@@ -30,8 +30,8 @@ import pandas as pd
 import numpy as np
 from openpyxl.styles import colors, PatternFill
 
-from cpovc_main.functions import (
-    get_general_list, get_dict, get_mapped, convert_date, get_description_for_item_id)
+#from cpovc_main.functions import (
+# get_general_list, get_dict, get_mapped, convert_date, get_description_for_item_id)
 from cpovc_main.models import SetupGeography
 
 from cpovc_ovc.models import (
