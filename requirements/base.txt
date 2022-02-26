@@ -1,7 +1,7 @@
-Django==1.8.15
+Django==4.0.2
 django-crispy-forms==1.6.0
 jellyfish==0.5.4
-pillow==3.3.2
+pillow
 psycopg2
 reportlab==3.3.0
 djangorestframework==3.3.3
@@ -9,7 +9,7 @@ openpyxl==2.4.0
 python-dateutil==2.4.2
 jellyfish==0.5.4
 python-memcached
-pandas==0.20.3
+pandas
 xlsxwriter==0.9.8
 django-import-export==1.2.0
 sentry-sdk==0.10.0

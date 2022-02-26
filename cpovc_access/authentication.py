@@ -5,7 +5,7 @@ import datetime
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from cpovc_access import signals
 from cpovc_access import BasePolicy
@@ -15,17 +15,13 @@ logger = logging.getLogger(__name__)
 
 class AuthenticationPolicy(BasePolicy):
     """Checks run when authenticating.
-
     Policies can define:
     `pre_auth_check` for checks that should be run before attempting to
     authenticate provided credentials.
-
     `post_auth_check` for checks that should be run after attempting to
     authenticate provided credentials.
-
     Both `pre_auth_check` and `post_auth_check` raise a ValidationError
     when authentication fails to comply with the policy
-
     `auth_success` is run when the attempt was successful and should not
     raise a ValidationError
     """
@@ -81,9 +77,7 @@ class AuthenticationBasicChecks(AuthenticationPolicy):
 
 class AuthenticationDisableExpiredUsers(AuthenticationPolicy):
     """Disable ALL users that have been expired.
-
     Users must have an `is_active` and a `last_login` field
-
     Reactivate user by setting is_active to True and last_login to
     now.
     """
@@ -102,7 +96,7 @@ class AuthenticationDisableExpiredUsers(AuthenticationPolicy):
 
         for user in expired:
             logger.info(u'User %s disabled because last login was at %s',
-                        unicode(user), user.last_login)
+                        str(user), user.last_login)
             # Send signal to be used to alert admins
             signals.user_expired.send(sender=user, user=user)
 

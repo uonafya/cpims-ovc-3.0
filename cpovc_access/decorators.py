@@ -8,17 +8,16 @@ from django.contrib.auth import logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.utils import timezone as datetime
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy
 
 from cpovc_access.models import AccessLog
 from cpovc_access.models import AccessAttempt
 from cpovc_access.signals import user_locked_out
 import cpovc_access
-from django.utils import six
-
+from six import u
 
 PRIVATE_IPS_PREFIX = ('10.', '172.', '192.', '127.')
 
@@ -84,7 +83,7 @@ ONLY_WHITELIST = getattr(settings, 'AXES_ONLY_ALLOW_WHITELIST', False)
 IP_WHITELIST = getattr(settings, 'AXES_IP_WHITELIST', None)
 IP_BLACKLIST = getattr(settings, 'AXES_IP_BLACKLIST', None)
 
-ERROR_MESSAGE = ugettext_lazy("Please enter a correct username and password. "
+ERROR_MESSAGE = gettext_lazy("Please enter a correct username and password. "
                               "Note that both fields are case-sensitive.")
 
 
@@ -112,7 +111,6 @@ def is_valid_ip(ip_address):
 def get_ip_address_from_request(request):
     """
     Make the best attempt to get the client's.
-
     real IP or return the loopback.
     """
     ip_address = ''
@@ -182,14 +180,13 @@ def get_lockout_url():
 def query2str(items, max_length=1024):
     """
     Turn a dictionary into an easy-to-read list of key-value pairs.
-
     If there's a field called "password" it will be excluded from the output.
     The length of the output is limited to max_length to avoid a DoS attack.
     """
     kvs = []
     for k, v in items:
         if k != PASSWORD_FORM_FIELD:
-            kvs.append(six.u('%s=%s') % (k, v))
+            kvs.append(u('%s=%s') % (k, v))
 
     return '\n'.join(kvs)[:max_length]
 
@@ -213,7 +210,6 @@ def ip_in_blacklist(ip):
 def is_user_lockable(request):
     """
     Check if the user has a profile with nolockout.
-
     If so, then return the value to see if this user is special
     and doesn't get their account locked out
     """
@@ -251,7 +247,6 @@ def is_user_lockable(request):
 def _get_user_attempts(request):
     """
     Return access attempt record if it exists.
-
     Otherwise return None.
     """
     ip = get_ip(request)
@@ -375,7 +370,7 @@ def lockout_response(request):
             'failure_limit': FAILURE_LIMIT,
             'username': request.POST.get(USERNAME_FORM_FIELD, '')
         }
-        return render_to_response(LOCKOUT_TEMPLATE, context,
+        return render(LOCKOUT_TEMPLATE, context,
                                   context_instance=RequestContext(request))
 
     lockout_url = get_lockout_url()

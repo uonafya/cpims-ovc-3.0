@@ -2,9 +2,9 @@
 import logging
 from django.contrib import admin
 from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth import REDIRECT_FIELD_NAME
-from django.contrib.auth.views import password_change
+#from django.contrib.auth.views import password
 from django.contrib import messages
 
 from cpovc_access.forms import StrictPasswordChangeForm
@@ -17,7 +17,6 @@ logger = logging.getLogger(__name__)
 def unlock_user(modeladmin, request, queryset):
     """
     These takes in a Django queryset and spits out a CSV file.
-
     Generic method for any queryset
     """
     # model = qs.model
@@ -207,6 +206,6 @@ def admin_password_change(request):
     }
     if admin.site.password_change_template is not None:
         defaults['template_name'] = admin.site.password_change_template
-    return password_change(request, **defaults)
+  #  return password_reset(request, **defaults)
 
 admin.site.password_change = admin_password_change
