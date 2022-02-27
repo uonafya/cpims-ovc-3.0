@@ -13,18 +13,38 @@ sub_county_list = get_geo_list(all_list, 'GDIS', 'Please Select Sub-county')
 '''
 document_type = get_list('document_type_id', 'Select report/document type')
 '''
-document_type = (('DSCE', 'Social enquiry'), ('DSUM', 'Summons'))
-report_types = (('', 'Select type'), ('M', 'Monthly'),
-                ('Q', 'Quarterly'), ('Y', 'Yearly'))
+document_type = (
 
-report_types_others = (('', 'Select type'), ('M', 'Monthly'),
-                       ('Q', 'Quarterly'), ('Y', 'Yearly'), ('O', 'Others'))
+    ('DSCE', 'Social enquiry'),
+    ('DSUM', 'Summons')
 
-report_types_datim = (('', 'Select type'), ('S', 'Semi Annual'),
-                      ('Y', 'Annual'))
+)
 
-report_types_other = (('', 'Select type'), ('S', 'Semi Annual'),
-                      ('Y', 'Annual'), ('O', 'Other'))
+report_types = (
+    ('', 'Select type'),
+    ('M', 'Monthly'),
+    ('Q', 'Quarterly'),
+    ('Y', 'Yearly')
+)
+
+report_types_others = (
+
+    ('', 'Select type'),
+    ('M', 'Monthly'),
+    ('Q', 'Quarterly'), ('Y', 'Yearly'),
+    ('O', 'Others')
+
+)
+
+report_types_datim = (
+    ('', 'Select type'),
+    ('S', 'Semi Annual'),
+    ('Y', 'Annual')
+)
+
+report_types_other = (
+    ('', 'Select type'), ('S', 'Semi Annual'),
+    ('Y', 'Annual'), ('O', 'Other'))
 
 report_vars = (('', 'Select Variable'), (1, 'Organisation Unit'),
                (2, 'Institution Register'))
