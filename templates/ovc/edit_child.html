@@ -488,7 +488,9 @@
                 </div>
             </div>
             <!-- end panel body -->
-        </div>
+                </form>
+            </div>
+
         <!-- end panel -->  
     </div>
     <!-- end col-12 -->
@@ -551,19 +553,19 @@
                               
                             </tr>
                             {% for data in hiv_data %}
-                            {% if data.hiv_status = "HSTP" %}
+                            {% if data.hiv_status == "HSTP" %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>Positive</td>
                                 <td>{{data.date_of_event}}</td>
                             </tr>
-                            {% elif data.hiv_status = "HSTN" %}
+                            {% elif data.hiv_status == "HSTN" %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>Negative</td>
                                 <td>{{data.date_of_event}}</td>
                             </tr>
-                            {% elif data.hiv_status = "HSKN" %}
+                            {% elif data.hiv_status == "HSKN" %}
                             <tr>
                                     <td>{{ forloop.counter }}</td>
                                 <td>Not Known</td>
@@ -649,7 +651,7 @@
 
                                     <td>{% if vload.viral_load > 1000%}<label class="label label-danger">No</label> 
                                          {% else %} <label class="label label-success">Yes</label>{% endif %}</td>
-                                    <td>{% if vload.status = 1%}<label class="label label-danger">Viral test required</label> 
+                                    <td>{% if vload.status == 1%}<label class="label label-danger">Viral test required</label>
                                             {% else %} <label class="label label-success">Viral test valid</label>{% endif %}</td>
                                      
                                 </tr>
