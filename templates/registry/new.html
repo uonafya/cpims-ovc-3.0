@@ -68,13 +68,13 @@
                                 <!-- begin row -->
                                 <div class="row">
                                     <div class="form-group">
-										<label class="control-label col-md-4 col-sm-4" for="org_unit_name">Name of Organisation Unit * :</label>
+										<label id="org_unit_name" class="control-label col-md-4 col-sm-4" for="org_unit_name">Name of Organisation Unit * :</label>
 										<div class="col-md-6 col-sm-6">
 												{{ form.org_unit_name }}
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="control-label col-md-4 col-sm-4" for="date_reg">Date when the organisation Unit was set up or became operational * :</label>
+										<label id="date_reg" class="control-label col-md-4 col-sm-4" for="date_reg">Date when the organisation Unit was set up or became operational * :</label>
 										<div class="col-md-6 col-sm-6">
 			                                {{ form.reg_date }}
 										</div>
@@ -92,25 +92,25 @@
                                 <div class="row">
                                     <!-- begin col-6 -->
                                     <div class="form-group">
-										<label class="control-label col-md-4 col-sm-4" for="org_unit_type">Type of organisation Unit :</label>
+										<label id="org_unit_type" class="control-label col-md-4 col-sm-4" for="org_unit_type">Type of organisation Unit :</label>
 										<div class="col-md-6 col-sm-6">
 											{{ form.org_unit_type }}
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="control-label col-md-4 col-sm-4" for="legal_reg_type">Legal Registration type :</label>
+										<label id="legal_reg_type" class="control-label col-md-4 col-sm-4" for="legal_reg_type">Legal Registration type :</label>
 										<div class="col-md-6 col-sm-6">
 											{{ form.org_reg_type }}
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="control-label col-md-4 col-sm-4" for="legal_reg_number">Legal Registration Number :</label>
+										<label id="legal_reg_number" class="control-label col-md-4 col-sm-4" for="legal_reg_number">Legal Registration Number :</label>
 										<div class="col-md-6 col-sm-6">
 											{{ form.legal_reg_number }}
 										</div>
 									</div>
 			                        <div class="form-group">
-										<label class="control-label col-md-4 col-sm-4" for="parent_unit">Parent Unit :</label>
+										<label id="parent_unit" class="control-label col-md-4 col-sm-4" for="parent_unit">Parent Unit :</label>
 										<div class="col-md-6 col-sm-6">
 											{{ form.parent_org_unit }}
 										</div>
@@ -129,14 +129,14 @@
                                 <div class="row">
                                     <!-- begin col-4 -->
                                     <div class="form-group">
-										<label class="control-label col-md-4 col-sm-4" for="sub_county">Sub County :</label>
+										<label id="sub_county" class="control-label col-md-4 col-sm-4" for="sub_county">Sub County :</label>
 										<div class="col-md-6 col-sm-6">
 											{{ form.sub_county }}
 											<span id="sel_sub_county" class="showlist"></span>
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="control-label col-md-4 col-sm-4" for="wards">Wards :</label>
+										<label id="wards" class="control-label col-md-4 col-sm-4" for="wards">Wards :</label>
 										<div class="col-md-6 col-sm-6">
 											{{ form.ward }}
 											<span id="sel_ward" class="showlist"></span>

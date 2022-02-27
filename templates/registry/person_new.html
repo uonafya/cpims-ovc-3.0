@@ -58,14 +58,14 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group block1">
-                                        <label for="person_type">Person Type <span class="asteriskField">*</span></label>
+                                        <label id="person_type" for="person_type">Person Type <span class="asteriskField">*</span></label>
                                         {{ form.person_type }}
                                     </div>
                                 </div>
                                 <!-- end col-4 -->
                                 <div class="col-md-4">
                                     <div id="is_caregiver_div" class="form-group block1">
-                                        <label for="is_caregiver">Person is also a Caregiver <span class="asteriskField"></span></label>
+                                        <label id="is_caregiver" for="is_caregiver">Person is also a Caregiver <span class="asteriskField"></span></label>
                                         <br>
                                         {{ form.is_caregiver }} 
                                     </div>
@@ -74,7 +74,7 @@
                                 <!-- begin col-4 -->
                                 <div class="col-md-4">
                                     <div id="provides_service" class="form-group">
-                                        <label for="child_services">Provides services directly to children <span class="asteriskField">*</span></label>
+                                        <label id="child_services" for="child_services">Provides services directly to children <span class="asteriskField">*</span></label>
                                         <br>                                        
                                         {{ form.child_services }}
                                         <span id="services_error"></span>
@@ -85,7 +85,7 @@
                                 <!-- begin col-4 -->
                                 <div class="col-md-4">
                                     <div id="is_ovc" class="form-group">
-                                        <label for="child_ovc">Child is OVC <span class="asteriskField">*</span></label>
+                                        <label id="child_ovc" for="child_ovc">Child is OVC <span class="asteriskField">*</span></label>
                                         <br>                                        
                                         {{ form.child_ovc }}
                                         <span id="child_ovc_error"></span>
@@ -100,7 +100,7 @@
                                 <!-- end col-4 -->
                                 <div class="col-md-4">
                                     <div class="form-group block1">
-                                        <label for="first_name">First Name <span class="asteriskField">*</span></label>
+                                        <label id="first_name" for="first_name">First Name <span class="asteriskField">*</span></label>
                                         {{ form.first_name }}
                                     </div>
                                 </div>
@@ -108,7 +108,7 @@
                                 <!-- begin col-4 -->
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="surname">Surname <span class="asteriskField">*</span></label>
+                                        <label id="surname" for="surname">Surname <span class="asteriskField">*</span></label>
                                         {{ form.surname }}
                                     </div>
                                 </div>
@@ -116,7 +116,7 @@
                                 <!-- begin col-4 -->
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="other_names">Other Name(s) <span class="asteriskField"></span></label>
+                                        <label id="other_names" for="other_names">Other Name(s) <span class="asteriskField"></span></label>
                                         {{ form.other_names}}
                                     </div>
                                 </div>
@@ -126,7 +126,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group block1">
-                                        <label for="sex_id">Sex <span class="asteriskField">*</span></label>
+                                        <label id="sex_id" for="sex_id">Sex <span class="asteriskField">*</span></label>
                                         {{ form.sex_id }}
                                     </div>
                                 </div>
@@ -134,20 +134,20 @@
                                 <!-- begin col-4 -->
                                 <div class="col-md-3">
                                     <div id="dob_div" class="form-group">
-                                        <label for="date_of_birth">Date of Birth <span class="asteriskField">*</span></label>
+                                        <label id="date_of_birth" for="date_of_birth">Date of Birth <span class="asteriskField">*</span></label>
                                         {{ form.date_of_birth }}
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div id="title_type_div" class="form-group">
-                                        <label for="title_type">Title <span class="asteriskField">*</span></label>
+                                        <label id="title_type" for="title_type">Title <span class="asteriskField">*</span></label>
                                         {{ form.title_type }}
                                     </div>
                                 </div>
                                 <!-- begin col-4 -->
                                 <div class="col-md-3">
                                     <div id="cadre_type_div" class="form-group">
-                                        <label for="cadre_type">Designation <span class="asteriskField">*</span> :</label>
+                                        <label id="cadre_type" for="cadre_type">Designation <span class="asteriskField">*</span> :</label>
                                         {{ form.cadre_type }}
                                     </div>
                                     <div id="date_warning" class="form-group" style="display: none"></div>
@@ -196,43 +196,43 @@
                                             <!-- begin row -->
                                             <div class="row">
                                                 <div id="national_id_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="national_id">National ID <span class="asteriskField">*</span> :</label>
+                                                    <label id="national_id" class="control-label col-md-4 col-sm-4" for="national_id">National ID <span class="asteriskField">*</span> :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.national_id }}
                                                     </div>
                                                 </div>
                                                 <div id="birth_reg_id_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="birth_reg_id">Birth Registration Number :</label>
+                                                    <label id="birth_reg_id" class="control-label col-md-4 col-sm-4" for="birth_reg_id">Birth Registration Number :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.birth_reg_id }}
                                                     </div>
                                                 </div>
                                                 <div id="staff_id_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="staff_id">Staff No. / Registration No. / Serial No. :</label>
+                                                    <label id="staff_id" class="control-label col-md-4 col-sm-4" for="staff_id">Staff No. / Registration No. / Serial No. :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.staff_id }}
                                                     </div> 
                                                 </div>
                                                 <div id="given_name_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="given_name">Child Given Name :</label>
+                                                    <label id="given_name" class="control-label col-md-4 col-sm-4" for="given_name">Child Given Name :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.given_name }}
                                                     </div>
                                                 </div>
                                                 <div id="nation_id_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="country">Country of Origin :</label>
+                                                    <label id="country" class="control-label col-md-4 col-sm-4" for="country">Country of Origin :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.country }}
                                                     </div>
                                                 </div>
                                                 <div id="tribe_id_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="tribe">Tribe :</label>
+                                                    <label id="tribe" class="control-label col-md-4 col-sm-4" for="tribe">Tribe :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.tribe }}
                                                     </div>
                                                 </div>
                                                 <div id="religion_id_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="religion">Religion :</label>
+                                                    <label id="religion" class="control-label col-md-4 col-sm-4" for="religion">Religion :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.religion }}
                                                     </div>
@@ -249,25 +249,25 @@
                                             <!-- begin row -->
                                             <div class="row">
                                                 <div id="des_phone_number_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="des_phone_number">Designated mobile Number :<span class="asteriskField">*</span></label>
+                                                    <label id="des_phone_number" class="control-label col-md-4 col-sm-4" for="des_phone_number">Designated mobile Number :<span class="asteriskField">*</span></label>
                                                     <div class="col-md-6 col-sm-6">
                                                        {{ form.des_phone_number }}
                                                     </div>
                                                 </div>
                                                 <div id="other_phone_number_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="other_phone_number">Other mobile Number :</label>
+                                                    <label id="other_phone_number" class="control-label col-md-4 col-sm-4" for="other_phone_number">Other mobile Number :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.other_phone_number }}
                                                     </div>
                                                 </div> 
                                                 <div id="email_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="email">Email Address :</label>
+                                                    <label id="email" class="control-label col-md-4 col-sm-4" for="email">Email Address :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.email }}
                                                     </div>
                                                 </div>
                                                 <div id="physical_location_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="physical_address">Physical Location :</label>
+                                                    <label id="physical_address" class="control-label col-md-4 col-sm-4" for="physical_address">Physical Location :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.physical_address }}
                                                     </div>
@@ -294,14 +294,14 @@
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group" id="working_in_region_div">
-                                                           <label class="control-label col-md-4 col-sm-4" for="working_in_region">Region :</label>
+                                                           <label id="working_in_region" class="control-label col-md-4 col-sm-4" for="working_in_region">Region :</label>
                                                             <div class="col-md-4 col-sm-4">
                                                                {{ form.working_in_region }}
                                                             </div>
                                                             <div id="type_error"></div>
                                                         </div>
                                                         <div class="form-group" id="county_div">
-                                                            <label class="control-label col-md-4 col-sm-4" for="working_in_county">County <span class="asteriskField">*</span> : </label>
+                                                            <label id="working_in_county" class="control-label col-md-4 col-sm-4" for="working_in_county">County <span class="asteriskField">*</span> : </label>
                                                             <div class="col-md-4 col-sm-4 data-maxOptions=1" >
                                                                 {{ form.working_in_county }}
                                                                 <br>
@@ -309,7 +309,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group" id="subcounty_div">
-                                                            <label class="control-label col-md-4 col-sm-4" for="working_in_subcounty">Sub-county <span class="asteriskField">*</span> : </label>
+                                                            <label id="working_in_subcounty" class="control-label col-md-4 col-sm-4" for="working_in_subcounty">Sub-county <span class="asteriskField">*</span> : </label>
                                                             <div class="col-md-4 col-sm-4 data-maxOptions=1" >
                                                                 {{ form.working_in_subcounty }}
                                                                 <br>
@@ -317,7 +317,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group" id="ward_div">
-                                                            <label class="control-label col-md-4 col-sm-4" for="working_in_ward">Ward : </label>
+                                                            <label id="working_in_ward" class="control-label col-md-4 col-sm-4" for="working_in_ward">Ward : </label>
                                                             <div class="col-md-4 col-sm-4 data-maxOptions=1" >
                                                                 {{ form.working_in_ward }}
                                                                 <br>
@@ -340,19 +340,19 @@
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <label class="control-label col-md-4 col-sm-4" for="living_in_county">County <span class="asteriskField">*</span> : </label>
+                                                            <label id="living_in_county" class="control-label col-md-4 col-sm-4" for="living_in_county">County <span class="asteriskField">*</span> : </label>
                                                             <div class="col-md-4 col-sm-4 data-maxOptions=1" >
                                                                 {{ form.living_in_county }}
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="control-label col-md-4 col-sm-4" for="living_in_subcounty">Sub-county <span class="asteriskField">*</span> : </label>
+                                                            <label id="living_in_subcounty" class="control-label col-md-4 col-sm-4" for="living_in_subcounty">Sub-county <span class="asteriskField">*</span> : </label>
                                                             <div class="col-md-4 col-sm-4" >
                                                                 {{ form.living_in_subcounty }}
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="control-label col-md-4 col-sm-4" for="living_in_ward">Ward: </label>
+                                                            <label id="living_in_ward" class="control-label col-md-4 col-sm-4" for="living_in_ward">Ward: </label>
                                                             <div class="col-md-4 col-sm-4" >
                                                                 {{ form.living_in_ward }}
                                                             </div>
@@ -438,14 +438,14 @@
                                             <div class="row"  id="cbo_chv_add">
                                                 <span class="form-group"></span>
                                                 <div id="cbo_id_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="cbo_unit_id">CBO <span class="asteriskField">*</span> :</label>
+                                                    <label id="cbo_unit_id" class="control-label col-md-4 col-sm-4" for="cbo_unit_id">CBO <span class="asteriskField">*</span> :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.cbo_unit_id  }}
                                                     </div>
                                                 </div>
 
                                                 <div id="chv_id_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="chv_unit_id">CHV <span class="asteriskField">*</span> :</label>
+                                                    <label id="chv_unit_id" class="control-label col-md-4 col-sm-4" for="chv_unit_id">CHV <span class="asteriskField">*</span> :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.chv_unit_id  }}
                                                     </div>
@@ -455,25 +455,25 @@
                                                 <span class="form-group"></span>
                                                 <div id="log_unit"></div>
                                                 <div id="org_unit_id_div" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="org_unit_id">Organizational Unit <span class="asteriskField">*</span> :</label>
+                                                    <label id="org_unit_id" class="control-label col-md-4 col-sm-4" for="org_unit_id">Organizational Unit <span class="asteriskField">*</span> :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.org_unit_id  }}
                                                     </div>
                                                 </div>
                                                 <div id="org_unit_id_parent" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="unit_parent">Primary Parent Organizational Unit <span class="asteriskField">*</span> :</label>
+                                                    <label id="unit_parent" class="control-label col-md-4 col-sm-4" for="unit_parent">Primary Parent Organizational Unit <span class="asteriskField">*</span> :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.unit_parent }}
                                                     </div>
                                                 </div>
                                                 <div id="org_unit_id_parent" class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4" for="unit_reg_assistant">Registration assistant for this Organizational Unit <span class="asteriskField">*</span> :</label>
+                                                    <label id="unit_reg_assistant" class="control-label col-md-4 col-sm-4" for="unit_reg_assistant">Registration assistant for this Organizational Unit <span class="asteriskField">*</span> :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.unit_reg_assistant }}
                                                     </div>
                                                 </div>
                                                 <div id="org_unit_id_add" class="form-group">
-                                                <label class="control-label col-md-4 col-sm-4" for="org_unit_primary"></label>
+                                                <label id="org_unit_primary" class="control-label col-md-4 col-sm-4" for="org_unit_primary"></label>
                                                     <div class="col-md-8 col-sm-8">
                                                         {{ form.org_unit_primary }}
                                                         <button type="button" class="btn btn-success" id="add_org_unit"><i class="fa fa-plus"></i> Organisation Unit</button> 
@@ -492,7 +492,7 @@
                                                     <tbody>
                                                     </tbody>
                                                 </table>
-                                                <label for="orgs_selected">Attached Units</label>
+                                                <label id="orgs_selected" for="orgs_selected">Attached Units</label>
                                                 <div id="selected_orgs_div">{{ form.orgs_selected }}</div>
                                             </div>
                                             <!-- end row -->
@@ -505,7 +505,7 @@
                             <div class="row" id="audit_detail_div">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="audit_workforce">Workforce member recorded on paper :<span class="asteriskField">*</span></label>
+                                        <label id="audit_workforce" for="audit_workforce">Workforce member recorded on paper :<span class="asteriskField">*</span></label>
                                         {{ form.audit_workforce }}
                                         {{ form.workforce_id }}
                                     </div>
@@ -513,7 +513,7 @@
                                 <!-- begin col-6 -->
                                 <div class="col-md-6">
                                     <div class="form-group col-md-6">
-                                        <label for="audit_date">Date paper form filled :<span class="asteriskField">*</span></label>
+                                        <label id="audit_date" for="audit_date">Date paper form filled :<span class="asteriskField">*</span></label>
                                         {{ form.audit_date }}
                                     </div>
                                 </div>
@@ -547,7 +547,7 @@
                                 <div class="row">
                                 <div id="log_cg"></div>
                                     <div id="caregiver_id_adult" class="form-group">
-                                        <label class="control-label col-md-4 col-sm-4" for="caregiver_id">CPIMS registered child:</label>
+                                        <label id="caregiver_id" class="control-label col-md-4 col-sm-4" for="caregiver_id">CPIMS registered child:</label>
                                         <div class="col-md-6 col-sm-6">
                                             {{ form.is_cpims_sibling }}
                                         </div>
@@ -616,7 +616,7 @@
                                 </div>
                                 <div class="divider pull-left width-full"></div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4" for="sibling_remark">Remarks :</label>
+                                    <label id="sibling_remark" class="control-label col-md-4 col-sm-4" for="sibling_remark">Remarks :</label>
                                     <div class="col-md-8 col-sm-8">
                                         {{ form.sibling_remark }}
                                         {{ form.sibling_cpims_id }}

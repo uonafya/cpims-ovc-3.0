@@ -67,14 +67,14 @@
                                 <legend class="pull-left width-full">About the Organisation</legend>
                                 <div class="row">
                                     <div class="form-group">
-										<label class="control-label col-md-4 col-sm-4" for="org_unit_name">Name of Organisation Unit <span class="asteriskField">*</span> :</label>
+										<label id="org_unit_name" class="control-label col-md-4 col-sm-4" for="org_unit_name">Name of Organisation Unit <span class="asteriskField">*</span> :</label>
 										<div class="col-md-6 col-sm-6">
 												{{ form.org_unit_name }}
 										</div>
 										<a href="#" data-toggle="tooltip" title="Unit name is mandatory"><i class="fa fa-info-circle fa-lg"></i></a>
 									</div>
 									<div class="form-group">
-										<label class="control-label col-md-4 col-sm-4" for="date_reg">Date when the organisation Unit was set up or became operational:</label>
+										<label id="date_reg" class="control-label col-md-4 col-sm-4" for="date_reg">Date when the organisation Unit was set up or became operational:</label>
 										<div class="col-md-6 col-sm-6">
 			                                {{ form.reg_date }}
 										</div>
@@ -93,7 +93,7 @@
                                 <div class="row">
                                     <!-- begin col-6 -->
                                     <div class="form-group">
-										<label class="control-label col-md-4 col-sm-4" for="org_unit_type">Type and sub-type of organisation Unit <span class="asteriskField">*</span>:</label>
+										<label id="org_unit_type" class="control-label col-md-4 col-sm-4" for="org_unit_type">Type and sub-type of organisation Unit <span class="asteriskField">*</span>:</label>
 										<div class="col-md-3 col-sm-3">
 											{{ form.org_unit_category }}
 										</div>
@@ -103,7 +103,7 @@
 										<a href="#" data-toggle="tooltip" title="Type and sub-type are mandatory"><i class="fa fa-info-circle fa-lg"></i></a>
 									</div>
 									<div class="form-group" id="div_handle_ovc">
-										<label class="control-label col-md-4 col-sm-4" for="handle_ovc">Provides services to OVC :</label>
+										<label id="handle_ovc" class="control-label col-md-4 col-sm-4" for="handle_ovc">Provides services to OVC :</label>
 										<div class="col-md-6 col-sm-6">
 											{{ form.handle_ovc }}
 											<span id="handle_ovc_error"></span>
@@ -111,21 +111,21 @@
 										<a href="#" data-toggle="tooltip" title="This is mandatory for NGO's to be used for providing OVC related functionalities."><i class="fa fa-info-circle fa-lg"></i></a>
 									</div>
 									<div class="form-group" id="div_legal_reg_type">
-										<label class="control-label col-md-4 col-sm-4" for="legal_reg_type">Legal Registration type :</label>
+										<label id="legal_reg_type" class="control-label col-md-4 col-sm-4" for="legal_reg_type">Legal Registration type :</label>
 										<div class="col-md-6 col-sm-6">
 											{{ form.org_reg_type }}
 										</div>
 										<a href="#" data-toggle="tooltip" title="This is mandatory for NGO's"><i class="fa fa-info-circle fa-lg"></i></a>
 									</div>
 									<div class="form-group" id="div_legal_reg_number">
-										<label class="control-label col-md-4 col-sm-4" for="legal_reg_number">Legal Registration Number :</label>
+										<label id="legal_reg_number" class="control-label col-md-4 col-sm-4" for="legal_reg_number">Legal Registration Number :</label>
 										<div class="col-md-6 col-sm-6">
 											{{ form.legal_reg_number }}
 										</div>
 										<a href="#" data-toggle="tooltip" title="This is mandatory for NGO's"><i class="fa fa-info-circle fa-lg"></i></a>
 									</div>
 			                        <div class="form-group">
-										<label class="control-label col-md-4 col-sm-4" for="parent_unit">Parent Unit <span class="asteriskField">*</span>:</label>
+										<label id="parent_unit" class="control-label col-md-4 col-sm-4" for="parent_unit">Parent Unit <span class="asteriskField">*</span>:</label>
 										<div class="col-md-6 col-sm-6">
 											{{ form.parent_org_unit }}
 										</div>
@@ -145,7 +145,7 @@
                                 <div class="row">
                                     <!-- begin col-4 -->
                                     <div class="form-group" id="county_div">
-										<label class="control-label col-md-4 col-sm-4" for="County">County :</label>
+										<label id="County" class="control-label col-md-4 col-sm-4" for="County">County :</label>
 										<div class="col-md-4 col-sm-4">
 											{{ form.county }}
 											<br>
@@ -154,7 +154,7 @@
 										<a href="#" data-toggle="tooltip" title="This is not mandatory and will not be saved. Only used for filtering sub-counties."><i class="fa fa-info-circle fa-lg"></i></a>
 									</div>
                                     <div class="form-group" id="sub_county_div">
-										<label class="control-label col-md-4 col-sm-4" for="sub_county">Sub County :</label>
+										<label id="sub_county" class="control-label col-md-4 col-sm-4" for="sub_county">Sub County :</label>
 										<div class="col-md-4 col-sm-4">
 											{{ form.sub_county }}
 											<br>
@@ -164,7 +164,7 @@
 										<a href="#" data-toggle="tooltip" title="This is mandatory for some organisational units."><i class="fa fa-info-circle fa-lg"></i></a>
 									</div>
 									<div class="form-group" id="ward_div">
-										<label class="control-label col-md-4 col-sm-4" for="wards">Wards :</label>
+										<label id="wards" class="control-label col-md-4 col-sm-4" for="wards">Wards :</label>
 										<div class="col-md-4 col-sm-4">
 											{{ form.ward }}
 											<br>

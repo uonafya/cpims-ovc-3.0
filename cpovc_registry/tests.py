@@ -82,7 +82,7 @@ class TestViews(TestCase):
         self.new_person_url = reverse('new_person')
 
     def test_home_POST(self):
-        response = self.client.post(self.home_url, )
+        response = self.client.post(self.home_url,)
 
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'registry/org_units_index.html')
@@ -94,13 +94,13 @@ class TestViews(TestCase):
         self.assertTemplateUsed(response, 'registry/org_units_new.html')
 
     def test_register_edit_POST(self):
-        response = self.client.post(self.register_edit_url, )
+        response = self.client.post(self.register_edit_url,org_id=2)
 
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'registry/org_units_edit.html')
 
     def test_register_details_POST(self):
-        response = self.client.post(self.register_details_url, )
+        response = self.client.post(self.register_details_url, org_id=2 )
 
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'registry/org_units_details.html')
@@ -118,13 +118,13 @@ class TestViews(TestCase):
         self.assertTemplateUsed(response, 'registry/person_search.html')
 
     def test_edit_person_POST(self):
-        response = self.client.post(self.edit_person_url, )
+        response = self.client.post(self.edit_person_url, id=2)
 
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'registry/person_edit.html')
 
     def test_new_user_POST(self):
-        response = self.client.post(self.new_user_url, )
+        response = self.client.post(self.new_user_url, id=2)
 
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'registry/new_user.html')
@@ -134,29 +134,13 @@ class TestViews(TestCase):
 
         self.assertEquals(response.status_code, 200)
 
-    def test_persons_action_POST(self):
+    def test_person_action_POST(self):
         response = self.client.post(self.persons_actions_url, )
 
         self.assertEquals(response.status_code, 200)
 
 
 #Forms TestCases
-
-"""class MyTests(TestCase):
-    def test_forms(self):
-        form_data = {'something': 'something'}
-        form = MyForm(data=form_data)
-        self.assertTrue(form.is_valid())
-        ... # other tests relating forms, for example checking the form data"""
-
-
-
-
-class RegPersonTypesAdminTestCase(TestCase):
-    def setUpTestData(cls):
-        admin.RegPersonTypesAdmin.search_fields = ['Mwajuma', 'Sidi']
-        admin.RegPersonTypesAdmin.list_display = ['1', 'Sidi Manajuma', 'temporary',
-                    '12/12/2017', 'False', ]
 
 
 
