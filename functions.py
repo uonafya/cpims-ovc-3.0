@@ -273,7 +273,7 @@ def simple_documents(params, document_name='CPIMS', report_name='letter'):
         story.append(Spacer(1, 24))
         vals = get_report_body(params, report_name)
         ptext = '%s' % (vals)
-        print (('BODY' + ptext))
+        print (('BODY'+ ptext))
         story.append(Paragraph(ptext, styles["Justify"]))
         story.append(Spacer(1, 12))
         doc.build(story, onFirstPage=draw_page, onLaterPages=draw_page,
