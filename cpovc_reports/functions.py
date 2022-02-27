@@ -6,7 +6,7 @@ import time
 import string
 import calendar
 import collections
-import pandas
+import pandas 
 from django.db import connection
 from django.db import connections
 from datetime import datetime, timedelta, date
