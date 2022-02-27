@@ -76,7 +76,7 @@ def gen_refferal(value):
     # Generate HtmlMarkUp
     mark_up = ''
     for v in value_list:
-        mark_up += '%s<br>' % v
+        mark_up += '{}<br>'.format(v)
     return mark_up
 
 
@@ -92,7 +92,7 @@ def gen_intervention(value):
     # Generate HtmlMarkUp
     mark_up = ''
     for v in value_list:
-        mark_up += '%s<br>' % v
+        mark_up += '{}<br>'.format(v)
     return mark_up
 
 
@@ -112,6 +112,7 @@ def gen_case_grouping_id(value):
         values = value['case_grouping_id']
     return values
 
+
 @register.filter(name='gen_referral_grouping_id')
 def gen_referral_grouping_id(value):
     value = value[0]
@@ -129,6 +130,7 @@ def gen_areaname(value):
     else:
         return value
 
+
 @register.filter(name='gen_orgunitname')
 def gen_orgunitname(value):
     if value:
@@ -137,14 +139,16 @@ def gen_orgunitname(value):
     else:
         return value
 
+
 @register.filter(name='gen_schoolname')
 def gen_schoolname(value):
-    print 'gen_schoolname : %s' %value
+    print('gen_schoolname : {}'.format(value))
     if value:
         item_value = SchoolList.objects.get(pk=value, is_void=False)
         return item_value.school_name
     else:
         return value
+
 
 @register.filter(name='has_group')
 def has_group(user, group_name):
@@ -153,7 +157,7 @@ def has_group(user, group_name):
         return True
     user_group = CPOVCRole.objects.get(group_id=group_name)
     group = Group.objects.get(name=user_group.group_name)
-    print 'GCHECK', group_name, group, user.groups.all()
+    print('GCHECK', group_name, group, user.groups.all())
     response = True if group in user.groups.all() else False
-    print response
+    print(response)
     return response

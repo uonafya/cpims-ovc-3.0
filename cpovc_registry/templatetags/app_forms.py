@@ -1,5 +1,6 @@
 """For dynamic forms."""
 from django import template
+
 register = template.Library()
 
 
