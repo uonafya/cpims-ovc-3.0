@@ -60,7 +60,7 @@ class UnreadNotificationsList(NotificationViewList):
         return self.request.user.notifications.unread()
 
 
-@login_required
+# @login_required
 def mark_all_as_read(request):
     request.user.notifications.mark_all_as_read()
 
@@ -71,7 +71,7 @@ def mark_all_as_read(request):
     return redirect('notifications:home')
 
 
-@login_required
+# @login_required
 def mark_as_read(request, slug=None):
     notification_id = slug2id(slug)
 
@@ -87,7 +87,7 @@ def mark_as_read(request, slug=None):
     return redirect('notifications:home')
 
 
-@login_required
+# @login_required
 def mark_as_unread(request, slug=None):
     notification_id = slug2id(slug)
 
@@ -103,7 +103,7 @@ def mark_as_unread(request, slug=None):
     return redirect('notifications:unread')
 
 
-@login_required
+# @login_required
 def delete(request, slug=None):
     notification_id = slug2id(slug)
 
@@ -256,7 +256,7 @@ def live_all_notification_count(request):
     return JsonResponse(data)
 
 
-@login_required
+# @login_required
 def notifications_home(request):
     """Method to do pivot reports."""
     try:
@@ -267,7 +267,7 @@ def notifications_home(request):
         pass
 
 
-@login_required
+# @login_required
 def notifications_read(request, id):
     """Method to do pivot reports."""
     try:

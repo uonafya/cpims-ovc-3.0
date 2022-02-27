@@ -6,7 +6,7 @@ from .forms import CaseLoad
 from .functions import get_geo, get_lips, get_chart_data
 
 
-@login_required
+# @login_required
 def ovc_dashboard(request):
     """Method to do pivot reports."""
     try:
@@ -18,7 +18,7 @@ def ovc_dashboard(request):
         pass
 
 
-@login_required
+# @login_required
 def ovc_dashboard_hivstat(request):
     """Method to do pivot reports."""
     try:
@@ -31,7 +31,7 @@ def ovc_dashboard_hivstat(request):
         pass
 
 
-@login_required
+# @login_required
 def ovc_dashboard_services(request):
     """Method to do pivot reports."""
     try:
@@ -44,7 +44,7 @@ def ovc_dashboard_services(request):
         pass
 
 
-@login_required
+# @login_required
 def ovc_dashboard_cm(request):
     """Method to do pivot reports."""
     try:

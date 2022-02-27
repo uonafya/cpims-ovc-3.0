@@ -10,23 +10,25 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = 'h34yo5l8c8!edb%^b@3j-i^gc$e)fcjnw_9jm4a^%jbq&*41+@'
 
+FORM_RENDERER = 'django.forms.renderers.DjangoTemplates'
+
 
 ALLOWED_HOSTS = ['*']
 
-cpims_db_host = os.environ.get('CPIMS_HOST') if os.environ.get('CPIMS_HOST') else ''
-cpims_db_pass = os.environ.get('CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else ''
-cpims_db_instance = os.environ.get('CPIMS_DB') if os.environ.get('CPIMS_DB') else ''
-cpims_db_port = os.environ.get('CPIMS_PORT') if os.environ.get('CPIMS_PORT') else ''
-cpims_db_user = os.environ.get('CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else ''
-cpims_debug = eval(os.environ.get('CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else False
+cpims_db_host = os.environ.get('CPIMS_HOST') if os.environ.get('CPIMS_HOST') else 'localhost'
+cpims_db_pass = os.environ.get('CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'secret2'
+cpims_db_instance = os.environ.get('CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims2'
+cpims_db_port = os.environ.get('CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5432'
+cpims_db_user = os.environ.get('CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'bowen2'
+cpims_debug = eval(os.environ.get('CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else True
 
 DEBUG = cpims_debug
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.auth',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cpovc_auth',
@@ -34,7 +36,7 @@ INSTALLED_APPS = (
     'cpovc_main',
     'cpovc_forms',
     'cpovc_gis',
-    #'cpovc_access',
+     'cpovc_access',
     'cpovc_settings',
     'crispy_forms',
     'cpovc_ovc',
@@ -47,7 +49,7 @@ INSTALLED_APPS = (
      'cpovc_manage',
      'notifications',
      'cpovc_help'
-)
+]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -122,9 +124,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'reports')
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
 
-AUTH_USER_MODEL = 'cpovc_auth.AppUser'
+# AUTH_USER_MODEL = 'cpovc_auth.AppUser'
 
 AUTHENTICATION_BACKENDS = ('cpovc_auth.backends.CPOVCAuthenticationBackend',)
+# AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 
 ALLOW_NATIONAL_ID_LOGIN = True
 

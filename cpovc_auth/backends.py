@@ -1,4 +1,4 @@
-from cpovc_auth.models import AppUser
+# from cpovc_auth.models import AppUser
 from django.contrib.auth.models import check_password
 from django.contrib.auth.backends import ModelBackend
 from django.conf import settings

@@ -4,7 +4,7 @@ import unicodedata
 
 from django.contrib.auth.hashers import check_password
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from cpovc_access import BasePolicy
 from cpovc_access.models import PasswordChange
@@ -12,7 +12,7 @@ from cpovc_access.models import PasswordChange
 
 def _normalize_unicode(value):
     try:
-        value = unicodedata.normalize('NFKD', unicode(value))
+        value = unicodedata.normalize('NFKD', str(value))
         return value.encode('ascii', 'ignore').strip().lower()
     except UnicodeDecodeError:
         return value

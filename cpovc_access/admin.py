@@ -2,9 +2,9 @@
 import logging
 from django.contrib import admin
 from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth import REDIRECT_FIELD_NAME
-from django.contrib.auth.views import password_change
+# from django.contrib.auth.views import password_change
 from django.contrib import messages
 
 from cpovc_access.forms import StrictPasswordChangeForm

@@ -5,15 +5,15 @@ import datetime
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
-from cpovc_access import signals
-from cpovc_access import BasePolicy
+# from cpovc_access import signals
+# from cpovc_access import BasePolicy
 
 logger = logging.getLogger(__name__)
 
 
-class AuthenticationPolicy(BasePolicy):
+class AuthenticationPolicy():
     """Checks run when authenticating.
 
     Policies can define:

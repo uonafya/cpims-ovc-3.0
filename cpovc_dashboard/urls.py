@@ -1,4 +1,5 @@
-from django.conf.urls import patterns, url
+from django.urls import path, re_path
+from django.conf.urls import patterns
 
 # This should contain urls related to Dashboards ONLY
 
@@ -9,10 +10,10 @@ d_params = "(?P<prd>\d+)/(?P<yr>\d+)"
 urlpatterns = patterns(
     'cpovc_dashboard.views',
     # Geo Settings
-    url(r'^constituency/(?P<area_id>\d+)/',
+    path('constituency/<int:area_id>/',
         'get_constituency', name='get_constituency'),
-    url(r'^ward/(?P<area_id>\d+)/', 'get_ward', name='get_ward'),
-    url(r'^lip/(?P<ip_id>\d+)/', 'get_lip', name='get_lip'),
-    url(r'^%s/%s/%s/' % (g_params, i_params, d_params), 'get_chart'),
+    path('ward/<int:area_id>/', 'get_ward', name='get_ward'),
+    path('lip/<int:ip_id>/', 'get_lip', name='get_lip'),
+    re_path(r'^%s/%s/%s/' % (g_params, i_params, d_params), 'get_chart'),
     # county_id, const_id, ward_id, ip, lip
 )
