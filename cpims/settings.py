@@ -51,7 +51,7 @@ INSTALLED_APPS = [
      'cpovc_help'
 ]
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -65,6 +65,17 @@ MIDDLEWARE_CLASSES = (
     'cpovc_auth.middleware.UserRestrictMiddleware',
     'cpovc_access.middleware.FailedLoginMiddleware',
 )
+
+# MIDDLEWARE = [
+#     'django.middleware.security.SecurityMiddleware',
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#     'social_django.middleware.SocialAuthExceptionMiddleware',   # Add
+# ]
 
 ROOT_URLCONF = 'cpims.urls'
 
@@ -87,6 +98,7 @@ TEMPLATES = [
     },
 ]
 
+# WSGI_APPLICATION = 'cpims.wsgi.application'
 WSGI_APPLICATION = 'cpims.wsgi.application'
 
 DATABASES = {
@@ -124,10 +136,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'reports')
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
 
-# AUTH_USER_MODEL = 'cpovc_auth.AppUser'
+AUTH_USER_MODEL = 'cpovc_auth.AppUser'
 
 AUTHENTICATION_BACKENDS = ('cpovc_auth.backends.CPOVCAuthenticationBackend',)
 # AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 ALLOW_NATIONAL_ID_LOGIN = True
 

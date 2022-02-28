@@ -24,6 +24,7 @@ from data_cleanup import urls as data_cleanup_urls
 from cpovc_offline_mode import urls as offline_mode_urls
 # from django.contrib.auth.views import (
 #     password_reset_done, password_change, password_change_done)
+from django.contrib.auth import views as auth_views
 from cpovc_auth.views import password_reset
 from django.views.generic import TemplateView
 from cpovc_dashboard import urls as dashboard_api_urls
@@ -92,13 +93,13 @@ urlpatterns = [
     re_path(r'^accounts/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
         cpovc_auth.views.reset_confirm, name='password_reset_confirm'),
     path('reset/', cpovc_auth.views.reset, name='reset'),
-    # path('accounts/password/change/', password_change,
-    #     {'post_change_redirect': '/accounts/password/change/done/',
-    #      'template_name': 'registration/password_change.html',
-    #      'password_change_form': StrictPasswordChangeForm},
-    #     name='password_change'),
-    # path('accounts/password/change/done/', password_change_done,
-    #     {'template_name': 'registration/password_change_done.html'}),
+    path('accounts/password/change/', auth_views.PasswordChangeView.as_view(),
+        {'post_change_redirect': '/accounts/password/change/done/',
+         'template_name': 'registration/password_change.html',
+         'password_change_form': StrictPasswordChangeForm},
+        name='password_change'),
+    path('accounts/password/change/done/', auth_views.PasswordResetDoneView.as_view(),
+        {'template_name': 'registration/password_change_done.html'}),
     re_path(r'^F57665A859FE7CFCDB6C8935196374AD\.txt$',
         TemplateView.as_view(template_name='comodo.txt',
                              content_type='text/plain')),

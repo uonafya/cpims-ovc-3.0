@@ -322,15 +322,18 @@ def access(request):
         raise e
 
 
-def handler_400(request):
+def handler_400(request, exception, template_name="400.html"):
     """Some default page for Bad request error page."""
+    # response = '/not-found'
+    # response.status_code = 400
+    # return render(request, response, template_name)
     try:
         return render(request, '400.html', {'status': 400})
     except Exception as e:
         raise e
 
 
-def handler_404(request):
+def handler_404(request, exception):
     """Some default page for the Page not Found."""
     try:
         return render(request, '404.html', {'status': 404})
