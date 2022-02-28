@@ -25,7 +25,7 @@ def settings_home(request):
     """Method to do pivot reports."""
     try:
         return render(request, 'settings/home.html', {'form': {}})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -51,7 +51,7 @@ def settings_reports(request):
                 report = [report_name, create_date, filename]
                 reports.append(report)
         return render(request, 'settings/reports.html', {'reports': reports})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -70,7 +70,7 @@ def archived_reports(request, file_name):
                 response['Content-Disposition'] = 'inline; filename=' + \
                     os.path.basename(file_path)
                 return response
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -87,7 +87,7 @@ def remove_reports(request, file_name):
             msg = "File named %s removed Successfully" % (file_name)
             messages.info(request, msg)
         return HttpResponseRedirect(reverse(settings_reports))
-    except Exception, e:
+    except Exception as e:
         msg = "COuld not remove %s: %s." % (file_name, str(e))
         messages.error(request, msg)
         return HttpResponseRedirect(reverse(settings_reports))
@@ -111,7 +111,7 @@ def settings_facilities(request):
         else:
             facilities = OVCFacility.objects.all().order_by('-id')[:1000]
         return render(request, 'settings/facilities.html', {'facilities': facilities})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -129,7 +129,7 @@ def settings_schools(request):
         else:
              schools = OVCSchool.objects.all().order_by('-id')[:1000]
         return render(request, 'settings/schools.html', {'schools': schools})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -145,7 +145,7 @@ def write_excel(data, csv_file, xlsx_file):
         df_new = pd.read_csv(csv_file)
         writer = pd.ExcelWriter(xlsx_file, engine='xlsxwriter')
         df_new.to_excel(writer, sheet_name='Sheet1', index=False)
-        # This is it       
+        # This is it
         workbook = writer.book
         workbook.add_worksheet('Sheet2')
         workbook.add_worksheet('Sheet3')
@@ -171,12 +171,12 @@ def qstorows(desc, rows):
             vals = []
             for n, i in enumerate(columns):
                 val = res[i]
-                if type(val) is unicode:
+                if type(val) is str:
                     val = val.encode('ascii', 'ignore').decode('ascii')
                 vals.append(val)
             data.append(vals)
     except Exception as e:
-        print 'error getting rows - %s' % (str(e))
+        print('error getting rows - %s' % (str(e)))
         return []
     else:
         return data
@@ -202,7 +202,7 @@ def settings_rawdata(request):
             is_admin = True if request.user.is_superuser else False
             is_allowed = True if filename.startswith(user_in) else is_admin
             if (filename.endswith(".xlsx") or filename.endswith(".xlsm") ) and is_allowed:
-                print filename
+                print(filename)
                 rname = os.path.join(directory, filename)
                 cdate = os.stat(rname)
                 (md, ino, dev, nnk, uid, gid, size, atm, mtime, ctime) = cdate
@@ -213,7 +213,7 @@ def settings_rawdata(request):
         if request.method == 'POST':
             form = SettingsForm(request.user, data=request.POST)
             params = get_variables(request)
-            print 'PARAMS', params
+            print('PARAMS', params)
             raw_data = request.POST.get('raw_data')
             org_unit = request.POST.get('org_unit')
             cluster = request.POST.get('cluster')
@@ -231,7 +231,7 @@ def settings_rawdata(request):
             csv_file_name = '%s/csv/%s' % (MEDIA_ROOT, csv_file)
             xlsx_file = '%s.xlsx' % (fname)
             final_sql = sql.format(**params)
-            print 'SQL', final_sql
+            print('SQL', final_sql)
             # rows = my_custom_sql(final_sql)
             rows, desc = run_sql_data(request, final_sql)
             # print '99999', desc
@@ -244,11 +244,11 @@ def settings_rawdata(request):
                 messages.info(request, msg)
             else:
                 msg = "Query returned 0 Results"
-                messages.error(request, msg)   
+                messages.error(request, msg)
         return render(request, 'settings/data.html',
                       {'reports': reports, 'form': form, 'results': results,
                        'file_name': file_name})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -262,7 +262,8 @@ def change_notes(request):
         return render(request, 'settings/changes.html',
                       {'term_title': 'Change Notes',
                        'term_detail': term_detail})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
+

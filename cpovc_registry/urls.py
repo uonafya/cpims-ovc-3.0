@@ -1,22 +1,26 @@
 """Registry section urls."""
 from django.urls import path
-from cpovc_registry.views import (home, register_new, register_details, register_edit, persons_search,
-                                  new_user, )
-
+# from cpovc_registry.views import (home, register_new, register_details, register_edit, persons_search,
+#                                   new_user, )
+from . import views
 # This should contain urls related to registry ONLY
 urlpatterns = [
-    'cpovc_registry.views',
-    path(f'^ou/$', home, name='registry'),
-    path(f'^ou/new/$', register_new, name='registry_new'),
-    path(f'^ou/view/(?P<org_id>\d+)/$', register_details,
+    # 'cpovc_registry.views',
+    path('ou/', views.home, name='registry'),
+    path('ou/new/', views.register_new, name='registry_new'),
+    path('ou/view/<int:pk>/', views.register_details,
         name='register_details'),
-    path(f'^ou/edit/(?P<org_id>\d+)/$', register_edit, name='registry_edit'),
-    path(f'^person/search/$', persons_search, name='search_persons'),
-    path(f'^person/user/(?P<id>\d+)/$', new_user, name='new_user'),
-    path(f'^person/$', person_actions, name='person_actions'),
-    path(f'^person/new/$', views.new_person, name='new_person'),
-    path(f'^person/edit/(?P<id>\d+)/$', edit_person, name='edit_person'),
-    path(f'^person/view/(?P<id>\d+)/$', view_person, name='view_person'),
-    path(f'^person/delete/<int:id>/', views.delete_person, name='delete_person'),
-    path(f'^lookup/$', views.registry_look, name='reg_lookup'), ]
+    path('ou/edit/<int:pk>/', views.register_edit, name='registry_edit'),
+    # path('ou/view/(?P<org_id>\d+)/', views.register_details,
+    #     name='register_details'),
+    # path('ou/edit/(?P<org_id>\d+)/', views.register_edit, name='registry_edit'),
+    path('person/search/', views.persons_search, name='search_persons'),
+    path('person/user/<int:pk>/', views.new_user, name='new_user'),
+    path('person/', views.person_actions, name='person_actions'),
+    path('person/new/', views.new_person, name='new_person'),
+    path('person/edit/<int:pk>/', views.edit_person, name='edit_person'),
+    path('person/view/<int:pk>/', views.view_person, name='view_person'),
+    path('person/delete/<int:id>/', views.delete_person, name='delete_person'),
+    # path('person/delete/<int:id>/', views.delete_person, name='delete_person'),
+    path('lookup/', views.registry_look, name='reg_lookup'), ]
 # {% url 'view_person' id=result.id %}

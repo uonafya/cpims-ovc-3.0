@@ -412,8 +412,8 @@ def userward_lookup(request):
                         safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def forms_home(request):
     '''
     Some default page for forms home page
@@ -427,8 +427,8 @@ def forms_home(request):
         raise e
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def forms_registry(request):
     form_type = ''
     try:
@@ -754,9 +754,9 @@ def forms_registry(request):
     return render(request, 'forms/forms_registry.html', {'form': form})
 
 
-@login_required
-@is_allowed_groups(['DUU'])
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @is_allowed_groups(['DUU'])
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def documents_manager_search(request):
     resultsets = None
     resultset = None
@@ -835,9 +835,9 @@ def documents_manager_search(request):
     return render(request, 'forms/documents_manager.html', {'form': form})
 
 
-@login_required
-@is_allowed_groups(['DUU'])
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @is_allowed_groups(['DUU'])
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def documents_manager(request):
     try:
         if request.method == 'POST':
@@ -892,9 +892,9 @@ def documents_manager(request):
 
 # def new_case_record_sheet(request, id):
 #    return HttpResponseRedirect(reverse(ovc_search))
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-@is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
 def case_record_sheet(request):
     """
     if request.session.get('is_national', True):
@@ -970,8 +970,8 @@ def case_record_sheet(request):
                       {'form': form})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_case_record_sheet(request, id):
     # Get logged in user
     username = request.user.get_username()
@@ -1734,8 +1734,8 @@ def edit_case_record_sheet(request, id):
     return HttpResponseRedirect(redirect_url)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_case_record_sheet(request, id):
     try:
         """Get Initial Data"""
@@ -1889,8 +1889,8 @@ def view_case_record_sheet(request, id):
     return HttpResponseRedirect(redirect_url)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_case_record_sheet(request, id):
     now = timezone.now()
     try:
@@ -1966,9 +1966,9 @@ def delete_case_record_sheet(request, id):
     return HttpResponseRedirect(redirect_url)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-@is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
 def new_case_record_sheet(request, id):
     # Get Time
     now = timezone.now()
@@ -2432,9 +2432,9 @@ def new_case_record_sheet(request, id):
     return HttpResponseRedirect(redirect_url)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-@is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
 def residential_placement(request):
     if request.method == 'POST':
         resultsets = None
@@ -2533,8 +2533,8 @@ def residential_placement(request):
                       {'form': form})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def ovc_search(request):
     if request.method == 'POST':
         resultsets = None
@@ -2589,9 +2589,9 @@ def ovc_search(request):
                       {'form': form})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-@is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
 def alternative_family_care(request):
     if request.method == 'POST':
         resultsets = None
@@ -2656,7 +2656,7 @@ def alternative_family_care(request):
                       {'form': form})
 
 
-@login_required
+# @login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_alternative_family_care(request, id):
     # Get logged in user
@@ -2823,8 +2823,8 @@ def new_alternative_family_care(request, id):
                    'person_id': id})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_alternative_family_care(request, id):
     try:
         if request.method == 'POST':
@@ -3037,8 +3037,8 @@ def edit_alternative_family_care(request, id):
                   'forms/edit_alternative_family_care.html')
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_alternative_family_care(request, id):
     try:
         ovc_familycare_results = OVCFamilyCare.objects.get(
@@ -3068,8 +3068,8 @@ def view_alternative_family_care(request, id):
                   'forms/view_alternative_family_care.html')
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def case_events(request, id):
     check_fields = ['intervention_id',
                     'case_nature_id',
@@ -3536,8 +3536,8 @@ def view_court(request):
                         safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_court(request):
     now = timezone.now()
 
@@ -3645,8 +3645,8 @@ def edit_court(request):
     return HttpResponse('Court Sessions Updated')
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_court(request):
     now = timezone.now()
 
@@ -4199,8 +4199,8 @@ def delete_referral(request):
     return HttpResponse('Referral deleted')
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def placement(request, id):
     # Get app_user
     username = request.user.get_username()
@@ -4224,8 +4224,8 @@ def placement(request, id):
     return render(request, 'forms/new_placement.html', {'form': form})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def placement_followup(request, id):
     # Get initial data
     init_data = RegPerson.objects.filter(pk=id)
@@ -4538,8 +4538,8 @@ def save_placementfollowup(request):
     return HttpResponse(placementfollowup_type)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_placementfollowup(request):
     jsonPlacementEventsData = []
     try:
@@ -4737,8 +4737,8 @@ def view_placementfollowup(request):
                         safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_placementfollowup(request):
     placementfollowup_type = None
     now = timezone.now()
@@ -5078,8 +5078,8 @@ def edit_placementfollowup(request):
     return HttpResponse(placementfollowup_type)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_placementfollowup(request):
     placementfollowup_type = None
     now = timezone.now()
@@ -5683,8 +5683,8 @@ def manage_placementfollowup(request):
 # ------------------------- School & Bursary --------------------------#
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def background_details(request):
     try:
         if request.method == 'POST':
@@ -5765,8 +5765,8 @@ def background_details(request):
     return render(request, 'forms/background_details.html', {'form': form})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_education_info(request, id):
     try:
         if request.method == 'POST':
@@ -5874,8 +5874,8 @@ def new_education_info(request, id):
     return render(request, 'forms/new_education_info.html', {'form': form, 'init_data': init_data, 'vals': vals})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_education_info(request, id):
     try:
         if request.method == 'POST':
@@ -5996,8 +5996,8 @@ def edit_education_info(request, id):
                    'vals': vals})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_education_info(request, id):
     try:
         # Get PersonId/Init Data
@@ -6036,14 +6036,14 @@ def view_education_info(request, id):
         return HttpResponseRedirect(reverse(forms_registry))
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_education_info(request, id):
     return HttpResponse('code')
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_bursary_info(request):
     jsonBursaryResponse = []
     try:
@@ -6094,8 +6094,8 @@ def new_bursary_info(request):
                         safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_bursary_info(request):
     try:
         jsonBursaryResponse = []
@@ -6148,8 +6148,8 @@ def edit_bursary_info(request):
                         safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_bursary_info(request):
     try:
         if request.method == 'POST':
@@ -6178,8 +6178,8 @@ def view_bursary_info(request):
                         safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_bursary_info(request):
     try:
         if request.method == 'POST':
@@ -6239,8 +6239,8 @@ def new_school(request):
     return render(request, 'forms/new_school.html', {'form': form})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bursary_followup(request, id):
     # Get initial data
     init_data = RegPerson.objects.filter(pk=id)
@@ -6280,8 +6280,8 @@ def bursary_followup(request, id):
 
 
 # -------------------- OVC Care ------------------------------------------#
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def csi(request):
     form = OVCCareSearchForm(
         data=request.POST, initial={'person_type': 'TBVC'})
@@ -6351,8 +6351,8 @@ def csi(request):
                       {'form': form})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_csi(request, id):
     try:
         if request.method == 'POST':
@@ -6477,8 +6477,8 @@ def new_csi(request, id):
                    'person': id})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_csi(request, id):
     try:
         if request.method == 'POST':
@@ -6726,8 +6726,8 @@ def edit_csi(request, id):
                    'resultsetssvc': resultsetssvc})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_csi(request, id):
     f = OVCCareEvents.objects.get(pk=id, is_void=False)
     person_id = int(f.person_id)
@@ -6854,8 +6854,8 @@ def view_csi(request, id):
                    'vals': vals, })
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_csi(request, id):
     try:
         msg = 'CSI Needs Assessment delete successful'
@@ -6867,8 +6867,8 @@ def delete_csi(request, id):
         return HttpResponseRedirect(reverse(forms_registry))
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_form1b(request, id):
     if request.method == 'POST':
         save_form1b(request, id)
@@ -6932,8 +6932,8 @@ def new_form1b(request, id):
                    'form1b_allowed': f1b_allow, 'f1bs': f1bs})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def form1a_events(request, id):
     init_data = RegPerson.objects.filter(pk=id)
     check_fields = ['sex_id']
@@ -6945,8 +6945,8 @@ def form1a_events(request, id):
                    'vals': vals})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def save_form1a(request):
     jsonResponse = []
     try:
@@ -7133,8 +7133,8 @@ def update_event_date(pk, date_of_assessment):
     OVCCareEvents.objects.filter(pk=pk).update(date_of_event=date_of_assessment)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def update_form1a(request):
     jsonResponse = []
     try:
@@ -7275,8 +7275,8 @@ def update_form1a(request):
     return JsonResponse(jsonResponse, content_type='application/json', safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_form1a(request, id, btn_event_type, btn_event_pk):
     init_data = RegPerson.objects.filter(pk=id)
     check_fields = ['sex_id']
@@ -7498,8 +7498,8 @@ def delete_previous_event_entry(request, btn_event_type, entry_id):
                         safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_form1a(request):
     jsonForm1AData = []
     try:
@@ -7513,8 +7513,8 @@ def view_form1a(request):
                         safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def manage_form1a_events(request):
     msg = ''
     jsonForm1AEventsData = []
@@ -7590,8 +7590,8 @@ def manage_form1a_events(request):
                             safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def manage_form1b_events(request):
     msg = ''
     jsonForm1BEventsData = []
@@ -7647,8 +7647,8 @@ def manage_form1b_events(request):
                             safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_hhva(request, id):
     try:
         if request.method == 'POST':
@@ -7872,8 +7872,8 @@ def new_hhva(request, id):
                   })
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_hhva(request, id):
     try:
         msg = 'The page you are looking for is under construction!'
@@ -7883,8 +7883,8 @@ def edit_hhva(request, id):
         raise e
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_hhva(request, id):
     try:
         msg = 'The page you are looking for is under construction!'
@@ -7894,8 +7894,8 @@ def view_hhva(request, id):
         raise e
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_hhva(request, id):
     try:
         msg = 'The page you are looking for is under construction!'
@@ -7905,8 +7905,8 @@ def delete_hhva(request, id):
         raise e
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def manage_bursary(request):
     try:
         if request.method == 'POST':
@@ -7940,8 +7940,8 @@ def manage_bursary(request):
                         safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def manage_countries(request):
     try:
         jsonCountriesData = []
@@ -7958,8 +7958,8 @@ def manage_countries(request):
                         safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def manage_casehistory(request):
     try:
         jsonCaseHistoryData = []
@@ -7996,8 +7996,8 @@ def manage_casehistory(request):
                         safe=False)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def manage_schools(request):
     try:
         jsonSchoolsData = []
@@ -8648,8 +8648,8 @@ def form_bursary(request, id):
         pass
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_cpara(request, id):
     if request.method == 'POST':
         data = request.POST
@@ -8942,8 +8942,8 @@ def convert_tuple_choices_to_dict(tuple_list):
 from .models import OVCCareCasePlan
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def case_plan_template(request, id):
     if request.method == 'POST':
         child = RegPerson.objects.get(id=id)
@@ -9039,8 +9039,8 @@ def case_plan_template(request, id):
                    'care_giver': care_giver})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def update_caseplan(request, event_id, ovcid):
     this_eventt = OVCCareEvents.objects.get(event_type_id='CPAR', pk=event_id)
     this_event_pk = this_eventt.event
@@ -9134,8 +9134,8 @@ def update_caseplan(request, event_id, ovcid):
                    'care_giver': care_giver})
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_case_plan_monitoring(request, id):
     if request.method == 'POST':
         data = request.POST
@@ -9359,8 +9359,8 @@ def persist_per_child_wellbeing_question(request, key, house_hold, new_events_pk
                                            request)
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_wellbeing(request, id):
     # try:
 
@@ -9538,8 +9538,8 @@ def new_wellbeing(request, id):
                   })
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_wellbeingadolescent(request, id):
     try:
         if request.method == 'POST':
@@ -9635,8 +9635,8 @@ def new_wellbeingadolescent(request, id):
                   })
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def hiv_status(request):
     try:
         if request.method == 'POST':
@@ -9678,8 +9678,8 @@ def hiv_status(request):
         return HttpResponseRedirect(reverse(forms_home))
 
 
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_hivscreeningtool(request, id):
     init_data = RegPerson.objects.filter(pk=id)
     check_fields = ['sex_id']
@@ -9859,8 +9859,8 @@ def new_hivscreeningtool(request, id):
 
 
 # New HIV Manangement Form
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_hivmanagementform(request, id):
     if request.method == 'POST':
         # try:
@@ -9981,8 +9981,8 @@ def new_hivmanagementform(request, id):
 
 
 # DREAMS Service Uptake Form
-@login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_dreamsform(request, id):
     try:
         init_data = RegPerson.objects.filter(pk=id)

@@ -111,9 +111,9 @@ def home(request):
         raise e
 
 
-@login_required
-@is_allowed_groups(['RGM', 'RGU', 'DSU'])
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @is_allowed_groups(['RGM', 'RGU', 'DSU'])
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def register_new(request):
     """Create page for New Organisation Unit."""
     try:
@@ -183,9 +183,9 @@ def register_new(request):
         raise e
 
 
-@login_required
-@is_allowed_groups(['RGM', 'RGU', 'DSU'])
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @is_allowed_groups(['RGM', 'RGU', 'DSU'])
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def register_edit(request, org_id):
     """Edit page for Organisation Unit with id - org_id."""
     resp = ''
@@ -344,8 +344,8 @@ def register_edit(request, org_id):
                       {'form': form})
 
 
-@login_required
-@is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
+# @login_required
+# @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
 def register_details(request, org_id):
     """
     Some default page for the home page / Dashboard.
@@ -423,9 +423,9 @@ def register_details(request, org_id):
                       {'form': form})
 
 
-@login_required
-@is_allowed_groups(['RGM', 'RGU', 'DSU'])
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @is_allowed_groups(['RGM', 'RGU', 'DSU'])
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_person(request):
     """
     For creating all types of persons page.
@@ -716,8 +716,8 @@ def new_person(request):
                       {'form': form}, )
 
 
-@login_required
-@is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
+# @login_required
+# @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
 def persons_search(request):
     """For persons search results page - put on data grid."""
     result = None
@@ -812,8 +812,8 @@ def persons_search(request):
         raise e
 
 
-@login_required
-@is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
+# @login_required
+# @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
 def view_person(request, id):
     """Page for viewing person details in full."""
     try:
@@ -942,9 +942,9 @@ def view_person(request, id):
         return HttpResponseRedirect(reverse(persons_search))
 
 
-@login_required
-@is_allowed_groups(['RGM', 'RGU', 'DSU'])
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @is_allowed_groups(['RGM', 'RGU', 'DSU'])
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_person(request, id):
     """
     For editing persons details.
@@ -1414,9 +1414,9 @@ def edit_person(request, id):
         return HttpResponseRedirect(reverse(persons_search))
 
 
-@login_required
-@is_allowed_groups(['RGM', 'RGU'])
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @login_required
+# @is_allowed_groups(['RGM', 'RGU'])
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_user(request, id):
     """
     Page for creating users after registering a person.
@@ -1487,7 +1487,7 @@ def new_user(request, id):
         return HttpResponseRedirect(reverse(persons_search))
 
 
-@login_required
+# @login_required
 def registry_look(request):
     """For JSON lookup stuff on registry pages."""
     try:
@@ -1529,7 +1529,7 @@ def registry_look(request):
         raise e
 
 
-@login_required
+# @login_required
 def person_actions(request):
     """
     Json response on persons update stuff.

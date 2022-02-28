@@ -29,7 +29,7 @@ from cpovc_registry.views import persons_search
 from cpovc_access.decorators import watch_login
 from cpovc_access.forms import StrictAuthenticationForm
 
-from django.contrib.auth.views import password_reset_confirm
+# from django.contrib.auth.views import password_reset_confirm
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.contrib.auth.tokens import default_token_generator
 from django.template.response import TemplateResponse
@@ -428,7 +428,8 @@ def roles_edit(request, user_id):
 
 def reset_confirm(request, uidb36=None, token=None):
     """Method for confirm password reset."""
-    return password_reset_confirm(
+    # return password_reset_confirm(
+    return render(
         request, template_name='registration/password_reset_confirm.html',
         uidb36=uidb36, token=token, post_reset_redirect=reverse(log_in))
 
