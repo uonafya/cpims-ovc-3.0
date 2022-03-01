@@ -25,7 +25,7 @@ from .functions import (
     get_sub_county_info, get_raw_data, create_year_list, get_totals,
     get_case_data, org_unit_tree, get_performance, get_performance_detail,
     get_pivot_data, get_pivot_ovc, get_variables, get_sql_data, write_xls,
-    csvxls_data, write_xlsm, get_cluster, edit_cluster, create_pepfar,get_viral_load_rpt_stats,
+    csvxls_data, write_xlsm, get_cluster, edit_cluster, create_pepfar, get_viral_load_rpt_stats,
     get_dashboard_summary)
 
 from cpovc_registry.models import RegOrgUnit
@@ -76,8 +76,9 @@ def reports_cpims(request, id):
                       {'form': form, 'status': 200, 'doc_id': doc_id,
                        'report_name': report_name, 'cyears': cyear_list,
                        'fyears': fyear_list})
-    except Exception, e:
+    except Exception as e:
         raise e
+
 
 
 def arrange_pending(mylist):
@@ -152,8 +153,8 @@ def reports_home(request):
                                 safe=False)
         return render(request, 'reports/reports_documents.html',
                       {'form': form, 'status': 200})
-    except Exception, e:
-        print 'Error writing report - %s' % (str(e))
+    except Exception as e:
+        print('Error writing report - %s' % (str(e)))
         raise e
 
 
@@ -180,7 +181,7 @@ def write_html(data, file_name, report_variables):
         html += '<tbody>%s' % (table_string)
         html += '</tbody></table>'
         return html
-    except Exception, e:
+    except Exception as e:
         raise e
 
 
@@ -217,8 +218,8 @@ def write_xlsx(data, file_name, params):
         ws.title = sheet_name
         xls_name = '%s/%s%s' % (MEDIA_ROOT, file_name, file_ext)
         wb.save(xls_name)
-    except Exception, e:
-        print "error writing excel - %s" % (str(e))
+    except Exception as e:
+        print("error writing excel - %s" % (str(e)))
         raise e
 
 
@@ -236,11 +237,11 @@ def write_csv(data, file_name, params):
         vba_file = '%s/%s/vbaProject.bin' % (DOC_ROOT, s_name)
         excel_file = ''
         if 'archive' in params:
-            print file_name
+            print(file_name)
             epoch_time = int(time.time())
             file_name = file_name.replace('tmp-', '')
             rnames = base64.urlsafe_b64decode(str(file_name))
-            print rnames
+            print(rnames)
             report_details = rnames.split('_')
             s_name = '%s.%s' % (report_details[0], epoch_time)
             uid = report_details[-1]
@@ -251,7 +252,7 @@ def write_csv(data, file_name, params):
 
             writer = pd.ExcelWriter(xlsx_file, engine='xlsxwriter')
             df_new.to_excel(writer, sheet_name='Sheet1', index=False)
-            # This is it       
+            # This is it
             workbook = writer.book
             xlsm_file = '%s/xlsx/%s.xlsm' % (MEDIA_ROOT, fname)
             workbook.add_worksheet('Sheet2')
@@ -262,8 +263,8 @@ def write_csv(data, file_name, params):
                 workbook.add_vba_project(vba_file)
             writer.save()
             writer.close()
-    except Exception, e:
-        print 'Error creating csv Results - %s' % (str(e))
+    except Exception as e:
+        print('Error creating csv Results - %s' % (str(e)))
         pass
     else:
         return excel_file
@@ -296,7 +297,7 @@ def write_pdf(data, file_name):
         elements.append(t)
         doc.build(elements, onFirstPage=draw_page, onLaterPages=draw_page)
 
-    except Exception, e:
+    except Exception as e:
         raise e
 
 
@@ -308,9 +309,9 @@ def get_viral_load_report(request):
         report_variables = get_variables(request)
         if request.method == 'POST':
             ext = request.POST.get('ext')
-        print ext
+        print(ext)
         report_ovc_id = int(report_variables['report_ovc'])
-        #report_name = report_variables['report_ovc_name']
+        # report_name = report_variables['report_ovc_name']
         report_name = 'Viral Load'
         start_date = report_variables['start_date']
         report_id = int(request.POST.get('rpt_ovc_id', 1))
@@ -318,13 +319,13 @@ def get_viral_load_report(request):
         if start_date > today:
             results = []
         else:
-            #results = get_pivot_ovc(request, report_variables)
-            results =get_viral_load_rpt_stats(get_variables(request))
+            # results = get_pivot_ovc(request, report_variables)
+            results = get_viral_load_rpt_stats(get_variables(request))
 
         fid = '%s_%s_%s' % (report_name, today, user_id)
         fid = fid.replace(':', '').replace(' ', '_')
         fid = base64.urlsafe_b64encode(fid)
-        titles = ['CPIMS ID', 'NAME','VIRAL LOAD','SUPPRESSION']
+        titles = ['CPIMS ID', 'NAME', 'VIRAL LOAD', 'SUPPRESSION']
         # if report_ovc_id == 6 and report_id == 5:
         #     titles = []
         # if report_ovc_id == 6 and (report_id == 12 or report_id == 8):
@@ -332,7 +333,7 @@ def get_viral_load_report(request):
         # if report_ovc_id == 6 and report_id == 14:
         #     titles = []
         data = [titles]
-        print 'Results count - ', len(results)
+        print('Results count - ', len(results))
         for res in results:
             vals = []
             for n, i in enumerate(titles):
@@ -363,11 +364,10 @@ def get_viral_load_report(request):
                  'status': status, 'message': message, 'xls': xlsm_name}
         return JsonResponse(datas, content_type='application/json',
                             safe=False)
-    except Exception, e:
-        print 'error getting raw data - %s' % (str(e))
+    except Exception as e:
+        print('error getting raw data - %s' % (str(e)))
         return JsonResponse([], content_type='application/json',
                             safe=False)
-
 
 
 @login_required
@@ -432,7 +432,7 @@ def reports_caseload(request):
             period_params = get_period(
                 report_type=report_type, year=year, month=month)
             report_variables = merge_two_dicts(variables, period_params)
-            print "CASE load params ", report_variables
+            print("CASE load params ", report_variables)
             # -----------------------------------------------
             ou_ids = org_unit_tree(report_unit)
             report_variables['org_unit_tree'] = ou_ids
@@ -526,8 +526,8 @@ def reports_caseload(request):
         return render(request, 'reports/case_load.html',
                       {'form': form, 'results': results,
                        'report': html})
-    except Exception, e:
-        print 'Case load report error - %s' % (str(e))
+    except Exception as e:
+        print('Case load report error - %s' % (str(e)))
         raise e
 
 
@@ -553,11 +553,11 @@ def get_interventions(data_itv, dval, bn, kl, itvs):
                 else:
                     itvs[knt].append(dts)
         # return itvs
-    except Exception, e:
-        print 'Error getting intervention', str(e)
-        pass
-
-
+    except Exception as e:
+        print('Error getting intervention', str(e))
+         pass 
+     
+     
 def get_caseload_summary(all_datas, categories):
     """Method to get all case load summary."""
     try:
@@ -579,11 +579,10 @@ def get_caseload_summary(all_datas, categories):
         perc_ints = get_interven_perc(sum_vals)
         sum_vals[4] = perc_ints
         return sum_vals
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting summary - %s' % (str(e))
-        print error
+        print(error)
         return {}
-
 
 def get_interven_perc(case_data):
     """Method to calculate percentage interventions."""
@@ -596,8 +595,8 @@ def get_interven_perc(case_data):
             interven = int(intervens[val])
             intp = interven * 100.0 / case if case > 0 else 0
             int_perc.append(round(intp, 1))
-    except Exception, e:
-        print 'Error calculating inteven percentage %s' % (str(e))
+    except Exception as e:
+        print ('Error calculating inteven percentage %s' % (str(e)))
         return []
     else:
         return int_perc
@@ -623,7 +622,7 @@ def reports_generate(request):
             report_variables = get_variables(request)
             # all_datas = get_data(report_variables)
             # all_data = all_datas['data']
-            print 'VRRRRRRRRRRRRRR', report_variables
+            print('VRRRRRRRRRRRRRR', report_variables)
             all_data, raw_data = get_raw_data(report_variables)
             if not raw_data:
                 results = {'status': 9, 'file_name': '',
@@ -649,7 +648,7 @@ def reports_generate(request):
             # Write the csv
             write_csv(raw_data, file_name, report_variables)
             # Write xlsx with macros
-            print ovc_type
+            print(ovc_type)
             results = {'status': 0, 'file_name': file_name, 'report': html,
                        'message': 'No data matching your query.'}
             return JsonResponse(results, content_type='application/json',
@@ -659,9 +658,9 @@ def reports_generate(request):
                        'message': 'Invalid request.'}
             return JsonResponse(results, content_type='application/json',
                                 safe=False)
-    except Exception, e:
-        print 'Error generating report - %s' % (str(e))
-        raise e
+    except Exception as e:
+        print('Error generating report - %s' % (str(e)))
+    raise e
 
 
 @login_required
@@ -700,8 +699,8 @@ def reports_download(request, file_name):
             filename_header = 'filename*=UTF-8\'\'%s' % urllib.quote(
                 file_name.encode('utf-8'))
         response['Content-Disposition'] = 'attachment; ' + filename_header
-    except Exception, e:
-        print "Error downloading file - %s" % (str(e))
+    except Exception as e:
+        print("Error downloading file - %s" % (str(e)))
         msg = 'Error downloading file. Please contact your administrator.'
         messages.info(request, msg)
         results, html, file_name = {}, None, None
@@ -798,7 +797,7 @@ def manage_reports(request):
                 vals[person.id] = '%s %s' % (sname, fname)
         return render(request, 'reports/reports_manage.html',
                       {'data': data, 'vals': vals, 'fusage': fusage})
-    except Exception, e:
+    except Exception as e:
         raise e
 
 
@@ -863,8 +862,8 @@ def manage_dashboard(request):
         return render(request, 'reports/reports_dashboard.html',
                       {'persons': persons, 'units': units,
                        'cases': cases})
-    except Exception, e:
-        print 'error - %s' % (str(e))
+    except Exception as e:
+        print('error - %s' % (str(e)))
         raise e
     else:
         pass
@@ -877,8 +876,8 @@ def clean_reports(report_id):
         file_name = '%s/%s' % (MEDIA_ROOT, fname)
         os.remove(file_name)
         return 0, 'File removed successfully.'
-    except Exception, e:
-        print "Delete error - %s" % (str(e))
+    except Exception as e:
+        print ("Delete error - %s" % (str(e)))
         return 99, 'File removal error. Please contact Administrator.'
 
 
@@ -888,7 +887,7 @@ def reports_pivot(request):
     try:
         form = CaseLoad(request.user)
         return render(request, 'reports/pivot.html', {'form': form})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -900,7 +899,7 @@ def reports_ovc_pivot(request):
     try:
         form = CaseLoad(request.user)
         return render(request, 'reports/pivot_datim.html', {'form': form})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -912,7 +911,7 @@ def reports_ovc_datim_mer_pivot(request):
     try:
         form = CaseLoad(request.user)
         return render(request, 'reports/pivot_datim_mer.html', {'form': form})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -923,7 +922,7 @@ def reports_ovc_datim_mer23_pivot(request):
     try:
         form = CaseLoad(request.user)
         return render(request, 'reports/pivot_datim_mer23.html', {'form': form})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -934,7 +933,7 @@ def reports_ovc_datim_mer24_pivot(request):
     try:
         form = CaseLoad(request.user)
         return render(request, 'reports/pivot_datim_mer24.html', {'form': form})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -945,7 +944,7 @@ def reports_ovc_datim_mer25_pivot(request):
     try:
         form = CaseLoad(request.user)
         return render(request, 'reports/pivot_datim_mer25.html', {'form': form})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -956,7 +955,7 @@ def reports_ovc_pepfar(request):
     try:
         form = CaseLoad(request.user)
         return render(request, 'reports/pivot_pepfar.html', {'form': form})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -968,7 +967,7 @@ def viral_load(request):
     try:
         form = CaseLoad(request.user)
         return render(request, 'reports/viral_load.html', {'form': form})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -979,7 +978,7 @@ def reports_ovc_kpi(request):
     try:
         form = CaseLoad(request.user)
         return render(request, 'reports/pivot_kpi.html', {'form': form})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -995,8 +994,8 @@ def reports_ovc_list(request):
             return JsonResponse(res, content_type='application/json',
                                 safe=False)
         return render(request, 'reports/pivot_listing.html', {'form': form})
-    except Exception, e:
-        print 'Error response - %s' % (str(e))
+    except Exception as e:
+        print ('Error response - %s' % (str(e)))
         raise e
     else:
         pass
@@ -1018,8 +1017,8 @@ def reports_rawdata(request):
                 'status': status, 'message': message}
         return JsonResponse(data, content_type='application/json',
                             safe=False)
-    except Exception, e:
-        print 'error getting raw data 2 - %s' % (str(e))
+    except Exception as e:
+        print ('error getting raw data 2 - %s' % (str(e)))
         return JsonResponse([], content_type='application/json',
                             safe=False)
 
@@ -1033,7 +1032,7 @@ def reports_ovc_rawdata(request):
         report_variables = get_variables(request)
         if request.method == 'POST':
             ext = request.POST.get('ext')
-        print ext
+        print (ext)
         report_ovc_id = int(report_variables['report_ovc'])
         report_name = report_variables['report_ovc_name']
         start_date = report_variables['start_date']
@@ -1051,10 +1050,10 @@ def reports_ovc_rawdata(request):
         if results:
             for res in results[0]:
                 titles.append(res)
-        print 'RID', report_ovc_id, report_id
+        print ('RID', report_ovc_id, report_id)
         columns = [col.lower() for col in titles]
         data = [columns]
-        print 'Results count - ', len(results)
+        print ('Results count - ', len(results))
         for res in results:
             vals = []
             for n, i in enumerate(titles):
@@ -1080,11 +1079,11 @@ def reports_ovc_rawdata(request):
             '''
         datas = {'file_name': fid, 'data': results,
                  'status': status, 'message': message, 'xls': xls_name}
-        print 'Results', message
-        return JsonResponse(datas, content_type='application/json',
+        print('Results', message)
+        return JsonResponse (datas, content_type='application/json',
                             safe=False)
-    except Exception, e:
-        print 'error getting raw data - %s' % (str(e))
+    except Exception as e:
+        print ('error getting raw data - %s' % (str(e)))
         return JsonResponse([], content_type='application/json',
                             safe=False)
 
@@ -1099,7 +1098,7 @@ def reports_ovc(request, id):
         return render(request, 'reports/pivot_ovc.html',
                       {'form': form, 'name': name,
                        'report_id': rpt_id})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -1111,7 +1110,7 @@ def reports_ovc_download(request):
     dates = today.strftime('%d%m%Y')
     f = request.GET.get('f')
     rnames = base64.urlsafe_b64decode(str(f))
-    print rnames
+    print (rnames)
     s_name = rnames.split('_')[0]
     file_name = "REGISTRATIONReport_%s" % (dates)
     mc_name = "%s.xlsx" % (file_name)
@@ -1175,18 +1174,18 @@ def dashboard_details(request):
         ous = request.session.get('ou_attached', False)
         report_id = request.GET.get('report_id', 0)
         rid = int(report_id) if report_id else 0
-        print 'OUs', ous
+        print('OUs', ous)
         if rid > 10:
             # This is for GoK
             datas = get_dashboard_summary(request, rid)
-        else:
-            # This is for USG
-            datas = get_dashboard_summary(request, rid, 1)
+    else:
+         # This is for USG
+        datas = get_dashboard_summary(request, rid, 1)
         results = {"data": datas}
-        return JsonResponse(results, content_type='application/json',
-                            safe=False)
+        return JsonResponse (results, content_type='application/json',
+                            safe=False
     except Exception as e:
-        print 'Error getting dasboard details - %s' % (str(e))
+        print ('Error getting dasboard details - %s' % (str)(e))
         return JsonResponse({}, content_type='application/json',
                             safe=False)
     else:
@@ -1206,8 +1205,8 @@ def raw_data(request):
         zf.write(os.path.join(dirname, filename))
         zf.close()
     except Exception as e:
-        print 'Error getting Raw data - %s' % (str(e))
-        return 0
+        print ('Error getting Raw data - %s' % (str(e))
+   )     return 0
     else:
         return res
 
@@ -1240,8 +1239,8 @@ def reports_bursary(request):
             return JsonResponse(results, content_type='application/json',
                                 safe=False)
         return render(request, 'reports/bursary.html', {'form': form})
-    except Exception, e:
-        print 'error on bursary report - %s' % (str(e))
-        raise e
+    except Exception as e:
+        print ('error on bursary report - %s' % (str(e))
+  )      raise e
     else:
         pass
