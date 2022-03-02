@@ -34,7 +34,7 @@ def dump_to_csv(modeladmin, request, qs):
             val = getattr(obj, field)
             if callable(val):
                 val = val()
-            if type(val) == str():
+            if type(val) == unicode:
                 val = val.encode("utf-8")
             row.append(val)
         writer.writerow(row)
