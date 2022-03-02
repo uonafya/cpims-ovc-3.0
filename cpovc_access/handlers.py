@@ -6,7 +6,7 @@ from django.utils.module_loading import import_string
 from django.core.exceptions import ValidationError
 from django.db import transaction
 
-# from cpovc_access.models import PasswordChange, LoginAttempt
+from cpovc_access.models import PasswordChange, LoginAttempt
 
 logger = logging.getLogger(__name__)
 

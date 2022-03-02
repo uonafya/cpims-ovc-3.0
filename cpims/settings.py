@@ -20,7 +20,7 @@ cpims_db_pass = os.environ.get('CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWO
 cpims_db_instance = os.environ.get('CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims2'
 cpims_db_port = os.environ.get('CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5432'
 cpims_db_user = os.environ.get('CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'bowen2'
-cpims_debug = eval(os.environ.get('CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else True
+cpims_debug = eval(os.environ.get('CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else False
 
 DEBUG = cpims_debug
 
@@ -36,13 +36,14 @@ INSTALLED_APPS = [
     'cpovc_main',
     'cpovc_forms',
     'cpovc_gis',
-     'cpovc_access',
+    'cpovc_access',
     'cpovc_settings',
     'crispy_forms',
     'cpovc_ovc',
     'import_export',
     'rest_framework',
     'data_cleanup',
+    'cpovc_offline_mode',
      # forums,
     # 'adminsortable',
     # 'simple_forums',
@@ -51,31 +52,30 @@ INSTALLED_APPS = [
      'cpovc_help'
 ]
 
-MIDDLEWARE = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'cpovc_access.middleware.AuthenticationPolicyMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    #'cpovc_main.middleware.SqlPrintingMiddleware',
-    'cpovc_auth.middleware.UserRestrictMiddleware',
-    'cpovc_access.middleware.FailedLoginMiddleware',
-)
-
-# MIDDLEWARE = [
-#     'django.middleware.security.SecurityMiddleware',
+# MIDDLEWARE = (
 #     'django.contrib.sessions.middleware.SessionMiddleware',
 #     'django.middleware.common.CommonMiddleware',
 #     'django.middleware.csrf.CsrfViewMiddleware',
 #     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+#     # 'cpovc_access.middleware.AuthenticationPolicyMiddleware',
 #     'django.contrib.messages.middleware.MessageMiddleware',
 #     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-#     'social_django.middleware.SocialAuthExceptionMiddleware',   # Add
-# ]
+#     'django.middleware.security.SecurityMiddleware',
+#     #'cpovc_main.middleware.SqlPrintingMiddleware',
+#     'cpovc_auth.middleware.UserRestrictMiddleware',
+#     # 'cpovc_access.middleware.FailedLoginMiddleware',
+# )
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
 
 ROOT_URLCONF = 'cpims.urls'
 
@@ -100,6 +100,13 @@ TEMPLATES = [
 
 # WSGI_APPLICATION = 'cpims.wsgi.application'
 WSGI_APPLICATION = 'cpims.wsgi.application'
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 DATABASES = {
     'default': {

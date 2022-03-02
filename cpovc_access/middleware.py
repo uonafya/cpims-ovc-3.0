@@ -126,8 +126,7 @@ class AuthenticationPolicyMiddleware(object):
         # To prevent logout at password change views call the
         # `update_password` function in that view
         # Ignore non 2xx responses (e.g. redirects).
-        if (response.status_code >= 200 and
-                response.status_code < 300 and
+        if (200 <= response.status_code < 300 and
                 LOGOUT_AFTER_PASSWORD_CHANGE and
                 password_changed(request.session, request.user)):
             # Update password change time

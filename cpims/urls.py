@@ -34,7 +34,7 @@ from cpovc_access.forms import StrictPasswordChangeForm
 urlpatterns = [
     path('admin/', admin.site.urls),  # Keep
     # path('admin/', include(admin.site.urls), name='admin'),
-    # url(r'^$', cpovc_auth.views.log_in, name='home'),
+    re_path(r'^$', cpovc_auth.views.log_in, name='home'),
     path('public_dashboard/registration/', views.public_dashboard_reg, name='public_dashboard_reg'),
     path('public_dashboard/hivstat/', views.public_dashboard_hivstat, name='public_dashboard_hivstat'),
     path('public_dashboard/served/', views.public_dashboard_served, name='public_dashboard_served'),

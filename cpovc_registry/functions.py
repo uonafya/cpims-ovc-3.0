@@ -124,7 +124,7 @@ def fetch_new_ovcregs_by_period(request, level, area_id, funding_partner, fundin
                        '''.format(
             period_span, currentYear, yr)
 
-    elif (currentMonth is not 10 and period_typ == 'annual'):
+    elif (currentMonth != 10 and period_typ == 'annual'):
         yr = currentYear - 1
         period_span = str(yr) + '/' + str(currentYear)
         base_sql = '''    
@@ -270,7 +270,7 @@ def fetch_exited_ovcs_by_period(request, level, area_id, funding_partner, fundin
                                  '''.format(
             period_span, currentYear, yr)
 
-    elif (currentMonth is not 10 and period_typ == 'annual'):
+    elif (currentMonth != 10 and period_typ == 'annual'):
         yr = currentYear - 1
         period_span = str(yr) + '/' + str(currentYear)
         base_sql = '''    
@@ -430,7 +430,7 @@ def fetch_exited_hsehlds_by_period(request, level, area_id, funding_partner, fun
                                      '''.format(
             period_span, currentYear, yr)
 
-    elif (currentMonth is not 10 and period_typ == 'annual'):
+    elif (currentMonth != 10 and period_typ == 'annual'):
         yr = currentYear - 1
         period_span = str(yr) + '/' + str(currentYear)
         base_sql = '''    
@@ -1026,7 +1026,7 @@ def _get_ovc_served_stats(level='national', area_id='', funding_partner='', fund
                 select sum(ovccount) as cboactive ,'{}' as time_period,gender,numberofservices
                  from vw_ovc_services_served where date_of_event between 'oct-01-{}' and 'Sept-30-{}'    '''.format(
             period_span, currentYear, yr)
-    elif (currentMonth is not 10 and period_typ == 'annual'):
+    elif (currentMonth != 10 and period_typ == 'annual'):
         yr = currentYear - 1
         period_span = 'APR ' + str(yr) + '/' + str(currentYear)
         base_sql = '''    
@@ -2746,6 +2746,7 @@ def get_all_geo_list(filters=False):
         raise e
     else:
         return geo_lists
+
 
 
 def get_geo_list(geo_lists, geo_filter, add_select=False, user_filter=[]):
