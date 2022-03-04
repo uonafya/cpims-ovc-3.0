@@ -45,7 +45,7 @@ def home(request):
         raise e
 
 
-@watch_login
+# @watch_login
 def log_in(request):
     """Method to handle log in to system."""
     try:

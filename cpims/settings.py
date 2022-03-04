@@ -20,7 +20,7 @@ cpims_db_pass = os.environ.get('CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWO
 cpims_db_instance = os.environ.get('CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims2'
 cpims_db_port = os.environ.get('CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5432'
 cpims_db_user = os.environ.get('CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'bowen2'
-cpims_debug = eval(os.environ.get('CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else False
+cpims_debug = eval(os.environ.get('CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else True
 
 DEBUG = cpims_debug
 
@@ -31,9 +31,9 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cpovc_main',
     'cpovc_auth',
     'cpovc_registry',
-    'cpovc_main',
     'cpovc_forms',
     'cpovc_gis',
     'cpovc_access',
@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     # 'simple_forums',
      'cpovc_manage',
      'notifications',
-     'cpovc_help'
+     'cpovc_help',
 ]
 
 # MIDDLEWARE = (
@@ -75,6 +75,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'cpovc_access.middleware.AuthenticationPolicyMiddleware',
+    # 'cpovc_auth.middleware.UserRestrictMiddleware',
+    # 'cpovc_access.middleware.FailedLoginMiddleware',
+
 ]
 
 ROOT_URLCONF = 'cpims.urls'
@@ -98,8 +102,8 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'cpims.wsgi.application'
 WSGI_APPLICATION = 'cpims.wsgi.application'
+
 
 # DATABASES = {
 #     'default': {
@@ -145,7 +149,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
 
 AUTH_USER_MODEL = 'cpovc_auth.AppUser'
 
-AUTHENTICATION_BACKENDS = ('cpovc_auth.backends.CPOVCAuthenticationBackend',)
+AUTHENTICATION_BACKENDS = ['cpovc_auth.backends.CPOVCAuthenticationBackend']
 # AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

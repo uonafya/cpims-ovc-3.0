@@ -7,13 +7,13 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-# from cpovc_access import signals
-# from cpovc_access import BasePolicy
+from cpovc_access import signals
+from cpovc_access import BasePolicy
 
 logger = logging.getLogger(__name__)
 
 
-class AuthenticationPolicy():
+class AuthenticationPolicy(BasePolicy):
     """Checks run when authenticating.
 
     Policies can define:
@@ -102,7 +102,7 @@ class AuthenticationDisableExpiredUsers(AuthenticationPolicy):
 
         for user in expired:
             logger.info(u'User %s disabled because last login was at %s',
-                        unicode(user), user.last_login)
+                        str(user), user.last_login)
             # Send signal to be used to alert admins
             signals.user_expired.send(sender=user, user=user)
 

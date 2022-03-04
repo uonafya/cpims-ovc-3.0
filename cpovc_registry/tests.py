@@ -1,3 +1,22 @@
+from django.test import TestCase
+from cpovc_registry.models import RegOrgUnit
+
+class GreatTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        RegOrgUnit.objects.create(org_unit_id_vis='Big', org_unit_name='Bob')
+
+
+    def test_common_access(self):
+        """Animals that can speak are correctly identified"""
+        # Big = CommonAccess.objects.get(name="lion")
+        # Small = CommonAccess.objects.get(name="cat")
+        comm = RegOrgUnit.objects.get(id=1)
+        field_label = comm._meta.get_field('org_unit_name').verbose_name
+        self.assertEqual(field_label, 'org unit name')
+
+
+
 # import json
 # from django.test import TestCase
 # from django.urls import reverse, resolve

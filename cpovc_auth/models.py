@@ -12,7 +12,6 @@ from django.dispatch import receiver
 class CPOVCUserManager(BaseUserManager):
 
     def create_user(self, username, reg_person, password=None):
-
         from cpovc_registry.models import RegPerson
         if not username:
             raise ValueError('The given username must be set')
@@ -45,7 +44,8 @@ class CPOVCUserManager(BaseUserManager):
 
 
 class AppUser(AbstractBaseUser, PermissionsMixin):
-    reg_person = models.OneToOneField('cpovc_registry.RegPerson', on_delete=models.CASCADE, null=False)
+    # changed the onetoone to foreignKey
+    reg_person = models.ForeignKey(to='cpovc_registry.RegPerson', on_delete=models.CASCADE, null=False)
     role = models.CharField(max_length=20, unique=False, default='Public')
     username = models.CharField(max_length=20, unique=True)
     is_staff = models.BooleanField(default=False)
@@ -156,8 +156,8 @@ class CPOVCUserRoleGeoOrg(models.Model):
     # from cpovc_registry.models import RegPersonsGeo, RegOrgUnit
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     group = models.ForeignKey(CPOVCRole, on_delete=models.CASCADE)
-    org_unit = models.ForeignKey('cpovc_registry.RegOrgUnit',on_delete=models.CASCADE, null=True)
-    area = models.ForeignKey('cpovc_main.SetupGeography',on_delete=models.CASCADE, null=True)
+    org_unit = models.ForeignKey('cpovc_registry.RegOrgUnit', on_delete=models.CASCADE, null=True)
+    area = models.ForeignKey('cpovc_main.SetupGeography', on_delete=models.CASCADE, null=True)
     timestamp_modified = models.DateTimeField(default=timezone.now)
     is_void = models.BooleanField(default=False)
 

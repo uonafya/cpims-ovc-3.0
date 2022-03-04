@@ -47,7 +47,7 @@ def fetch_total_ovc_ever(request, org_ids, level='', area_id=''):
             row = cursor.fetchone()
             total_ovc_ever.append(row[0])
         except Exception as e:
-            print('error on fetch_total_ovc_ever - {}'.foramt(str(e)))
+            print('error on fetch_total_ovc_ever - {}'.format(str(e)))
     return total_ovc_ever
 
 
@@ -2755,6 +2755,7 @@ def get_geo_list(geo_lists, geo_filter, add_select=False, user_filter=[]):
     if add_select:
         area_detail[''] = 'Please Select'
     try:
+
         if geo_lists:
             for i, geo_list in enumerate(geo_lists):
                 area_id = geo_list['area_id']
@@ -2766,7 +2767,8 @@ def get_geo_list(geo_lists, geo_filter, add_select=False, user_filter=[]):
                             area_detail[area_id] = area_name
                     else:
                         area_detail[area_id] = area_name
-            result = area_detail.items()
+                        result = area_detail.items()
+
     except Exception as e:
         raise e
     else:

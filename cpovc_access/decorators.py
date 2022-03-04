@@ -19,8 +19,8 @@ from cpovc_access.signals import user_locked_out
 import cpovc_access
 from django.utils import six
 
-
 PRIVATE_IPS_PREFIX = ('10.', '172.', '192.', '127.')
+
 
 try:
     from django.contrib.auth import get_user_model
@@ -116,7 +116,7 @@ def get_ip_address_from_request(request):
     real IP or return the loopback.
     """
     ip_address = ''
-    x_forwarded_for = request.headers.get('X-Forwarded-For', '')
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR', '')
     if x_forwarded_for and ',' not in x_forwarded_for:
         private_ip = x_forwarded_for.startswith(PRIVATE_IPS_PREFIX)
         if not private_ip and is_valid_ip(x_forwarded_for):
@@ -132,7 +132,7 @@ def get_ip_address_from_request(request):
                 ip_address = ip
                 break
     if not ip_address:
-        x_real_ip = request.headers.get('X-Real-Ip', '')
+        x_real_ip = request.META.get('HTTP_X_REAL_IP', '')
         if x_real_ip:
             private_pref = x_real_ip.startswith(PRIVATE_IPS_PREFIX)
             if not private_pref and is_valid_ip(x_real_ip):
@@ -259,7 +259,7 @@ def _get_user_attempts(request):
     username = request.POST.get(USERNAME_FORM_FIELD, None)
 
     if USE_USER_AGENT:
-        ua = request.headers.get('User-Agent', '<unknown>')[:255]
+        ua = request.META.get('HTTP_USER_AGENT', '<unknown>')[:255]
         attempts = AccessAttempt.objects.filter(
             user_agent=ua, ip_address=ip, username=username, trusted=True
         )
@@ -349,11 +349,11 @@ def watch_login(func):
             )
 
             AccessLog.objects.create(
-                user_agent=request.headers.get(
-                    'User-Agent', '<unknown>')[:255],
+                user_agent=request.META.get(
+                    'HTTP_USER_AGENT', '<unknown>')[:255],
                 ip_address=get_ip(request),
                 username=request.POST.get(USERNAME_FORM_FIELD, None),
-                http_accept=request.headers.get('Accept', '<unknown>'),
+                http_accept=request.META.get('HTTP_ACCEPT', '<unknown>'),
                 path_info=request.META.get('PATH_INFO', '<unknown>'),
                 trusted=not login_unsuccessful,
             )
@@ -375,8 +375,7 @@ def lockout_response(request):
             'failure_limit': FAILURE_LIMIT,
             'username': request.POST.get(USERNAME_FORM_FIELD, '')
         }
-        return render(request, LOCKOUT_TEMPLATE, context,
-                                  context_instance=RequestContext(request))
+        return render(LOCKOUT_TEMPLATE, context)
 
     lockout_url = get_lockout_url()
     if lockout_url:
@@ -437,8 +436,8 @@ def check_request(request, login_unsuccessful):
                     attempt.post_data,
                     query2str(request.POST.items())
                 )
-                attempt.http_accept = request.headers.get(
-                    'Accept', '<unknown>')
+                attempt.http_accept = request.META.get(
+                    'HTTP_ACCEPT', '<unknown>')
                 attempt.path_info = request.META.get('PATH_INFO', '<unknown>')
                 attempt.failures_since_start = failures
                 attempt.attempt_time = datetime.now()
@@ -490,7 +489,7 @@ def check_request(request, login_unsuccessful):
 def create_new_failure_records(request, failures):
     """Create new failure records."""
     ip = get_ip(request)
-    ua = request.headers.get('User-Agent', '<unknown>')[:255]
+    ua = request.META.get('HTTP_USER_AGENT', '<unknown>')[:255]
     username = request.POST.get(USERNAME_FORM_FIELD, None)
 
     params = {
@@ -499,7 +498,7 @@ def create_new_failure_records(request, failures):
         'username': username,
         'get_data': query2str(request.GET.items()),
         'post_data': query2str(request.POST.items()),
-        'http_accept': request.headers.get('Accept', '<unknown>'),
+        'http_accept': request.META.get('HTTP_ACCEPT', '<unknown>'),
         'path_info': request.META.get('PATH_INFO', '<unknown>'),
         'failures_since_start': failures,
     }
@@ -512,7 +511,7 @@ def create_new_failure_records(request, failures):
 def create_new_trusted_record(request):
     """Create new trusted record."""
     ip = get_ip(request)
-    ua = request.headers.get('User-Agent', '<unknown>')[:255]
+    ua = request.META.get('HTTP_USER_AGENT', '<unknown>')[:255]
     username = request.POST.get(USERNAME_FORM_FIELD, None)
 
     if not username:
@@ -524,7 +523,7 @@ def create_new_trusted_record(request):
         username=username,
         get_data=query2str(request.GET.items()),
         post_data=query2str(request.POST.items()),
-        http_accept=request.headers.get('Accept', '<unknown>'),
+        http_accept=request.META.get('HTTP_ACCEPT', '<unknown>'),
         path_info=request.META.get('PATH_INFO', '<unknown>'),
         failures_since_start=0,
         trusted=True

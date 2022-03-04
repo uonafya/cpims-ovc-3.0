@@ -1,5 +1,5 @@
 from cpovc_registry.models import RegPersonsOrgUnits
-# from cpovc_auth.models import AppUser
+from cpovc_auth.models import AppUser
 from notifications.signals import notify
 
 

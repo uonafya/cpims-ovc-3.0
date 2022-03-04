@@ -67,7 +67,7 @@ urlpatterns = [
     re_path(r'^get_ovc_served_stats/(?P<org_level>\w+)/(?P<area_id>.*)/(?P<funding_partner>.*)/(?P<funding_part_id>.*)/(?P<period_type>.*)/', views.get_ovc_served_stats, name='get_ovc_served_stats'),
     # endAPIs
     path('', views.home, name='home'),
-    # url(r'^home/$', views.home, name='home'),
+# url(r'^home/$', views.home, name='home'),
     path('accounts/request/', views.access, name='access'),
     path('accounts/terms/<int:id>/', cpovc_access.views.terms,
         name='terms'),

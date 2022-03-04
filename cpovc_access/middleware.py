@@ -22,18 +22,19 @@ from cpovc_access.settings import (
 logger = logging.getLogger(__name__)
 
 
-class FailedLoginMiddleware(object):
+class FailedLoginMiddleware:
     """Handle failed logins."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, get_response):
         """Handle failure constructor."""
-        super(FailedLoginMiddleware, self).__init__(*args, **kwargs)
+        self.get_response = get_response
+        super(FailedLoginMiddleware, self)
 
         # watch the auth login
         auth_views.login = watch_login(auth_views.login)
 
 
-class ViewDecoratorMiddleware(object):
+class ViewDecoratorMiddleware:
     """
     When this middleware is installed, by default it watches.
 
@@ -61,7 +62,7 @@ class ViewDecoratorMiddleware(object):
         return None
 
 
-class AuthenticationPolicyMiddleware(object):
+class AuthenticationPolicyMiddleware:
     """This middleware enforces the following policy.
 
     - Change of password when password has expired;

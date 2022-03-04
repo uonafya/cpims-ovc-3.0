@@ -20,7 +20,7 @@ MEDIA_ROOT = settings.MEDIA_ROOT
 
 
 # Create your views here.
-@login_required
+# @login_required
 def settings_home(request):
     """Method to do pivot reports."""
     try:
@@ -31,7 +31,7 @@ def settings_home(request):
         pass
 
 
-@login_required
+# @login_required
 def settings_reports(request):
     """Method to do pivot reports."""
     # mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime
@@ -57,7 +57,7 @@ def settings_reports(request):
         pass
 
 
-@login_required
+# @login_required
 def archived_reports(request, file_name):
     """Method to do pivot reports."""
     try:
@@ -76,7 +76,7 @@ def archived_reports(request, file_name):
         pass
 
 
-@login_required
+# @login_required
 def remove_reports(request, file_name):
     """Method to do pivot reports."""
     try:
@@ -95,7 +95,7 @@ def remove_reports(request, file_name):
         pass
 
 
-@login_required
+# @login_required
 def settings_facilities(request):
     """Method to do pivot reports."""
     # mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime
@@ -117,7 +117,7 @@ def settings_facilities(request):
         pass
 
 
-@login_required
+# @login_required
 def settings_schools(request):
     """Method to do pivot reports."""
     # mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime
@@ -182,7 +182,7 @@ def qstorows(desc, rows):
         return data
 
 
-@login_required
+# @login_required
 def settings_rawdata(request):
     """Method to do pivot reports."""
     # mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime

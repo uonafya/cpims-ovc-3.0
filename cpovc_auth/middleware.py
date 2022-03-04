@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.cache import cache
 
 
-class UserRestrictMiddleware(object):
+class UserRestrictMiddleware:
     """Restrict Multiple logins."""
 
     def process_request(self, request):

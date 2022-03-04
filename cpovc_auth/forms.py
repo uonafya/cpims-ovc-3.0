@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.template import loader
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-# from .models import AppUser
+from .models import AppUser
 
 
 class RegistrationForm(forms.Form):

@@ -7,7 +7,7 @@ from cpovc_registry.models import (
     RegPersonsAuditTrail, RegOrgUnitsAuditTrail, RegPersonsGeo,
     RegPersonsOrgUnits, RegOrgUnit, RegPerson)
 from cpovc_ovc.models import OVCRegistration
-# from .models import AppUser
+from .models import AppUser
 from .perms import PERM
 
 ORG_GROUPS = ['DEC', 'DSU', 'DUU', 'RGU']

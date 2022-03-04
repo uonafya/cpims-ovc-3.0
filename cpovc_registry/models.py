@@ -6,7 +6,9 @@ from django.db import models
 from django.utils import timezone
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+# from cpovc_main.models import SetupGeography
 from cpovc_auth.models import AppUser
+
 
 
 class RegOrgUnit(models.Model):
@@ -91,7 +93,7 @@ class RegOrgUnitGeography(models.Model):
     """Model for Organisational units Geography."""
 
     org_unit = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
-    area = models.ForeignKey('cpovc_main.SetupGeography', on_delete=models.CASCADE)
+    area = models.ForeignKey(to='cpovc_main.SetupGeography', on_delete=models.CASCADE)
     date_linked = models.DateField(null=True)
     date_delinked = models.DateField(null=True)
     is_void = models.BooleanField(default=False)
@@ -289,9 +291,9 @@ class RegPersonsTypes(models.Model):
 class RegPersonsGeo(models.Model):
     """Model for Persons Geography."""
 
-    from cpovc_main.models import SetupGeography
+    # from cpovc_main.models import SetupGeography
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    area = models.ForeignKey(SetupGeography, on_delete=models.CASCADE)
+    area = models.ForeignKey(to='cpovc_main.SetupGeography', on_delete=models.CASCADE)
     area_type = models.CharField(max_length=4)
     date_linked = models.DateField(null=True)
     date_delinked = models.DateField(null=True)
@@ -332,7 +334,7 @@ class RegPersonsExternalIds(models.Model):
 class RegPersonsContact(models.Model):
     """Model for Persons contacts."""
 
-    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE,)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, )
     contact_detail_type_id = models.CharField(max_length=4)
     contact_detail = models.CharField(max_length=255)
     is_void = models.BooleanField(default=False)
@@ -423,7 +425,7 @@ class RegPersonsAuditTrail(models.Model):
     person_recorded_paper = models.ForeignKey(
         RegPerson, on_delete=models.CASCADE, related_name='person_recorded_paper', null=True)
     timestamp_modified = models.DateTimeField(auto_now=True)
-    app_user = models.ForeignKey(AppUser , on_delete=models.CASCADE)
+    app_user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     ip_address = models.GenericIPAddressField(protocol='both')
     meta_data = models.TextField(null=True)
 

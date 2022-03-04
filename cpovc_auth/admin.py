@@ -2,6 +2,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
+from .models import AppUser
 
 
 class MyUserAdmin(UserAdmin):
@@ -11,7 +12,7 @@ class MyUserAdmin(UserAdmin):
     This is for handling Django admin create user.
     """
 
-    # model = AppUser
+    model = AppUser
 
 
     list_display = ['username', 'sex', 'surname', 'first_name', 'last_name',
