@@ -6,7 +6,7 @@ import time
 import string
 import calendar
 import collections
-import pandas as pd
+import pandas #Simply dont use as pd alias
 from django.db import connection
 from django.db import connections
 from datetime import datetime, timedelta, date
