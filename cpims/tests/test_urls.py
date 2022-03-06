@@ -2,7 +2,7 @@ from django.test import SimpleTestCase
 from django.urls import reverse, resolve
 from cpims.views import public_dashboard_reg, public_dashboard_hivstat, public_dashboard_served, \
     public_dash, get_locality_data, get_pub_data, get_ovc_hiv_status, get_hiv_suppression_data, \
-    get_ovc_active_hiv_status, get_total_ovc_ever
+    get_ovc_active_hiv_status, get_total_ovc_ever, fetch_cbo_list
 
 
 class URLTests(SimpleTestCase):
@@ -54,3 +54,20 @@ class URLTests(SimpleTestCase):
     def test_get_total_w_bcert_2date_is_resolves(self):
         url = reverse('get_total_w_bcert_2date', args=['nationality', 4])
         self.assertEqual(url, '/get_total_w_bcert_2date/nationality/4/')
+
+    def test_get_total_s_bcert_aft_enrol_is_resolves(self):
+        url = reverse('get_total_s_bcert_aft_enrol', args=['nationality', 4])
+        self.assertEqual(url, '/get_total_s_bcert_aft_enrol/nationality/4/')
+
+    def test_fetch_cbo_list_is_resolves(self):
+        url = reverse('fetch_cbo_list')
+        self.assertEquals(resolve(url).func, fetch_cbo_list)
+
+    def test_get_ever_tested_hiv_is_resolves(self):
+        url = reverse('get_ever_tested_hiv', args=['nationality', 4])
+        self.assertEqual(url, '/get_ever_tested_hiv/nationality/4/')
+
+    def test_get_new_ovcregs_by_period_is_resolves(self):
+        url = reverse('get_new_ovcregs_by_period', args=['nationality', 4])
+        self.assertEqual(url, '/get_new_ovcregs_by_period/nationality/4/')
+
