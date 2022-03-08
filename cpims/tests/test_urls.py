@@ -68,6 +68,33 @@ class URLTests(SimpleTestCase):
         self.assertEqual(url, '/get_ever_tested_hiv/nationality/4/')
 
     def test_get_new_ovcregs_by_period_is_resolves(self):
-        url = reverse('get_new_ovcregs_by_period', args=['nationality', 4])
-        self.assertEqual(url, '/get_new_ovcregs_by_period/nationality/4/')
+        url = reverse('get_new_ovcregs_by_period', args=['nationality', 4, 'who', 3, 'period'])
+        self.assertEqual(url, '/get_new_ovcregs_by_period/nationality/4/who/3/period/')
 
+    def test_get_active_ovcs_by_period_is_resolves(self):
+        url = reverse('get_active_ovcs_by_period', args=['nationality', 4, 'who', 3, 'period'])
+        self.assertEqual(url, '/get_active_ovcs_by_period/nationality/4/who/3/period/')
+
+    def test_get_exited_ovcs_by_period_is_resolves(self):
+        url = reverse('get_exited_ovcs_by_period', args=['nationality', 4, 'who', 3, 'period'])
+        self.assertEqual(url, '/get_exited_ovcs_by_period/nationality/4/who/3/period/')
+
+    def test_get_exited_hsehlds_by_period_is_resolves(self):
+        url = reverse('get_exited_hsehlds_by_period', args=['nationality', 4, 'who', 3, 'period'])
+        self.assertEqual(url, '/get_exited_hsehlds_by_period/nationality/4/who/3/period/')
+
+    def test_get_served_bcert_by_period_is_resolves(self):
+        url = reverse('get_served_bcert_by_period', args=['nationality', 4, 12])
+        self.assertEqual(url, '/get_served_bcert_by_period/nationality/4/12/')
+
+    def test_get_u5_served_bcert_by_period_is_resolves(self):
+        url = reverse('get_u5_served_bcert_by_period', args=['nationality', 4, 12])
+        self.assertEqual(url, '/get_u5_served_bcert_by_period/nationality/4/12/')
+
+    def test_get_ovc_served_stats_is_resolves(self):
+        url = reverse('get_ovc_served_stats', args=['nationality', 4, 'who', 3, 'period'])
+        self.assertEqual(url, '/get_ovc_served_stats/nationality/4/who/3/period/')
+
+    def test_get_home_is_resolves(self):
+        url = reverse('home')
+        self.assertEqual(url, '/home/')

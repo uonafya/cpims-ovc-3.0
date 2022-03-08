@@ -149,8 +149,8 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
 
 AUTH_USER_MODEL = 'cpovc_auth.AppUser'
 
-AUTHENTICATION_BACKENDS = ['cpovc_auth.backends.CPOVCAuthenticationBackend']
-# AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+# AUTHENTICATION_BACKENDS = ['cpovc_auth.backends.CPOVCAuthenticationBackend']
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
