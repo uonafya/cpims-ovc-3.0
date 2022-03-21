@@ -1,8 +1,7 @@
 """Forms for Registry sections of CPIMS."""
 from django import forms
-from django.utils.translation import ugettext_lazy as _
-from django.forms.widgets import RadioFieldRenderer
-from django.utils.encoding import force_unicode
+from django.utils.translation import gettext_lazy as _
+from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 
 from crispy_forms.helper import FormHelper
@@ -83,13 +82,13 @@ class RegistrationSearchForm(forms.Form):
             attrs={'id': 'person_deceased'}))
 
 
-class RadioCustomRenderer(RadioFieldRenderer):
+class RadioCustomRenderer(forms.RadioSelect):
     """Custom radio button renderer class."""
 
     def render(self):
         """Renderer override method."""
         return mark_safe(u'%s' % u'\n'.join(
-            [u'%s' % force_unicode(w) for w in self]))
+            [u'%s' % force_str(w) for w in self]))
 
 
 class RegistrationForm(forms.Form):
@@ -128,7 +127,7 @@ class RegistrationForm(forms.Form):
 
         # All working in selections need to be tied to currently logged in user
         user_geos = get_user_geos(self.user)
-        print user_geos
+        print (user_geos)
         county_filter = [] if user.is_superuser else user_geos['counties']
         scounty_filter = [] if user.is_superuser else user_geos['sub_counties']
         ward_filter = [] if user.is_superuser else user_geos['wards']

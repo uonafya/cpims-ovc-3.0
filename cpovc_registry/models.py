@@ -54,7 +54,7 @@ class RegOrgUnit(models.Model):
             self.date_closed = date_closed
         super(RegOrgUnit, self).save()
 
-    def __unicode__(self):
+    def __str__(self):
         """To be returned by admin actions."""
         return self.org_unit_name
 
@@ -133,7 +133,7 @@ class RegPerson(models.Model):
         return _reg_persons_data
 
     def _get_full_name(self):
-        return '%s %s' % (self.first_name, self.surname)
+        return '{} {}'.format(self.first_name, self.surname)
 
     def make_void(self):
         """Inline call method."""
@@ -155,12 +155,12 @@ class RegPerson(models.Model):
         if self.date_of_birth:
             dob = self.date_of_birth
             date_check = (today.month, today.day) < (dob.month, dob.day)
-            yrs = today.year - dob.year - (date_check)
-            age = '%d years' % (yrs)
+            yrs = today.year - dob.year - date_check
+            age = '{:d} years'.format(yrs)
             if yrs == 0:
                 days = (today - dob).days
                 mon = days / 30
-                age = '%d days' % days if mon < 1 else '%d months' % mon
+                age = '{:d} days'.format(days if mon < 1 else '{:d} months'.format(mon))
         return age
 
     age = property(_calculate_age)
@@ -172,7 +172,7 @@ class RegPerson(models.Model):
         if self.date_of_birth:
             dob = self.date_of_birth
             date_check = (today.month, today.day) < (dob.month, dob.day)
-            yrs = today.year - dob.year - (date_check)
+            yrs = today.year - dob.year - date_check
         return yrs
 
     years = property(_calculate_years)
@@ -190,9 +190,9 @@ class RegPerson(models.Model):
         verbose_name = 'Persons Registry'
         verbose_name_plural = 'Persons Registries'
 
-    def __unicode__(self):
+    def __str__(self):
         """To be returned by admin actions."""
-        return '%s %s %s' % (self.first_name, self.other_names, self.surname)
+        return '{} {} {}'.format(self.first_name, self.other_names, self.surname)
 
 
 class RegBiometric(models.Model):
@@ -210,9 +210,9 @@ class RegBiometric(models.Model):
         verbose_name = 'Persons Biometric'
         verbose_name_plural = 'Persons Biometrics'
 
-    def __unicode__(self):
+    def __str__(self):
         """To be returned by admin actions."""
-        return '%s %s %s' % (self.account)
+        return '{} {} {}'.format(self.account)
 
 
 class RegPersonsGuardians(models.Model):
