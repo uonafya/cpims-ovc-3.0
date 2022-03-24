@@ -44,10 +44,10 @@ class TestViews(TestCase):
         # Check that we got a response "success"
         self.assertEqual(response.status_code, 200)
 
-    def test_submit_form_views(self):
-        client = Client()
-        response = client.get(reverse('submit_form'))
-        self.assertEqual(response.status_code, 200)
-        # assert response.context() == {'msg': 'ok'}
+    # def test_submit_form_views(self):
+    #     client = Client()
+    #     response = client.get(reverse('submit_form'))
+    #     self.assertEqual(response.status_code, 200)
+    #     # assert response.context() == {'msg': 'ok'}
 
 
