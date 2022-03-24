@@ -8,6 +8,7 @@ import jellyfish
 import traceback
 import operator
 from dateutil import parser
+from functools import reduce
 from .models import SetupList, SetupGeography
 from django.core.cache import cache
 from django.core.exceptions import FieldError
@@ -61,7 +62,7 @@ class Persons:
                 work_locations_change_date=None,date_of_death=None,org_data_hidden = None, primary_org_id=None, wards_string = None,
                 org_units_string = None,communities_string = None):
         
-        if workforce_id == fielddictionary.empty_workforce_id:
+        if workforce_id == fielddictionary.empty_workforce_id: # ---> this variable is not available ERROR
             self.user_id = 'N/A'
         else:
             self.user_id = workforce_id
@@ -129,7 +130,7 @@ class Persons:
             for comm in communities:
                 self.locations_unique_readable.append(RegOrgUnit.objects.get(pk=comm).org_unit_name)
         
-    def __unicode__(self):
+    def __str__(self):
         return '%s %s'% (self.first_name, self.surname)
     
     def sex(self):
@@ -188,9 +189,9 @@ def get_geo_list(default_txt=False):
             is_void=False).order_by('area_name')
         for a_list in my_list:
             all_list[a_list.area_id] = a_list.area_name
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return ()
     else:
         return all_list.items
@@ -203,9 +204,9 @@ def get_vgeo_dict(area_id, default_txt=False):
             is_void=False).order_by('area_name')
         for a_list in my_list:
             all_list[a_list.area_id] = a_list.area_name
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return ()
     else:
         return all_list.items
@@ -217,9 +218,9 @@ def get_vgeo_list(area_id):
     try:
         queryset = SetupGeography.objects.filter(area_id=area_id, is_void=False).order_by('area_id')
         
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting whole list - %s' % (str(e))
-        print error
+        print(error)
         return None
     else:
         return queryset
@@ -233,9 +234,9 @@ def get_vorg_list(org_unit_id):
         queryset = RegOrgUnit.objects.filter(
             id=org_unit_id, is_void=False).order_by('org_unit_name')
         # print 'OrgUnit Name: %s' %queryset.org_unit_name
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting whole list - %s' % (str(e))
-        print error
+        print(error)
         return None
     else:
         return queryset
@@ -259,9 +260,9 @@ def get_general_list(field_names=[], item_category=False):
         if item_category:
             queryset = queryset.filter(
                 item_category=item_category).order_by('the_order')
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting whole list - %s' % (str(e))
-        print error
+        print(error)
         return None
     else:
         return queryset
@@ -285,9 +286,9 @@ def get_list(field_name=[], default_txt=False, category=False):
             initial_list = ('', default_txt)
             final_list = [initial_list] + list(my_list)
             return final_list
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return my_list
     else:
         return my_list
@@ -311,9 +312,9 @@ def get_org_units_list(default_txt=False, org_types=[]):
                     all_list[a_list.id] = unit_names
             else:
                 all_list[a_list.id] = unit_names
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return ()
     else:
         return all_list.items
@@ -330,9 +331,9 @@ def get_org_units_dict(default_txt=False):
         for a_list in my_list:
             org_name = '%s %s' % (a_list.org_unit_id_vis, a_list.org_unit_name)
             all_list[a_list.id] = org_name
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return ()
     else:
         return all_list
@@ -355,9 +356,9 @@ def get_dict(field_name=[], default_txt=False):
             item_id = value['item_id']
             item_details = value['item_description']
             dict_val[item_id] = item_details
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return {}
     else:
         return dict_val
@@ -383,9 +384,9 @@ def get_mapped(field_name=[], default_txt=False):
             item_field = value['field_name']
             items = {'name': item_details, 'id': item_field}
             dict_val[item_id] = items
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return {}
     else:
         return dict_val
@@ -454,8 +455,8 @@ def order_by_relevence(wrapped_function):
             field_string = " ".join(field_values)
             # access the field names dynamically.
             diff_distance = jellyfish.jaro_distance(
-                unicode(field_string.upper()),
-                unicode(search_string.upper())
+                str(field_string.upper()),
+                str(search_string.upper())
             )
             diff_distances.append((result, diff_distance),)
         sorted_distances = sorted(diff_distances, key=lambda x: -x[1])
@@ -578,7 +579,7 @@ def rank_results(results_dict, required_fields, rank_order):
     return ranked_results
 
 def load_wfc_from_id(wfc_pk,user=None,include_dead=False):
-    print 'include_dead', include_dead
+    print('include_dead', include_dead)
     if RegPerson.objects.filter(pk=wfc_pk,is_void=False).count() > 0:
         tmp_wfc = None
         if include_dead:
@@ -723,7 +724,7 @@ def load_wfc_from_id(wfc_pk,user=None,include_dead=False):
         if geos and 'GDIS'.strip() in geos:
             districts = geos['GDIS'.strip()]
         if geos and 'GWRD'.strip() in geos:
-            wards = geos['GWRD',strip()]
+            wards = geos['GWRD'.strip()]
         
         """
         ***Not Required For Kenyan Model***
@@ -772,7 +773,7 @@ def load_wfc_from_id(wfc_pk,user=None,include_dead=False):
         return wfc
     
     else:
-        print 'Workforce with the ID passsed does not exists'
+        print('Workforce with the ID passsed does not exists')
         #raise Exception('Workforce with the ID passsed does not exists')
 
 def search_wfc_by_org_unit(tokens):
@@ -1233,9 +1234,9 @@ def convert_date(d_string, fmt='%d-%b-%Y'):
             new_date = datetime.datetime.strptime(d_string, fmt)
         else:
             new_date = datetime.datetime.strptime(d_string, fmt)
-    except Exception, e:
+    except Exception as e:
         error = 'Error converting date -%s' % (str(e))
-        print error
+        print(error)
         return d_string
     else:
         return new_date
