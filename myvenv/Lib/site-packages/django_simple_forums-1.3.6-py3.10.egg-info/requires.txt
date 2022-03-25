@@ -1,0 +1,5 @@
+bleach
+django
+django-admin-sortable
+markdown
+pymdown-extensions

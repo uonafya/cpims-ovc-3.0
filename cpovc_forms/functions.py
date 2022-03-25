@@ -269,7 +269,7 @@ def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event
         'No': 'No'
     }
     if question.code.lower() == 'cp2d':
-        if answer is '':
+        if answer == '':
             answer = None
         if answer is not None:
             answer = convert_date(answer)

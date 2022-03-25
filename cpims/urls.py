@@ -34,7 +34,7 @@ from cpovc_access.forms import StrictPasswordChangeForm
 urlpatterns = [
     path('admin/', admin.site.urls),  # Keep
     # path('admin/', include(admin.site.urls), name='admin'),
-    re_path(r'^$', cpovc_auth.views.log_in, name='home'),
+    # re_path(r'^$', cpovc_auth.views.log_in, name='home'),
     path('public_dashboard/registration/', views.public_dashboard_reg, name='public_dashboard_reg'),
     path('public_dashboard/hivstat/', views.public_dashboard_hivstat, name='public_dashboard_hivstat'),
     path('public_dashboard/served/', views.public_dashboard_served, name='public_dashboard_served'),
@@ -66,8 +66,8 @@ urlpatterns = [
     re_path(r'^get_u5_served_bcert_by_period/(?P<org_level>\w+)/(?P<area_id>.*)/(?P<month_year>.*)/', views.get_u5_served_bcert_by_period, name='get_u5_served_bcert_by_period'),
     re_path(r'^get_ovc_served_stats/(?P<org_level>\w+)/(?P<area_id>.*)/(?P<funding_partner>.*)/(?P<funding_part_id>.*)/(?P<period_type>.*)/', views.get_ovc_served_stats, name='get_ovc_served_stats'),
     # endAPIs
-    path('home/', views.home, name='home'),
-    # re_path(r'^$', 'cpims.views.home', name='home'),
+    # path('home/', views.home, name='home'),
+    re_path(r'^$', views.home, name='home'),
 # url(r'^home/$', views.home, name='home'),
     path('accounts/request/', views.access, name='access'),
     path('accounts/terms/<int:id>/', cpovc_access.views.terms,

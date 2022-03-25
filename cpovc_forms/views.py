@@ -7167,7 +7167,7 @@ def update_form1a(request):
                     olmis_assessment_data = json.loads(olmis_assessment_provided_list)
 
                     for assessment_data in olmis_assessment_data:
-                        if len(assessment_data) is not 0:
+                        if len(assessment_data) != 0:
                             # service_grouping_id = new_guid_32()
                             olmis_assessment_domain = assessment_data['olmis_assessment_domain']
                             olmis_assessment_service = assessment_data['olmis_assessment_coreservice']
@@ -7221,7 +7221,7 @@ def update_form1a(request):
                 if olmis_priority_service_provided_list:
                     olmis_priority_data = json.loads(olmis_priority_service_provided_list)
                     for priority_data in olmis_priority_data:
-                        if len(priority_data) is not 0:
+                        if len(priority_data) != 0:
                             olmis_priority_domain = priority_data['olmis_priority_domain']
                             olmis_priority_service = priority_data['olmis_priority_service']
                             services = olmis_priority_service.split(',')

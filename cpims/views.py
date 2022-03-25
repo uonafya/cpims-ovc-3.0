@@ -185,7 +185,7 @@ def get_ever_tested_hiv(request, org_level, area_id):
                         safe=False)
 
 
-# @login_required(login_url='/login/')
+@login_required(login_url='/login/')
 def home(request):
     """Some default page for the home page / Dashboard."""
     try:

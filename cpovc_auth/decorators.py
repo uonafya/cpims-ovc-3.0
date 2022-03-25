@@ -21,12 +21,12 @@ def is_allowed_groups(allowed_groups, page=11):
     """Method for checking roles and permissions."""
 
     def decorator(check_func):
-        @wraps(check_func, assigned=(check_func))
+        @wraps(check_func, assigned=check_func)
         def _wrapped_view(request, *args, **kwargs):
             # If active super user lets just proceed
             url_parts = request.path_info.split('/')
             url_len = len(url_parts)
-            print(('url', request.path_info, 'Len', len(url_parts), url_parts))
+            print('url', request.path_info, 'Len', len(url_parts), url_parts)
             app = url_parts[1] if url_len > 1 and url_parts[1] else None
             module = url_parts[2] if url_len > 2 and url_parts[2] else None
             trans = url_parts[3] if url_len > 3 and url_parts[3] else None
@@ -45,9 +45,9 @@ def is_allowed_groups(allowed_groups, page=11):
             # Get the DCS restricted modules
             if module in FORMS:
                 print(('GOK restricted', app, module))
-                page = '4%s' % (page_type)
+                page = '4%s' % page_type
                 if reg_ovc:
-                    page = '5%s' % (page_type)
+                    page = '5%s' % page_type
             page_id = int(page)
             print(page_type)
             if request.user.is_active and request.user.is_superuser:

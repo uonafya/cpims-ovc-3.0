@@ -171,7 +171,7 @@ def register(request):
         raise e
 
 
-# @login_required
+@login_required
 # @is_allowed_groups(['ACM', 'DSU'])
 def roles_home(request):
     """Default page for Roles home."""

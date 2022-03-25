@@ -96,5 +96,5 @@ class URLTests(SimpleTestCase):
         self.assertEqual(url, '/get_ovc_served_stats/nationality/4/who/3/period/')
 
     def test_get_home_is_resolves(self):
-        url = reverse('home')
+        url = reverse('')
         self.assertEqual(url, '/home/')

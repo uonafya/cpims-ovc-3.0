@@ -1,0 +1,56 @@
+{% load simple_forum_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>{% block page_title %}Untitled Page{% endblock %} &bull; Simple Forums</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+
+    <header>
+
+        <nav>
+            <ul>
+                <li><a href="{% url 'simple-forums:topic-list' %}">Home</a></li>
+                <li><a href="{% url 'simple-forums:search' %}">Search</a></li>
+
+                {% if request.user.is_authenticated %}
+
+                    <li><a href="{% url 'simple-forums:thread-create' %}">New Thread</a></li>
+                    <li><a href="{% logout_url %}">Log Out</a></li>
+
+                {% else %}
+
+                    <li><a href="{% login_url %}">Log In</a></li>
+
+                {% endif %}
+
+            </ul>
+        </nav>
+
+    </header>
+
+    <main>
+        {% if messages %}
+            <h3>Messages:</h3>
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+
+        {% block content %}{% endblock %}
+    </main>
+
+</body>
+
+</html>
