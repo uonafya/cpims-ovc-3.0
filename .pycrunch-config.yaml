@@ -1,0 +1,5 @@
+# documentation https://pycrunch.com/docs/configuration-file
+engine:
+    runtime: pytest
+    enable-web-ui: true
+    load-pytest-plugins: true
