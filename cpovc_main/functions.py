@@ -8,6 +8,7 @@ import jellyfish
 import traceback
 import operator
 from dateutil import parser
+from functools import reduce
 from .models import SetupList, SetupGeography
 from django.core.cache import cache
 from django.core.exceptions import FieldError
@@ -54,18 +55,15 @@ class Persons:
     contact = None
     registered_by_person_id = None
     direct_services = None
+    
 
-    def __init__(self, workforce_id, national_id, first_name, surname, other_names, sex_id, date_of_birth,
-                 steps_ovc_number, man_number,
-                 ts_number, sign_number, roles, org_units, primary_org_unit_name, person_type, gdclsu_details, contact,
-                 person_type_id, districts=None,
-                 wards=None, communities=None, direct_services=None, edit_mode_hidden=None,
-                 workforce_type_change_date=None, parent_org_change_date=None,
-                 work_locations_change_date=None, date_of_death=None, org_data_hidden=None, primary_org_id=None,
-                 wards_string=None,
-                 org_units_string=None, communities_string=None):
-
-        if workforce_id == fielddictionary.empty_workforce_id:
+    def __init__(self, workforce_id, national_id, first_name,surname, other_names, sex_id, date_of_birth, steps_ovc_number,man_number,
+                ts_number,sign_number,roles, org_units,primary_org_unit_name, person_type, gdclsu_details, contact,person_type_id, districts=None, 
+                wards=None, communities=None,direct_services=None,edit_mode_hidden=None,workforce_type_change_date=None,parent_org_change_date=None,
+                work_locations_change_date=None,date_of_death=None,org_data_hidden = None, primary_org_id=None, wards_string = None,
+                org_units_string = None,communities_string = None):
+        
+        if workforce_id == fielddictionary.empty_workforce_id: # ---> this variable is not available ERROR
             self.user_id = 'N/A'
         else:
             self.user_id = workforce_id
@@ -132,10 +130,10 @@ class Persons:
         if _communities:
             for comm in communities:
                 self.locations_unique_readable.append(RegOrgUnit.objects.get(pk=comm).org_unit_name)
-
-    def __unicode__(self):
-        return '%s %s' % (self.first_name, self.surname)
-
+        
+    def __str__(self):
+        return '%s %s'% (self.first_name, self.surname)
+    
     def sex(self):
         self.sex = list_provider.get_description_for_item_id(self.sex_id)
         # self.sex = list_provider.get_item_desc_for_order_and_category(self.sex_id, fielddictionary.sex)
@@ -230,7 +228,7 @@ def get_vgeo_list(area_id):
     '''
     try:
         queryset = SetupGeography.objects.filter(area_id=area_id, is_void=False).order_by('area_id')
-
+        
     except Exception as e:
         error = 'Error getting whole list - %s' % (str(e))
         print(error)
@@ -592,10 +590,9 @@ def rank_results(results_dict, required_fields, rank_order):
                 pass
     return ranked_results
 
-
-def load_wfc_from_id(wfc_pk, user=None, include_dead=False):
+def load_wfc_from_id(wfc_pk,user=None,include_dead=False):
     print('include_dead', include_dead)
-    if RegPerson.objects.filter(pk=wfc_pk, is_void=False).count() > 0:
+    if RegPerson.objects.filter(pk=wfc_pk,is_void=False).count() > 0:
         tmp_wfc = None
         if include_dead:
             tmp_wfc = RegPerson.objects.get(pk=wfc_pk, is_void=False)
@@ -739,8 +736,8 @@ def load_wfc_from_id(wfc_pk, user=None, include_dead=False):
         if geos and 'GDIS'.strip() in geos:
             districts = geos['GDIS'.strip()]
         if geos and 'GWRD'.strip() in geos:
-            wards = geos['GWRD', strip()]
-
+            wards = geos['GWRD'.strip()]
+        
         """
         ***Not Required For Kenyan Model***
         communties = {}
@@ -789,8 +786,7 @@ def load_wfc_from_id(wfc_pk, user=None, include_dead=False):
 
     else:
         print('Workforce with the ID passsed does not exists')
-        # raise Exception('Workforce with the ID passsed does not exists')
-
+        #raise Exception('Workforce with the ID passsed does not exists')
 
 def search_wfc_by_org_unit(tokens):
     # print tokens,'tokens'

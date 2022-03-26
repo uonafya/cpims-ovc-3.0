@@ -45,11 +45,11 @@ class SqlPrintingMiddleware(object):
                     sql = "[%s] %s" % (query['time'], nice_sql)
                     total_time = total_time + float(query['time'])
                     while len(sql) > width - indent:
-                        print "%s%s" % (" " * indent, sql[:width - indent])
+                        print("%s%s" % (" " * indent, sql[:width - indent]))
                         sql = sql[width - indent:]
-                    print "%s%s\n" % (" " * indent, sql)
-                except Exception, e:
-                    print e
+                    print("%s%s\n" % (" " * indent, sql))
+                except Exception as e:
+                    print(e)
             replace_tuple = (" " * indent, str(total_time))
-            print "%s[TOTAL PAGE LOAD TIME: %s seconds]" % replace_tuple
+            print("%s[TOTAL PAGE LOAD TIME: %s seconds]" % replace_tuple)
         return response
