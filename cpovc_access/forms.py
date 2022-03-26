@@ -5,13 +5,13 @@ from collections import OrderedDict
 from django import forms
 from django.utils import timezone
 from django.utils.text import capfirst
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate, get_user_model
 
-from cpovc_access.models import PasswordChange
 from cpovc_access.handlers import (PasswordStrengthPolicyHandler,
                                    AuthenticationPolicyHandler,
                                    PasswordChangePolicyHandler)
+from cpovc_access.models import PasswordChange
 
 logger = logging.getLogger(__name__)
 
@@ -96,7 +96,7 @@ class StrictAuthenticationForm(forms.Form):
                 self.password_change_policy.update_session(
                     self.request, self.user_cache)
 
-        return self.cleaned_data
+            return self.cleaned_data
 
     def get_user_id(self):
         """Get user id."""

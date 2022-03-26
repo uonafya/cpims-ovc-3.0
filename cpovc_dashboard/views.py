@@ -6,7 +6,7 @@ from .forms import CaseLoad
 from .functions import get_geo, get_lips, get_chart_data
 
 
-@login_required
+# #@login_required
 def ovc_dashboard(request):
     """Method to do pivot reports."""
     try:
@@ -18,7 +18,7 @@ def ovc_dashboard(request):
         pass
 
 
-@login_required
+# #@login_required
 def ovc_dashboard_hivstat(request):
     """Method to do pivot reports."""
     try:
@@ -31,7 +31,7 @@ def ovc_dashboard_hivstat(request):
         pass
 
 
-@login_required
+# #@login_required
 def ovc_dashboard_services(request):
     """Method to do pivot reports."""
     try:
@@ -44,7 +44,7 @@ def ovc_dashboard_services(request):
         pass
 
 
-@login_required
+# #@login_required
 def ovc_dashboard_cm(request):
     """Method to do pivot reports."""
     try:
@@ -57,7 +57,7 @@ def ovc_dashboard_cm(request):
         pass
 
 
-@login_required
+#@login_required
 def get_constituency(request, area_id):
     """Method to do pivot reports."""
     try:
@@ -72,7 +72,7 @@ def get_constituency(request, area_id):
         return JsonResponse(values, safe=False)
 
 
-@login_required
+#@login_required
 def get_ward(request, area_id):
     """Method to do pivot reports."""
     try:
@@ -87,7 +87,7 @@ def get_ward(request, area_id):
         return JsonResponse(values, safe=False)
 
 
-@login_required
+#@login_required
 def get_lip(request, ip_id):
     """Method to do pivot reports."""
     try:
@@ -102,7 +102,7 @@ def get_lip(request, ip_id):
         return JsonResponse(values, safe=False)
 
 
-@login_required
+#@login_required
 def get_chart(request, rid, county_id, const_id, ward_id=0,
               ip_id=0, lip_id=0, prd=0, yr=0):
     """Method to do pivot reports."""

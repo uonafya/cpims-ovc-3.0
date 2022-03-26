@@ -1,8 +1,11 @@
 """Urls for GIS."""
-from django.conf.urls import patterns, url
-
+# from django.urls import path
+# from django.conf.urls import patterns
+from django.urls import path, include
+from . import views
 # This should contain urls related to GIS Module ONLY
-urlpatterns = patterns(
-    'cpovc_gis.views',
-    url(r'^$', 'gis_home', name='gis_home'),
-    url(r'^data/$', 'gis_data', name='gis_data'),)
+urlpatterns = [
+    # 'cpovc_gis.views',
+    path('', views.gis_home, name='gis_home'),
+    path('data/', views.gis_data, name='gis_data'),
+    ]

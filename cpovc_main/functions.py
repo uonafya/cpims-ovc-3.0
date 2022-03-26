@@ -18,6 +18,7 @@ from cpovc_registry.models import (
 # Added
 from cpovc_forms.models import OVCCaseCategory
 from cpovc_main.models import SetupGeography, SetupList, SchoolList
+from functools import reduce
 
 organisation_id_prefix = 'U'
 benficiary_id_prefix = 'B'
@@ -53,14 +54,17 @@ class Persons:
     contact = None
     registered_by_person_id = None
     direct_services = None
-    
 
-    def __init__(self, workforce_id, national_id, first_name,surname, other_names, sex_id, date_of_birth, steps_ovc_number,man_number,
-                ts_number,sign_number,roles, org_units,primary_org_unit_name, person_type, gdclsu_details, contact,person_type_id, districts=None, 
-                wards=None, communities=None,direct_services=None,edit_mode_hidden=None,workforce_type_change_date=None,parent_org_change_date=None,
-                work_locations_change_date=None,date_of_death=None,org_data_hidden = None, primary_org_id=None, wards_string = None,
-                org_units_string = None,communities_string = None):
-        
+    def __init__(self, workforce_id, national_id, first_name, surname, other_names, sex_id, date_of_birth,
+                 steps_ovc_number, man_number,
+                 ts_number, sign_number, roles, org_units, primary_org_unit_name, person_type, gdclsu_details, contact,
+                 person_type_id, districts=None,
+                 wards=None, communities=None, direct_services=None, edit_mode_hidden=None,
+                 workforce_type_change_date=None, parent_org_change_date=None,
+                 work_locations_change_date=None, date_of_death=None, org_data_hidden=None, primary_org_id=None,
+                 wards_string=None,
+                 org_units_string=None, communities_string=None):
+
         if workforce_id == fielddictionary.empty_workforce_id:
             self.user_id = 'N/A'
         else:
@@ -74,35 +78,35 @@ class Persons:
             self.name = first_name + ' ' + surname
         self.sex_id = sex_id
         self.date_of_birth = date_of_birth
-        #self.date_of_death = date_of_death
+        # self.date_of_death = date_of_death
         self.steps_ovc_number = steps_ovc_number
         self.man_number = man_number
         self.ts_number = ts_number
         self.sign_number = sign_number
-        #self.registered_by_person_id = registered_by_person_id
+        # self.registered_by_person_id = registered_by_person_id
         self.roles = roles
         self.org_units = org_units
         self.primary_org_id = primary_org_id
         self.primary_org_unit_name = primary_org_unit_name
         self.person_type = person_type
-        #self.geo_location = geo_location
-        self.gdclsu_details = gdclsu_details       
+        # self.geo_location = geo_location
+        self.gdclsu_details = gdclsu_details
         self.contact = contact
         self.person_type_id = person_type_id
         self.wards_string = wards_string
         self.org_units_string = org_units_string
         self.communities_string = communities_string
         self.geo_location = {}
-        self.geo_location = {'districts':districts,
+        self.geo_location = {'districts': districts,
                              'wards': wards,
-                             'communities':communities}
-        
+                             'communities': communities}
+
         self.direct_services = direct_services
         self.edit_mode_hidden = edit_mode_hidden
-        self.workforce_type_change_date=workforce_type_change_date
-        self.parent_org_change_date=parent_org_change_date
-        self.work_locations_change_date=work_locations_change_date
-        self.date_of_death=date_of_death
+        self.workforce_type_change_date = workforce_type_change_date
+        self.parent_org_change_date = parent_org_change_date
+        self.work_locations_change_date = work_locations_change_date
+        self.date_of_death = date_of_death
         self.org_data_hidden = org_data_hidden
         _distrcits_wards = []
         _communities = None
@@ -110,7 +114,7 @@ class Persons:
             _distrcits_wards += wards
         if districts:
             _distrcits_wards += districts
-            
+
         if _distrcits_wards:
             if self.geo_location['communities']:
                 _communities = self.geo_location['communities']
@@ -119,44 +123,49 @@ class Persons:
             self.locations_for_display = matches_for_display(_distrcits_wards, _communities)
         else:
             self.locations_for_display = []
-        
+
         self.locations_unique_readable = []
-        
+
         for loc in _distrcits_wards:
             self.locations_unique_readable.append(GeoLocation(loc).geo_name)
-        
+
         if _communities:
             for comm in communities:
                 self.locations_unique_readable.append(RegOrgUnit.objects.get(pk=comm).org_unit_name)
-        
+
     def __unicode__(self):
-        return '%s %s'% (self.first_name, self.surname)
-    
+        return '%s %s' % (self.first_name, self.surname)
+
     def sex(self):
         self.sex = list_provider.get_description_for_item_id(self.sex_id)
-        #self.sex = list_provider.get_item_desc_for_order_and_category(self.sex_id, fielddictionary.sex)
+        # self.sex = list_provider.get_item_desc_for_order_and_category(self.sex_id, fielddictionary.sex)
         if not self.sex:
             return ''
         return self.sex[0]
-    
+
     def get_locations_for_display(self):
         return self.locations_for_display
+
 
 def translate_school(value):
     item_value = SchoolList.objects.get(school_id=value, is_void=False)
     return item_value.school_name
 
+
 def translate_reverse_org(value):
     item_value = RegOrgUnit.objects.get(org_unit_name=value, is_void=False)
     return item_value.id
-    
+
+
 def translate_case(value):
     item_value = OVCCaseCategory.objects.get(case_category_id=value, is_void=False)
     return item_value.case_category
 
+
 def translate_geo(value):
     item_value = SetupGeography.objects.get(area_id=value, is_void=False)
     return item_value.area_name
+
 
 def translate(value):
     if value:
@@ -166,6 +175,7 @@ def translate(value):
     else:
         return value
 
+
 def translate_reverse(value):
     if value:
         item_value = SetupList.objects.filter(item_description=value, is_void=False)
@@ -174,8 +184,10 @@ def translate_reverse(value):
     else:
         return value
 
+
 def get_description_for_item_id(item_id):
-    return tuple([(l.item_description) for l in SetupList.objects.filter(item_id = item_id)])
+    return tuple([(l.item_description) for l in SetupList.objects.filter(item_id=item_id)])
+
 
 def get_geo_list(default_txt=False):
     '''
@@ -188,27 +200,29 @@ def get_geo_list(default_txt=False):
             is_void=False).order_by('area_name')
         for a_list in my_list:
             all_list[a_list.area_id] = a_list.area_name
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return ()
     else:
         return all_list.items
+
 
 def get_vgeo_dict(area_id, default_txt=False):
     initial_list = {'': default_txt} if default_txt else {}
     all_list = collections.OrderedDict(initial_list)
     try:
         my_list = SetupGeography.objects.filter(area_id=area_id,
-            is_void=False).order_by('area_name')
+                                                is_void=False).order_by('area_name')
         for a_list in my_list:
             all_list[a_list.area_id] = a_list.area_name
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return ()
     else:
         return all_list.items
+
 
 def get_vgeo_list(area_id):
     '''
@@ -216,10 +230,10 @@ def get_vgeo_list(area_id):
     '''
     try:
         queryset = SetupGeography.objects.filter(area_id=area_id, is_void=False).order_by('area_id')
-        
-    except Exception, e:
+
+    except Exception as e:
         error = 'Error getting whole list - %s' % (str(e))
-        print error
+        print(error)
         return None
     else:
         return queryset
@@ -233,9 +247,9 @@ def get_vorg_list(org_unit_id):
         queryset = RegOrgUnit.objects.filter(
             id=org_unit_id, is_void=False).order_by('org_unit_name')
         # print 'OrgUnit Name: %s' %queryset.org_unit_name
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting whole list - %s' % (str(e))
-        print error
+        print(error)
         return None
     else:
         return queryset
@@ -259,9 +273,9 @@ def get_general_list(field_names=[], item_category=False):
         if item_category:
             queryset = queryset.filter(
                 item_category=item_category).order_by('the_order')
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting whole list - %s' % (str(e))
-        print error
+        print(error)
         return None
     else:
         return queryset
@@ -285,9 +299,9 @@ def get_list(field_name=[], default_txt=False, category=False):
             initial_list = ('', default_txt)
             final_list = [initial_list] + list(my_list)
             return final_list
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return my_list
     else:
         return my_list
@@ -311,9 +325,9 @@ def get_org_units_list(default_txt=False, org_types=[]):
                     all_list[a_list.id] = unit_names
             else:
                 all_list[a_list.id] = unit_names
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return ()
     else:
         return all_list.items
@@ -330,9 +344,9 @@ def get_org_units_dict(default_txt=False):
         for a_list in my_list:
             org_name = '%s %s' % (a_list.org_unit_id_vis, a_list.org_unit_name)
             all_list[a_list.id] = org_name
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return ()
     else:
         return all_list
@@ -355,9 +369,9 @@ def get_dict(field_name=[], default_txt=False):
             item_id = value['item_id']
             item_details = value['item_description']
             dict_val[item_id] = item_details
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return {}
     else:
         return dict_val
@@ -383,9 +397,9 @@ def get_mapped(field_name=[], default_txt=False):
             item_field = value['field_name']
             items = {'name': item_details, 'id': item_field}
             dict_val[item_id] = items
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return {}
     else:
         return dict_val
@@ -450,17 +464,18 @@ def order_by_relevence(wrapped_function):
         for result in results:
             # match against the concentenated fields
             field_values = [getattr(result, fname) for fname in field_names]
-            field_values = itertools.ifilter(None, field_values)
+            field_values = filter(None, field_values)
             field_string = " ".join(field_values)
             # access the field names dynamically.
             diff_distance = jellyfish.jaro_distance(
-                unicode(field_string.upper()),
-                unicode(search_string.upper())
+                str(field_string.upper()),
+                str(search_string.upper())
             )
-            diff_distances.append((result, diff_distance),)
+            diff_distances.append((result, diff_distance), )
         sorted_distances = sorted(diff_distances, key=lambda x: -x[1])
         # Now return the actual sorted results not the tuples
         return [sorted_distance[0] for sorted_distance in sorted_distances]
+
     return _wrapper
 
 
@@ -577,15 +592,16 @@ def rank_results(results_dict, required_fields, rank_order):
                 pass
     return ranked_results
 
-def load_wfc_from_id(wfc_pk,user=None,include_dead=False):
-    print 'include_dead', include_dead
-    if RegPerson.objects.filter(pk=wfc_pk,is_void=False).count() > 0:
+
+def load_wfc_from_id(wfc_pk, user=None, include_dead=False):
+    print('include_dead', include_dead)
+    if RegPerson.objects.filter(pk=wfc_pk, is_void=False).count() > 0:
         tmp_wfc = None
         if include_dead:
-            tmp_wfc = RegPerson.objects.get(pk=wfc_pk,is_void=False)
+            tmp_wfc = RegPerson.objects.get(pk=wfc_pk, is_void=False)
         else:
-            tmp_wfc = RegPerson.objects.get(pk=wfc_pk,is_void=False,date_of_death=None)
-            
+            tmp_wfc = RegPerson.objects.get(pk=wfc_pk, is_void=False, date_of_death=None)
+
         if tmp_wfc:
             if tmp_wfc.workforce_id == '':
                 tmp_wfc.workforce_id = 'N/A'
@@ -593,27 +609,27 @@ def load_wfc_from_id(wfc_pk,user=None,include_dead=False):
         org_units = []
         person_type = None
         geos = None
-        wards=None
+        wards = None
         districts = None
         communities = None
-        contact = None 
+        contact = None
         person_type_id = None
         org_unit_name = ''
         org_unit_id = ''
 
-        if RegPersonsOrgUnits.objects.filter(person=tmp_wfc,date_delinked=None,is_void=False).count() > 0:
+        if RegPersonsOrgUnits.objects.filter(person=tmp_wfc, date_delinked=None, is_void=False).count() > 0:
             try:
-                tmp_org_unit = RegPersonsOrgUnits.objects.get(person=tmp_wfc,date_delinked=None,is_void=False)
+                tmp_org_unit = RegPersonsOrgUnits.objects.get(person=tmp_wfc, date_delinked=None, is_void=False)
                 if tmp_org_unit:
-                    #To come back here
+                    # To come back here
                     org_unit_name = tmp_org_unit.org_unit.org_unit_name
                     org_unit_id = tmp_org_unit.org_unit.pk
             except:
                 org_unit_name = None
                 org_unit_id = None
-            tmp_org_units = RegPersonsOrgUnits.objects.filter(person=tmp_wfc,is_void=False,date_delinked=None)
+            tmp_org_units = RegPersonsOrgUnits.objects.filter(person=tmp_wfc, is_void=False, date_delinked=None)
             if tmp_org_units:
-                for org in tmp_org_units:                    
+                for org in tmp_org_units:
                     org_model = org.org_unit
 
                     """
@@ -641,25 +657,25 @@ def load_wfc_from_id(wfc_pk,user=None,include_dead=False):
                     """
 
                     org_unit = OrganisationUnit(
-                                    org_id_int = org_model.pk,
-                                    org_id = org_model.org_unit_id_vis,                                    
-                                    org_name = org_model.org_unit_name
-                                    #primary_org = yes_no_value,
-                                    #hasRegAssistantRole = has_reg_assisstant_role
-                                    )
-                    
+                        org_id_int=org_model.pk,
+                        org_id=org_model.org_unit_id_vis,
+                        org_name=org_model.org_unit_name
+                        # primary_org = yes_no_value,
+                        # hasRegAssistantRole = has_reg_assisstant_role
+                    )
+
                     org_units.append(org_unit)
-            
-        if RegPersonsTypes.objects.filter(person=tmp_wfc,is_void=False,date_ended=None).count() > 0:
-            person_type = RegPersonsTypes.objects.get(person=tmp_wfc,is_void=False,date_ended=None)
-        person_type_desc=''
+
+        if RegPersonsTypes.objects.filter(person=tmp_wfc, is_void=False, date_ended=None).count() > 0:
+            person_type = RegPersonsTypes.objects.get(person=tmp_wfc, is_void=False, date_ended=None)
+        person_type_desc = ''
         if person_type:
             person_type_id = person_type.person_type_id
             wfc_type_tpl = list_provider.get_description_for_item_id(person_type.person_type_id)
-            if(len(wfc_type_tpl) > 0):
+            if (len(wfc_type_tpl) > 0):
                 person_type_desc = wfc_type_tpl[0]
-            
-        #RegPersonsExternalIds
+
+        # RegPersonsExternalIds
         """
         ********** To add later[Search by RegPersonsExternalIds] ************  
         man_id = ''
@@ -670,21 +686,21 @@ def load_wfc_from_id(wfc_pk,user=None,include_dead=False):
             tmp_man_id = [(l.identifier) for l in RegPersonsExternalIds.objects.filter(person=tmp_wfc, identifier_type_id = fielddictionary.govt_man_number,is_void=False)]
             if(len(tmp_man_id) > 0):
                 man_id = tmp_man_id[0]
-                
+
             tmp_ovc_id = [(l.identifier) for l in RegPersonsExternalIds.objects.filter(person=tmp_wfc, identifier_type_id = fielddictionary.steps_ovc_caregiver,is_void=False)]
             if(len(tmp_ovc_id) > 0):
                 ovc_id = tmp_ovc_id[0]
-                
+
             tmp_ts_id = [(l.identifier) for l in RegPersonsExternalIds.objects.filter(person=tmp_wfc, identifier_type_id = fielddictionary.teacher_service_id,is_void=False)]
             if(len(tmp_ts_id) > 0):
                 ts_id = tmp_ts_id[0]
-                
+
             tmp_sign_id = [(l.identifier) for l in RegPersonsExternalIds.objects.filter(person=tmp_wfc, identifier_type_id = fielddictionary.police_sign_number,is_void=False)]
             if(len(tmp_sign_id) > 0):
                 sing_id = tmp_sign_id[0]
                 #sing_id = x[0]
 
-        
+
         ********** To add later[Search by RegPersonsContact] ************  
         designated_phone = ''
         other_mobile_number = ''
@@ -694,26 +710,26 @@ def load_wfc_from_id(wfc_pk,user=None,include_dead=False):
             designated_phone_tpl = [(l.contact_detail) for l in RegPersonsContact.objects.filter(person=tmp_wfc, contact_detail_type_id = fielddictionary.contact_designated_mobile_phone,is_void=False)]
             if(len(designated_phone_tpl) > 0):
                 designated_phone = designated_phone_tpl[0]
-                
+
             mobile_phone_tpl = [(l.contact_detail) for l in RegPersonsContact.objects.filter(person=tmp_wfc, contact_detail_type_id = fielddictionary.contact_mobile_phone,is_void=False)]
             if(len(mobile_phone_tpl) > 0):
                 other_mobile_number = mobile_phone_tpl[0]
-             
+
             email_address_tpl = [(l.contact_detail) for l in RegPersonsContact.objects.filter(person=tmp_wfc, contact_detail_type_id = fielddictionary.contact_email_address,is_void=False)]
             if(len(email_address_tpl) > 0):
                 email_address = email_address_tpl[0]
-                
+
             physical_address_tpl = [(l.contact_detail) for l in RegPersonsContact.objects.filter(person=tmp_wfc, contact_detail_type_id = fielddictionary.contact_physical_address,is_void=False)]
             if(len(physical_address_tpl) > 0):
                 physical_address = physical_address_tpl[0]
-                
+
         contact = Contact(designated_phone, other_mobile_number, email_address, physical_address)
         """
 
         geos = {}
-        if RegPersonsGeo.objects.filter(person=tmp_wfc,is_void=False,date_delinked=None).count() > 0:
-            m_wfc_geo = RegPersonsGeo.objects.filter(person=tmp_wfc,is_void=False,date_delinked=None)
-            
+        if RegPersonsGeo.objects.filter(person=tmp_wfc, is_void=False, date_delinked=None).count() > 0:
+            m_wfc_geo = RegPersonsGeo.objects.filter(person=tmp_wfc, is_void=False, date_delinked=None)
+
             for geo in m_wfc_geo:
                 areainfo = SetupGeography.objects.get(area_id=geo.area_id)
                 if areainfo.area_type_id in geos:
@@ -723,8 +739,8 @@ def load_wfc_from_id(wfc_pk,user=None,include_dead=False):
         if geos and 'GDIS'.strip() in geos:
             districts = geos['GDIS'.strip()]
         if geos and 'GWRD'.strip() in geos:
-            wards = geos['GWRD',strip()]
-        
+            wards = geos['GWRD', strip()]
+
         """
         ***Not Required For Kenyan Model***
         communties = {}
@@ -733,9 +749,9 @@ def load_wfc_from_id(wfc_pk,user=None,include_dead=False):
         """
         org_data_hidden = reconstruct_org_text(org_units)
 
-        wfc = WorkforceMember(  
-            workforce_id = tmp_wfc.workforce_id,
-            national_id= tmp_wfc.national_id,
+        wfc = WorkforceMember(
+            workforce_id=tmp_wfc.workforce_id,
+            national_id=tmp_wfc.national_id,
             first_name=tmp_wfc.first_name,
             surname=tmp_wfc.surname,
             other_names=tmp_wfc.other_names,
@@ -747,45 +763,46 @@ def load_wfc_from_id(wfc_pk,user=None,include_dead=False):
             ts_number=ts_id,
             sign_number=sing_id,
             roles=None,
-            org_units= org_units,
+            org_units=org_units,
             org_unit_name=org_unit_name,
-            person_type=person_type_desc, 
-            gdclsu_details=None, 
+            person_type=person_type_desc,
+            gdclsu_details=None,
             contact=contact,
             person_type_id=person_type_id,
             districts=districts,
             wards=wards,
-            wards_string=get_obj_strings(wards,None,'ward'),
-            org_units_string=get_obj_strings(org_units,org_unit_name,'org'),
-            communities_string=get_obj_strings(communities,None,'community'),
-            communities= communities,
+            wards_string=get_obj_strings(wards, None, 'ward'),
+            org_units_string=get_obj_strings(org_units, org_unit_name, 'org'),
+            communities_string=get_obj_strings(communities, None, 'community'),
+            communities=communities,
             direct_services='',
             edit_mode_hidden='',
             workforce_type_change_date=None,
             parent_org_change_date=None,
             work_locations_change_date=None,
             org_data_hidden=org_data_hidden,
-            org_unit_id = org_unit_id
-                    )
+            org_unit_id=org_unit_id
+        )
         wfc.id_int = tmp_wfc.pk
 
         return wfc
-    
+
     else:
-        print 'Workforce with the ID passsed does not exists'
-        #raise Exception('Workforce with the ID passsed does not exists')
+        print('Workforce with the ID passsed does not exists')
+        # raise Exception('Workforce with the ID passsed does not exists')
+
 
 def search_wfc_by_org_unit(tokens):
-    #print tokens,'tokens'
+    # print tokens,'tokens'
     org_ids = None
     search_condition = []
     if tokens:
-        #for term in tokens:
-        #print term,'term'
+        # for term in tokens:
+        # print term,'term'
         search_condition.append(Q(org_unit_name__icontains=tokens))
 
         orgs = RegOrgUnit.objects.filter(reduce(operator.or_, search_condition)).values_list('id', 'org_unit_name')
-        #print orgs,'orgs'
+        # print orgs,'orgs'
         if orgs:
             idstosearch = []
             for id, unit_name in orgs:
@@ -793,7 +810,8 @@ def search_wfc_by_org_unit(tokens):
                     continue
                 idstosearch.append(id)
 
-            org_ids = RegPersonsOrgUnits.objects.filter(org_unit_id__in=idstosearch, is_void=False).values_list('org_unit_id', flat=True)
+            org_ids = RegPersonsOrgUnits.objects.filter(org_unit_id__in=idstosearch, is_void=False).values_list(
+                'org_unit_id', flat=True)
 
     return org_ids
 
@@ -811,11 +829,11 @@ def get_parent_area_ids(geoid, geoids=[]):
 
 
 def search_wfc_by_location(tokens):
-    #Search By Living In
+    # Search By Living In
     loc_ids = None
     search_condition = []
     if tokens:
-        #for term in tokens:
+        # for term in tokens:
         search_condition.append(Q(area_name__icontains=tokens))
 
         geos = SetupGeography.objects.filter(reduce(operator.or_, search_condition)).values_list('area_id', 'area_name')
@@ -830,46 +848,56 @@ def search_wfc_by_location(tokens):
             loc_ids = RegPersonsGeo.objects.filter(area_id__in=idstosearch).values_list('area_id', flat=True)
     return loc_ids
 
-def search_wfcs(tokens, wfc_type,search_location=True, search_by_org_unit = False):
+
+def search_wfcs(tokens, wfc_type, search_location=True, search_by_org_unit=False):
     result = set()
     q_list = []
     if tokens or wfc_type:
         try:
             if tokens:
-                #for token in tokens:
+                # for token in tokens:
                 q_list.append(Q(first_name__icontains=tokens))
                 q_list.append(Q(surname__icontains=tokens))
                 q_list.append(Q(other_names__icontains=tokens))
-                #q_list.append(Q(national_id__icontains=tokens))
-            
+                # q_list.append(Q(national_id__icontains=tokens))
+
             if wfc_type and tokens:
-                tmp_result = RegPerson.objects.filter(reduce(operator.or_, q_list), regpersonstypes__person_type_id__icontains=wfc_type, regpersonstypes__date_ended=None, is_void=False,date_of_death=None)               
+                tmp_result = RegPerson.objects.filter(reduce(operator.or_, q_list),
+                                                      regpersonstypes__person_type_id__icontains=wfc_type,
+                                                      regpersonstypes__date_ended=None, is_void=False,
+                                                      date_of_death=None)
             elif wfc_type and not tokens:
-                tmp_result = RegPerson.objects.filter(regpersonstypes__person_type_id__contains=wfc_type, regpersonstypes__date_ended=None,is_void=False,date_of_death=None)
+                tmp_result = RegPerson.objects.filter(regpersonstypes__person_type_id__contains=wfc_type,
+                                                      regpersonstypes__date_ended=None, is_void=False,
+                                                      date_of_death=None)
             elif tokens and not wfc_type:
-                tmp_result = RegPerson.objects.filter(reduce(operator.or_, q_list), regpersonstypes__date_ended=None,is_void=False,date_of_death=None)
+                tmp_result = RegPerson.objects.filter(reduce(operator.or_, q_list), regpersonstypes__date_ended=None,
+                                                      is_void=False, date_of_death=None)
             elif not wfc_type and not tokens:
-                tmp_result = RegPerson.objects.filter(regpersonstypes__date_ended=None, is_void=False,date_of_death=None)
-            
-            #Add Person To Result
+                tmp_result = RegPerson.objects.filter(regpersonstypes__date_ended=None, is_void=False,
+                                                      date_of_death=None)
+
+            # Add Person To Result
             for person in tmp_result:
                 result.add(person)
-            
+
             if search_location:
                 loc_ids = search_wfc_by_location(tokens)
                 if loc_ids:
                     locsstofetch = list(loc_ids)
-                    
+
                     if locsstofetch:
                         if wfc_type:
-                            persons_by_geo = RegPerson.objects.filter(regpersonstypes__person_type_id__icontains=wfc_type,
-                                regpersonsgeo__area_id__in=locsstofetch,is_void=False,date_of_death=None)
+                            persons_by_geo = RegPerson.objects.filter(
+                                regpersonstypes__person_type_id__icontains=wfc_type,
+                                regpersonsgeo__area_id__in=locsstofetch, is_void=False, date_of_death=None)
                         else:
-                            persons_by_geo = RegPerson.objects.filter(regpersonsgeo__area_id__in=locsstofetch, is_void=False,date_of_death=None)
+                            persons_by_geo = RegPerson.objects.filter(regpersonsgeo__area_id__in=locsstofetch,
+                                                                      is_void=False, date_of_death=None)
                     if persons_by_geo:
                         for person_by_geo in persons_by_geo:
                             result.add(person_by_geo)
-            
+
             if search_by_org_unit:
                 org_unit_ids = search_wfc_by_org_unit(tokens)
                 if org_unit_ids:
@@ -899,7 +927,6 @@ def search_wfcs(tokens, wfc_type,search_location=True, search_by_org_unit = Fals
             regpersonstypes__date_ended=None, is_void=False,
             date_of_death=None)
     return result
-
 
 
 def get_persons_list(user, tokens, wfc_type, getJSON=False,
@@ -1180,16 +1207,19 @@ def beneficiary_id_generator(modelid):
     checkdigit = calculate_luhn(str(uniqueid))
     return benficiary_id_prefix + str(uniqueid) + str(checkdigit)
 
+
 def form_id_generator(modelid):
     uniqueid = '%05d' % modelid
     checkdigit = calculate_luhn(str(uniqueid))
     return form_id_prefix + str(uniqueid) + str(checkdigit)
 
+
 def case_event_id_generator(modelid):
     uniqueid = '%05d' % modelid
     checkdigit = calculate_luhn(str(uniqueid))
     return case_event_id_prefix + str(uniqueid) + str(checkdigit)
-    
+
+
 def org_id_generator(modelid):
     uniqueid = '%05d' % modelid
     checkdigit = calculate_luhn(str(uniqueid))
@@ -1200,8 +1230,10 @@ def luhn_checksum(check_number):
     '''
     http://en.wikipedia.org/wiki/Luhn_algorithm
     '''
+
     def digits_of(n):
         return [int(d) for d in str(n)]
+
     digits = digits_of(check_number)
     odd_digits = digits[-1::-2]
     even_digits = digits[-2::-2]
@@ -1233,9 +1265,9 @@ def convert_date(d_string, fmt='%d-%b-%Y'):
             new_date = datetime.datetime.strptime(d_string, fmt)
         else:
             new_date = datetime.datetime.strptime(d_string, fmt)
-    except Exception, e:
+    except Exception as e:
         error = 'Error converting date -%s' % (str(e))
-        print error
+        print(error)
         return d_string
     else:
         return new_date
@@ -1253,3 +1285,4 @@ def get_days_difference(d_event):
     delta = d_today - d_event
 
     return delta.days
+

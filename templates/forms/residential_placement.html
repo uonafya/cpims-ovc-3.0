@@ -2,11 +2,12 @@
 
 {% load app_filters %}
 
-{% load staticfiles %}
+{% load static %}
 
 {% block page_title %} Residential Placement {% endblock %}
 
 {% block style_code %}
+
 <link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet" />
 <link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
 <link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
@@ -35,10 +36,10 @@
         <span class="close" data-dismiss="alert">×</span>
         <i class="fa fa-info fa-2x pull-left"></i>
     {% else %}
-        <div id="messages" class="alert alert-success fade in">
+        <div id="message" class="alert alert-success fade in">
         <span class="close" data-dismiss="alert">×</span>
         <i class="fa fa-check fa-2x pull-left"></i>
-    {% endif %}    
+    {% endif %}
         <p>{{ message }}</p>
     </div>
    {% endfor %}
@@ -56,7 +57,7 @@
                     <div class="panel-heading-btn">
                             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
                             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                    </div>                          
+                    </div>
                     <h4 class="panel-title"><b>Search Form</b></h4>
                 </div>
                 <div class="panel-body">
@@ -75,7 +76,7 @@
                         <!--
                         <a href="#" class="btn btn-sm btn-danger m-r-5" onClick="ResidentialPlacement('Emergency', 0)"><i class="fa fa-plus"></i>&nbsp;Emergency Placement</a>
                         -->
-                    </form>       
+                    </form>
                 </div>
             </div>
         </div>
@@ -90,7 +91,7 @@
                         <th>ID</th>
                         <th>First Name</th>
                         <th>Surname</th>
-                        <th>Sex</th>  
+                        <th>Sex</th>
                         <th>Institution</th>
                         <th>Residence</th>
                         <th>Actions</th>
@@ -98,7 +99,7 @@
                 </thead>
                 <tbody>
                 {% for result in resultsets %}
-                <tr>                                        
+                <tr>
                     <td width="5%">{{ result.id }}</a></td>
                     <td width="20%">{{ result.first_name }}</td>
                     <td width="20%">{{ result.surname }}</td>
@@ -112,7 +113,7 @@
                     </td>
 
                     <td width="20%">{{ result.ovc_persongeos }}</td>
-                 
+
                     <td width="5%">
                     <!--{{ result.placement_id }}-->
                     {% if result.caserecordsheet %}
@@ -125,12 +126,12 @@
                         {% else %}
                             <span style="width:100%" class="badge badge-danger">THIS CHILD HAS NOT BEEN REFERRED FOR PLACEMENT</span>
                         {% endif %}
-                    {% else %} 
-                        <button style="width:100%" type="button" class="btn btn-sm btn-primary m-r-5" onClick="CaseRecordSheet({{ result.id }})">Fill Case Record Sheet</button> 
-                    {% endif %}                                       
+                    {% else %}
+                        <button style="width:100%" type="button" class="btn btn-sm btn-primary m-r-5" onClick="CaseRecordSheet({{ result.id }})">Fill Case Record Sheet</button>
+                    {% endif %}
                     </td>
                 </tr>
-                {% endfor %}  
+                {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -156,7 +157,7 @@ function ResidentialPlacementFollowup(person_id, placement_id)
     var id = person_id
     //console.log(person_id);
     //console.log(placement_id);
-    return window.location.href='{% url 'placement_followup' id=0 %}'.replace("0", id); 
+    return window.location.href='{% url 'placement_followup' id=0 %}'.replace("0", id);
 }
 function ResidentialPlacement(placement_type, person_id)
 {
@@ -168,11 +169,11 @@ function CaseRecordSheet(person_id)
 }
 </script>
 <script>
-$(document).ready(function() 
+$(document).ready(function()
 {
     $('#placement_data_table').bootstrapTable(
-    { 
-        toggle: 'table', 
+    {
+        toggle: 'table',
         search: 'true',
         locale: 'en-US',
         pagination: 'true',
@@ -184,12 +185,12 @@ $(document).ready(function()
         singleSelect: true,
         clickToSelect:true,
         maintainSelected: true,
-        
+
         onClickRow: function (row, $element)
         {
-            // row: the record corresponding to the clicked row, 
+            // row: the record corresponding to the clicked row,
             // $element: the tr element
-           
+
             person_id = row[0];
             person_fname = row[1];
             person_sname = row[2];
@@ -197,7 +198,7 @@ $(document).ready(function()
             sessionStorage.setItem("person_fname",person_fname);
             sessionStorage.setItem("person_sname",person_sname);
         }
-        
+
     });
 
     //multi selects
@@ -209,9 +210,8 @@ $(document).ready(function()
         maxHeight: 300,
         buttonWidth: '100%',
         buttonClass: 'btn btn-white'
-    }); 
+    });
 });
 </script>
 {% endblock %}
-
-
+        </div>

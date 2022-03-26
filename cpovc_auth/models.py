@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser, PermissionsMixin, Group, Permission)
@@ -12,7 +12,6 @@ from django.dispatch import receiver
 class CPOVCUserManager(BaseUserManager):
 
     def create_user(self, username, reg_person, password=None):
-
         from cpovc_registry.models import RegPerson
         if not username:
             raise ValueError('The given username must be set')
@@ -45,7 +44,8 @@ class CPOVCUserManager(BaseUserManager):
 
 
 class AppUser(AbstractBaseUser, PermissionsMixin):
-    reg_person = models.OneToOneField('cpovc_registry.RegPerson', null=False)
+    # changed the onetoone to foreignKey
+    reg_person = models.ForeignKey(to='cpovc_registry.RegPerson', on_delete=models.CASCADE, null=False)
     role = models.CharField(max_length=20, unique=False, default='Public')
     username = models.CharField(max_length=20, unique=True)
     is_staff = models.BooleanField(default=False)
@@ -154,10 +154,10 @@ class CPOVCRole(Group):
 class CPOVCUserRoleGeoOrg(models.Model):
     # Put here to avoid cyclic imports because of User model
     # from cpovc_registry.models import RegPersonsGeo, RegOrgUnit
-    user = models.ForeignKey(AppUser)
-    group = models.ForeignKey(CPOVCRole)
-    org_unit = models.ForeignKey('cpovc_registry.RegOrgUnit', null=True)
-    area = models.ForeignKey('cpovc_main.SetupGeography', null=True)
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    group = models.ForeignKey(CPOVCRole, on_delete=models.CASCADE)
+    org_unit = models.ForeignKey('cpovc_registry.RegOrgUnit', on_delete=models.CASCADE, null=True)
+    area = models.ForeignKey('cpovc_main.SetupGeography', on_delete=models.CASCADE, null=True)
     timestamp_modified = models.DateTimeField(default=timezone.now)
     is_void = models.BooleanField(default=False)
 
@@ -171,10 +171,10 @@ def update_change(sender, instance, **kwargs):
     try:
         obj = sender.objects.get(pk=instance.pk)
     except sender.DoesNotExist:
-        print "User does not exist"
+        print("User does not exist")
         pass
     else:
         if obj.password != instance.password:
-            print "Password changed so update date."
+            print("Password changed so update date.")
         else:
-            print "Password NOT changed so NO update."
+            print("Password NOT changed so NO update.")

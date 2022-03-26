@@ -3,7 +3,7 @@ import csv
 import time
 from django.contrib import admin
 from django.http import HttpResponse
-from .models import SetupGeography, SetupList
+# from .models import SetupGeography, SetupList
 
 
 def dump_to_csv(modeladmin, request, qs):
@@ -131,7 +131,7 @@ class GeoModelAdmin(admin.ModelAdmin):
     list_filter = ['area_type_id', 'parent_area_id']
     actions = [dump_to_csv, export_xls, export_xlsx]
 
-admin.site.register(SetupGeography, GeoModelAdmin)
+# admin.site.register(SetupGeography, GeoModelAdmin)
 
 
 class GeneralModelAdmin(admin.ModelAdmin):
@@ -146,4 +146,4 @@ class GeneralModelAdmin(admin.ModelAdmin):
     actions = [dump_to_csv]
 
 
-admin.site.register(SetupList, GeneralModelAdmin)
+# admin.site.register(SetupList, GeneralModelAdmin)

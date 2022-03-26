@@ -1,4 +1,3 @@
-
 from cpovc_registry.functions import (
     get_client_ip, get_meta_data)
 
@@ -20,7 +19,7 @@ def save_audit_trail(request, params, audit_type):
         interface_id = params['interface_id']
         meta_data = get_meta_data(request)
 
-        print 'Audit Trail', params
+        print('Audit Trail', params)
 
         FormsAuditTrail(
             transaction_type_id=transaction_type_id,
@@ -32,8 +31,8 @@ def save_audit_trail(request, params, audit_type):
             meta_data=meta_data,
             app_user_id=user_id).save()
 
-    except Exception, e:
-        print 'Error saving audit - %s' % (str(e))
+    except Exception as e:
+        print('Error saving audit - %s' % (str(e)))
         pass
     else:
         pass
@@ -58,9 +57,9 @@ def create_fields(field_name=[], default_txt=False):
                 dict_val[item_cat] = [items]
             else:
                 dict_val[item_cat].append(items)
-    except Exception, e:
+    except Exception as e:
         error = 'Error getting list - %s' % (str(e))
-        print error
+        print(error)
         return {}
     else:
         return dict_val
@@ -69,7 +68,7 @@ def create_fields(field_name=[], default_txt=False):
 def create_form_fields(data):
     """Method to create fields."""
     try:
-        print data
+        print(data)
         dms = {'HG': ['1a', '1s'], 'SC': ['2a', '2s'], 'PG': ['3a', '3s'],
                'PSG': ['4a', '4s'], 'EG': ['5a', '5s'], 'HE': ['6a', '6s']}
         domains = {'HG': {}, 'SC': {}, 'PG': {}, 'PSG': {}, 'EG': {}, 'HE': {}}
@@ -82,7 +81,7 @@ def create_form_fields(data):
                 else:
                     domains[domain][itd] = []
     except Exception as e:
-        print 'error with domains - %s' % (str(e))
+        print('error with domains - %s' % (str(e)))
         return {}
     else:
         return domains
@@ -95,12 +94,12 @@ def save_form1b(request, person_id, edit=0):
         domains = {'SC': 'DSHC', 'PS': 'DPSS', 'PG': 'DPRO',
                    'HE': 'DHES', 'HG': 'DHNU', 'EG': 'DEDU'}
         if edit:
-            print 'F1B edit'
+            print('F1B edit')
         else:
             f1b_date = request.POST.get('olmis_service_date')
             caretaker_id = request.POST.get('caretaker_id')
             f1bs = request.POST.getlist('f1b[]')
-            print 'save', f1b_date, f1bs
+            print('save', f1b_date, f1bs)
             hh = get_house_hold(caretaker_id)
             hhid = hh.id if hh else None
             event_date = convert_date(f1b_date)
@@ -118,7 +117,7 @@ def save_form1b(request, person_id, edit=0):
                            entity=f1b).save()
 
     except Exception as e:
-        print 'error saving form 1B - %s' % (str(e))
+        print('error saving form 1B - %s' % (str(e)))
         return None
     else:
         return True
@@ -152,7 +151,7 @@ def save_bursary(request, person_id):
         mother_telephone = request.POST.get('mother_contact')
         guardian_names = request.POST.get('guardian_name')
         guardian_telephone = request.POST.get('guardian_contact')
-        # 
+        #
         guardian_relation = request.POST.get('guardian_relation')
         val_same_household = request.POST.get('living_with')
         same_household = True if val_same_household == 'AYES' else False
@@ -258,7 +257,7 @@ def save_bursary(request, person_id):
             app_user_id=app_user_id, application_date=application_date)
         gok_bursary.save()
     except Exception as e:
-        print 'Error saving bursary - %s' % (str(e))
+        print('Error saving bursary - %s' % (str(e)))
     else:
         return True
 
@@ -270,7 +269,7 @@ def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event
         'No': 'No'
     }
     if question.code.lower() == 'cp2d':
-        if answer is '':
+        if answer == '':
             answer = None
         if answer is not None:
             answer = convert_date(answer)
@@ -294,7 +293,7 @@ def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event
             date_of_event=date_event
         )
     except Exception as e:
-        print '%s :error saving cpara - %s' % (question.code, str(e))
+        print('%s :error saving cpara - %s' % (question.code, str(e)))
         return False
 
 
@@ -376,7 +375,7 @@ def get_past_cpt(ovc_id):
                 'event_healthy': one_event_healthy,
                 'event_school': one_event_school
             })
-        print("get_past_cpt successful::::::::::::", caseplan_events)
+        print(("get_past_cpt successful::::::::::::", caseplan_events))
         return caseplan_events
     except Exception as e:
         caseplan_events = []
@@ -384,6 +383,6 @@ def get_past_cpt(ovc_id):
             'error': True,
             'msg': '%s :error fetching past CPT - %s' % (ovc_id, str(e))
         })
-        print '%s :error fetching past CPT - %s' % (ovc_id, str(e))
+        print('%s :error fetching past CPT - %s' % (ovc_id, str(e)))
         # return False
         return caseplan_events

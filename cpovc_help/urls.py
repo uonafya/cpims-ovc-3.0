@@ -1,10 +1,11 @@
 """Urls for Settings."""
-from django.conf.urls import patterns, url
+from django.urls import path, re_path
+from django.conf.urls import patterns
 
 # This should contain urls related to settings ONLY
 urlpatterns = patterns(
     'cpovc_help.views',
-    url(r'^downloads/$', 'help_downloads', name='help_downloads'),
-    url(r'^download/(?P<name>[0-9A-Za-z_\-\.]+)$', 'doc_download', name='doc_download'),
-    url(r'^faq/$', 'help_faq', name='help_faq'),
+    path('downloads/', 'help_downloads', name='help_downloads'),
+    re_path(r'^download/(?P<name>[0-9A-Za-z_\-\.]+)$', 'doc_download', name='doc_download'),
+    path('faq/', 'help_faq', name='help_faq'),
 )

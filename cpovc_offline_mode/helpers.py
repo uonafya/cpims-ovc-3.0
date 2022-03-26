@@ -5,12 +5,14 @@ import logging
 from django.core.cache import cache
 from django.utils import timezone
 
+import cpovc_ovc
 from cpovc_forms.models import OVCCareEvents, OVCCareAssessment, OVCCareEAV, OVCCarePriority, OVCCareServices, \
     OVCCareF1B, OVCCareCasePlan, OVCCareForms
 from cpovc_main.functions import new_guid_32, convert_date
 from cpovc_main.models import SetupList
 from cpovc_ovc.functions import get_house_hold
-from cpovc_ovc.models import OVCEducation, OVCHealth, OVCHHMembers, OVCHouseHold, OVCRegistration
+# from cpovc_ovc.models import OVCEducation, OVCHealth, OVCHHMembers, OVCHouseHold, OVCRegistration
+from cpovc_ovc.models import OVCHealth, OVCHHMembers
 from cpovc_registry.models import RegPerson
 
 logger = logging.getLogger(__name__)
@@ -19,7 +21,7 @@ def get_ovc_school_details(ovc):
     if ovc.school_level == "SLNS":
         return {}
 
-    schools = OVCEducation.objects.filter(person_id=ovc.person.id, is_void=False)[:1]
+    schools = cpovc_ovc.models.OVCEducation.objects.filter(person_id=ovc.person.id, is_void=False)[:1]
     if not schools:
         return {}
     school = schools[0]
