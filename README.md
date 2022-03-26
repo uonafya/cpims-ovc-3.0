@@ -12,13 +12,13 @@
          alt="License">
 </p>
 
-## Who we are
+## Who we are 😊
 
 `Codeblocks` are a group formed in the recent HealthIt Hackathon hosted at Kabarak University.
 
 We were responsible in the upgrade of the CPIMS from `python 2.7 to python 3.9` and upgrade of django from `django 1.8 to django 4.0.2`.
 
-## Tasks worked on 
+## Tasks worked on ⚒
 We worked on cpims-ovs and cpims-dcs repositories. The main tasks undertaken was the syntax upgrade from python 2 to python 3. 
 
 We worked on the cpims-ovc-forms and cpims-dcs-main. The individual changes made on the modules can be found on our [wiki](). 
@@ -27,13 +27,64 @@ Below is the list of few changes made on our modules.
 
 `CPIMS-OVC-forms :` 
 
-    - [ ] Syntax upgrade on the Models, views, forms and urls
-    - [ ] Writing of 
+    - [x] Syntax upgrade on the Models, views, forms and urls
+    - [x] Writing of 
     
 `CPIMS-DCS-main :` 
 
-    - [ ] Syntax upgrade on the Models, views, forms and urls
-    - [ ] Writing of tests
+    - [x] Syntax upgrade on the Models, views, forms and urls
+    - [x] Writing of tests
+
+## Guide 🗺
+### Installation
+The requirements for this project is python and pip
+
+One the requirements are installed, you can setup a virtual environment using `venv`
+```shell
+$ pip install virtualenv
+```
+
+On **Success** you have to create a virtual environment with python 3.9 
+```shell
+$ python3 venv .env
+
+$ source .env/bin/activate
+```
+
+When the virtual environment is created, you can install the required packages using 
+```shell
+$ pip install -r ./requirements/base.txt
+```
+
+`⚠` 🚧 This project is under active development so the starting the django server may fail.
+
+### Project Setup 👶
+To start one has to make `migrations`
+```shell
+$ python manage.py makemigrations
+```
+
+Then migrate 
+```shell
+$ python manage.py migrate
+```
+
+`🎉` You can start the dev server now and start contributing
+
+### Running the Dev Server 🖥
+To run the dev server 
+```shell
+$ python manage.py runserver
+```
+
+### Running your Tests 🧪
+To run tests
+```shell
+$ python manage.py test
+```
+
+## License
+This Project is under the [`Apache`](https://choosealicense.com/licenses/) License
 ## Contributors
 
 1. [Emmanual Changole](https://github.com/EmmanuelChangole)
