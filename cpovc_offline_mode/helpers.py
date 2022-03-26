@@ -12,6 +12,7 @@ from cpovc_main.functions import new_guid_32, convert_date
 from cpovc_main.models import SetupList
 from cpovc_ovc.functions import get_house_hold
 # from cpovc_ovc.models import OVCEducation, OVCHealth, OVCHHMembers, OVCHouseHold, OVCRegistration
+from cpovc_ovc.models import OVCHealth, OVCHHMembers
 from cpovc_registry.models import RegPerson
 
 logger = logging.getLogger(__name__)
