@@ -1,0 +1,8 @@
+{
+    "schemaVersion": "0",
+    "name": "cpims-ovc-3.0.F",
+    "rootDir": "./cpovc_offline_mode",
+    "testNamePattern": "{name}_test.{ext}",
+    "testLocationStrategy": "relativeToProjectRoot",
+    "testLocationFolder": "./cpovc_offline_mode_tests"
+}
