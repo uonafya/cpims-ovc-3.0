@@ -20,7 +20,7 @@ from cpovc_auth.decorators import is_allowed_ous
 from cpovc_forms.models import OVCCareEvents
 
 
-# @login_required(login_url='/')
+@login_required(login_url='/')
 def ovc_home(request):
     """Some default page for Server Errors."""
     try:
@@ -76,8 +76,8 @@ def ovc_search(request):
                             safe=False)
 
 
-# @login_required(login_url='/')
-# @is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
+@login_required(login_url='/')
+@is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
 def ovc_register(request, id):
     """Some default page for Server Errors."""
     try:
@@ -164,8 +164,8 @@ def ovc_register(request, id):
         raise e
 
 from cpovc_forms.models import OVCHivStatus
-# @login_required(login_url='/')
-# @is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
+@login_required(login_url='/')
+@is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
 def ovc_edit(request, id):
     """Some default page for Server Errors."""
     try:
@@ -338,8 +338,8 @@ def ovc_edit(request, id):
         form=OVCSearchForm()
         return render(request, 'ovc/home.html', {'form':form, 'status':200})
 
-# @login_required(login_url='/')
-# @is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
+@login_required(login_url='/')
+@is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
 def ovc_view(request, id):
     """Some default page for Server Errors."""
     try:
@@ -459,7 +459,7 @@ def ovc_view(request, id):
         url=reverse('ovc_register', kwargs={'id':id})
         return HttpResponseRedirect(url)
 
-# @login_required(login_url='/')
+@login_required(login_url='/')
 def hh_manage(request, hhid):
     """Some default page for Server Errors."""
     try:
@@ -475,7 +475,7 @@ def hh_manage(request, hhid):
         raise e
 
 
-# @login_required(login_url='/')
+@login_required(login_url='/')
 def ovc_manage(request):
     """Some default page for Server Errors."""
     try:

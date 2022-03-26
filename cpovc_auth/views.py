@@ -172,7 +172,7 @@ def register(request):
 
 
 @login_required
-# @is_allowed_groups(['ACM', 'DSU'])
+@is_allowed_groups(['ACM', 'DSU'])
 def roles_home(request):
     """Default page for Roles home."""
     try:
@@ -181,8 +181,8 @@ def roles_home(request):
         raise e
 
 
-# @login_required
-# @is_allowed_groups(['ACM', 'DSU'])
+@login_required
+@is_allowed_groups(['ACM', 'DSU'])
 def roles_edit(request, user_id):
     """Create / Edit page for the roles."""
     try:

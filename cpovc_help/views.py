@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from .models import OVCDownloads, OVCFAQ
 
 
-# @login_required
+@login_required
 def help_home(request):
     """Method to do pivot reports."""
     try:
@@ -21,7 +21,7 @@ def help_home(request):
         pass
 
 
-# @login_required
+@login_required
 def help_downloads(request):
     """Method to do pivot reports."""
     try:
@@ -34,7 +34,7 @@ def help_downloads(request):
         pass
 
 #
-# @login_required
+@login_required
 def help_faq(request):
     """Method to do pivot reports."""
     try:
@@ -46,7 +46,7 @@ def help_faq(request):
         pass
 
 
-# @login_required
+@login_required
 def doc_download(request, name):
     """Method to do pivot reports."""
     try:

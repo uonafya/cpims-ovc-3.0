@@ -54,7 +54,7 @@ DOC_ROOT = settings.DOCUMENT_ROOT
 STATIC_ROOT = settings.STATICFILES_DIRS[0]
 
 
-# @login_required
+@login_required
 def reports_cpims(request, id):
     """Method for all other reports."""
     try:
@@ -96,7 +96,7 @@ def arrange_pending(mylist):
     return vals
 
 
-# @login_required
+@login_required
 def reports_home(request):
     """Some default page for reports home page."""
     try:
@@ -370,7 +370,7 @@ def get_viral_load_report(request):
 
 
 
-# @login_required
+@login_required
 def reports_caseload(request):
     """Case load views."""
     results, html = {}, None
@@ -664,7 +664,7 @@ def reports_generate(request):
         raise e
 
 
-# @login_required
+@login_required
 def reports_download(request, file_name):
     """Generic method for downloading files."""
     try:
@@ -713,7 +713,7 @@ def reports_download(request, file_name):
         return response
 
 
-# @login_required
+@login_required
 def print_pdf(request):
     """Download without printing."""
     response = HttpResponse(content_type='application/pdf')
@@ -730,7 +730,7 @@ def print_pdf(request):
     return response
 
 
-# @login_required
+@login_required
 def manage_reports(request):
     """For cleaning up the reports."""
     data, users, vals = [], [], {}
@@ -802,7 +802,7 @@ def manage_reports(request):
         raise e
 
 
-# @login_required
+@login_required
 def manage_dashboard(request):
     """Method to manage user dashboard."""
     try:
@@ -882,7 +882,7 @@ def clean_reports(report_id):
         return 99, 'File removal error. Please contact Administrator.'
 
 
-# @login_required
+@login_required
 def reports_pivot(request):
     """Method to do pivot reports."""
     try:
@@ -894,7 +894,7 @@ def reports_pivot(request):
         pass
 
 
-# @login_required
+@login_required
 def reports_ovc_pivot(request):
     """Method to do pivot reports."""
     try:
@@ -906,7 +906,7 @@ def reports_ovc_pivot(request):
         pass
 
 
-# @login_required
+@login_required
 def reports_ovc_datim_mer_pivot(request):
     """Method to do pivot reports."""
     try:
@@ -917,7 +917,7 @@ def reports_ovc_datim_mer_pivot(request):
     else:
         pass
 
-# @login_required
+@login_required
 def reports_ovc_datim_mer23_pivot(request):
     """Method to do pivot reports."""
     try:
@@ -928,7 +928,7 @@ def reports_ovc_datim_mer23_pivot(request):
     else:
         pass
 
-# @login_required
+@login_required
 def reports_ovc_datim_mer24_pivot(request):
     """Method to do pivot reports."""
     try:
@@ -939,7 +939,7 @@ def reports_ovc_datim_mer24_pivot(request):
     else:
         pass
 
-# @login_required
+@login_required
 def reports_ovc_datim_mer25_pivot(request):
     """Method to do pivot reports."""
     try:
@@ -950,7 +950,7 @@ def reports_ovc_datim_mer25_pivot(request):
     else:
         pass
 
-# @login_required
+@login_required
 def reports_ovc_pepfar(request):
     """Method to do pivot reports."""
     try:
@@ -962,7 +962,7 @@ def reports_ovc_pepfar(request):
         pass
 
 
-# @login_required
+@login_required
 def viral_load(request):
     """Method to do pivot reports."""
     try:
@@ -973,7 +973,7 @@ def viral_load(request):
     else:
         pass
 
-# @login_required
+@login_required
 def reports_ovc_kpi(request):
     """Method to do pivot reports."""
     try:
@@ -985,7 +985,7 @@ def reports_ovc_kpi(request):
         pass
 
 
-# @login_required
+@login_required
 def reports_ovc_list(request):
     """Method to list OVC reports."""
     try:
@@ -1089,7 +1089,7 @@ def reports_ovc_rawdata(request):
                             safe=False)
 
 
-# @login_required
+@login_required
 def reports_ovc(request, id):
     """Method to do pivot reports."""
     try:
@@ -1136,7 +1136,7 @@ def reports_ovc_download(request):
     return response
 
 
-# @login_required
+@login_required
 def cluster(request):
     """Method to handle clusters."""
     try:
@@ -1220,7 +1220,7 @@ def my_custom_sql(sql):
     return row
 
 
-# @login_required
+@login_required
 def reports_bursary(request):
     """Method to do pivot reports."""
     try:
