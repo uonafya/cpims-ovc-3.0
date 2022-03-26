@@ -15,12 +15,16 @@ from .models import RegPerson
 from cpovc_main.country import OCOUNTRIES
 from cpovc_access.forms import StrictSetPasswordForm
 
+"""
+refactor: change string formating style
+          add brackets to print function
+          meet pep8 standards
+"""
 
 my_list = []
 for country in OCOUNTRIES:
     my_list.append((country, OCOUNTRIES[country]))
 country_list = list(my_list)
-
 
 person_type_list = get_list('person_type_id', 'Please Select')
 org_unit_type_list = get_list('org_unit_type_id', 'Please Select')
@@ -37,7 +41,7 @@ county_list = get_geo_list(all_list, 'GPRV')
 sub_county_list = get_geo_list(all_list, 'GDIS')
 ward_list = get_geo_list(all_list, 'GWRD')
 
-caregiver_hiv_status_choices = ( ('', 'Select status'), ('1', 'Positive'), ('2', 'Negative'), ('3', 'Not Known') )
+caregiver_hiv_status_choices = (('', 'Select status'), ('1', 'Positive'), ('2', 'Negative'), ('3', 'Not Known'))
 
 YESNO_CHOICES = get_list('yesno_id')
 
@@ -82,6 +86,7 @@ class RegistrationSearchForm(forms.Form):
             attrs={'id': 'person_deceased'}))
 
 
+# refactor: change the class RadioRenderer to RadioSelect, where RadioCustomRenderer is inheriting from
 class RadioCustomRenderer(forms.RadioSelect):
     """Custom radio button renderer class."""
 
@@ -127,7 +132,7 @@ class RegistrationForm(forms.Form):
 
         # All working in selections need to be tied to currently logged in user
         user_geos = get_user_geos(self.user)
-        print (user_geos)
+        print(user_geos)
         county_filter = [] if user.is_superuser else user_geos['counties']
         scounty_filter = [] if user.is_superuser else user_geos['sub_counties']
         ward_filter = [] if user.is_superuser else user_geos['wards']
@@ -495,7 +500,7 @@ class LoginForm(forms.Form):
         attrs={'placeholder': _('Password'), 'class': 'form-control input-lg',
                'autofocus': 'false'}),
         error_messages={'required': 'Please enter your password.',
-                        'invalid': 'Please enter a valid password.'},)
+                        'invalid': 'Please enter a valid password.'}, )
 
     def clean_username(self):
         """Method to clean username."""
@@ -717,11 +722,11 @@ class FormContact(forms.Form):
                 v_name, v_check = 'data-parsley-type', "number"
             else:
                 if 'data-parsley-type' in attrs:
-                    del(attrs['data-parsley-type'])
+                    del (attrs['data-parsley-type'])
                 if 'data-parsley-min' in attrs:
-                    del(attrs['data-parsley-min'])
+                    del (attrs['data-parsley-min'])
                 if 'data-parsley-max' in attrs:
-                    del(attrs['data-parsley-max'])
+                    del (attrs['data-parsley-max'])
             # validations params
             attrs[v_name] = v_check
             is_designate = 'designated' in contact_name.lower()
@@ -735,22 +740,22 @@ class FormContact(forms.Form):
             else:
                 is_required = False
                 if 'data-parsley-required' in attrs:
-                    del(attrs['data-parsley-required'])
-                if 'latitude'in contact_name.lower():
+                    del (attrs['data-parsley-required'])
+                if 'latitude' in contact_name.lower():
                     attrs['data-parsley-type'] = "number"
                     attrs['data-parsley-min'] = "-4"
                     attrs['data-parsley-max'] = "4"
-                elif 'longitude'in contact_name.lower():
+                elif 'longitude' in contact_name.lower():
                     attrs['data-parsley-type'] = "number"
                     attrs['data-parsley-min'] = "31"
                     attrs['data-parsley-max'] = "41"
                 else:
                     if 'data-parsley-group' in attrs:
-                        del(attrs['data-parsley-group'])
+                        del (attrs['data-parsley-group'])
                     if 'data-parsley-min' in attrs:
-                        del(attrs['data-parsley-min'])
+                        del (attrs['data-parsley-min'])
                     if 'data-parsley-max' in attrs:
-                        del(attrs['data-parsley-max'])
+                        del (attrs['data-parsley-max'])
             tool_text = self.do_tooltips(contact_name, is_required)
             cont_name = contact_name + tool_text
             form_char = forms.CharField(label=cont_name,
@@ -773,9 +778,9 @@ class FormContact(forms.Form):
             data = 'Latitude (max +4 for North and min -4 for South)'
         if data.lower() == 'longitude':
             data = 'Longitude (min 31 for East and max 41 for West)'
-        label = ('<span><a href="#" data-toggle="tooltip" title="%s is%s '
+        label = ('<span><a href="#" data-toggle="tooltip" title={:s} is{:s} '
                  'mandatory."><i class="fa fa-info-circle fa-lg">'
-                 '</i></a></span>') % (data, tool_req)
+                 '</i></a></span>').format(data, tool_req)
         return label
 
     def extra_contacts(self):
@@ -784,4 +789,4 @@ class FormContact(forms.Form):
             if name.startswith('contact'):
                 field_name = name.replace('contact_', '')
                 # field_label = self.fields[name].label
-                yield (field_name, value)
+                yield field_name, value

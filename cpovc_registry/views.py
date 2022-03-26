@@ -47,6 +47,13 @@ from cpovc_forms.views import new_case_record_sheet
 
 now = timezone.now()
 
+"""
+refactor: add brackets to print function
+          error handling with exceptions, from [exception, e] to [exception as e]
+          meet pep8 standards
+          string formatting to .format()
+
+"""
 
 @login_required(login_url='/')
 @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])

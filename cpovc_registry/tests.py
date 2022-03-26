@@ -9,6 +9,9 @@ from cpovc_registry.views import (home, register_new, new_user, register_edit, r
                 persons_search, new_user, person_actions, new_person, edit_person,
                 delete_person, registry_look,view_person )
 
+from cpovc_registry.models import (RegOrgUnit, RegOrgUnitContact, RegBiometric, RegPersonsContact,
+                                     RegPerson, RegPersonsTypes)
+ 
 # TestCase for urls
 class Testurls(TestCase):
 
@@ -140,7 +143,40 @@ class TestViews(TestCase):
         self.assertEquals(response.status_code, 200)
 
 
-#Forms TestCases
+# models TestCases
+class RegPersonsGuardiansTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Set up non-modified objects used by all test methods
+        RegPersonsGuardians.objects.create(relationship='Uncle')
+
+    def test_relationship_label(self):
+        guardian = RegPersonsGuardians.objects.get(id=1)
+        field_label = guardian._meta.get_field('relationship').verbose_name
+        self.assertEqual(field_label, 'relationship')
+
+    def test_relationship_label_length(self):
+        guardian = RegPersonsGuardians.objects.get(id=1)
+        max_length = guardian._meta.get_field('relationship').max_length
+        self.assertEqual(max_length, 5)
+
+    def test_date_linked_label(self):
+        guardian = RegPersonsGuardians.objects.get(id=1)
+        field_label = guardian._meta.get_field('date_linked').verbose_name
+        self.assertEqual(field_label, 'linked')
+
+    def test_date_delinked_label(self):
+        guardian = RegPersonsGuardians.objects.get(id=1)
+        field_label = guardian._meta.get_field('date_delinked').verbose_name
+        self.assertEqual(field_label, 'delinked')
+
+
+class RegPersonsTypesTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls) -> None:
+        
+        return super().setUpTestData()
+
 
 
 

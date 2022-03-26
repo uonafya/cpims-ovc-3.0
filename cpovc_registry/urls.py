@@ -1,12 +1,17 @@
 """Registry section urls."""
 from django.urls import path
 from cpovc_registry.functions import delete_person
-from cpovc_registry.views import (home, register_new, register_details, register_edit, persons_search,
+from .views import (home, register_new, register_details, register_edit, persons_search,
                                   new_user,person_actions, new_person, edit_person, delete_person, registry_look, view_person)
 
+"""
+refactor: url function to path function
+          string formatting from r"" to f""
+          import views 
+
+"""
 # This should contain urls related to registry ONLY
 urlpatterns = [
-    'cpovc_registry.views',
     path(f'^ou/$', home, name='registry'),
     path(f'^ou/new/$', register_new, name='registry_new'),
     path(f'^ou/view/<int:org_id>/$', register_details,
