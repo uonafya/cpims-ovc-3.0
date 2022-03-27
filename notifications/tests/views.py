@@ -7,7 +7,7 @@ from django.shortcuts import render
 from notifications.signals import notify
 
 
-@login_required
+# @login_required
 def live_tester(request):
     notify.send(sender=request.user, recipient=request.user, verb='you loaded the page')
 

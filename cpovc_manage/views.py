@@ -1,6 +1,6 @@
 import collections
 from django.shortcuts import render
-from django.core.urlresolvers import reverse
+from django.urls import reverse, resolve
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.forms import formset_factory
@@ -26,7 +26,7 @@ from cpovc_main.models import SetupGeography
 from .params import PARAMS
 
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def manage_home(request):
     """Main home method and view."""
     try:
@@ -38,7 +38,7 @@ def manage_home(request):
         pass
 
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def home_travel(request):
     """Main home method and view."""
     try:
@@ -69,7 +69,7 @@ def home_travel(request):
         pass
 
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def new_travel(request):
     """Main home method and view."""
     try:
@@ -84,7 +84,7 @@ def new_travel(request):
         pass
 
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def view_travel(request, id):
     """Main home method and view."""
     try:
@@ -103,7 +103,7 @@ def view_travel(request, id):
         pass
 
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def travel_report(request, id):
     """Main home method and view."""
     try:
@@ -119,7 +119,7 @@ def travel_report(request, id):
         pass
 
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def edit_travel(request, id):
     """Main home method and view."""
     try:
@@ -258,7 +258,7 @@ def edit_travel(request, id):
 
 
 # Create your views here.
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def integration_home(request):
     """Method to do pivot reports."""
     try:
@@ -333,7 +333,7 @@ def integration_home(request):
         pass
 
 
-@login_required
+# @login_required
 def process_integration(request, case_id):
     """Method to process case."""
     try:
@@ -400,7 +400,7 @@ def process_integration(request, case_id):
         pass
 
 
-@login_required
+# @login_required
 def get_document(request, doc_id, case_id):
     """Some default page for reports home page."""
     try:
@@ -441,7 +441,7 @@ def get_document(request, doc_id, case_id):
         raise e
 
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def dq_home(request):
     """Main home method and view."""
     try:
@@ -559,7 +559,7 @@ def dq_data(request):
         pass
 
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def se_home(request):
     """Main home method and view."""
     try:

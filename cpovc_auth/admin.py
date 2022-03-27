@@ -1,7 +1,7 @@
 """Users admin."""
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from .models import AppUser
 
 
@@ -55,6 +55,6 @@ class MyUserAdmin(UserAdmin):
                 (_('Personal info'), {'fields': ('username', 'reg_person')}),
                 (_('Permissions'), {'fields': perm_fields}),
                 (_('Important dates'), {'fields': ('last_login', 'password_changed_timestamp')})]
-
-
-admin.site.register(AppUser, MyUserAdmin)
+#
+# admin.site.register(MyUserAdmin)
+# admin.site.register(AppUser, MyUserAdmin)

@@ -3,11 +3,14 @@ import csv
 import time
 from django.contrib import admin
 from django.http import HttpResponse
+from numpy.compat import unicode
+
 from .models import (RegPerson, RegOrgUnit, RegOrgUnitsAuditTrail,
                      RegPersonsAuditTrail, RegPersonsTypes)
 
 
 from cpovc_auth.models import AppUser
+
 
 def dump_to_csv(modeladmin, request, qs):
     """
@@ -16,8 +19,8 @@ def dump_to_csv(modeladmin, request, qs):
     Generic method for any queryset
     """
     model = qs.model
-    file_id = 'CPIMS_%s_%d' % (model.__name__, int(time.time()))
-    file_name = 'attachment; filename=%s.csv' % (file_id)
+    file_id = 'CPIMS_{}_{:d}'.format(model.__name__, int(time.time()))
+    file_name = 'attachment; filename={}.csv'.format(file_id)
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = file_name
     writer = csv.writer(response, csv.excel)
@@ -38,6 +41,8 @@ def dump_to_csv(modeladmin, request, qs):
             row.append(val)
         writer.writerow(row)
     return response
+
+
 dump_to_csv.short_description = u"Dump to CSV"
 
 

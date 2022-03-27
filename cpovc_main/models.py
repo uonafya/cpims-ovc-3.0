@@ -66,9 +66,13 @@ class SetupGeography(models.Model):
     timestamp_updated = models.DateTimeField(auto_now=True, null=True)
     is_void = models.BooleanField(default=False)
 
+    # def __unicode__(self):
+    #     """To be returned by admin actions."""
+    #     return '%s - %s' % (self.area_type_id, self.area_name)
+
     class Meta:
         """Override some params."""
-
+        # managed = False
         db_table = 'list_geo'
         verbose_name = 'Setup Geography'
         verbose_name_plural = 'Setup Geographies'
@@ -260,6 +264,7 @@ class FormOrgUnitContributions(models.Model):
     form = models.ForeignKey(Forms, on_delete=models.CASCADE)
     org_unit_id = models.CharField(max_length=7)
     contribution_id = models.CharField(max_length=4)
+
     # TODO part of composite key - org_unit_id and contrib_id
 
     class Meta:

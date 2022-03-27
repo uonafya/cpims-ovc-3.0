@@ -9,6 +9,8 @@ from django.shortcuts import get_object_or_404
 from cpovc_main.models import SetupGeography, SetupList, RegTemp
 from cpovc_main.functions import convert_date, get_dict
 from django.db.models import Q, Count
+from numpy.compat import unicode
+
 from .models import (
     RegOrgUnitContact, RegOrgUnit, RegOrgUnitExternalID, RegOrgUnitGeography,
     RegPersonsOrgUnits, RegPersonsExternalIds, RegPerson, RegPersonsGeo,
@@ -26,11 +28,12 @@ from cpovc_forms.models import (
 from cpovc_reports.functions import run_sql_data
 from cpovc_reports.queries import QUERIES
 
-from django.db import connection
+from django.db import connections
 
 organisation_id_prefix = 'U'
 benficiary_id_prefix = 'B'
 workforce_id_prefix = 'W'
+
 
 # publicDash--
 
@@ -43,9 +46,10 @@ def fetch_total_ovc_ever(request, org_ids, level='', area_id=''):
             )
             row = cursor.fetchone()
             total_ovc_ever.append(row[0])
-        except Exception, e:
-            print 'error on fetch_total_ovc_ever - %s' % (str(e))
+        except Exception as e:
+            print('error on fetch_total_ovc_ever - {}'.format(str(e)))
     return total_ovc_ever
+
 
 def fetch_total_ovc_ever_exited(request, org_ids, level='', area_id=''):
     total_ovc_ever_exited = []
@@ -56,9 +60,10 @@ def fetch_total_ovc_ever_exited(request, org_ids, level='', area_id=''):
             )
             row = cursor.fetchone()
             total_ovc_ever_exited.append(row[0])
-        except Exception, e:
-            print 'error on fetch_total_ovc_ever_exited - %s' % (str(e))
+        except Exception as e:
+            print('error on fetch_total_ovc_ever_exited - {}'.format(str(e)))
     return total_ovc_ever_exited
+
 
 def fetch_total_wout_bcert_at_enrol(request, org_ids, level='', area_id=''):
     total_wout_bcert_at_enrol = []
@@ -69,9 +74,10 @@ def fetch_total_wout_bcert_at_enrol(request, org_ids, level='', area_id=''):
             )
             row = cursor.fetchone()
             total_wout_bcert_at_enrol.append(row[0])
-        except Exception, e:
-            print 'error on fetch_total_wout_bcert_at_enrol - %s' % (str(e))
+        except Exception as e:
+            print('error on fetch_total_wout_bcert_at_enrol - {}'.format(str(e)))
     return total_wout_bcert_at_enrol
+
 
 def fetch_total_w_bcert_2date(request, org_ids, level='', area_id=''):
     total_w_bcert_2date = []
@@ -82,9 +88,10 @@ def fetch_total_w_bcert_2date(request, org_ids, level='', area_id=''):
             )
             row = cursor.fetchone()
             total_w_bcert_2date.append(row[0])
-        except Exception, e:
-            print 'error on fetch_total_w_bcert_2date - %s' % (str(e))
+        except Exception as e:
+            print('error on fetch_total_w_bcert_2date - {}'.format(str(e)))
     return total_w_bcert_2date
+
 
 def fetch_total_s_bcert_aft_enrol(request, org_ids, level='', area_id=''):
     total_s_bcert_aft_enrol = []
@@ -95,13 +102,12 @@ def fetch_total_s_bcert_aft_enrol(request, org_ids, level='', area_id=''):
             )
             row = cursor.fetchone()
             total_s_bcert_aft_enrol.append(row[0])
-        except Exception, e:
-            print 'error on fetch_total_s_bcert_aft_enrol - %s' % (str(e))
+        except Exception as e:
+            print('error on fetch_total_s_bcert_aft_enrol - {}'.format(str(e)))
     return total_s_bcert_aft_enrol
 
 
-
-def fetch_new_ovcregs_by_period(request, level,area_id,funding_partner,funding_part_id,period_typ):
+def fetch_new_ovcregs_by_period(request, level, area_id, funding_partner, funding_part_id, period_typ):
     # print 'oooop running fetch_new_ovcregs_by_period month_year='+month_year+" \n "
 
     rows2, desc2 = 0, 0
@@ -109,17 +115,16 @@ def fetch_new_ovcregs_by_period(request, level,area_id,funding_partner,funding_p
     currentMonth = datetime.now().month
     currentYear = datetime.now().year
 
-
     if (currentMonth == 10 and period_typ == 'annual'):  # start of a new period (october)
         yr = currentYear + 1
-        period_span =  str(currentYear) + '/' + str(yr)
+        period_span = str(currentYear) + '/' + str(yr)
         base_sql = '''    
                     Select count(*) as count,person.gender as gender,'{}' as time_period from  public.ovc_registration  ovc_reg join public.persons person on person.person_id=ovc_reg.person_id where
                     ovc_reg.registration_date between 'oct-01-{}' and 'Sept-30-{}'
                        '''.format(
             period_span, currentYear, yr)
 
-    elif (currentMonth is not 10 and period_typ == 'annual'):
+    elif (currentMonth != 10 and period_typ == 'annual'):
         yr = currentYear - 1
         period_span = str(yr) + '/' + str(currentYear)
         base_sql = '''    
@@ -127,7 +132,6 @@ def fetch_new_ovcregs_by_period(request, level,area_id,funding_partner,funding_p
                     ovc_reg.registration_date between 'oct-01-{}' and 'Sept-30-{}'
                        '''.format(
             period_span, yr, currentYear)
-
 
     if (period_typ == 'semi' and (currentMonth >= 10 and currentMonth <= 3)):
         if (currentMonth >= 1 and currentMonth <= 3):
@@ -144,8 +148,6 @@ def fetch_new_ovcregs_by_period(request, level,area_id,funding_partner,funding_p
                        '''.format(
             period_span, start_year, end_year)
 
-
-
     elif (period_typ == 'semi' and (currentMonth >= 3 and currentMonth <= 9)):
         period_span = str(currentYear)
         base_sql = '''    
@@ -154,28 +156,28 @@ def fetch_new_ovcregs_by_period(request, level,area_id,funding_partner,funding_p
                        '''.format(
             period_span, currentYear, currentYear)
 
-  #  level = 'national', area_id = '', funding_partner = '', funding_part_id = '', period_typ = 'annual'
+    #  level = 'national', area_id = '', funding_partner = '', funding_part_id = '', period_typ = 'annual'
     ############
     if level == 'national':
-        print "national level +==============>"
-        print base_sql + '''
+        print("national level +==============>")
+        print(base_sql + '''
                                         group by gender
-                                        '''
-        print "end level +==============>"
+                                        ''')
+        print("end level +==============>")
         rows2, desc2 = run_sql_data(None,
                                     base_sql + '''
                                         group by gender
                                         ''')
 
     elif (level == 'county'):
-        print "county level =========>"
+        print("county level =========>")
 
-        print base_sql + '''
+        print(base_sql + '''
                                             and person.area_id in (select area_id as ward_ids from list_geo where parent_area_id in(
                                             select area_id as sub_county from list_geo where parent_area_id in
                                             (select area_id as county from list_geo where area_id ='{}'))) group by 
                                             gender
-                                        '''.format(area_id)
+                                        '''.format(area_id))
 
         rows2, desc2 = run_sql_data(None,
                                     base_sql + '''
@@ -185,31 +187,32 @@ def fetch_new_ovcregs_by_period(request, level,area_id,funding_partner,funding_p
                                             gender
                                         '''.format(area_id))
 
-    elif (level == 'subcounty'):
+    elif level == 'subcounty':
         rows2, desc2 = run_sql_data(None,
                                     base_sql + '''
                                             and 
                                             person.area_id in (select area_id as ward_ids from list_geo where parent_area_id ='{}')
                                             group by gender
                                         '''.format(area_id))
-        print base_sql  + '''
+        print(base_sql + '''
                             and 
                             ward in (select area_id as ward_ids from list_geo where parent_area_id ='{}')
                             group by gender
-                        '''.format(area_id)
+                        '''.format(area_id))
 
-    elif (level == 'ward'):
+    elif level == 'ward':
         rows2, desc2 = run_sql_data(None,
                                     base_sql + '''
                                             and person.area_id={0} group by gender
                                         '''.format(area_id))
-        print base_sql + '''
+        print(base_sql + '''
                                             and person.area_id={0} group by gender
-                                        '''.format(area_id)
+                                        '''.format(area_id))
 
 
     elif (funding_partner == 'funding_mechanism' or funding_partner == 'cluster' or funding_partner == 'cbo_unit'):
-        print "not 10th month 0"
+        print("not 10th month 0")
+
         if (funding_partner == 'funding_mechanism'):
             if (funding_part_id == '0'):  # usaid
 
@@ -222,7 +225,8 @@ def fetch_new_ovcregs_by_period(request, level,area_id,funding_partner,funding_p
                                             )
 
         if (funding_partner == 'cluster'):
-            print "=======> cluster"
+            print("=======> cluster")
+
             rows2, desc2 = run_sql_data(None,
                                         base_sql + '''
                                              and person.child_cbo_id in (select cbo_id from  public.ovc_cluster_cbo  where cluster_id = '{}' 
@@ -230,7 +234,7 @@ def fetch_new_ovcregs_by_period(request, level,area_id,funding_partner,funding_p
                                         )
 
         if (funding_partner == 'cbo_unit'):
-            print "=======> cbo_unit"
+            print("=======> cbo_unit")
             rows2, desc2 = run_sql_data(None,
                                         base_sql + '''
                                                          and person.child_cbo_id = '{}' group by gender'''.format(
@@ -251,7 +255,7 @@ def fetch_new_ovcregs_by_period(request, level,area_id,funding_partner,funding_p
     return ovc_registration_within_period
 
 
-def fetch_exited_ovcs_by_period(request, level,area_id,funding_partner,funding_part_id,period_typ):
+def fetch_exited_ovcs_by_period(request, level, area_id, funding_partner, funding_part_id, period_typ):
     rows2, desc2 = 0, 0
     period_span = ''
     currentMonth = datetime.now().month
@@ -266,7 +270,7 @@ def fetch_exited_ovcs_by_period(request, level,area_id,funding_partner,funding_p
                                  '''.format(
             period_span, currentYear, yr)
 
-    elif (currentMonth is not 10 and period_typ == 'annual'):
+    elif (currentMonth != 10 and period_typ == 'annual'):
         yr = currentYear - 1
         period_span = str(yr) + '/' + str(currentYear)
         base_sql = '''    
@@ -299,10 +303,9 @@ def fetch_exited_ovcs_by_period(request, level,area_id,funding_partner,funding_p
             Select count(*)  as count from  public.ovc_household
               ovc_reg join public.persons person on person.person_id=ovc_reg.head_person_id 
               where ovc_reg.is_void=true and (select date_part('month', ovc_reg.created_at))="+m_y[0]+" and 
-              (select date_part('year', ovc_reg.created_at))="+m_y[1]+""
-        
-        '''
+              (select date_part('year', ovc_reg.created_at))="+m_y[1]+"
 
+        '''
 
         base_sql = '''    
                               Select count(*) as count,person.gender as gender,ovc_reg.is_active as active, '{}' as time_period from  public.ovc_registration  ovc_reg join public.persons person on person.person_id=ovc_reg.person_id where
@@ -313,25 +316,25 @@ def fetch_exited_ovcs_by_period(request, level,area_id,funding_partner,funding_p
     #  level = 'national', area_id = '', funding_partner = '', funding_part_id = '', period_typ = 'annual'
     ############
     if level == 'national':
-        print "national level +==============>"
-        print base_sql + '''
+        print("national level +==============>")
+        print(base_sql + '''
                                                   group by gender,ovc_reg.is_active
-                                                  '''
-        print "end level +==============>"
+                                                  ''')
+        print("end level +==============>")
         rows2, desc2 = run_sql_data(None,
                                     base_sql + '''
                                                   group by gender,ovc_reg.is_active
                                                   ''')
 
     elif (level == 'county'):
-        print "county level =========>"
+        print("county level =========>")
 
-        print base_sql + '''
+        print(base_sql + '''
                                                       and person.area_id in (select area_id as ward_ids from list_geo where parent_area_id in(
                                                       select area_id as sub_county from list_geo where parent_area_id in
                                                       (select area_id as county from list_geo where area_id ='{}'))) group by 
                                                       gender,ovc_reg.is_active
-                                                  '''.format(area_id)
+                                                  '''.format(area_id))
 
         rows2, desc2 = run_sql_data(None,
                                     base_sql + '''
@@ -348,24 +351,24 @@ def fetch_exited_ovcs_by_period(request, level,area_id,funding_partner,funding_p
                                                       person.area_id in (select area_id as ward_ids from list_geo where parent_area_id ='{}')
                                                       group by gender,ovc_reg.is_active
                                                   '''.format(area_id))
-        print base_sql + '''
+        print(base_sql + '''
                                       and 
                                       ward in (select area_id as ward_ids from list_geo where parent_area_id ='{}')
                                       group by gender,ovc_reg.is_active
-                                  '''.format(area_id)
+                                  '''.format(area_id))
 
     elif (level == 'ward'):
         rows2, desc2 = run_sql_data(None,
                                     base_sql + '''
                                                       and person.area_id={0} group by gender,ovc_reg.is_active
                                                   '''.format(area_id))
-        print base_sql + '''
+        print(base_sql + '''
                                                       and person.area_id={0} group by gender,ovc_reg.is_active
-                                                  '''.format(area_id)
+                                                  '''.format(area_id))
 
 
     elif (funding_partner == 'funding_mechanism' or funding_partner == 'cluster' or funding_partner == 'cbo_unit'):
-        print "not 10th month 0"
+        print("not 10th month 0")
         if (funding_partner == 'funding_mechanism'):
             if (funding_part_id == '0'):  # usaid
 
@@ -378,15 +381,16 @@ def fetch_exited_ovcs_by_period(request, level,area_id,funding_partner,funding_p
                                             )
 
         if (funding_partner == 'cluster'):
-            print "=======> cluster"
+            print("=======> cluster")
             rows2, desc2 = run_sql_data(None,
                                         base_sql + '''
                                                        and person.child_cbo_id in (select cbo_id from  public.ovc_cluster_cbo  where cluster_id = '{}' 
-                                                             )  group by gender,ovc_reg.is_active'''.format(funding_part_id)
+                                                             )  group by gender,ovc_reg.is_active'''.format(
+                                            funding_part_id)
                                         )
 
         if (funding_partner == 'cbo_unit'):
-            print "=======> cbo_unit"
+            print("=======> cbo_unit")
             rows2, desc2 = run_sql_data(None,
                                         base_sql + '''
                                                                    and person.child_cbo_id = '{}' group by gender,ovc_reg.is_active'''.format(
@@ -404,13 +408,12 @@ def fetch_exited_ovcs_by_period(request, level,area_id,funding_partner,funding_p
         ovc_active['active'] = data['ACTIVE']
 
         ovc_active_within_period.append(ovc_active)
-    print "and we retunr ===============>"
-    print ovc_active_within_period
+    print("and we return ===============>")
+    print(ovc_active_within_period)
     return ovc_active_within_period
 
 
-
-def fetch_exited_hsehlds_by_period(request, level,area_id,funding_partner,funding_part_id,period_typ):
+def fetch_exited_hsehlds_by_period(request, level, area_id, funding_partner, funding_part_id, period_typ):
     rows2, desc2 = 0, 0
     period_span = ''
     currentMonth = datetime.now().month
@@ -427,7 +430,7 @@ def fetch_exited_hsehlds_by_period(request, level,area_id,funding_partner,fundin
                                      '''.format(
             period_span, currentYear, yr)
 
-    elif (currentMonth is not 10 and period_typ == 'annual'):
+    elif (currentMonth != 10 and period_typ == 'annual'):
         yr = currentYear - 1
         period_span = str(yr) + '/' + str(currentYear)
         base_sql = '''    
@@ -468,10 +471,10 @@ def fetch_exited_hsehlds_by_period(request, level,area_id,funding_partner,fundin
     ############
     if level == 'national':
         rows2, desc2 = run_sql_data(None,
-                                    base_sql )
+                                    base_sql)
 
     elif (level == 'county'):
-        print "county level =========>"
+        print("county level =========>")
         '''
                     and person.area_id in (select area_id as ward_ids from list_geo where parent_area_id in
                     ((SELECT area_id as constituency_ids from list_geo where parent_area_id='{}')))
@@ -488,22 +491,22 @@ def fetch_exited_hsehlds_by_period(request, level,area_id,funding_partner,fundin
                                     base_sql + '''
                                                           and person.area_id in (select area_id as ward_ids from list_geo where parent_area_id='{}'
                                                       '''.format(area_id))
-        print base_sql + '''
+        print(base_sql + '''
                                           and person.area_id in (select area_id as ward_ids from list_geo where parent_area_id='{}'
-                                      '''.format(area_id)
+                                      '''.format(area_id))
 
     elif (level == 'ward'):
         rows2, desc2 = run_sql_data(None,
                                     base_sql + '''
                                                           and person.area_id='{}'
                                                       '''.format(area_id))
-        print base_sql + '''
+        print(base_sql + '''
                                                           and person.area_id='{}'
-                                                      '''.format(area_id)
+                                                      '''.format(area_id))
 
 
     elif (funding_partner == 'funding_mechanism' or funding_partner == 'cluster' or funding_partner == 'cbo_unit'):
-        print "not 10th month 0"
+        print("not 10th month 0")
         if (funding_partner == 'funding_mechanism'):
             if (funding_part_id == '0'):  # usaid
 
@@ -516,7 +519,7 @@ def fetch_exited_hsehlds_by_period(request, level,area_id,funding_partner,fundin
                                             )
 
         if (funding_partner == 'cluster'):
-            print "=======> cluster"
+            print("=======> cluster")
             rows2, desc2 = run_sql_data(None,
                                         base_sql + '''
                                                            and person.child_cbo_id in (select cbo_id from  public.ovc_cluster_cbo  where cluster_id = '{}' 
@@ -525,7 +528,7 @@ def fetch_exited_hsehlds_by_period(request, level,area_id,funding_partner,fundin
                                         )
 
         if (funding_partner == 'cbo_unit'):
-            print "=======> cbo_unit"
+            print("=======> cbo_unit")
             rows2, desc2 = run_sql_data(None,
                                         base_sql + '''
                                                                        and person.child_cbo_id = '{}' group by gender,ovc_reg.is_active'''.format(
@@ -541,12 +544,12 @@ def fetch_exited_hsehlds_by_period(request, level,area_id,funding_partner,fundin
         hlsd_exited['count'] = data['COUNT']
 
         hsld_exited_within_period.append(hlsd_exited)
-    print "and we retunr ===============>"
-    print hsld_exited_within_period
+    print("and we retunr ===============>")
+    print(hsld_exited_within_period)
     return hsld_exited_within_period
 
 
-def fetch_served_bcert_by_period(request,org_ids,level='',area_id='',month_year=''):
+def fetch_served_bcert_by_period(request, org_ids, level='', area_id='', month_year=''):
     # print 'oooop running fetch_served_bcert_by_period month_year='+month_year+" \n "
     month_year = json.loads(month_year)
     served_bcert_by_period = []
@@ -554,15 +557,18 @@ def fetch_served_bcert_by_period(request,org_ids,level='',area_id='',month_year=
         with connection.cursor() as cursor:
             try:
                 cursor.execute(
-                    "Select count(*) from  public.ovc_registration  where has_bcert=true and hiv_status='DEMO' and (select date_part('month', created_at))={} and (select date_part('year', created_at))={}".format(m_y[0],m_y[1])
+                    "Select count(*) from  public.ovc_registration  where has_bcert=true and hiv_status='DEMO' and (select date_part('month', created_at))={} and (select date_part('year', created_at))={}".format(
+                        m_y[0], m_y[1])
                 )
                 for record in cursor:
                     served_bcert_by_period.append(record[0])
-            except Exception, e:
-                print 'error on fetch_served_bcert_by_period - %s' % (str(e))
+            except Exception as e:
+                print
+                'error on fetch_served_bcert_by_period - {}'.format(str(e))
     return served_bcert_by_period
 
-def fetch_u5_served_bcert_by_period(request,org_ids,level='',area_id='',month_year=''):
+
+def fetch_u5_served_bcert_by_period(request, org_ids, level='', area_id='', month_year=''):
     # print 'oooop running fetch_u5_served_bcert_by_period month_year='+month_year+" \n "
     month_year = json.loads(month_year)
     u5_served_bcert_by_period = []
@@ -570,13 +576,16 @@ def fetch_u5_served_bcert_by_period(request,org_ids,level='',area_id='',month_ye
         with connection.cursor() as cursor:
             try:
                 cursor.execute(
-                    "Select count(*) from  public.ovc_registration  where has_bcert=true and hiv_status='DEMO' and (select date_part('month', created_at))={} and (select date_part('year', created_at))={}".format(m_y[0],m_y[1])
+                    "Select count(*) from  public.ovc_registration  where has_bcert=true and hiv_status='DEMO' and (select date_part('month', created_at))={} and (select date_part('year', created_at))={}".format(
+                        m_y[0], m_y[1])
                 )
                 for record in cursor:
                     u5_served_bcert_by_period.append(record[0])
-            except Exception, e:
-                print 'error on fetch_u5_served_bcert_by_period - %s' % (str(e))
+            except Exception as e:
+                print(
+                'error on fetch_u5_served_bcert_by_period - {}'.format(str(e)))
     return u5_served_bcert_by_period
+
 
 # --publicDash--
 
@@ -592,14 +601,14 @@ def fetch_locality_data():
                                       END AS "grand_parent" 
                                    FROM 
                                 ( SELECT area_id,area_type_id,area_name,parent_area_id  FROM public.list_geo order by area_id) as tt
-                                    
+
                                 ''')
     org_list = {}
     for x in rows2:
         # print x
-        if (x['AREA_ID'] not in org_list and x['PARENT_AREA_ID'] == None):
+        if (x['AREA_ID'] not in org_list and x['PARENT_AREA_ID'] is None):
             org_list[x['AREA_ID']] = {'name': x['AREA_NAME'] + " county", 'siblings': {}}
-        elif (x['AREA_ID'] in org_list and x['PARENT_AREA_ID'] == None):
+        elif (x['AREA_ID'] in org_list and x['PARENT_AREA_ID'] is None):
             pass
         elif (x['AREA_TYPE_ID'] == 'GDIS'):  # constituency
             if (x['PARENT_AREA_ID'] in org_list):
@@ -625,7 +634,7 @@ def fetch_locality_data():
 
 
 def get_cbo_list():
-    cbo_list=[]
+    cbo_list = []
     rows2, desc2 = run_sql_data(None,
                                 ''' 
                                 select DISTINCT ovc_cluster_cbo.cluster_id  as cluster_id, org_unit_name,reg_org_unit.id as id from reg_org_unit inner join 
@@ -641,12 +650,11 @@ def get_cbo_list():
                                  )
                                 ''')
     for x in rows2:
+        _cbo = {}
 
-        _cbo={}
-
-        _cbo['name']=x['ORG_UNIT_NAME']
-        _cbo['id']=x['ID']
-        _cbo['cluster_id']=x['CLUSTER_ID']
+        _cbo['name'] = x['ORG_UNIT_NAME']
+        _cbo['id'] = x['ID']
+        _cbo['cluster_id'] = x['CLUSTER_ID']
 
         cbo_list.append(_cbo)
 
@@ -654,10 +662,11 @@ def get_cbo_list():
 
 
 def get_ovc_hiv_status_funding_partner(level, org_unit_id):
-    if (level=='funding_mechanism'):
-        print "the fundingg mechanisms"
-        print org_unit_id
-        if(org_unit_id == '0'): # usaid
+    if (level == 'funding_mechanism'):
+        print(
+        "the fundingg mechanisms")
+        print(org_unit_id)
+        if (org_unit_id == '0'):  # usaid
             rows2, desc2 = run_sql_data(None,
                                         '''Select count(*),person.gender,person.art_status ,person.hiv_status from public.persons person
                         join  public.ovc_registration  ovc_reg on person.person_id=ovc_reg.person_id
@@ -667,15 +676,15 @@ def get_ovc_hiv_status_funding_partner(level, org_unit_id):
                                           ))
                                                   group by person.gender,person.art_status,person.hiv_status''')
 
-    if (level=='cluster'):
+    if (level == 'cluster'):
         rows2, desc2 = run_sql_data(None,
                                     '''Select count(*),person.gender,person.art_status ,person.hiv_status from public.persons person
                         join  public.ovc_registration  ovc_reg on person.person_id=ovc_reg.person_id
                         where person.child_cbo_id in (select cbo_id from  public.ovc_cluster_cbo  where cluster_id='{}')
-                                                  group by person.gender,person.art_status,person.hiv_status'''.format(org_unit_id))
+                                                  group by person.gender,person.art_status,person.hiv_status'''.format(
+                                        org_unit_id))
 
-
-    if (level=='cbo_unit'):
+    if (level == 'cbo_unit'):
         rows2, desc2 = run_sql_data(None,
                                     '''Select count(*),person.gender,person.art_status ,person.hiv_status from public.persons person
                                       join  public.ovc_registration  ovc_reg on person.person_id=ovc_reg.person_id
@@ -688,18 +697,19 @@ def get_ovc_hiv_status_funding_partner(level, org_unit_id):
 
 def get_public_dash_ovc_hiv_status(level='national', area_id=''):
     # "SELECT count(ovccount) FROM public.hiv_status where "
-    print "line ====="
-    print level
-    print area_id
+    print(
+    "line =====")
+    print(level)
+    print(area_id)
     rows2, desc2 = 0, 0
     if level == 'national':
         rows2, desc2 = run_sql_data(None,
                                     "Select count(*),gender,art_status,hiv_status from public.persons group by gender,art_status,hiv_status")
     elif (level == 'county'):
-        print '''Select count(*),gender,art_status,hiv_status from public.persons where area_id in (select area_id as ward_ids from list_geo where parent_area_id in(
+        print('''Select count(*),gender,art_status,hiv_status from public.persons where area_id in (select area_id as ward_ids from list_geo where parent_area_id in(
                     (SELECT area_id as constituency_ids from list_geo where parent_area_id='{}')))
                           group by gender,art_status,hiv_status count(*),gender,art_status,hiv_status  group by gender,art_status,hiv_status'''.format(
-            area_id)
+            area_id))
 
         rows2, desc2 = run_sql_data(None,
                                     '''Select count(*),gender,art_status,hiv_status from public.persons where area_id in (select area_id as ward_ids from list_geo where parent_area_id in(
@@ -713,12 +723,13 @@ def get_public_dash_ovc_hiv_status(level='national', area_id=''):
         rows2, desc2 = run_sql_data(None,
                                     '''Select count(*),gender,art_status,hiv_status from public.persons where area_id='{}'
                                               group by gender,art_status,hiv_status'''.format(area_id))
-    elif(level == 'funding_mechanism' or level == 'cluster' or level == 'cbo_unit'):
-        rows2, desc2=get_ovc_hiv_status_funding_partner(level, area_id)
+    elif (level == 'funding_mechanism' or level == 'cluster' or level == 'cbo_unit'):
+        rows2, desc2 = get_ovc_hiv_status_funding_partner(level, area_id)
     else:
-        print '''Select count(*),gender,art_status,hiv_status from public.persons where area_id in (SELECT area_id from list_geo where parent_area_id='{}')
+        print(
+        '''Select count(*),gender,art_status,hiv_status from public.persons where area_id in (SELECT area_id from list_geo where parent_area_id='{}')
       group by gender,art_status,hiv_status'''.format(
-            area_id)
+            area_id))
 
         rows2, desc2 = run_sql_data(None,
                                     '''Select count(*),gender,art_status,hiv_status from public.persons where area_id in (SELECT area_id from list_geo where parent_area_id='{}')
@@ -739,7 +750,7 @@ def get_public_dash_ovc_hiv_status(level='national', area_id=''):
     hiv_domain_status['HIV_unknown_status_m'] = 0
 
     for x in rows2:
-        print x
+        print(x)
         domain = x['ART_STATUS']
         hiv_stats = x['HIV_STATUS']
         gender = x['GENDER']
@@ -772,8 +783,8 @@ def get_public_dash_ovc_hiv_status(level='national', area_id=''):
 
 def get_ovc_active_hiv_status_funding_partner(level, org_unit_id):
     if (level == 'funding_mechanism'):
-        print "the fundingg mechanisms"
-        print org_unit_id
+        print("the fundingg mechanisms")
+        print(org_unit_id)
         if (org_unit_id == '0'):  # usaid
             rows2, desc2 = run_sql_data(None,
                                         '''Select count(*),person.gender,person.art_status ,person.hiv_status from public.persons person
@@ -805,9 +816,9 @@ def get_ovc_active_hiv_status_funding_partner(level, org_unit_id):
 
 def _get_ovc_active_hiv_status(level='national', area_id=''):
     # "SELECT count(ovccount) FROM public.hiv_status where "
-    print "line ====="
-    print level
-    print area_id
+    print("line =====")
+    print(level)
+    print(area_id)
     rows2, desc2 = 0, 0
     if level == 'national':
         rows2, desc2 = run_sql_data(None,
@@ -827,7 +838,7 @@ def _get_ovc_active_hiv_status(level='national', area_id=''):
                                     '''Select count(*),gender,art_status,hiv_status from public.persons where is_active=true and area_id='{}'
                                               group by gender,art_status,hiv_status'''.format(area_id))
     elif (level == 'funding_mechanism' or level == 'cluster' or level == 'cbo_unit'):
-        print "level reached ===============>"
+        print("level reached ===============>")
         rows2, desc2 = get_ovc_active_hiv_status_funding_partner(level, area_id)
     else:
 
@@ -850,7 +861,7 @@ def _get_ovc_active_hiv_status(level='national', area_id=''):
     hiv_domain_status['HIV_unknown_status_m'] = 0
 
     for x in rows2:
-        print x
+        print(x)
         domain = x['ART_STATUS']
         hiv_stats = x['HIV_STATUS']
         gender = x['GENDER']
@@ -883,10 +894,10 @@ def _get_ovc_active_hiv_status(level='national', area_id=''):
 
 def get_hiv_dashboard_stats_partner_level(request, org_ids, cursor, super_user=False, level='', org_unit_id=''):
     if (level == 'funding_mechanism'):
-        print "the fundin mechanisms"
-        print org_unit_id
+        print("the fundin mechanisms")
+        print(org_unit_id)
         if (org_unit_id == '0'):  # usaid
-            print "running query"
+            print("running query")
             cursor.execute(
                 '''select count(*),ovc_reg.art_status,ovc_reg.hiv_status from  public.ovc_registration  ovc_reg
                  join public.persons person on person.person_id=ovc_reg.person_id
@@ -895,8 +906,7 @@ def get_hiv_dashboard_stats_partner_level(request, org_ids, cursor, super_user=F
                                    'bcc9e119-388f-4840-93b3-1ee7e07d3ffa','bcc9e119-388f-4840-93b3-1ee7e07d3ffa','8949ab03-a430-44d0-a94c-4457118b9485'
                                    )) group by ovc_reg.hiv_status,ovc_reg.art_status'''
             )
-    if (level=='cluster'):
-
+    if (level == 'cluster'):
         cursor.execute(
             '''select count(*),ovc_reg.art_status,ovc_reg.hiv_status from  public.ovc_registration  ovc_reg
              join public.persons person on person.person_id=ovc_reg.person_id
@@ -904,7 +914,7 @@ def get_hiv_dashboard_stats_partner_level(request, org_ids, cursor, super_user=F
                                            ) group by ovc_reg.hiv_status,ovc_reg.art_status'''.format(org_unit_id)
         )
 
-    if (level=='cbo_unit'):
+    if (level == 'cbo_unit'):
         cursor.execute(
             '''select count(*),ovc_reg.art_status,ovc_reg.hiv_status from  public.ovc_registration  ovc_reg
              join public.persons person on person.person_id=ovc_reg.person_id
@@ -954,17 +964,18 @@ def get_hiv_dashboard_stats(request, org_ids, super_user=False, level='', area_i
     ovc_unknown_count, ovc_HSTN, on_art, not_on_art, ovc_HSTP = 0, 0, 0, 0, 0
     try:
         ids = ','.join(str(e) for e in org_ids)
-    except Exception, e:
+    except Exception as e:
         pass
 
     with connection.cursor() as cursor:
         try:
             if (level == 'funding_mechanism' or level == 'cluster' or level == 'cbo_unit'):  # drill by cbo
-                print "funding_mechanism called"
+                print("funding_mechanism called")
                 super_user = False
                 cursor = get_hiv_dashboard_stats_partner_level(request, org_ids, cursor, super_user, level, area_id)
-            elif (level == 'county' or level == 'subcounty' or level == 'ward' or super_user or level == 'national'): # drill by geo location
-                cursor=get_hiv_dashboard_stats_geo_level(request, org_ids, cursor,super_user, level, area_id)
+            elif (
+                    level == 'county' or level == 'subcounty' or level == 'ward' or super_user or level == 'national'):  # drill by geo location
+                cursor = get_hiv_dashboard_stats_geo_level(request, org_ids, cursor, super_user, level, area_id)
             else:
                 cursor.execute(
                     "select count(*),art_status,hiv_status from  public.ovc_registration  where child_cbo_id in ({0}) group by hiv_status,art_status".format(
@@ -988,86 +999,87 @@ def get_hiv_dashboard_stats(request, org_ids, super_user=False, level='', area_i
             ovc_unknown_count = ovc_reg_all_count - ovc_reg_known_count
             not_on_art = ovc_HSTP - on_art
 
-        except Exception, e:
-            print 'error on dashs - %s' % (str(e))
-    print ovc_unknown_count, ovc_HSTN, on_art, not_on_art, ovc_HSTP
+        except Exception as e:
+            print('error on dashs - {}'.format(str(e)))
+    print(ovc_unknown_count, ovc_HSTN, on_art, not_on_art, ovc_HSTP)
     return ovc_unknown_count, ovc_HSTN, on_art, not_on_art, ovc_HSTP
 
 
 def get_ever_tested_for_HIV(request, org_ids, level='', area_id=''):
     pass
 
-def _get_ovc_served_stats(level='national', area_id='',funding_partner='',funding_part_id='',period_typ='annual'):
+
+def _get_ovc_served_stats(level='national', area_id='', funding_partner='', funding_part_id='', period_typ='annual'):
     # "SELECT count(ovccount) FROM public.hiv_status where "
     rows2, desc2 = 0, 0
-    period_span=''
+    period_span = ''
     currentMonth = datetime.now().month
     currentYear = datetime.now().year
-    print "test ======>"
-    print level, area_id,funding_partner,funding_part_id,period_typ
-    base_sql=''
+    print("test ======>")
+    print(level, area_id, funding_partner, funding_part_id, period_typ)
+    base_sql = ''
 
-    if(currentMonth==10 and period_typ=='annual'): # start of a new period (october)
-        yr=currentYear+1
-        period_span='APR '+str(currentYear)+'/'+str(yr)
+    if (currentMonth == 10 and period_typ == 'annual'):  # start of a new period (october)
+        yr = currentYear + 1
+        period_span = 'APR ' + str(currentYear) + '/' + str(yr)
         base_sql = '''    
                 select sum(ovccount) as cboactive ,'{}' as time_period,gender,numberofservices
                  from vw_ovc_services_served where date_of_event between 'oct-01-{}' and 'Sept-30-{}'    '''.format(
-            period_span,currentYear,yr)
-    elif(currentMonth is not 10 and period_typ=='annual'):
-        yr=currentYear-1
-        period_span = 'APR '+str(yr) + '/' + str(currentYear)
+            period_span, currentYear, yr)
+    elif (currentMonth != 10 and period_typ == 'annual'):
+        yr = currentYear - 1
+        period_span = 'APR ' + str(yr) + '/' + str(currentYear)
         base_sql = '''    
                 select sum(ovccount) as cboactive ,'{}' as time_period,gender,numberofservices
                  from vw_ovc_services_served where date_of_event between 'oct-01-{}' and 'Sept-30-{}'    '''.format(
-            period_span, yr,currentYear)
-        print "base sql annual ======>"
-        print base_sql
+            period_span, yr, currentYear)
+        print("base sql annual ======>")
+        print(base_sql)
 
-    if(period_typ=='semi' and (currentMonth>=10 and currentMonth<=3)):
-        if(currentMonth>=1 and currentMonth<=3):
+    if (period_typ == 'semi' and (currentMonth >= 10 and currentMonth <= 3)):
+        if (currentMonth >= 1 and currentMonth <= 3):
             yr = currentYear - 1
             start_year = yr
             end_year = currentYear
         else:
-            start_year=currentYear
-            end_year=currentYear+1
+            start_year = currentYear
+            end_year = currentYear + 1
         period_span = str(start_year) + '/' + str(end_year)
         base_sql = '''    
                         select sum(ovccount) as cboactive ,'{}' as time_period,gender,numberofservices
                          from vw_ovc_services_served where date_of_event between 'oct-01-{}' and 'mar-31-{}'    '''.format(
             period_span, start_year, end_year)
 
-    elif(period_typ=='semi' and (currentMonth>=3 and currentMonth<=9)):
+    elif (period_typ == 'semi' and (currentMonth >= 3 and currentMonth <= 9)):
         period_span = str(currentYear)
         base_sql = '''    
                                 select sum(ovccount) as cboactive ,'{}' as time_period,gender,numberofservices
                                  from vw_ovc_services_served where date_of_event between 'apr-01-{}' and 'sep-30-{}'    '''.format(
             period_span, currentYear, currentYear)
-        print "base sql semi ======>"
-        print base_sql
+        print("base sql semi ======>")
+        print(base_sql)
 
     if level == 'national':
-        print "national level +==============>"
-        print base_sql
-        print "end level +==============>"
+        print("national level +==============>")
+        print(base_sql)
+        print("end level +==============>")
         rows2, desc2 = run_sql_data(None,
-                                    base_sql+'''
+                                    base_sql + '''
                                     group by gender,numberofservices
                                     ''')
 
     elif (level == 'county'):
         rows2, desc2 = run_sql_data(None,
-                                    base_sql  + '''
+                                    base_sql + '''
                                         and countyid={0} group by 
                                         gender,numberofservices
                                     '''.format(area_id))
-        print base_sql  + '''
+        print(base_sql + '''
                                         and countyid={0} group by gender,numberofservices
-                                    '''.format(area_id)
+                                    '''.format(area_id))
     elif (level == 'subcounty'):
         rows2, desc2 = run_sql_data(None,
-                                    base_sql  + '''
+                                    base_sql + '''
                                         and 
                                         ward in (select area_id as ward_ids from list_geo where parent_area_id ='{}')
                                         group by gender,numberofservices
@@ -1075,17 +1087,17 @@ def _get_ovc_served_stats(level='national', area_id='',funding_partner='',fundin
 
     elif (level == 'ward'):
         rows2, desc2 = run_sql_data(None,
-                                    base_sql  + '''
+                                    base_sql + '''
                                         and ward={0} group by gender,numberofservices
                                     '''.format(area_id))
 
     elif (funding_partner == 'funding_mechanism' or funding_partner == 'cluster' or funding_partner == 'cbo_unit'):
-        print "not 10th month 0"
+        print("not 10th month 0")
         if (funding_partner == 'funding_mechanism'):
             if (funding_part_id == '0'):  # usaid
 
                 rows2, desc2 = run_sql_data(None,
-                        base_sql  + '''
+                                            base_sql + '''
                              and cbo_id in (select cbo_id from  public.ovc_cluster_cbo  where cluster_id  
                                                            in('9d40cb90-23ce-447c-969f-3888b96cdf16','7f52a9eb-d528-4f69-9a7e-c3577dcf3ac1','7f52a9eb-d528-4f69-9a7e-c3577dcf3ac1',
                                                'bcc9e119-388f-4840-93b3-1ee7e07d3ffa','bcc9e119-388f-4840-93b3-1ee7e07d3ffa','8949ab03-a430-44d0-a94c-4457118b9485'
@@ -1117,10 +1129,10 @@ def _get_ovc_served_stats(level='national', area_id='',funding_partner='',fundin
 
         ovc_served_obj = {}
 
-        ovc_served_obj['gender']=data['GENDER']
-        ovc_served_obj['service']=data['NUMBEROFSERVICES']
-        ovc_served_obj['period']=data['TIME_PERIOD']
-        ovc_served_obj['cboactive']=data['CBOACTIVE']
+        ovc_served_obj['gender'] = data['GENDER']
+        ovc_served_obj['service'] = data['NUMBEROFSERVICES']
+        ovc_served_obj['period'] = data['TIME_PERIOD']
+        ovc_served_obj['cboactive'] = data['CBOACTIVE']
 
         ovc_served_with_services_list_envelop.append(ovc_served_obj)
 
@@ -1130,12 +1142,12 @@ def _get_ovc_served_stats(level='national', area_id='',funding_partner='',fundin
 def get_ovc_hiv_status(request, org_ids, level='', area_id=''):
     hiv_status = {}
     hiv_status_list_envelop = []
-    print "The organisation unit {} #".format(org_ids)
+    print("The organisation unit {} #".format(org_ids))
     is_super_user = False
     try:
         user = request.user.is_superuser
         is_super_user = True
-    except Exception, e:
+    except Exception as e:
         is_super_user = True
     if is_super_user or org_ids is None or len(org_ids) == 0:
         hiv_stats = get_hiv_dashboard_stats(request, org_ids, True, level, area_id)
@@ -1153,60 +1165,60 @@ def get_ovc_hiv_status(request, org_ids, level='', area_id=''):
     # rates %
     try:
         x = float(hiv_status['on_art']) / float(hiv_status['ovc_HSTP']) * 100
-        hiv_status['on_art_rate'] = "%.2f" % x
-    except Exception, e:
-        print 'dash chart error - %s' % (str(e))
+        hiv_status['on_art_rate'] = "{:.2f}".format(x)
+    except Exception as e:
+        print('dash chart error - {}'.format(str(e)))
         hiv_status['on_art_rate'] = 0
-        #raise e
+        # raise e
     try:
         x = float(hiv_status['not_on_art']) / float(hiv_status['ovc_HSTP']) * 100
-        hiv_status['not_on_art_rate'] = "%.2f" % x
-    except Exception, e:
-        print 'dash chart error - %s' % (str(e))
+        hiv_status['not_on_art_rate'] = "{:.2f}".format(x)
+    except Exception as e:
+        print('dash chart error - {}'.format(str(e)))
         hiv_status['not_on_art_rate'] = 0
-        #raise e
+        # raise e
 
     try:
         x = float(supression[0]) / float(hiv_status['on_art']) * 100
-        hiv_status['suppresed_rate'] = "%.2f" % x
-    except Exception, e:
-        print 'dash chart error - %s' % (str(e))
+        hiv_status['suppresed_rate'] = "{:.2f}".format(x)
+    except Exception as e:
+        print('dash chart error - {}'.format(str(e)))
         hiv_status['suppresed_rate'] = 0
-        #raise e
+        # raise e
 
     try:
         x = float(supression[1]) / float(hiv_status['on_art']) * 100
-        hiv_status['not_suppresed_rate'] = "%.2f" % x
-    except Exception, e:
-        print 'dash chart error - %s' % (str(e))
+        hiv_status['not_suppresed_rate'] = "{:.2f}".format(x)
+    except Exception as e:
+        print('dash chart error - {}'.format(str(e)))
         hiv_status['not_suppresed_rate'] = 0
-        #raise e
-    print "-------------------- 9"
+        # raise e
+    print("-------------------- 9")
     ovc_total = hiv_status['ovc_HSTP'] + hiv_status['ovc_HSTN'] + hiv_status['ovc_unknown_count']
-    print "-------------------- 10"
+    print("-------------------- 10")
     try:
         x = float(hiv_status['ovc_HSTP']) / float(ovc_total) * 100
-        hiv_status['ovc_HSTP_rate'] = "%.2f" % x
-    except Exception, e:
-        print 'dash chart error - %s' % (str(e))
+        hiv_status['ovc_HSTP_rate'] = "{:.2f}".format(x)
+    except Exception as e:
+        print('dash chart error - {}'.format(str(e)))
         hiv_status['ovc_HSTP_rate'] = 0
-        #raise e
+        # raise e
 
     try:
         x = float(hiv_status['ovc_HSTN']) / float(ovc_total) * 100
-        hiv_status['ovc_HSTN_rate'] = "%.2f" % x
-    except Exception, e:
-        print 'dash chart error - %s' % (str(e))
+        hiv_status['ovc_HSTN_rate'] = "{:.2f}".format(x)
+    except Exception as e:
+        print('dash chart error - {}'.format(str(e)))
         hiv_status['ovc_HSTN_rate'] = 0
-        #raise e
+        # raise e
 
     try:
         x = float(hiv_status['ovc_unknown_count']) / float(ovc_total) * 100
         hiv_status['ovc_unknown_count_rate'] = "%.2f" % x
-    except Exception, e:
-        print 'dash chart error - %s' % (str(e))
+    except Exception as e:
+        print('dash chart error - {}'.format(str(e)))
         hiv_status['ovc_unknown_count_rate'] = 0
-        #raise e
+        # raise e
     hiv_status_list_envelop.append(hiv_status)
     return hiv_status_list_envelop
 
@@ -1217,7 +1229,7 @@ def get_hiv_suppression_stats(request, org_ids, level='national', area_id=''):
     ids = None
     try:
         ids = ','.join(str(e) for e in org_ids)
-    except Exception, e:
+    except Exception as e:
         pass
     # get suppresion stats
     if request.user.is_superuser or ids is None or len(ids) == 0:
@@ -1229,8 +1241,8 @@ def get_hiv_suppression_stats(request, org_ids, level='national', area_id=''):
                     " and ovc.art_status = 'ARAR'"
                 )
                 suppressed = cursor.fetchall()[0][0]
-                print "gogogo"
-                print suppressed
+                print("gogogo")
+                print(suppressed)
                 cursor.execute(
                     "SELECT count(*) FROM ovc_viral_load ovl inner join  public.ovc_registration  ovc on CAST (ovl.person_id  AS Varchar) = CAST (ovc.id  AS Varchar) "
                     "where CAST (ovl.viral_load  AS Varchar) = 'lds' or ovl.viral_load > 1000"
@@ -1238,8 +1250,8 @@ def get_hiv_suppression_stats(request, org_ids, level='national', area_id=''):
                 )
                 not_suppressed = cursor.fetchall()[0][0]
 
-            except Exception, e:
-                print 'error fetching suppression stats - %s' % (str(e))
+            except Exception as e:
+                print('error fetching suppression stats - {}'.format(str(e)))
     else:
 
         with connection.cursor() as cursor:
@@ -1258,8 +1270,8 @@ def get_hiv_suppression_stats(request, org_ids, level='national', area_id=''):
                 )
                 not_suppressed = cursor.fetchall()[0][0]
 
-            except Exception, e:
-                print 'error fetching suppression stats - %s' % (str(e))
+            except Exception as e:
+                print('error fetching suppression stats - {}'.format(str(e)))
     return suppressed, not_suppressed
 
 
@@ -1287,7 +1299,6 @@ def get_super_user_hiv_dashboard_stats(request, org_ids):
 
             ovc_unknown_count = ovc_reg_all_count - ovc_reg_known_count
 
-
             cursor.execute(
                 "select count(*) from  public.ovc_registration  where art_status='ARAR'"
 
@@ -1303,8 +1314,8 @@ def get_super_user_hiv_dashboard_stats(request, org_ids):
             ovc_HSTN = row[0]
             not_on_art = ovc_HSTP - on_art
 
-        except Exception, e:
-            print 'error on get_super_user_hiv_dashboard_stats - %s' % (str(e))
+        except Exception as e:
+            print('error on get_super_user_hiv_dashboard_stats - {}'.format(str(e)))
 
     return ovc_unknown_count, ovc_HSTN, on_art, not_on_art, ovc_HSTP
 
@@ -1353,8 +1364,8 @@ def get_normal_user_hiv_dashboard_stats(request, org_ids):
             ovc_HSTN = row[0]
             not_on_art = ovc_HSTP - on_art
 
-        except Exception, e:
-            print 'error on dashs - %s' % (str(e))
+        except Exception as e:
+            print('error on dashs - {}'.format(str(e)))
 
     return ovc_unknown_count, ovc_HSTN, on_art, not_on_art, ovc_HSTP
 
@@ -1363,7 +1374,7 @@ def get_ovc_domain_hiv_status(request, org_ids):
     hiv_domain_status = {}
     hiv_domain_status_list_envelop = []
     cbos = ""
-    print 'ORG IDS', org_ids
+    print('ORG IDS', org_ids)
     try:
         datas = []
         # HIVSTAT
@@ -1371,13 +1382,13 @@ def get_ovc_domain_hiv_status(request, org_ids):
             if org_ids[0] == 0:
                 cbos = "(select child_cbo_id from  public.ovc_registration )"
             else:
-                cbos = "(%s)" % (org_ids[0])
+                cbos = "({})".format(org_ids[0])
         else:
             cbos = ','.join(str(v) for v in org_ids)
             cbos = '{}{}{}'.format('(', cbos, ')')
 
         sql = QUERIES['datim_4'].format(**{'cbos': cbos})
-        print sql
+        print(sql)
         rows, desc = run_sql_data(None, sql)
 
         sql2 = QUERIES['datim_5'].format(**{'cbos': cbos})
@@ -1414,8 +1425,8 @@ def get_ovc_domain_hiv_status(request, org_ids):
 
         hiv_domain_status_list_envelop.append(hiv_domain_status)
 
-    except Exception, e:
-        print 'datim error - %s' % (str(e))
+    except Exception as e:
+        print('datim error - {}'.format(str(e)))
         raise e
     else:
         return hiv_domain_status_list_envelop
@@ -1428,7 +1439,7 @@ def dashboard():
         vals = {'TBVC': 0, 'TBGR': 0, 'TWGE': 0, 'TWNE': 0}
         person_types = RegPersonsTypes.objects.filter(
             is_void=False, date_ended=None).values(
-                'person_type_id').annotate(dc=Count('person_type_id'))
+            'person_type_id').annotate(dc=Count('person_type_id'))
         for person_type in person_types:
             vals[person_type['person_type_id']] = person_type['dc']
         dash['children'] = vals['TBVC']
@@ -1465,11 +1476,11 @@ def dashboard():
         # Case categories Top 5
         case_categories = pending_cases.values(
             'case_category').annotate(unit_count=Count(
-                'case_category')).order_by('-unit_count')
+            'case_category')).order_by('-unit_count')
         dash['case_regs'] = case_regs
         dash['case_cats'] = case_categories
-    except Exception, e:
-        print 'error with dash - %s' % (str(e))
+    except Exception as e:
+        print('error with dash - {}'.format(str(e)))
         dash = {}
         dash['children'] = 0
         dash['guardian'] = 0
@@ -1495,7 +1506,7 @@ def ovc_dashboard(request):
         vals = {'TBVC': 0, 'TBGR': 0, 'TWGE': 0, 'TWNE': 0}
         person_types = RegPersonsTypes.objects.filter(
             is_void=False, date_ended=None).values(
-                'person_type_id').annotate(dc=Count('person_type_id'))
+            'person_type_id').annotate(dc=Count('person_type_id'))
         for person_type in person_types:
             vals[person_type['person_type_id']] = person_type['dc']
         dash['children'] = vals['TBVC']
@@ -1524,7 +1535,8 @@ def ovc_dashboard(request):
         # All linked CBOS
         org_id = int(cbo_id)
         org_ids = get_orgs_child(org_id)
-        print 'dash orgs', org_ids
+        print(
+        'dash orgs', org_ids)
         dash['hiv_status'] = get_ovc_hiv_status(request, org_ids)
         dash['domain_hiv_status'] = get_ovc_domain_hiv_status(request, org_ids)
 
@@ -1684,16 +1696,16 @@ def ovc_dashboard(request):
 
         cases = OVCEligibility.objects.filter(
             person_id__in=child_ids)
-        case_criteria = cases.values(
-            'criteria').annotate(unit_count=Count(
-                'criteria')).order_by('-unit_count')
+        case_criteria = cases.values('criteria').annotate(unit_count=Count(
+            'criteria')).order_by('-unit_count')
         dash['child_regs'] = child_regs
         dash['ovc_regs'] = ovc_regs
         dash['case_regs'] = case_regs
         dash['case_cats'] = {}
         dash['criteria'] = case_criteria
-    except Exception, e:
-        print 'error - %s' % (str(e))
+    except Exception as e:
+        print(
+            'error - {}'.format(str(e)))
         dash = {}
         dash['children'] = 0
         dash['children_all'] = 0
@@ -1723,11 +1735,11 @@ def get_unit_parent(org_ids):
         orgs_qs = RegOrgUnit.objects.filter(
             is_void=False,
             parent_org_unit_id__in=org_ids).values_list('id', flat=True)
-        print 'Check Org Unit level - %s' % (str(orgs))
+        print('Check Org Unit level - {}'.format(str(orgs)))
         if orgs_qs:
             orgs = [org for org in orgs_qs]
     except Exception as e:
-        print 'No parent unit - %s' % (str(e))
+        print('No parent unit - {}'.format(str(e)))
         return []
     else:
         return orgs
@@ -1742,19 +1754,20 @@ def get_orgs_child(org_id, m=0):
             child_units = [int(org_id)]
         p_orgs_3, p_orgs_2, p_orgs_1 = [], [], []
         parent_orgs = get_unit_parent(child_units)
-        print 'c1', child_units, parent_orgs
+        print('c1', child_units, parent_orgs)
         if parent_orgs:
             p_orgs_1 = get_unit_parent(parent_orgs)
-            print 'c2', child_units
+            print('c2', child_units)
             if p_orgs_1:
                 p_orgs_2 = get_unit_parent(p_orgs_1)
-                print 'c3'
+                print('c3')
                 if p_orgs_2:
                     p_orgs_3 = get_unit_parent(p_orgs_2)
-                    print 'c4'
+                    print('c4')
         all_units = child_units + parent_orgs + p_orgs_1 + p_orgs_2 + p_orgs_3
     except Exception as e:
-        print 'error with tree - %s' % (str(e))
+        print
+        'error with tree - {}'.format(str(e))
         return []
     else:
         return all_units
@@ -1765,48 +1778,48 @@ def save_household(index_child, members):
     try:
         hh_m = [str(m) for m in members]
         hh_ms = ','.join(hh_m)
-        hh_members = '%s,%s,' % (index_child, hh_ms)
+        hh_members = '{},{},'.format(index_child, hh_ms)
         OVCHouseHold(index_child_id=index_child,
                      members=hh_members).save()
     except Exception as e:
-        print 'error creating household - %s ' % (str(e))
+        print('error creating household - {} '.format(str(e)))
         pass
 
-    
-def add_household_members(index_child, member):	
-    try:	
+
+def add_household_members(index_child, member):
+    try:
         child = OVCRegistration.objects.get(person=index_child)
-        caretaker = child.caretaker	
-        household = caretaker.ovchousehold_set.first()	
-        mbr = OVCHHMembers.objects.create(	
-            house_hold=household,	
-            person_id=member,	
-            member_type='tst',	
-        )	
-        print 'added household member -' + str(mbr.id)	
-    except Exception as e:	
-        print 'error adding household - %s ' % (str(e))
+        caretaker = child.caretaker
+        household = caretaker.ovchousehold_set.first()
+        mbr = OVCHHMembers.objects.create(
+            house_hold=household,
+            person_id=member,
+            member_type='tst',
+        )
+        print('added household member -' + str(mbr.id))
+    except Exception as e:
+        print('error adding household - {} '.format(str(e)))
         pass
 
 
-def update_household(index_child, member):	
-    """Method to update households."""	
-    try:	
-        hh = OVCHouseHold.objects.get(index_child=index_child)	
-        hh.members += str(member) + ','	
-        hh.save()	
-    except Exception as e:	
-        print 'error updating household - %s ' % (str(e))	
+def update_household(index_child, member):
+    """Method to update households."""
+    try:
+        hh = OVCHouseHold.objects.get(index_child=index_child)
+        hh.members += str(member) + ','
+        hh.save()
+    except Exception as e:
+        print('error updating household - {} '.format(str(e)))
         pass
 
-    
+
 def get_ovc_lists(ovc_ids):
     """Method to get child chv details from ids."""
     try:
         ovc_details = OVCRegistration.objects.filter(
             person_id__in=ovc_ids, is_void=False)
-    except Exception, e:
-        print 'error getting ovc lists - %s' % (str(e))
+    except Exception as e:
+        print('error getting ovc lists - {}'.format(str(e)))
         return {}
     else:
         return ovc_details
@@ -1826,7 +1839,7 @@ def get_index_child(child_id):
         for sibling in siblings:
             index_id = sibling.child_person_id
     except Exception as e:
-        print 'error getting index child - %s' % (str(e))
+        print('error getting index child - {}'.format(str(e)))
         return 0
     else:
         return index_id
@@ -1835,24 +1848,24 @@ def get_index_child(child_id):
 def get_household(chid):
     """Method to create households."""
     try:
-        child_id = ',%s,' % (chid)
+        child_id = ',{},'.format(chid)
         child_index, cids = 0, []
         child_ids = []
         members = OVCHouseHold.objects.filter(
             index_child_id=chid)
         if not members:
-            print 'no mm'
+            print('no mm')
             members = OVCHouseHold.objects.filter(
                 members__contains=child_id)
         for member in members:
             cids = member.members.split(',')
             child_index = member.index_child_id
-        print 'NN', cids, child_index
+        print('NN', cids, child_index)
         for cid in cids:
             if cid:
                 child_ids.append(int(cid))
     except Exception as e:
-        print 'error getting household - %s ' % (str(e))
+        print('error getting household - {} '.format(str(e)))
         return 0, []
     else:
         return child_index, child_ids
@@ -1879,8 +1892,8 @@ def get_chvs(person_id):
         for person in persons:
             cbo_detail[person.person_id] = person.person.full_name
         chvs = cbo_detail.items()
-    except Exception, e:
-        print "error getting CHV - %s" % (str(e))
+    except Exception as e:
+        print("error getting CHV - {}".format(str(e)))
         return ()
     else:
         return chvs
@@ -1891,7 +1904,7 @@ def get_temp(request):
     try:
         user_id = request.user.id
         page_id = request.get_full_path()
-        print "CHECK TMP", user_id, page_id
+        print("CHECK TMP", user_id, page_id)
         time_threshold = timezone.now() - timedelta(minutes=15)
         tmps = RegTemp.objects.get(user_id=user_id, page_id=page_id,
                                    created_at__gt=time_threshold)
@@ -1906,14 +1919,14 @@ def unit_duplicate(request):
     """Method to check if same unit exists with same name."""
     resp = {'status': 0}
     try:
-        print 'DUP org check', request.POST
+        print('DUP org check', request.POST)
         unit_name = request.POST.get('org_unit_name').strip()
         existing_units = RegOrgUnit.objects.filter(
             org_unit_name__iexact=unit_name, is_void=False).count()
         resp['status'] = existing_units
         return resp
-    except Exception, e:
-        print "Error checking unit duplicate - %s" % (str(e))
+    except Exception as e:
+        print("Error checking unit duplicate - {}".format(str(e)))
         return {'status': 9}
 
 
@@ -1921,7 +1934,7 @@ def person_duplicate(request, person='child'):
     """Method to check if child already exists."""
     resp = {'status': 0}
     try:
-        print 'DUP Check', request.POST
+        print('DUP Check', request.POST)
         if person == 'sibling':
             first_name = request.POST.get('sibling_firstname').strip()
             surname = request.POST.get('sibling_surname').strip()
@@ -1960,8 +1973,8 @@ def person_duplicate(request, person='child'):
             resp['status'] = children_qs.count()
             resp['child'] = children_qs
         return resp
-    except Exception, e:
-        print 'Error checking child duplicate - %s' % (str(e))
+    except Exception as e:
+        print('Error checking child duplicate - {}'.format(str(e)))
         return {'status': 99}
 
 
@@ -1981,14 +1994,14 @@ def get_list_types(list_type=['organisation_type_id']):
             vals.append(res)
             if org_unit.field_name in list_type:
                 cnt += 1
-                blks = 'BLK_%s' % (str(cnt))
+                blks = 'BLK_{}'.format(str(cnt))
                 item_scat = item_sub_cat if item_sub_cat else blks
                 orgs[item_scat] = org_unit.item_id
         for val in vals:
             val_field = val['field_name']
             if val_field in orgs:
                 type_id = str(orgs[val_field])
-                type_id_name = '%s,%s' % (str(val['id']), str(val['name']))
+                type_id_name = '{},{}'.format(str(val['id']), str(val['name']))
                 if type_id not in orgs_dict:
                     orgs_dict[type_id] = [type_id_name]
                 else:
@@ -1998,8 +2011,8 @@ def get_list_types(list_type=['organisation_type_id']):
                 org_id = orgs[org]
                 orgs_dict[org_id] = []
         return orgs_dict
-    except Exception, e:
-        print 'error - %s' % (str(e))
+    except Exception as e:
+        print('error - {}'.format(str(e)))
         pass
 
 
@@ -2011,7 +2024,7 @@ def get_user_geos(user):
         results = {'sub_counties': [], 'counties': [], 'wards': []}
         user_geos = CPOVCUserRoleGeoOrg.objects.select_related().filter(
             is_void=False, user_id=user_id, area_id__isnull=False)
-        print "CHECK", user_geos, user_id
+        print("CHECK", user_geos, user_id)
         for user_geo in user_geos:
             geo_id = user_geo.area_id
             sub_counties.append(geo_id)
@@ -2036,8 +2049,8 @@ def get_user_details(person):
         person_appuser = AppUser.objects.get(
             reg_person=person, is_active=True)
         return person_appuser
-    except Exception, e:
-        print "Get user details error - %s" % (str(e))
+    except Exception as e:
+        print("Get user details error - {}".format(str(e)))
         return None
 
 
@@ -2049,8 +2062,8 @@ def counties_from_aids(area_list, area_type='GDIS'):
             geos = SetupGeography.objects.filter(
                 area_id__in=area_list, area_type_id=area_type,
                 is_void=False).values_list('parent_area_id', flat=True)
-    except Exception, e:
-        print 'Error getting county list from area ids - %s' % (str(e))
+    except Exception as e:
+        print('Error getting county list from area ids - {}'.format(str(e)))
         return []
     else:
         return geos
@@ -2062,8 +2075,8 @@ def geos_from_aids(area_list, area_type='GWRD'):
         geos = SetupGeography.objects.filter(
             parent_area_id__in=area_list, area_type_id=area_type,
             is_void=False).values_list('area_id', flat=True)
-    except Exception, e:
-        print 'Error getting geo list from area ids - %s' % (str(e))
+    except Exception as e:
+        print('Error getting geo list from area ids - {}'.format(str(e)))
         return []
     else:
         return geos
@@ -2076,8 +2089,8 @@ def create_geo_list(geo_dict, form_items, geo_type='GLTW'):
             for geo_item in form_items:
                 if geo_item:
                     geo_dict[int(geo_item)] = geo_type
-    except Exception, e:
-        print 'Error creating public.persons geos - %s' % (str(e))
+    except Exception as e:
+        print('Error creating public.persons geos - {}'.format(str(e)))
         return geo_dict
     else:
         return geo_dict
@@ -2092,7 +2105,7 @@ def save_audit_trail(request, params, audit_type='Person'):
         interface_id = params['interface_id']
         meta_data = get_meta_data(request)
         paper_date = None
-        print 'Audit Trail', params
+        print('Audit Trail', params)
         if len(params) >= 3 and audit_type == 'Person':
             date_recorded_paper = params['date_recorded_paper']
             paper_person_id = params['paper_person_id']
@@ -2121,8 +2134,8 @@ def save_audit_trail(request, params, audit_type='Person'):
                 ip_address=ip_address,
                 meta_data=meta_data,
                 app_user_id=user_id).save()
-    except Exception, e:
-        print 'Error saving audit - %s' % (str(e))
+    except Exception as e:
+        print('Error saving audit - {}'.format(str(e)))
         pass
     else:
         pass
@@ -2188,7 +2201,7 @@ def save_sibling(request, attached_sb, person_id):
                     defaults={'child_person_id': person_id,
                               'sibling_person_id': sibling_id,
                               'date_linked': todate, 'remarks': sibling_rmk,
-                              'is_void': False},)
+                              'is_void': False}, )
                 # Use Owners location details to create/update sibling details
                 copy_locations(person_id, sibling_id, request)
                 new_sib_ids.append(sibling_id)
@@ -2200,8 +2213,8 @@ def save_sibling(request, attached_sb, person_id):
                 params['paper_person_id'] = None
                 params['person_id'] = int(sibling_id)
                 save_audit_trail(request, params)
-    except Exception, e:
-        print 'Error attaching sibling - ', str(e)
+    except Exception as e:
+        print('Error attaching sibling - ', str(e))
         pass
     else:
         return new_sib_ids
@@ -2223,9 +2236,9 @@ def copy_locations(person_id, relative_id, request):
                               'person_id': relative_id,
                               'area_type': area_type,
                               'date_linked': todate,
-                              'is_void': False},)
+                              'is_void': False}, )
         else:
-            print 'Child does not exist but create CG'
+            print('Child does not exist but create CG')
             area_id = request.POST.get('living_in_subcounty')
             nloc, created = RegPersonsGeo.objects.update_or_create(
                 person_id=relative_id, area_id=area_id, is_void=False,
@@ -2233,8 +2246,8 @@ def copy_locations(person_id, relative_id, request):
                           'person_id': relative_id,
                           'area_type': 'GLTL',
                           'date_linked': todate,
-                          'is_void': False},)
-    except Exception, e:
+                          'is_void': False}, )
+    except Exception as e:
         raise e
 
 
@@ -2248,8 +2261,8 @@ def save_person_extids(identifier_types, person_id):
                 is_void=False,
                 defaults={'person_id': person_id, 'identifier': identifier,
                           'identifier_type_id': identifier_type,
-                          'is_void': False},)
-    except Exception, e:
+                          'is_void': False}, )
+    except Exception as e:
         raise e
     else:
         pass
@@ -2266,7 +2279,7 @@ def save_person_type(person_types, person_id):
                 date_began=now,
                 date_ended=None,
                 is_void=False).save()
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -2282,7 +2295,7 @@ def remove_person_type(person_types, person_id):
                 person_id=person_id, is_void=False)
             person_area.date_ended = now
             person_area.save(update_fields=["date_ended"])
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -2301,7 +2314,7 @@ def save_locations(area_ids, person_id):
                 date_linked=now,
                 date_delinked=None,
                 is_void=False).save()
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -2317,7 +2330,7 @@ def remove_locations(area_ids, person_id):
             person_area.date_delinked = now
             person_area.is_void = True
             person_area.save(update_fields=["date_delinked", "is_void"])
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -2336,8 +2349,8 @@ def names_from_ids(ids, registry='orgs'):
                 orgs_name[geo] = ', '.join(gname)
             else:
                 orgs_name[geo] = None
-    except Exception, e:
-        print 'Error getting list - %s' % (str(e))
+    except Exception as e:
+        print('Error getting list - {}'.format(str(e)))
         return None
     else:
         return orgs_name
@@ -2363,7 +2376,7 @@ def get_attached_ous(request):
             if attached_ous:
                 ous = [int(ou) for ou in attached_ous.split(',')]
     except Exception as e:
-        print 'error getting attached ous - %s' % (str(e))
+        print('error getting attached ous - {}'.format(str(e)))
         return []
     else:
         return ous
@@ -2400,16 +2413,16 @@ def auto_suggest_person(request, query, qid=0):
         tstring = str(query)
         qstring = unicode(tstring)
         psearch = tstring if qstring.isnumeric() else False
-        print 'ID search', psearch
+        print('ID search', psearch)
         # Get IDS
         ext_ids = {}
         if psearch:
             pids = RegPersonsExternalIds.objects.filter(
                 Q(identifier=psearch) | Q(person_id=psearch), identifier_type_id='INTL',
                 is_void=False)
-            print pids.query
-            print 'Count PIDs: ', pids.count()
-            if pids.count()>0:
+            print(pids.query)
+            print('Count PIDs: ', pids.count())
+            if pids.count() > 0:
                 person_list = pids.values_list('person_id', flat=True)
                 persons = RegPerson.objects.filter(
                     id__in=person_list, is_void=False)
@@ -2425,43 +2438,43 @@ def auto_suggest_person(request, query, qid=0):
                     person_ids = RegPersonsTypes.objects.filter(
                         person_type_id=person_type, person_id__in=porgs,
                         is_void=False).values_list(
-                            'person_id', flat=True)
+                        'person_id', flat=True)
                 else:
                     person_ids = RegPersonsTypes.objects.filter(
                         person_type_id=person_type,
                         is_void=False).values_list(
-                            'person_id', flat=True)
-                    print person_ids.query
+                        'person_id', flat=True)
+                    print(person_ids.query)
             else:
                 wf_ids = ['TWNE', 'TWGE', 'TWVL']
                 person_ids = RegPersonsTypes.objects.filter(
                     person_type_id__in=wf_ids, person_id__in=porgs,
                     is_void=False).values_list(
-                        'person_id', flat=True)
+                    'person_id', flat=True)
             queryset = RegPerson.objects.filter(
-                Q(surname__icontains=query) | Q(email__icontains=query) | Q(first_name__icontains=query) | Q(other_names__icontains=query), id__in=person_ids, is_void=False)
-            #field_names = ['surname', 'email', 'first_name', 'other_names']
-            #q_filter = Q()
-            #for field in field_names:
-                #q_filter |= Q(**{"%s__icontains" % field: query})
+                Q(surname__icontains=query) | Q(email__icontains=query) | Q(first_name__icontains=query) | Q(
+                    other_names__icontains=query), id__in=person_ids, is_void=False)
+            # field_names = ['surname', 'email', 'first_name', 'other_names']
+            # q_filter = Q()
+            # for field in field_names:
+            # q_filter |= Q(**{"%s__icontains" % field: query})
 
-            #persons = queryset.filter(q_filter)
+            # persons = queryset.filter(q_filter)
             persons = queryset
-            print queryset.query
+            print(queryset.query)
             pids = RegPersonsExternalIds.objects.filter(
                 person_id__in=person_ids, identifier_type_id='INTL')
-            print pids.query
+            print(pids.query)
 
         for pid in pids:
             ext_ids[pid.person_id] = pid.identifier
         for person in persons:
             person_id = person.pk
             onames = person.other_names if person.other_names else ''
-            names = '%s %s %s' % (person.first_name, person.surname,
-                                  onames)
+            names = '{} {} {}'.format(person.first_name, person.surname, onames)
             idno = ext_ids[person_id] if person_id in ext_ids else None
-            id_ext = ' - %s' % (idno) if idno else ''
-            name = '%s%s' % (names.strip(), id_ext)
+            id_ext = ' - {}'.format(idno) if idno else ''
+            name = '{}{}'.format(names.strip(), id_ext)
             val = {'id': person.pk, 'label': name, 'value': name}
             if query_id in detail_list:
                 person_dob = person.date_of_birth
@@ -2489,7 +2502,7 @@ def auto_suggest_person(request, query, qid=0):
                 if case_ids:
                     # Now filter only cases handled by this org unit
                     my_org_id = request.session.get('ou_primary')
-                    print 'PERMS', my_org_id, case_ids
+                    print('PERMS', my_org_id, case_ids)
                     all_cids = OVCCaseGeo.objects.filter(
                         is_void=False, case_id_id__in=case_ids,
                         report_orgunit_id=my_org_id)
@@ -2504,10 +2517,10 @@ def auto_suggest_person(request, query, qid=0):
                         val['cases'] = new_case
                     if request.user.is_superuser:
                         val['cases'] = cases
-                val['label'] = '%s (%s)' % (name, len(cases))
+                val['label'] = '{} ({})'.format(name, len(cases))
             results.append(val)
-    except Exception, e:
-        print 'error checking public.persons - %s' % (str(e))
+    except Exception as e:
+        print('error checking public.persons - {}'.format(str(e)))
         return []
     else:
         return results
@@ -2534,7 +2547,7 @@ def extract_post_params(request, naming='cc_'):
                     cid = vals[1]
                     req_vals[cid] = val.split(',')
         return req_vals
-    except Exception, e:
+    except Exception as e:
         raise e
 
 
@@ -2548,7 +2561,7 @@ def create_olists(org_lists, org_detail, org_ids, ltype=0, i_type=0):
                 unit_vis = org_list.org_unit.org_unit_id_vis
                 unit_name = org_list.org_unit.org_unit_name
                 unit_type = org_list.org_unit.org_unit_type_id
-                unit_names = '%s - %s' % (unit_vis, unit_name)
+                unit_names = '{} - {}'.format(unit_vis, unit_name)
                 org_detail[unit_id] = unit_names
                 if i_type == 1:
                     if unit_type in inst_types:
@@ -2561,14 +2574,14 @@ def create_olists(org_lists, org_detail, org_ids, ltype=0, i_type=0):
                 unit_vis = org_list.org_unit_id_vis
                 unit_name = org_list.org_unit_name
                 unit_type = org_list.org_unit_type_id
-                unit_names = '%s - %s' % (unit_vis, unit_name)
+                unit_names = '{} - {}'.format(unit_vis, unit_name)
                 org_detail[unit_id] = unit_names
                 if i_type == 1:
                     if unit_type in inst_types:
                         org_ids.append(unit_id)
                 else:
                     org_ids.append(unit_id)
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         return org_detail, org_ids
@@ -2597,9 +2610,9 @@ def get_specific_orgs(user_id, i_type=0):
                     org_detail, ssub_org_ids = create_olists(
                         ssub_results, org_detail, org_ids, 2, i_type)
         result = org_detail.items()
-    except Exception, e:
-        error = 'Error getting specific orgs - %s' % (str(e))
-        print error
+    except Exception as e:
+        error = 'Error getting specific orgs - {}'.format(str(e))
+        print(error)
         return result
     else:
         return result
@@ -2623,7 +2636,7 @@ def get_specific_geos(list_ids, registry='orgs', reg_type=[]):
                     else:
                         orgs[person_id].append(area_name)
         elif registry == 'person_orgs':
-            print 'pps', list_ids
+            print('pps', list_ids)
             geos = RegPersonsOrgUnits.objects.select_related().filter(
                 person_id__in=list_ids, is_void=False)
             # For getting all geo ids for org units
@@ -2672,9 +2685,9 @@ def get_specific_geos(list_ids, registry='orgs', reg_type=[]):
                         orgs[org_id] = [area_name]
                     else:
                         orgs[org_id].append(area_name)
-    except Exception, e:
-        error = 'Error getting geos - %s' % (str(e))
-        print error
+    except Exception as e:
+        error = 'Error getting geos - {}'.format(str(e))
+        print(error)
     else:
         return orgs
 
@@ -2684,9 +2697,9 @@ def get_specific_units(org_ids):
     try:
         result = RegOrgUnitGeography.objects.select_related().filter(
             org_unit_id__in=org_ids, is_void=False)
-    except Exception, e:
-        error = 'Error getting geos - %s' % (str(e))
-        print error
+    except Exception as e:
+        error = 'Error getting geos - {}'.format(str(e))
+        print(error)
     else:
         return result
 
@@ -2704,11 +2717,11 @@ def get_geo_selected(results, datas, extras, filters=False):
         area_id = geo_list['area_id']
         area_name = geo_list['area_name']
         if parent_area_id in area_ids:
-            final_list = '%s,%s' % (area_id, area_name)
+            final_list = '{},{}'.format(area_id, area_name)
             wards.append(final_list)
         # attach already selected
         if area_id in selected_ids:
-            extra_list = '%s,%s' % (area_id, area_name)
+            extra_list = '{},{}'.format(area_id, area_name)
             wards.append(extra_list)
     unique_wards = list(set(wards))
     results['wards'] = unique_wards
@@ -2729,10 +2742,11 @@ def get_all_geo_list(filters=False):
         geo_lists = geo_lists.values(
             'area_id', 'area_type_id', 'area_name', 'parent_area_id')
         # .exclude(area_type_id='GPRV')
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         return geo_lists
+
 
 
 def get_geo_list(geo_lists, geo_filter, add_select=False, user_filter=[]):
@@ -2741,6 +2755,7 @@ def get_geo_list(geo_lists, geo_filter, add_select=False, user_filter=[]):
     if add_select:
         area_detail[''] = 'Please Select'
     try:
+
         if geo_lists:
             for i, geo_list in enumerate(geo_lists):
                 area_id = geo_list['area_id']
@@ -2752,8 +2767,9 @@ def get_geo_list(geo_lists, geo_filter, add_select=False, user_filter=[]):
                             area_detail[area_id] = area_name
                     else:
                         area_detail[area_id] = area_name
-            result = area_detail.items()
-    except Exception, e:
+                        result = area_detail.items()
+
+    except Exception as e:
         raise e
     else:
         return result
@@ -2776,9 +2792,9 @@ def search_org_units(unit_types, is_closed):
         if unit_types:
             # org_units = org_unit_type_filter(org_units, unit_types)
             org_units = org_units.filter(org_unit_type_id__in=unit_types)
-    except Exception, e:
-        error = "Error searching org units - %s" % (str(e))
-        print error
+    except Exception as e:
+        error = "Error searching org units - {}".format(str(e))
+        print(error)
         return {}
     else:
         return org_units
@@ -2789,9 +2805,9 @@ def get_all_org_units():
     try:
         org_units = RegOrgUnit.objects.all().values(
             'id', 'org_unit_id_vis', 'org_unit_name')
-    except Exception, e:
-        error = "Error getting org units - %s" % (str(e))
-        print error
+    except Exception as e:
+        error = "Error getting org units - {}".format(str(e))
+        print(error)
         return None
     else:
         return org_units
@@ -2806,8 +2822,8 @@ def get_org_units(initial="Select unit"):
             unit_vis = unit['org_unit_id_vis']
             unit_name = unit['org_unit_name']
             unit_detail[unit['id']] = '%s %s' % (unit_vis, unit_name)
-    except Exception, e:
-        print "error - %s" % (str(e))
+    except Exception as e:
+        print("error - {}".format(str(e)))
         return {}
     else:
         return unit_detail.items()
@@ -2820,10 +2836,10 @@ def save_contacts(contact_id, contact_value, org_unit):
             contact_detail_type_id=contact_id, org_unit_id=org_unit,
             defaults={'contact_detail_type_id': contact_id,
                       'contact_detail': contact_value,
-                      'org_unit_id': org_unit, 'is_void': False},)
-    except Exception, e:
-        error = 'Error searching org unit -%s' % (str(e))
-        print error
+                      'org_unit_id': org_unit, 'is_void': False}, )
+    except Exception as e:
+        error = 'Error searching org unit -{}'.format(str(e))
+        print(error)
         return None
     else:
         return contact, created
@@ -2837,11 +2853,11 @@ def get_contacts(org_id):
             org_unit_id=org_id, is_void=False).values(
             'contact_detail_type_id', 'contact_detail')
         for contact in contacts:
-            contact_type = 'contact_%s' % (contact['contact_detail_type_id'])
+            contact_type = 'contact_{}'.format(contact['contact_detail_type_id'])
             contact_dict[contact_type] = contact['contact_detail']
-    except Exception, e:
-        error = 'Error searching org unit -%s' % (str(e))
-        print error
+    except Exception as e:
+        error = 'Error searching org unit -{}'.format(str(e))
+        print(error)
         return None
     else:
         return contact_dict
@@ -2854,10 +2870,10 @@ def save_external_ids(identifier_id, identifier_value, org_unit):
             identifier_type_id=identifier_id, org_unit_id=org_unit,
             defaults={'identifier_type_id': identifier_id,
                       'identifier_value': identifier_value,
-                      'org_unit_id': org_unit, 'is_void': False},)
-    except Exception, e:
-        error = 'Error searching org unit -%s' % (str(e))
-        print error
+                      'org_unit_id': org_unit, 'is_void': False}, )
+    except Exception as e:
+        error = 'Error searching org unit -{}'.format(str(e))
+        print(error)
         return None
     else:
         return contact, created
@@ -2869,7 +2885,7 @@ def get_external_ids(org_id):
         ext_ids = RegOrgUnitExternalID.objects.filter(
             org_unit_id=org_id, is_void=False).values(
             'identifier_type_id', 'identifier_value')
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         return ext_ids
@@ -2881,7 +2897,7 @@ def perform_audit_persons(org_id):
         ext_ids = RegOrgUnitExternalID.objects.filter(
             org_unit_id=org_id, is_void=False).values(
             'identifier_type_id', 'identifier_value')
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         return ext_ids
@@ -2898,15 +2914,15 @@ def save_geo_location(area_ids, org_unit, existing_ids=[]):
             if area_id not in delink_list:
                 geo, created = RegOrgUnitGeography.objects.update_or_create(
                     area_id=area_id, org_unit_id=org_unit,
-                    defaults={'date_linked': date_linked, 'is_void': False},)
+                    defaults={'date_linked': date_linked, 'is_void': False}, )
         if delink_list:
             for i, area_id in enumerate(delink_list):
                 geo, created = RegOrgUnitGeography.objects.update_or_create(
                     area_id=area_id, org_unit_id=org_unit,
-                    defaults={'date_delinked': date_linked, 'is_void': True},)
-    except Exception, e:
-        error = 'Error linking area to org unit -%s' % (str(e))
-        print error
+                    defaults={'date_delinked': date_linked, 'is_void': True}, )
+    except Exception as e:
+        error = 'Error linking area to org unit - {}'.format(str(e))
+        print(error)
         return None
     else:
         return True
@@ -2917,7 +2933,7 @@ def get_geo_location(org_id):
     try:
         ext_ids = RegOrgUnitGeography.objects.filter(
             org_unit_id=org_id, is_void=False).values('area_id')
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         return ext_ids
@@ -2931,7 +2947,7 @@ def close_org_unit(close_date, org_unit_id):
         org_unit = get_object_or_404(RegOrgUnit, pk=org_unit_id)
         org_unit.date_closed = close_date
         org_unit.save(update_fields=["date_closed"])
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
@@ -2945,7 +2961,7 @@ def set_person_dead(date_of_death, person_id):
         person_detail = get_object_or_404(RegPerson, pk=person_id)
         person_detail.date_of_death = date_of_death
         person_detail.save(update_fields=["date_of_death"])
-    except Exception, e:
+    except Exception as e:
         raise e
 
 
@@ -2955,7 +2971,7 @@ def delete_org_unit(org_unit_id):
         org_unit = get_object_or_404(RegOrgUnit, pk=org_unit_id)
         org_unit.is_void = True
         org_unit.save(update_fields=["is_void"])
-    except Exception, e:
+    except Exception as e:
         raise e
 
 
@@ -2965,7 +2981,7 @@ def delete_person(person_id):
         person_detail = get_object_or_404(RegPerson, pk=person_id)
         person_detail.is_void = True
         person_detail.save(update_fields=["is_void"])
-    except Exception, e:
+    except Exception as e:
         raise e
 
 
@@ -2976,15 +2992,17 @@ def new_guid_32():
 
 def org_id_generator(modelid):
     """Method for generating org unit id."""
-    uniqueid = '%05d' % modelid
+    uniqueid = '{:5d}'.format(modelid)
     checkdigit = calculate_luhn(str(uniqueid))
     return organisation_id_prefix + str(uniqueid) + str(checkdigit)
 
 
 def luhn_checksum(check_number):
     """http://en.wikipedia.org/wiki/Luhn_algorithm ."""
+
     def digits_of(n):
         return [int(d) for d in str(n)]
+
     digits = digits_of(check_number)
     odd_digits = digits[-1::-2]
     even_digits = digits[-2::-2]
@@ -3035,7 +3053,7 @@ def check_duplicate(person_uid):
         person = PersonsMaster(id=person_uid)
         person.save()
     except Exception as e:
-        print 'error in duplicate page check - %s' % (str(e))
+        print('error in duplicate page check - {}'.format(str(e)))
         return None
     else:
         return person
@@ -3050,7 +3068,7 @@ def search_person_ft(request, search_string, ptype, incl_dead):
         person_type = str(ptype)
         p_type = person_type
         other_filter = ''
-        print 'Person type is: ', p_type
+        print('Person type is: ', p_type)
         if person_type == 'TBVC':
             person_type = 'COVC'
             other_filter = "OR designation = 'TBVC'"
@@ -3072,7 +3090,8 @@ def search_person_ft(request, search_string, ptype, incl_dead):
                      " ORDER BY date_of_birth DESC")
             vals = ' & '.join(names)
             sql = query % (p_type, vals)
-        print sql
+        print(sql)
+
         with connection.cursor() as cursor:
             cursor.execute(sql)
             rows = cursor.fetchall()
@@ -3082,7 +3101,7 @@ def search_person_ft(request, search_string, ptype, incl_dead):
             cbo_ovcs = get_org_ovcs(request)
             qs = qs.filter(id__in=cbo_ovcs)
     except Exception as e:
-        print 'error doing fts search - %s' % (str(e))
+        print('error doing fts search - {}'.format(str(e)))
         return []
     else:
         return qs
@@ -3108,7 +3127,7 @@ def get_org_ovcs(request):
         # Get OVC ids
         child_ids = regs.values_list('person_id', flat=True)
     except Exception as e:
-        print 'Get getting Org OVCs - %s' % (str(e))
+        print('Get getting Org OVCs - {}'.format(str(e)))
         return []
     else:
         return child_ids

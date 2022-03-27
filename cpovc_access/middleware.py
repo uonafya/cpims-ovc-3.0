@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth import views as auth_views
-from django.core.urlresolvers import resolve, reverse
+from django.urls import resolve, reverse
 from django.views.decorators.csrf import requires_csrf_token
 
 from cpovc_access.handlers import PasswordChangePolicyHandler
@@ -22,18 +22,19 @@ from cpovc_access.settings import (
 logger = logging.getLogger(__name__)
 
 
-class FailedLoginMiddleware(object):
+class FailedLoginMiddleware:
     """Handle failed logins."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, get_response):
         """Handle failure constructor."""
-        super(FailedLoginMiddleware, self).__init__(*args, **kwargs)
+        self.get_response = get_response
+        super(FailedLoginMiddleware, self)
 
         # watch the auth login
         auth_views.login = watch_login(auth_views.login)
 
 
-class ViewDecoratorMiddleware(object):
+class ViewDecoratorMiddleware:
     """
     When this middleware is installed, by default it watches.
 
@@ -61,7 +62,7 @@ class ViewDecoratorMiddleware(object):
         return None
 
 
-class AuthenticationPolicyMiddleware(object):
+class AuthenticationPolicyMiddleware:
     """This middleware enforces the following policy.
 
     - Change of password when password has expired;
@@ -126,8 +127,7 @@ class AuthenticationPolicyMiddleware(object):
         # To prevent logout at password change views call the
         # `update_password` function in that view
         # Ignore non 2xx responses (e.g. redirects).
-        if (response.status_code >= 200 and
-                response.status_code < 300 and
+        if (200 <= response.status_code < 300 and
                 LOGOUT_AFTER_PASSWORD_CHANGE and
                 password_changed(request.session, request.user)):
             # Update password change time

@@ -6,7 +6,9 @@ from django.db import models
 from django.utils import timezone
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+# from cpovc_main.models import SetupGeography
 from cpovc_auth.models import AppUser
+
 
 
 class RegOrgUnit(models.Model):
@@ -20,7 +22,7 @@ class RegOrgUnit(models.Model):
     handle_ovc = models.BooleanField(default=False)
     is_void = models.BooleanField(default=False)
     parent_org_unit_id = models.IntegerField(null=True, blank=True)
-    created_by = models.ForeignKey(AppUser, null=True)
+    created_by = models.ForeignKey(AppUser, on_delete=models.CASCADE, null=True)
     created_at = models.DateField(default=timezone.now)
 
     def _is_active(self):
@@ -54,7 +56,7 @@ class RegOrgUnit(models.Model):
             self.date_closed = date_closed
         super(RegOrgUnit, self).save()
 
-    def __unicode__(self):
+    def __str__(self):
         """To be returned by admin actions."""
         return self.org_unit_name
 
@@ -62,7 +64,7 @@ class RegOrgUnit(models.Model):
 class RegOrgUnitContact(models.Model):
     """Model for Organisational units contact details."""
 
-    org_unit = models.ForeignKey(RegOrgUnit)
+    org_unit = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
     contact_detail_type_id = models.CharField(max_length=20)
     contact_detail = models.CharField(max_length=255)
     is_void = models.BooleanField(default=False)
@@ -76,7 +78,7 @@ class RegOrgUnitContact(models.Model):
 class RegOrgUnitExternalID(models.Model):
     """Model for Organisational units external IDs."""
 
-    org_unit = models.ForeignKey(RegOrgUnit)
+    org_unit = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
     identifier_type_id = models.CharField(max_length=4)
     identifier_value = models.CharField(max_length=255, null=True)
     is_void = models.BooleanField(default=False)
@@ -90,8 +92,8 @@ class RegOrgUnitExternalID(models.Model):
 class RegOrgUnitGeography(models.Model):
     """Model for Organisational units Geography."""
 
-    org_unit = models.ForeignKey(RegOrgUnit)
-    area = models.ForeignKey('cpovc_main.SetupGeography')
+    org_unit = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
+    area = models.ForeignKey(to='cpovc_main.SetupGeography', on_delete=models.CASCADE)
     date_linked = models.DateField(null=True)
     date_delinked = models.DateField(null=True)
     is_void = models.BooleanField(default=False)
@@ -125,7 +127,7 @@ class RegPerson(models.Model):
     sex_id = models.CharField(max_length=4,
                               choices=[('SMAL', 'Male'), ('SFEM', 'Female')])
     is_void = models.BooleanField(default=False)
-    created_by = models.ForeignKey(AppUser, null=True)
+    created_by = models.ForeignKey(AppUser, on_delete=models.CASCADE, null=True)
     created_at = models.DateField(default=timezone.now)
 
     def _get_persons_data(self):
@@ -133,7 +135,7 @@ class RegPerson(models.Model):
         return _reg_persons_data
 
     def _get_full_name(self):
-        return '%s %s' % (self.first_name, self.surname)
+        return '{} {}'.format(self.first_name, self.surname)
 
     def make_void(self):
         """Inline call method."""
@@ -155,12 +157,12 @@ class RegPerson(models.Model):
         if self.date_of_birth:
             dob = self.date_of_birth
             date_check = (today.month, today.day) < (dob.month, dob.day)
-            yrs = today.year - dob.year - (date_check)
-            age = '%d years' % (yrs)
+            yrs = today.year - dob.year - date_check
+            age = '{:d} years'.format(yrs)
             if yrs == 0:
                 days = (today - dob).days
                 mon = days / 30
-                age = '%d days' % days if mon < 1 else '%d months' % mon
+                age = '{:d} days'.format(days if mon < 1 else '{:d} months'.format(mon))
         return age
 
     age = property(_calculate_age)
@@ -172,7 +174,7 @@ class RegPerson(models.Model):
         if self.date_of_birth:
             dob = self.date_of_birth
             date_check = (today.month, today.day) < (dob.month, dob.day)
-            yrs = today.year - dob.year - (date_check)
+            yrs = today.year - dob.year - date_check
         return yrs
 
     years = property(_calculate_years)
@@ -190,9 +192,9 @@ class RegPerson(models.Model):
         verbose_name = 'Persons Registry'
         verbose_name_plural = 'Persons Registries'
 
-    def __unicode__(self):
+    def __str__(self):
         """To be returned by admin actions."""
-        return '%s %s %s' % (self.first_name, self.other_names, self.surname)
+        return '{} {} {}'.format(self.first_name, self.other_names, self.surname)
 
 
 class RegBiometric(models.Model):
@@ -210,18 +212,16 @@ class RegBiometric(models.Model):
         verbose_name = 'Persons Biometric'
         verbose_name_plural = 'Persons Biometrics'
 
-    def __unicode__(self):
+    def __str__(self):
         """To be returned by admin actions."""
-        return '%s %s %s' % (self.account)
+        return '{} {} {}'.format(self.account)
 
 
 class RegPersonsGuardians(models.Model):
     """Model for Persons (Child) guardians."""
 
-    child_person = models.ForeignKey(RegPerson,
-                                     related_name='child_person')
-    guardian_person = models.ForeignKey(RegPerson,
-                                        related_name='guardian_person')
+    child_person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='child_person')
+    guardian_person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='guardian_person')
     relationship = models.CharField(max_length=5)
     date_linked = models.DateField(null=True)
     date_delinked = models.DateField(null=True)
@@ -244,10 +244,8 @@ class RegPersonsGuardians(models.Model):
 class RegPersonsSiblings(models.Model):
     """Model for Persons (Child) siblings."""
 
-    child_person = models.ForeignKey(RegPerson,
-                                     related_name='child_sibling')
-    sibling_person = models.ForeignKey(RegPerson,
-                                       related_name='sibling_person')
+    child_person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='child_sibling')
+    sibling_person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='sibling_person')
     date_linked = models.DateField(null=True)
     date_delinked = models.DateField(null=True)
     remarks = models.TextField(null=True)
@@ -269,7 +267,7 @@ class RegPersonsSiblings(models.Model):
 class RegPersonsTypes(models.Model):
     """Model for Persons types details."""
 
-    person = models.ForeignKey(RegPerson)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     person_type_id = models.CharField(max_length=4)
     date_began = models.DateField(null=True)
     date_ended = models.DateField(null=True, default=None)
@@ -293,9 +291,9 @@ class RegPersonsTypes(models.Model):
 class RegPersonsGeo(models.Model):
     """Model for Persons Geography."""
 
-    from cpovc_main.models import SetupGeography
-    person = models.ForeignKey(RegPerson)
-    area = models.ForeignKey(SetupGeography)
+    # from cpovc_main.models import SetupGeography
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    area = models.ForeignKey(to='cpovc_main.SetupGeography', on_delete=models.CASCADE)
     area_type = models.CharField(max_length=4)
     date_linked = models.DateField(null=True)
     date_delinked = models.DateField(null=True)
@@ -317,7 +315,7 @@ class RegPersonsGeo(models.Model):
 class RegPersonsExternalIds(models.Model):
     """Model for Persons External IDs."""
 
-    person = models.ForeignKey(RegPerson)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     identifier_type_id = models.CharField(max_length=4)
     identifier = models.CharField(max_length=255)
     is_void = models.BooleanField(default=False)
@@ -336,7 +334,7 @@ class RegPersonsExternalIds(models.Model):
 class RegPersonsContact(models.Model):
     """Model for Persons contacts."""
 
-    person = models.ForeignKey(RegPerson)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, )
     contact_detail_type_id = models.CharField(max_length=4)
     contact_detail = models.CharField(max_length=255)
     is_void = models.BooleanField(default=False)
@@ -355,8 +353,8 @@ class RegPersonsContact(models.Model):
 class RegPersonsOrgUnits(models.Model):
     """Model for Persons Organisational Units."""
 
-    person = models.ForeignKey(RegPerson)
-    org_unit = models.ForeignKey(RegOrgUnit)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    org_unit = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
     date_linked = models.DateField(null=True)
     date_delinked = models.DateField(null=True)
     primary_unit = models.BooleanField(default=False)
@@ -372,7 +370,7 @@ class RegPersonsOrgUnits(models.Model):
 class RegPersonsWorkforceIds(models.Model):
     """Model for Persons Workforce IDs."""
 
-    person = models.ForeignKey(RegPerson)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     workforce_id = models.CharField(max_length=8, null=True)
 
     class Meta:
@@ -384,7 +382,7 @@ class RegPersonsWorkforceIds(models.Model):
 class RegPersonsBeneficiaryIds(models.Model):
     """Model for Persons Beneficiary IDs."""
 
-    person = models.ForeignKey(RegPerson)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     beneficiary_id = models.CharField(max_length=10, null=True)
 
     class Meta:
@@ -397,12 +395,12 @@ class RegOrgUnitsAuditTrail(models.Model):
     """Model for Organisational units Audit."""
 
     transaction_id = models.AutoField(primary_key=True)
-    org_unit = models.ForeignKey(RegOrgUnit)
+    org_unit = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
     transaction_type_id = models.CharField(max_length=4, null=True,
                                            db_index=True)
     interface_id = models.CharField(max_length=4, null=True, db_index=True)
     timestamp_modified = models.DateTimeField(auto_now=True)
-    app_user = models.ForeignKey(AppUser)
+    app_user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     ip_address = models.GenericIPAddressField(protocol='both')
     meta_data = models.TextField(null=True)
 
@@ -419,15 +417,15 @@ class RegPersonsAuditTrail(models.Model):
     """Model for Persons Audit."""
 
     transaction_id = models.AutoField(primary_key=True)
-    person = models.ForeignKey(RegPerson)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     transaction_type_id = models.CharField(max_length=4, null=True,
                                            db_index=True)
     interface_id = models.CharField(max_length=4, null=True, db_index=True)
     date_recorded_paper = models.DateField(null=True)
     person_recorded_paper = models.ForeignKey(
-        RegPerson, related_name='person_recorded_paper', null=True)
+        RegPerson, on_delete=models.CASCADE, related_name='person_recorded_paper', null=True)
     timestamp_modified = models.DateTimeField(auto_now=True)
-    app_user = models.ForeignKey(AppUser)
+    app_user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     ip_address = models.GenericIPAddressField(protocol='both')
     meta_data = models.TextField(null=True)
 
@@ -443,8 +441,8 @@ class RegPersonsAuditTrail(models.Model):
 class OVCSibling(models.Model):
     """Model for Siblings details."""
 
-    person = models.ForeignKey(RegPerson, related_name='ovc_sibling')
-    cpims = models.ForeignKey(RegPerson, related_name='ovc_cpims', null=True)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='ovc_sibling')
+    cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='ovc_cpims', null=True)
     first_name = models.CharField(max_length=50)
     other_names = models.CharField(max_length=50, default=None)
     surname = models.CharField(max_length=50)
@@ -467,9 +465,9 @@ class OVCCheckin(models.Model):
 
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    person = models.ForeignKey(RegPerson)
-    user = models.ForeignKey(AppUser)
-    org_unit = models.ForeignKey(RegOrgUnit, null=True)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    org_unit = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE, null=True)
     is_ovc = models.BooleanField(default=True)
     is_void = models.BooleanField(default=False)
     timestamp_created = models.DateTimeField(default=timezone.now)
@@ -485,7 +483,7 @@ class OVCHouseHold(models.Model):
 
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    index_child = models.ForeignKey(RegPerson, related_name='index_child')
+    index_child = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='index_child')
     members = models.CharField(max_length=200)
     is_void = models.BooleanField(default=False)
     timestamp_created = models.DateTimeField(default=timezone.now)
@@ -501,7 +499,7 @@ class PersonsMaster(models.Model):
 
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    person = models.ForeignKey(RegPerson, null=True)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, null=True)
     person_type = models.CharField(max_length=5, null=True)
     system_id = models.CharField(max_length=100, null=True)
     timestamp_created = models.DateTimeField(default=timezone.now)

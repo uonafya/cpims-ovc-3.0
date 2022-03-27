@@ -19,7 +19,7 @@ from cpovc_registry.templatetags.app_filters import gen_value, vals, check_field
 logger = logging.getLogger(__name__)
 
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def templates(request):
     values = get_dict(field_name=check_fields)
     form_1a = OVCF1AForm()
@@ -42,7 +42,7 @@ def templates(request):
     return JsonResponse({'data': json.dumps(tpls)})
 
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def fetch_data(request):
     user_orgs = request.user.reg_person.regpersonsorgunits_set.values()
     org_units = []
@@ -110,7 +110,7 @@ def fetch_data(request):
     })
 
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def fetch_services(request):
     return JsonResponse({
         'data': base64.b64encode(json.dumps(get_services()))
@@ -150,3 +150,9 @@ def submit_form(request):
     return JsonResponse({
         'msg': 'ok'
     })
+# templates()
+# fetch_data()
+# fetch_services()
+# submit_form()
+# from django.conf import settings
+# >>> settings.configure()

@@ -1,9 +1,9 @@
 ''' Django notifications models file '''
 # -*- coding: utf-8 -*-
 # pylint: disable=too-many-lines
-from distutils.version import StrictVersion
+# from distutils.version import StrictVersion
 # pylint: disable=no-name-in-module,import-error
-
+from packaging.version import Version
 from django import get_version
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -19,7 +19,7 @@ from notifications import settings as notifications_settings
 from notifications.signals import notify
 from notifications.utils import id2slug
 
-if StrictVersion(get_version()) >= StrictVersion('1.8.0'):
+if Version(get_version()) >= Version('1.8.0'):
     from django.contrib.contenttypes.fields import GenericForeignKey  # noqa
 else:
     from django.contrib.contenttypes.generic import GenericForeignKey  # noqa

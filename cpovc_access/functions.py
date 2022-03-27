@@ -5,10 +5,9 @@ from cpovc_registry.functions import get_client_ip
 
 def access_request(request):
     """Method to save guest access requests."""
-    response = {'status': 9}
-    response['message'] = ('Request could not be saved because we '
-                           'already have your details or there was an error. '
-                           'Contact the administrator.')
+    response = {'status': 9, 'message': ('Request could not be saved because we '
+                                         'already have your details or there was an error. '
+                                         'Contact the administrator.')}
     try:
         ip_address = get_client_ip(request)
         fname = request.POST.get('fname').strip()

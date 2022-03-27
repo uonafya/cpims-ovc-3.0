@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load static %}
 {% block page_title %} Organization Unit details {% endblock %}
 
 {% load app_filters %}
@@ -19,7 +19,7 @@
 <h1 class="page-header">Registry <small>Organizational Unit Details</small></h1>
 <!-- end page-header -->
 {% if messages %}
-<div id="messages" class="alert alert-success fade in">
+<div id="message" class="alert alert-success fade in">
     <span class="close" data-dismiss="alert">×</span>
     <i class="fa fa-check fa-2x pull-left"></i>
 	<ul class="messages">

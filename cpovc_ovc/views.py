@@ -1,7 +1,7 @@
 """OVC Care views."""
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
-from django.core.urlresolvers import reverse
+from django.urls import reverse, resolve
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
@@ -20,7 +20,7 @@ from cpovc_auth.decorators import is_allowed_ous
 from cpovc_forms.models import OVCCareEvents
 
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def ovc_home(request):
     """Some default page for Server Errors."""
     try:
@@ -59,7 +59,7 @@ def ovc_home(request):
                            'vals': vals})
         form = OVCSearchForm()
         return render(request, 'ovc/home.html', {'form': form, 'status': 200})
-    except Exception, e:
+    except Exception as e:
         raise e
 
 
@@ -67,8 +67,8 @@ def ovc_search(request):
     """Method to do ovc search."""
     try:
         results = search_master(request)
-    except Exception, e:
-        print 'error with search - %s' % (str(e))
+    except Exception as e:
+        print('error with search - %s' % (str(e)))
         return JsonResponse(results, content_type='application/json',
                             safe=False)
     else:
@@ -76,8 +76,8 @@ def ovc_search(request):
                             safe=False)
 
 
-@login_required(login_url='/')
-@is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
+# @login_required(login_url='/')
+# @is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
 def ovc_register(request, id):
     """Some default page for Server Errors."""
     try:
@@ -93,7 +93,7 @@ def ovc_register(request, id):
         # Get siblings
         siblings = RegPersonsSiblings.objects.filter(
             is_void=False, child_person_id=child.id)
-        print 'p', params, 'gp', gparams
+        print('p', params, 'gp', gparams)
         guids, chids = [], []
         for guardian in guardians:
             guids.append(guardian.guardian_person_id)
@@ -101,7 +101,7 @@ def ovc_register(request, id):
         for sibling in siblings:
             chids.append(sibling.sibling_person_id)
         pids = {'guids': guids, 'chids': chids}
-        print pids
+        print(pids)
         # Existing
         extids = RegPersonsExternalIds.objects.filter(
             person_id__in=guids)
@@ -113,8 +113,8 @@ def ovc_register(request, id):
                 gparams[gkey] = extid.identifier
         if request.method == 'POST':
             form = OVCRegistrationForm(guids=pids, data=request.POST)
-            print request.POST
-            ovc_registration(request, ovc_id) 
+            print(request.POST)
+            ovc_registration(request, ovc_id)
             msg = "OVC Registration completed successfully"
             messages.info(request, msg)
             url = reverse('ovc_view', kwargs={'id': ovc_id})
@@ -159,13 +159,13 @@ def ovc_register(request, id):
                        'guardians': guardians, 'siblings': siblings,
                        'vals': vals, 'extids': gparams, 'ovc': ovc,
                        'levels': levels})
-    except Exception, e:
-        print "error with OVC registration - %s" % (str(e))
+    except Exception as e:
+        print("error with OVC registration - %s" % (str(e)))
         raise e
 
 from cpovc_forms.models import OVCHivStatus
-@login_required(login_url='/')
-@is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
+# @login_required(login_url='/')
+# @is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
 def ovc_edit(request, id):
     """Some default page for Server Errors."""
     try:
@@ -198,7 +198,7 @@ def ovc_edit(request, id):
         hhmqs = OVCHHMembers.objects.filter(
             is_void=False, house_hold_id=hhid).order_by("-hh_head")
         # Viral Load
-       
+
         vloads = OVCViralload.objects.filter(
             is_void=False, person_id=ovc_id).order_by("-viral_date")
         vlist=[]
@@ -207,15 +207,15 @@ def ovc_edit(request, id):
             obj['viral_date']=vl.viral_date
             obj['viral_load']=vl.viral_load
 
-           
+
 
             delta = get_days_difference(vl.viral_date)
-            print delta
+            print(delta)
 
             if (delta) < 183 :
                 obj['status']=0
             else:
-                obj['status']=1 
+                obj['status']=1
 
             vlist.append(obj)
         # add caregivers hiv status
@@ -317,29 +317,29 @@ def ovc_edit(request, id):
         check_fields = ['relationship_type_id']
         vals = get_dict(field_name=check_fields)
         hiv_data=OVCHivStatus.objects.filter(person_id=ovc_id).order_by('date_of_event')
-        print ('ggggggg', hiv_data)
+        print(('ggggggg', hiv_data))
 
         #date manenos
         date_langu = datetime.now().month
-        
-       
+
+
         return render(request, 'ovc/edit_child.html',
                       {'form': form, 'status': 200, 'child': child,
                        'vals': vals, 'hhold': hhold, 'extids': gparams,
                        'hhmembers': hhmembers, 'levels': levels,
                        'sch_class': sch_class, 'siblings': siblings,
-                       'ctaker': ctaker, 'vloads': vlist, 'mydate': date_langu, 
+                       'ctaker': ctaker, 'vloads': vlist, 'mydate': date_langu,
                        'hiv_data':hiv_data})
-    except Exception, e:
-        print "error with OVC viewing - %s" % (str(e))
+    except Exception as e:
+        print("error with OVC viewing - %s" % (str(e)))
         # raise e
         msg= "Error occured during ovc edit"
         messages.error(request, msg)
         form=OVCSearchForm()
         return render(request, 'ovc/home.html', {'form':form, 'status':200})
 
-@login_required(login_url='/')
-@is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
+# @login_required(login_url='/')
+# @is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
 def ovc_view(request, id):
     """Some default page for Server Errors."""
     try:
@@ -364,7 +364,7 @@ def ovc_view(request, id):
             edate = creg.exit_date
             tdate = date.today()
             days = (tdate - edate).days
-        print 'exit days', days
+        print('exit days', days)
         allow_edit = False if days > 90 else True
         params = {}
         gparams = {}
@@ -439,7 +439,7 @@ def ovc_view(request, id):
             care_giver=RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
         except RegPerson.DoesNotExist:
             care_giver=None
-            print 'Caregiver does not exist for child: %s' % child.id
+            print('Caregiver does not exist for child: %s' % child.id)
         return render(request, 'ovc/view_child.html',
                       {'status': 200, 'child': child, 'params': params, 'child_hiv_status':child_hiv_status,
                        'guardians': guardians, 'siblings': siblings,
@@ -451,15 +451,15 @@ def ovc_view(request, id):
                        'suppression': vl_sup,
                        'well_being_count': wellbeing_services
                        })
-    except Exception, e:
-        print "error with OVC viewing - %s" % (str(e))
+    except Exception as e:
+        print("error with OVC viewing - %s" % (str(e)))
         # raise e
         msg= "Error occured during ovc view - Complete initial registration form"
         messages.error(request, msg)
         url=reverse('ovc_register', kwargs={'id':id})
         return HttpResponseRedirect(url)
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def hh_manage(request, hhid):
     """Some default page for Server Errors."""
     try:
@@ -470,12 +470,12 @@ def hh_manage(request, hhid):
         return render(request, 'ovc/household.html',
                       {'status': 200, 'hhmembers': hhmembers,
                        'vals': vals})
-    except Exception, e:
-        print "error getting hh members - %s" % (str(e))
+    except Exception as e:
+        print("error getting hh members - %s" % (str(e)))
         raise e
 
 
-@login_required(login_url='/')
+# @login_required(login_url='/')
 def ovc_manage(request):
     """Some default page for Server Errors."""
     try:
@@ -483,8 +483,9 @@ def ovc_manage(request):
         results = {'message': 'Successful'}
         return JsonResponse(results, content_type='application/json',
                             safe=False)
-    except Exception, e:
+    except Exception as e:
         msg = "error updating OVC details - %s" % (str(e))
         results = {'message': msg}
         return JsonResponse(results, content_type='application/json',
                             safe=False)
+

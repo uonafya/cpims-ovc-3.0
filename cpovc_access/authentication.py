@@ -5,7 +5,7 @@ import datetime
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from cpovc_access import signals
 from cpovc_access import BasePolicy
@@ -102,7 +102,7 @@ class AuthenticationDisableExpiredUsers(AuthenticationPolicy):
 
         for user in expired:
             logger.info(u'User %s disabled because last login was at %s',
-                        unicode(user), user.last_login)
+                        str(user), user.last_login)
             # Send signal to be used to alert admins
             signals.user_expired.send(sender=user, user=user)
 

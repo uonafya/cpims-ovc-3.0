@@ -1,7 +1,7 @@
 from django import forms
-from django.utils.translation import ugettext_lazy as _
-from django.forms.widgets import RadioFieldRenderer
-from django.utils.encoding import force_unicode
+from django.utils.translation import gettext_lazy as _
+# from django.forms.widgets import RadioFieldRenderer
+from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 from cpovc_main.functions import get_list, get_org_units_list
 from cpovc_registry.functions import get_geo_list, get_all_geo_list
@@ -3142,13 +3142,13 @@ class OVCHHVAForm(forms.Form):
                }))
 
 
-class RadioCustomRenderer(RadioFieldRenderer):
+class RadioCustomRenderer():
     """Custom radio button renderer class."""
 
     def render(self):
         """Renderer override method."""
         return mark_safe(u'%s' % u'\n'.join(
-            [u'%s' % force_unicode(w) for w in self]))
+            [u'%s' % force_str(w) for w in self]))
 
 
 class GOKBursaryForm(forms.Form):
@@ -3230,7 +3230,7 @@ class GOKBursaryForm(forms.Form):
     in_school = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+#             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#in_school_error"})
     )
@@ -3271,7 +3271,7 @@ class GOKBursaryForm(forms.Form):
     father_alive = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+#             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#father_alive_error"}))
     mother_contact = forms.CharField(widget=forms.TextInput(
@@ -3297,7 +3297,7 @@ class GOKBursaryForm(forms.Form):
     mother_alive = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#mother_alive_error"}))
 
@@ -3310,21 +3310,21 @@ class GOKBursaryForm(forms.Form):
     living_with = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#living_with_error"}))
 
     father_ill = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#father_ill_error"}))
 
     mother_ill = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#mother_ill_error"}))
     father_illness = forms.CharField(widget=forms.TextInput(
@@ -3343,13 +3343,13 @@ class GOKBursaryForm(forms.Form):
     father_disabled = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#father_disabled_error"}))
     mother_disabled = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#mother_disabled_error"}))
     father_disability = forms.CharField(widget=forms.TextInput(
@@ -3375,7 +3375,7 @@ class GOKBursaryForm(forms.Form):
     father_pension = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#father_pension_error"}))
     mother_occupation = forms.CharField(widget=forms.TextInput(
@@ -3388,7 +3388,7 @@ class GOKBursaryForm(forms.Form):
     mother_pension = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#mother_pension_error"}))
     fees_amount = forms.CharField(widget=forms.TextInput(
@@ -3479,19 +3479,19 @@ class GOKBursaryForm(forms.Form):
     school_type = forms.ChoiceField(
         choices=bursary_school_type_list,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#school_type_error"}))
     school_category = forms.ChoiceField(
         choices=bursary_school_category_list,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#school_category_error"}))
     school_enrolled = forms.ChoiceField(
         choices=bursary_school_enrolled_list,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#school_enrolled_error"}))
 
@@ -3517,7 +3517,7 @@ class GOKBursaryForm(forms.Form):
     approved_csac = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#approved_csac_error"}))
     approved_amount = forms.CharField(widget=forms.TextInput(
@@ -3531,13 +3531,13 @@ class GOKBursaryForm(forms.Form):
     signed_scco = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_scco_error"}))
     signed_csac = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
     date_signed_scco = forms.CharField(widget=forms.TextInput(
@@ -3560,14 +3560,14 @@ class GOKBursaryForm(forms.Form):
     recommend_principal = forms.ChoiceField(
         choices=principal_list,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#recommend_principal_error"}))
 
     recommend_chief = forms.ChoiceField(
         choices=chief_list,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#recommend_chief_error"}))
 
@@ -3618,7 +3618,7 @@ class CparaAssessment(forms.Form):
     cp1d = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
                         attrs={
                 # 'data-parsley-required': 'true',
                 # 'data-parsley-group': 'group1',
@@ -3634,27 +3634,27 @@ class CparaAssessment(forms.Form):
     cp3d = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp4d = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp5d = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp6d = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp1q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp2q = forms.DateField(widget=forms.TextInput(
         attrs={'class': 'form-control',
@@ -3673,207 +3673,207 @@ class CparaAssessment(forms.Form):
     cp3q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp4q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp1b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp5q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp6q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp7q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp2b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp8q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp9q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp10q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp11q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp12q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp13q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp14q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp15q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp16q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp17q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp18q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp3b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp19q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp20q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp21q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp22q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp23q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp23qa = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp23qb = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp23qc = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp23qd = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp4b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp24q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp25q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp26q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp27q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp28q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp29q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp5b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp30q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp31q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp6b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp32q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp33q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp34q = forms.CharField(widget=forms.TextInput(
         attrs={
@@ -3883,252 +3883,252 @@ class CparaAssessment(forms.Form):
     cp35q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp7b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp36q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp37q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp38q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp8b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp39q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp40q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp9b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp41q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp42q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp43q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp10b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp44q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp45q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp46q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp47q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp48q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp11b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp49q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp50q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp51q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp52q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp53q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp54q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp12b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp55q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp56q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp57q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp58q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp59q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp13b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp60q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp61q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp14b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp62q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp63q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp64q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp65q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp15b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp66q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp67q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp68q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp69q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp70q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp16b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp71q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp72q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp73q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp17b = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cp74q = forms.CharField(widget=forms.NumberInput(
         attrs={
@@ -4149,73 +4149,73 @@ class CparaMonitoring(forms.Form):
     cm2q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
     cm3q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
     cm4q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
     cm5q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
     cm6q =forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
     cm7q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
     cm8q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
     cm9q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
     cm10q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
     cm11q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
     cm12q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
     cm13q = forms.ChoiceField(
         choices=CPARA_MONITORING_CASE_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
 
@@ -4733,7 +4733,7 @@ class Wellbeing(forms.Form):
     WB_SAF_31 = forms.ChoiceField(
         choices=YESNO_CHOICES_REFUSE,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "True"
                 # 'data-parsley-required': 'true',
@@ -4764,7 +4764,7 @@ class Wellbeing(forms.Form):
     WB_SAF_32_1=forms.ChoiceField(
         choices=YESNO_CHOICES_REFUSE,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "True"
                 # 'data-parsley-required': 'true',
@@ -4777,7 +4777,7 @@ class Wellbeing(forms.Form):
     WB_SAF_33_1 = forms.ChoiceField(
         choices=YESNO_CHOICES_REFUSE,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "True"
                 # 'data-parsley-required': 'true',
@@ -4802,7 +4802,7 @@ class Wellbeing(forms.Form):
     WB_SAF_35_1 = forms.ChoiceField(
         choices=YESNO_CHOICES_REFUSE,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -4835,7 +4835,7 @@ class Wellbeing(forms.Form):
     WB_SAF_37_1 = forms.ChoiceField(
         choices=FAMILY_MEMBERS_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -4846,7 +4846,7 @@ class Wellbeing(forms.Form):
     WB_SAF_38_1 = forms.ChoiceField(
         choices=FAMILY_MEMBERS_CHOICES2,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -4864,7 +4864,7 @@ class Wellbeing(forms.Form):
     WB_SAF_39_1 = forms.ChoiceField(
         choices=FAMILY_MEMBER_STATUS,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -4883,7 +4883,7 @@ class Wellbeing(forms.Form):
     WB_SAF_40_1 = forms.ChoiceField(
         choices=FAMILY_MEMBER_STATUS2,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -4904,7 +4904,7 @@ class Wellbeing(forms.Form):
     WB_SCH_39_1 = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -4915,7 +4915,7 @@ class Wellbeing(forms.Form):
     WB_SCH_40_1 = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -4939,7 +4939,7 @@ class Wellbeing(forms.Form):
     WB_SCH_42_2 = forms.ChoiceField(
         choices=SCHOOL_GRADE,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -4961,7 +4961,7 @@ class Wellbeing(forms.Form):
     WB_SCH_43_2 = forms.ChoiceField(
         choices=SCHOOL_GRADE,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -4982,7 +4982,7 @@ class Wellbeing(forms.Form):
     WB_SCH_44_1 = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -4993,7 +4993,7 @@ class Wellbeing(forms.Form):
     WB_SCH_45_1 = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -5054,7 +5054,7 @@ class Wellbeing(forms.Form):
     WB_GEN_12 = forms.ChoiceField(
         choices=MARITAL_STATUS,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -5107,7 +5107,7 @@ class Wellbeing(forms.Form):
     WB_GEN_05 = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -5306,7 +5306,7 @@ class Wellbeing(forms.Form):
     WB_STA_11_1 = forms.MultipleChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -5369,7 +5369,7 @@ class Wellbeing(forms.Form):
     WB_HEL_24_1 = forms.MultipleChoiceField(
         required=True,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': "False"}
         ),
         choices=WB_HEL_26_1_CHOICES,
@@ -5393,7 +5393,7 @@ class Wellbeing(forms.Form):
     WB_HEL_26_1 = forms.MultipleChoiceField(
         required=True,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': "False"}
         ),
         choices=WB_HEL_26_1_CHOICES,)
@@ -5414,7 +5414,7 @@ class Wellbeing(forms.Form):
     WB_HEL_28_1 = forms.MultipleChoiceField(
         required=True,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': "False"}
         ),
         choices=WB_HEL_28_1_CHOICES,)
@@ -5445,7 +5445,7 @@ class Wellbeing(forms.Form):
     WB_HEL_15_1 = forms.MultipleChoiceField(
         choices=WB_HEL_14_YNR,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true'
@@ -5458,7 +5458,7 @@ class Wellbeing(forms.Form):
     WB_HEL_16_1 = forms.ChoiceField(
         choices=WB_HEL_14_YNR,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true'
@@ -5483,7 +5483,7 @@ class Wellbeing(forms.Form):
     WB_HEL_17_1 = forms.ChoiceField(
         choices=WB_HEL_17YNR,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -5507,7 +5507,7 @@ class Wellbeing(forms.Form):
     WB_HEL_18_1 = forms.ChoiceField(
         choices=WB_HEL_17YNR,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -5517,7 +5517,7 @@ class Wellbeing(forms.Form):
 
     WB_HEL_18_2 = forms.ChoiceField(
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -5530,7 +5530,7 @@ class Wellbeing(forms.Form):
     WB_HEL_19_1 = forms.ChoiceField(
         choices=WB_HEL_14_YNR,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true'
@@ -5542,7 +5542,7 @@ class Wellbeing(forms.Form):
     #20
     WB_HEL_20_1 = forms.ChoiceField(
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -5562,7 +5562,7 @@ class Wellbeing(forms.Form):
     WB_HEL_21_1 = forms.ChoiceField(
         choices=YESNO_CHOICES_REFUSE,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
@@ -5711,7 +5711,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_GEN_5_1 = forms.ChoiceField(
         choices = WB_AD_GEN_5_1,
         widget=forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#errorfield"
@@ -5740,7 +5740,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SCH_7 = forms.ChoiceField(
         choices =WB_AD_SCH_7,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#errorfield"
@@ -5749,7 +5749,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SCH_8_1 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 'id': 'WB_AD_SCH_8_1',
                 #'data-parsley-required': 'true',
@@ -5769,7 +5769,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SCH_9_1 = forms.ChoiceField(
         choices = WB_AD_SCH_9_1,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 #'data-parsley-required': 'true',
  #               'data-parsley-errors-container': "#errorfield"
@@ -5796,7 +5796,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SCH_11 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 # 'data-parsley-required': 'true',
                 # 'data-parsley-errors-container': "#errorfield"
@@ -5814,7 +5814,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SCH_12_1 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 # 'data-parsley-required': 'true',
                 # 'data-parsley-errors-container': "#errorfield"
@@ -5843,7 +5843,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_STA_13_1 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 # 'data-parsley-required': 'true',
                 # 'data-parsley-errors-container': "#errorfield"
@@ -5852,7 +5852,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_STA_13_2 = forms.ChoiceField(
         choices = WB_AD_STA_13_2,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
                 # 'data-parsley-required': 'true',
                 # 'data-parsley-errors-container': "#errorfield"
@@ -5863,7 +5863,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_14 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -5872,7 +5872,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_15 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -5881,7 +5881,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_16_1 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -5899,7 +5899,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_16_3 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -5917,7 +5917,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_17_1 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -5926,7 +5926,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_17_2 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -5944,7 +5944,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_17_4 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -5963,7 +5963,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_18_1 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -5981,7 +5981,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_19_1 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -5999,7 +5999,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_20_1 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -6018,7 +6018,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_20_3 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -6027,7 +6027,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_20_4 = forms.ChoiceField(
         choices = WB_AD_HEL_20_4_CHOICE,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -6036,7 +6036,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_21_1 = forms.ChoiceField(
         choices = WB_AD_HEL_21_1,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -6059,7 +6059,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_22_1 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -6068,7 +6068,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_22_2 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -6093,7 +6093,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_HEL_24_1 = forms.ChoiceField(
         choices = WB_AD_HEL_24_1,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -6128,7 +6128,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_26 = forms.ChoiceField(
         choices = WB_AD_SAF_26,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -6137,7 +6137,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_27_1 = forms.ChoiceField(
         choices = WB_AD_SAF_27_1,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -6153,7 +6153,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_28 = forms.ChoiceField(
         choices = WB_AD_SAF_28,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -6162,7 +6162,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_29 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-            renderer=RadioCustomRenderer,
+            # renderer=RadioCustomRenderer,
             attrs={
             # 'data-parsley-required': 'true',
             # 'data-parsley-errors-container': "#errorfield"
@@ -6171,7 +6171,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_30_1 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6189,7 +6189,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_31_1 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6198,7 +6198,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_31_2 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6207,7 +6207,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_31_3 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6216,7 +6216,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_32_1 = forms.ChoiceField(
         choices = YESNO_CHOICES_REFUSE,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6225,7 +6225,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_32_2 = forms.ChoiceField(
         choices = WB_AD_SAF_32_2,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6234,7 +6234,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_32_3 = forms.ChoiceField(
         choices = YESNO_CHOICES_REFUSE,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6243,7 +6243,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_32_4 = forms.ChoiceField(
         choices = YESNO_CHOICES_REFUSE,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6252,7 +6252,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_32_5 = forms.ChoiceField(
         choices = YESNO_CHOICES_REFUSE,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6261,7 +6261,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_32_6_1 = forms.ChoiceField(
         choices = WB_AD_SAF_32_6_1,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6277,7 +6277,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_33_1 = forms.ChoiceField(
         choices = YESNO_CHOICES_REFUSE,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6293,7 +6293,7 @@ class WellbeingAdolescentForm(forms.Form):
     WB_AD_SAF_34 = forms.ChoiceField(
         choices = YESNO_CHOICES_REFUSE,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6354,7 +6354,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_01 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6363,7 +6363,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_02 = forms.ChoiceField(
         choices = (('AYES', 'HIV_Positive'),('ANNO', 'HIV_Negative'),),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6372,7 +6372,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_03 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6380,7 +6380,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_03A=forms.ChoiceField(
         choices = (('AYES', 'HIV_Positive'),('ANNO', 'HIV_Negative'),),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6390,7 +6390,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_04 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6399,7 +6399,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_05 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6408,7 +6408,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_06 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6417,7 +6417,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_07 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6426,7 +6426,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_08 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6435,7 +6435,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_09 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6444,7 +6444,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_10 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6453,7 +6453,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_11 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6462,7 +6462,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_14 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6484,7 +6484,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_16 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6506,7 +6506,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_18 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6524,7 +6524,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_18B = forms.ChoiceField(
         choices = (('1', 'HIV_Positive'), ('2', 'HIV_NEGATIVE'), ('3', 'HIV_UNKOWN/UNDISCLOSED')),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6546,7 +6546,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_21 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6568,7 +6568,7 @@ class HIV_SCREENING_FORM(forms.Form):
     HIV_RS_23 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6653,7 +6653,7 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
     HIV_MGMT_2_E = forms.ChoiceField(
         choices = (('Good', 'Good'),('Fair', 'Fair'),('Poor', 'Poor')),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6674,7 +6674,7 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
         ('BoosterAdherence', 'Booster Adherence'),
         ('EnhancedAdherence', 'Enhanced Adherence')),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6688,7 +6688,7 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
         ('Others', 'Others')
         ),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6705,7 +6705,7 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
     HIV_MGMT_2_H_3 = forms.ChoiceField(
         choices = (('Male', 'Male'),('Female', 'Female'),),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6723,7 +6723,7 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
     HIV_MGMT_2_H_5 = forms.ChoiceField(
         choices = (('HIV_POSTIVE', 'HIV_Positive'), ('HIV_NEGATIVE', 'HIV_NEGATIVE'), ('HIV_UNKOWN', 'HIV_UNKOWN/UNDISCLOSED')),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6759,7 +6759,7 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
         ('SpecialSupportGroup', 'Special Support Group')
         ),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6771,7 +6771,7 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
         ('FullDisclosure', 'Full Disclosure'),
         ),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6783,7 +6783,7 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
         ('Green', 'Green'),
         ),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6820,7 +6820,7 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
         ('Not_Enrolled','Not Enrolled'),
         ),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6831,7 +6831,7 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
         ('No', 'No'),
         ),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6842,7 +6842,7 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
         ('Dormant', 'Dormant'),
         ),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -6938,7 +6938,7 @@ class HIV_MANAGEMENT_ARV_THERAPY_FORM(forms.Form):
     HIV_MGMT_1_E = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-errors-container': "#errorfield"
     }))
@@ -6946,7 +6946,7 @@ class HIV_MANAGEMENT_ARV_THERAPY_FORM(forms.Form):
     HIV_MGMT_1_F = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-errors-container': "#errorfield"
     }))
@@ -6954,7 +6954,7 @@ class HIV_MANAGEMENT_ARV_THERAPY_FORM(forms.Form):
     HIV_MGMT_1_G = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         # 'data-parsley-errors-container': "#errorfield"
     }))
@@ -6998,7 +6998,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_001 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7007,7 +7007,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_002 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7016,7 +7016,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_003 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7025,7 +7025,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_004 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7034,7 +7034,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_005 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7043,7 +7043,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_006 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7052,7 +7052,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_009 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7061,7 +7061,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_011 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7070,7 +7070,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_015 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7079,7 +7079,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_016 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7088,7 +7088,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_019 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7097,7 +7097,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_020 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7106,7 +7106,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_021 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7115,7 +7115,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_022 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7124,7 +7124,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_023 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7133,7 +7133,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_024 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7142,7 +7142,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_025 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7151,7 +7151,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_026 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7160,7 +7160,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_027 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7169,7 +7169,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_028 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7178,7 +7178,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_029 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7187,7 +7187,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_030 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7196,7 +7196,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_031 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7205,7 +7205,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_032 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7214,7 +7214,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_033 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7223,7 +7223,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_034 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7232,7 +7232,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_035 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7241,7 +7241,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_036 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7250,7 +7250,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_037 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7259,7 +7259,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_038 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7268,7 +7268,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_039 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7277,7 +7277,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_040 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7286,7 +7286,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_041 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7295,7 +7295,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_042 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7304,7 +7304,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_043 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7313,7 +7313,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_044 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7322,7 +7322,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_045 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7331,7 +7331,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_046 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7340,7 +7340,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_047 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7349,7 +7349,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_048 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7358,7 +7358,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_050 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7367,7 +7367,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_051 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7376,7 +7376,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_052 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7385,7 +7385,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_053 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7394,7 +7394,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_054 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7403,7 +7403,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_055 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7412,7 +7412,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_056 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7421,7 +7421,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_057 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7430,7 +7430,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_058 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -7439,7 +7439,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_059 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -8083,7 +8083,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_008 = forms.ChoiceField(
         choices = (('Negative', 'Negative'), ('Positive', 'Positive'), ('KnownPositive', 'KnownPositive')),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
@@ -8100,7 +8100,7 @@ class DREAMS_FORM(forms.Form):
     DREAMS_014 = forms.ChoiceField(
         choices = (('Negative', 'Negative'), ('Positive', 'Positive'), ('KnownPositive', 'KnownPositive')),
         widget = forms.RadioSelect(
-        renderer=RadioCustomRenderer,
+        # renderer=RadioCustomRenderer,
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"

@@ -10,59 +10,76 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = 'h34yo5l8c8!edb%^b@3j-i^gc$e)fcjnw_9jm4a^%jbq&*41+@'
 
+FORM_RENDERER = 'django.forms.renderers.DjangoTemplates'
+
 
 ALLOWED_HOSTS = ['*']
 
-cpims_db_host = os.environ.get('CPIMS_HOST') if os.environ.get('CPIMS_HOST') else ''
-cpims_db_pass = os.environ.get('CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else ''
-cpims_db_instance = os.environ.get('CPIMS_DB') if os.environ.get('CPIMS_DB') else ''
-cpims_db_port = os.environ.get('CPIMS_PORT') if os.environ.get('CPIMS_PORT') else ''
-cpims_db_user = os.environ.get('CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else ''
+cpims_db_host = os.environ.get('CPIMS_HOST') if os.environ.get('CPIMS_HOST') else '127.0.0.1'
+cpims_db_pass = os.environ.get('CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'Xaen!ee8'
+cpims_db_instance = os.environ.get('CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims_ovc'
+cpims_db_port = os.environ.get('CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5432'
+cpims_db_user = os.environ.get('CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'cpimsdbuser'
 cpims_debug = eval(os.environ.get('CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else False
 
 DEBUG = cpims_debug
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.auth',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cpovc_main',
     'cpovc_auth',
     'cpovc_registry',
-    'cpovc_main',
     'cpovc_forms',
     'cpovc_gis',
-    #'cpovc_access',
+    'cpovc_access',
     'cpovc_settings',
     'crispy_forms',
     'cpovc_ovc',
     'import_export',
     'rest_framework',
     'data_cleanup',
+    'cpovc_offline_mode',
      # forums,
     # 'adminsortable',
     # 'simple_forums',
      'cpovc_manage',
      'notifications',
-     'cpovc_help'
-)
+     'cpovc_help',
+]
 
-MIDDLEWARE_CLASSES = (
+# MIDDLEWARE = (
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+#     # 'cpovc_access.middleware.AuthenticationPolicyMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#     'django.middleware.security.SecurityMiddleware',
+#     #'cpovc_main.middleware.SqlPrintingMiddleware',
+#     'cpovc_auth.middleware.UserRestrictMiddleware',
+#     # 'cpovc_access.middleware.FailedLoginMiddleware',
+# )
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'cpovc_access.middleware.AuthenticationPolicyMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    #'cpovc_main.middleware.SqlPrintingMiddleware',
-    'cpovc_auth.middleware.UserRestrictMiddleware',
-    'cpovc_access.middleware.FailedLoginMiddleware',
-)
+    # 'cpovc_access.middleware.AuthenticationPolicyMiddleware',
+    # 'cpovc_auth.middleware.UserRestrictMiddleware',
+    # 'cpovc_access.middleware.FailedLoginMiddleware',
+
+]
 
 ROOT_URLCONF = 'cpims.urls'
 
@@ -86,6 +103,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'cpims.wsgi.application'
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 DATABASES = {
     'default': {
@@ -124,7 +149,10 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
 
 AUTH_USER_MODEL = 'cpovc_auth.AppUser'
 
-AUTHENTICATION_BACKENDS = ('cpovc_auth.backends.CPOVCAuthenticationBackend',)
+# AUTHENTICATION_BACKENDS = ['cpovc_auth.backends.CPOVCAuthenticationBackend']
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 ALLOW_NATIONAL_ID_LOGIN = True
 

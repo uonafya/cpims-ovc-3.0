@@ -33,13 +33,17 @@
 	<link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
 	<!-- ================== BEGIN BASE JS ================== -->
 	<script src="{% static 'plugins/pace/pace.min.js' %}"></script>
+	<!-- htmx added -->
+	<script src="https://unpkg.com/htmx.org@1.7.0"></script>
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-149126746-1"></script>
 	{% block javascript_code %}{% endblock %}
 	<!-- ================== END BASE JS ================== -->
 </head>
 <body>
+
 	<!-- begin #page-loader -->
+	<script src="https://unpkg.com/htmx.org@1.7.0"></script>
 	<div id="page-loader" class="fade in"><span class="spinner"></span></div>
 	<!-- end #page-loader -->
 	
@@ -79,7 +83,7 @@
 						<ul class="dropdown-menu animated fadeInLeft">
 							<li class="arrow"></li>
 							<li><a href="{% url 'view_person' id=request.user.reg_person_id %}">View My Profile</a></li>
-							<li><a href="{% url 'password_change' %}">Change Password</a></li>
+<!--							<li><a href="{% url 'password_change' %}">Change Password</a></li>-->
 							<li><a href="#"><span class="badge badge-danger pull-right">2</span> Messages</a></li>
 							<li class="divider"></li>
 							<li><a href="{% url 'cluster' %}">Clusters</a></li>
@@ -93,7 +97,7 @@
 					{% else %}
 					<li class="dropdown navbar-user online_mode">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<img src="{% static 'img/user-2.jpg' %}" alt="" /> 
+							<img src="{% static 'img/user-2.jpg' %}" alt="" />
 							<span class="hidden-xs">CPMIS Guest</span> <b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu animated fadeInLeft">
@@ -277,6 +281,7 @@
 	//   $('select#chv_unit_id').multiselect({'multiple': false});
 	//   $('select#cbo_unit_id').multiselect({'multiple': false});
     </script>
+	<script src="https://unpkg.com/htmx.org@1.7.0"></script>
     <script src="{% static 'js/base64.js' %}"></script>
     <script src="{% static 'js/offline_mode/service.js' %}"></script>
     <script src="{% static 'js/offline_mode/templates_events.js' %}"></script>
