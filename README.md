@@ -1,22 +1,64 @@
-# CPIMS OVC Upgrade
 
-Code base for CPIMS OVC business process upgrade from python 2.7 / Django 1.8 to Python 3.10 / Django 4.0.2
+<h1 align="center">CPIMS upgrade by incognito 👋</h1>
+<p align="center">
 
-## files edited by incognito
-we upgraded all modules from
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original-wordmark.svg" alt="postgresql" width="40" height="40"/> </a> 
+    <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-yellow.svg" target="_blank" />
+  </a>
+  <a href="https://www.python.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="python" width="40" height="40"/> </a>
 
-    python 2.7 to 3.10.0
-    django 1.8 to 4.0.2
-    changed templates staticfiles to static
-    tests for cpovc_offline_mode
-    commented login_required, is_allowed_groups, cache_control
-    used default django middleware instead of the cpims middleware
-    updated requirements.txt
+</p>
 
-#### install python 3.10 https://www.python.org/getit/
+<p><b>Incognito is a group comprising four members formed during the HealthIT Hackathon at Kabarak University and their primary task was upgrading 
+`cpovc_offline_mode` module to python 3.10 and django 4.0.2 but later in the long run upgraded the
+whole system</b></p>
+
+
+### 📝 Tasks done by incognito
+
+- python 2.7 to 3.10.0 
+> we used an online python 2 to o 3 converter [python2to3.com](https://www.python2to3.com) for every python file it converted the .py files to python3 syntax
+- django 1.8 to 4.0.2 <br />
+> we used ```django-upgrade``` library for converting files from django 1.8 to 4.0.2 here is a link to [django-upgrade](https://github.com/adamchainz/django-upgrade) with detailed instructions
+- Added ``on_delete=models.CASCADE`` to ``ForeignKey`` and ``OneToOneField`` and used pycharm's ReGex capabilities for faster lookup:
+
+
+    -models.ForeignKey("auth.User")
+    +models.ForeignKey("auth.User", on_delete=models.CASCADE)
+
+    -models.OneToOneField("auth.User")
+    +models.OneToOneField("auth.User", on_delete=models.CASCADE)
+- changed templates staticfiles to static <br />
+
+
+    -{% load staticfiles %}
+    +{% load static %}
+- commented is_allowed_groups due to complexity of decorators.py <br />
+- used default django backends auth instead of the cpims middleware <br />
+    
+
+    -AUTHENTICATION_BACKENDS = ['cpovc_auth.backends.CPOVCAuthenticationBackend']
+    +AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+- updated requirements.txt
+```sh 
+pip freeze
+```
+
+- wrote tests for cpovc_offline_mode and used ```coverage``` to see the percentage coverage of our tests
+```shell
+pip install coverage
+coverage run manage.py test cpovc_offline_mode.tests.tests_urls -v 3
+```
+
+## 🚀 Usage
+
+Make sure you have [python 3.10](https://www.python.org/getit/) and [postgreSQL](https://www.postgresql.org/) installed
+
 #### Installation
     clone the repository to your local machine
-    git clone https://github.com/uonafya/cpims-ovc-3.0
+    git clone https://github.com/uonafya/cpims-dcs-3.0
+
+Just run the following command at the root of your project:
 
 #### install virtualenv windows
 
@@ -34,24 +76,45 @@ we upgraded all modules from
 
     pip install -r requirements.txt
 
-##### Install postgres https://www.postgresql.org/
-##### open psql(shell)
+##### initialize db
 
-    create database cpims;
-    create user username with password 'userpassword';
-    grant all privileges on database cpims to username;
-
-##### Edit cpims/settings.py with credentials created above
-
-    py manage.py makemigrations
+    py manage.py makemigrations 
     py manage.py migrate
-    py manage.py check
-
-##### runserver 
-
+    py manage.py createsuperuser
     py manage.py runserver
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-Please make sure to update tests as appropriate.
+
+## Code Contributors
+
+This upgrade exists thanks to the people who contributed.
+
+👤 **Vivian Atieno Ouma**
+
+- Phone: +254705412563
+- Gmail: atienooumavee@gmail.com
+- Github: [github.com/Atieno-Ouma](https://github.com/Atieno-Ouma)
+
+👤 **Ivan Toroitich Bowen**
+
+- Phone: +254791440095
+- Gmail: bowenivan16@gmail.com
+- Github: [github.com/874bowen](https://github.com/874bowen)
+
+👤 **Shem Miriam Wanjiru**
+
+- Phone: +254714660411
+- Gmail: 
+- Github: [Shem Miriam](https://github.com/shemmiriam)
+
+👤 **Rebecca Cheptoek Kibet**
+
+- Phone: +254759669534
+- Gmail: rebbytoek095@gmail.com
+- Github: [Rebecca Cheptoek](https://github.com/Rebeccacheptoek)
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome.<br />
+Feel free to check [cpims]( https://github.com/uonafya/cpims-ovc-3.0) if you want to contribute.<br />
+
+
