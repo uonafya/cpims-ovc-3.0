@@ -21,7 +21,7 @@ def is_allowed_groups(allowed_groups, page=11):
     """Method for checking roles and permissions."""
 
     def decorator(check_func):
-        @wraps(check_func, assigned=check_func)
+        # @wraps(check_func, assigned=check_func)
         def _wrapped_view(request, *args, **kwargs):
             # If active super user lets just proceed
             url_parts = request.path_info.split('/')
