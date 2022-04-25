@@ -302,7 +302,7 @@ def get_list(field_name=[], default_txt=False, category=False):
     except Exception as e:
         error = 'Error getting list - %s' % (str(e))
         print(error)
-        return my_list
+        return []
     else:
         return my_list
 

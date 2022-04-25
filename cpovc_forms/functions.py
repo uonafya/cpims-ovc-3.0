@@ -6,6 +6,7 @@ from cpovc_forms.models import (
     FormsAuditTrail, OVCCareF1B, OVCCareEvents, OVCEducationFollowUp, OVCCareCpara, OVCCareCasePlan)
 from cpovc_ovc.functions import get_house_hold
 from .models import OVCGokBursary
+from cpovc_ovc.models import OVCFacility
 
 
 def save_audit_trail(request, params, audit_type):
@@ -386,3 +387,16 @@ def get_past_cpt(ovc_id):
         print('%s :error fetching past CPT - %s' % (ovc_id, str(e)))
         # return False
         return caseplan_events
+
+
+def get_facility_list():
+    """Method to get list of facilities."""
+    try:
+        initial_list = [('', 'Please Select')]
+        flist = OVCFacility.objects.filter().values_list('id', 'facility_name')
+        facility_list = initial_list + list(flist)
+    except Exception as e:
+        print('Error - %s' % e)
+        return []
+    else:
+        return facility_list

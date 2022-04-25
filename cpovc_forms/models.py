@@ -1166,7 +1166,7 @@ class OVCHIVManagement(models.Model):
     baseline_hei=models.CharField(max_length=100, null=False)
     firstline_start_date = models.DateTimeField(null=False)
     substitution_firstline_arv = models.BooleanField(default=False)
-    substitution_firstline_date = models.DateTimeField(default=datetime.datetime.now())
+    substitution_firstline_date = models.DateTimeField(default=timezone.now)
     switch_secondline_arv = models.BooleanField(default=False)
     switch_secondline_date = models.DateTimeField(null=True)
     switch_thirdline_arv = models.BooleanField(default=False)

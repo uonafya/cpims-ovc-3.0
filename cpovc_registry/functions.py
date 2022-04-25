@@ -2748,7 +2748,6 @@ def get_all_geo_list(filters=False):
         return geo_lists
 
 
-
 def get_geo_list(geo_lists, geo_filter, add_select=False, user_filter=[]):
     """Get specific Organisational units based on filter and list."""
     area_detail, result = {}, ()
@@ -2770,7 +2769,8 @@ def get_geo_list(geo_lists, geo_filter, add_select=False, user_filter=[]):
                         result = area_detail.items()
 
     except Exception as e:
-        raise e
+        print('Error - %s' % e)
+        return ()
     else:
         return result
 
