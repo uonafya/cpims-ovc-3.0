@@ -23,7 +23,7 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, BenchmarkMonitoringForm)
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -36,7 +36,7 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, OVCBenchmarkMonitoring)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -8844,6 +8844,8 @@ def new_cpara(request, id):
             else:
                 event_detail = "No answered questions found"
                 total_benchmark_score = 0
+                # cpara_data = OVCCareCpara.objects.filter(event=one_cpara_event)
+                cpara_data = OVCCareBenchmarkScore.objects.filter(event_id=one_cpara_event.event)
                 bm_array = []
             past_cpara.append({
                 'ev_date': one_cpara_event.date_of_event,
@@ -9997,3 +9999,72 @@ def new_dreamsform(request, id):
                   'forms/new_dreamsform.html',
                   {'form': form, 'init_data': init_data,
                    'vals': vals})
+from .helpers.events import save_event
+def new_benchmarkmonitoring(request, id):
+    """
+        Function that processes the new benchmark monitoring
+        form
+        Args:
+            params(int): id
+                        :request
+        Returns:
+            new_benchmarkmonitoring.html
+    """
+    child = RegPerson.objects.get(id=id)
+    if request.method == 'POST':
+        
+        # get submitted data
+        benchmark1= request.POST.get("BENCHMARKMONITORING_001")
+        benchmark2= request.POST.get("BENCHMARKMONITORING_002")
+        benchmark3= request.POST.get("BENCHMARKMONITORING_003")
+        benchmark4= request.POST.get("BENCHMARKMONITORING_004")
+        benchmark5= request.POST.get("BENCHMARKMONITORING_005")
+        benchmark6= request.POST.get("BENCHMARKMONITORING_006")
+        benchmark7= request.POST.get("BENCHMARKMONITORING_007")
+        benchmark8= request.POST.get("BENCHMARKMONITORING_008")
+        benchmark9= request.POST.get("BENCHMARKMONITORING_009")
+        date_of_event = request.POST.get("monitoring_date")
+
+        event_name = 'MONITORING'
+
+        # save events
+        
+        try:
+            event_id =save_event(request, id, event_name, date_of_event, )
+            
+        except exception as e:
+            print("an error occured ", e)
+
+        benchmark =OVCBenchmarkMonitoring(
+            person_id = id,
+            benchmark_1 = benchmark1,
+            benchmark_2 = benchmark2,
+            benchmark_3 = benchmark3,
+            benchmark_4 = benchmark4,
+            benchmark_5 = benchmark5,
+            benchmark_6 = benchmark6,
+            benchmark_7 = benchmark7,
+            benchmark_8 = benchmark8,
+            benchmark_9 = benchmark9,
+            event = event_id
+        )
+        benchmark.save()
+       
+
+
+    else:
+        # caregiver name
+        # caregiver ID
+        import pdb
+        form = BenchmarkMonitoringForm()
+        
+        
+        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+        # pdb.set_trace()
+        context = {
+            'form' : form,
+            'care_giver':care_giver
+
+        }
+        
+        return render(request,'forms/new_benchmarkmonitoring.html', context)

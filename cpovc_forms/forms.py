@@ -8145,3 +8145,93 @@ class DREAMS_FORM(forms.Form):
                #'data-parsley-required': "true",
                #'data-parsley-group': 'group0',
                'rows': '3'}))
+
+
+class BenchmarkMonitoringForm(forms.Form):
+    BENCHMARKMONITORING_001 = forms.ChoiceField(
+        choices = ((1, 'Yes'), (0, 'No')),
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        #  'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+
+    BENCHMARKMONITORING_002 = forms.ChoiceField(
+        choices = ((1, 'Yes'), (0, 'No')),
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        #  'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+
+    BENCHMARKMONITORING_003 = forms.ChoiceField(
+        choices = ((1, 'Yes'), (0, 'No')),
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        #  'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+    BENCHMARKMONITORING_004 = forms.ChoiceField(
+        choices = ((1, 'Yes'), (0, 'No')),
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        #  'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+
+    BENCHMARKMONITORING_005 = forms.ChoiceField(
+        choices = ((1, 'Yes'), (0, 'No')),
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        #  'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+
+    BENCHMARKMONITORING_006 = forms.ChoiceField(
+        choices = ((1, 'Yes'), (0, 'No')),
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        #  'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+
+    BENCHMARKMONITORING_007 = forms.ChoiceField(
+        choices = ((1, 'Yes'), (0, 'No')),
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        #  'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+
+    BENCHMARKMONITORING_008 = forms.ChoiceField(
+        choices = ((1, 'Yes'), (0, 'No')),
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        #  'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+
+    BENCHMARKMONITORING_009 = forms.ChoiceField(
+        choices = ((1, 'Yes'), (0, 'No')),
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        #  'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+    monitoring_date = forms.DateField(widget=forms.TextInput(
+        attrs={'placeholder': _('Date'),
+               'class': 'form-control',
+               'id': 'monitoring_date',
+               'data-parsley-required': "true",
+               'data-parsley-group': 'group0'
+               # type': 'hidden'
+               }))
