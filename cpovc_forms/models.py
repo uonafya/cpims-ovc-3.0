@@ -1400,34 +1400,6 @@ class OVCCaseLocation(models.Model):
     def __unicode__(self):
         """To be returned by admin actions."""
         return '%s' % (str(self.case))
-class OVCCareWellbeing(models.Model):
-    well_being_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    question_code = models.CharField(max_length=10, null=False, blank=True)
-    question = models.ForeignKey('OVCCareQuestions', on_delete=models.CASCADE)
-    answer = models.CharField(max_length=250)
-    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
-    question_type = models.CharField(max_length=5)
-    domain = models.CharField(max_length=100)
-    is_void = models.BooleanField(default=False)
-    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
-    date_of_event = models.DateField()
-    timestamp_created = models.DateTimeField(default=timezone.now)
-    timestamp_updated = models.DateTimeField(auto_now=True)
-
-    def __unicode__(self):
-        return self.answer
-
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.question_code = self.question.code
-        super(OVCCareWellbeing, self).save(force_insert, force_update, using, update_fields)
-
-
-    class Meta:
-        db_table = 'ovc_care_well_being'
-
-    def __unicode__(self):
-        return str(self.well_being_id)
 
 class OVCBenchmarkMonitoring(models.Model):
 
