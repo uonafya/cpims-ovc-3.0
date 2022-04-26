@@ -8146,3 +8146,240 @@ class DREAMS_FORM(forms.Form):
                #'data-parsley-required': "true",
                #'data-parsley-group': 'group0',
                'rows': '3'}))
+
+
+class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
+    SESSION_ATTENDANCE_1 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+
+    SESSION_ATTENDANCE_2 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+    SESSION_ATTENDANCE_3 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+
+    SESSION_ATTENDANCE_4 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+    SESSION_ATTENDANCE_5 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+    SESSION_ATTENDANCE_6 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+    SESSION_ATTENDANCE_7 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+    SESSION_ATTENDANCE_8 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+    SESSION_ATTENDANCE_9 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+    SESSION_ATTENDANCE_10 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+    SESSION_ATTENDANCE_11 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+    SESSION_ATTENDANCE_12 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+    SESSION_ATTENDANCE_13 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+
+    SESSION_ATTENDANCE_14 = forms.ChoiceField(
+        choices = ((1, 'Present'), ('0', 'Absent')),
+        widget = forms.RadioSelect(
+        ))
+    COMPLETED_ALL_SESSIONS = forms.ChoiceField(
+        choices = ((1, 'Yes'), ('0', 'No')),
+        widget = forms.RadioSelect(
+        ))
+
+    SESSION_1_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_1_DATE',
+               'id': 'SESSION_1_DATE',
+               'autocomplete': "off",
+          #     'data-parsley-required': "true",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_2_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_2_DATE',
+               'id': 'SESSION_2_DATE',
+               'autocomplete': "off",
+          #     'data-parsley-required': "true",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_3_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_3_DATE',
+               'id': 'SESSION_3_DATE',
+               'autocomplete': "off",
+          #     'data-parsley-required': "true",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_4_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_4_DATE',
+               'id': 'SESSION_4_DATE',
+               'autocomplete': "off",
+          #     'data-parsley-required': "true",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_5_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_5_DATE',
+               'id': 'SESSION_5_DATE',
+               'autocomplete': "off",
+          #     'data-parsley-required': "true",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_6_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_6_DATE',
+               'id': 'SESSION_6_DATE',
+               'autocomplete': "off",
+          #     'data-parsley-required': "true",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_6_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_6_DATE',
+               'id': 'SESSION_6_DATE',
+               'autocomplete': "off",
+          #     'data-parsley-required': "true",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_7_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_7_DATE',
+               'id': 'SESSION_7_DATE',
+               'autocomplete': "off",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_8_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_8_DATE',
+               'id': 'SESSION_8_DATE',
+               'autocomplete': "off",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_9_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_9_DATE',
+               'id': 'SESSION_9_DATE',
+               'autocomplete': "off",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_10_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_10_DATE',
+               'id': 'SESSION_10_DATE',
+               'autocomplete': "off",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_11_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_11_DATE',
+               'id': 'SESSION_11_DATE',
+               'autocomplete': "off",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_12_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_12_DATE',
+               'id': 'SESSION_12_DATE',
+               'autocomplete': "off",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_13_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_13_DATE',
+               'id': 'SESSION_13_DATE',
+               'autocomplete': "off",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_13_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_13_DATE',
+               'id': 'SESSION_13_DATE',
+               'autocomplete': "off",
+               'data-parsley-group': 'group0'
+    }))
+    SESSION_14_DATE = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'SESSION_14_DATE',
+               'id': 'SESSION_14_DATE',
+               'autocomplete': "off",
+               'data-parsley-group': 'group0'
+    }))
+    
+    
+    
