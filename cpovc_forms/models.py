@@ -1128,10 +1128,13 @@ class OVCHIVRiskScreening(models.Model):
     parent_PLWH= models.BooleanField(null=True)
     child_sick_malnourished= models.BooleanField(null=True)
     child_sexual_abuse= models.BooleanField(null=True)
+    traditional_procedures = models.BooleanField(null=True)
     adol_sick= models.BooleanField(null=True)
+    tb = models.BooleanField(null=True)
     adol_sexual_abuse= models.BooleanField(null=True)
     sex= models.BooleanField(null=True)
     sti= models.BooleanField(null=True)
+    drug_user = models.BooleanField(null=True)
     hiv_test_required= models.BooleanField(null=True)
     parent_consent_testing= models.BooleanField(null=True)
     parent_consent_date=models.DateTimeField(default=timezone.now, null=True) ###date new 1
@@ -1154,8 +1157,8 @@ class OVCHIVRiskScreening(models.Model):
 
     class Meta:
         db_table = 'ovc_risk_screening'
-    def __unicode__(self):
-        return str(self.risk_id)
+    # def __unicode__(self):
+    #     return str(self.risk_id)
 
 
 class OVCHIVManagement(models.Model):

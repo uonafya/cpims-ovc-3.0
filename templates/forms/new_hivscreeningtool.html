@@ -188,12 +188,24 @@
 
                                             </td>
                                         </tr>
+
+                                        <tr class="section_a q4 under_15">
+                                            <td>Q4</td>
+                                            <td>
+                                            Has the child been subjected to traditional/non medical procedures (eg scarification/tattooing, traditional circumcision )?
+
+                                            </td>
+                                            <td>
+                                                    {{ form.HIV_RS_12 }}
+
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td colspan="3"> <strong>Adolescent Assessment(&gt 15years)</strong> </td> 
                                         </tr>
                                         
-                                        <tr class="section_b q4 over_15">
-                                            <td>Q4</td>
+                                        <tr class="section_b q5 over_15">
+                                            <td>Q5</td>
                                             <td>
                                                     Have you been persistently sick in the past 3 months without improvement?
                                             </td>
@@ -202,8 +214,20 @@
 
                                             </td>
                                         </tr>
-                                        <tr class="section_b q5 over_15">
-                                            <td>Q5</td>
+
+                                        <tr class="section_b q6 over_15">
+                                            <td>Q6</td>
+                                            <td>
+                                                    Have you had TB in the last 12 months?
+                                            </td>
+                                            <td>
+                                                    {{ form.HIV_RS_13 }}
+
+                                            </td>
+                                        </tr>
+
+                                        <tr class="section_b q7 over_15">
+                                            <td>Q7</td>
                                             <td>
                                                     Have you been sexually abuse (defiled) or been physically forced to have sexual intercourse?
 
@@ -213,15 +237,15 @@
 
                                             </td>
                                         </tr>
-                                        <tr class="section_b q6 over_15">
-                                            <td>Q6</td>
-                                            <td>Have you had sexual intercourse in the past 6 months?                                                </td>
+                                        <tr class="section_b q8 over_15">
+                                            <td>Q8</td>
+                                            <td>Have you had unprotected sexual intercourse in the past 6 months?                                                </td>
                                             <td>
                                                     {{ form.HIV_RS_09 }}
                                             </td>
                                         </tr>
-                                        <tr class="section_b q7 over_15">
-                                            <td>Q7</td>
+                                        <tr class="section_b q9 over_15">
+                                            <td>Q9</td>
                                             <td>
                                             Do you have any Symptoms of sexually transmitted infections? {Penial/Vaginal sores, unusual discharge or Pain)
                                             </td>
@@ -231,12 +255,25 @@
                                             </td>
                                             
                                         </tr>
+
+                                         <tr class="section_b q10 over_15">
+                                            <td>Q10</td>
+                                            <td>
+                                            Are you an HIV drug user sharing needles?
+                                            </td>
+                                            <td>
+                                                    {{ form.HIV_RS_20 }}
+
+                                            </td>
+
+                                        </tr>
+
                                         <tr>
                                                 <td colspan="3"> <strong>Final Evaluation</strong> </td> 
                                             </tr>
                                             
-                                        <tr class="section_b q8">
-                                                <td>Q8</td>
+                                        <tr class="section_b q11">
+                                                <td>Q11</td>
                                                 <td>
                                                 Did the child/Adolescent/youth have a YES to at least one of the above questions?
                                                 </td>
@@ -423,8 +460,8 @@
                     <table class="table" border="1" id="past-hst">
                             <thead>
                             <tr>
-                            <th colspan="3">CURRENT HIV STATUS</th>
-                            <th colspan="8">HIV RISK ASSESSMENT</th>
+                            <th colspan="2">CURRENT HIV STATUS</th>
+                            <th colspan="11">HIV RISK ASSESSMENT</th>
                             <th colspan="8">PROGRESS MONITORING</th>
                                   </tr>
                                   
@@ -440,6 +477,9 @@
                                         <th>Q 6</th>
                                         <th>Q 7</th>
                                         <th>Q 8</th>
+                                        <th>Q 9</th>
+                                        <th>Q 10</th>
+                                        <th>Q 11</th>
                                         <th>Q 1</th>
                                         <th>Q 2</th>
                                         <th>Q 3</th>
@@ -461,10 +501,13 @@
                           <td>{{one_screening_data.parent_PLWH | yesno:"Yes, No, N/A"}}</td>
                           <td>{{one_screening_data.child_sick_malnourished | yesno:"Yes, No, N/A"}}</td>
                           <td>{{one_screening_data.child_sexual_abuse | yesno:"Yes, No, N/A"}}</td>
+                          <td>{{one_screening_data.traditional_procedures | yesno:"Yes, No, N/A"}}</td>
                           <td>{{one_screening_data.adol_sick | yesno:"Yes, No, N/A"}}</td>
+                          <td>{{one_screening_data.tb | yesno:"Yes, No, N/A"}}</td>
                           <td>{{one_screening_data.adol_sexual_abuse | yesno:"Yes, No, N/A"}}</td>
                           <td>{{one_screening_data.sex | yesno:"Yes, No, N/A"}}</td>
                           <td>{{one_screening_data.sti | yesno:"Yes, No"}}</td>
+                          <td>{{one_screening_data.drug_user | yesno:"Yes, No"}}</td>
                           <td>{{one_screening_data.hiv_test_required  | yesno:"Yes, No, N/A"}}</td>
                           <td>{{one_screening_data.parent_consent_testing | yesno:"Yes, No, N/A"}}</td>
                           <td>{{one_screening_data.referral_made | yesno:"Yes, No, N/A"}}</td>
