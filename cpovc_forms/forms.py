@@ -8380,6 +8380,11 @@ class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
                'autocomplete': "off",
                'data-parsley-group': 'group0'
     }))
+
+    REFERAL_MADE = forms.ChoiceField(
+        choices = ((1, 'Y'), ('0', 'N')),
+        widget = forms.RadioSelect(
+        ))
     
     
     

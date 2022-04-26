@@ -23,7 +23,7 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, PREVENTIVE_ATTENDANCE_REGISTER_FORM)
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -9997,3 +9997,18 @@ def new_dreamsform(request, id):
                   'forms/new_dreamsform.html',
                   {'form': form, 'init_data': init_data,
                    'vals': vals})
+
+
+def preventive_attendance_register(request, id):
+    if request.method == 'POST':
+        pass
+
+    else:
+        form = PREVENTIVE_ATTENDANCE_REGISTER_FORM(initial={'person': id})
+        check_fields = ['sex_id']
+        vals = get_dict(field_name=check_fields)
+        print(vals)
+        init_data = RegPerson.objects.filter(pk=id)
+        return render(request,
+                  'forms/new_preventive_attendance_register.html',
+                  {'form': form, 'init_data': init_data, 'vals': vals})
