@@ -174,4 +174,6 @@ urlpatterns = [
     # Dreams SerivceUptake Form
     re_path('dreamsform/new/(?P<id>\d+)/', views.new_dreamsform, name='new_dreamsform'),
 
+    path('preventiveattendanceregister/new/<int:id>/', views.preventive_attendance_register, name='preventiveattendanceregister'),
+
 ]
