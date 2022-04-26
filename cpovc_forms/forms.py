@@ -8146,3 +8146,42 @@ class DREAMS_FORM(forms.Form):
                #'data-parsley-required': "true",
                #'data-parsley-group': 'group0',
                'rows': '3'}))
+
+class PREEVALUATION_FORM(forms.Form):
+    # Mixed Attributes
+    PREEVALUATION_001 = forms.ChoiceField(
+        choices=(('Never', 'Never'), ('Sometimes', 'Sometimes'), ('A lot of times ', 'A lot of times '), ('All of the time','All of the time')),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                #  'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+
+    # Yes/No Choices
+    PREEVALUATION_002 = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                #  'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+
+    PREEVALUATION_003 = forms.ChoiceField(
+        choices=(('Yes', 'Yes'), ('No', 'No'), ('Dont know', 'Dont know')),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                #  'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+
+    PREEVALUATION_004 = forms.ChoiceField(
+        choices=(('Not at all true', 'Not at all true'), ('A little true', 'A little true'), ('Very true', 'Very true')),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                #  'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
