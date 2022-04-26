@@ -1402,7 +1402,6 @@ class OVCCaseLocation(models.Model):
         return '%s' % (str(self.case))
 
 class OVCBenchmarkMonitoring(models.Model):
-
     bench_mark_monitoring_id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
     bench_mark1 = models.CharField(max_length=10, null=True, blank=True)
@@ -1422,11 +1421,6 @@ class OVCBenchmarkMonitoring(models.Model):
     timestamp_created = models.DateTimeField(default=timezone.now)
     timestamp_updated = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
-        return str(self.bench_mark_monitoring_id)
-
     class Meta:
         db_table = 'ovc__benchmark_monitoring'
 
-    def __unicode__(self):
-        return str(self.bench_mark_monitoring_id)

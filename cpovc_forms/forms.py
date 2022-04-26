@@ -18,6 +18,7 @@ bursary_school_enrolled_list = (('SEDY', 'Day'), ('SEBO', 'Boarding'), ('SESP', 
 principal_list = (('PRNC', 'Principal'), ('DPRN', 'Deputy Principal'))
 chief_list = (('CHIF', 'Chief'), ('SCHF', 'Sub-Chief'))
 bank_list = (('', 'Please Select'), ('1', 'Equity Bank'))
+
 # -------------------------------- CPIMS-------------------------------------
 person_type_list = get_list('person_type_id', 'Please Select')
 psearch_criteria_list = get_list('psearch_criteria_type_id', 'Select Criteria')
@@ -133,9 +134,12 @@ olmis_ha28_list = get_list('olmis_ha28_id', 'Please Select')
 olmis_ha29_list = get_list('olmis_ha29_id', 'Please Select')
 olmis_ha30_list = get_list('olmis_ha30_id', 'Please Select')
 olmis_ha31_list = get_list('olmis_ha31_id', 'Please Select')
-
-
-#wellbeing
+#caseplan
+CASE_CLOSURE_REASON =(   ('YES', 'Yes'),
+    ('NO', 'No'),
+    ('Refuse', 'I refuse to answer'),
+    ('Other', 'Other (please specify)'))
+    #wellbeing
 YESNO_CHOICES_REFUSE = (('AYES', 'Yes'), ('ANNO', 'No'), ('AREFUSE', 'Refuse'))
 
 MARITAL_STATUS =(('Monogamous Marriage','Monogamous Marriage'),('Polygamous Marriage', 'Polygamous Marriage'), ('Single', 'Single'),
@@ -8227,7 +8231,9 @@ class BenchmarkMonitoringForm(forms.Form):
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
     }))
-    monitoring_date = forms.DateField(widget=forms.TextInput(
+    monitoring_date = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
         attrs={'placeholder': _('Date'),
                'class': 'form-control',
                'id': 'monitoring_date',
@@ -8235,3 +8241,205 @@ class BenchmarkMonitoringForm(forms.Form):
                'data-parsley-group': 'group0'
                # type': 'hidden'
                }))
+
+
+
+
+class CaseClosureForm(forms.Form):
+
+
+
+    CASE_CL001 = forms.ChoiceField(
+        choices=(('1', 'Case Plan Achievement/Graduation'),('2', ' Transfer'),('3', 'Attrition')),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                #'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL002= forms.CharField(
+        widget=forms.TextInput(
+        attrs={'placeholder': _('Name of Receiving Organization')
+               }))
+
+    CASE_CL003= forms.ChoiceField(
+        choices=(('1', 'Voluntary withdrawal'),('2', '  Death'),('3', ' Married'),('4', '  Family re-integration'),
+                 ('5', '  Family reconciliation'),('4', '  Family re-integration'),('6', '   Fostered'),('7', '  Adopted'),
+                 ('8', ' Self employed'),('9', '  Over 18 years and out of school'),('9', ' Relocation'), ('9', ' Relocation'),
+                 ('9', '  Duplicated record'),('9', ' Any other reason? Specify ')),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                #'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL004 = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Any Other Reason')
+                   }))
+
+    CASE_CL005 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL006 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL007 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL008 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL009 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL010 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL011 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL012 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL013 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL014 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL023 = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'placeholder': _('signature')
+                   }))
+    CASE_CL024 = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Case Worker')
+                   }))
+    CASE_CL025 = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Signature/stamp')
+                   }))
+    CASE_CL026 = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%m/%d/%Y",
+            attrs={'placeholder': _('Report Date'),
+                   'class': 'form-control',
+                   'name': 'HIV_RS_15',
+                   'id': 'HIV_RS_15',
+                   'autocomplete': "off"
+                   # ,
+                   #    'data-parsley-required': "true",
+                   #    'data-parsley-group': 'group0'
+                   }))
+
+    CASE_CL027= forms.ChoiceField(choices=(('1', 'Voluntary withdrawal'),('2', '  Death'),('3', ' Married'),('4', '  Family re-integration'),
+                 ('5', '  Family reconciliation'),('4', '  Family re-integration'),('6', '   Fostered'),('7', '  Adopted'),
+                 ('8', ' Self employed'),('9', '  Over 18 years and out of school'),('9', ' Relocation'), ('9', ' Relocation'),
+                 ('9', '  Duplicated record'),('9', ' Any other reason? Specify ')),
+                                      initial='0',
+                                      required=True,
+                                      widget=forms.Select(
+                                          attrs={
+
+                                          }))
+
+
+
+

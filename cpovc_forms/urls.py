@@ -158,10 +158,10 @@ urlpatterns = [
     re_path('caseplan-monitoring/new/(?P<id>\d+)/', views.new_case_plan_monitoring, name='new_caseplan_monitoring'),
 
     # wellbeing Adult and Child
-    re_path(r'^wellbeing/new/(?P<id>\d+)/$', views.new_wellbeing, name='new_wellbeing'),
+    re_path(r'wellbeing/new/(?P<id>\d+)/$', views.new_wellbeing, name='new_wellbeing'),
 
     # wellbeing Adolescent
-    re_path(r'^wellbeingadolescent/new/(?P<id>\d+)/$', views.new_wellbeingadolescent, name='new_wellbeingadolescent'),
+    re_path(r'wellbeingadolescent/new/(?P<id>\d+)/$', views.new_wellbeingadolescent, name='new_wellbeingadolescent'),
     # hiv_status
     path('HIVstatus/', views.hiv_status, name='hiv_status'),
 
@@ -176,5 +176,7 @@ urlpatterns = [
 
     # Benchmarks Monitoring Form
     path('benchmarkmonitoring/new/<int:id>/', views.new_benchmarkmonitoring, name='benchmarkmonitoring'),
+    #Case Closure Form
+    re_path('caseclosure/new/(?P<id>\d+)/', views.new_caseclosure, name='new_caseclosure'),
 
 ]
