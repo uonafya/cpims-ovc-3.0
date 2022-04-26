@@ -23,7 +23,7 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, BenchmarkMonitoringForm)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, BenchmarkMonitoringForm,CaseClosureForm)
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -10068,3 +10068,72 @@ def new_benchmarkmonitoring(request, id):
         }
         
         return render(request,'forms/new_benchmarkmonitoring.html', context)
+
+
+def new_caseclosure(request, id):
+    """
+        Function that processes the new benchmark monitoring
+        form
+        Args:
+            params(int): id
+                        :request
+        Returns:
+            new_benchmarkmonitoring.html
+    """
+    child = RegPerson.objects.get(id=id)
+    if request.method == 'POST':
+
+        # get submitted data
+        reason1 = request.POST.get("CASE_CL001")
+        org2 = request.POST.get("CASE_CL002")
+        benchmark3 = request.POST.get("CASE_CL003")
+        benchmark4 = request.POST.get("BENCHMARKMONITORING_004")
+        benchmark5 = request.POST.get("BENCHMARKMONITORING_005")
+        benchmark6 = request.POST.get("BENCHMARKMONITORING_006")
+        benchmark7 = request.POST.get("BENCHMARKMONITORING_007")
+        benchmark8 = request.POST.get("BENCHMARKMONITORING_008")
+        benchmark9 = request.POST.get("BENCHMARKMONITORING_009")
+        date_of_event = request.POST.get("monitoring_date")
+
+        event_name = 'MONITORING'
+
+        # save events
+
+        try:
+            event_id = save_event(request, id, event_name, date_of_event, )
+
+        except exception as e:
+            print("an error occured ", e)
+
+        benchmark = OVCBenchmarkMonitoring(
+            person_id=id,
+            benchmark_1=benchmark1,
+            benchmark_2=benchmark2,
+            benchmark_3=benchmark3,
+            benchmark_4=benchmark4,
+            benchmark_5=benchmark5,
+            benchmark_6=benchmark6,
+            benchmark_7=benchmark7,
+            benchmark_8=benchmark8,
+            benchmark_9=benchmark9,
+            event=event_id
+        )
+        benchmark.save()
+
+
+
+    else:
+        # caregiver name
+        # caregiver ID
+        import pdb
+        form = CaseClosureForm()
+
+        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+        # pdb.set_trace()
+        context = {
+            'form': form,
+            'care_giver': care_giver
+
+        }
+
+        return render(request, 'forms/new_case_closure.html', context)
