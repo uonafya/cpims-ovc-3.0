@@ -2708,9 +2708,11 @@ def get_geo_selected(results, datas, extras, filters=False):
     """Get specific Geography based on existing ids."""
     wards = []
     all_list = get_all_geo_list(filters)
+    datas.remove('') if '' in datas else datas
+    extras.remove('') if '' in extras else extras
     results['wards'] = datas
-    area_ids = map(int, datas)
-    selected_ids = map(int, extras)
+    area_ids = list(map(int, datas))
+    selected_ids = list(map(int, extras) if extras else [])
     # compare
     for geo_list in all_list:
         parent_area_id = geo_list['parent_area_id']

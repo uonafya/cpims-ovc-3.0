@@ -1,11 +1,10 @@
 """Access handler models."""
 from django.db import models
-from django.utils import six
+import six
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.utils.translation import gettext_lazy as _
 from django.utils.crypto import get_random_string
-from six import python_2_unicode_compatible
 
 from cpovc_access.settings import TEMP_PASSWORD_LENGTH, TEMP_PASSWORD_CHARS
 
