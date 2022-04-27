@@ -715,11 +715,11 @@
             var this_val = $(this).val();
             
             // Yes, the test was done less than 6 months ago. STOP
-            if(this_val == 'AYES'){
+            if(this_val == 'AYES' ){
                 disableSection("section_a"); disableSection("section_a"); disableSection("section_b");disableSection("section_c");
                 switchTab("3");
             }else {
-                enableSection("section_a"); enableSection("section_b"); enableSection("section_c");
+                enableSection("section_a"); disableSection("section_b"); enableSection("section_c");
                 switchTab("1");
             }
         });
