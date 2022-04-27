@@ -115,11 +115,11 @@ WSGI_APPLICATION = 'cpims.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': cpims_db_instance,
-        'USER': cpims_db_user,
-        'PASSWORD': cpims_db_pass,
-        'HOST': cpims_db_host,
-        'PORT': cpims_db_port, },
+        'NAME': 'cpims',
+        'USER': 'username',
+        'PASSWORD': '123456ab',
+        'HOST': 'localhost',
+        'PORT': '5432', },
     'reporting': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': cpims_db_instance,
