@@ -37,7 +37,9 @@
 
 <!-- begin breadcrumb -->
 <ol class="breadcrumb pull-right">
-	<li><a href="#">Home</a></li>
+	<li><a href="#">Home</
+
+        a></li>
 	<li class="active">Forms</li>
 </ol>
 <!-- end breadcrumb -->
@@ -68,27 +70,17 @@
                     <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i class="fa fa-minus"></i></a>
                     <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i class="fa fa-times"></i></a>
                 </div>
-                <h4 class="panel-title"> Case Closure/Exit Form || {{child}}</h4>
-                <!-- <h5>{{child}}</h5> -->
+                <h4 class="panel-title"> Case Closure/Exit Form || {{care_giver}}|| {{child}} </h4>
+                 <h5>{{child}}</h5>
+
             </div>
             <div class="panel-body">
             	<form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true">
                 	{% csrf_token %}
 						<div class="panel-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <div class="col-md-2">
-                                                <label class="control-label formlabel" for="csi_qs">Date of Monitoring : <span class="asteriskField">* </span></label>
-                                            </div>
-                                            <div class="col-md-3 col-sm-3">
-                                                {{ form.monitoring_date}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
 							    <!-- add labels like HA1, HA2 .. -->
-							    <h3 class="text-center note note-info"> PERSONAL INFORMATION FOR THE CHILD</h3>
+							    <h3 class="text-center note note-info"> Personal Information For The Child</h3>
 							<div class="form-group"> <table class="table table-bordered">
 
 
@@ -96,13 +88,17 @@
                                 <tr>
                                     <td>Reason for Case Closure (tick):
                                     </td>
-                                    <td>
+                                   <div id="ss_main">
+                                        <td>
                                         {{form.CASE_CL001}}
 
                                     </td>
+                                   </div>
+
                                 </tr>
 
-                                <tr>
+                                <div >
+                                    <tr id="cc_001">
 
                                     <td>For those Transferred (Name of receiving Organization/program):<span class="asteriskField">*</span>
                                     </td>
@@ -111,8 +107,10 @@
                                         {{form.CASE_CL002}}
                                     </td>
                                 </tr>
+                                </div>
 
-                                <tr>
+                               <div >
+                                    <tr id="cc_002">
 
                                     <td>For Attrition: Specify reason for attrition. Tick below:<span class="asteriskField">*</span>
                                     </td>
@@ -129,19 +127,21 @@
                                                 </td>
 
                         </tr>
+                               </div>
                         </tbody>
                         </table>
 
                             </div>
 
                         <!-- </div> -->
-                    <h3 class="text-center note note-info">Case Closure Checklist for Case Plan Achievement.</h3>
-                 <div class="form-group">
+                            <div id="cc_tab_001">
+                                  <h3 class="text-center note note-info">Case Closure Checklist for Case Plan Achievement.</h3>
+                                  <div class="form-group" >
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
 
-                                    <th scope="col">Questions?</th>
+                                    <th scope="col">Questions</th>
                                     <th scope="col">Options/Answers</th>
                                 </tr>
                                 </thead>
@@ -179,8 +179,10 @@
                             <p>&nbsp;</p>
 
                         </div>
-                    <h3 class="text-center note note-info" >Case Closure Checklist for Transfer.</h3>
-							<div class="form-group">
+                            </div>
+                            <div id="cc_tab_002">
+                                <h3 class="text-center note note-info" >Case Closure Checklist for Transfer.</h3>
+							    <div class="form-group" >
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
@@ -230,9 +232,10 @@
                             <p>&nbsp;</p>
 
                         </div>
-
-                    <h3 class="text-center note note-info">Case Closure Checklist for Attrition.</h3>
-							 <div class="form-group">
+                            </div>
+                            <div id="cc_tab_003">
+                                 <h3 class="text-center note note-info">Case Closure Checklist for Attrition.</h3>
+							        <div class="form-group" >
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
@@ -297,6 +300,11 @@
                             <p>&nbsp;</p>
 
                         </div>
+                            </div>
+
+
+
+
 
 					<div class="panel-body panel-form">
 						<div class="form-group">
@@ -334,10 +342,45 @@
 <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
 <script>
+
 jQuery(document).ready(function() 
 {
+
+
+             $('#cc_001').hide();
+             $('#cc_002').hide();
+              $("#cc_tab_001").hide();
+           $("#cc_tab_003").hide();
+            $("input[name='CASE_CL001']").on('change', function () {
+      var ival = $("input[name='CASE_CL001']:checked").val();
+      if(ival == '2'){
+           $("#cc_001").show();
+           $("#cc_tab_002").show();
+           $("#cc_002").hide();
+           $("#cc_tab_001").hide();
+           $("#cc_tab_003").hide();
+      }else if(ival == '3'){
+          $("#cc_002").show();
+          $("#cc_tab_003").show();
+          $("#cc_001").hide();
+          $("#cc_tab_001").hide();
+          $("#cc_tab_002").hide();
+      }else if(ival == '1'){
+          $("#cc_tab_001").show();
+          $("#cc_tab_003").hide();
+          $("#cc_tab_002").hide();
+      }
+
+  });
+
 	$('html,body').scrollTop(0);
 	FormWizardValidation.init();
 });
+
+
 </script>
+
+
+
+
 {% endblock lazy_javascript_code %}

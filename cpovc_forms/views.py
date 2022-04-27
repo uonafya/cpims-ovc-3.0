@@ -10080,6 +10080,13 @@ def new_caseclosure(request, id):
         Returns:
             new_benchmarkmonitoring.html
     """
+
+    child = RegPerson.objects.get(id=id)
+
+    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+    house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+
+
     child = RegPerson.objects.get(id=id)
     if request.method == 'POST':
 

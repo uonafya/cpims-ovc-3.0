@@ -139,6 +139,8 @@ CASE_CLOSURE_REASON =(   ('YES', 'Yes'),
     ('NO', 'No'),
     ('Refuse', 'I refuse to answer'),
     ('Other', 'Other (please specify)'))
+
+REASON_SS = (('1', 'Case Plan Achievement/Graduation'),('2', ' Transfer'),('3', 'Attrition'))
     #wellbeing
 YESNO_CHOICES_REFUSE = (('AYES', 'Yes'), ('ANNO', 'No'), ('AREFUSE', 'Refuse'))
 
@@ -8250,7 +8252,7 @@ class CaseClosureForm(forms.Form):
 
 
     CASE_CL001 = forms.ChoiceField(
-        choices=(('1', 'Case Plan Achievement/Graduation'),('2', ' Transfer'),('3', 'Attrition')),
+        choices=REASON_SS,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
