@@ -1081,6 +1081,34 @@ class OVCMonitoring(models.Model):
     def __unicode__(self):
         return str(self.id)
 
+class OVCMonitoring11(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
+    hiv_status_knowledge = models.CharField(max_length=5)
+    viral_suppression = models.CharField(max_length=5)
+    hiv_prevention = models.CharField(max_length=5)
+    undernourished = models.CharField(max_length=5)
+    access_money = models.CharField(max_length=5)
+    violence = models.CharField(max_length=5)
+    caregiver = models.CharField(max_length=5)
+    school_attendance = models.CharField(max_length=5)
+    school_progression = models.CharField(max_length=5)
+    cp_achievement = models.CharField(max_length=5)
+    case_closure = models.CharField(max_length=5)
+    case_closure_checked =  models.CharField(max_length=5)
+    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+    quarter = models.CharField(max_length=10, null=True, blank=True)
+    is_void = models.BooleanField(default=False)
+    event_date = models.DateField()
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ovc_monitoring11'
+
+    def __unicode__(self):
+        return str(self.id)
+
 
 class OVCHivStatus(models.Model):
     hiv_status_id = models.AutoField(primary_key=True)
@@ -1097,25 +1125,6 @@ class OVCHivStatus(models.Model):
 
     def __unicode__(self):
         return str(self.hiv_status_id)
-
-
-class OVCCareQuestions(models.Model):
-    question_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
-    code = models.CharField(max_length=5)
-    question = models.CharField(max_length=55)
-    domain = models.CharField(max_length=10)
-    question_text = models.CharField(max_length=255)
-    question_type = models.CharField(max_length=20, null=False)
-    form = models.ForeignKey(OVCCareForms, on_delete=models.CASCADE)
-    is_void = models.BooleanField(default=False)
-    timestamp_created = models.DateTimeField(auto_now_add=True)
-    timestamp_updated = models.DateTimeField(auto_now=True)
-
-    def __unicode__(self):
-        return self.code
-
-    class Meta:
-        db_table = 'ovc_care_questions'
 
 
 class OVCHIVRiskScreening(models.Model):
@@ -1400,3 +1409,51 @@ class OVCCaseLocation(models.Model):
     def __unicode__(self):
         """To be returned by admin actions."""
         return '%s' % (str(self.case))
+
+class OVCCareQuestions(models.Model):
+    question_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    code = models.CharField(max_length=5)
+    question = models.CharField(max_length=55)
+    domain = models.CharField(max_length=10)
+    question_text = models.CharField(max_length=255)
+    question_type = models.CharField(max_length=20, null=False)
+    form = models.ForeignKey(OVCCareForms, on_delete=models.CASCADE)
+    is_void = models.BooleanField(default=False)
+    timestamp_created = models.DateTimeField(auto_now_add=True)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return self.code
+
+    class Meta:
+        db_table = 'ovc_care_questions'
+
+class OVCCareCpara_upgrade(models.Model):
+    cpara_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver_upgrade')
+    question_code = models.CharField(max_length=10, null=False, blank=True)
+    question = models.ForeignKey('OVCCareQuestions', on_delete=models.CASCADE)
+    answer = models.CharField(max_length=15)
+    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
+    question_type = models.CharField(max_length=50)
+    domain = models.CharField(max_length=50)
+    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+    date_of_event = models.DateField()
+    date_of_previous_event =models.DateField(null=True, blank=True)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    is_void = models.BooleanField(default=False)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return self.answer
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.question_code = self.question.code
+        super(OVCCareCpara_upgrade, self).save(force_insert, force_update, using, update_fields)
+
+    class Meta:
+        db_table = 'ovc_care_cpara_upgrade'
+
+    def __unicode__(self):
+        return str(self.cpara_id)
