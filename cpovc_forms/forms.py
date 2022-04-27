@@ -8147,41 +8147,170 @@ class DREAMS_FORM(forms.Form):
                #'data-parsley-group': 'group0',
                'rows': '3'}))
 
-class PREEVALUATION_FORM(forms.Form):
-    # Mixed Attributes
-    PREEVALUATION_001 = forms.ChoiceField(
-        choices=(('Never', 'Never'), ('Sometimes', 'Sometimes'), ('A lot of times ', 'A lot of times '), ('All of the time','All of the time')),
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={
-                #  'data-parsley-required': 'true',
-                # 'data-parsley-errors-container': "#errorfield"
-            }))
 
-    # Yes/No Choices
-    PREEVALUATION_002 = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={
-                #  'data-parsley-required': 'true',
-                # 'data-parsley-errors-container': "#errorfield"
-            }))
+# class PREEVALUATION_FORM(forms.Form):
+#     # Mixed Attributes
+#     PREEVALUATION_001 = forms.ChoiceField(
+#         choices=(('Never', 'Never'), ('Sometimes', 'Sometimes'), ('A lot of times ', 'A lot of times '), ('All of the time','All of the time')),
+#         widget=forms.RadioSelect(
+#             # renderer=RadioCustomRenderer,
+#             attrs={
+#                 #  'data-parsley-required': 'true',
+#                 # 'data-parsley-errors-container': "#errorfield"
+#             }))
+#
+#     # Yes/No Choices
+#     PREEVALUATION_002 = forms.ChoiceField(
+#         choices=YESNO_CHOICES,
+#         widget=forms.RadioSelect(
+#             # renderer=RadioCustomRenderer,
+#             attrs={
+#                 #  'data-parsley-required': 'true',
+#                 # 'data-parsley-errors-container': "#errorfield"
+#             }))
+#
+#     PREEVALUATION_003 = forms.ChoiceField(
+#         choices=(('Yes', 'Yes'), ('No', 'No'), ('Dont know', 'Dont know')),
+#         widget=forms.RadioSelect(
+#             # renderer=RadioCustomRenderer,
+#             attrs={
+#                 #  'data-parsley-required': 'true',
+#                 # 'data-parsley-errors-container': "#errorfield"
+#             }))
+#
+#     PREEVALUATION_004 = forms.ChoiceField(
+#         choices=(('Not at all true', 'Not at all true'), ('A little true', 'A little true'), ('Very true', 'Very true')),
+#         widget=forms.RadioSelect(
+#             # renderer=RadioCustomRenderer,
+#             attrs={
+#                 #  'data-parsley-required': 'true',
+#                 # 'data-parsley-errors-container': "#errorfield"
+#             }))
 
-    PREEVALUATION_003 = forms.ChoiceField(
-        choices=(('Yes', 'Yes'), ('No', 'No'), ('Dont know', 'Dont know')),
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={
-                #  'data-parsley-required': 'true',
-                # 'data-parsley-errors-container': "#errorfield"
-            }))
 
-    PREEVALUATION_004 = forms.ChoiceField(
-        choices=(('Not at all true', 'Not at all true'), ('A little true', 'A little true'), ('Very true', 'Very true')),
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={
-                #  'data-parsley-required': 'true',
-                # 'data-parsley-errors-container': "#errorfield"
-            }))
+PLC_CHOICES = (
+        ('Never', 'Never'),
+        ('Sometimes', 'Sometimes'),
+        ('A lot of times', 'A lot of times'),
+        ('All of the time', 'All of the time'),
+    )
+
+TV_CHOICES = (
+        ('Never', 'Never'),
+        ('Sometimes', 'Sometimes'),
+        ('A lot of times', 'A lot of times'),
+        ('All of the time', 'All of the time'),
+    )
+
+WB_HE_CHOICES = (
+        ('Never', 'Never'),
+        ('Sometimes', 'Sometimes'),
+        ('A lot of times', 'A lot of times'),
+        ('All of the time', 'All of the time'),
+    )
+
+WB_AD_HE_15_5 = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+        ('Dont know', 'Dont know'),
+    )
+
+HE_CHOICES = (
+        ('Not at all true', 'Not at all true'),
+        ('A little true', 'A little true'),
+        ('Very true', 'Very true'),
+    )
+
+THOUGHTS_CHOICES = (
+        ('Not at all true', 'Not at all true'),
+        ('A little true', 'A little true'),
+        ('Very true', 'Very true'),
+    )
+
+class FmpPostEvaluation(forms.Form):
+    household_id = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control',
+               'id': 'household_id',
+               'type': 'hidden'
+               }))
+
+    #Domain General
+
+    WB_AD_GEN_4_1 = forms.DateField(
+        widget = forms.widgets.DateInput(
+        format="%m/%d/%Y",
+        attrs = {'placeholder': _('Date Of Assessement'),
+               'class': 'form-control',
+               'name': 'WB_AD_GEN_4_1',
+               'id': 'WB_AD_GEN_4_1',
+               'autocomplete': "off"
+            # ,
+            #    'data-parsley-required': "true",
+            #    'data-parsley-group': 'group0'
+        }))
+
+    WB_AD_GEN_5_2 = forms.CharField(widget=forms.TextInput(
+        attrs={'placeholder': _('Other'),
+               'class': 'form-control',
+               'id': 'WB_AD_GEN_5_2'
+            # ,
+            #    'data-parsley-required': "true",
+            #    'data-parsley-group': 'group0'
+               }))
+
+    FORMS_CHOICES = forms.ChoiceField(
+        choices = (('PreEvaluation', 'Pre-Evaluation Form'), ('PostEvaluation', 'Post-Evaluation Form')),
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        #  'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+
+     ##Domain about child
+
+    WB_AD_PLC_7 = forms.ChoiceField(choices=PLC_CHOICES)
+    WB_AD_PLC_8_1 = forms.ChoiceField(choices=PLC_CHOICES)
+    WB_AD_PLC_9_1 = forms.ChoiceField(choices=PLC_CHOICES)
+
+
+    ##Domain tv viewing
+
+    WB_AD_TV_13_1 = forms.ChoiceField(choices=TV_CHOICES)
+    WB_AD_TV_13_2 = forms.ChoiceField(choices=TV_CHOICES)
+    WB_AD_TV_13_3 = forms.ChoiceField(choices=TV_CHOICES)
+    WB_AD_TV_13_4 = forms.ChoiceField(choices=TV_CHOICES)
+    WB_AD_TV_13_5 = forms.ChoiceField(choices=TV_CHOICES)
+
+    ##Domain hiv, sti,sex
+
+    WB_AD_HE_15_1 = forms.ChoiceField(choices=WB_HE_CHOICES)
+    WB_AD_HE_15_2 = forms.ChoiceField(choices=WB_HE_CHOICES)
+    WB_AD_HE_15_3 = forms.ChoiceField(choices=WB_HE_CHOICES)
+    WB_AD_HE_15_4 = forms.ChoiceField(choices=YESNO_CHOICES)
+    WB_AD_HE_15_4_1 = forms.CharField(
+        widget = forms.Textarea(
+        attrs = {'placeholder': _('Response-What was It?'),
+               'class': 'form-control',
+               'id': 'WB_AD_HEL_16_2',
+            #    'data-parsley-group': 'group0',
+               'rows': '2'})
+        )
+
+    WB_AD_HE_15_5 = forms.ChoiceField(choices=WB_AD_HE_15_5)
+    WB_AD_HE_15_6 = forms.ChoiceField(choices=HE_CHOICES)
+    WB_AD_HE_15_7 = forms.ChoiceField(choices=HE_CHOICES)
+    WB_AD_HE_15_8 = forms.ChoiceField(choices=HE_CHOICES)
+    WB_AD_HE_15_9 = forms.ChoiceField(choices=HE_CHOICES)
+    WB_AD_HE_15_10 = forms.ChoiceField(choices=HE_CHOICES)
+    WB_AD_HE_15_11 = forms.ChoiceField(choices=HE_CHOICES)
+    WB_AD_HE_15_12 = forms.ChoiceField(choices=HE_CHOICES)
+
+    # Thoughts and feelings about your child on sex issues
+    WB_AD_THO_16_1 = forms.ChoiceField(choices=THOUGHTS_CHOICES)
+    WB_AD_THO_16_2 = forms.ChoiceField(choices=THOUGHTS_CHOICES)
+    WB_AD_THO_16_3 = forms.ChoiceField(choices=THOUGHTS_CHOICES)
+    WB_AD_THO_16_4 = forms.ChoiceField(choices=THOUGHTS_CHOICES)
+    WB_AD_THO_16_5 = forms.ChoiceField(choices=THOUGHTS_CHOICES)
+    WB_AD_THO_16_6 = forms.ChoiceField(choices=THOUGHTS_CHOICES)
+

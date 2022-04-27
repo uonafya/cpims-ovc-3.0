@@ -23,7 +23,10 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, PREEVALUATION_FORM)
+
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,  FmpPostEvaluation)
+
+
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -8844,6 +8847,8 @@ def new_cpara(request, id):
             else:
                 event_detail = "No answered questions found"
                 total_benchmark_score = 0
+                # cpara_data = OVCCareCpara.objects.filter(event=one_cpara_event)
+                cpara_data = OVCCareBenchmarkScore.objects.filter(event_id=one_cpara_event.event)
                 bm_array = []
             past_cpara.append({
                 'ev_date': one_cpara_event.date_of_event,
@@ -9998,17 +10003,114 @@ def new_dreamsform(request, id):
                   {'form': form, 'init_data': init_data,
                    'vals': vals})
 
-# FMP Pre- Evaluation form
-def new_preevaluationform(request, id):
-    try:
-        init_data = RegPerson.objects.filter(pk=id)
-        check_fields = ['sex_id']
-        vals = get_dict(field_name=check_fields)
-        print(vals)
-        form = PREEVALUATION_FORM(initial={'person': id})
-    except:
-        pass
 
-    return render(request, 'forms/new_preevaluationform.html',
-                  {'form': form, 'init_data': init_data,
-                   'vals': vals})
+# # FMP Pre- Evaluation form
+# def new_preevaluationform(request, id):
+#     try:
+#         init_data = RegPerson.objects.filter(pk=id)
+#         check_fields = ['sex_id']
+#         vals = get_dict(field_name=check_fields)
+#         print(vals)
+#         form = PREEVALUATION_FORM(initial={'person': id})
+#     except:
+#         pass
+#
+#     return render(request, 'forms/new_preevaluationform.html',
+#                   {'form': form, 'init_data': init_data,
+#                    'vals': vals})
+
+def new_fmppostevaluation(request, id):
+    try:
+        if request.method == 'POST':
+            comments = ['WB_AD_GEN_4_2']
+            ignore_request_values = ['household_id', 'csrfmiddlewaretoken']
+
+
+            household_id = request.POST.get('household_id')
+            hse_uuid = uuid.UUID(household_id)
+            house_holds = OVCHouseHold.objects.get(pk=hse_uuid)
+            person = RegPerson.objects.get(pk=int(id))
+            event_type_id = 'WBGA'
+            date_of_wellbeing_event = timezone.now()
+
+            """ Save Wellbeing-event """
+            # get event counter
+            event_counter = OVCCareEvents.objects.filter(
+                event_type_id=event_type_id, person=id, is_void=False).count()
+            # save event
+            ovccareevent = OVCCareEvents(
+                event_type_id=event_type_id,
+                event_counter=event_counter,
+                event_score=0,
+                date_of_event=date_of_wellbeing_event,
+                created_by=request.user.id,
+                person=RegPerson.objects.get(pk=int(id)),
+                house_hold=house_holds
+            )
+            ovccareevent.save()
+            # get questions for adolescent
+            questions = OVCCareQuestions.objects.filter(code__startswith='wba')
+            ovc_id = int(id)
+            child = RegPerson.objects.get(is_void=False, id=ovc_id)
+            care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+            for question in questions:
+                answer = request.POST.get(question.question)
+                if answer is None:
+                    answer = 'No'
+                OVCCareWellbeing.objects.create(
+                    person=RegPerson.objects.get(pk=int(id)),
+                    question=question,
+                    answer=answer,
+                    household=house_holds,
+                    event=ovccareevent,
+                    date_of_event=timezone.now(),
+                    domain=question.domain,
+                    question_type=question.question_type,
+                    # caregiver=care_giver
+                )
+            msg = 'wellbeing adolesent saved successful'
+            messages.add_message(request, messages.INFO, msg)
+            url = reverse('ovc_view', kwargs={'id': id})
+            return HttpResponseRedirect(url)
+            # url = reverse('ovc_view', kwargs={'id': id})
+            # # return HttpResponseRedirect(reverse(forms_registry))
+            # return HttpResponseRedirect(url)
+    except Exception as e:
+        msg = 'wellbeing adolescent save error : (%s)' % (str(e))
+        messages.add_message(request, messages.ERROR, msg)
+        print('Error saving wellbeing adolescent : %s' % str(e))
+        return HttpResponseRedirect(reverse(forms_home))
+
+    # get household members/ caretaker/ household_id
+    household_id = None
+    try:
+        ovcreg = get_object_or_404(OVCRegistration, person_id=id, is_void=False)
+        caretaker_id = ovcreg.caretaker_id if ovcreg else None
+        ovchh = get_object_or_404(OVCHouseHold, head_person=caretaker_id, is_void=False)
+        household_id = ovchh.id if ovchh else None
+    except Exception as e:
+        print(str(e))
+        msg = 'Error getting household identifier: (%s)' % (str(e))
+        messages.add_message(request, messages.ERROR, msg)
+        return HttpResponseRedirect(reverse(forms_registry))
+    # get child data
+    init_data = RegPerson.objects.filter(pk=id)
+    check_fields = ['sex_id', 'relationship_type_id']
+    vals = get_dict(field_name=check_fields)
+    ovc_id = int(id)
+    child = RegPerson.objects.get(is_void=False, id=ovc_id)
+
+    form = FmpPostEvaluation(initial={'household_id': household_id})
+    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+
+    return render(request,
+                  'forms/new_fmppostevaluation.html',
+                  {
+                      'form': form,
+                      'init_data': init_data,
+                      'vals': vals,
+                      'person': id,
+                      'care_giver': care_giver
+
+                  })
+
