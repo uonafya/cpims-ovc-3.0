@@ -36,7 +36,7 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,OVCaseClosure)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -9405,12 +9405,12 @@ def new_wellbeing(request, id):
         for key in request.POST:
             if (str(key) != "safeanswer" and str(key) != "schooledanswer" and "WB_SCH_39" not in str(
                     key) and "WB_SCH_40" not in str(key) and "WB_SCH_41" not in str(key) and "WB_SCH_42" not in str(
-                    key) and "WB_SAF_31_1" not in str(key) and "WB_SCH_43" not in str(key) and "WB_SCH_44" not in str(
-                    key) and "WB_SCH_45" not in str(key) and "WB_SAF_37" not in str(key) and "WB_SAF_38" not in str(
-                    key) and "WB_SAF_39" not in str(key) and "WB_SAF_40" not in str(key) and "WB_HEL_17_2" not in str(
-                    key) and "WB_GEN_11" not in str(key) and "WB_GEN_13" not in str(key) and "WB_GEN_15" not in str(
-                    key) and "WB_GEN_14" not in str(key) and "WB_GEN_16" not in str(key) and "caretaker_id" not in str(
-                    key)):
+                key) and "WB_SAF_31_1" not in str(key) and "WB_SCH_43" not in str(key) and "WB_SCH_44" not in str(
+                key) and "WB_SCH_45" not in str(key) and "WB_SAF_37" not in str(key) and "WB_SAF_38" not in str(
+                key) and "WB_SAF_39" not in str(key) and "WB_SAF_40" not in str(key) and "WB_HEL_17_2" not in str(
+                key) and "WB_GEN_11" not in str(key) and "WB_GEN_13" not in str(key) and "WB_GEN_15" not in str(
+                key) and "WB_GEN_14" not in str(key) and "WB_GEN_16" not in str(key) and "caretaker_id" not in str(
+                key)):
 
                 if (key in ignore_request_values):
                     continue
@@ -10012,26 +10012,25 @@ def new_benchmarkmonitoring(request, id):
     """
     child = RegPerson.objects.get(id=id)
     if request.method == 'POST':
-        
-        # get submitted data
-        benchmark1= request.POST.get("BENCHMARKMONITORING_001")
-        benchmark2= request.POST.get("BENCHMARKMONITORING_002")
-        benchmark3= request.POST.get("BENCHMARKMONITORING_003")
-        benchmark4= request.POST.get("BENCHMARKMONITORING_004")
-        benchmark5= request.POST.get("BENCHMARKMONITORING_005")
-        benchmark6= request.POST.get("BENCHMARKMONITORING_006")
-        benchmark7= request.POST.get("BENCHMARKMONITORING_007")
-        benchmark8= request.POST.get("BENCHMARKMONITORING_008")
-        benchmark9= request.POST.get("BENCHMARKMONITORING_009")
-        date_of_event = request.POST.get("monitoring_date")
 
+        # get submitted data
+        benchmark1 = request.POST.get("BENCHMARKMONITORING_001")
+        benchmark2 = request.POST.get("BENCHMARKMONITORING_002")
+        benchmark3 = request.POST.get("BENCHMARKMONITORING_003")
+        benchmark4 = request.POST.get("BENCHMARKMONITORING_004")
+        benchmark5 = request.POST.get("BENCHMARKMONITORING_005")
+        benchmark6 = request.POST.get("BENCHMARKMONITORING_006")
+        benchmark7 = request.POST.get("BENCHMARKMONITORING_007")
+        benchmark8 = request.POST.get("BENCHMARKMONITORING_008")
+        benchmark9 = request.POST.get("BENCHMARKMONITORING_009")
+        date_of_event = request.POST.get("monitoring_date")
         event_name = 'MONITORING'
 
         # save events
-        
+
         try:
             event_id =save_event(request, id, event_name, date_of_event, )
-            
+
         except exception as e:
             print("an error occured ", e)
 
@@ -10049,7 +10048,7 @@ def new_benchmarkmonitoring(request, id):
             event = event_id
         )
         benchmark.save()
-       
+
 
 
     else:
@@ -10057,8 +10056,8 @@ def new_benchmarkmonitoring(request, id):
         # caregiver ID
         import pdb
         form = BenchmarkMonitoringForm()
-        
-        
+
+
         care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
         # pdb.set_trace()
         context = {
@@ -10066,81 +10065,132 @@ def new_benchmarkmonitoring(request, id):
             'care_giver':care_giver
 
         }
-        
+
         return render(request,'forms/new_benchmarkmonitoring.html', context)
 
 
 def new_caseclosure(request, id):
-    """
-        Function that processes the new benchmark monitoring
-        form
-        Args:
-            params(int): id
-                        :request
-        Returns:
-            new_benchmarkmonitoring.html
-    """
 
-    child = RegPerson.objects.get(id=id)
 
+    try:
+
+    # except:
+    #     pass
+        if request.method == 'POST':
+            closure_reason = request.POST.get("CASE_CL001")
+            receiving_org = request.POST.get("CASE_CL002}")
+            attrition_reason1 = request.POST.get("CASE_CL027")
+            other = request.POST.get("CASE_CL004")
+            transfer_completed = request.POST.get("CASE_CL010")
+            followup_time = request.POST.get("CASE_CL011")
+            informed = request.POST.get("CASE_CL0012")
+            copy_sent = request.POST.get("CASE_CL013")
+            file_stored1 = request.POST.get("CASE_CL014")
+            attrition_reason2 = request.POST.get("CASE_CL030}")
+            manager_report = request.POST.get("CASE_CL029")
+            file_stored2 = request.POST.get("CASE_CL028}")
+            exit_reason = request.POST.get("CASE_CL031")
+            staff_certifying = request.POST.get("CASE_CL024")
+            date = request.POST.get("CASE_CL026")
+            files_completed = request.POST.get("CASE_CL006")
+            phone_number = request.POST.get("CASE_CL007")
+            informed_graduation = request.POST.get("CASE_CL008")
+            file_stored3 = request.POST.get("CASE_CL009")
+
+            person = RegPerson.objects.get(pk=int(id))
+            event_type_id = 'WBGA'
+            date_of_closure = timezone.now()
+
+            """ Save evaluation-event """
+            # get event counter
+            event_counter = OVCCareEvents.objects.filter(
+                event_type_id=event_type_id, person=id, is_void=False).count()
+            # save event
+            ovccareevent = OVCCareEvents(
+                event_type_id=event_type_id,
+                event_counter=event_counter,
+                event_score=0,
+                date_of_event= date_of_closure,
+                created_by=request.user.id,
+                person=RegPerson.objects.get(pk=int(id)),
+                # house_hold=house_holds
+            )
+            ovccareevent.save()
+                # OVCFMPEvaluation
+
+                # Saving OVC Case Closure
+                #OVCaseClosure.objects.create(
+            case_closing= OVCaseClosure(
+            # case_closure_id=closure_reason,
+            closure_reason=closure_reason,
+            receiving_org=receiving_org,
+            attrition_reason1=attrition_reason1,
+            other =other,
+            transfer_completed=transfer_completed,
+            followup_time=followup_time,
+            informed=informed,
+            copy_sent=copy_sent,
+            file_stored1=file_stored1,
+            attrition_reason2=attrition_reason2,
+            manager_report=manager_report,
+            file_stored2=file_stored2,
+            exit_reason=exit_reason,
+            staff_certifying=staff_certifying,
+            date_closed = date,
+            files_completed=files_completed ,
+            phone_number=phone_number,
+            informed_graduation=informed_graduation,
+            file_stored3=file_stored3,
+            event=ovccareevent, )
+
+
+            case_closing.save()
+
+            msg = 'form case closure saved successful'
+            messages.add_message(request, messages.INFO, msg)
+            url = reverse('ovc_view', kwargs={'id': id})
+            return HttpResponseRedirect(url)
+            # url = reverse('ovc_view', kwargs={'id': id})
+            # # return HttpResponseRedirect(reverse(forms_registry))
+            # return HttpResponseRedirect(url)
+    except Exception as e:
+        msg = 'form Case closure save error : (%s)' % (str(e))
+        messages.add_message(request, messages.ERROR, msg)
+        print('Error saving form evaluation : %s' % str(e))
+        return HttpResponseRedirect(reverse(forms_home))
+
+
+    init_data = RegPerson.objects.filter(pk=id)
+    check_fields = ['sex_id', 'relationship_type_id']
+    vals = get_dict(field_name=check_fields)
+    ovc_id = int(id)
+    child = RegPerson.objects.get(is_void=False, id=ovc_id)
+
+    form = CaseClosureForm()
+    event = OVCCareEvents.objects.filter(person_id=id).values_list('event')
+    case_closure = OVCaseClosure.objects.filter(event_id__in=event).order_by('date_of_event')
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-    house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
 
+    return render(request,
+                  'forms/new_case_closure.html',
+                  {'form': form, 'init_data': init_data,
+                    'care_giver': care_giver,'case_closure':case_closure,
+                   'vals': vals})
+def edit_caseclosure(request, id):
+  """Some default page for Server Errors."""
 
-    child = RegPerson.objects.get(id=id)
-    if request.method == 'POST':
+  try:
+      caseclosuredata = OVCaseClosure.objects.get(case_closure_id=id)
+  except Exception as e:
+      print("error with OVC viewing - %s" % (str(e)))
+      # raise e
+      msg = "Error occured during case closure  edit"
+      messages.error(request, msg)
 
-        # get submitted data
-        reason1 = request.POST.get("CASE_CL001")
-        org2 = request.POST.get("CASE_CL002")
-        benchmark3 = request.POST.get("CASE_CL003")
-        benchmark4 = request.POST.get("BENCHMARKMONITORING_004")
-        benchmark5 = request.POST.get("BENCHMARKMONITORING_005")
-        benchmark6 = request.POST.get("BENCHMARKMONITORING_006")
-        benchmark7 = request.POST.get("BENCHMARKMONITORING_007")
-        benchmark8 = request.POST.get("BENCHMARKMONITORING_008")
-        benchmark9 = request.POST.get("BENCHMARKMONITORING_009")
-        date_of_event = request.POST.get("monitoring_date")
+  form = CaseClosureForm()
+  return render(request, 'forms/new_case_closure.html', {'form': form, 'caseclosuredata':caseclosuredata, 'status': 200})
 
-        event_name = 'MONITORING'
-
-        # save events
-
-        try:
-            event_id = save_event(request, id, event_name, date_of_event, )
-
-        except exception as e:
-            print("an error occured ", e)
-
-        benchmark = OVCBenchmarkMonitoring(
-            person_id=id,
-            benchmark_1=benchmark1,
-            benchmark_2=benchmark2,
-            benchmark_3=benchmark3,
-            benchmark_4=benchmark4,
-            benchmark_5=benchmark5,
-            benchmark_6=benchmark6,
-            benchmark_7=benchmark7,
-            benchmark_8=benchmark8,
-            benchmark_9=benchmark9,
-            event=event_id
-        )
-        benchmark.save()
-
-
-
-    else:
-        # caregiver name
-        # caregiver ID
-        import pdb
-        form = CaseClosureForm()
-
-        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-        # pdb.set_trace()
-        context = {
-            'form': form,
-            'care_giver': care_giver
-
-        }
-
-        return render(request, 'forms/new_case_closure.html', context)
+def delete_caseclosure(request, id):
+   delete_caseclosure = OVCaseClosure.objects.get(case_closure_id=id)
+   delete_caseclosure.delete()
+   return render(request, 'forms/new_case_closure.html')

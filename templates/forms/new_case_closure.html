@@ -3,7 +3,7 @@
 {% load static %}
 {% block page_title %} Reaching Case Plan Achievement {% endblock %}
 {% block style_code %}
-<link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" xmlns="http://www.w3.org/1999/html"/>
 <link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
 <link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
 <link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
@@ -45,12 +45,13 @@
 <!-- end breadcrumb -->
 
 <!-- begin page-header -->
-
 {% for data in init_data %}
-
-	<h1 class="page-header">Forms <small>Reaching Case Plan Achievement</small></h1>
+<h1 class="page-header">
+    <small> Care Giver's Name:       {{ care_giver }} <br> <br> </small> </h1>
 
 {% endfor %}
+
+
 <!-- end page-header -->
 
 <div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
@@ -70,22 +71,35 @@
                     <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i class="fa fa-minus"></i></a>
                     <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i class="fa fa-times"></i></a>
                 </div>
-                <h4 class="panel-title"> Case Closure/Exit Form || {{care_giver}}|| {{child}} </h4>
-                 <h5>{{child}}</h5>
+                <h1 class="panel-title">
+                {% for data in init_data %}
+
+                     Reaching Case Plan Achievement: <b> &nbsp;{{ data.first_name }} {{ data.surname }} | {{ data.sex_id|gen_value:vals }} ||
+        {% if data.date_of_birth|gen_age == 0 %}
+                    UNDER 1 YEAR
+                {% else %}
+                    {{ data.date_of_birth|gen_age }} YRS
+                {% endif %}</b> </small>
+        </b>
+                {% endfor %}
+                </h1>
+
 
             </div>
             <div class="panel-body">
             	<form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true">
                 	{% csrf_token %}
-						<div class="panel-body">
+						<div class="panel-body ">
 
 							    <!-- add labels like HA1, HA2 .. -->
+                            <div id="wizard-caseclosureform">
 							    <h3 class="text-center note note-info"> Personal Information For The Child</h3>
 							<div class="form-group"> <table class="table table-bordered">
 
 
                                 <tbody>
                                 <tr>
+                                    <td>Q1A</td>
                                     <td>Reason for Case Closure (tick):
                                     </td>
                                    <div id="ss_main">
@@ -99,6 +113,7 @@
 
                                 <div >
                                     <tr id="cc_001">
+                                        <td>Q1B</td>
 
                                     <td>For those Transferred (Name of receiving Organization/program):<span class="asteriskField">*</span>
                                     </td>
@@ -111,12 +126,14 @@
 
                                <div >
                                     <tr id="cc_002">
+                                        <td>Q1C</td>
 
                                     <td>For Attrition: Specify reason for attrition. Tick below:<span class="asteriskField">*</span>
                                     </td>
                                     <td>
-                                        <div class="row">
-                                            <div class="col-md-6">
+                                        <div class="row " >
+                                            <div class="col-md-6 ">
+
 
                                                 {{form.CASE_CL027}}
                                                 {{form.CASE_CL004}}
@@ -148,6 +165,7 @@
 
                                 <tbody>
                                 <tr>
+                                    <td>Q2</td>
 
                                     <td>Case files completed per the protocol. </td>
                                     <td>
@@ -155,6 +173,7 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Q3</td>
 
                                     <td>Case Worker has given phone number to household   Head of household linked to a family, which already graduated.</td>
                                     <td>
@@ -162,10 +181,12 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Q4</td>
                                     <td>Informed necessary service providers of graduation.</td>
                                     <td>{{ form.CASE_CL008 }}</td>
                                 </tr>
                                 <tr>
+                                    <td>Q5</td>
                                     <td>Files stored in a safe place (locked cabinet).</td>
                                     <td>
                                         {{ form.CASE_CL009 }}
@@ -194,6 +215,7 @@
 
                                 <tbody>
                                 <tr>
+                                    <td>Q6</td>
 
                                     <td>Case Transfer Form completed per the protocol.</td>
                                     <td>
@@ -201,6 +223,7 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Q7</td>
 
                                     <td>Referring Case Manager established time and frequency for follow up</td>
                                     <td>
@@ -208,10 +231,12 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Q8</td>
                                     <td>Informed necessary service providers of case transfer.</td>
-                                    <td>{{ form.CASE_CL0012 }}</td>
+                                    <td>{{ form.CASE_CL012 }}</td>
                                 </tr>
                                 <tr>
+                                    <td>Q9</td>
                                     <td>Copy of family folder sent to receiving organization.</td>
                                     <td>
                                         {{ form.CASE_CL013 }}
@@ -219,6 +244,7 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Q10</td>
                                     <td>Files stored in a safe place (locked cabinet). </td>
                                     <td>
                                         {{ form.CASE_CL014 }}
@@ -247,35 +273,40 @@
 
                                 <tbody>
                                 <tr>
+                                    <td>Q11</td>
 
                                     <td>Reason for attrition documented in family folder. </td>
                                     <td>
-                                        {{ form.CASE_CL010}}
+                                        {{ form.CASE_CL030}}
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Q12</td>
 
                                     <td>Case Manager Report</td>
                                     <td>
-                                        {{ form.CASE_CL011 }}
+                                        {{ form.CASE_CL029 }}
                                     </td>
                                 </tr>
 
                                   <tr>
+                                      <td>Q13</td>
 
                                     <td>Files stored in a safe place (locked cabinet).</td>
                                     <td>
-                                        {{ form.CASE_CL011 }}
+                                        {{ form.CASE_CL028 }}
                                     </td>
                                 </tr>
                                    <tr>
+                                       <td>Q14</td>
 
                                     <td>Exit reason recorded in OVC Database  </td>
                                     <td>
-                                        {{ form.CASE_CL011 }}
+                                        {{ form.CASE_CL031 }}
                                     </td>
                                 </tr>
                                    <tr>
+                                       <td>Q15</td>
 
                                     <td>Name of Case Manager/LIP staff certifying</td>
                                     <td>
@@ -285,6 +316,7 @@
 
 
                                 <tr>
+                                    <td>Q16</td>
 
                                       <td>
                                         Date
@@ -302,8 +334,7 @@
                         </div>
                             </div>
 
-
-
+                        </div>
 
 
 					<div class="panel-body panel-form">
@@ -318,6 +349,75 @@
                 </div>
 
                 </form>
+                  <div class="card-block table-border-style">
+                <div class="table-responsive">
+                    <table class="table table-success table-striped" border="1" id="past-hst">
+
+                        <thead>
+                        <tr>
+                            <th>Q1A</th>
+                            <th>Q1B</th>
+                            <th>Q1C</th>
+                            <th>Q2</th>
+                            <th>Q3</th>
+                            <th>Q4</th>
+                            <th>Q5</th>
+                            <th>Q6</th>
+                            <th>Q7</th>
+                            <th>Q8</th>
+                            <th>Q9</th>
+                            <th>Q10</th>
+                            <th>Q11</th>
+                            <th>Q12</th>
+                            <th>Q13</th>
+                            <th>Q13</th>
+                             <th>Q14</th>
+                             <th>Q15</th>
+                             <th>Q16</th>
+
+
+
+                            <th>Date of Event</th>
+                        </tr>
+                        </thead>
+                        {% if case_closure %}
+
+                            {% for case_closure_data in case_closure %}
+
+                                <tr>
+                                    <td>{{ case_closure_data.closure_reason }}</td>
+                                    <td>{{ case_closure_data.receiving_org}}</td>
+                                    <td>{{ case_closure_data.attrition_reason1 }} || {{ one_evaluation_data.other}}</td>
+                                    <td>{{ case_closure_data.files_completed }}</td>
+                                    <td>{{ case_closure_data.phone_number }}</td>
+                                    <td>{{ case_closure_data.informed_graduation}}</td>
+                                    <td>{{ case_closure_data.file_stored1 }}</td>
+                                    <td>{{ case_closure_data.transfer_completed }}</td>
+                                    <td>{{ case_closure_data.followup_time }}</td>
+                                    <td>{{ case_closure_data.informed}}</td>
+                                    <td>{{ case_closure_data.copy_sent }}</td>
+                                    <td>{{ case_closure_data.file_stored2}}</td>
+                                    <td>{{ case_closure_data.attrition_reason2 }}</td>
+                                    <td>{{ case_closure_data.manager_report }}</td>
+                                    <td>{{ case_closure_data.file_stored3}}</td>
+                                    <td>{{ case_closure_data.exit_reason }}</td>
+                                    <td>{{ case_closure_data.staff_certifying}}</td>
+                                    <td>{{ case_closure_data.date_closed }}</td>
+                                <td>                 <a href="{% url 'edit_caseclosure' case_closure_data.case_closure_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a> </td>
+                                    <td> <a href="{% url 'delete_caseclosure' case_closure_data.case_closure_id%}"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a> </td>
+
+
+
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+
+                        {% endif %}
+                    </table>
+
+
+                </div>
+            </div>
 
             </div>
 
@@ -326,6 +426,8 @@
 
     </div>
     <!-- end col-12 -->
+
+
 
 </div>
 <!-- end row -->
@@ -343,14 +445,15 @@
 <script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
 <script>
 
-jQuery(document).ready(function() 
+jQuery(document).ready(function()
 {
 
-
+        $('#CASE_CL026').datepicker({ format: 'yyyy-mm-dd' }).val();
              $('#cc_001').hide();
              $('#cc_002').hide();
-              $("#cc_tab_001").hide();
-           $("#cc_tab_003").hide();
+            $("#cc_tab_001").hide();
+            $("#cc_tab_002").hide();
+            $("#cc_tab_003").hide();
             $("input[name='CASE_CL001']").on('change', function () {
       var ival = $("input[name='CASE_CL001']:checked").val();
       if(ival == '2'){

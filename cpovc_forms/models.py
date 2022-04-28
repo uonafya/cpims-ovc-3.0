@@ -1424,3 +1424,75 @@ class OVCBenchmarkMonitoring(models.Model):
     class Meta:
         db_table = 'ovc__benchmark_monitoring'
 
+
+class OVCaseClosure(models.Model):
+    case_closure_id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    closure_reason = models.CharField(max_length=10, null=True, blank=True)
+    receiving_org = models.CharField(max_length=10, null=True, blank=True)
+    attrition_reason1 = models.CharField(max_length=10, null=True, blank=True)
+    other = models.CharField(max_length=10, null=True, blank=True)
+    transfer_completed = models.CharField(max_length=10, null=True, blank=True)
+    followup_time = models.CharField(max_length=10, null=True, blank=True)
+    informed = models.CharField(max_length=10, null=True, blank=True)
+    copy_sent = models.CharField(max_length=10, null=True, blank=True)
+    file_stored1 = models.CharField(max_length=10, null=True, blank=True)
+    attrition_reason2= models.CharField(max_length=10, null=True, blank=True)
+    manager_report = models.CharField(max_length=10, null=True, blank=True)
+    file_stored2 = models.CharField(max_length=10, null=True, blank=True)
+    exit_reason = models.CharField(max_length=10, null=True, blank=True)
+    staff_certifying = models.CharField(max_length=10, null=True, blank=True)
+    #closure_date = models.DateField(max_length=10, null=True, blank=True)
+    date_closed = models.DateField(max_length=10, null=True, blank=True)
+    files_completed = models.CharField(max_length=10, null=True, blank=True)
+    phone_number = models.CharField(max_length=10, null=True, blank=True)
+    informed_graduation = models.CharField(max_length=10, null=True, blank=True)
+    file_stored3 = models.CharField(max_length=10, null=True, blank=True)
+
+    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+
+    is_void = models.BooleanField(default=False)
+    date_of_event = models.DateField(default=timezone.now)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ovc_case_closure'
+
+    class OVCFMPEvaluation(models.Model):
+            evaluation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+            person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+            form_type = models.CharField(max_length=20, null=True)
+            caregiver_know_where = models.CharField(max_length=50, null=True)
+            caregiver_know_what = models.CharField(max_length=50, null=True)
+            caregiver_know_who = models.CharField(max_length=50, null=True)
+            child_watch_often = models.CharField(max_length=50, null=True)
+            what_program = models.CharField(max_length=50, null=True)
+            specific_program = models.CharField(max_length=50, null=True)
+            talk_on_topic = models.CharField(max_length=50, null=True)
+            watch_with_child = models.CharField(max_length=50, null=True)
+            talk_on_sex = models.CharField(max_length=50, null=True)
+            talk_on_hiv = models.CharField(max_length=50, null=True)
+            talk_on_sti = models.CharField(max_length=50, null=True)
+            other_sexual_issues = models.CharField(max_length=50, null=True)
+            if_yes = models.CharField(max_length=50, null=True)
+            child_asks = models.CharField(max_length=50, null=True)
+            if_asks = models.CharField(max_length=50, null=True)
+            comfortable = models.CharField(max_length=50, null=True)
+            how_talk = models.CharField(max_length=50, null=True)
+            enough_information = models.CharField(max_length=50, null=True)
+            talk_bad_things = models.CharField(max_length=50, null=True)
+            ask_questions = models.CharField(max_length=50, null=True)
+            thoughts_on_sex = models.CharField(max_length=50, null=True)
+            ready_to_learn = models.CharField(max_length=50, null=True)
+            still_young = models.CharField(max_length=50, null=True)
+            have_someone = models.CharField(max_length=50, null=True)
+            guardian_responsibility = models.CharField(max_length=50, null=True)
+            happy_with_child = models.CharField(max_length=50, null=True)
+
+            event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+            date_of_event = models.DateField(default=timezone.now, null=True)  ### date
+            timestamp_created = models.DateTimeField(auto_now_add=True)
+            timestamp_updated = models.DateTimeField(auto_now=True)
+
+            class Meta:
+                db_table = 'ovc_fmp_evaluation'

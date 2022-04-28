@@ -8418,17 +8418,17 @@ class CaseClosureForm(forms.Form):
         widget=forms.TextInput(
             attrs={'placeholder': _('Signature/stamp')
                    }))
+
     CASE_CL026 = forms.DateField(
         widget=forms.widgets.DateInput(
             format="%m/%d/%Y",
-            attrs={'placeholder': _('Report Date'),
+            attrs={'placeholder': _('date'),
                    'class': 'form-control',
-                   'name': 'HIV_RS_15',
-                   'id': 'HIV_RS_15',
-                   'autocomplete': "off"
-                   # ,
-                   #    'data-parsley-required': "true",
-                   #    'data-parsley-group': 'group0'
+                   'name': 'CASE_CL026',
+                   'id': 'CASE_CL026',
+                   'autocomplete': "off",
+                   #     'data-parsley-required': "true",
+                   'data-parsley-group': 'group0'
                    }))
 
     CASE_CL027= forms.ChoiceField(choices=(('1', 'Voluntary withdrawal'),('2', '  Death'),('3', ' Married'),('4', '  Family re-integration'),
@@ -8441,6 +8441,55 @@ class CaseClosureForm(forms.Form):
                                           attrs={
 
                                           }))
+    CASE_CL028 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL029 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL030 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+    CASE_CL031 = forms.ChoiceField(
+
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': "True"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+
 
 
 
