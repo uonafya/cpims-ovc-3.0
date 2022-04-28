@@ -10001,7 +10001,33 @@ def new_dreamsform(request, id):
 
 def preventive_attendance_register(request, id):
     if request.method == 'POST':
-        pass
+        person = RegPerson.objects.get(id=id)
+        event_date = request.POST.get('HIV_MGMT_2_A')
+        event_type_id = 'RREVENTIVE_REGISTER'
+        child = RegPerson.objects.get(id=id)
+        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+
+        event_counter = OVCCareEvents.objects.filter(
+            event_type_id=event_type_id, person=id, is_void=False).count()
+        # save event
+        ovccareevent = OVCCareEvents.objects.create(
+            event_type_id=event_type_id,
+            event_counter=event_counter,
+            event_score=0,
+            created_by=request.user.id,
+            person=RegPerson.objects.get(pk=int(id)),
+            house_hold=house_hold
+        )
+        ovc_service_provided = request.POST.get('ovc_service_provided')
+        ovc_service = request.POST.get('ovc_service')
+        caregiver_service_provided = request.POST.get('caregiver_service_provided')
+        ovc_reffered_for_service = request.POST.get('ovc_reffered_for_service')
+        # ovc_service_provided = request.POST.get('ovc_service_provided')
+        # ovc_service_provided = request.POST.get('ovc_service_provided')
+        # ovc_service_provided = request.POST.get('ovc_service_provided')
+
+       
+        
 
     else:
         form = PREVENTIVE_ATTENDANCE_REGISTER_FORM(initial={'person': id})

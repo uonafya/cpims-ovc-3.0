@@ -273,7 +273,7 @@
                                             <th width="15%"><h6><b>Service<span class="asteriskField">*</b></h6></th>
                                             <th width="20%"><h6><b>Refferred/Completed<span class="asteriskField">*</b></h6></th>
                                             <th width="15%"><h6><b>Referal Made (R) <span class="asteriskField">*</b></h6></th>
-                                           <th width="20%"><h6><b>Referal Completed(C)</b></h6></th> 
+                                            <th width="20%"><h6><b>Referal Completed(C)</b></h6></th> 
                                             <th width="5%"><h6><b>Actions<span class="asteriskField">*</b></h6></th>
                                         </tr>
                                     </thead>
@@ -343,70 +343,83 @@
                             </div>
                         </div> 
                         <!-- end wizard step-4 -->
-                        <div class="wizard-step-4">
-                            <div class="panel-body">
-                                <div id="error_service"></div>
+                        <div class="wizard-step-3">
+                            <fieldset> 
+                                <div id="error_assessment"></div>
                             <div style="overflow-x: auto; min-height: 350px;">
-                                <table id="services_manager_table" class="table" style="overflow-y: auto !important;">
+                                <!-- begin col-6 -->
+                                <table id="caregiver_assessment_manager_table" class="table" style="overflow-y: auto !important;">
                                     <thead>
-                                        <tr id="id_inputHeaders">
-                                            <td width="2%"></td>
-                                            <th width="15%"><h6><b>CAREGIVER REFERRED FOR SERVICES (Y/N)<span class="asteriskField">*</b></h6></th>
-                                            <th width="20%"><h6><b>Services<span class="asteriskField">*</b></h6></th>
-                                            <th width="15%"><h6><b>Referal Made (R) <span class="asteriskField">*</b></h6></th>
-                                           <th width="20%"><h6><b>Referal Completed(C)</b></h6></th> 
-                                            <th width="5%"><h6><b>Actions<span class="asteriskField">*</b></h6></th>
+                                        <tr id="id_inputHeaders3">
+                                        	<td width="5%"></td>
+                                            <th width="10%"><h6><b>CAREGIVER REFERRED FOR SERVICES (Y/N) <span class="asteriskField">*</h6></b></th>
+                                            <th width="20%" colspan="2" ><h6><b><center>Services <span class="asteriskField">*</center></h6></b></th>                                                
+                                            <th width="15%"><h6><b>Referal Made (R)<span class="asteriskField">*</b></h6></th>
+                                            <th width="15%"><h6><b>Referal Completed(C)<span class="asteriskField">*</b></h6></th>
+                                            <th width="15%"><h6><b>Comment<span class="asteriskField">*</b></h6></th>
+                                            <th width="5%"><h6><b>Actions</b></h6></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr id="id_inputElements13">
-                                            <td width="2%"></td>
+                                        <tr id="id_inputElements14">
+                                        	<td></td>
+                                        	<td width="10%">
+                                        		{{ form.CAREGIVER_REFFERED_FOR_SERVICES }}
+                                        		<div id="olmis_assessment_domain_errormsg" style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                            <td width="10%">
+                                            	{{ form.CAREGIVER_REFFERAL_SERVICES }}
+                                            	<div id="olmis_assessment_coreservice_errormsg" style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                                                </div>
+                                            </td>
+                                            <td width="10%">
+                                            	{{ form.CAREGIVER_REFERAL_MADE }}
+                                            	<div id="olmis_assessment_coreservice_errormsg" style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                                                </div>
+                                            </td>
                                             <td width="15%">
-                                                {{ form.OVC_REFFEREDFOR_SERVICES }}
-                                                <div id="olmis_domain_errormsg" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                            </td>
-                                            <td width="20%">
-                                                {{ form.REFFERAL_SERVICES}}
-                                                <h6><span id="sel_olmis_service"></span></h6>
-                                                <div id="olmis_service_errormsg" style="display:none;">
+                                            	{{ form.CAREGIVER_REFFERAL_COMPLETED }}
+                                            	<div id="olmis_assessment_coreservice_errormsg" style="display:none;">
                                                     <small><p class="dialog_paragraph">This value is required</p></span></small><span>
                                                 </div>
                                             </td>
                                             <td width="15%">
-                                                {{ form.OVC_REFFEREDFOR_SERVICES }}
-                                                <div id="olmis_service_date_errormsg" style="display:none;">
+                                            	{{ form.COMMENTS }}
+                                            	<h6><span id="sel_olmis_assessment_coreservice_status"></span></h6>
+                                            	<div id="olmis_assessment_coreservice_status_errormsg" style="display:none;">
+                                                </div>
+                                            </td>    
+        
+                                            	<div id="preventive_cas_errormsg" style="display:none;">
                                                     <small><p class="dialog_paragraph">This value is required</p></span></small><span>
                                                 </div>
-                                            </td>
-                                            
-                                            <td width="20%">
-                                                {{ form.OVC_REFFEREDFOR_SERVICES }}
-                                                <div id="olmis_service_provider_errormsg" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                            </td>
+                                            </td>                                         
                                             <td width="5%">
                                             <h6><b>
-                                                <button type="button" class="btn btn-sm btn-inverse m-r-5" onClick="AddRow(3)">
-                                                    <i class="fa fa-plus"></i>  Add
-                                                </button>
-                                                </b></h6>
+	                                            <button type="button" class="btn btn-sm btn-inverse m-r-5" onClick="AddRow(3)">
+	                                                <i class="fa fa-plus"></i>  Add
+	                                            </button>
+                                            	</b></h6>
                                             </td>
-                                        </tr>                                               
+                                        </tr>		                                        
                                     </tbody>
-                                    <!-- {{ form.olmis_service_provided_list }} -->
-                                </table>  
-                            </div>                               
+                                    {{ form.service_provided_list }}
+                                </table>
                             </div>
+							    <!-- end col-6 -->                                
+							</fieldset>
 
                             <div class="panel-body panel-form">
                                 <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4">Date Services Recorded<span class="asteriskField">*</label>
+                                    <label class="control-label col-md-4 col-sm-4">Date Assessment Recorded<span class="asteriskField">*</label>
                                     <div class="col-md-2 col-sm-2">
-                                        <!-- {{ form.date_of_service }} -->
-                                        <div id="date_errormsg3" style="display:none;">
+                                        {{ form.date_of_assessment }}
+                                        <div id="date_errormsg0" style="display:none;">
                                             <small><p class="dialog_paragraph">This value is required</p></small>
                                         </div>
                                     </div>
@@ -417,12 +430,12 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-4 col-sm-4"></label>
                                     <div class="col-md-6 col-sm-6">
-                                        <button id="mysubmit-f1a-3" class="btn btn-primary" type="button" onClick="saveForm1A(4)">Submit Service(s)</button>
-                                        <a href="{% url 'ovc_view' id=form.person.value %}" onClick="resetForm1A(4)" class="btn btn-white">Cancel</a>
+                                        <button id="mysubmit-f1a-0" class="btn btn-primary" type="button" onClick="saveForm1A(1)">Submit Assessment</button>
+                                        <a href="{% url 'ovc_view' id=form.person.value %}" onClick="resetForm1A(1)" class="btn btn-white">Cancel</a>
                                     </div>
                                 </div>
                             </div>
-                        </div> 
+						</div>
 
 						                         
 					</div>
@@ -1114,7 +1127,7 @@ function AddRow(x)
                     OlmisAssessmentData = JSON.stringify(OlmisAssessmentData); 
 
                     // Set olmis_assessment_provided_list
-                    $('#olmis_assessment_provided_list').val(OlmisAssessmentData);
+                    // $('#olmis_assessment_provided_list').val(OlmisAssessmentData);
 
                     console.log(OlmisAssessmentData)
 				}
@@ -1175,7 +1188,7 @@ function AddRow(x)
                 var holmis_domain= "<input disabled id='holmis_service_domain' value='"+olmis_service_domain+"'>"
                 var holmis_service = "<input disabled id='holmis_service' value='"+olmis_service+"'>"
                 var holmis_refferal_completed= "<input disabled id='holmis_service_status'  value='"+olmis_refferal_completed+"'>"
-                var holmis_service_made= "<input disabled id='holmis_service_made' type='hidden' value='"+olmis_service_made+"'>"
+                var holmis_service_made= "<input disabled id='holmis_service_made' value='"+olmis_service_made+"'>"
 
                 cell0.innerHTML = '<h6 class="td_style">#</h6>';        
                 cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_domain") + holmis_domain + '</h6>';
@@ -1219,7 +1232,7 @@ function AddRow(x)
                 OlmisServiceData = JSON.stringify(OlmisServiceData);
 
                 // Set service_provided_list
-                $('#olmis_service_provided_list').val(OlmisServiceData);
+                // $('#service_provided_list').val(OlmisServiceData);
 
                 console.log(OlmisServiceData)
 			}
@@ -1234,243 +1247,122 @@ function AddRow(x)
 		} 
 	}
 	
-    if(x==3)
-	{   
-
-        var OlmisPriorityServiceData = new Array();     
-        var olmis_priority_domain = $("#olmis_priority_domain").val();
-        var olmis_priority_service = $("#olmis_priority_service").val();        
+	if(x==3)
+	{
+		var OlmisAssessmentData = new Array();
+        var olmis_assessment_domain = $('input[name="CAREGIVER_REFFERED_FOR_SERVICES"]:checked').val();
+        var olmis_assessment_coreservice = $("#caregiver_refferal_services_id").val();
+        var olmis_assessment_coreservice_status = $('input[name="CAREGIVER_REFFERAL_COMPLETED"]:checked').val();
+        var olmis_session_attended_days = $('input[name="CAREGIVER_REFERAL_MADE"]:checked').val();
         var csrftoken = $.cookie('csrftoken');        
         var values = {  
             'csrfmiddlewaretoken': csrftoken
         };
+        console.log("------------------------>>>>>>>>>> "+olmis_session_attended_days);
+        // console.log("===========>>>> "+ olmis_assessment_coreservice + "########## "+olmis_assessment_domain+ 'xxxxxxxxxxx ') +olmis_assessment_coreservice_status;
 
         // Validation and Ajax
-        if(olmis_priority_domain)
-        {
-            if(olmis_priority_service)
-            {
-                // Find a <table> element with id="myTable":
-                var table = $('#priority_manager_table')[0]; 
+        if(olmis_assessment_domain || olmis_assessment_domain == '')
+		{
+			if(olmis_assessment_coreservice || olmis_assessment_coreservice == '')
+			{
+				if(olmis_assessment_coreservice_status || olmis_assessment_coreservice_status == '')
+				{
+                    // console.log("Daaaaaataaa to be logged!!!!!");
+					// Find a <table> element with id="myTable":
+                    var table = $('#caregiver_assessment_manager_table')[0]; 
 
-                // Create an empty <tr> element with id and add it to the 1st position of the table:
-                var rows_length = table.rows.length;
-                var row = table.insertRow(rows_length);
-                // var index = rows_length - 2;
-                // row_id = 'rowid_' + index;
-                row_id = 'rowid_' + (rows_length-2);
-                row.id = row_id;
-                var btnRemoveSvcId = 'btnRemoveSvc' + index;
-                var total = arr_DSHC.length + arr_DPSS.length + arr_DPRO.length + arr_DHES.length + arr_DHNU.length + arr_DEDU.length;
-                console.log('total : ' + total);                
-                if(total >= 3)
-                {
-                    $('#csi-warning-dialog').modal('show');
-                    $('#span_csi_alert').html("You are violating CSI Priority assessment Rules which demands 3 a maximum of priorities from either domain.");
-                    return false;
-                }
-                else
-                {
-                    /* 
-                    Manage validations
-                    ----------------------------------
-                    Get total domain-specific selected 
-                    */
-                    console.log('current priority domain: '+olmis_priority_domain)
-                    if(olmis_priority_domain == 'DEDU')
-                    {
-                        items = olmis_priority_service;
-                        for(var i=0, l = items.length; i < l; i++)
-                        {
-                            if($.inArray(items[i], arr_DEDU) == -1)
-                            {
-                                if(arr_DEDU.length < 3)
-                                {
-                                    arr_DEDU.push(items[i]);
-                                }
-                            }
-                            else
-                            {
-                                $('#csi-warning-dialog').modal('show');
-                                $('#span_csi_alert').html('One or more of the priority need you have selected have been captured.');
-                                return false;
-                            }
-                        }
-                        domain_log.DEDU = arr_DEDU;
-                    }
+                    // Create an empty <tr> element with id and add it to the 1st position of the table:
+                    var rows_length = table.rows.length;
+                    var row = table.insertRow(rows_length);
+                    var index = rows_length - 2;
+                    row_id = 'rowid_' + index;
+                    row.id = row_id;
+                    var btnRemoveSvcId = 'btnRemoveSvc' + index;
 
-                    if(olmis_priority_domain == 'DHNU')
-                    {
-                        items = olmis_priority_service;
-                        for(var i=0, l = items.length; i < l; i++)
-                        {
-                            if($.inArray(items[i], arr_DHNU) == -1)
-                            {
-                                if(arr_DHNU.length < 3)
-                                {
-                                    arr_DHNU.push(items[i]);
-                                }
-                            }
-                            else
-                            {
-                                $('#csi-warning-dialog').modal('show');
-                                $('#span_csi_alert').html('One or more of the priority need you have selected have been captured.');
-                                return false;
-                            }
-                        }
-                        domain_log.DHNU = arr_DHNU;
-                    }
-
-                    if(olmis_priority_domain == 'DHES')
-                    {
-                        items = olmis_priority_service;
-                        for(var i=0, l = items.length; i < l; i++)
-                        {
-                            if($.inArray(items[i], arr_DHES) == -1)
-                            {
-                                if(arr_DHES.length < 3)
-                                {
-                                    arr_DHES.push(items[i]);
-                                }
-                            }
-                            else
-                            {
-                                $('#csi-warning-dialog').modal('show');
-                                $('#span_csi_alert').html('One or more of the priority need you have selected have been captured.');
-                                return false;
-                            }
-                        }
-                        domain_log.DHES = arr_DHES;
-                    }
-
-                    if(olmis_priority_domain == 'DPRO')
-                    {
-                        items = olmis_priority_service;
-                        for(var i=0, l = items.length; i < l; i++)
-                        {
-                            if($.inArray(items[i], arr_DPRO) == -1)
-                            {
-                                if(arr_DPRO.length < 3)
-                                {
-                                    arr_DPRO.push(items[i]);
-                                }
-                            }
-                            else
-                            {
-                                $('#csi-warning-dialog').modal('show');
-                                $('#span_csi_alert').html('One or more of the priority need you have selected have been captured.');
-                                return false;
-                            }
-                        }
-                        domain_log.DPRO = arr_DPRO;
-                    }
-
-                    if(olmis_priority_domain == 'DPSS')
-                    {
-                        items = olmis_priority_service;
-                        for(var i=0, l = items.length; i < l; i++)
-                        {
-                            if($.inArray(items[i], arr_DPSS) == -1)
-                            {
-                                if(arr_DPSS.length < 3)
-                                {
-                                    arr_DPSS.push(items[i]);
-                                }
-                            }
-                            else
-                            {
-                                $('#csi-warning-dialog').modal('show');
-                                $('#span_csi_alert').html('One or more of the priority need you have selected have been captured.');
-                                return false;
-                            }
-                        }
-                        domain_log.DPSS = arr_DPSS;
-                    }
-
-                    if(olmis_priority_domain == 'DSHC')
-                    {
-                        items = olmis_priority_service;
-                        for(var i=0, l = items.length; i < l; i++)
-                        {
-                            if($.inArray(items[i], arr_DSHC) == -1)
-                            {
-                                if(arr_DSHC.length < 3)
-                                {
-                                    arr_DSHC.push(items[i]);
-                                }
-                            }
-                            else
-                            {
-                                $('#csi-warning-dialog').modal('show');
-                                $('#span_csi_alert').html('One or more of the priority need you have selected have been captured.');
-                                return false;
-                            }
-                        }
-                        domain_log.DSHC = arr_DSHC;
-                    }
-                    console.log( 'DSHC: '+arr_DSHC.length+', DPSS:'+arr_DPSS.length+ ', DPRO:'+arr_DPRO.length+', DHES:'+arr_DHES.length+', DHNU: '+arr_DHNU.length+', DEDU:'+arr_DEDU.length);
                     // Insert new cells (<td> elements) of the "new" <tr> element:
                     var cell0 = row.insertCell(0);
                     var cell1 = row.insertCell(1);
                     var cell2 = row.insertCell(2);
                     var cell3 = row.insertCell(3);
+                    var cell4 = row.insertCell(4);
 
-                    var holmis_priority_domain= "<input id='holmis_priority_domain' type='hidden' value='"+olmis_priority_domain+"'>"
-                    var holmis_priority_service = "<input id='holmis_priority_service' type='hidden' value='"+olmis_priority_service+"'>"
-                    var holmis_priority_service_status= "<input id='holmis_priority_service_status' type='hidden' value='new'>"
+                    var holmis_assessment_domain= "<input id='holmis_assessment_domain'  value='"+olmis_assessment_domain+"'>"
+                    var holmis_assessment_coreservice = "<input id='holmis_assessment_coreservice'  value='"+olmis_assessment_coreservice+"'>"
+                    var holmis_assessment_coreservice_status = "<input id='holmis_assessment_coreservice_status' value='"+olmis_assessment_coreservice_status+"'>"
+                    var holmis_session_attended_days = "<input id='session_attended_days' value='"+olmis_session_attended_days+"'>"
+                    // var holmis_session_attended_days = "<input id='session_attended_days' value='"+olmis_session_attended_days+"'>"
+                    
+                    var holmis_assessment_status= "<input id='holmis_assessment_status'  value='new'>"
+                    
+                    
 
-                    cell0.innerHTML = '<h6 class="td_style"></h6>';        
-                    cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_priority_domain") + holmis_priority_domain + '</h6>';
-                    cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_priority_service") + holmis_priority_service + '</h6>';
-                    cell3.innerHTML  = '<h6 class="dialog_paragraph">' + holmis_priority_service_status + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
+                    cell0.innerHTML = '<h6 class="td_style">#</h6>';        
+                    cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice") + holmis_assessment_coreservice + '</h6>';
+                    cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_domain") + holmis_assessment_domain + '</h6>';
+                    cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice_status") + holmis_assessment_coreservice_status + '</h6>';
+                    cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "holmis_session_attended_days") + holmis_session_attended_days + '</h6>';
+                    cell4.innerHTML = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
+
 
                     // AddClick Event To Remove Button
                     $("#" + btnRemoveSvcId + "").click(function(e)
                     {
-                        RemoveRow(3, '', row_id);
+                        RemoveRow(1, '', row_id);
                     });
-                    
-
-                    //Show ClearGridOption
-                    // $("#btnClearGrid").css({'display': 'block'})
 
                     // Reset Input Elements/Error Divs
-                    $("#olmis_priority_domain").multiselect("clearSelection");
-                    $("#olmis_priority_domain").multiselect("refresh");
-                    $("#olmis_priority_service").multiselect("clearSelection");
-                    $("#olmis_priority_service").multiselect("refresh");
-                    $("#sel_olmis_priority_service").html('');
-                    $(".alert").hide();                
+                    $("#olmis_assessment_domain").multiselect("clearSelection");
+                    $("#olmis_assessment_domain").multiselect("refresh");
+                    $("#olmis_assessment_coreservice").multiselect("clearSelection");
+                    $("#olmis_assessment_coreservice").multiselect("refresh");
+                    $("#olmis_assessment_coreservice_status").multiselect("clearSelection");
+                    $("#olmis_assessment_coreservice_status").multiselect("refresh");
+                    $('#sel_olmis_assessment_coreservice_status').html('');                    
 
-                    $('#priority_manager_table tr').each(function(row, tr)
+                    $('#assessment_manager_table tr').each(function(row, tr)
                     {                            
-                        var olmis_priority_domain = $(tr).find('input[id="holmis_priority_domain"]').val();
-                        var olmis_priority_service = $(tr).find('input[id="holmis_priority_service"]').val();
+                        var olmis_assessment_domain = $(tr).find('input[id="holmis_assessment_domain"]').val();
+                        var olmis_assessment_coreservice = $(tr).find('input[id="holmis_assessment_coreservice"]').val();
+                        var olmis_assessment_coreservice_status = $(tr).find('input[id="holmis_assessment_coreservice_status"]').val();
+                        var olmis_session_attended_days = $(tr).find('input[id="holmis_session_attended_days"]').val();
 
-                        OlmisPriorityServiceData[row]= {
-                            "olmis_priority_domain" : olmis_priority_domain,
-                            "olmis_priority_service" : olmis_priority_service
-                            } 
+                        OlmisAssessmentData[row]= {
+                            "olmis_assessment_domain" : olmis_assessment_domain,
+                            "olmis_assessment_coreservice" : olmis_assessment_coreservice,
+                            "olmis_assessment_coreservice_status" : olmis_assessment_coreservice_status,
+                            "olmis_session_attended_days": olmis_session_attended_days
+                            }                                
+                        
                     });
                     
-                    OlmisPriorityServiceData.shift(); //remove first row(headers stuff)
-                    OlmisPriorityServiceData.shift(); //remove second row(controls stuff)
-                    OlmisPriorityServiceData = JSON.stringify(OlmisPriorityServiceData); 
+                    OlmisAssessmentData.shift(); //remove first row(headers stuff)
+                    OlmisAssessmentData.shift(); //remove second row(controls stuff)
+                    OlmisAssessmentData = JSON.stringify(OlmisAssessmentData); 
 
-                    // Set olmis_priority_service_provided_list
-                    $('#olmis_priority_service_provided_list').val(OlmisPriorityServiceData);
-                }
-            }
-            else
-            {
-                $("#olmis_priority_service_errormsg").css({ 'display': "block" });
-            }
-        }
-        else
-        {
-            $("#olmis_priority_domain_errormsg").css({ 'display': "block" });
-        }
+                    // Set olmis_assessment_provided_list
+                    $('#olmis_assessment_provided_list').val(OlmisAssessmentData);
+
+                    console.log(OlmisAssessmentData)
+				}
+				else
+				{
+					$("#olmis_assessment_coreservice_status_errormsg").css({ 'display': "block" });
+				}
+			}
+			else
+			{
+				$("#olmis_assessment_coreservice_errormsg").css({ 'display': "block" });
+			}
+		}
+		else
+		{
+			$("#olmis_assessment_domain_errormsg").css({ 'display': "block" });
+		}
 	}
+	
+	
+	
 }
 
 function RemoveRow(index, uuid, tr_id)
