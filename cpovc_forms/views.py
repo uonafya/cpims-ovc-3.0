@@ -10113,7 +10113,7 @@ def new_fmppostevaluation(request, id):
             #     )
             msg = 'form evaluation saved successful'
             messages.add_message(request, messages.INFO, msg)
-            url = reverse('new_fmppostevaluation', kwargs={'id': id})
+            url = reverse('ovc_view', kwargs={'id': id})
             return HttpResponseRedirect(url)
             # url = reverse('ovc_view', kwargs={'id': id})
             # # return HttpResponseRedirect(reverse(forms_registry))
@@ -10159,3 +10159,23 @@ def new_fmppostevaluation(request, id):
                       'fmp_evaluation': fmp_evaluation
 
                   })
+
+def edit_fmppostevaluation(request, id):
+   """Some default page for Server Errors."""
+
+   try:
+       fmpdata = OVCFMPEvaluation.objects.get(evaluation_id=id)
+   except Exception as e:
+       print("error with OVC viewing - %s" % (str(e)))
+       # raise e
+       msg = "Error occured during ovc edit"
+       messages.error(request, msg)
+
+   form = FmpPostEvaluation()
+   return render(request, 'forms/edit_fmppostevaluation.html', {'form': form, 'fmpdata':fmpdata, 'status': 200})
+
+
+def delete_evaluation(request, id):
+   new_eval = OVCFMPEvaluation.objects.get(evaluation_id=id)
+   new_eval.delete()
+   return redirect('new_fmppostevaluation',  id=60)
