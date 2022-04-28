@@ -155,10 +155,6 @@
                                 Attendance
 							    <small>Services details</small>
 							</li>
-                            <!-- <li>
-                                Critical Event(s)
-                                <small>Critical events details</small>
-                            </li> -->
                             <li>
                                 Services Refferal(s)
                                 <small>Refferals details.</small>
@@ -198,7 +194,7 @@
                                             </td>
                                             <td></td>
                                             <td width="10%">
-                                            	{{ form.SESSION_DAYS }}
+                                            	{{ form.SESSION_ATTENDED_DAYS }}
                                             	<div id="olmis_assessment_coreservice_errormsg" style="display:none;">
                                                     <small><p class="dialog_paragraph">This value is required</p></span></small><span>
                                                 </div>
@@ -219,7 +215,6 @@
                                             	{{ form.COMPLETED_ALL_SESSIONS }}
                                             	<h6><span id="sel_olmis_assessment_coreservice_status"></span></h6>
                                             	<div id="olmis_assessment_coreservice_status_errormsg" style="display:none;">
-                                                    <!-- <small><p class="dialog_paragraph">This value is required</p></span></small><span> -->
                                                 </div>
                                             </td>    
         
@@ -299,26 +294,18 @@
                                                 </div>
                                             </td>
                                             <td width="15%">
-                                                {{ form.OVC_REFFEREDFOR_SERVICES }}
+                                                {{ form.REFERAL_MADE }}
                                                 <div id="olmis_service_date_errormsg" style="display:none;">
                                                     <small><p class="dialog_paragraph">This value is required</p></span></small><span>
                                                 </div>
                                             </td>
                                             
                                             <td width="20%">
-                                                {{ form.OVC_REFFEREDFOR_SERVICES }}
+                                                {{ form.OVC_REFFERAL_COMPLETED }}
                                                 <div id="olmis_service_provider_errormsg" style="display:none;">
                                                     <small><p class="dialog_paragraph">This value is required</p></span></small><span>
                                                 </div>
                                             </td>
-                                            <!--
-                                            <td width="20%">
-                                                {{ form.olmis_place_of_service }}
-                                                <div id="olmis_place_of_service_errormsg" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                            </td>
-                                            -->
                                             <td width="5%">
                                             <h6><b>
                                                 <button type="button" class="btn btn-sm btn-inverse m-r-5" onClick="AddRow(2)">
@@ -400,17 +387,9 @@
                                                     <small><p class="dialog_paragraph">This value is required</p></span></small><span>
                                                 </div>
                                             </td>
-                                            <!--
-                                            <td width="20%">
-                                                {{ form.olmis_place_of_service }}
-                                                <div id="olmis_place_of_service_errormsg" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                            </td>
-                                            -->
                                             <td width="5%">
                                             <h6><b>
-                                                <button type="button" class="btn btn-sm btn-inverse m-r-5" onClick="AddRow(2)">
+                                                <button type="button" class="btn btn-sm btn-inverse m-r-5" onClick="AddRow(3)">
                                                     <i class="fa fa-plus"></i>  Add
                                                 </button>
                                                 </b></h6>
@@ -1047,13 +1026,14 @@ function AddRow(x)
 	{
 		var OlmisAssessmentData = new Array();
         var olmis_assessment_domain = $("#intervention_prevention_register").val();
-        var olmis_assessment_coreservice = $("#refferal_services_id").val();
+        var olmis_assessment_coreservice = $("#makeup_session_id").val();
         var olmis_assessment_coreservice_status = $("#completed_all_sessions").val();
+        var olmis_session_attended_days = $("#session_attended_days").val();
         var csrftoken = $.cookie('csrftoken');        
         var values = {  
             'csrfmiddlewaretoken': csrftoken
         };
-        console.log("===========>>>> "+ olmis_assessment_coreservice + "########## "+olmis_assessment_domain+ 'xxxxxxxxxxx ') +olmis_assessment_coreservice_status;
+        // console.log("===========>>>> "+ olmis_assessment_coreservice + "########## "+olmis_assessment_domain+ 'xxxxxxxxxxx ') +olmis_assessment_coreservice_status;
 
         // Validation and Ajax
         if(olmis_assessment_domain || olmis_assessment_domain == '')
@@ -1084,13 +1064,21 @@ function AddRow(x)
                     var holmis_assessment_domain= "<input id='holmis_assessment_domain'  value='"+olmis_assessment_domain+"'>"
                     var holmis_assessment_coreservice = "<input id='holmis_assessment_coreservice'  value='"+olmis_assessment_coreservice+"'>"
                     var holmis_assessment_coreservice_status = "<input id='holmis_assessment_coreservice_status' value='"+olmis_assessment_coreservice_status+"'>"
+                    var holmis_session_attended_days = "<input id='session_attended_days' value='"+olmis_session_attended_days+"'>"
+                    // var holmis_session_attended_days = "<input id='session_attended_days' value='"+olmis_session_attended_days+"'>"
+                    
                     var holmis_assessment_status= "<input id='holmis_assessment_status'  value='new'>"
+                    
+                    
 
                     cell0.innerHTML = '<h6 class="td_style">#</h6>';        
-                    cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_domain") + holmis_assessment_domain + '</h6>';
                     cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice") + holmis_assessment_coreservice + '</h6>';
+                    cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_domain") + holmis_assessment_domain + '</h6>';
                     cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice_status") + holmis_assessment_coreservice_status + '</h6>';
+                    cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice_status") + holmis_session_attended_days + '</h6>';
+
                     cell4.innerHTML  = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
+
 
                     // AddClick Event To Remove Button
                     $("#" + btnRemoveSvcId + "").click(function(e)
@@ -1148,22 +1136,25 @@ function AddRow(x)
 	if(x==2)
 	{
 		var OlmisServiceData = new Array();
-        var olmis_domain = $("#olmis_domain").val();
-        var olmis_service = $("#olmis_service").val();
-        var olmis_service_date = $("#olmis_service_date").val();
-        // var olmis_service_provider = $("#olmis_service_provider").val();
-        // var olmis_place_of_service = $("#olmis_place_of_service").val();
+        var olmis_service_domain =  $('input[name="OVC_REFFEREDFOR_SERVICES"]:checked').val();
+        var olmis_service = $("#refferal_services_id").val();
+        var olmis_service_made = $('input[name="REFERAL_MADE"]:checked').val();
+        var olmis_refferal_completed = $('input[name="OVC_REFFERAL_COMPLETED"]:checked').val();
+        // $("#refferal_made_id").val();
         var csrftoken = $.cookie('csrftoken');        
         var values = {  
             'csrfmiddlewaretoken': csrftoken
         };
+        console.log("ppppppppppppppppppppppppppppp "+olmis_service_made);
+        
 
         // Validation and Ajax
-        if(olmis_domain)
+        if(olmis_service_domain)
 		{
-			if(olmis_service)
+			if(olmis_service_domain)
 			{
 				var table = $('#services_manager_table')[0]; 
+                
 
                 // Create an empty <tr> element with id and add it to the 1st position of the table:
                 var rows_length = table.rows.length;
@@ -1179,18 +1170,19 @@ function AddRow(x)
                 var cell2 = row.insertCell(2);
                 var cell3 = row.insertCell(3);
                 var cell4 = row.insertCell(4);
+                var cell5 = row.insertCell(5);
 
-                var holmis_domain= "<input id='holmis_domain' type='hidden' value='"+olmis_domain+"'>"
-                var holmis_service = "<input id='holmis_service' type='hidden' value='"+olmis_service+"'>"
-                var holmis_service_status= "<input id='holmis_service_status' type='hidden' value='new'>"
-                var olmis_service_date = $('#olmis_service_date').val();
-                if (!olmis_service_date) { olmis_service_date = 'None'; }
+                var holmis_domain= "<input disabled id='holmis_service_domain' value='"+olmis_service_domain+"'>"
+                var holmis_service = "<input disabled id='holmis_service' value='"+olmis_service+"'>"
+                var holmis_refferal_completed= "<input disabled id='holmis_service_status'  value='"+olmis_refferal_completed+"'>"
+                var holmis_service_made= "<input disabled id='holmis_service_made' type='hidden' value='"+olmis_service_made+"'>"
 
                 cell0.innerHTML = '<h6 class="td_style">#</h6>';        
                 cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_domain") + holmis_domain + '</h6>';
                 cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_service") + holmis_service + '</h6>';
-                cell3.innerHTML = '<h6 class="td_style">' + olmis_service_date + '</h6>';
-                cell4.innerHTML  = '<h6 class="dialog_paragraph">' + holmis_service_status + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
+                cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_refferal_completed") + holmis_refferal_completed + '</h6>';
+                cell4.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_service_made") + holmis_service_made + '</h6>';
+                cell5.innerHTML  = '<h6 class="dialog_paragraph">' + '1' + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
 
                 // AddClick Event To Remove Button
                 $("#" + btnRemoveSvcId + "").click(function(e)
@@ -1203,7 +1195,7 @@ function AddRow(x)
                 $("#olmis_domain").multiselect("refresh");
                 $("#olmis_service").multiselect("clearSelection");
                 $("#olmis_service").multiselect("refresh");
-                $('#olmis_service_date').val('');
+                // $('#olmis_service_date').val('');
                 $("#sel_olmis_service").html('');
 
                 $('#services_manager_table tr').each(function(row, tr)
@@ -1214,10 +1206,10 @@ function AddRow(x)
                     var olmis_service_status = $(tr).find('input[id="holmis_service_status"]').val();
 
                     OlmisServiceData[row]= {
-                        "olmis_domain" : olmis_domain,
-                        "olmis_service" : olmis_service,
-                        "olmis_service_date" : olmis_service_date,
-                        "olmis_service_status" : olmis_service_status
+                        "olmis_domain" : holmis_domain,
+                        "olmis_service" : holmis_service,
+                        "olmis_service_date" : holmis_refferal_completed,
+                        "olmis_service_status" : holmis_service_made
                         }                                
                     
                 });
@@ -1241,7 +1233,8 @@ function AddRow(x)
 		    $("#olmis_domain_errormsg").css({ 'display': "block" }); 
 		} 
 	}
-	if(x==3)
+	
+    if(x==3)
 	{   
 
         var OlmisPriorityServiceData = new Array();     
@@ -1649,36 +1642,6 @@ function tabManager()
     }
 }
 
-$("#olmis_assessment_domain").change(function(event) 
-{ 
-	var olmis_assessment_domain = $("#olmis_assessment_domain").val();
-	
-	$("#olmis_assessment_domain_errormsg").css({ 'display': "none" });
-
-    $('#olmis_assessment_coreservice').multiselect("clearSelection");
-    $('#olmis_assessment_coreservice').multiselect("refresh");
-    $('#olmis_assessment_coreservice').trigger("change");
-    $("#olmis_assessment_coreservice_errormsg").css({ 'display': "none" });
-    getServices(1, olmis_assessment_domain);
-});
-
-$("#olmis_assessment_coreservice").change(function(event) 
-{ 
-	var olmis_assessment_coreservice = $("#olmis_assessment_coreservice").val();
-	getServices(2, olmis_assessment_coreservice);
-
-    $('#olmis_assessment_coreservice_status').multiselect("clearSelection");
-    $('#olmis_assessment_coreservice_status').multiselect('refresh');
-	$("#olmis_assessment_coreservice_status_errormsg").css({ 'display': "none" });
-	$('#sel_olmis_assessment_coreservice_status').html('');
-});
-
-$("#olmis_assessment_coreservice_status").change(function(event) 
-{ 
-	var olmis_assessment_coreservice = $("#olmis_assessment_coreservice").val();	
-	displayVals(1, 'olmis_assessment_coreservice_status');
-	$("#olmis_assessment_coreservice_status_errormsg").css({ 'display': "none" });
-});
 
 $('#session_date_id').datepicker({ format: 'dd-M-yyyy' });
 $('#makeup_session_id').datepicker().on('change.dp', function(e) {
