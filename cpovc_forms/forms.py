@@ -8236,7 +8236,7 @@ class CparaAssessmentUpgrade(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-    cphealt11 = forms.ChoiceField(
+    cphealth11 = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
@@ -8336,7 +8336,7 @@ class CparaAssessmentUpgrade(forms.Form):
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     cpsafe3 = forms.ChoiceField(
-        choices=YESNO_CHOICES,
+        choices=(("AYES","Yes"),("ANO","No"),("ANA","N/A")),
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
