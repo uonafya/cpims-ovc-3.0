@@ -304,8 +304,8 @@ CPT_SERVICES_STABLE_CHOICES = (
                          ('CPTS2s', 'NHIF'),
                          ('CPTS3s', 'Income generating activity (IGA)'),
 
-                         ('CPTS4s', 'Saving group (SILCs, VSLAs)'),                        
-                
+                         ('CPTS4s', 'Saving group (SILCs, VSLAs)'),
+
                          ('CPTS5s', 'Food support'),
                          ('CPTS6s', 'Nutritional assessment & supplements'),
                          ('CPTS7s', 'Financial literacy/skills'),
@@ -325,7 +325,7 @@ CPT_SERVICES_SAFE_CHOICES = (
                        ('CPTP8p', 'Provide information on child rights and responsibilities'),
                        ('CPTS2p', 'Provide/ refer OVC for basic counseling services '),
                        ('CPTS3p', 'Psychosocial support to children living with HIV, caregiver support, children clubs, support groups for SGBV survivors'),
-                       ('CPTS4p', 'Health services'),                    
+                       ('CPTS4p', 'Health services'),
                     #    ('CPTS5p', 'Legal services'),
                        ('CPTP9p', 'Provide/ refer for legal documents (e.g, birth certificate)'),
                        ('CPTS7p', 'Succession planning support'),
@@ -6935,7 +6935,7 @@ class HIV_MANAGEMENT_ARV_THERAPY_FORM(forms.Form):
             #    'data-parsley-required': "true",
             #    'data-parsley-group': 'group0'
         }))
-    
+
     HIV_MGMT_1_E = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
@@ -6970,7 +6970,7 @@ class HIV_MANAGEMENT_ARV_THERAPY_FORM(forms.Form):
                'autocomplete': "off",
                'data-parsley-group': 'group0'
     }))
-    
+
     HIV_MGMT_1_F_DATE = forms.DateField(
         widget = forms.widgets.DateInput(
         format="%m/%d/%Y",
@@ -6981,7 +6981,7 @@ class HIV_MANAGEMENT_ARV_THERAPY_FORM(forms.Form):
                'autocomplete': "off",
                'data-parsley-group': 'group0'
     }))
-    
+
     HIV_MGMT_1_G_DATE = forms.DateField(
         widget = forms.widgets.DateInput(
         format="%m/%d/%Y",
@@ -6992,7 +6992,7 @@ class HIV_MANAGEMENT_ARV_THERAPY_FORM(forms.Form):
                'autocomplete': "off",
                'data-parsley-group': 'group0'
     }))
-    
+
 
 class DREAMS_FORM(forms.Form):
     # Yes/No Choices
@@ -7400,7 +7400,7 @@ class DREAMS_FORM(forms.Form):
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
     }))
-     
+
     DREAMS_055 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
@@ -8130,7 +8130,7 @@ class DREAMS_FORM(forms.Form):
             # ,
             #    'data-parsley-required': "False"
     }))
-    
+
     DREAMS_061 = forms.CharField(widget=forms.Textarea(
         attrs={'placeholder': _('Comments'),
                'class': 'form-control',
@@ -8146,3 +8146,63 @@ class DREAMS_FORM(forms.Form):
                #'data-parsley-required': "true",
                #'data-parsley-group': 'group0',
                'rows': '3'}))
+
+# Bidirectional referral forms
+class BIDIRECTIONALREFERRALFORM(forms.Form):
+    HEALTH_CHOICES=((0,'please select'),
+                    (1,'Health insurance cover'),
+                    (2, 'secticide Treated Mosquito net (ITN)'),
+                    (3, 'Enrollment to care and treatment'),
+                    (4, 'Enhance Adherence Counselling'),
+                    (5, 'Routine/ emergency healthcare'),
+                    (6, 'Perinatal care including PMTCT'))
+
+    STABLE_DOMAIN= (('Please select','please select'),
+                    ('cash transfer OVC', 'cash transfer OVC'),
+                      ('cash transfer Elderly', 'cash transfer Elderly'),
+                      ('cash transfer Disability', 'cash transfer Disability'),
+                      ('Safe shelter repair or construction', 'Safe shelter repair or construction'),
+                      ('Routine/ emergency healthcare', 'Routine/ emergency healthcare'),
+                      ('Perinatal care including PMTCT', 'Perinatal care including PMTCT'))
+
+    SAFE_DOMAIN = (('Please select','please select'),
+                    ('Post Violence Counseling', 'Post Violence Counseling'),
+                     ('Post Violence Medical care', 'Post Violence Medical care'),
+                     ('Post violence Legal Care', 'Post violence Legal Care'),
+                     ('Emergency shelter support', 'Emergency shelter support'),
+                     ('Re-enrollment ', 'Re-enrollment'),
+                     ('Bursary, tuition', 'Bursary, tuition'))
+
+    health_choices_domain = forms.ChoiceField(choices=HEALTH_CHOICES,
+                                              initial='0',
+                                              widget=forms.Select(
+                                                  attrs={'class': 'form-control',
+                                                         'id': 'health_choices_domain'})
+                                              )
+
+
+
+    HEALTH_DOMAIN = forms.ChoiceField(choices=HEALTH_CHOICES,
+                                                initial='0',
+                                                widget=forms.Select(
+                                                    attrs={'class': 'form-control',
+                                                           'id': 'HEALTH_DOMAIN',
+
+                                                           })
+                                                )
+    STABLE_DOMAIN = forms.MultipleChoiceField(
+                                      #   required = True,
+                                      #   widget=forms.CheckboxSelectMultiple,
+                                      choices=STABLE_DOMAIN,
+                                      initial='0',
+                                      widget=forms.Select(
+                                          attrs={'class': 'form-control',
+                                                 'id': 'STABLE_DOMAIN'})
+                                      )
+
+    SAFE_DOMAIN = forms.MultipleChoiceField(choices=SAFE_DOMAIN,
+                                              initial='0',
+                                              widget=forms.Select(
+                                                  attrs={'class': 'form-control',
+                                                         'id': 'SAFE_DOMAIN'})
+                                              )

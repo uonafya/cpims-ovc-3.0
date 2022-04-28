@@ -23,7 +23,7 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, BIDIRECTIONALREFERRALFORM)
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -9403,12 +9403,12 @@ def new_wellbeing(request, id):
         for key in request.POST:
             if (str(key) != "safeanswer" and str(key) != "schooledanswer" and "WB_SCH_39" not in str(
                     key) and "WB_SCH_40" not in str(key) and "WB_SCH_41" not in str(key) and "WB_SCH_42" not in str(
-                    key) and "WB_SAF_31_1" not in str(key) and "WB_SCH_43" not in str(key) and "WB_SCH_44" not in str(
-                    key) and "WB_SCH_45" not in str(key) and "WB_SAF_37" not in str(key) and "WB_SAF_38" not in str(
-                    key) and "WB_SAF_39" not in str(key) and "WB_SAF_40" not in str(key) and "WB_HEL_17_2" not in str(
-                    key) and "WB_GEN_11" not in str(key) and "WB_GEN_13" not in str(key) and "WB_GEN_15" not in str(
-                    key) and "WB_GEN_14" not in str(key) and "WB_GEN_16" not in str(key) and "caretaker_id" not in str(
-                    key)):
+                key) and "WB_SAF_31_1" not in str(key) and "WB_SCH_43" not in str(key) and "WB_SCH_44" not in str(
+                key) and "WB_SCH_45" not in str(key) and "WB_SAF_37" not in str(key) and "WB_SAF_38" not in str(
+                key) and "WB_SAF_39" not in str(key) and "WB_SAF_40" not in str(key) and "WB_HEL_17_2" not in str(
+                key) and "WB_GEN_11" not in str(key) and "WB_GEN_13" not in str(key) and "WB_GEN_15" not in str(
+                key) and "WB_GEN_14" not in str(key) and "WB_GEN_16" not in str(key) and "caretaker_id" not in str(
+                key)):
 
                 if (key in ignore_request_values):
                     continue
@@ -9997,3 +9997,37 @@ def new_dreamsform(request, id):
                   'forms/new_dreamsform.html',
                   {'form': form, 'init_data': init_data,
                    'vals': vals})
+
+
+def bidirectionalreferralform(request, id):
+    if request.method == 'POST':
+        pass
+
+    init_data = RegPerson.objects.filter(pk=id)
+    check_fields = ['sex_id']
+    vals = get_dict(field_name=check_fields)
+    form = BIDIRECTIONALREFERRALFORM(initial={'person': id})
+    return  render(request,
+                   'forms/bidirectionalreferralform.html',
+                    {'form': form, 'init_data': init_data,
+                     'vals': vals})
+
+
+
+    # try:
+    #     init_data = RegPerson.objects.filter(pk=id)
+    #     check_fields = ['sex_id']
+    #     vals = get_dict(field_name=check_fields)
+    #     print(vals)
+    #     form = BIDIRECTIONALREFERRALFORM(initial={'person': id})
+    # except:
+    #     pass
+    #
+
+    # if request.method == 'POST':
+    #     pass
+    # # BIDIRECTIONALREFERRALFORM
+    # bi_direction = BIDIRECTIONALREFERRALFORM()
+    # return render(request, "forms/bidirectionalreferralform.html", context={
+    #     'bi-dire': bi_direction,
+    # })
