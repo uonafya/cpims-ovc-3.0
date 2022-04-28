@@ -181,14 +181,14 @@
                                                         <td width="80%">
                                                             <h5 class="m-t-0 m-b-5">Have you ever talked to your child about HIV/AIDS?</h5>
                                                         </td>
-                                                        <td>{{ form.WB_AD_HE_15_1 }}</td>
+                                                        <td>{{ form.WB_AD_HE_15_2 }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td class="col-md-1 p-r-5">11</td>
                                                         <td width="80%">
                                                             <h5 class="m-t-0 m-b-5">Have you ever talked to your child over sexually transmitted infections?</h5>
                                                         </td>
-                                                        <td>{{ form.WB_AD_HE_15_2 }}</td>
+                                                        <td>{{ form.WB_AD_HE_15_3 }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td class="col-md-1 p-r-5" colspan="1" rowspan="2">12</td>
@@ -300,15 +300,9 @@
                                                         <td width="80%">
                                                             <h5 class="m-t-0 m-b-5">I am happy with my child and I get along.</h5>
                                                         </td>
-                                                        <td>{{ form.WB_AD_THO_16_5}}</td>
+                                                        <td>{{ form.WB_AD_THO_16_6}}</td>
                                                     </tr>
                                                     <br>
-                                                    <tr>
-                                                        <td colspan="3">
-                                                            <center><i>Thank you for filling this form and participating in this forum</i>
-                                                            </center>
-                                                        </td>
-                                                    </tr>
 
                                                 </tbody>
                                             </table>
@@ -339,94 +333,87 @@
 
 
 
-<!--            <div>-->
-<!--                    <table class="table" border="1" id="past-hst">-->
-<!--                            <thead>-->
-<!--                                <tr>-->
-<!--                                    <th colspan="3">CURRENT HIV STATUS</th>-->
-<!--                                    <th colspan="8">HIV RISK ASSESSMENT</th>-->
-<!--                                    <th colspan="8">PROGRESS MONITORING</th>-->
-<!--                                </tr>-->
+            <div>
+                    <table class="table" border="1" id="past-hst">
+                            <thead>
+                                <tr>
+                                    <th colspan="3">About your child</th>
+                                    <th colspan="5">Child's TV viewing</th>
+                                    <th colspan="12">Issues on sex, HIV, STIs</th>
+                                    <th colspan="6">Thoughts and feelings about child on sex issues</th>
+                                </tr>
 
-<!--                                <tr>-->
-<!--                                        &lt;!&ndash; <th>Q 1a</th> &ndash;&gt;-->
-<!--                                        <th>Q 1b</th>-->
-<!--                                        <th>Q 1c</th>-->
-<!--                                        <th>Q 1</th>-->
-<!--                                        <th>Q 2</th>-->
-<!--                                        <th>Q 3</th>-->
-<!--                                        <th>Q 4</th>-->
-<!--                                        <th>Q 5</th>-->
-<!--                                        <th>Q 6</th>-->
-<!--                                        <th>Q 7</th>-->
-<!--                                        <th>Q 8</th>-->
-<!--                                        <th>Q 1</th>-->
-<!--                                        <th>Q 2</th>-->
-<!--                                        <th>Q 3</th>-->
-<!--                                         <th>Q 3b</th>-->
-<!--                                        <th>Q 4</th>-->
-<!--                                        <th>Q 5</th>-->
-<!--                                        <th>Q 1</th>-->
-<!--                                        <th>Q 2</th>-->
-<!--                                        <th>Q 3</th>-->
-<!--                                        <th>Q 3b</th>-->
-<!--                                        <th>Q 4</th>-->
-<!--                                        <th>Q 5</th>-->
-<!--                                        <th>Q 1</th>-->
-<!--                                        <th>Q 2</th>-->
-<!--                                        <th>Q 3</th>-->
-<!--                                        <th>Q 3b</th>-->
-<!--                                        <th>Q 4</th>-->
-<!--                                        <th>Q 5</th>-->
-<!--                                        <th>Date of Event</th>-->
-<!--                                  </tr>-->
-<!--                            </thead>-->
-<!--&lt;!&ndash;                    {% if hiv_screen %}&ndash;&gt;-->
+                                <tr>
+                                        <th>Q 1</th>
+                                        <th>Q 2</th>
+                                        <th>Q 3</th>
+                                        <th>Q 4</th>
+                                        <th>Q 5</th>
+                                        <th>Q 6</th>
+                                        <th>Q 7</th>
+                                        <th>Q 8</th>
+                                        <th>Q 9</th>
+                                        <th>Q 10</th>
+                                        <th>Q 11</th>
+                                        <th>Q 12a</th>
+                                        <th>Q 12b</th>
+                                        <th>Q 13</th>
+                                        <th>Q 14</th>
+                                        <th>Q 15</th>
+                                        <th>Q 16</th>
+                                        <th>Q 17</th>
+                                        <th>Q 18</th>
+                                        <th>Q 19</th>
+                                        <th>Q 20</th>
+                                        <th>Q 21</th>
+                                        <th>Q 22</th>
+                                        <th>Q 23</th>
+                                        <th>Q 24</th>
+                                        <th>Q 25</th>
+                                        <th>Date of Event</th>
+                                  </tr>
+                            </thead>
+                    {% if fmp_evaluation %}
 
-<!--&lt;!&ndash;                    {% for one_screening_data in hiv_screen %}&ndash;&gt;-->
+                    {% for one_evaluation_data in fmp_evaluation %}
 
-<!--                           <tbody>-->
-<!--                                 <tr>-->
-<!--                              &lt;!&ndash; <td>{{one_screening_data.date_of_event}}</td> &ndash;&gt;-->
-<!--                              <td>Yes</td>-->
-<!--                              <td>No</td>-->
-<!--                              <td>Yes</td>-->
-<!--                              <td>No</td>-->
-<!--                              <td>sometimes</td>-->
-<!--                              <td>a lot of times</td>-->
-<!--                              <td>all the time</td>-->
-<!--                              <td>not true</td>-->
-<!--                              <td>very true</td>-->
-<!--                              <td>sometimes true</td>-->
-<!--                              <td>sometimes</td>-->
-<!--                              <td>a lot of times</td>-->
-<!--                              <td>all the time</td>-->
-<!--                              <td>not true</td>-->
-<!--                              <td>very true</td>-->
-<!--                              <td>sometimes true</td>-->
-<!--                              <td>Yes</td>-->
-<!--                              <td>No</td>-->
-<!--                              <td>Yes</td>-->
-<!--                              <td>No</td>-->
-<!--                              <td>sometimes</td>-->
-<!--                              <td>a lot of times</td>-->
-<!--                                <td>Yes</td>-->
-<!--                              <td>No</td>-->
-<!--    &lt;!&ndash;                          <td>Yes</td>&ndash;&gt;-->
-<!--    &lt;!&ndash;                          <td>No</td>&ndash;&gt;-->
-<!--    &lt;!&ndash;                          <td>sometimes</td>&ndash;&gt;-->
-<!--    &lt;!&ndash;                          <td>a lot of times</td>&ndash;&gt;-->
-<!--    &lt;!&ndash;                          <td>12-07-2020</td>&ndash;&gt;-->
-<!--                            </tr>-->
-<!--                           </tbody>-->
-<!--&lt;!&ndash;                    {% endfor %}&ndash;&gt;-->
-<!--&lt;!&ndash;                    {% else %}&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <h3>No data available</h3>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                    {% endif %}&ndash;&gt;-->
-<!--                </table>-->
-<!--            </div>-->
+                        <tr>
+                            <td>{{one_evaluation_data.caregiver_know_where}}</td>
+                            <td>{{one_evaluation_data.caregiver_know_what}}</td>
+                            <td>{{one_evaluation_data.caregiver_know_who}}</td>
+                            <td>{{one_evaluation_data.child_watch_often}}</td>
+                            <td>{{one_evaluation_data.what_program}}</td>
+                            <td>{{one_evaluation_data.specific_program}}</td>
+                            <td>{{one_evaluation_data.talk_on_topic}}</td>
+                            <td>{{one_evaluation_data.watch_with_child}}</td>
+                            <td>{{one_evaluation_data.talk_on_sex}}</td>
+                            <td>{{one_evaluation_data.talk_on_hiv}}</td>
+                            <td>{{one_evaluation_data.talk_on_sti}}</td>
+                            <td>{{one_evaluation_data.other_sexual_issues}}</td>
+                            <td>{{one_evaluation_data.if_yes}}</td>
+                            <td>{{one_evaluation_data.child_asks}}</td>
+                            <td>{{one_evaluation_data.if_asks}}</td>
+                            <td>{{one_evaluation_data.comfortable}}</td>
+                            <td>{{one_evaluation_data.how_talk}}</td>
+                            <td>{{one_evaluation_data.enough_information}}</td>
+                            <td>{{one_evaluation_data.talk_bad_things}}</td>
+                            <td>{{one_evaluation_data.ask_questions}}</td>
+                            <td>{{one_evaluation_data.thoughts_on_sex}}</td>
+                            <td>{{one_evaluation_data.ready_to_learn}}</td>
+                            <td>{{one_evaluation_data.still_young}}</td>
+                            <td>{{one_evaluation_data.have_someone}}</td>
+                            <td>{{one_evaluation_data.guardian_responsibility}}</td>
+                            <td>{{one_evaluation_data.happy_with_child}}</td>
+                            <td>{{one_evaluation_data.date_of_event}}</td>
+                        </tr>
+                    {% endfor %}
+                    {% else %}
+                    <div>
+                        <h3>No data available</h3>
+                    </div>
+                    {% endif %}
+                </table>
+            </div>
             <div class="badge pull-right m-4">Revised: Feb 23rd 2019</div>
         </div>
 <!--        </div>-->

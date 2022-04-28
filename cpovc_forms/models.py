@@ -1400,3 +1400,43 @@ class OVCCaseLocation(models.Model):
     def __unicode__(self):
         """To be returned by admin actions."""
         return '%s' % (str(self.case))
+
+
+class OVCFMPEvaluation(models.Model):
+    evaluation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    form_type = models.CharField(max_length=20, null=True)
+    caregiver_know_where = models.CharField(max_length=50, null=True)
+    caregiver_know_what = models.CharField(max_length=50, null=True)
+    caregiver_know_who = models.CharField(max_length=50, null=True)
+    child_watch_often = models.CharField(max_length=50, null=True)
+    what_program = models.CharField(max_length=50, null=True)
+    specific_program = models.CharField(max_length=50, null=True)
+    talk_on_topic = models.CharField(max_length=50, null=True)
+    watch_with_child = models.CharField(max_length=50, null=True)
+    talk_on_sex = models.CharField(max_length=50, null=True)
+    talk_on_hiv = models.CharField(max_length=50, null=True)
+    talk_on_sti = models.CharField(max_length=50, null=True)
+    other_sexual_issues = models.CharField(max_length=50, null=True)
+    if_yes = models.CharField(max_length=50, null=True)
+    child_asks = models.CharField(max_length=50, null=True)
+    if_asks = models.CharField(max_length=50, null=True)
+    comfortable = models.CharField(max_length=50, null=True)
+    how_talk = models.CharField(max_length=50, null=True)
+    enough_information = models.CharField(max_length=50, null=True)
+    talk_bad_things = models.CharField(max_length=50, null=True)
+    ask_questions = models.CharField(max_length=50, null=True)
+    thoughts_on_sex = models.CharField(max_length=50, null=True)
+    ready_to_learn = models.CharField(max_length=50, null=True)
+    still_young = models.CharField(max_length=50, null=True)
+    have_someone = models.CharField(max_length=50, null=True)
+    guardian_responsibility = models.CharField(max_length=50, null=True)
+    happy_with_child = models.CharField(max_length=50, null=True)
+
+    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+    date_of_event = models.DateField(default=timezone.now, null=True)### date
+    timestamp_created = models.DateTimeField(auto_now_add=True)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ovc_fmp_evaluation'
