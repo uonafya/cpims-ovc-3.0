@@ -2,7 +2,7 @@
 
 
 // validBench(['if_ovc', 'cp1q', 'cp3q', 'cp4q'], ['AYES','AYES','AYES','AYES'], 'cp1b');
-validBench(['cp1q', 'cp3q', 'cp4q'], ['AYES','AYES','AYES'], 'cp1b');
+validBench(['cphealth1', 'cphealth2', 'cphealth3', 'cphealth4', 'cphealth5'], ['AYES','AYES','AYES','AYES','AYES'], 'cp1b');
 // validBench(['cp5q', 'cp6q', 'cp7q'], ['AYES','AYES','AYES'], 'cp2b');
 validBench(['cp7q'], ['AYES'], 'cp2b');
 // validBench(['u10_know_status', 'cp8q', 'cp9q', 'cp10q', 'cp11q', 'cp12q', 'o10_know_status', 'cp13q', 'cp14q', 'cp15q', 'cp16q', 'cp17q'], ['AYES','AYES','AYES', 'AYES','AYES','AYES', 'AYES','AYES','AYES', 'AYES','AYES','AYES'], 'cp3b');
@@ -35,7 +35,7 @@ validDate('cp2q','cp1q','ANNO','AYES');
 validDate('children_rsk_hiv_assess_date','cp1q','ANNO','AYES');
 
 var benchmarkScore = 0;
-$('input[name=cp74q]').attr('readonly', true);
+$('input[name=cp74q],input[name=cp75q],input[name=cp76q],input[name=cp77q],input[name=cp78q],input[name=cp79q]').attr('readonly', true);
 
 // disable benchmark editing 
 // $('input[name=cp1b]').attr('disabled', true);
