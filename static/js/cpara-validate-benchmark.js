@@ -1,43 +1,35 @@
 // validBench(['cp3d','cp4d','cp5d','cp6d','if_ovc', 'cp1q', 'cp3q', 'cp4q'], ['AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'cp1b');
 
 
-// validBench(['if_ovc', 'cp1q', 'cp3q', 'cp4q'], ['AYES','AYES','AYES','AYES'], 'cp1b');
+// Healthy Goal 1 >> Benchmark 1
 validBench(['cphealth1', 'cphealth2', 'cphealth3', 'cphealth4', 'cphealth5'], ['AYES','AYES','AYES','AYES','AYES'], 'cp1b');
-// validBench(['cp5q', 'cp6q', 'cp7q'], ['AYES','AYES','AYES'], 'cp2b');
-validBench(['cp7q'], ['AYES'], 'cp2b');
-// validBench(['u10_know_status', 'cp8q', 'cp9q', 'cp10q', 'cp11q', 'cp12q', 'o10_know_status', 'cp13q', 'cp14q', 'cp15q', 'cp16q', 'cp17q'], ['AYES','AYES','AYES', 'AYES','AYES','AYES', 'AYES','AYES','AYES', 'AYES','AYES','AYES'], 'cp3b');
-validBench(['cp8q', 'cp9q', 'cp10q', 'cp11q', 'cp12q', 'o10_know_status', 'cp13q', 'cp14q', 'cp15q', 'cp16q', 'cp17q'], ['AYES','AYES', 'AYES','AYES','AYES', 'AYES','AYES','AYES', 'AYES','AYES','AYES'], 'cp3b');
-// validBench(['adole_preg_hiv', 'cp19q', 'adole_preg_testpos', 'cp20q', 'cp21q', 'adole_wo_deliv','cp22q','cp23q','cp23qa','cp23qb','cp23qc','cp23qd'], ['AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'cp4b');
-validBench(['cp19q','cp20q','cp21q','cp22q','cp23q'], ['AYES','AYES','AYES','AYES','AYES'], 'cp4b');
-///////////////////////////////////////////////validBench(['cp19q', 'adole_preg_testpos', 'cp20q', 'cp21q', 'adole_wo_deliv','cp22q','cp23q','cp23qa','cp23qb','cp23qc','cp23qd'], ['AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'cp4b');
-// validBench(['adole_gb_hse', 'cp24q', 'cp25q','cp26q','cp27q','cp28q','cp29q'], ['AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'cp5b');
-validBench(['cp24q', 'cp25q','cp26q','cp27q','cp28q','cp29q'], ['AYES','AYES','AYES','AYES','AYES','AYES'], 'cp5b');
-// validBench(['child_w_disab_hse', 'cp30q', 'cp31q'], ['AYES','AYES','AYES'], 'cp6b');
-validBench(['cp30q', 'cp31q'], ['AYES','AYES'], 'cp6b');
-validBench(['cp32q', 'cp33q', 'cp35q'], ['AYES','AYES','AYES'], 'cp7b');
-validBench(['cp36q', 'cp37q', 'cp38q'], ['AYES','AYES','AYES'], 'cp8b');
-validBench(['cp39q', 'cp40q'], ['AYES','AYES'], 'cp9b');
-validBench(['cp41q', 'cp42q', 'cp43q'], ['AYES','AYES','AYES'], 'cp10b');
-// validBench(['child_hd_hse', 'cp44q', 'cp45q','cp46q','cp47q','cp48q'], ['AYES','AYES','AYES','AYES','AYES','AYES'], 'cp11b');
-validBench(['cp44q', 'cp45q','cp46q','cp47q','cp48q'], ['AYES','AYES','AYES','AYES','AYES'], 'cp11b');
-validBench(['cp49q', 'cp50q', 'cp51q', 'o5y_cd_hse', 'cp52q', 'cp53q', 'cp54q'], ['AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'cp12b');
-// validBench(['cld_rsk_abus', 'cp55q', 'cp56q', 'cp57q', 'cp58q', 'cp59q'], ['AYES','AYES','AYES','AYES','AYES','AYES'], 'cp13b');
-validBench(['cp55q', 'cp56q', 'cp57q', 'cp58q', 'cp59q'], ['AYES','AYES','AYES','AYES','AYES'], 'cp13b');
-validBench(['cp60q', 'cp61q'], ['AYES','AYES'], 'cp14b');
-validBench(['cp62q', 'cp63q','cp64q','cp65q'], ['AYES','AYES','AYES','AYES'], 'cp15b');
-validBench(['cp66q', 'cp67q','cp68q','cp69q','cp70q'], ['AYES','AYES','AYES','AYES','AYES'], 'cp16b');
-// validBench(['adole_in_vc_train', 'cp71q','cp72q','cp73q'], ['AYES','AYES','AYES','AYES'], 'cp17b');
-validBench(['cp71q','cp72q','cp73q'], ['AYES','AYES','AYES'], 'cp17b');
+// Healthy Goal 2 >> Benchmark 2
+validBench(['cphealth6','cphealth7','cphealth8','cphealth9','cphealth10','cphealth11','cphealth12','cphealth13','cphealth14'], ['AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'cp2b');
+// Healthy Goal 3 >> Benchmark 3
+validBench(['cphealth18','cphealth19','cphealth20'],['AYES','AYES','AYES'],'cp3b')
+// Healthy Goal 4 >> Benchmark 4
+validBench(['cphealth21', 'cphealth22', 'cphealth23', 'cphealth24'], ['AYES','AYES', 'AYES','AYES'], 'cp4b');
+// Stable: Goal 5:
+validBench(['cpstable1','cpstable2','cpstable3'], ['AYES','AYES','AYES'], 'cp5b');
+// Safe: Goal 6:Benchmark 6
+validBench(['cpsafe1','cpsafe2','cpsafe3','cpsafe4','cpsafe5'],['AYES','AYES','AYES','AYES', 'AYES'],'cp6b')
+// Safe: Benchmark 7:
+validBench(['cpsafe8','cpsafe9'],['AYES','AYES'],'cp7b')
+// Safe: Goal 8:
+validBench(['cpsafe10'],['AYES'],'cp8b')
+// Schooled: Goal 8: Benachmark 9
+validBench(['cpschool1','cpschool2','cpschool3','cpschool4'],['AYES','AYES','AYES','AYES'],'cp9b')
 
 
 validDate('cp2d','cp1d','AYES','ANNO');
-validDate('cp2q','cp1q','ANNO','AYES');
+// validDate('cp2q','cp1q','ANNO','AYES');
 validDate('children_rsk_hiv_assess_date','cp1q','ANNO','AYES');
 
 var benchmarkScore = 0;
 $('input[name=cp74q],input[name=cp75q],input[name=cp76q],input[name=cp77q],input[name=cp78q],input[name=cp79q]').attr('readonly', true);
 
 // disable benchmark editing 
+
 // $('input[name=cp1b]').attr('disabled', true);
 $('input[name=cp1b]').click(function(){return false;});
 
@@ -65,29 +57,29 @@ $('input[name=cp8b]').click(function(){return false;});
 // $('input[name=cp9b]').attr('disabled', true);
 $('input[name=cp9b]').click(function(){return false;});
 
-// $('input[name=cp10b]').attr('disabled', true);
-$('input[name=cp10b]').click(function(){return false;});
+// // $('input[name=cp10b]').attr('disabled', true);
+// $('input[name=cp10b]').click(function(){return false;});
 
-// $('input[name=cp11b]').attr('disabled', true);
-$('input[name=cp11b]').click(function(){return false;});
+// // $('input[name=cp11b]').attr('disabled', true);
+// $('input[name=cp11b]').click(function(){return false;});
 
-// $('input[name=cp12b]').attr('disabled', true);
-$('input[name=cp12b]').click(function(){return false;});
+// // $('input[name=cp12b]').attr('disabled', true);
+// $('input[name=cp12b]').click(function(){return false;});
 
-// $('input[name=cp13b]').attr('disabled', true);
-$('input[name=cp13b]').click(function(){return false;});
+// // $('input[name=cp13b]').attr('disabled', true);
+// $('input[name=cp13b]').click(function(){return false;});
 
-// $('input[name=cp14b]').attr('disabled', true);
-$('input[name=cp14b]').click(function(){return false;});
+// // $('input[name=cp14b]').attr('disabled', true);
+// $('input[name=cp14b]').click(function(){return false;});
 
-// $('input[name=cp15b]').attr('disabled', true);
-$('input[name=cp15b]').click(function(){return false;});
+// // $('input[name=cp15b]').attr('disabled', true);
+// $('input[name=cp15b]').click(function(){return false;});
 
-// $('input[name=cp16b]').attr('disabled', true);
-$('input[name=cp16b]').click(function(){return false;});
+// // $('input[name=cp16b]').attr('disabled', true);
+// $('input[name=cp16b]').click(function(){return false;});
 
-// $('input[name=cp17b]').attr('disabled', true);
-$('input[name=cp17b]').click(function(){return false;});
+// // $('input[name=cp17b]').attr('disabled', true);
+// $('input[name=cp17b]').click(function(){return false;});
 
 
 // disable benchmark editing
@@ -142,47 +134,52 @@ $('input[type=radio]').change(function (e) {
     else{cp9b = 0;}
     console.log('benchScore cp9b=> '+cp9b);
 
-    var cp10b = $('input[name=cp10b]:checked').val();
-    if(cp10b === 'AYES'){cp10b = 1;}
-    else{cp10b = 0;}
-    console.log('benchScore cp10b=> '+cp10b);
+    // var cp10b = $('input[name=cp10b]:checked').val();
+    // if(cp10b === 'AYES'){cp10b = 1;}
+    // else{cp10b = 0;}
+    // console.log('benchScore cp10b=> '+cp10b);
 
-    var cp11b = $('input[name=cp11b]:checked').val();
-    if(cp11b === 'AYES'){cp11b = 1;}
-    else{cp11b = 0;}
-    console.log('benchScore cp11b=> '+cp11b);
+    // var cp11b = $('input[name=cp11b]:checked').val();
+    // if(cp11b === 'AYES'){cp11b = 1;}
+    // else{cp11b = 0;}
+    // console.log('benchScore cp11b=> '+cp11b);
 
-    var cp12b = $('input[name=cp12b]:checked').val();
-    if(cp12b === 'AYES'){cp12b = 1;}
-    else{cp12b = 0;}
-    console.log('benchScore cp12b=> '+cp12b);
+    // var cp12b = $('input[name=cp12b]:checked').val();
+    // if(cp12b === 'AYES'){cp12b = 1;}
+    // else{cp12b = 0;}
+    // console.log('benchScore cp12b=> '+cp12b);
 
-    var cp13b = $('input[name=cp13b]:checked').val();
-    if(cp13b === 'AYES'){cp13b = 1;}
-    else{cp13b = 0;}
-    console.log('benchScore cp13b=> '+cp13b);
+    // var cp13b = $('input[name=cp13b]:checked').val();
+    // if(cp13b === 'AYES'){cp13b = 1;}
+    // else{cp13b = 0;}
+    // console.log('benchScore cp13b=> '+cp13b);
 
-    var cp14b = $('input[name=cp14b]:checked').val();
-    if(cp14b === 'AYES'){cp14b = 1;}
-    else{cp14b = 0;}
-    console.log('benchScore cp14b=> '+cp14b);
+    // var cp14b = $('input[name=cp14b]:checked').val();
+    // if(cp14b === 'AYES'){cp14b = 1;}
+    // else{cp14b = 0;}
+    // console.log('benchScore cp14b=> '+cp14b);
 
-    var cp15b = $('input[name=cp15b]:checked').val();
-    if(cp15b === 'AYES'){cp15b = 1;}
-    else{cp15b = 0;}
-    console.log('benchScore cp15b=> '+cp15b);
+    // var cp15b = $('input[name=cp15b]:checked').val();
+    // if(cp15b === 'AYES'){cp15b = 1;}
+    // else{cp15b = 0;}
+    // console.log('benchScore cp15b=> '+cp15b);
 
-    var cp16b = $('input[name=cp16b]:checked').val();
-    if(cp16b === 'AYES'){cp16b = 1;}
-    else{cp16b = 0;}
-    console.log('benchScore cp16b=> '+cp16b);
+    // var cp16b = $('input[name=cp16b]:checked').val();
+    // if(cp16b === 'AYES'){cp16b = 1;}
+    // else{cp16b = 0;}
+    // console.log('benchScore cp16b=> '+cp16b);
 
-    var cp17b = $('input[name=cp17b]:checked').val();
-    if(cp17b === 'AYES'){cp17b = 1;}
-    else{cp17b = 0;}
-    console.log('benchScore cp17b=> '+cp17b);
+    // var cp17b = $('input[name=cp17b]:checked').val();
+    // if(cp17b === 'AYES'){cp17b = 1;}
+    // else{cp17b = 0;}
+    // console.log('benchScore cp17b=> '+cp17b);
     
-    benchmarkScore =  parseFloat(cp1b) + parseFloat(cp2b) + parseFloat(cp3b) + parseFloat(cp4b) + parseFloat(cp5b) + parseFloat(cp6b) + parseFloat(cp7b) + parseFloat(cp8b) + parseFloat(cp9b) + parseFloat(cp10b) + parseFloat(cp11b) + parseFloat(cp12b) + parseFloat(cp13b) + parseFloat(cp14b) + parseFloat(cp15b) + parseFloat(cp16b) + parseFloat(cp17b);
+    benchmarkScore =  parseFloat(cp1b) + parseFloat(cp2b) + parseFloat(cp3b) + parseFloat(cp4b) + parseFloat(cp5b) + parseFloat(cp6b) + parseFloat(cp7b) + parseFloat(cp8b) + parseFloat(cp9b) // + parseFloat(cp10b) + parseFloat(cp11b) + parseFloat(cp12b) + parseFloat(cp13b) + parseFloat(cp14b) + parseFloat(cp15b) + parseFloat(cp16b) + parseFloat(cp17b);
+    healthScore = parseFloat(cp1b)+parseFloat(cp2b)+parseFloat(cp3b)+parseFloat(cp4b)
+    stableScore = parseFloat(cp5b)
+    safeScore = parseFloat(cp6b)+parseFloat(cp7b)+parseFloat(cp8b)
+    schoolScore = parseFloat(cp9b)
+
     console.log('TOTAL benchScore=> '+benchmarkScore);
     
     var bench_array = [];
@@ -196,15 +193,21 @@ $('input[type=radio]').change(function (e) {
     bench_array.push( cp7b );
     bench_array.push( cp8b );
     bench_array.push( cp9b );
-    bench_array.push( cp10b );
-    bench_array.push( cp11b );
-    bench_array.push( cp12b );
-    bench_array.push( cp13b );
-    bench_array.push( cp14b );
-    bench_array.push( cp15b );
-    bench_array.push( cp16b );
-    bench_array.push( cp17b );
-    $('input[name=cp74q]').val(benchmarkScore);
+    // bench_array.push( cp10b );
+    // bench_array.push( cp11b );
+    // bench_array.push( cp12b );
+    // bench_array.push( cp13b );
+    // bench_array.push( cp14b );
+    // bench_array.push( cp15b );
+    // bench_array.push( cp16b );
+    // bench_array.push( cp17b );
+    $('input[name=cp74q]').val(benchmarkScore); //  Overall number of points
+
+    $('input[name=p75q]').val(healthScore); // Healthy Domain
+    $('input[name=p76q]').val(stableScore); // Stable Domain
+    $('input[name=p77q]').val(safeScore); // Safe Domain
+    $('input[name=p78q]').val(schoolScore); // Schooled Domain
+    $('input[name=p79q]').val(healthScore+stableScore+safeScore+schoolScore); //Total Score
     $('input[name=bench_array]').val(JSON.stringify(bench_array));
     console.log('benchmark_score => '+JSON.stringify(bench_array));
     
@@ -304,7 +307,7 @@ function validBench(arrayOfInputsToCheck, arrayOfExpectedValues, idOfBenchmarkQn
 }
 
 function markBenchmark(benchmarkId, passOrFail) {
-    console.log('marking benchmark')
+    console.log('marking benchmark' +benchmarkId)
     if(passOrFail){
         // $('input[name="'+benchmarkId+'"][value="AYES"]').attr('checked', true);
         $('input[name='+benchmarkId+']').removeAttr('disabled');

@@ -8671,7 +8671,7 @@ def new_cpara(request, id):
         )
         questions = OVCCareQuestions.objects.filter(code__startswith='cp')
         exceptions = ['cp2d', 'cp2q', 'cp74q', 'cp34q', 'cp18q']
-        for question in questions:
+        for question in questions:  
             save_cpara_form_by_domain(
                 id=id,
                 question=question,
@@ -10005,7 +10005,9 @@ def new_dreamsform(request, id):
 
 def new_cpara_upgrade(request, id):
     if request.method == 'POST':
-        pass
+        data = request.POST
+
+    child = RegPerson.objects.get(id=id)
     form= CparaAssessmentUpgrade()
     
     siblings = RegPersonsSiblings.objects.select_related().filter(
@@ -10014,7 +10016,6 @@ def new_cpara_upgrade(request, id):
         sibling_person=id, is_void=False, date_delinked=None)
     oguardians = RegPersonsGuardians.objects.select_related().filter(
         guardian_person=id, is_void=False, date_delinked=None)
-    child = RegPerson.objects.get(id=id)
     ovc_id = int(id)
     creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
