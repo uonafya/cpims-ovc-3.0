@@ -24,7 +24,7 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-
+    
     HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,  FmpPostEvaluation)
 
 
@@ -10185,13 +10185,86 @@ def edit_fmppostevaluation(request, id):
 
    try:
        fmpdata = OVCFMPEvaluation.objects.get(evaluation_id=id)
+       if request.method == 'POST':
+           formtype = request.POST.get("FORMS_CHOICES")
+           q1 = request.POST.get("WB_AD_PLC_7")
+           q2 = request.POST.get("WB_AD_PLC_8_1")
+           q3 = request.POST.get("WB_AD_PLC_9_1")
+           q4 = request.POST.get("WB_AD_TV_13_1")
+           q5 = request.POST.get("WB_AD_TV_13_2")
+           q6 = request.POST.get("WB_AD_TV_13_3")
+           q7 = request.POST.get("WB_AD_TV_13_4")
+           q8 = request.POST.get("WB_AD_TV_13_5")
+           q9 = request.POST.get("WB_AD_HE_15_1")
+           q10 = request.POST.get("WB_AD_HE_15_2")
+           q11 = request.POST.get("WB_AD_HE_15_3")
+           q12a = request.POST.get("WB_AD_HE_15_4")
+           q12b = request.POST.get("WB_AD_HE_15_4_1")
+           q13 = request.POST.get("WB_AD_HE_15_5")
+           q14 = request.POST.get("WB_AD_HE_15_6")
+           q15 = request.POST.get("WB_AD_HE_15_8")
+           q16 = request.POST.get("WB_AD_HE_15_9")
+           q17 = request.POST.get("WB_AD_HE_15_10")
+           q18 = request.POST.get("WB_AD_HE_15_11")
+           q19 = request.POST.get("WB_AD_HE_15_12")
+           q20 = request.POST.get("WB_AD_THO_16_1")
+           q21 = request.POST.get("WB_AD_THO_16_2")
+           q22 = request.POST.get("WB_AD_THO_16_3")
+           q23 = request.POST.get("WB_AD_THO_16_4")
+           q24 = request.POST.get("WB_AD_THO_16_5")
+           q25 = request.POST.get("WB_AD_THO_16_6")
+
+           # household_id = request.POST.get('household_id')
+           # hse_uuid = uuid.UUID(household_id)
+           # house_holds = OVCHouseHold.objects.get(pk=hse_uuid)
+
+           # Save all details from the Bursary form
+
+           fmpdata.form_type = formtype,
+           fmpdata.caregiver_know_where = q1,
+           fmpdata.caregiver_know_what = q2,
+           fmpdata.caregiver_know_who = q3,
+           fmpdata.child_watch_often = q4,
+           fmpdata.save()
+
+       # fmpdata = OVCFMPEvaluation.objects.get(evaluation_id=id)
+       fmp={
+           'FORMS_CHOICES': fmpdata.form_type,
+           'WB_AD_PLC_7':   fmpdata.caregiver_know_where,
+           'WB_AD_PLC_8_1': fmpdata.caregiver_know_what,
+           'WB_AD_PLC_9_1': fmpdata.caregiver_know_who,
+           'WB_AD_TV_13_1': fmpdata.child_watch_often,
+           'WB_AD_TV_13_2': fmpdata.what_program,
+           'WB_AD_TV_13_3': fmpdata.specific_program,
+           'WB_AD_TV_13_4': fmpdata.talk_on_topic,
+           'WB_AD_TV_13_5': fmpdata.watch_with_child,
+           'WB_AD_HE_15_1': fmpdata.talk_on_sex,
+           'WB_AD_HE_15_2': fmpdata.talk_on_hiv,
+           'WB_AD_HE_15_3': fmpdata.talk_on_sti,
+           'WB_AD_HE_15_4': fmpdata.other_sexual_issues,
+           'WB_AD_HE_15_4_1': fmpdata.if_yes,
+           'WB_AD_HE_15_5': fmpdata.child_asks,
+           'WB_AD_HE_15_6': fmpdata.if_asks,
+           'WB_AD_HE_15_8': fmpdata.comfortable,
+           'WB_AD_HE_15_9': fmpdata.how_talk,
+           'WB_AD_HE_15_10': fmpdata.enough_information,
+           'WB_AD_HE_15_11': fmpdata.talk_bad_things,
+           'WB_AD_HE_15_12': fmpdata.ask_questions,
+           'WB_AD_THO_16_1': fmpdata.thoughts_on_sex,
+           'WB_AD_THO_16_2': fmpdata.ready_to_learn,
+           'WB_AD_THO_16_3': fmpdata.still_young,
+           'WB_AD_THO_16_4': fmpdata.have_someone,
+           'WB_AD_THO_16_5': fmpdata.guardian_responsibility,
+           'WB_AD_THO_16_6': fmpdata.happy_with_child
+       }
+
    except Exception as e:
        print("error with OVC viewing - %s" % (str(e)))
        # raise e
        msg = "Error occured during ovc edit"
        messages.error(request, msg)
 
-   form = FmpPostEvaluation()
+   form = FmpPostEvaluation(data=fmp)
    return render(request, 'forms/edit_fmppostevaluation.html', {'form': form, 'fmpdata':fmpdata, 'status': 200})
 
 
@@ -10200,11 +10273,4 @@ def delete_evaluation(request, id):
    new_eval.delete()
    return redirect('new_fmppostevaluation',  id=60)
 
-# def update_evaluation(request, id):
-#   new_update = OVCFMPEvaluation.objects.get(evaluation_id=id)
-#   template = loader.get_template('edit_fmppostevaluation.html')
-#   context = {
-#     'new_update': new_update,
-#   }
-#   return redirect('new_fmppostevaluation')
 

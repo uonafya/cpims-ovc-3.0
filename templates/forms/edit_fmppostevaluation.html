@@ -46,7 +46,6 @@
     <i class="fa fa-info fa-2x pull-left"></i>
     <span class="invalid-form-message" id="invalid-form-message"></span>
 </div>
-<!--<h4>{{fmpdata.evaluation_id}}</h4>-->
 <!-- begin row -->
 <div id='case_details' class="row">
     <!-- begin col-12 -->
@@ -309,7 +308,7 @@
                         <div class="form-group">
                             <label class="control-label col-md-4 col-sm-4"></label>
                             <div class="col-md-6 col-sm-6">
-                                <a href=""><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;update</button></a>
+                                <button type="submit" class="btn btn-sm btn-success m-r-5">update</button></a></td>
                                 <a href="javascript:history.go(-1)" class="btn btn-white">Cancel</a>
                             </div>
                         </div>
@@ -364,22 +363,16 @@
             }
         };
 
-
-
-
     };
 </script>
 
-<script>
-
-
-</script>
 
 <script>
     $( function() {
       $( "#WB_AD_GEN_4_1" ).datepicker({ format: 'yyyy-mm-dd' }).val();
     } );
 </script>
+
 
 
 {% endblock %}
