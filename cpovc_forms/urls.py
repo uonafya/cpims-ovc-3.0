@@ -177,4 +177,7 @@ urlpatterns = [
        # New Cpara upgrade Form
     re_path('cpara_upgrade/new/(?P<id>\d+)/', views.new_cpara_upgrade, name='new_cpara_upgrade'),
 
+       # New Graduation Monitoring Tool
+    path('grad_monitor/new/<int:id>/', views.grad_monitor_tool, name='grad_monitor_tool')
+
 ]

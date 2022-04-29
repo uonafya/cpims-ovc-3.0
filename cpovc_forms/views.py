@@ -27,7 +27,7 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessmentUpgrade)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessmentUpgrade,gradMonitoringToolform)
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -40,7 +40,7 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,OVCGradMonitorTool)
 
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
@@ -10006,7 +10006,7 @@ def new_dreamsform(request, id):
 def new_cpara_upgrade(request, id):
     if request.method == 'POST':
         data = request.POST
-
+        print(data)
     child = RegPerson.objects.get(id=id)
     form= CparaAssessmentUpgrade()
     
@@ -10165,3 +10165,80 @@ def new_cpara_upgrade(request, id):
                 }
 
     return render(request,'forms/new_cpara_upgrade.html',context)
+
+def grad_monitor_tool(request, id):
+    if request.method == 'POST':
+        data = request.POST
+        print(data)
+        child = RegPerson.objects.get(id=id)
+        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+        event = OVCCareEvents.objects.create(
+            event_type_id='gmt',
+            created_by=request.user.id,
+            person=child,
+            house_hold=house_hold
+        )
+        event_date = convert_date(data.get('gm1d'))
+        month = event_date.month
+        quarter = 0
+        if month in [10, 11, 12]:
+            quarter = 1
+        elif month in [1, 2, 3]:
+            quarter = 2
+        elif month in [4, 5, 6]:
+            quarter = 3
+        elif month in [7, 8, 9]:
+            quarter = 4
+        answer_value = {
+            'AYES': 'Yes',
+            'ANNO': 'No'
+        }
+        try:
+            OVCGradMonitorTool.objects.create(
+                household=house_hold,
+                hiv_status_knowledge=answer_value[data.get('cm2q')],
+                viral_suppression=answer_value[data.get('cm3q')],
+                hiv_prevention=answer_value[data.get('cm4q')],
+                undernourished=answer_value[data.get('cm5q')],
+                access_money=answer_value[data.get('cm6q')],
+                violence=answer_value[data.get('cm7q')],
+                caregiver=answer_value[data.get('cm8q')],
+                school_attendance=answer_value[data.get('cm9q')],
+                # school_progression=answer_value[data.get('cm10q')],
+                # cp_achievement=answer_value[data.get('cm11q')],
+                # case_closure=answer_value[data.get('cm12q')],
+                case_closure_checked=data.get('cm13q'),
+                succesful_exit_checked = data.get('cm14q'),
+                recommended_action_checked=data.get('cm15p'),
+                quarter=quarter,
+                event=event,
+                event_date=event_date
+            )
+        except Exception as e:
+            print('error saving graduation monitoring tool - %s' % (str(e)))
+            # return False
+        msg = 'Graduation Monitoring saved successful'
+        messages.add_message(request, messages.INFO, msg)
+        url = reverse('ovc_view', kwargs={'id': id})
+        return HttpResponseRedirect(url)
+    else:
+        form = gradMonitoringToolform()
+
+        ovc_id = int(id)
+        child = RegPerson.objects.get(is_void=False, id=ovc_id)
+        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+        creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
+        caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
+        caregiver = RegPerson.objects.get(id=caregiver_id)
+        # Show previous cpara monitoring events
+        event = OVCCareEvents.objects.filter(person_id=ovc_id).values_list('event')
+        cpara_mon_data = [] # OVCMonitoring.objects.filter(event_id__in=event).order_by('event_date')
+        context = {
+            'form': form, 
+            'care_giver': care_giver,
+            'creg':creg,
+            'caregiver':caregiver,
+            'cpara_mon_data': cpara_mon_data
+            }
+    return render(request, 'forms/new_grad_monitor_tool.html',
+                context)

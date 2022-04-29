@@ -1081,33 +1081,6 @@ class OVCMonitoring(models.Model):
     def __unicode__(self):
         return str(self.id)
 
-class OVCMonitoring11(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
-    hiv_status_knowledge = models.CharField(max_length=5)
-    viral_suppression = models.CharField(max_length=5)
-    hiv_prevention = models.CharField(max_length=5)
-    undernourished = models.CharField(max_length=5)
-    access_money = models.CharField(max_length=5)
-    violence = models.CharField(max_length=5)
-    caregiver = models.CharField(max_length=5)
-    school_attendance = models.CharField(max_length=5)
-    school_progression = models.CharField(max_length=5)
-    cp_achievement = models.CharField(max_length=5)
-    case_closure = models.CharField(max_length=5)
-    case_closure_checked =  models.CharField(max_length=5)
-    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
-    quarter = models.CharField(max_length=10, null=True, blank=True)
-    is_void = models.BooleanField(default=False)
-    event_date = models.DateField()
-    timestamp_created = models.DateTimeField(default=timezone.now)
-    timestamp_updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = 'ovc_monitoring11'
-
-    def __unicode__(self):
-        return str(self.id)
 
 
 class OVCHivStatus(models.Model):
@@ -1457,3 +1430,33 @@ class OVCCareCpara_upgrade(models.Model):
 
     def __unicode__(self):
         return str(self.cpara_id)
+
+class OVCGradMonitorTool(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
+    hiv_status_knowledge = models.CharField(max_length=5)
+    viral_suppression = models.CharField(max_length=5)
+    hiv_prevention = models.CharField(max_length=5)
+    undernourished = models.CharField(max_length=5)
+    access_money = models.CharField(max_length=5)
+    violence = models.CharField(max_length=5)
+    caregiver = models.CharField(max_length=5)
+    school_attendance = models.CharField(max_length=5)
+    school_progression = models.CharField(max_length=5)
+    cp_achievement = models.CharField(max_length=5)
+    case_closure = models.CharField(max_length=5)
+    case_closure_checked =  models.CharField(max_length=5)
+    succesful_exit_checked =  models.CharField(max_length=5)
+    recommended_action_checked =  models.CharField(max_length=500)
+    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+    quarter = models.CharField(max_length=10, null=True, blank=True)
+    is_void = models.BooleanField(default=False)
+    event_date = models.DateField()
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ovc_grad_monitor_tool'
+
+    def __unicode__(self):
+        return str(self.id)
