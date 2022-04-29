@@ -40,7 +40,7 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,OVCGradMonitorTool)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,OVCBenchmarkMonitoring)
 
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
@@ -10194,29 +10194,26 @@ def grad_monitor_tool(request, id):
             'ANNO': 'No'
         }
         try:
-            OVCGradMonitorTool.objects.create(
+            OVCBenchmarkMonitoring.objects.create(
                 household=house_hold,
-                hiv_status_knowledge=answer_value[data.get('cm2q')],
-                viral_suppression=answer_value[data.get('cm3q')],
-                hiv_prevention=answer_value[data.get('cm4q')],
-                undernourished=answer_value[data.get('cm5q')],
-                access_money=answer_value[data.get('cm6q')],
-                violence=answer_value[data.get('cm7q')],
-                caregiver=answer_value[data.get('cm8q')],
-                school_attendance=answer_value[data.get('cm9q')],
-                # school_progression=answer_value[data.get('cm10q')],
-                # cp_achievement=answer_value[data.get('cm11q')],
-                # case_closure=answer_value[data.get('cm12q')],
+                caregiver=caregiver,
+                Benchmark1=answer_value[data.get('cm2q')],
+                Benchmark2=answer_value[data.get('cm3q')],
+                Benchmark3=answer_value[data.get('cm4q')],
+                Benchmark4=answer_value[data.get('cm5q')],
+                Benchmark5=answer_value[data.get('cm6q')],
+                Benchmark6=answer_value[data.get('cm7q')],
+                Benchmark7=answer_value[data.get('cm8q')],
+                Benchmark8=answer_value[data.get('cm9q')],
+                Benchmark9=answer_value[data.get('cm10q')],
                 case_closure_checked=data.get('cm13q'),
                 succesful_exit_checked = data.get('cm14q'),
-                recommended_action_checked=data.get('cm15p'),
-                quarter=quarter,
                 event=event,
                 event_date=event_date
             )
         except Exception as e:
             print('error saving graduation monitoring tool - %s' % (str(e)))
-            # return False
+            return False
         msg = 'Graduation Monitoring saved successful'
         messages.add_message(request, messages.INFO, msg)
         url = reverse('ovc_view', kwargs={'id': id})

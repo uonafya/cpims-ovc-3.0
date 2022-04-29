@@ -1431,32 +1431,30 @@ class OVCCareCpara_upgrade(models.Model):
     def __unicode__(self):
         return str(self.cpara_id)
 
-class OVCGradMonitorTool(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+class OVCBenchmarkMonitoring(models.Model):
+    obm_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
-    hiv_status_knowledge = models.CharField(max_length=5)
-    viral_suppression = models.CharField(max_length=5)
-    hiv_prevention = models.CharField(max_length=5)
-    undernourished = models.CharField(max_length=5)
-    access_money = models.CharField(max_length=5)
-    violence = models.CharField(max_length=5)
-    caregiver = models.CharField(max_length=5)
-    school_attendance = models.CharField(max_length=5)
-    school_progression = models.CharField(max_length=5)
-    cp_achievement = models.CharField(max_length=5)
-    case_closure = models.CharField(max_length=5)
-    case_closure_checked =  models.CharField(max_length=5)
-    succesful_exit_checked =  models.CharField(max_length=5)
-    recommended_action_checked =  models.CharField(max_length=500)
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    Benchmark1 =models.BooleanField()
+    Benchmark2=models.BooleanField()
+    Benchmark3=models.BooleanField()
+    Benchmark4=models.BooleanField()
+    Benchmark4=models.BooleanField()
+    Benchmark6=models.BooleanField()
+    Benchmark7=models.BooleanField()
+    Benchmark8=models.BooleanField()
+    Benchmark9=models.BooleanField()
+    case_closure_checked=models.BooleanField()
+    succesful_exit_checked=models.BooleanField()
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
-    quarter = models.CharField(max_length=10, null=True, blank=True)
     is_void = models.BooleanField(default=False)
     event_date = models.DateField()
     timestamp_created = models.DateTimeField(default=timezone.now)
     timestamp_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'ovc_grad_monitor_tool'
+        db_table = 'ovc_benchmark_monitoring'
 
     def __unicode__(self):
-        return str(self.id)
+        return str(self.obm_id)
+
