@@ -8188,40 +8188,40 @@ class DREAMS_FORM(forms.Form):
 #             }))
 
 
-PLC_CHOICES = (
+PLC_CHOICES = (('', 'Please Select'),
         ('Never', 'Never'),
         ('Sometimes', 'Sometimes'),
         ('A lot of times', 'A lot of times'),
         ('All of the time', 'All of the time'),
     )
 
-TV_CHOICES = (
+TV_CHOICES = (('', 'Please Select'),
         ('Never', 'Never'),
         ('Sometimes', 'Sometimes'),
         ('A lot of times', 'A lot of times'),
         ('All of the time', 'All of the time'),
     )
 
-WB_HE_CHOICES = (
+WB_HE_CHOICES = (('', 'Please Select'),
         ('Never', 'Never'),
         ('Sometimes', 'Sometimes'),
         ('A lot of times', 'A lot of times'),
         ('All of the time', 'All of the time'),
     )
 
-WB_AD_HE_15_5 = (
+WB_AD_HE_15_5 = (('', 'Please Select'),
         ('Yes', 'Yes'),
         ('No', 'No'),
         ('Dont know', 'Dont know'),
     )
 
-HE_CHOICES = (
+HE_CHOICES = (('', 'Please Select'),
         ('Not at all true', 'Not at all true'),
         ('A little true', 'A little true'),
         ('Very true', 'Very true'),
     )
 
-THOUGHTS_CHOICES = (
+THOUGHTS_CHOICES = (('', 'Please Select'),
         ('Not at all true', 'Not at all true'),
         ('A little true', 'A little true'),
         ('Very true', 'Very true'),
@@ -8269,25 +8269,61 @@ class FmpPostEvaluation(forms.Form):
 
      ##Domain about child
 
-    WB_AD_PLC_7 = forms.ChoiceField(choices=PLC_CHOICES)
-    WB_AD_PLC_8_1 = forms.ChoiceField(choices=PLC_CHOICES)
-    WB_AD_PLC_9_1 = forms.ChoiceField(choices=PLC_CHOICES)
+    WB_AD_PLC_7 = forms.ChoiceField(choices=PLC_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_PLC_7'}))
+    WB_AD_PLC_8_1 = forms.ChoiceField(choices=PLC_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_PLC_8_1'}))
+    WB_AD_PLC_9_1 = forms.ChoiceField(choices=PLC_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_PLC_9_1'}))
 
 
     ##Domain tv viewing
 
-    WB_AD_TV_13_1 = forms.ChoiceField(choices=TV_CHOICES)
-    WB_AD_TV_13_2 = forms.ChoiceField(choices=TV_CHOICES)
-    WB_AD_TV_13_3 = forms.ChoiceField(choices=TV_CHOICES)
-    WB_AD_TV_13_4 = forms.ChoiceField(choices=TV_CHOICES)
-    WB_AD_TV_13_5 = forms.ChoiceField(choices=TV_CHOICES)
+    WB_AD_TV_13_1 = forms.ChoiceField(choices=TV_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_TV_13_1'}))
+    WB_AD_TV_13_2 = forms.ChoiceField(choices=TV_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_TV_13_2'}))
+    WB_AD_TV_13_3 = forms.ChoiceField(choices=TV_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_TV_13_3'}))
+    WB_AD_TV_13_4 = forms.ChoiceField(choices=TV_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_TV_13_4'}))
+    WB_AD_TV_13_5 = forms.ChoiceField(choices=TV_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_TV_13_5'}))
 
     ##Domain hiv, sti,sex
 
-    WB_AD_HE_15_1 = forms.ChoiceField(choices=WB_HE_CHOICES)
-    WB_AD_HE_15_2 = forms.ChoiceField(choices=WB_HE_CHOICES)
-    WB_AD_HE_15_3 = forms.ChoiceField(choices=WB_HE_CHOICES)
-    WB_AD_HE_15_4 = forms.ChoiceField(choices=YESNO_CHOICES)
+    WB_AD_HE_15_1 = forms.ChoiceField(choices=WB_HE_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_HE_15_1'}))
+    WB_AD_HE_15_2 = forms.ChoiceField(choices=WB_HE_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_HE_15_2'}))
+    WB_AD_HE_15_3 = forms.ChoiceField(choices=WB_HE_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_HE_15_3'}))
+    WB_AD_HE_15_4 = forms.ChoiceField(choices=YESNO_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_HE_15_4'}))
     WB_AD_HE_15_4_1 = forms.CharField(
         widget = forms.Textarea(
         attrs = {'placeholder': _('Response-What was It?'),
@@ -8297,20 +8333,62 @@ class FmpPostEvaluation(forms.Form):
                'rows': '2'})
         )
 
-    WB_AD_HE_15_5 = forms.ChoiceField(choices=WB_AD_HE_15_5)
-    WB_AD_HE_15_6 = forms.ChoiceField(choices=HE_CHOICES)
-    WB_AD_HE_15_7 = forms.ChoiceField(choices=HE_CHOICES)
-    WB_AD_HE_15_8 = forms.ChoiceField(choices=HE_CHOICES)
-    WB_AD_HE_15_9 = forms.ChoiceField(choices=HE_CHOICES)
-    WB_AD_HE_15_10 = forms.ChoiceField(choices=HE_CHOICES)
-    WB_AD_HE_15_11 = forms.ChoiceField(choices=HE_CHOICES)
-    WB_AD_HE_15_12 = forms.ChoiceField(choices=HE_CHOICES)
+    WB_AD_HE_15_5 = forms.ChoiceField(choices=WB_AD_HE_15_5,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_HE_15_5'}))
+    WB_AD_HE_15_6 = forms.ChoiceField(choices=HE_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_HE_15_6'}))
+    WB_AD_HE_15_7 = forms.ChoiceField(choices=HE_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_HE_15_7'}))
+    WB_AD_HE_15_8 = forms.ChoiceField(choices=HE_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_HE_15_8'}))
+    WB_AD_HE_15_9 = forms.ChoiceField(choices=HE_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_HE_15_9'}))
+    WB_AD_HE_15_10 = forms.ChoiceField(choices=HE_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_HE_15_10'}))
+    WB_AD_HE_15_11 = forms.ChoiceField(choices=HE_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_HE_15_11'}))
+    WB_AD_HE_15_12 = forms.ChoiceField(choices=HE_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_HE_15_12'}))
 
     # Thoughts and feelings about your child on sex issues
-    WB_AD_THO_16_1 = forms.ChoiceField(choices=THOUGHTS_CHOICES)
-    WB_AD_THO_16_2 = forms.ChoiceField(choices=THOUGHTS_CHOICES)
-    WB_AD_THO_16_3 = forms.ChoiceField(choices=THOUGHTS_CHOICES)
-    WB_AD_THO_16_4 = forms.ChoiceField(choices=THOUGHTS_CHOICES)
-    WB_AD_THO_16_5 = forms.ChoiceField(choices=THOUGHTS_CHOICES)
-    WB_AD_THO_16_6 = forms.ChoiceField(choices=THOUGHTS_CHOICES)
+    WB_AD_THO_16_1 = forms.ChoiceField(choices=THOUGHTS_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_THO_16_1'}))
+    WB_AD_THO_16_2 = forms.ChoiceField(choices=THOUGHTS_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_THO_16_2'}))
+    WB_AD_THO_16_3 = forms.ChoiceField(choices=THOUGHTS_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_THO_16_3'}))
+    WB_AD_THO_16_4 = forms.ChoiceField(choices=THOUGHTS_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_THO_16_4'}))
+    WB_AD_THO_16_5 = forms.ChoiceField(choices=THOUGHTS_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_THO_16_5'}))
+    WB_AD_THO_16_6 = forms.ChoiceField(choices=THOUGHTS_CHOICES,
+                                    widget=forms.Select(
+                                        attrs={'class': 'form-control',
+                                               'id': 'WB_AD_THO_16_6'}))
 
