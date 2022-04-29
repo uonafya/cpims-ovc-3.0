@@ -1496,3 +1496,38 @@ class OVCaseClosure(models.Model):
 
             class Meta:
                 db_table = 'ovc_fmp_evaluation'
+
+    class OVCCareCaseExitClosure(models.Model):
+        case_clouse_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+        person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+        caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='caseclouse_caregiver')
+        #----cpa
+        attrition_reason = models.CharField(max_length=10, null=True)
+        other = models.CharField(max_length=10, null=True)
+        case_files_completed = models.CharField(max_length=5, null=True)
+        cw_phone_household = models.CharField(max_length=5, null=True)
+        head_hh_linked = models.CharField(max_length=5, null=True)
+        sp_informed_graduation = models.CharField(max_length=5, null=True)
+        files_stored = models.CharField(max_length=5, null=True)
+        #--transfer
+        transfer_form_completed = models.CharField(max_length=5, null=True)
+        follow_up_frequency = models.CharField(max_length=5, null=True)
+        sp_informed_tarnsfer = models.CharField(max_length=5, null=True)
+        family_folder_sent = models.CharField(max_length=5, null=True)
+        attrition_documented = models.CharField(max_length=5, null=True)
+        manager_report = models.CharField(max_length=5, null=True)
+        date_of_event = models.DateField()
+        form = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+        is_void = models.BooleanField(default=False)
+        event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+        timestamp_created = models.DateTimeField(default=timezone.now)
+        timestamp_updated = models.DateTimeField(auto_now=True)
+
+        class Meta:
+            """Override table details."""
+
+            db_table = 'OVC_Care_Case_closure_Exit'
+            verbose_name = 'OVC Case Clouse Exit'
+            verbose_name_plural = 'OVC Case Clouse Exit'
+
+

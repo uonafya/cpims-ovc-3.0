@@ -3,7 +3,7 @@ from cpovc_registry.functions import (
 
 from cpovc_main.functions import get_general_list, convert_date
 from cpovc_forms.models import (
-    FormsAuditTrail, OVCCareF1B, OVCCareEvents, OVCEducationFollowUp, OVCCareCpara, OVCCareCasePlan)
+    FormsAuditTrail, OVCCareF1B, OVCCareEvents, OVCEducationFollowUp, OVCCareCpara, OVCCareCasePlan,OVCCareCaseExitClosure)
 from cpovc_ovc.functions import get_house_hold
 from .models import OVCGokBursary
 

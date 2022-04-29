@@ -36,7 +36,7 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,OVCaseClosure)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, OVCCareCaseExitClosure)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -890,8 +890,8 @@ def documents_manager(request):
     return render(request, 'forms/documents_manager.html', {'status': 200, 'form': form})
 
 
-# def new_case_record_sheet(request, id):
-#    return HttpResponseRedirect(reverse(ovc_search))
+def new_case_record_sheet(request, id):
+   return HttpResponseRedirect(reverse(ovc_search))
 # @login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 # @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
@@ -10120,26 +10120,26 @@ def new_caseclosure(request, id):
 
                 # Saving OVC Case Closure
                 #OVCaseClosure.objects.create(
-            case_closing= OVCaseClosure(
+            case_closing= OVCCareCaseExitClosure(
             # case_closure_id=closure_reason,
             closure_reason=closure_reason,
-            receiving_org=receiving_org,
-            attrition_reason1=attrition_reason1,
+            #receiving_org=receiving_org,
+            attrition_reason=attrition_reason1,
             other =other,
             transfer_completed=transfer_completed,
-            followup_time=followup_time,
-            informed=informed,
-            copy_sent=copy_sent,
-            file_stored1=file_stored1,
-            attrition_reason2=attrition_reason2,
+            follow_up_frequency=followup_time,
+            sp_informed_tarnsfer=informed,
+            family_folder_sent=copy_sent,
+            files_stored=file_stored1,
+            attrition_documented=attrition_reason2,
             manager_report=manager_report,
             file_stored2=file_stored2,
             exit_reason=exit_reason,
             staff_certifying=staff_certifying,
-            date_closed = date,
-            files_completed=files_completed ,
-            phone_number=phone_number,
-            informed_graduation=informed_graduation,
+            date_of_event = date,
+            case_files_completed=files_completed ,
+            cw_phone_household=phone_number,
+            sp_informed_graduation =informed_graduation,
             file_stored3=file_stored3,
             event=ovccareevent, )
 
@@ -10168,7 +10168,7 @@ def new_caseclosure(request, id):
 
     form = CaseClosureForm()
     event = OVCCareEvents.objects.filter(person_id=id).values_list('event')
-    case_closure = OVCaseClosure.objects.filter(event_id__in=event).order_by('date_of_event')
+    case_closure = OVCCareCaseExitClosure.objects.filter(event_id__in=event).order_by('date_of_event')
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
 
     return render(request,
@@ -10180,7 +10180,7 @@ def edit_caseclosure(request, id):
   """Some default page for Server Errors."""
 
   try:
-      caseclosuredata = OVCaseClosure.objects.get(case_closure_id=id)
+      caseclosuredata = OVCCareCaseExitClosure.objects.get(case_closure_id=id)
   except Exception as e:
       print("error with OVC viewing - %s" % (str(e)))
       # raise e
@@ -10191,6 +10191,6 @@ def edit_caseclosure(request, id):
   return render(request, 'forms/new_case_closure.html', {'form': form, 'caseclosuredata':caseclosuredata, 'status': 200})
 
 def delete_caseclosure(request, id):
-   delete_caseclosure = OVCaseClosure.objects.get(case_closure_id=id)
+   delete_caseclosure = OVCCareCaseExitClosure.objects.get(case_closure_id=id)
    delete_caseclosure.delete()
    return render(request, 'forms/new_case_closure.html')
