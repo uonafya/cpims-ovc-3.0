@@ -15,12 +15,20 @@ FORM_RENDERER = 'django.forms.renderers.DjangoTemplates'
 
 ALLOWED_HOSTS = ['*']
 
-cpims_db_host = os.environ.get('CPIMS_HOST') if os.environ.get('CPIMS_HOST') else '127.0.0.1'
-cpims_db_pass = os.environ.get('CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'saruni123'
-cpims_db_instance = os.environ.get('CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims'
-cpims_db_port = os.environ.get('CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5432'
-cpims_db_user = os.environ.get('CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'saruni'
-cpims_debug = eval(os.environ.get('CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else True
+
+cpims_db_host = os.environ.get(
+    'CPIMS_HOST') if os.environ.get('CPIMS_HOST') else '127.0.0.1'
+cpims_db_pass = os.environ.get(
+    'CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'Xaen!ee8'
+cpims_db_instance = os.environ.get(
+    'CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims_upgrade'
+cpims_db_port = os.environ.get(
+    'CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5432'
+cpims_db_user = os.environ.get(
+    'CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'cpimsdbuser'
+cpims_debug = eval(os.environ.get(
+    'CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else False
+
 
 DEBUG = cpims_debug
 
@@ -44,28 +52,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'data_cleanup',
     'cpovc_offline_mode',
-     # forums,
-    # 'adminsortable',
-    # 'simple_forums',
-     'cpovc_manage',
-     'notifications',
-     'cpovc_help',
+    'cpovc_manage',
+    'notifications',
+    'cpovc_help',
 ]
 
-# MIDDLEWARE = (
-#     'django.contrib.sessions.middleware.SessionMiddleware',
-#     'django.middleware.common.CommonMiddleware',
-#     'django.middleware.csrf.CsrfViewMiddleware',
-#     'django.contrib.auth.middleware.AuthenticationMiddleware',
-#     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-#     # 'cpovc_access.middleware.AuthenticationPolicyMiddleware',
-#     'django.contrib.messages.middleware.MessageMiddleware',
-#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-#     'django.middleware.security.SecurityMiddleware',
-#     #'cpovc_main.middleware.SqlPrintingMiddleware',
-#     'cpovc_auth.middleware.UserRestrictMiddleware',
-#     # 'cpovc_access.middleware.FailedLoginMiddleware',
-# )
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -94,9 +85,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                 'cpovc_main.context_processors.global_settings',
-                 # forums,
-               # 'simple_forums.context_processors.installed_apps'
+                'cpovc_main.context_processors.global_settings',
             ],
         },
     },
@@ -104,13 +93,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cpims.wsgi.application'
 
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
 
 DATABASES = {
     'default': {
@@ -150,9 +132,9 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
 AUTH_USER_MODEL = 'cpovc_auth.AppUser'
 
 # AUTHENTICATION_BACKENDS = ['cpovc_auth.backends.CPOVCAuthenticationBackend']
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+# AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ALLOW_NATIONAL_ID_LOGIN = True
 
@@ -222,10 +204,8 @@ CACHES = {
 }
 CSRF_FAILURE_VIEW = 'cpims.views.csrf_failure'
 
-OFFLINE_MODE_CAPABILITY_ENABLED = eval(os.environ.get('CAN_WORK_OFFLINE', 'True'))
-
-# import logging configs
-from .logging_config import *
+OFFLINE_MODE_CAPABILITY_ENABLED = eval(
+    os.environ.get('CAN_WORK_OFFLINE', 'True'))
 
 # kmhfl API
 KMHFL_USERNAME = '10004'
@@ -241,7 +221,14 @@ KMHFL_SUBCOUNTY_BASE_URL = ''
 KMHFL_TOKEN_URL = ''
 
 # nascop API
-NASCOP_API_BASE_URL = os.environ.get('NASCOP_API_BASE_URL') if os.environ.get('NASCOP_API_BASE_URL') else ''
-NASCOP_LOGIN_URL = os.environ.get('NASCOP_LOGIN_URL') if os.environ.get('NASCOP_LOGIN_URL') else ''
-NASCOP_EMAIL = os.environ.get('NASCOP_EMAIL') if os.environ.get('NASCOP_EMAIL') else ''
-NASCOP_PASSWORD = os.environ.get('NASCOP_PASSWORD') if os.environ.get('NASCOP_PASSWORD') else ''
+NASCOP_API_BASE_URL = os.environ.get(
+    'NASCOP_API_BASE_URL') if os.environ.get('NASCOP_API_BASE_URL') else ''
+NASCOP_LOGIN_URL = os.environ.get(
+    'NASCOP_LOGIN_URL') if os.environ.get('NASCOP_LOGIN_URL') else ''
+NASCOP_EMAIL = os.environ.get(
+    'NASCOP_EMAIL') if os.environ.get('NASCOP_EMAIL') else ''
+NASCOP_PASSWORD = os.environ.get(
+    'NASCOP_PASSWORD') if os.environ.get('NASCOP_PASSWORD') else ''
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
