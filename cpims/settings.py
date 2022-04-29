@@ -16,10 +16,10 @@ FORM_RENDERER = 'django.forms.renderers.DjangoTemplates'
 ALLOWED_HOSTS = ['*']
 
 cpims_db_host = os.environ.get('CPIMS_HOST') if os.environ.get('CPIMS_HOST') else '127.0.0.1'
-cpims_db_pass = os.environ.get('CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'Xaen!ee8'
-cpims_db_instance = os.environ.get('CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims_upgrade'
+cpims_db_pass = os.environ.get('CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'userpassword'
+cpims_db_instance = os.environ.get('CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims'
 cpims_db_port = os.environ.get('CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5432'
-cpims_db_user = os.environ.get('CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'cpimsdbuser'
+cpims_db_user = os.environ.get('CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'username'
 cpims_debug = eval(os.environ.get('CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else False
 
 DEBUG = cpims_debug
@@ -115,9 +115,9 @@ WSGI_APPLICATION = 'cpims.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'cpims',
-        'USER': 'username',
-        'PASSWORD': '123456ab',
+        'NAME': cpims_db_instance,
+        'USER': cpims_db_user,
+        'PASSWORD': cpims_db_pass,
         'HOST': 'localhost',
         'PORT': '5432', },
     'reporting': {

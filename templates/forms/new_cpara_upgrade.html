@@ -82,7 +82,7 @@ print(blu.sing("'Happy'"))
                 <h4 class="panel-title"> Case Plan Achievement Readiness Assessment || {{care_giver}}</h4> 
             </div>
             <div class="panel-body">
-            	<form class="form-horizontal form-bordered form-control" action="." method="POST" data-parsley-validate="false" name="form-wizard-hhva" id="new_hhva" novalidate>
+            	<form class="form-horizontal form-bordered form-control" style="border: 0px" action="." method="POST" data-parsley-validate="false" name="form-wizard-hhva" id="new_hhva" novalidate>
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-12">
@@ -114,10 +114,10 @@ print(blu.sing("'Happy'"))
                                 <div class="wizard-step-1">
                                     <div class="panel-body">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label class="control-label formlabel">Date of Assessment:</label><br/>
-                                                    <input type="text" class="form-control" name="d_o_a">
+                                                    <input type="text" class="form-control display-flex flex-direction-row flex-grow" name="d_o_a">
                                                 </div>
                                             </div>                                           
                                         </div>
@@ -125,7 +125,7 @@ print(blu.sing("'Happy'"))
                                         <div class="panel-body">
                                             {#<form action="." method="post" name="ovcreg_form" id="ovcreg_form" data-parsley-validate="true">#}
                                                 {#{% csrf_token %}#}
-                                                    <div style="overflow-x: auto; min-height: 300px;">
+                                                    <div style="overflow-x: auto; display: flex; flex-direction: row; flex: auto;">
                                                         <input type="hidden" name="ovc_id" id="ovc_id" value="{{ creg.person_id }}">
                                                             <table width="100%" class="table table-profile">
                                                                 <tbody>
@@ -194,7 +194,7 @@ print(blu.sing("'Happy'"))
                                         <hr/>
                                             <div class="col-md-12">
                                                 <h4>Details of all children below 18 years currently living in the household.</h4>
-                                                <div class="alert alert-info">
+                                                <div class="alert alert-info    ">
                                                     <strong>Note:</strong><br/>
                                                     <p>Includes any other aged above 18 years if still in school</p> 
                                                 </div>
