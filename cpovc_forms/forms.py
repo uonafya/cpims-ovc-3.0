@@ -8149,58 +8149,31 @@ class DREAMS_FORM(forms.Form):
 
 # Bidirectional referral forms
 class BIDIRECTIONALREFERRALFORM(forms.Form):
-    HEALTH_CHOICES=((0,'please select'),
-                    (1,'Health insurance cover'),
-                    (2, 'secticide Treated Mosquito net (ITN)'),
-                    (3, 'Enrollment to care and treatment'),
-                    (4, 'Enhance Adherence Counselling'),
-                    (5, 'Routine/ emergency healthcare'),
-                    (6, 'Perinatal care including PMTCT'))
 
-    STABLE_DOMAIN= (('Please select','please select'),
-                    ('cash transfer OVC', 'cash transfer OVC'),
-                      ('cash transfer Elderly', 'cash transfer Elderly'),
-                      ('cash transfer Disability', 'cash transfer Disability'),
-                      ('Safe shelter repair or construction', 'Safe shelter repair or construction'),
-                      ('Routine/ emergency healthcare', 'Routine/ emergency healthcare'),
-                      ('Perinatal care including PMTCT', 'Perinatal care including PMTCT'))
+    DOMAIN_CHOICES=((0,'please select'),
+                    (1,'Health Domain'),
+                    (2, 'Stable Domain'),
+                    (3, 'Safe Domain'))
 
-    SAFE_DOMAIN = (('Please select','please select'),
-                    ('Post Violence Counseling', 'Post Violence Counseling'),
-                     ('Post Violence Medical care', 'Post Violence Medical care'),
-                     ('Post violence Legal Care', 'Post violence Legal Care'),
-                     ('Emergency shelter support', 'Emergency shelter support'),
-                     ('Re-enrollment ', 'Re-enrollment'),
-                     ('Bursary, tuition', 'Bursary, tuition'))
 
-    health_choices_domain = forms.ChoiceField(choices=HEALTH_CHOICES,
-                                              initial='0',
-                                              widget=forms.Select(
-                                                  attrs={'class': 'form-control',
-                                                         'id': 'health_choices_domain'})
-                                              )
+    SERVICE_CHOICES = ((0,'please select'),
+                    (1, 'Post Violence Counseling'),
+                     (2, 'Post Violence Medical care'),
+                     (3, 'Post violence Legal Care'),
+                     (4, 'Emergency shelter support'),
+                     (5, 'Re-enrollment'),
+                     (6, 'Bursary, tuition'))
 
 
 
-    HEALTH_DOMAIN = forms.ChoiceField(choices=HEALTH_CHOICES,
+    BIREFERRAL_DOMAIN = forms.ChoiceField(choices=DOMAIN_CHOICES,
                                                 initial='0',
                                                 widget=forms.Select(
                                                     attrs={'class': 'form-control',
                                                            'id': 'HEALTH_DOMAIN',
+                                                           }))
 
-                                                           })
-                                                )
-    STABLE_DOMAIN = forms.MultipleChoiceField(
-                                      #   required = True,
-                                      #   widget=forms.CheckboxSelectMultiple,
-                                      choices=STABLE_DOMAIN,
-                                      initial='0',
-                                      widget=forms.Select(
-                                          attrs={'class': 'form-control',
-                                                 'id': 'STABLE_DOMAIN'})
-                                      )
-
-    SAFE_DOMAIN = forms.MultipleChoiceField(choices=SAFE_DOMAIN,
+    BIREFERRAL_SERVICES = forms.MultipleChoiceField(choices=SERVICE_CHOICES,
                                               initial='0',
                                               widget=forms.Select(
                                                   attrs={'class': 'form-control',

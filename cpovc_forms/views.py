@@ -36,7 +36,7 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, OVCBiReferral)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -9999,9 +9999,24 @@ def new_dreamsform(request, id):
                    'vals': vals})
 
 
+# get the form for Bidirectional Referral Form
 def bidirectionalreferralform(request, id):
+    import pdb
     if request.method == 'POST':
-        pass
+        data = request.POST
+        pdb.set_trace()
+
+        if data:
+            OVCBiReferral(
+                client_category = data['client_category']
+            ).save()
+
+            msg = 'saved successfully'
+            messages.add_message(request, messages.INFO, msg)
+        else:
+            msg = 'unsuccessfully'
+            messages.add_message(request, messages.ERROR, msg)
+
 
     init_data = RegPerson.objects.filter(pk=id)
     check_fields = ['sex_id']
@@ -10013,21 +10028,3 @@ def bidirectionalreferralform(request, id):
                      'vals': vals})
 
 
-
-    # try:
-    #     init_data = RegPerson.objects.filter(pk=id)
-    #     check_fields = ['sex_id']
-    #     vals = get_dict(field_name=check_fields)
-    #     print(vals)
-    #     form = BIDIRECTIONALREFERRALFORM(initial={'person': id})
-    # except:
-    #     pass
-    #
-
-    # if request.method == 'POST':
-    #     pass
-    # # BIDIRECTIONALREFERRALFORM
-    # bi_direction = BIDIRECTIONALREFERRALFORM()
-    # return render(request, "forms/bidirectionalreferralform.html", context={
-    #     'bi-dire': bi_direction,
-    # })
