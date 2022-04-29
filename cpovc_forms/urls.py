@@ -1,6 +1,8 @@
 from django.urls import path, include, re_path
 from . import views
 
+# app_name = 'forms'
+
 # This should contain paths related to registry ONLY
 urlpatterns = [
     # Forms Registry
@@ -168,10 +170,17 @@ urlpatterns = [
     # HIV Risk Assessment Form
     re_path('hivscreeningtool/new/(?P<id>\d+)/', views.new_hivscreeningtool, name='new_hivscreeningtool'),
 
+
     # HIV Risk Management Form
-    re_path('hivmanagementform/new/(?P<id>\d+)/', views.new_hivmanagementform, name='new_hivmanagementform'),
+    path('hivmanagementform/new/<int:id>/', views.new_hivmanagementform, name='new_hivmanagementform'),
 
     # Dreams SerivceUptake Form
     re_path('dreamsform/new/(?P<id>\d+)/', views.new_dreamsform, name='new_dreamsform'),
+
+    #edit hivriskscreening tool
+    path('hivriskscreeningtool/edit/<uuid:id>/', views.edit_hivriskscreeningtool, name='hivriskscreeningtool'),
+
+    #Delete hivscreening tool
+    path('delete_hivriskscreening/(?P<id>)/', views.delete_hivriskscreening, name='delete_hivriskscreening'),
 
 ]

@@ -483,10 +483,11 @@
                                         <th>Q 1</th>
                                         <th>Q 2</th>
                                         <th>Q 3</th>
-                                        <!-- <th>Q 3b</th> -->
+                                        <th>Q 3b</th>
                                         <th>Q 4</th>
                                         <th>Q 5</th>
                                         <th>Date of Event</th>
+                                        <th>Actions</th>
                                   </tr>
                                 </thead>
                     {% if hiv_screen %}
@@ -517,6 +518,18 @@
                           <td>{{one_screening_data.art_referral | yesno:"Yes, No, N/A"}}</td>
                           <td>{{one_screening_data.art_referral_completed  | yesno:"Yes, No, N/A"}}</td>
                           <td>{{one_screening_data.date_of_event}}</td>
+                          <td>
+                              <a href="{% url 'hivriskscreeningtool' one_screening_data.risk_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
+                              <a href="{% url 'delete_hivriskscreening' one_screening_data.risk_id%}"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a>
+{#                              <button id="btn_edit_details" onclick="window.location.href='edit_hivriskscreeningtool.html'" class="btn  btn-sm btn-primary m-r-5">#}
+{#                                                <b> Edit </b>&nbsp; <i class="fa fa-pencil"></i>#}
+{#                                                </button>#}
+{#                              <button id="btn_edit_details" onclick="window.location.href='/registry/person/edit/3427087/'" class="btn  btn-sm btn-danger m-r-5">#}
+{#                                                <b> Delete </b>&nbsp; <i class="fa fa-trash"></i>#}
+{#                                                </button>#}
+{#                              <button id="btnEdit0" data-event_type="CRITICAL" {% url 'forms:hivriskscreeningtool' pk=form.person.pk %}event="" data-event_pk="76010dd8-c661-11ec-90b5-00155d5de017" data-core_service="" data-core_service_status="" type="submit" class="btn  btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i></button>#}
+{#                              <button id="btnDelete0" data-event_type="CRITICAL" event="" data-event_pk="76010dd8-c661-11ec-90b5-00155d5de017" type="submit" class="btn  btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i></button>#}
+                             </td>
                         </tr>
                     {% endfor %}
                     {% else %}
