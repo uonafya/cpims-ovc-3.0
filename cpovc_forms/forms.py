@@ -8188,6 +8188,7 @@ class DREAMS_FORM(forms.Form):
 #             }))
 
 
+#Post and Pre evaluation dropdowns
 PLC_CHOICES = (('', 'Please Select'),
         ('Never', 'Never'),
         ('Sometimes', 'Sometimes'),
@@ -8226,6 +8227,9 @@ THOUGHTS_CHOICES = (('', 'Please Select'),
         ('A little true', 'A little true'),
         ('Very true', 'Very true'),
     )
+PPYESNO_CHOICES = (('', 'Please Select'),
+        ('Yes', 'Yes'),
+        ('No', 'No'),)
 
 class FmpPostEvaluation(forms.Form):
     household_id = forms.CharField(widget=forms.TextInput(
@@ -8320,7 +8324,7 @@ class FmpPostEvaluation(forms.Form):
                                     widget=forms.Select(
                                         attrs={'class': 'form-control',
                                                'id': 'WB_AD_HE_15_3'}))
-    WB_AD_HE_15_4 = forms.ChoiceField(choices=YESNO_CHOICES,
+    WB_AD_HE_15_4 = forms.ChoiceField(choices=PPYESNO_CHOICES,
                                     widget=forms.Select(
                                         attrs={'class': 'form-control',
                                                'id': 'WB_AD_HE_15_4'}))
