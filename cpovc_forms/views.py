@@ -10089,13 +10089,13 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
 
         # house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
         # siblings = RegPersonsSiblings.objects.select_related().filter(child_person=id, is_void=False, date_delinked=None)
-        return render(request=request, template_name='forms/progress_assessment.html',
-                context={'form': form, 'child': child, 'care_giver': care_giver,
+        return render(request=request, template_name='forms/caregiver_progress_assessment.html',
+                      context={'form': form, 'child': child, 'care_giver': care_giver,
                             'care_giver_gender': care_giver_gender}) # 'temporary_data':# temporary_data })
 
 def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
     object = ovc_preventive_pre_post_program_assessment_model.objects.get(id=id)
-    return render(request, template_name='forms/progress_assessment.html', context={'form': object})
+    return render(request, template_name='forms/caregiver_progress_assessment.html', context={'form': object})
 
 def ovc_preventive_pre_post_program_assessment_delete_view(request, id):
     object =  ovc_preventive_pre_post_program_assessment_model.objects.get(id=id)

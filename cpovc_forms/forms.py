@@ -8561,14 +8561,14 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
                             'id': 'sp_caring_energy',
     }))
     sp_source_stress = forms.ChoiceField(
-        choices=CHOICES_SAD,
+        choices=CHOICES_FEELING,
         widget=forms.Select(attrs={
                             'class': 'form-control',
                             'id': 'sp_source_stress',
     }))
 
     sp_physical_punish = forms.ChoiceField(
-        choices=CHOICES_SAD,
+        choices=CHOICES_FEELING,
         widget=forms.Select(attrs={
                             'class': 'form-control',
                             'id': 'sp_physical_punish',
