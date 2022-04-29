@@ -7,8 +7,8 @@ from cpovc_main.functions import get_list, get_org_units_list
 from cpovc_registry.functions import get_geo_list, get_all_geo_list
 from cpovc_registry.models import RegOrgUnit
 from cpovc_main.models import SchoolList
-from .functions import  get_facility_list
-
+from cpovc_ovc.models import OVCFacility
+from django.db.models.fields import BLANK_CHOICE_DASH
 # New lists
 WB_AD_GEN_5_ChoiceList=WB_AD_SAF_32_6_CHOICELIST=WB_AD_SAF_32_2_CHOICELIST=WB_AD_SAF_28_CHOICELIST=WB_AD_SAF_27_1_CHOICELIST=WB_AD_SAF_26_CHOICELIST=WB_AD_HEL_24_1_CHOICELIST=WB_AD_HEL_21_1_CHOICELIST=WB_AD_SCH_7_CHOICELIST=WB_AD_SCH_12_2_CHOICELIST=WB_AD_HEL_20_4_CHOICELIST=WB_AD_SCH_13_2_CHOICELIST = (('TBD1', 'TBD1'), ('TBD2', 'TBD2'),('TBD3', 'TBD3'))
 YESNO_CHOICES = (('AYES', 'Yes'), ('ANNO', 'No'))
@@ -88,7 +88,7 @@ alternative_family_care_type_list = get_list(
     'alternative_family_care_type_id', 'Please Select')
 type_of_adoption_list = get_list('adoption_id', 'Please Select')
 bursary_type_list = get_list('bursary_type_id', 'Select Bursary Type')
-school_type_list = get_list('school_category_id', 'Please Select')
+school_type_list = ('school_category_id', 'Please Select')
 term_list = get_list('school_term_id', 'Select Term Awarded')
 schoolout_reason_list = get_list('out_of_school_id', 'Please Select')
 school_admission_type_list = get_list('school_type_id', 'Please Select')
@@ -6339,7 +6339,7 @@ class WellbeingAdolescentForm(forms.Form):
 
 # HIV Screening Form
 class HIV_SCREENING_FORM(forms.Form):
-    org_units_list = get_facility_list()
+    org_units_list = [('', 'Please Select')] + list(OVCFacility.objects.filter().values_list('id', 'facility_name'))
     HIV_RA_1A = forms.DateField(
         widget = forms.widgets.DateInput(
         format="%m/%d/%Y",
@@ -8146,3 +8146,472 @@ class DREAMS_FORM(forms.Form):
                #'data-parsley-required': "true",
                #'data-parsley-group': 'group0',
                'rows': '3'}))
+
+
+
+# form new_graduation_monitoring_form
+class NewGraduationMonitoringForm(forms.Form):
+    YES_NO_CHOICES = ((1, 'Yes'), (0, 'No'))
+
+    date = forms.DateField(widget=forms.TextInput(
+        attrs={'placeholder': _('Date'),
+               'class': 'form-control',
+               # type': 'hidden'
+               }))
+    BNMRK_1 = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+           ))
+
+    BNMRK_2 = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            ))
+
+    BNMRK_3 = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            ))
+
+    BNMRK_4 = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            ))
+
+    BNMRK_5 = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            ))
+
+    BNMRK_6 = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            ))
+
+    BNMRK_7 = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            ))
+
+    BNMRK_8 = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            ))
+
+    BNMRK_9 = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            ))
+
+
+
+class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
+    CHOICES_TYPE_ASSESSMENT = (
+        ('Pre-Programme(before implementation)', 'Pre-Programme(before implementation)'),
+        ('Post-Programme(after implementation)', 'Post-Programme(after implementation)'),
+    )
+
+    CHOICES_READ = (
+        ('', '(select)'),
+        ('Cannot read at all', 'Cannot read at all'),
+        ('Can read but with lots of difficulty', 'Can read but with lots of difficulty'),
+        ('Can read with a little difficulty', 'Can read with a little difficulty'),
+        ('Can read with a little difficulty', 'Can read with a little difficulty')
+    )
+    CHOICES_EDUCATION = (
+        ('Primary', 'Primary'),
+        ('Secondary', 'Secondary'),
+        ('Tertiary', 'Tertiary'),
+        ('College/University', 'College/University'),
+        ('Not gone to school', 'Not gone to school')
+    )
+
+    YES_NO_CHOICES = (
+        ('Yes', 'Yes'),
+        ('No', 'No')
+    )
+
+    CHOICES_INCOME = (
+        ('', '(Select)'),
+        ('No, unemployed', 'No, unemployed'),
+        ('Yes, self-employed', 'Yes, self-employed'),
+        ('Yes, employed full-time', 'Yes, employed full-time'),
+        ('Yes, employed part-time', 'Yes, employed part-time')
+    )
+
+    CHOICES_RELATIONSHIP = (
+        ('', '(select)'),
+        ('Never', 'Never'),
+        ('Almost never', 'Almost never'),
+        ('Sometimes', 'Sometimes'),
+        ('Often', 'Often'),
+        ('Always', 'Always')
+    )
+
+    CHOICES_BEHAVIOR = (
+        ('', '(select)'),
+        ('Not true', 'Not true'),
+        ('Somewhat true', 'Somewhat true'),
+        ('Very true', 'Very true')
+    )
+
+    CHOICES_DISCIPLINE = (
+        ('', '(select)'),
+        ('Never', 'Never'),
+        ('1 times', '1 times'),
+        ('2 times', '2 times'),
+        ('3 times', '3 times'),
+        ('4 times', '4 times'),
+        ('5 times', '5 times'),
+        ('6 times', '6 times'),
+        ('7 times', '7 times'),
+        (' or more times', ' or more times')
+    )
+
+    CHOICES_BIOLOGICAL=(
+                    ('', '(select)'),
+                    ('Yes', 'Yes'),
+                    ('No, she passed away', 'No, she passed away'),
+                    ('No, she lives elsewhere', 'No, she lives elsewhere')
+                    )
+
+    CHOICES_HIV = (
+        ('', '(select)'),
+        ('No', 'No'),
+        ('Yes, all of them', 'Yes, all of them'),
+        ('Yes, some of them', 'Yes, some of them'),
+    )
+
+    CHOICES_FEELING = (
+        ('', '(select)'),
+        ('Strongly disagree', 'Strongly disagree'),
+        ('Disagree', 'Disagree'),
+        ('Not sure', 'Not sure'),
+        ('Not sure', 'Agree'),
+        ('Strongly agree', 'Strongly agree')
+    )
+
+    CHOICES_SAD = (
+        ('', '(select)'),
+        ('Rarely or none of the time (less than 1 day)', 'Rarely or none of the time (less than 1 day)'),
+        ('Some or a little of the time (1–2 days)', 'Some or a little of the time (1–2 days)'),
+        ('Occasionally or a moderate amount of time (3–4 days)', 'Occasionally or a moderate amount of time (3–4 days)'),
+        ('Most or all of the time (5–7 days)', 'Most or all of the time (5–7 days)')
+
+    )
+
+    CHOICES_FINANCE = (
+        ('', '(select)'),
+        ('Never', 'Never'),
+        ('Rarely', 'Rarely'),
+        ('Sometimes', 'Sometimes'),
+        ('Often', 'Often')
+    )
+
+    TYPE_ASSESSMENT = forms.ChoiceField(choices=CHOICES_TYPE_ASSESSMENT,
+                                        widget = forms.RadioSelect())
+
+    date_of_assessment = forms.DateTimeField(
+        input_formats=['%d/%m/%Y '],
+        widget=forms.DateTimeInput(attrs={
+            'class': 'form-control datetimepicker-input',
+            'type': 'date',
+            'data-target': '#datetimepicker1'
+        }))
+   # SECTION 1: BACKGROUND DETAILS
+
+    bd_read = forms.ChoiceField(
+        choices=CHOICES_READ,
+        widget=forms.Select(attrs={
+                                   'class': 'form-control',
+                                   'id': 'bd_read',
+                                   }))
+
+    bd_education_level = forms.ChoiceField(
+        choices=CHOICES_EDUCATION,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+        ))
+
+    bd_biological_children = forms.IntegerField()
+
+    bd_non_biological_children = forms.IntegerField()
+
+    bd_children_not_in_school = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+             # renderer=RadioCustomRenderer,
+        ))
+
+    watch_tv_with_child = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+             # renderer=RadioCustomRenderer,
+        ))
+
+    bd_source_income = forms.ChoiceField(
+        choices=CHOICES_INCOME,
+        widget=forms.Select(attrs={
+                           'class': 'form-control',
+                           'id': 'BIOLOGICAL_FATHER',
+                           'default': "0"
+                           }))
+
+    bd_adults_contribute_hh_income = forms.ChoiceField(
+        choices=CHOICES_INCOME,
+        widget=forms.Select(attrs={
+                           'class': 'form-control',
+                           'id': 'BIOLOGICAL_FATHER',
+                           'default': "0"
+                           }))
+
+    bd_children_contribute_hh_income = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+             # renderer=RadioCustomRenderer,
+        ))
+
+    bd_biological_mother = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+
+            # renderer=RadioCustomRenderer,
+        ))
+
+    bd_bm_live_hh = forms.ChoiceField(
+        choices=CHOICES_BIOLOGICAL,
+        widget=forms.Select(attrs={
+                           'class': 'form-control',
+                           'id': 'Q_12',
+                           }))
+
+    bd_biological_father = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+
+            # renderer=RadioCustomRenderer,
+        ))
+
+    bd_bf_live_hh = forms.ChoiceField(
+        choices=CHOICES_BIOLOGICAL,
+        widget=forms.Select(attrs={
+                           'class': 'form-control',
+                           'id': 'bd_adult_unwell',
+                           }))
+
+    bd_money_basic_expenses = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+        ))
+
+    bd_violence = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+
+            # renderer=RadioCustomRenderer,
+        ))
+
+    bd_adult_unwell = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+
+            # renderer=RadioCustomRenderer,
+        ))
+
+    bad_things_from_sex = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+
+            # renderer=RadioCustomRenderer,
+        ))
+
+    bd_child_unwell = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+        ))
+
+    bd_miss_school = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+
+            # renderer=RadioCustomRenderer,
+        ))
+
+ 
+    bd_hiv_status = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+
+            # renderer=RadioCustomRenderer,
+        ))
+
+    bd_children_hiv_status = forms.ChoiceField(
+        choices=CHOICES_HIV,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'bd_children_hiv_status',
+                        }
+        ))
+
+    bd_hiv_prevention = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+
+            # renderer=RadioCustomRenderer,
+        ))
+
+    bd_two_meals = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+
+            # renderer=RadioCustomRenderer,
+        ))
+
+    bd_missing_meal = forms.ChoiceField(
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+
+            # renderer=RadioCustomRenderer,
+        ))
+
+    # SECTION 2: MY RELATIONSHIP WITH MY CHILD
+
+    rc_discuss_child_needs = forms.ChoiceField(
+        choices=CHOICES_RELATIONSHIP,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'rc_discuss_child_needs',
+                        }))
+
+    rc_discipline = forms.ChoiceField(
+        choices=CHOICES_RELATIONSHIP, required=True,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'rc_discipline',
+                        }))
+
+    rc_tells_bothering = forms.ChoiceField(
+        choices=CHOICES_RELATIONSHIP,required=True,
+        widget=forms.Select(attrs={
+                                   'class': 'form-control',
+                                   'id': 'rc_tells_bothering',
+                                   }))
+
+    rc_involve_decisions = forms.ChoiceField(
+        choices=CHOICES_RELATIONSHIP,required=True,
+        widget=forms.Select(attrs={
+                                   'class': 'form-control',
+                                   'id': 'rc_involve_decisions',
+                                   }))
+
+    # SECTION 3: MY CHILD’S BEHAVIOUR
+
+    cb_child_obedient = forms.ChoiceField(
+        choices=CHOICES_BEHAVIOR, required=True,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'cb_child_obedient',
+                            }))
+
+    cb_figths_children = forms.ChoiceField(
+        choices=CHOICES_BEHAVIOR,required=True,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'cb_figths_children',
+    }))
+
+    # SECTION 4: DISCIPLINING MY CHILD
+
+    dc_often_discipline = forms.ChoiceField(
+        choices=CHOICES_DISCIPLINE, required=True,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'dc_often_discipline',
+    }))
+    dc_physical_discipline = forms.ChoiceField(
+        choices=CHOICES_DISCIPLINE,required=True,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'dc_physical_discipline',
+    }))
+
+    dc_upstet_child = forms.ChoiceField(
+        choices=CHOICES_DISCIPLINE, required=True,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'dc_upstet_child',
+    }))
+
+    # SECTION 5: DEALING WITH STRESSFUL LIVES AS PARENTS
+    sp_caring_energy = forms.ChoiceField(
+        choices=CHOICES_FEELING,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'sp_caring_energy',
+    }))
+    sp_source_stress = forms.ChoiceField(
+        choices=CHOICES_SAD,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'sp_source_stress',
+    }))
+
+    sp_physical_punish = forms.ChoiceField(
+        choices=CHOICES_SAD,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'sp_physical_punish',
+    }))
+
+    # SECTION 6: FEELING SAD
+
+    fs_depressed = forms.ChoiceField(
+        choices=CHOICES_SAD,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'fs_depressed',
+    }))
+
+    fs_effort = forms.ChoiceField(
+        choices=CHOICES_SAD,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'fs_depressed',
+    }))
+
+    fs_hopeful = forms.ChoiceField(
+        choices=CHOICES_SAD,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'fs_depressed',
+    }))
+
+
+    # SECTION 7: FINANCES
+    fi_money_important_items = forms.ChoiceField(
+        choices=CHOICES_FINANCE,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'Q_38',
+    }))
+
+    fi_worried_money = forms.ChoiceField(
+        choices=CHOICES_FINANCE,
+        widget=forms.Select(attrs={
+                            'class': 'form-control',
+                            'id': 'fi_worried_money',
+    }))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

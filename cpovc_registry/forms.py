@@ -38,7 +38,7 @@ county_list = get_geo_list(all_list, 'GPRV')
 sub_county_list = get_geo_list(all_list, 'GDIS')
 ward_list = get_geo_list(all_list, 'GWRD')
 
-caregiver_hiv_status_choices = ( ('', 'Select status'), ('1', 'Positive'), ('2', 'Negative'), ('3', 'Not Known') )
+caregiver_hiv_status_choices = ( ('', 'Select status'), ('1', 'Positive'),('2', 'Negative'), ('3', 'Not Known') )
 
 YESNO_CHOICES = get_list('yesno_id')
 
@@ -105,19 +105,19 @@ class RegistrationForm(forms.Form):
             org_units_list = get_org_units_list('Please select Unit')
         org_unit_id = forms.ChoiceField(
             choices=org_units_list,
-            initial='',
+            required=False,
             widget=forms.Select(
                 attrs={'class': 'form-control',
                        'id': 'org_unit_id'}))
         cbo_unit_id = forms.ChoiceField(
             choices=org_units_list,
-            initial='',
+            required=False,
             widget=forms.Select(
                 attrs={'class': 'form-control',
                        'id': 'cbo_unit_id'}))
         chv_unit_id = forms.ChoiceField(
             choices=chv_list,
-            initial='',
+            required=False,
             widget=forms.Select(
                 attrs={'class': 'form-control',
                        'id': 'chv_unit_id'}))
@@ -128,7 +128,7 @@ class RegistrationForm(forms.Form):
 
         # All working in selections need to be tied to currently logged in user
         user_geos = get_user_geos(self.user)
-        print (user_geos)
+        # print (user_geos)
         county_filter = [] if user.is_superuser else user_geos['counties']
         scounty_filter = [] if user.is_superuser else user_geos['sub_counties']
         ward_filter = [] if user.is_superuser else user_geos['wards']
@@ -139,7 +139,7 @@ class RegistrationForm(forms.Form):
 
         working_in_county = forms.MultipleChoiceField(
             choices=county_list,
-            initial='',
+            required=False,
             widget=forms.SelectMultiple(
                 attrs={'class': 'form-control',
                        'id': 'working_in_county'}))
@@ -147,7 +147,7 @@ class RegistrationForm(forms.Form):
 
         working_in_subcounty = forms.MultipleChoiceField(
             choices=sub_county_list,
-            initial='',
+            required=False,
             widget=forms.SelectMultiple(
                 attrs={'class': 'form-control',
                        'id': 'working_in_subcounty',
@@ -156,7 +156,7 @@ class RegistrationForm(forms.Form):
 
         working_in_ward = forms.MultipleChoiceField(
             choices=ward_list, label=_('Select ward'),
-            initial='',
+            required=False,
             widget=forms.SelectMultiple(
                 attrs={'id': 'working_in_ward',
                        'class': 'form-control'}))
@@ -173,22 +173,17 @@ class RegistrationForm(forms.Form):
 
     working_in_region = forms.ChoiceField(
         choices=REGION_CHOICES,
+        required=False,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'id': 'working_in_region',
                    'data-parsley-required': 'true',
                    'class': 'working_region',
                    'data-parsley-errors-container': "#type_error"}))
-        # widget=forms.RadioSelect(
-        #     renderer=RadioCustomRenderer,
-        #     attrs={'id': 'working_in_region',
-        #            'data-parsley-required': 'true',
-        #            'class': 'working_region',
-        #            'data-parsley-errors-container': "#type_error"}))
 
     person_type = forms.ChoiceField(
         choices=person_type_list,
-        initial='0',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'autofocus': 'false',
@@ -196,15 +191,18 @@ class RegistrationForm(forms.Form):
                    'data-parsley-required': 'true'}))
 
     is_caregiver = forms.CharField(
+        required=False,
         widget=forms.CheckboxInput(
             attrs={'autofocus': 'false', 'data-parsley-required': 'false'}))
 
     no_adult_caregiver = forms.CharField(
+        required=False,
         widget=forms.CheckboxInput(
             attrs={'autofocus': 'false'}))
 
     child_services = forms.ChoiceField(
         choices=YESNO_CHOICES,
+        required=True,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'id': 'child_services',
@@ -213,6 +211,7 @@ class RegistrationForm(forms.Form):
 
     child_ovc = forms.ChoiceField(
         choices=YESNO_CHOICES,
+        required=True,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'id': 'child_ovc',
@@ -221,265 +220,362 @@ class RegistrationForm(forms.Form):
 
     unit_parent = forms.ChoiceField(
         choices=YESNO_CHOICES,
+        required=False,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'autofocus': 'false'}))
 
     unit_reg_assistant = forms.ChoiceField(
         choices=YESNO_CHOICES,
+        required=False,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'autofocus': 'false'}))
 
     title_type = forms.ChoiceField(
         choices=(),
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'title_type'}))
 
     cadre_type = forms.ChoiceField(
         choices=cadre_type_list,
-        initial='0',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'cadre_type'}))
 
-    first_name = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('First Name'),
-               'class': 'form-control',
-               'id': 'first_name',
-               'data-parsley-required': "true"}))
-    other_names = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('Other Names'),
-               'class': 'form-control',
-               'id': 'other_names'}))
-    surname = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('Surname'),
-               'class': 'form-control',
-               'id': 'surname',
-               'data-parsley-required': "true"}))
+    first_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('First Name'),
+                   'class': 'form-control',
+                   'id': 'first_name',
+                   'data-parsley-required': "true"}))
+
+    other_names = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Other Names'),
+                   'class': 'form-control',
+                   'id': 'other_names'}))
+
+    surname = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Surname'),
+                   'class': 'form-control', 'id': 'surname',
+                   'data-parsley-required': "true"}))
+
     sex_id = forms.ChoiceField(
         choices=sex_id_list,
+        required=True,
         widget=forms.Select(
             attrs={'placeholder': _('Sex'),
-                   'class': 'form-control',
-                   'id': 'sex_id',
+                   'class': 'form-control', 'id': 'sex_id',
                    'data-parsley-required': "true"}))
-    des_phone_number = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('07XXXXXXXX'),
-               'class': 'form-control',
-               'id': 'des_phone_number',
-               'data-parsley-maxlength': '10',
-               'data-parsley-pattern': '/^[0-9\+]{1,}[0-9\-]{3,12}$/'}))
-    other_phone_number = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('07XXXXXXXX'),
-               'class': 'form-control',
-               'id': 'other_phone_number',
-               'data-parsley-maxlength': '10',
-               'data-parsley-pattern': '/^[0-9\+]{1,}[0-9\-]{3,12}$/'}))
-    email = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('Email Address'),
-               'class': 'form-control',
-               'id': 'email',
-               'data-parsley-type': 'email'}))
-    physical_address = forms.CharField(widget=forms.Textarea(
-        attrs={'rows': '3', 'class': 'form-control'}))
+
+    des_phone_number = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('07XXXXXXXX'),
+                   'class': 'form-control', 'id': 'des_phone_number',
+                   'data-parsley-maxlength': '10',
+                   'data-parsley-pattern': '/^[0-9\+]{1,}[0-9\-]{3,12}$/'}))
+
+    other_phone_number = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('07XXXXXXXX'),
+                   'class': 'form-control',
+                   'id': 'other_phone_number',
+                   'data-parsley-maxlength': '10',
+                   'data-parsley-pattern': '/^[0-9\+]{1,}[0-9\-]{3,12}$/'}))
+
+    email = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Email Address'),
+                   'class': 'form-control',
+                   'id': 'email',
+                   'data-parsley-type': 'email'}))
+
+    physical_address = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={'rows': '3', 'class': 'form-control'}))
 
     living_in_county = forms.ChoiceField(
         choices=county_list_wb,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'living_in_county'}))
 
     living_in_subcounty = forms.ChoiceField(
         choices=sub_county_list_wb,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'living_in_subcounty'}))
 
     living_in_ward = forms.ChoiceField(
         choices=ward_list_wb, label=_('Select ward'),
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'id': 'living_in_ward',
                    'class': 'form-control'}))
 
-    national_id = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('National ID'),
-               'class': 'form-control',
-               'id': 'national_id'}))
-    staff_id = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('Staff Number'),
-               'class': 'form-control',
-               'id': 'staff_id'}))
-    workforce_id = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Workforce ID'),
-               'class': 'form-control',
-               'id': 'workforce_id'}))
-    beneficiary_id = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Beneficiary ID'),
-               'class': 'form-control',
-               'id': 'beneficiary_id'}))
-    birth_reg_id = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Birth Reg ID'),
-               'class': 'form-control',
-               'id': 'birth_reg_id'}))
-    given_name = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Given name'),
-               'class': 'form-control'}))
-    caregiver_id = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Caregiver National ID/Name/CPIMS ID'),
-               'class': 'form-control',
-               'id': 'caregiver_id'}))
-    caregiver_idno = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('National ID'),
-               'class': 'form-control',
-               'id': 'caregiver_idno'}))
-    caregiver_tel = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Cellphone Number'),
-               'class': 'form-control',
-               'id': 'caregiver_tel'}))
+    national_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('National ID'),
+                   'class': 'form-control',
+                   'id': 'national_id'}))
+
+    staff_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Staff Number'),
+                   'class': 'form-control',
+                   'id': 'staff_id'}))
+
+    workforce_id = forms.IntegerField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Workforce ID'),
+                   'class': 'form-control',
+                   'id': 'workforce_id'}))
+
+    beneficiary_id = forms.IntegerField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Beneficiary ID'),
+                   'class': 'form-control',
+                   'id': 'beneficiary_id'}))
+
+    birth_reg_id = forms.IntegerField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Birth Reg ID'),
+                   'class': 'form-control',
+                   'id': 'birth_reg_id'}))
+
+    given_name = forms.IntegerField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Given name'),
+                   'class': 'form-control'}))
+
+    caregiver_id = forms.IntegerField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Caregiver National ID/Name/CPIMS ID'),
+                   'class': 'form-control',
+                   'id': 'caregiver_id'}))
+
+    caregiver_idno = forms.IntegerField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('National ID'),
+                   'class': 'form-control',
+                   'id': 'caregiver_idno'}))
+
+    caregiver_tel = forms.IntegerField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Cellphone Number'),
+                   'class': 'form-control',
+                   'id': 'caregiver_tel'}))
+
     caregiver_hiv_status = forms.ChoiceField(
-        choices=caregiver_hiv_status_choices, label=_('Select HIV status'),
-        initial='',
+        choices=caregiver_hiv_status_choices,
+        label=_('Select HIV status'),
+        required=False,
         widget=forms.Select(
             attrs={'id': 'caregiver_hiv_status',
                    'class': 'form-control'}))
 
     relationship_type_id = forms.ChoiceField(
         choices=relationship_type_list,
-        initial='0',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'relationship_type_id'}))
-    date_of_birth = forms.DateField(widget=forms.DateInput(
-        attrs={'placeholder': _('Date Of Birth'),
-               'class': 'form-control',
-               'id': 'date_of_birth',
-               'data-parsley-required': 'true'
-               }))
-    date_of_death = forms.DateField(widget=forms.DateInput(
-        attrs={'placeholder': _('Date Of Death'),
-               'class': 'form-control',
-               'id': 'date_of_death'}))
 
-    caregiver_cpims_id = forms.CharField(widget=forms.HiddenInput(
-        attrs={'id': 'caregiver_cpims_id'}))
+    date_of_birth = forms.DateField(
+        required=True,
+        widget=forms.DateInput(
+            attrs={'placeholder': _('Date Of Birth'),
+                   'class': 'form-control',
+                   'id': 'date_of_birth',
+                   'data-parsley-required': 'true'
+                   }))
 
-    sibling_cpims_id = forms.CharField(widget=forms.HiddenInput(
-        attrs={'id': 'sibling_cpims_id'}))
+    date_of_death = forms.DateField(
+        required=False,
+        widget=forms.DateInput(
+            attrs={'placeholder': _('Date Of Death'),
+                   'class': 'form-control',
+                   'id': 'date_of_death'}))
+
+    caregiver_cpims_id = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(
+            attrs={'id': 'caregiver_cpims_id'}))
+
+    sibling_cpims_id = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(
+            attrs={'id': 'sibling_cpims_id'}))
 
     is_cpims_sibling = forms.CharField(
+        required=False,
         widget=forms.CheckboxInput(
             attrs={'autofocus': 'false'}))
 
-    sibling_id = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Birth Registration ID/Name/CPIMS ID'),
-               'class': 'form-control',
-               'id': 'cpims_child_id'}))
+    sibling_id = forms.IntegerField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Birth Registration ID/Name/CPIMS ID'),
+                   'class': 'form-control',
+                   'id': 'cpims_child_id'}))
 
-    sibling_firstname = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('First name'),
-               'class': 'form-control'}))
+    sibling_firstname = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('First name'),
+                   'class': 'form-control'}))
 
-    sibling_surname = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('Surname'),
-               'class': 'form-control'}))
+    sibling_surname = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Surname'),
+                   'class': 'form-control'}))
 
-    sibling_othernames = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('Other names'),
-               'class': 'form-control'}))
+    sibling_othernames = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Other names'),
+                   'class': 'form-control'}))
 
-    sibling_dob = forms.DateField(widget=forms.DateInput(
-        attrs={'placeholder': _('Sibling Date Of Birth'),
-               'class': 'form-control',
-               'id': 'sibling_dob'}))
+    sibling_dob = forms.DateField(
+        required=False,
+        widget=forms.DateInput(
+            attrs={'placeholder': _('Sibling Date Of Birth'),
+                   'class': 'form-control',
+                   'id': 'sibling_dob'}))
 
     sibling_gender = forms.ChoiceField(
         choices=sex_id_list,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'sibling_gender_id'}))
 
     sibling_class = forms.ChoiceField(
         choices=classes_list,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'sibling_class_id'}))
 
-    sibling_remark = forms.CharField(widget=forms.Textarea(
-        attrs={'rows': '3', 'class': 'form-control'}))
+    sibling_remark = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={'rows': '3', 'class': 'form-control'}))
 
-    audit_workforce = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Workforce ID / Name'),
-               'class': 'form-control',
-               'data-parsley-required': 'true',
-               'id': 'audit_workforce_id'}))
+    audit_workforce = forms.IntegerField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Workforce ID / Name'),
+                   'class': 'form-control',
+                   'data-parsley-required': 'true',
+                   'id': 'audit_workforce_id'}))
 
-    workforce_id = forms.CharField(widget=forms.HiddenInput(
-        attrs={'id': 'workforce_id'}))
+    workforce_id = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(
+            attrs={'id': 'workforce_id'}))
 
-    audit_date = forms.DateField(widget=forms.DateInput(
-        attrs={'class': 'form-control',
-               'data-parsley-required': 'true',
-               'id': 'audit_date'}))
+    audit_date = forms.DateField(
+        required=True,
+        widget=forms.DateInput(
+            attrs={'class': 'form-control',
+                   'data-parsley-required': 'true',
+                   'id': 'audit_date'}))
 
-    org_unit_primary = forms.CharField(widget=forms.HiddenInput(
-        attrs={'id': 'org_unit_primary'}))
+    org_unit_primary = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(
+            attrs={'id': 'org_unit_primary'}))
 
-    person_id = forms.CharField(widget=forms.HiddenInput(
-        attrs={'id': 'person_id'}))
+    person_id = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(
+            attrs={'id': 'person_id'}))
 
-    orgs_selected = forms.CharField(widget=forms.TextInput(
-        attrs={'readonly': 'readonly',
-               'data-parsley-required-message': (
-                   'Please add atleast one Organisation unit to the grid'),
-               'class': 'form-control'}))
+    orgs_selected = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'readonly': 'readonly',
+                   'data-parsley-required-message': (
+                       'Please add atleast one Organisation unit to the grid'),
+                   'class': 'form-control'}))
 
     tribe = forms.ChoiceField(
         choices=tribes,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control'}))
 
     religion = forms.ChoiceField(
         choices=religions,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control'}))
 
     is_cpims_caregiver = forms.CharField(
+        required=False,
         widget=forms.CheckboxInput(
             attrs={'autofocus': 'false'}))
 
-    caregiver_firstname = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('First name'),
-               'class': 'form-control'}))
+    caregiver_firstname = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('First name'),
+                   'class': 'form-control'}))
 
-    caregiver_surname = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('Surname'),
-               'class': 'form-control'}))
+    caregiver_surname = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Surname'),
+                   'class': 'form-control'}))
 
-    caregiver_othernames = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('Other names'),
-               'class': 'form-control'}))
+    caregiver_othernames = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Other names'),
+                   'class': 'form-control'}))
 
-    caregiver_dob = forms.DateField(widget=forms.DateInput(
-        attrs={'placeholder': _('Caregiver Date Of Birth'),
-               'class': 'form-control',
-               'id': 'caregiver_dob'}))
+    caregiver_dob = forms.DateField(
+        required=False,
+        widget=forms.DateInput(
+            attrs={'placeholder': _('Caregiver Date Of Birth'),
+                   'class': 'form-control',
+                   'id': 'caregiver_dob'}))
 
     caregiver_gender = forms.ChoiceField(
         choices=sex_id_list,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'caregiver_gender_id'}))
 
     country = forms.ChoiceField(
         choices=country_list,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'country_id'}))
@@ -567,18 +663,21 @@ class FormRegistry(forms.Form):
 
     handle_ovc = forms.ChoiceField(
         choices=YESNO_CHOICES,
+        required=False,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'id': 'handle_ovc',
                    'data-parsley-required': 'true',
                    'data-parsley-group': 'primary1',
                    'data-parsley-errors-container': "#handle_ovc_error"}))
+
     org_unit_name = forms.CharField(
         required=False,
         widget=forms.TextInput(
             attrs={'placeholder': _('Organisation unit'),
                    'class': 'form-control',
                    'autofocus': 'false', 'data-parsley-group': 'primary'}))
+
     org_closed = forms.CharField(
         required=False,
         widget=forms.CheckboxInput(
@@ -598,6 +697,7 @@ class FormRegistryNew(forms.Form):
         parent_org_unit = forms.ChoiceField(
             choices=org_units,
             initial='',
+            required=True,
             widget=forms.Select(
                 attrs={'class': 'form-control',
                        'autofocus': 'false',
@@ -608,6 +708,7 @@ class FormRegistryNew(forms.Form):
     org_unit_category = forms.ChoiceField(
         choices=reg_list,
         initial='0',
+        required=True,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'autofocus': 'false',
@@ -617,6 +718,7 @@ class FormRegistryNew(forms.Form):
     org_unit_type = forms.ChoiceField(
         choices=(('', 'Select sub-type'),),
         initial='0',
+        required=True,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'autofocus': 'false',
@@ -625,6 +727,7 @@ class FormRegistryNew(forms.Form):
 
     handle_ovc = forms.ChoiceField(
         choices=YESNO_CHOICES,
+        required=True,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'id': 'handle_ovc',
@@ -635,10 +738,13 @@ class FormRegistryNew(forms.Form):
     org_reg_type = forms.ChoiceField(
         choices=reg_type,
         initial='0',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-group': 'primary1'}))
+
     org_unit_name = forms.CharField(
+        required=True,
         widget=forms.TextInput(
             attrs={'placeholder': _('Unit name'),
                    'class': 'form-control',
@@ -647,6 +753,7 @@ class FormRegistryNew(forms.Form):
                    'data-parsley-required': "true",
                    'data-parsley-trigger': 'input',
                    'data-parsley-group': 'primary'}))
+
     reg_date = forms.CharField(
         required=False,
         widget=forms.TextInput(
@@ -655,12 +762,15 @@ class FormRegistryNew(forms.Form):
                    'data-parsley-notfuturedate': "dd-M-yy",
                    'id': 'datepicker',
                    'data-parsley-group': 'primary'}))
+
     legal_reg_number = forms.CharField(
+        required=False,
         widget=forms.TextInput(
             attrs={'placeholder': _('Registration No.'),
                    'class': 'form-control',
                    'autofocus': 'false',
                    'data-parsley-group': 'primary1'}))
+
     county = forms.MultipleChoiceField(
         choices=county_list,
         label=_('Select County'),
@@ -668,6 +778,7 @@ class FormRegistryNew(forms.Form):
         widget=forms.SelectMultiple(
             attrs={'rows': '6',
                    'data-parsley-multiple': 'multiple'}))
+
     sub_county = forms.MultipleChoiceField(
         choices=sub_county_list,
         label=_('Select sub-county'),
@@ -679,24 +790,30 @@ class FormRegistryNew(forms.Form):
                    'data-parsley-validate-if-empty': "true",
                    'data-parsley-errors-container': "#county_error",
                    'data-parsley-multiple': 'multiple'}))
+
     ward = forms.MultipleChoiceField(
         choices=ward_list, label=_('Select ward'),
         required=False, widget=forms.SelectMultiple(
             attrs={'rows': '6', 'data-parsley-multiple': 'multiple'}))
+
     parent_org_units = forms.ChoiceField(
         choices=org_units,
         initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'autofocus': 'false',
                    'data-parsley-group': 'primary1'}))
-    close_date = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': _('Select date'),
-               'class': 'form-control',
-               'autofocus': 'false',
-               'data-parsley-notfuturedate': "dd-M-yy",
-               'id': 'editdate',
-               'readonly': 'readonly'}))
+
+    close_date = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Select date'),
+                   'class': 'form-control',
+                   'autofocus': 'false',
+                   'data-parsley-notfuturedate': "dd-M-yy",
+                   'id': 'editdate',
+                   'readonly': 'readonly'}))
 
 
 class FormContact(forms.Form):
@@ -743,11 +860,11 @@ class FormContact(forms.Form):
                 is_required = False
                 if 'data-parsley-required' in attrs:
                     del(attrs['data-parsley-required'])
-                if 'latitude'in contact_name.lower():
+                if 'latitude' in contact_name.lower():
                     attrs['data-parsley-type'] = "number"
                     attrs['data-parsley-min'] = "-4"
                     attrs['data-parsley-max'] = "4"
-                elif 'longitude'in contact_name.lower():
+                elif 'longitude' in contact_name.lower():
                     attrs['data-parsley-type'] = "number"
                     attrs['data-parsley-min'] = "31"
                     attrs['data-parsley-max'] = "41"

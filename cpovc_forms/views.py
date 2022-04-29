@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.core import serializers
 from django.conf import settings
 from django.db.models import Q
+
 import json
 import random
 import ast
@@ -23,7 +24,8 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, NewGraduationMonitoringForm,
+    OVCPreventivePrePostProgramAssessmentForm )
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -36,7 +38,8 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
+    OVCPreventiveEvents, OVCPrevSinovyoCaregiverEvaluation)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -9997,3 +10000,112 @@ def new_dreamsform(request, id):
                   'forms/new_dreamsform.html',
                   {'form': form, 'init_data': init_data,
                    'vals': vals})
+
+
+# graduatoin monitoring tool
+# @login_required
+def new_graduation_monitoring_form(request, id):
+    if request.method == 'POST':
+        recommended_action = NewGraduationMonitoringForm(request.POST).RecommendActionForm(request.POST)
+        new_graduation_form_month_1 = NewGraduationMonitoringForm(request.POST, prefix="month_1")
+        new_graduation_form_month_2 = NewGraduationMonitoringForm(request.POST, prefix="month_2")
+        new_graduation_form_month_3 = NewGraduationMonitoringForm(request.POST, prefix="month_3")
+        child = RegPerson.objects.get(id=id)
+        if new_graduation_form_month_1.is_valid() and new_graduation_form_month_2.is_valid() and new_graduation_form_month_3.is_valid():
+            new_graduation_monitoring_form.is_valid() and recommended_action.is_valid()
+            new_graduation_form_month_1.save()
+            new_graduation_form_month_2.save()
+            new_graduation_form_month_3.save()
+            recommended_action.save()
+            messages.success(request, 'Form saved succesfully!')
+        else:
+            messages.error(request, 'Error saving form!')
+
+        return render(request=request, template_name='forms/new_graduation.html',
+               context={'new_graduation_form_month_1': new_graduation_form_month_1,
+                           'new_graduation_form_month_2': new_graduation_form_month_2,
+                           'new_graduation_form_month_3': new_graduation_form_month_3,
+                            'recommended_action': recommended_action})
+
+    new_graduation_form_month_1 = NewGraduationMonitoringForm(prefix="month_1")
+    new_graduation_form_month_2 = NewGraduationMonitoringForm(prefix="month_2")
+    new_graduation_form_month_3 = NewGraduationMonitoringForm(prefix="month_3")
+    recommended_action = NewGraduationMonitoringForm(request.POST).RecommendActionForm(request.POST)
+    return render(request=request, template_name='forms/new_graduation.html',
+                  context={'new_graduation_form_month_1': new_graduation_form_month_1,
+                           'new_graduation_form_month_2': new_graduation_form_month_2,
+                           'new_graduation_form_month_3': new_graduation_form_month_3,
+                           'recommended_action': recommended_action})
+
+
+def ovc_preventive_pre_post_program_assessment_view(request, id):
+    import pdb
+    child = RegPerson.objects.get(id=id)
+    model = OVCPrevSinovyoCaregiverEvaluation
+    if request.method == 'POST':
+        form = OVCPreventivePrePostProgramAssessmentForm(request.POST)
+        house_hold = OVCPreventiveEvents.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+        event_type_id = 'PREVENTIVE PRE/POST ASSMENT'
+        event_counter = OVCCareEvents.objects.filter(
+            event_type_id=event_type_id,
+            person=id,
+            is_void=False,
+        ).count()
+        #ovc_care_event = OVCCareEvents.objects.create(
+        #   event_type_id=event_type_id,
+        #   event_counter=event_counter,
+        #   event_score=0,
+        #   created_by=request.user.id,
+        #   person=RegPerson.objects.get(pk=int(id)),
+        #   house_hold=house_hold
+        # )
+
+        ovc_preventive_event = OVCPreventiveEvents.objects.create(
+            event_type_id=event_type_id,
+            event_counter=event_counter,
+            event_score=0,
+            date_of_previous_event=OVCPreventiveEvents.objects.get(event_type_id=event_type_id).date_of_event,
+            created_by=request.user.id,
+            is_void=False
+            )
+        if form.is_valid():
+            # save event
+            ovc_preventive_event.save()
+            form.cleaned_data.save()
+            messages.success(request, 'Form saved succesfully!')
+            
+
+        else:
+            messages.error(request, 'Error saving form!')
+        return redirect('progress-assessment/<int:id>/')
+    else:
+        form = OVCPreventivePrePostProgramAssessmentForm()
+        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+        care_giver_gender = care_giver.sex_id
+        if care_giver_gender == 'SMAL':
+            care_giver_gender = 'Male'
+        else:
+            care_giver_gender = 'Female'
+
+        # house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+        # siblings = RegPersonsSiblings.objects.select_related().filter(child_person=id, is_void=False, date_delinked=None)
+        return render(request=request, template_name='forms/progress_assessment.html',
+                context={'form': form, 'child': child, 'care_giver': care_giver,
+                            'care_giver_gender': care_giver_gender}) # 'temporary_data':# temporary_data })
+
+def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
+    object = ovc_preventive_pre_post_program_assessment_model.objects.get(id=id)
+    return render(request, template_name='forms/progress_assessment.html', context={'form': object})
+
+def ovc_preventive_pre_post_program_assessment_delete_view(request, id):
+    object =  ovc_preventive_pre_post_program_assessment_model.objects.get(id=id)
+    form = OVCPreventivePrePostProgramAssessmentForm(request.POST, instance=object)
+    if form.is_valid:
+        form.save()
+        object = ovc_preventive_pre_post_program_assessment_model.objects.all()
+        return redirect('retrieve')
+
+    def delete(request, pk):
+        ovc_preventive_pre_post_program_assessment_model.objects.filter(id=pk).delete()
+        return redirect('retrieve')
+

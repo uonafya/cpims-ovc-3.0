@@ -28,26 +28,26 @@ Caregiver details | {{care_giver}}
 </small></h1>
 <!-- end page-header -->
 {% if messages %}
-    {% for message in messages %}
-    {% if 'error' in message.tags %}
-        <div id="messages" class="alert alert-danger fade in">
-        <span class="close" data-dismiss="alert">×</span>
-        <i class="fa fa-info fa-2x pull-left"></i>
-    {% else %}
-        <div id="messages" class="alert alert-success fade in">
-        <span class="close" data-dismiss="alert">×</span>
-        <i class="fa fa-check fa-2x pull-left"></i>
-    {% endif %}    
-        <p>{{ message }}</p>
-    </div>
-   {% endfor %}
+{% for message in messages %}
+{% if 'error' in message.tags %}
+    <div id="messages" class="alert alert-danger fade in">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-info fa-2x pull-left"></i>
+{% else %}
+    <div id="messages" class="alert alert-success fade in">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+{% endif %}    
+    <p>{{ message }}</p>
+</div>
+{% endfor %}
 {% endif %}
-    <div id="message" class="alert alert-success fade in" style="display: none">
-        <span class="close" data-dismiss="alert">×</span>
-        <i class="fa fa-check fa-2x pull-left"></i>
-  
-        <span id="response"></span>
-    </div>
+<div id="message" class="alert alert-success fade in" style="display: none">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+
+    <span id="response"></span>
+</div>
 <!-- begin row -->
 <div class="row">
   <!-- begin col-12 -->
@@ -340,6 +340,10 @@ Caregiver details | {{care_giver}}
 
                         <a href="{% url 'new_dreamsform' id=creg.person_id%}">
                                 <button type="button" class="btn btn-primary"> <i class="fa .fa-th-list"></i> DREAMS Service Uptake Form</button>
+                        </a>
+                            <hr/>
+                        <a href="{% url 'progress-assessment' id=creg.person_id%}">
+                                <button type="button" class="btn btn-primary"> OVC Preventive Pre and Post Program Assessment Form <i class="fa .fa-th-list"></i> </button>
                         </a>
 
                         {% endif %}

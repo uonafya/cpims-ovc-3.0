@@ -4,7 +4,7 @@ import datetime
 import uuid
 from cpovc_registry.models import (RegPerson, RegOrgUnit, AppUser)
 from cpovc_main.models import (SchoolList, SetupLocation)
-from cpovc_ovc.models import (OVCHouseHold, OVCFacility)
+from cpovc_ovc.models import (OVCHouseHold, OVCFacility,)
 
 # Create your models here.
 class OVCBursary(models.Model):
@@ -1166,7 +1166,7 @@ class OVCHIVManagement(models.Model):
     baseline_hei=models.CharField(max_length=100, null=False)
     firstline_start_date = models.DateTimeField(null=False)
     substitution_firstline_arv = models.BooleanField(default=False)
-    substitution_firstline_date = models.DateTimeField(default=timezone.now)
+    substitution_firstline_date = models.DateTimeField(default=datetime.datetime.now())
     switch_secondline_arv = models.BooleanField(default=False)
     switch_secondline_date = models.DateTimeField(null=True)
     switch_thirdline_arv = models.BooleanField(default=False)
@@ -1400,3 +1400,136 @@ class OVCCaseLocation(models.Model):
     def __unicode__(self):
         """To be returned by admin actions."""
         return '%s' % (str(self.case))
+
+
+class NewGraduationMonitoring(models.Model):
+
+    month_id = models.IntegerField(max_length=3)
+    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
+    bench_mark_1 = models.IntegerField(default=0)
+    bench_mark_2 = models.IntegerField(default=0)
+    bench_mark_3 = models.IntegerField(default=0)
+    bench_mark_4 = models.IntegerField(default=0)
+    bench_mark_5 = models.IntegerField(default=0)
+    bench_mark_6 = models.IntegerField(default=0)
+    bench_mark_7 = models.IntegerField(default=0)
+    bench_mark_8 = models.IntegerField(default=0)
+    bench_mark_9 = models.IntegerField(default=0)
+    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+    care_giver = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    date_of_event = models.DateField(default=timezone.now)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return str(self.month_id)
+
+    class Meta:
+        db_table = 'new_graduation_monitoring'
+
+    def __unicode__(self):
+        return str(self.month_id)
+
+class OVCFMPEvaluation(models.Model):
+    evaluation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    assessment_type = models.CharField(max_length=20, null=True)
+    Q_1 = models.CharField(max_length=50, null=True)
+    Q_2 = models.CharField(max_length=50, null=True)
+    Q_3 = models.CharField(max_length=50, null=True)
+    Q_4 = models.CharField(max_length=50, null=True)
+    Q_5 = models.CharField(max_length=50, null=True)
+    Q_6 = models.CharField(max_length=50, null=True)
+    Q_7 = models.CharField(max_length=50, null=True)
+    Q_8 = models.CharField(max_length=50, null=True)
+    Q_9 = models.CharField(max_length=50, null=True)
+    
+    date_of_event = models.DateField(default=timezone.now, null=True)### date
+    timestamp_created = models.DateTimeField(auto_now_add=True)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ovc_fmp_evaluation'
+
+
+class OVCPreventiveEvents(models.Model):
+    event = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    event_type_id = models.CharField(max_length=10)
+    event_counter = models.IntegerField(default=0)
+    event_score = models.IntegerField(null=True, default=0)
+    date_of_event = models.DateField(default=timezone.now)
+    date_of_previous_event = models.DateTimeField(null=True)
+    created_by = models.IntegerField(null=True, default=404)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    is_void = models.BooleanField(default=False)
+    sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
+    app_user = models.ForeignKey(AppUser, default=1, on_delete=models.CASCADE)
+    person = models.ForeignKey(RegPerson, null=True, on_delete=models.CASCADE)
+    house_hold = models.ForeignKey(OVCHouseHold, null=True, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'ovc_preventive_events'
+
+
+class OVCPrevSinovyoCaregiverEvaluation(models.Model):
+    evaluation_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    ref_caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='preval_caregiver')
+
+    bd_age = models.CharField(max_length=10)
+    bd_sex = models.CharField(max_length=10)
+    bd_read = models.CharField(max_length=10)
+    bd_education_level = models.CharField(max_length=10)
+    bd_biological_children = models.CharField(max_length=10)
+    bd_non_biological_children = models.CharField(max_length=10)
+    bd_children_not_in_school = models.CharField(max_length=10)
+    watch_tv_with_child = models.CharField(max_length=10)
+    bd_source_income = models.CharField(max_length=10)
+    bd_adults_contribute_hh_income = models.CharField(max_length=10)
+    bd_children_contribute_hh_income = models.CharField(max_length=10)
+    bd_biological_mother = models.CharField(max_length=10)
+    bd_bm_live_hh = models.CharField(max_length=10, null=True)
+    bd_biological_father = models.CharField(max_length=10)
+    bd_bf_live_hh = models.CharField(max_length=10, null=True)
+    bd_money_basic_expenses = models.CharField(max_length=10)
+    bd_violence = models.CharField(max_length=10)
+    bd_adult_unwell = models.CharField(max_length=10)
+    bad_things_from_sex = models.CharField(max_length=10)
+    bd_child_unwell = models.CharField(max_length=10)
+    bd_miss_school = models.CharField(max_length=10)
+    bd_hiv_status = models.CharField(max_length=10)
+    bd_children_hiv_status = models.CharField(max_length=10)
+    bd_hiv_prevention = models.CharField(max_length=10)
+    bd_two_meals = models.CharField(max_length=10)
+    bd_missing_meal = models.CharField(max_length=10)
+    rc_discuss_child_needs = models.CharField(max_length=10)
+    rc_discipline = models.CharField(max_length=10)
+    rc_tells_bothering = models.CharField(max_length=10)
+    rc_involve_decisions = models.CharField(max_length=10)
+    cb_child_obedient = models.CharField(max_length=10)
+    cb_figths_children = models.CharField(max_length=10)
+    dc_often_discipline = models.CharField(max_length=10)
+    dc_physical_discipline = models.CharField(max_length=10)
+    dc_upstet_child = models.CharField(max_length=10)
+    sp_caring_energy = models.CharField(max_length=10)
+    sp_source_stress = models.CharField(max_length=10)
+    sp_physical_punish = models.CharField(max_length=10)
+    fs_depressed = models.CharField(max_length=10)
+    fs_effort = models.CharField(max_length=10)
+    fs_hopeful = models.CharField(max_length=10)
+    fi_money_important_items = models.CharField(max_length=10)
+    fi_worried_money = models.CharField(max_length=10)
+    event = models.ForeignKey(OVCPreventiveEvents, on_delete=models.CASCADE)
+    fmp_pre_grouping_id = models.UUIDField(default=uuid.uuid1, editable=False)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(default=timezone.now)
+    is_void = models.BooleanField(default=False)
+    sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
+
+    class Meta:
+        db_table = 'ovc_prev_sinovuyo_caregiver_evaluation'
+
+    def __unicode__(self):
+        return str(self.evaluation_id)
+
+
