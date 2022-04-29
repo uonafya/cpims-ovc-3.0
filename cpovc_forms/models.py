@@ -572,21 +572,18 @@ class OVCAdverseMedicalEventsFollowUp(models.Model):
 
 
 class OVCFamilyCare(models.Model):
-    familycare_id = models.UUIDField(
-        primary_key=True, default=uuid.uuid1, editable=False)
+    familycare_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     type_of_care = models.CharField(max_length=4)
     certificate_number = models.CharField(max_length=20, null=True)
     date_of_certificate_expiry = models.DateField(null=True)
     type_of_adoption = models.CharField(max_length=4, null=True)
-    adoption_subcounty = models.ForeignKey(
-        'cpovc_main.SetupGeography', on_delete=models.CASCADE,  related_name='adoption_subcounty_fk', null=True)
+    adoption_subcounty = models.ForeignKey('cpovc_main.SetupGeography', on_delete=models.CASCADE,  related_name='adoption_subcounty_fk', null=True)
     adoption_country = models.CharField(max_length=20, null=True)
     residential_institution_name = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE,  related_name='residential_institution_name_fk', null=True)
     fostered_from = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE,  related_name='fostered_from_fk', null=True)
     date_of_adoption = models.DateField(default=timezone.now, null=True)
     court_name = models.CharField(max_length=100, null=True)
     court_file_number = models.CharField(max_length=20, null=True)
-    # adoption_startdate = models.CharField(max_length=20)
     parental_status = models.CharField(max_length=4, null=True)
     children_office = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE,  related_name='children_office_fk', null=True)
     contact_person = models.CharField(max_length=20, null=True)
@@ -609,8 +606,6 @@ class OVCFamilyCare(models.Model):
     timestamp_created = models.DateTimeField(default=timezone.now)
     is_void = models.BooleanField(default=False)
     sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
-
-    # children_office/contact_person/parental_status
 
     class Meta:
         db_table = 'ovc_family_care'
@@ -1166,7 +1161,7 @@ class OVCHIVManagement(models.Model):
     baseline_hei=models.CharField(max_length=100, null=False)
     firstline_start_date = models.DateTimeField(null=False)
     substitution_firstline_arv = models.BooleanField(default=False)
-    substitution_firstline_date = models.DateTimeField(default=datetime.datetime.now())
+    substitution_firstline_date = models.DateTimeField(default=timezone.now)
     switch_secondline_arv = models.BooleanField(default=False)
     switch_secondline_date = models.DateTimeField(null=True)
     switch_thirdline_arv = models.BooleanField(default=False)
@@ -1465,13 +1460,14 @@ class OVCFMPEvaluation(models.Model):
         class Meta:
             db_table = 'ovc_fmp_evaluation'
 
-class OVCCareCaseExitClosure(models.Model):
+class OVCCareCaseExit(models.Model):
     case_clouse_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE,related_name='caseclouse_child')
-    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='caseclouse_caregiver')
+    #caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='caseclouse_caregiver')
     #----cpa
     attrition_reason = models.CharField(max_length=10, null=True)
     closure_reason = models.CharField(max_length=10, null=True)
+    exit_reason_stored = models.CharField(max_length=10, null=True)
     other = models.CharField(max_length=10, null=True)
     case_files_completed = models.CharField(max_length=5, null=True)
     cw_phone_household = models.CharField(max_length=5, null=True)
@@ -1493,10 +1489,9 @@ class OVCCareCaseExitClosure(models.Model):
 
     class Meta:
         """Override table details."""
+        """table name"""
+        db_table = 'ovc_closure_exit'
 
-        db_table = 'OVC_Care_Case_closure_Exit'
-        verbose_name = 'OVC Case Clouse Exit'
-        verbose_name_plural = 'OVC Case Clouse Exit'
 
 
 
