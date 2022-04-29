@@ -10071,11 +10071,8 @@ def new_benchmarkmonitoring(request, id):
 
 def new_caseclosure(request, id):
 
-
     try:
 
-    # except:
-    #     pass
         if request.method == 'POST':
             closure_reason = request.POST.get("CASE_CL001")
             receiving_org = request.POST.get("CASE_CL002}")
@@ -10136,7 +10133,7 @@ def new_caseclosure(request, id):
             file_stored2=file_stored2,
             exit_reason=exit_reason,
             staff_certifying=staff_certifying,
-            date_of_event = date,
+            date_of_closure = date,
             case_files_completed=files_completed ,
             cw_phone_household=phone_number,
             sp_informed_graduation =informed_graduation,
@@ -10168,19 +10165,22 @@ def new_caseclosure(request, id):
 
     form = CaseClosureForm()
     event = OVCCareEvents.objects.filter(person_id=id).values_list('event')
-    case_closure = OVCCareCaseExitClosure.objects.filter(event_id__in=event).order_by('date_of_event')
+    case_closure_date = OVCCareCaseExitClosure.objects.filter(event_id__in=event).order_by('date_of_closure')
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
 
     return render(request,
                   'forms/new_case_closure.html',
-                  {'form': form, 'init_data': init_data,
-                    'care_giver': care_giver,'case_closure':case_closure,
+                  {'form': form,
+                   'init_data': init_data,
+                    'care_giver': care_giver,
+                   'case_closure_date':case_closure_date,
+                   'person':id,
                    'vals': vals})
 def edit_caseclosure(request, id):
   """Some default page for Server Errors."""
 
   try:
-      caseclosuredata = OVCCareCaseExitClosure.objects.get(case_closure_id=id)
+      caseclosuredata = OVCCareCaseExitClosure.objects.get(case_clouse_id=id)
   except Exception as e:
       print("error with OVC viewing - %s" % (str(e)))
       # raise e
@@ -10191,6 +10191,7 @@ def edit_caseclosure(request, id):
   return render(request, 'forms/new_case_closure.html', {'form': form, 'caseclosuredata':caseclosuredata, 'status': 200})
 
 def delete_caseclosure(request, id):
-   delete_caseclosure = OVCCareCaseExitClosure.objects.get(case_closure_id=id)
+   delete_caseclosure = OVCCareCaseExitClosure.objects.get(case_clouse_id=id)
    delete_caseclosure.delete()
-   return render(request, 'forms/new_case_closure.html')
+   return render(
+       request, 'forms/new_case_closure.html')
