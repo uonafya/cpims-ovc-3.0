@@ -8206,3 +8206,13 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
                                                   attrs={'class': 'form-control',
                                                          'id': 'SAFE_DOMAIN'})
                                               )
+
+    # Feedback form entry
+    FEEDBACK_BIDIRECTIONALFORM = forms.CharField(widget =forms.Textarea(
+        attrs= {
+            'placeholder': _('Your feedback'),
+            'class':'form-control',
+            'rows':'3'
+        }
+    )
+    )

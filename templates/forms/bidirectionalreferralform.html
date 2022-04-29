@@ -89,11 +89,10 @@
                 <table id="assessment_manager_table" class="table">
                     <thead>
                     <tr id="id_inputHeaders1">
-                        <td width="5%"></td>
-                        <th width="15%"><h6><b>Domain</b></h6></th>
-                        <th width="20%"><h6><b>Services</b></h6></th>
-                        <th width="25%"><h6><b>Safe Domain</b></h6></th>
-                        {#                                    <th width="5%"><h6><b>Schooled Domain</b></h6></th>#}
+                        <td width="3%"></td>
+                        <th width="20%"><h6><b>Domain<span class="asteriskField">*</b></h6></th>
+                        <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6></th>
+                        <th width="20%"><h6><b>Core services status<span class="asteriskField">*</b></h6></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -151,23 +150,16 @@
                                 <thead>
                                 <tr>
                                     <td>
-                                        <textarea name="" id="" cols="40" rows="4"></textarea>
+                                        {{ form.FEEDBACK_BIDIRECTIONALFORM }}
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td>Feedback by:</td>
-                                    <td> Designation:</td>
-                                    <td>Organization</td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
                             </table>
                         </div>
-                        <br><br>
                     </div>
                 </div>
-
             </div>
             <!-- end panel -->
         </div>
