@@ -51,6 +51,7 @@
                         {% else %}
                             {{ data.date_of_birth|gen_age }} YRS 
                         {% endif %}</b></small></h1>
+                        
 
 {% endfor %}
 <!-- end page-header -->
@@ -231,23 +232,23 @@
                                             </td>
                                         </tr>		                                        
                                     </tbody>
-                                    <!-- {{ form.olmis_assessment_provided_list }} -->
+                                    {{ form.preventive_assessment_provided_list }}
                                 </table>
                             </div>
 							    <!-- end col-6 -->                                
 							</fieldset>
 
-                            <div class="panel-body panel-form">
-                                <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4">Date Assessment Recorded<span class="asteriskField">*</label>
-                                    <div class="col-md-2 col-sm-2">
-                                        {{ form.date_of_assessment }}
-                                        <div id="date_errormsg0" style="display:none;">
-                                            <small><p class="dialog_paragraph">This value is required</p></small>
+                                <!-- <div class="panel-body panel-form">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 col-sm-4">Date Assessment Recorded<span class="asteriskField">*</label>
+                                        <div class="col-md-2 col-sm-2">
+                                            {{ form.date_of_assessment }}
+                                            <div id="date_errormsg0" style="display:none;">
+                                                <small><p class="dialog_paragraph">This value is required</p></small>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </div> -->
 
                             <div class="panel-body panel-form">
                                 <div class="form-group">
@@ -315,8 +316,8 @@
                                             </td>
                                         </tr>                                               
                                     </tbody>
-                                    <!-- {{ form.olmis_service_provided_list }} -->
-                                </table>  
+                                    {{ form.preventive_assessment_provided_list }}
+                                    </table>  
                             </div>                               
                             </div>
 
@@ -336,7 +337,7 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-4 col-sm-4"></label>
                                     <div class="col-md-6 col-sm-6">
-                                        <button id="mysubmit-f1a-3" class="btn btn-primary" type="button" onClick="saveForm1A(4)">Submit Service(s)</button>
+                                        <button id="mysubmit-f1a-3" class="btn btn-primary" type="button" onClick="saveForm1A(3)">Submit Service(s)</button>
                                         <a href="{% url 'ovc_view' id=form.person.value %}" onClick="resetForm1A(4)" class="btn btn-white">Cancel</a>
                                     </div>
                                 </div>
@@ -408,13 +409,13 @@
                                             </td>
                                         </tr>		                                        
                                     </tbody>
-                                    {{ form.service_provided_list }}
+                                    {{ form.preventive_assessment_provided_list }}
                                 </table>
                             </div>
 							    <!-- end col-6 -->                                
 							</fieldset>
 
-                            <div class="panel-body panel-form">
+                            <!-- <div class="panel-body panel-form">
                                 <div class="form-group">
                                     <label class="control-label col-md-4 col-sm-4">Date Assessment Recorded<span class="asteriskField">*</label>
                                     <div class="col-md-2 col-sm-2">
@@ -424,7 +425,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="panel-body panel-form">
                                 <div class="form-group">
@@ -703,46 +704,49 @@ function saveForm1A(x)
         error_div = '#error_assessment';
 
         var date_of_assessment = $('#date_of_assessment').val();
-        var olmis_assessment_provided_list = $('#olmis_assessment_provided_list').val();
+        var olmis_assessment_provided_list = $('#preventive_assessment_provided_list').val(); 
+        var person_id = '{{id}}'
+        console.log("============>>>>>> "+ olmis_assessment_provided_list);
         if(olmis_assessment_provided_list) 
+
         {
             values['olmis_assessment_provided_list'] = olmis_assessment_provided_list;
 
-            if(date_of_assessment)
-            {
-                values['date_of_assessment'] = date_of_assessment;
-                $.ajax({
-                    url: '{% url 'save_form1a' %}',
-                    dataType: 'json',
-                    method: 'POST',
-                    data: values,
-                    success: function(result)
+            // if(date_of_assessment)
+            // {
+            values['date_of_assessment'] = date_of_assessment;
+            $.ajax({
+                url: '{% url 'preventiveattendanceregister' id=60 %}',
+                dataType: 'json',
+                method: 'POST',
+                data: values,
+                success: function(result)
+                {
+                    $.each(result, function(i, val) 
                     {
-                        $.each(result, function(i, val) 
-                        {
-                            $(".alert-danger").hide();
-                            $('#success_message').css({'display': 'block'});
-                            $('#success_message p').html(val.msg);
-                            $('#error-message-reuse').css({'display': 'none'});
-                        });
-                        loadForm1aEvents();
-                        resetForm1A(1);
-                    },
-                    error: function(xhr, status, error){
                         $(".alert-danger").hide();
-                        $("" + error_div + "").addClass( "alert alert-danger fade in" );
-                        $("" + error_div + "").html(msg + error)
-                    }
-                });
-            }
-            else
-            {
-                $('#success_message').css({'display': 'none'});
-                $(".alert-danger").show();
-                $('.invalid-form-message').html('Please provide required date of event.');
-                $('#date_errormsg0').css({'display': 'block'});
-                return false;            
-            }
+                        $('#success_message').css({'display': 'block'});
+                        $('#success_message p').html(val.msg);
+                        $('#error-message-reuse').css({'display': 'none'});
+                    });
+                    loadForm1aEvents();
+                    resetForm1A(1);
+                },
+                error: function(xhr, status, error){
+                    $(".alert-danger").hide();
+                    $("" + error_div + "").addClass( "alert alert-danger fade in" );
+                    $("" + error_div + "").html(msg + error)
+                }
+            });
+            // }
+            // else
+            // {
+            //     $('#success_message').css({'display': 'none'});
+            //     $(".alert-danger").show();
+            //     $('.invalid-form-message').html('Please provide required date of event.');
+            //     $('#date_errormsg0').css({'display': 'block'});
+            //     return false;            
+            // }
         }
         else
         {
@@ -1038,15 +1042,20 @@ function AddRow(x)
 	if(x==1)
 	{
 		var OlmisAssessmentData = new Array();
+        
         var olmis_assessment_domain = $("#intervention_prevention_register").val();
+        var olmis_assessment_coreservice_status = $('input[name="COMPLETED_ALL_SESSIONS"]:checked').val();
         var olmis_assessment_coreservice = $("#makeup_session_id").val();
-        var olmis_assessment_coreservice_status = $("#completed_all_sessions").val();
         var olmis_session_attended_days = $("#session_attended_days").val();
+        var olmis_session_date_id = $("#session_date_id").val();
+
+
         var csrftoken = $.cookie('csrftoken');        
         var values = {  
             'csrfmiddlewaretoken': csrftoken
         };
-        // console.log("===========>>>> "+ olmis_assessment_coreservice + "########## "+olmis_assessment_domain+ 'xxxxxxxxxxx ') +olmis_assessment_coreservice_status;
+        var person_id = '{{id}}'
+        console.log("============>>>>>> "+ olmis_session_date_id);
 
         // Validation and Ajax
         if(olmis_assessment_domain || olmis_assessment_domain == '')
@@ -1073,24 +1082,26 @@ function AddRow(x)
                     var cell2 = row.insertCell(2);
                     var cell3 = row.insertCell(3);
                     var cell4 = row.insertCell(4);
+                    var cell5 = row.insertCell(5);
 
                     var holmis_assessment_domain= "<input id='holmis_assessment_domain'  value='"+olmis_assessment_domain+"'>"
                     var holmis_assessment_coreservice = "<input id='holmis_assessment_coreservice'  value='"+olmis_assessment_coreservice+"'>"
                     var holmis_assessment_coreservice_status = "<input id='holmis_assessment_coreservice_status' value='"+olmis_assessment_coreservice_status+"'>"
                     var holmis_session_attended_days = "<input id='session_attended_days' value='"+olmis_session_attended_days+"'>"
-                    // var holmis_session_attended_days = "<input id='session_attended_days' value='"+olmis_session_attended_days+"'>"
+                    var holmis_session_date = "<input id='session_attended_days' value='"+olmis_session_date_id+"'>"
                     
                     var holmis_assessment_status= "<input id='holmis_assessment_status'  value='new'>"
                     
                     
 
-                    cell0.innerHTML = '<h6 class="td_style">#</h6>';        
+                    cell0.innerHTML = '<h6 class="td_style">#</h6>';  
+                    cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_domain") + holmis_assessment_domain + '</h6>';      
                     cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice") + holmis_assessment_coreservice + '</h6>';
-                    cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_domain") + holmis_assessment_domain + '</h6>';
                     cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice_status") + holmis_assessment_coreservice_status + '</h6>';
-                    cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice_status") + holmis_session_attended_days + '</h6>';
+                    cell4.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_session_attended_days") + holmis_session_attended_days + '</h6>';
+                    cell5.innerHTML = '<h6 class="td_style">' + displayVals(2, "holmis_session_date") + holmis_session_date + '</h6>';
 
-                    cell4.innerHTML  = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
+                    cell6.innerHTML  = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
 
 
                     // AddClick Event To Remove Button
@@ -1113,11 +1124,16 @@ function AddRow(x)
                         var olmis_assessment_domain = $(tr).find('input[id="holmis_assessment_domain"]').val();
                         var olmis_assessment_coreservice = $(tr).find('input[id="holmis_assessment_coreservice"]').val();
                         var olmis_assessment_coreservice_status = $(tr).find('input[id="holmis_assessment_coreservice_status"]').val();
+                        var holmis_session_attended_days = $(tr).find('input[id="holmis_session_attended_days"]').val();
+                        var holmis_session_date = $(tr).find('input[id="holmis_session_date"]').val();
+                    
 
                         OlmisAssessmentData[row]= {
                             "olmis_assessment_domain" : olmis_assessment_domain,
                             "olmis_assessment_coreservice" : olmis_assessment_coreservice,
-                            "olmis_assessment_coreservice_status" : olmis_assessment_coreservice_status
+                            "olmis_assessment_coreservice_status" : olmis_assessment_coreservice_status,
+                            "olmis_session_attended_days" : holmis_session_attended_days,
+                            "olmis_session_date" : holmis_session_date
                             }                                
                         
                     });
@@ -1127,10 +1143,9 @@ function AddRow(x)
                     OlmisAssessmentData = JSON.stringify(OlmisAssessmentData); 
 
                     // Set olmis_assessment_provided_list
-                    // $('#olmis_assessment_provided_list').val(OlmisAssessmentData);
+                    $('#preventive_assessment_provided_list').val(OlmisAssessmentData);
 
-                    console.log(OlmisAssessmentData)
-				}
+                    console.log("------------>>>>>>> bbbbbb"+$('#olmis_assessment_provided_list').val())				}
 				else
 				{
 					$("#olmis_assessment_coreservice_status_errormsg").css({ 'display': "block" });
@@ -1232,7 +1247,7 @@ function AddRow(x)
                 OlmisServiceData = JSON.stringify(OlmisServiceData);
 
                 // Set service_provided_list
-                // $('#service_provided_list').val(OlmisServiceData);
+                $('#preventive_assessment_provided_list').val(OlmisServiceData);
 
                 console.log(OlmisServiceData)
 			}
@@ -1254,6 +1269,7 @@ function AddRow(x)
         var olmis_assessment_coreservice = $("#caregiver_refferal_services_id").val();
         var olmis_assessment_coreservice_status = $('input[name="CAREGIVER_REFFERAL_COMPLETED"]:checked').val();
         var olmis_session_attended_days = $('input[name="CAREGIVER_REFERAL_MADE"]:checked').val();
+        var attendence_comments = $("#attendance_comments").val();
         var csrftoken = $.cookie('csrftoken');        
         var values = {  
             'csrfmiddlewaretoken': csrftoken
@@ -1286,23 +1302,25 @@ function AddRow(x)
                     var cell2 = row.insertCell(2);
                     var cell3 = row.insertCell(3);
                     var cell4 = row.insertCell(4);
+                    var cell5 = row.insertCell(5);
+                    var cell6 = row.insertCell(6);
 
                     var holmis_assessment_domain= "<input id='holmis_assessment_domain'  value='"+olmis_assessment_domain+"'>"
                     var holmis_assessment_coreservice = "<input id='holmis_assessment_coreservice'  value='"+olmis_assessment_coreservice+"'>"
                     var holmis_assessment_coreservice_status = "<input id='holmis_assessment_coreservice_status' value='"+olmis_assessment_coreservice_status+"'>"
                     var holmis_session_attended_days = "<input id='session_attended_days' value='"+olmis_session_attended_days+"'>"
-                    // var holmis_session_attended_days = "<input id='session_attended_days' value='"+olmis_session_attended_days+"'>"
+                    var holmis_attendence_comments = "<input id='session_attended_days' value='"+attendence_comments+"'>"
                     
-                    var holmis_assessment_status= "<input id='holmis_assessment_status'  value='new'>"
                     
                     
 
                     cell0.innerHTML = '<h6 class="td_style">#</h6>';        
                     cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice") + holmis_assessment_coreservice + '</h6>';
                     cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_domain") + holmis_assessment_domain + '</h6>';
-                    cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice_status") + holmis_assessment_coreservice_status + '</h6>';
                     cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "holmis_session_attended_days") + holmis_session_attended_days + '</h6>';
-                    cell4.innerHTML = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
+                    cell4.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice_status") + holmis_assessment_coreservice_status + '</h6>';
+                    cell5.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice_status") + holmis_attendence_comments + '</h6>';
+                    cell6.innerHTML = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
 
 
                     // AddClick Event To Remove Button
@@ -1326,12 +1344,14 @@ function AddRow(x)
                         var olmis_assessment_coreservice = $(tr).find('input[id="holmis_assessment_coreservice"]').val();
                         var olmis_assessment_coreservice_status = $(tr).find('input[id="holmis_assessment_coreservice_status"]').val();
                         var olmis_session_attended_days = $(tr).find('input[id="holmis_session_attended_days"]').val();
+                        var olmis_session_attended_comments = $(tr).find('input[id="holmis_attendence_comments"]').val();
 
                         OlmisAssessmentData[row]= {
                             "olmis_assessment_domain" : olmis_assessment_domain,
                             "olmis_assessment_coreservice" : olmis_assessment_coreservice,
                             "olmis_assessment_coreservice_status" : olmis_assessment_coreservice_status,
-                            "olmis_session_attended_days": olmis_session_attended_days
+                            "olmis_session_attended_days": olmis_session_attended_days,
+                            "olmis_session_attended_comments": olmis_session_attended_comments
                             }                                
                         
                     });
@@ -1341,9 +1361,9 @@ function AddRow(x)
                     OlmisAssessmentData = JSON.stringify(OlmisAssessmentData); 
 
                     // Set olmis_assessment_provided_list
-                    $('#olmis_assessment_provided_list').val(OlmisAssessmentData);
+                    $('#preventive_assessment_provided_list').val(OlmisAssessmentData);
 
-                    console.log(OlmisAssessmentData)
+                    // console.log("------------>>>>>>> bbbbbb"+$('#olmis_assessment_provided_list').val())
 				}
 				else
 				{
