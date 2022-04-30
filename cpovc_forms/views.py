@@ -36,7 +36,8 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, OVCBiReferral)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
+    OVCBiReferral)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -10003,28 +10004,34 @@ def new_dreamsform(request, id):
 def bidirectionalreferralform(request, id):
     import pdb
     if request.method == 'POST':
+        data={}
+        data.insert()
         data = request.POST
-        pdb.set_trace()
+        print(data)
 
-        if data:
-            OVCBiReferral(
-                client_category = data['client_category']
-            ).save()
+        try:
+            OVCBiReferral.objects.create(
+            refferal_id=1
+            )
+        except Exception as e:
+            print(e)
 
-            msg = 'saved successfully'
-            messages.add_message(request, messages.INFO, msg)
-        else:
-            msg = 'unsuccessfully'
-            messages.add_message(request, messages.ERROR, msg)
-
-
+        url = reverse('ovc_view', kwargs={'id': id})
+        return HttpResponseRedirect(url)
     init_data = RegPerson.objects.filter(pk=id)
     check_fields = ['sex_id']
     vals = get_dict(field_name=check_fields)
     form = BIDIRECTIONALREFERRALFORM(initial={'person': id})
-    return  render(request,
-                   'forms/bidirectionalreferralform.html',
-                    {'form': form, 'init_data': init_data,
-                     'vals': vals})
+    creg = []
+    caregiver = []
+    context = {
+        'form': form,
+        'init_data': init_data,
+        'vals': vals,
+        'creg':creg,
+        'caregiver': caregiver
 
-
+    }
+    return render(request,
+                  'forms/bidirectionalreferralform.html',
+                  context)

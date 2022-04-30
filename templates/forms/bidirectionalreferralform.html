@@ -70,107 +70,114 @@
     <div class="col-md-12">
     <!-- begin panel -->
     <div class="panel panel-inverse">
-    <div class="panel-heading">
-        <div class="panel-heading-btn">
-            <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i
-                    class="fa fa-minus"></i></a>
-            <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i
-                    class="fa fa-times"></i></a>
-        </div>
-        <h4 class="panel-title"> Bidirectional Referral Details </h4>
-    </div>
-    <div class="panel-body">
-    <form method="post" action=".">
-        {% csrf_token %}
-        <div id="">
-            <!-- begin wizard step-1 -->
-            <div class="wizard-step-1">
-                <fieldset>
-                    <!-- begin col-6 -->
-                    <table id="assessment_manager_table" class="table">
-                        <thead>
-                        <tr id="id_inputHeaders1">
-                            <td width="3%"></td>
-                            <th width="20%"><h6><b>Domain<span class="asteriskField">*</b></h6></th>
-                            <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr id="id_inputElements1">
-                            <td></td>
-                            <td width="20%">
-                                {{ form.BIREFERRAL_DOMAIN }}
-                            </td>
-                            <td width="20%">
-                                {{ form.BIREFERRAL_SERVICES }}
-                                <div id="olmis_assessment_coreservice_errormsg" style="display:none;">
-                                    <small><p class="dialog_paragraph">This value is required</p></small>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <!-- end col-6 -->
-                </fieldset>
+        <div class="panel-heading">
+            <div class="panel-heading-btn">
+                <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i
+                        class="fa fa-minus"></i></a>
+                <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i
+                        class="fa fa-times"></i></a>
             </div>
-            <!-- end wizard step-1 -->
+            <h4 class="panel-title"> Bidirectional Referral Details </h4>
         </div>
-        <!-- end row -->
-
-
-        <!-- begin row -->
-        <div class="row">
-            <!-- begin col-12 -->
-            <div class="col-md-12">
-                <!-- begin panel -->
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <div class="panel-heading-btn">
-                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default"
-                               data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
-                               data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+        <div class="panel-body">
+            <form method="post" action=".">
+                {% csrf_token %}
+                {% comment %} <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            {{ form.BIDIRECTIONAL_DATE }}
                         </div>
-                        <h4 class="panel-title"><b>Bidirectional Referral Form feedback details</b></h4>
                     </div>
+                </div> {% endcomment %}
+                <div id="">
+                    <!-- begin wizard step-1 -->
+                    <div class="wizard-step-1">
+                        <fieldset>
+                            <!-- begin col-6 -->
+                            <table id="assessment_manager_table" class="table">
+                                <thead>
+                                <tr id="id_inputHeaders1">
+                                    <td width="3%"></td>
+                                    <th width="20%"><h6><b>Domain<span class="asteriskField">*</b></h6></th>
+                                    <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr id="id_inputElements1">
+                                    <td></td>
+                                    <td width="20%">
+                                        {{ form.BIREFERRAL_DOMAIN }}
+                                    </td>
+                                    <td width="20%">
+                                            {{ form.BIREFERRAL_SERVICES }}
+                                        <div id="olmis_assessment_coreservice_errormsg" style="display:none;">
+                                            <small><p class="dialog_paragraph">This value is required</p></small>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!-- end col-6 -->
+                        </fieldset>
+                    </div>
+                    <!-- end wizard step-1 -->
+                </div>
+                <!-- end row -->
 
-                    <div class="panel-body">
-                        <div class="panel panel-inverse">
-                            <div id="case-events" class="table-responsive">
-                                <table id="f1a_events_data_table" class="table table-striped table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <td>
-                                            {{ form.FEEDBACK_BIDIRECTIONALFORM }}
-                                        </td>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+
+                <!-- begin row -->
+                <div class="row">
+                    <!-- begin col-12 -->
+                    <div class="col-md-12">
+                        <!-- begin panel -->
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <div class="panel-heading-btn">
+                                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default"
+                                       data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                                </div>
+                                <h4 class="panel-title"><b>Bidirectional Referral Form feedback details</b></h4>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="panel panel-inverse">
+                                    <div id="case-events" class="table-responsive">
+                                        <table id="f1a_events_data_table" class="table table-striped table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <td>
+                                                    {{ form.FEEDBACK_BIDIRECTIONALFORM }}
+                                                </td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end panel -->
+                    </div>
+                    <!-- end col-12 -->
+                    <div class="panel-body panel-form">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4"></label>
+                            <div class="col-md-6 col-sm-6">
+                                <button id="mysubmit-f1a-0" class="btn btn-primary" type="submit`">Submit
+                                    Assessment
+                                </button>
+                                <!--TODO  pass in the url and id for cancel-->
+                                <a href="#" onClick="resetForm1A(1)" class="btn btn-white">Cancel</a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- end panel -->
-            </div>
-            <!-- end col-12 -->
-            <div class="panel-body panel-form">
-                <div class="form-group">
-                    <label class="control-label col-md-4 col-sm-4"></label>
-                    <div class="col-md-6 col-sm-6">
-                        <button id="mysubmit-f1a-0" class="btn btn-primary" type="submit`">Submit
-                            Assessment
-                        </button>
-                        <!--TODO  pass in the url and id for cancel-->
-                        <a href="#" onClick="resetForm1A(1)" class="btn btn-white">Cancel</a>
-                    </div>
-                </div>
-            </div>
+            </form>   <!-- end row -->
         </div>
-        <!-- end row -->
     </div>
-    </form>
 
     <!-- Bidirectional events -->
     <!-- End Bidirectional Events -->
@@ -188,6 +195,96 @@
     <script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
     <script>
         jQuery(document).ready(function () {
+
+            $("select[name='BIREFERRAL_DOMAIN']").change(
+                () => {
+                    const bireferral_domain = $("select[name='BIREFERRAL_DOMAIN']").val()
+                    {#const bireferral_health = $("select[name='HEALTH_DOMAIN']").val()#}
+                    {#const bireferral_stable = $("select[name='STABLE_DOMAIN']").val()#}
+
+                    {# Empty Services Drop down#}
+                    $("select[name='BIREFERRAL_SERVICES']").find('option')
+                        .remove()
+                        .end()
+
+
+                    switch (bireferral_domain) {
+                        case '1':
+                            $("select[name='BIREFERRAL_SERVICES']").append(
+                                        ` <option>Health insurance cover</option>
+                                          <option>secticide Treated Mosquito net (ITN)</option>
+                                          <option>Enrollment to care and treatment</option>
+                                          <option>Enhance Adherence Counselling</option>
+                                          <option>Routine/ emergency healthcare</option>
+                                          <option>Perinatal care including PMTCT</option>
+                                          <option>HIV prevention support services_VMMC</option>
+                                          <option>HIV prevention support services_PrEP</option>
+                                          <option>HIV prevention support services_FM</option>
+                                          <option> prevention support services_Condom</option>
+                                          <option>STI treatment</option>
+                                          <option>MUAC and Bipedal Oedema Assessment</option>
+                                          <option>Nutrition support</option>
+                                          <option>immunization</option>
+                                          <option>HIV-related testing HTS</option>
+                                          <option>HIV-related testing EID</option>
+                                         `
+                                    );
+                            break;
+                        case '2':
+                            $("select[name='BIREFERRAL_SERVICES']")
+                                .append(
+                                ` <option>Stable </option>
+                                  <option>Insecticide Treated Mosquito net (ITN)</option>
+                                  <option>Enrollment to care and treatment</option>
+                                  <option>Enhance Adherence Counselling</option>
+                                  <option>Routine/ emergency healthcare</option>
+                                  <option>Perinatal care including PMTCT</option>
+                                  <option>HIV prevention support services_VMMC</option>
+                                  <option>HIV prevention support services_PrEP</option>
+                                  <option>HIV prevention support services_FM</option>
+                                  <option> prevention support services_Condom</option>
+                                  <option>STI treatment</option>
+                                  <option>MUAC and Bipedal Oedema Assessment</option>
+                                  <option>Nutrition support</option>
+                                  <option>immunization</option>
+                                  <option>HIV-related testing HTS</option>
+                                  <option>HIV-related testing EID</option>
+                                 `
+                            );
+                            break;
+                        case '3':
+                            $("select[name='BIREFERRAL_SERVICES']").append(
+                                ` <option>safe domain </option>
+                                  <option>safe 1 Treated Mosquito net (ITN)</option>
+                                  <option>Enrollment to care and treatment</option>
+                                  <option>Enhance Adherence Counselling</option>
+                                  <option>Routine/ emergency healthcare</option>
+                                  <option>Perinatal care including PMTCT</option>
+                                  <option>HIV prevention support services_VMMC</option>
+                                  <option>HIV prevention support services_PrEP</option>
+                                  <option>HIV prevention support services_FM</option>
+                                  <option> prevention support services_Condom</option>
+                                  <option>STI treatment</option>
+                                  <option>MUAC and Bipedal Oedema Assessment</option>
+                                  <option>Nutrition support</option>
+                                  <option>immunization</option>
+                                  <option>HIV-related testing HTS</option>
+                                  <option>HIV-related testing EID</option>
+                                 `
+                            );
+                            break;
+
+                        default:
+                            $("select[name='BIREFERRAL_SERVICES']").append(
+{#                                {{ form.BIREFERRAL_SERVICES }}#}
+                                '<option>No value</option>'
+                            )
+                    }
+
+
+                }
+            )
+
             //multi selects
             $('#olmis_assessment_domain, #olmis_assessment_coreservice, #olmis_assessment_coreservice_status, #olmis_domain, #olmis_service_provider, #olmis_service, #olmis_priority_service, #olmis_priority_domain, #olmis_priority_health, #olmis_priority_education, #olmis_priority_shelter, #olmis_priority_protection, #olmis_priority_pss, #olmis_priority_hes, #olmis_critical_event').multiselect({
                 selectAllValue: 'multiselect-all',
@@ -210,6 +307,10 @@
             $('html,body').scrollTop(0);
             FormWizardValidation.init();
         });
+    </script>
+
+    <script>
+         $("#refferalDate").datepicker()
     </script>
 
     <script>

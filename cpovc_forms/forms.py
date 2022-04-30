@@ -8155,6 +8155,41 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
                     (2, 'Stable Domain'),
                     (3, 'Safe Domain'))
 
+    HEALTH_DOMAIN_CHOICES = ((0, 'please select'),
+                      (1, 'Health insurance cover'),
+                      (2, 'secticide Treated Mosquito net (ITN)'),
+                      (3, 'Enrollment to care and treatment'),
+                      (4, 'Enhance Adherence Counselling'),
+                      (5, 'Routine/ emergency healthcare'),
+                      (6, 'Perinatal care including PMTCT'),
+                             (7,'HIV prevention support services_VMMC'),
+                             (8,'HIV prevention support services_PrEP'),
+                             (9,'HIV prevention support services_FM'),
+                             (10,'HIV prevention support services_Condom'),
+                             (11,'STI treatment'),
+                             (12,'MUAC and Bipedal Oedema Assessment'),
+                             (13,'Nutrition support'),
+                             (14,'immunization'),
+                             (15,'HIV-related testing HTS'),
+                             (16,'HIV-related testing EID'),)
+
+    STABLE_DOMAIN_CHOICES = (('Please select', 'please select'),
+                     ('cash transfer OVC', 'cash transfer OVC'),
+                     ('cash transfer Elderly', 'cash transfer Elderly'),
+                     ('cash transfer Disability', 'cash transfer Disability'),
+                     ('Safe shelter repair or construction', 'Safe shelter repair or construction'),
+                     ('Routine/ emergency healthcare', 'Routine/ emergency healthcare'),
+                     ('Perinatal care including PMTCT', 'Perinatal care including PMTCT'))
+
+    SAFE_DOMAIN_CHOICES = (('Please select', 'please select'),
+                   ('Post Violence Counseling', 'Post Violence Counseling'),
+                   ('Post Violence Medical care', 'Post Violence Medical care'),
+                   ('Post violence Legal Care', 'Post violence Legal Care'),
+                   ('Emergency shelter support', 'Emergency shelter support'),
+                   ('Re-enrollment ', 'Re-enrollment'),
+                   ('Bursary, tuition, school fees or fee exemption', 'Bursary, tuition, school fees or fee exemption'),
+                    ('School uniform, books, or other materials','School uniform, books, or other materials'))
+
 
     SERVICE_CHOICES = ((0,'please select'),
                     (1, 'Post Violence Counseling'),
@@ -8186,6 +8221,15 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
             'placeholder': _('Your feedback'),
             'class':'form-control',
             'rows':'3'
-        }
-    )
-    )
+        }))
+    BIDIRECTIONAL_DATE = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%m/%d/%Y",
+            attrs={'placeholder': _('Refferal Date'),
+                   'class': 'form-control',
+                   'name': 'refferalDate',
+                   'id': 'refferalDate',
+                   'autocomplete': "off",
+                   #     'data-parsley-required': "true",
+                   'data-parsley-group': 'group0'
+                   }))
