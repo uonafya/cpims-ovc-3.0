@@ -14,6 +14,7 @@ import random
 import ast
 import uuid
 import time
+from psycopg2 import DatabaseError
 from reportlab.pdfgen import canvas
 # from itertools import chain #
 from datetime import datetime, timedelta
@@ -38,9 +39,9 @@ from .models import (
     OVCAdverseEventsFollowUp, OVCAdverseEventsOtherFollowUp,
     OVCCaseEventClosure, OVCCaseGeo, OVCMedicalSubconditions, OVCBursary,
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
-    OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
+    OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,OVCBenchmarkMonitoring)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening)#,OVCBenchmarkMonitoring)
 
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
@@ -10172,6 +10173,8 @@ def grad_monitor_tool(request, id):
         print(data)
         child = RegPerson.objects.get(id=id)
         house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+        caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
+        caregiver = RegPerson.objects.get(id=caregiver_id)
         event = OVCCareEvents.objects.create(
             event_type_id='gmt',
             created_by=request.user.id,
@@ -10190,8 +10193,8 @@ def grad_monitor_tool(request, id):
         elif month in [7, 8, 9]:
             quarter = 4
         answer_value = {
-            'AYES': 'Yes',
-            'ANNO': 'No'
+            'AYES': True,
+            'ANNO': False
         }
         try:
             OVCBenchmarkMonitoring.objects.create(
@@ -10207,13 +10210,13 @@ def grad_monitor_tool(request, id):
                 Benchmark8=answer_value[data.get('cm9q')],
                 Benchmark9=answer_value[data.get('cm10q')],
                 case_closure_checked=data.get('cm13q'),
-                succesful_exit_checked = data.get('cm14q'),
+                succesful_exit_checked =answer_value[data.get('cm14q')],
                 event=event,
                 event_date=event_date
             )
         except Exception as e:
             print('error saving graduation monitoring tool - %s' % (str(e)))
-            return False
+            # return False
         msg = 'Graduation Monitoring saved successful'
         messages.add_message(request, messages.INFO, msg)
         url = reverse('ovc_view', kwargs={'id': id})
@@ -10227,15 +10230,16 @@ def grad_monitor_tool(request, id):
         creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
         caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
         caregiver = RegPerson.objects.get(id=caregiver_id)
+        
         # Show previous cpara monitoring events
         event = OVCCareEvents.objects.filter(person_id=ovc_id).values_list('event')
-        cpara_mon_data = [] # OVCMonitoring.objects.filter(event_id__in=event).order_by('event_date')
+        benchmark_data = [] # OVCBenchmarkMonitoring.objects.filter(event=event).order_by('event_date')
         context = {
             'form': form, 
             'care_giver': care_giver,
             'creg':creg,
             'caregiver':caregiver,
-            'cpara_mon_data': cpara_mon_data
+            'benchmark_data': benchmark_data
             }
     return render(request, 'forms/new_grad_monitor_tool.html',
                 context)

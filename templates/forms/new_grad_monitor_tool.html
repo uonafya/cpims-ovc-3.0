@@ -169,14 +169,14 @@
                     <div class="form-group">
                                     <label class="col-md-6 control-label"><strong>Benchmark 8: </strong> All children <18 years have legal proof of identity<span class="asteriskField">*</label>
                                     <div class="col-md-3">
-                                        {{ form.cm8q }}
+                                        {{ form.cm9q }}
                                     </div>
                                 </div>
                     <h2 class="text-left note note-info">Schooled</h2>
 							<div class="form-group">
                                     <label class="col-md-6 control-label"><strong> Benchmark 9: </strong> All school-aged children (4-17) and adolescents aged 18-20 enrolled in secondary school in the household regularly attended school and progressed during the last year. <span class="asteriskField">*</label>
                                     <div class="col-md-3">
-                                        {{ form.cm9q }}
+                                        {{ form.cm10q }}
                                     </div>
                                 </div>
                     
@@ -238,7 +238,7 @@
                                   </tr>
                                 </thead>
                             
-                    {% for data in cpara_mon_data %}                   
+                    {% for data in benchmark_data %}                   
                         <tr>
                           <td>{{data.hiv_status_knowledge}}</td>
                           <td>{{data.viral_suppression}}</td>
@@ -252,6 +252,11 @@
                           <td>{{data.cp_achievement}}</td>
                           <td>{{data.case_closure}}</td>
                           <td>{{data.event_date}}</td>
+                          <td>
+                              <button>Edit</button>
+                              <hr/>
+                              <button>Delete</button>
+                          </td>
                         </tr>
 
                     {% endfor %}

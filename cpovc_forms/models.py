@@ -1439,7 +1439,7 @@ class OVCBenchmarkMonitoring(models.Model):
     Benchmark2=models.BooleanField()
     Benchmark3=models.BooleanField()
     Benchmark4=models.BooleanField()
-    Benchmark4=models.BooleanField()
+    Benchmark5=models.BooleanField()
     Benchmark6=models.BooleanField()
     Benchmark7=models.BooleanField()
     Benchmark8=models.BooleanField()
@@ -1453,7 +1453,7 @@ class OVCBenchmarkMonitoring(models.Model):
     timestamp_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'ovc_benchmark_monitoring'
+        db_table = '`ovc_benchmark_monitoring`'
 
     def __unicode__(self):
         return str(self.obm_id)
