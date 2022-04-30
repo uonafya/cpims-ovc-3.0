@@ -1466,8 +1466,10 @@ class OVCCareCaseExit(models.Model):
     #caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='caseclouse_caregiver')
     #----cpa
     attrition_reason = models.CharField(max_length=10, null=True)
+    #transfer_completed = models.CharField(max_length=10, null=True)
     closure_reason = models.CharField(max_length=10, null=True)
     exit_reason_stored = models.CharField(max_length=10, null=True)
+    #staff_certifying = models.CharField(max_length=10, null=True)
     other = models.CharField(max_length=10, null=True)
     case_files_completed = models.CharField(max_length=5, null=True)
     cw_phone_household = models.CharField(max_length=5, null=True)

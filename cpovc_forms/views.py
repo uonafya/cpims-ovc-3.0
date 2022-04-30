@@ -36,7 +36,7 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, OVCCareCaseExitClosure)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, OVCCareCaseExit)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -10078,7 +10078,7 @@ def new_caseclosure(request, id):
             receiving_org = request.POST.get("CASE_CL002}")
             attrition_reason1 = request.POST.get("CASE_CL027")
             other = request.POST.get("CASE_CL004")
-            transfer_completed = request.POST.get("CASE_CL010")
+            #transfer_completed = request.POST.get("CASE_CL010")
             followup_time = request.POST.get("CASE_CL011")
             informed = request.POST.get("CASE_CL0012")
             copy_sent = request.POST.get("CASE_CL013")
@@ -10117,27 +10117,28 @@ def new_caseclosure(request, id):
 
                 # Saving OVC Case Closure
                 #OVCaseClosure.objects.create(
-            case_closing= OVCCareCaseExitClosure(
+            case_closing= OVCCareCaseExit(
+            person=RegPerson.objects.get(pk=int(id)),
             # case_closure_id=closure_reason,
             closure_reason=closure_reason,
             #receiving_org=receiving_org,
             attrition_reason=attrition_reason1,
             other =other,
-            transfer_completed=transfer_completed,
+            #transfer_completed=transfer_completed,
             follow_up_frequency=followup_time,
             sp_informed_tarnsfer=informed,
             family_folder_sent=copy_sent,
             files_stored=file_stored1,
             attrition_documented=attrition_reason2,
             manager_report=manager_report,
-            file_stored2=file_stored2,
-            exit_reason=exit_reason,
-            staff_certifying=staff_certifying,
+            #file_stored2=file_stored2,
+            exit_reason_stored=exit_reason,
+            #staff_certifying=staff_certifying,
             date_of_closure = date,
             case_files_completed=files_completed ,
             cw_phone_household=phone_number,
             sp_informed_graduation =informed_graduation,
-            file_stored3=file_stored3,
+            #file_stored3=file_stored3,
             event=ovccareevent, )
 
 
@@ -10165,7 +10166,7 @@ def new_caseclosure(request, id):
 
     form = CaseClosureForm()
     event = OVCCareEvents.objects.filter(person_id=id).values_list('event')
-    case_closure_date = OVCCareCaseExitClosure.objects.filter(event_id__in=event).order_by('date_of_closure')
+    case_closure_date = OVCCareCaseExit.objects.filter(event_id__in=event).order_by('date_of_closure')
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
 
     return render(request,
@@ -10180,7 +10181,7 @@ def edit_caseclosure(request, id):
   """Some default page for Server Errors."""
 
   try:
-      caseclosuredata = OVCCareCaseExitClosure.objects.get(case_clouse_id=id)
+      caseclosuredata = OVCCareCaseExit.objects.get(case_clouse_id=id)
   except Exception as e:
       print("error with OVC viewing - %s" % (str(e)))
       # raise e
@@ -10191,7 +10192,7 @@ def edit_caseclosure(request, id):
   return render(request, 'forms/new_case_closure.html', {'form': form, 'caseclosuredata':caseclosuredata, 'status': 200})
 
 def delete_caseclosure(request, id):
-   delete_caseclosure = OVCCareCaseExitClosure.objects.get(case_clouse_id=id)
+   delete_caseclosure = OVCCareCaseExit.objects.get(case_clouse_id=id)
    delete_caseclosure.delete()
    return render(
        request, 'forms/new_case_closure.html')
