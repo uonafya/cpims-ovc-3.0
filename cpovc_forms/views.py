@@ -10174,25 +10174,29 @@ def new_caseclosure(request, id):
                   {'form': form,
                    'init_data': init_data,
                     'care_giver': care_giver,
-                   'case_closure_date':case_closure_date,
+                   'case_closure':case_closure_date,
                    'person':id,
                    'vals': vals})
+
+
 def edit_caseclosure(request, id):
-  """Some default page for Server Errors."""
+    """Some default page for Server Errors."""
 
-  try:
-      caseclosuredata = OVCCareCaseExit.objects.get(case_clouse_id=id)
-  except Exception as e:
-      print("error with OVC viewing - %s" % (str(e)))
-      # raise e
-      msg = "Error occured during case closure  edit"
-      messages.error(request, msg)
+    try:
+        caseclosuredata = OVCCareCaseExit.objects.get(case_clouse_id=id)
+    except Exception as e:
+        print("error with OVC viewing - %s" % (str(e)))
+        # raise e
+        msg = "Error occured during case closure  edit"
+        messages.error(request, msg)
 
-  form = CaseClosureForm()
-  return render(request, 'forms/new_case_closure.html', {'form': form, 'caseclosuredata':caseclosuredata, 'status': 200})
+    form = CaseClosureForm()
+    return render(request, 'forms/new_case_closure.html',
+                  {'form': form, 'caseclosuredata': caseclosuredata, 'status': 200})
+
 
 def delete_caseclosure(request, id):
-   delete_caseclosure = OVCCareCaseExit.objects.get(case_clouse_id=id)
-   delete_caseclosure.delete()
-   return render(
-       request, 'forms/new_case_closure.html')
+    delete_caseclosure = OVCCareCaseExit.objects.get(case_clouse_id=id)
+    delete_caseclosure.delete()
+    return render(
+        request, 'forms/new_case_closure.html')
