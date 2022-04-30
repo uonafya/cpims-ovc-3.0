@@ -8362,16 +8362,14 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
         choices=CHOICES_INCOME,
         widget=forms.Select(attrs={
                            'class': 'form-control',
-                           'id': 'BIOLOGICAL_FATHER',
-                           'default': "0"
+                           'id': 'bd_source_income',
                            }))
 
     bd_adults_contribute_hh_income = forms.ChoiceField(
         choices=CHOICES_INCOME,
         widget=forms.Select(attrs={
                            'class': 'form-control',
-                           'id': 'BIOLOGICAL_FATHER',
-                           'default': "0"
+                           'id': 'bd_adults_contribute_hh_income',
                            }))
 
     bd_children_contribute_hh_income = forms.ChoiceField(
@@ -8391,7 +8389,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
         choices=CHOICES_BIOLOGICAL,
         widget=forms.Select(attrs={
                            'class': 'form-control',
-                           'id': 'Q_12',
+                           'id': 'bd_bm_live_hh',
                            }))
 
     bd_biological_father = forms.ChoiceField(
@@ -8405,7 +8403,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
         choices=CHOICES_BIOLOGICAL,
         widget=forms.Select(attrs={
                            'class': 'form-control',
-                           'id': 'bd_adult_unwell',
+                           'id': 'bd_bf_live_hh',
                            }))
 
     bd_money_basic_expenses = forms.ChoiceField(
@@ -8603,7 +8601,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
         choices=CHOICES_FINANCE,
         widget=forms.Select(attrs={
                             'class': 'form-control',
-                            'id': 'Q_38',
+                            'id': 'fi_money_important_items',
     }))
 
     fi_worried_money = forms.ChoiceField(

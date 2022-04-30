@@ -39,7 +39,7 @@ from .models import (
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
     OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
-    OVCPreventiveEvents, OVCPrevSinovyoCaregiverEvaluation)
+    OVCPrevSinovyoCaregiverEvaluation, OVCPreventiveEvents)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -10036,16 +10036,20 @@ def new_graduation_monitoring_form(request, id):
                            'new_graduation_form_month_2': new_graduation_form_month_2,
                            'new_graduation_form_month_3': new_graduation_form_month_3,
                            'recommended_action': recommended_action})
-
-
+import pdb
 def ovc_preventive_pre_post_program_assessment_view(request, id):
-    import pdb
+    
     child = RegPerson.objects.get(id=id)
-    model = OVCPrevSinovyoCaregiverEvaluation
+    house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+    care_giver_gender = care_giver.sex_id
+    if care_giver_gender == 'SMAL':
+        care_giver_gender = 'Male'
+    else:
+        care_giver_gender = 'Female'
     if request.method == 'POST':
         form = OVCPreventivePrePostProgramAssessmentForm(request.POST)
-        house_hold = OVCPreventiveEvents.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-        event_type_id = 'PREVENTIVE PRE/POST ASSMENT'
+        event_type_id = 'CARGV_A'
         event_counter = OVCCareEvents.objects.filter(
             event_type_id=event_type_id,
             person=id,
@@ -10060,52 +10064,220 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
         #   house_hold=house_hold
         # )
 
-        ovc_preventive_event = OVCPreventiveEvents.objects.create(
-            event_type_id=event_type_id,
-            event_counter=event_counter,
-            event_score=0,
-            date_of_previous_event=OVCPreventiveEvents.objects.get(event_type_id=event_type_id).date_of_event,
-            created_by=request.user.id,
-            is_void=False
-            )
+       
+        #pdb.set_trace()
         if form.is_valid():
             # save event
-            ovc_preventive_event.save()
-            form.cleaned_data.save()
+            # ovc_preventive_events = OVCPreventiveEvents.objects.create(
+            # event_type_id=event_type_id,
+            # event_counter=event_counter,
+            # event_score=0,
+            # # date_of_previous_event=OVCPreventiveEvents.objects.get(event_type_id=event_type_id).date_of_event,
+            # created_by=request.user.id,
+            # is_void=False
+            #     event_type_id=event_type_id,
+            #     event_counter=event_counter,
+            #     event_score=0,
+            #     date_of_event=timezone.now(),
+            #     date_of_previous_event=timezone.now(),
+            #     created_by=request.user.id,
+            #     timestamp_created=timezone.now(),
+            #     is_void=False,
+            #     app_user=AppUser.objects.get(pk=request.user.id, is_active=True),
+            #     person=RegPerson.objects.get(id=request.user.id),
+            #     house_hold=house_hold,
+            # ).save()
+            form = form.cleaned_data
+            OVCPrevSinovyoCaregiverEvaluation(
+                # event_id=ovc_preventive_events,
+                person_id=RegPerson.objects.get(id=request.user.id),
+                ref_caregiver_id=care_giver.id,
+                bd_age=care_giver.age,
+                bd_sex=care_giver.sex_id,
+                bd_read=request.POST.get('bd_read'),
+                bd_education_level=request.POST.get('bd_education_level'),
+                bd_biological_children=request.POST.get('bd_biological_children'),
+                bd_non_biological_children=request.POST.get('bd_non_biological_children'),
+                bd_children_not_in_school=request.POST.get('bd_children_not_in_school'),
+                watch_tv_with_child=request.POST.get('watch_tv_with_child'),
+                bd_source_income=request.POST.get('bd_source_income'),
+                bd_adults_contribute_hh_income=request.POST.get('bd_adults_contribute_hh_income'),
+                bd_children_contribute_hh_income=request.POST.get('bd_children_contribute_hh_income'),
+                bd_biological_mother=request.POST.get('bd_biological_mother'),
+                bd_bm_live_hh=request.POST.get('bd_bm_live_hh'),
+                bd_biological_father=request.POST.get('bd_biological_father'),
+                bd_bf_live_hh=request.POST.get('bd_bf_live_hh'),
+                bd_money_basic_expenses=request.POST.get('bd_money_basic_expenses'),
+                bd_violence=request.POST.get('bd_violence'),
+                bd_adult_unwell=request.POST.get('bd_adult_unwell'),
+                bad_things_from_sex=request.POST.get('bad_things_from_sex'),
+                bd_child_unwell=request.POST.get('bd_child_unwell'),
+                bd_miss_school=request.POST.get('bd_miss_school'),
+                bd_hiv_status=request.POST.get('bd_hiv_status'),
+                bd_children_hiv_status=request.POST.get('bd_children_hiv_status'),
+                bd_hiv_prevention=request.POST.get('bd_hiv_prevention'),
+                bd_two_meals=request.POST.get('bd_two_meals'),
+                bd_missing_meal=request.POST.get('bd_missing_meal'),
+                rc_discuss_child_needs=request.POST.get('rc_discuss_child_needs'),
+                rc_discipline=request.POST.get('rc_discipline'),
+                rc_tells_bothering=request.POST.get('rc_tells_bothering'),
+                rc_involve_decisions=request.POST.get('rc_involve_decisions'),
+                cb_child_obedient=request.POST.get('cb_child_obedient'),
+                cb_figths_children=request.POST.get('cb_figths_children'),
+                dc_often_discipline=request.POST.get('dc_often_discipline'),
+                dc_physical_discipline=request.POST.get('dc_physical_discipline'),
+                dc_upstet_child=request.POST.get('dc_upstet_child'),
+                sp_caring_energy=request.POST.get('sp_caring_energy'),
+                sp_source_stress=request.POST.get('sp_source_stress'),
+                sp_physical_punish=request.POST.get('sp_physical_punish'),
+                fs_depressed=request.POST.get('fs_depressed'),
+                fs_effort=request.POST.get('fs_effort'),
+                fs_hopeful=request.POST.get('fs_hopeful'),
+                fi_money_important_items=request.POST.get('fi_money_important_items'),
+                fi_worried_money=request.POST.get('fi_worried_money'),
+    
+            ).save()
             messages.success(request, 'Form saved succesfully!')
-            
-
         else:
             messages.error(request, 'Error saving form!')
         return redirect('progress-assessment/<int:id>/')
     else:
         form = OVCPreventivePrePostProgramAssessmentForm()
-        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-        care_giver_gender = care_giver.sex_id
-        if care_giver_gender == 'SMAL':
-            care_giver_gender = 'Male'
-        else:
-            care_giver_gender = 'Female'
+        instance = OVCPrevSinovyoCaregiverEvaluation.objects.all() # request.user.id
+        pdb.set_trace()
 
-        # house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-        # siblings = RegPersonsSiblings.objects.select_related().filter(child_person=id, is_void=False, date_delinked=None)
         return render(request=request, template_name='forms/caregiver_progress_assessment.html',
                       context={'form': form, 'child': child, 'care_giver': care_giver,
-                            'care_giver_gender': care_giver_gender}) # 'temporary_data':# temporary_data })
+                            'care_giver_gender': care_giver_gender, "instance": instance}) # 'temporary_data':# temporary_data })
 
 def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
-    object = ovc_preventive_pre_post_program_assessment_model.objects.get(id=id)
-    return render(request, template_name='forms/caregiver_progress_assessment.html', context={'form': object})
+    child = RegPerson.objects.get(id=id)
+    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+    object = OVCPrevSinovyoCaregiverEvaluation.objects.get(ref_caregiver_id=care_giver.id)
+    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+    care_giver_gender = care_giver.sex_id
+    if care_giver_gender == 'SMAL':
+        care_giver_gender = 'Male'
+    else:
+        care_giver_gender = 'Female'
+    if request.method == 'POST':
+        form = OVCPreventivePrePostProgramAssessmentForm(request.POST)
+        #pdb.set_trace()
+        OVCPrevSinovyoCaregiverEvaluation.objects.filter(ref_caregiver_id=care_giver.id).update(
+            # event_id=ovc_preventive_events,
+            person_id=RegPerson.objects.get(id=id),
+            ref_caregiver_id=care_giver.id,
+            bd_age=care_giver.age,
+            bd_sex=care_giver.sex_id,
+            bd_read=request.POST.get('bd_read'),
+            bd_education_level=request.POST.get('bd_education_level'),
+            bd_biological_children=request.POST.get('bd_biological_children'),
+            bd_non_biological_children=request.POST.get('bd_non_biological_children'),
+            bd_children_not_in_school=request.POST.get('bd_children_not_in_school'),
+            watch_tv_with_child=request.POST.get('watch_tv_with_child'),
+            bd_source_income=request.POST.get('bd_source_income'),
+            bd_adults_contribute_hh_income=request.POST.get('bd_adults_contribute_hh_income'),
+            bd_children_contribute_hh_income=request.POST.get('bd_children_contribute_hh_income'),
+            bd_biological_mother=request.POST.get('bd_biological_mother'),
+            bd_bm_live_hh=request.POST.get('bd_bm_live_hh'),
+            bd_biological_father=request.POST.get('bd_biological_father'),
+            bd_bf_live_hh=request.POST.get('bd_bf_live_hh'),
+            bd_money_basic_expenses=request.POST.get('bd_money_basic_expenses'),
+            bd_violence=request.POST.get('bd_violence'),
+            bd_adult_unwell=request.POST.get('bd_adult_unwell'),
+            bad_things_from_sex=request.POST.get('bad_things_from_sex'),
+            bd_child_unwell=request.POST.get('bd_child_unwell'),
+            bd_miss_school=request.POST.get('bd_miss_school'),
+            bd_hiv_status=request.POST.get('bd_hiv_status'),
+            bd_children_hiv_status=request.POST.get('bd_children_hiv_status'),
+            bd_hiv_prevention=request.POST.get('bd_hiv_prevention'),
+            bd_two_meals=request.POST.get('bd_two_meals'),
+            bd_missing_meal=request.POST.get('bd_missing_meal'),
+            rc_discuss_child_needs=request.POST.get('rc_discuss_child_needs'),
+            rc_discipline=request.POST.get('rc_discipline'),
+            rc_tells_bothering=request.POST.get('rc_tells_bothering'),
+            rc_involve_decisions=request.POST.get('rc_involve_decisions'),
+            cb_child_obedient=request.POST.get('cb_child_obedient'),
+            cb_figths_children=request.POST.get('cb_figths_children'),
+            dc_often_discipline=request.POST.get('dc_often_discipline'),
+            dc_physical_discipline=request.POST.get('dc_physical_discipline'),
+            dc_upstet_child=request.POST.get('dc_upstet_child'),
+            sp_caring_energy=request.POST.get('sp_caring_energy'),
+            sp_source_stress=request.POST.get('sp_source_stress'),
+            sp_physical_punish=request.POST.get('sp_physical_punish'),
+            fs_depressed=request.POST.get('fs_depressed'),
+            fs_effort=request.POST.get('fs_effort'),
+            fs_hopeful=request.POST.get('fs_hopeful'),
+            fi_money_important_items=request.POST.get('fi_money_important_items'),
+            fi_worried_money=request.POST.get('fi_worried_money') )
+
+    data = {
+        # 'person_id': object.person_id,
+        # object.ref_caregiver_id,   
+        # 'bd_age': object.bd_age,
+        # 'bd_sex': object.bd_sex,    
+        'bd_read': object.bd_read,     
+        'bd_education_level': object.bd_education_level,    
+        'bd_biological_children': object.bd_biological_children,      
+        'bd_non_biological_children': object.bd_non_biological_children,    
+        'bd_children_not_in_school': object.bd_children_not_in_school,    
+        'watch_tv_with_child': object.watch_tv_with_child,
+        'bd_source_income': object.bd_source_income,  
+        'bd_adults_contribute_hh_income': object.bd_adults_contribute_hh_income,
+        'bd_children_contribute_hh_income': object.bd_children_contribute_hh_income,
+        'bd_biological_mother': object.bd_biological_mother,
+        'bd_bm_live_hh': object.bd_bm_live_hh,    
+        'bd_biological_father': object.bd_biological_father,
+        'bd_bf_live_hh': object.bd_bf_live_hh,
+        'bd_money_basic_expenses': object.bd_money_basic_expenses,  
+        'bd_violence': object.bd_violence,
+        'bd_adult_unwell': object.bd_adult_unwell,     
+        'bad_things_from_sex': object.bad_things_from_sex,      
+        'bd_child_unwell': object.bd_child_unwell,
+        'bd_miss_school': object.bd_miss_school,
+        'bd_hiv_status': object.bd_hiv_status,  
+        'bd_children_hiv_status': object.bd_children_hiv_status,
+        'bd_hiv_prevention': object.bd_hiv_prevention,
+        'bd_two_meals': object.bd_two_meals,
+        'bd_missing_meal': object.bd_missing_meal,
+        'rc_discuss_child_needs': object.rc_discuss_child_needs,
+        'rc_tells_bothering': object.rc_tells_bothering,  
+        'rc_involve_decisions': object.rc_involve_decisions,
+        'rc_discipline': object.rc_discipline,
+        'cb_child_obedient': object.cb_child_obedient,
+        'cb_figths_children': object.cb_figths_children,   
+        'dc_physical_discipline': object.dc_physical_discipline,
+        'dc_often_discipline': object.dc_often_discipline,
+        'dc_upstet_child': object.dc_upstet_child,
+        'sp_caring_energy': object.sp_caring_energy,
+        'sp_source_stress': object.sp_source_stress,
+        'sp_physical_punish': object.sp_physical_punish,
+        'fs_depressed': object.fs_depressed,
+        'fs_hopeful': object.fs_hopeful,
+        'fs_effort': object.fs_effort,
+        'fi_money_important_items': object.fi_money_important_items, 
+        'fi_worried_money': object.fi_worried_money,
+    }
+
+    form = OVCPreventivePrePostProgramAssessmentForm(data=data)
+    edit = True
+    return render(request, template_name='forms/caregiver_progress_assessment.html', 
+    context={'form': form, 'edit_form':edit,'care_giver': care_giver, 'status': 200 })
+
+
 
 def ovc_preventive_pre_post_program_assessment_delete_view(request, id):
-    object =  ovc_preventive_pre_post_program_assessment_model.objects.get(id=id)
-    form = OVCPreventivePrePostProgramAssessmentForm(request.POST, instance=object)
-    if form.is_valid:
-        form.save()
-        object = ovc_preventive_pre_post_program_assessment_model.objects.all()
-        return redirect('retrieve')
+    child = RegPerson.objects.get(id=id)
+    messages.success(request, 'Delete was Successfully!')
+    form = OVCPreventivePrePostProgramAssessmentForm()
+    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+    OVCPrevSinovyoCaregiverEvaluation.objects.filter(ref_caregiver_id=care_giver.id).delete()
+    house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+    messages.success(request, 'Delete was Successfully!')
+    return render(request=request, template_name='forms/caregiver_progress_assessment.html', context={
+        'child': child,
+        'form': form,
+        'care_giver': care_giver,
+    })
 
-    def delete(request, pk):
-        ovc_preventive_pre_post_program_assessment_model.objects.filter(id=pk).delete()
-        return redirect('retrieve')
 

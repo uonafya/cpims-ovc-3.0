@@ -54,11 +54,17 @@
 
 <!-- begin page-header -->
 <h1 class="page-header">Forms
-    <small>OVC Preventive Pre and Post Program Assessment Form <b>{{ child.first_name }} {{ child.surname }} | {% if child.date_of_birth|gen_age == 0 %}
+    <small>OVC Care Giver Preventive Pre and Post Program Assessment Form 
+        {% if edit_form %}
+        <b>{{care_giver.first_name}} {{care_giver.surname}} | {{ form.bd_sex }} | {{ form.bd_age}} YRS
+        </b></small></h1>
+        {%else%}
+        <b>{{ child.first_name }} {{ child.surname }} | {% if child.date_of_birth|gen_age == 0 %}
                             UNDER 1 YEAR
                         {% else %}
                             {{ child.date_of_birth|gen_age }} YRS
                         {% endif %}</b></small></h1>
+        {%endif%}
     </b></small>
 </h1>
 
@@ -91,32 +97,37 @@
                 </div>
                 <h4 class="panel-title"> OVC Preventive Pre and Post Program Assessment Form </h4>
             </div>
-        <div class="panel panel-default">
-            <div  class="panel panel-inverse">
-                <div id="case-events"  class="table-responsive">
-                    <table id="" class="table table-striped ">
-                        <div class="" >
-                            <h3 class="" style="color: dimgrey;"><b>  </b></h3>
+            {% if edit_form %}
+
+            <p></p>
+            {% else %}
+
+                    <div class="panel panel-default">
+                        <div  class="panel panel-inverse">
+                            <div id="case-events"  class="table-responsive">
+                                <table id="" class="table table-striped ">
+                                    <div class="" >
+                                        <h3 class="" style="color: dimgrey;"><b>  </b></h3>
+                                    </div>
+                                    <thead>
+
+                                    </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><P style="padding-left: 5px;"><strong>Care giver name:</strong> {{care_giver.first_name}} {{care_giver.surname}}</p>
+                                                            <P style="padding-left: 5px;"><strong>Age:</strong> {{care_giver.age}}</p></td>
+                                                                <td><P><strong>Gender:</strong> {{care_giver_gender}}</p>
+                                                                    <P><strong>Designation:</strong> {{care_giver.designation}}</p></td><td></td>
+
+                                                </tbody>
+                                        <p>&nbsp;</p>
+                                </table>
+                            </div>
+                            <br><br>
                         </div>
-                        <thead>
-
-                        </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><P style="padding-left: 5px;"><strong>Care giver name:</strong> {{care_giver.first_name}} {{care_giver.surname}}</p>
-                                                <P style="padding-left: 5px;"><strong>Age:</strong> {{care_giver.age}}</p></td>
-                                                    <td><P><strong>Gender:</strong> {{care_giver_gender}}</p>
-                                                        <P><strong>Designation:</strong> {{care_giver.designation}}</p></td><td></td>
-
-                                    </tbody>
-                            <p>&nbsp;</p>
-                    </table>
+                    </div>
                 </div>
-                <br><br>
-            </div>
-        </div>
-    </div>
-
+            {% endif %}
 
             <div class="panel-form">
                 <form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true"
@@ -124,6 +135,9 @@
                     {% csrf_token %}
             <div class="panel-body">
                 <div class="panel panel-form">
+                    {% if edit_form %}
+                    <p></p>
+                    {% else %}
                         <table class="table table-responsive">
                                 <td class="">
                                     <td><strong>Type of assessment: </strong><br><br>
@@ -133,6 +147,7 @@
                             {{ form.date_of_assessment }}</td>
                                 </tr>
                             </table>
+                    {% endif %}
                     <div id="case-events"  class="table-responsive">
                         <table id="" class="table ">
 
@@ -476,7 +491,7 @@
                                     needs to be physically punished
                                 </td>
                                 <td>
-                                        {{ form.sp_source_stress}}
+                                        {{ form.sp_physical_punish }}
                                 </td>
 
                                             </tbody>
@@ -497,7 +512,7 @@
                                                 <tr>
                                                     <td>37. How often in the past week have you felt depressed?</td>
                                                     <td>
-                                                            {{ form.sp_depressed }}
+                                                            {{ form.fs_depressed }}
                                                     </td>
                                                 </tr>
 
@@ -506,7 +521,7 @@
                                                     <td>38. How often in the past week have you felt that
                                                         everything you did was an effort?</td>
                                                     <td>
-                                                            {{ form.sp_effort }}
+                                                            {{ form.fs_effort }}
                                                     </td>
 
                                                 </tr>
@@ -515,7 +530,7 @@
                                                     <td>39. How often in the past week have you felt hopeful for
                                                         the future?</td>
                                                     <td>
-                                                            {{ form.fs_physical_punish }}
+                                                            {{ form.fs_hopeful }}
                                                     </td>
 
                                             </tbody>
@@ -557,7 +572,18 @@
                     <br><br>
                 </div>
             </div>
-
+                    {% if edit_form %}
+                    <div class="panel-body panel-form">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4"></label>
+                            <div class="col-md-6 col-sm-6">
+                                <button id="mysubmit-hivscreeningtool" type="submit"
+                                    class="btn btn-primary">Update</button>
+                                <a href="javascript:history.go(-1)" class="btn btn-white">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
                     <div class="panel-body panel-form">
                         <div class="form-group">
                             <label class="control-label col-md-4 col-sm-4"></label>
@@ -568,6 +594,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -697,5 +724,18 @@
 
         } );
 </script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#RSA_1").click(function(){
+    $("#RSA_2").toggle();
+  });
+    $("#RSB_1").click(function(){
+      $("#RSB_2").toggle();
+    });
+});
+</script>
+
 
 {% endblock %}
