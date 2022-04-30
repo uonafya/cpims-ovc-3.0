@@ -254,8 +254,8 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-4 col-sm-4"></label>
                                     <div class="col-md-6 col-sm-6">
-                                        <button id="mysubmit-f1a-0" class="btn btn-primary" type="button" onClick="saveForm1A(1)">Submit Assessment</button>
-                                        <a href="{% url 'ovc_view' id=form.person.value %}" onClick="resetForm1A(1)" class="btn btn-white">Cancel</a>
+                                        <button id="mysubmit-f1a-0" class="btn btn-primary" type="button" onClick="savePreventiveAttRegister(1)">Submit Assessment</button>
+                                        <a href="{% url 'ovc_view' id=form.person.value %}" onClick="resetPreventiveAttRegister(1)" class="btn btn-white">Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -337,8 +337,8 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-4 col-sm-4"></label>
                                     <div class="col-md-6 col-sm-6">
-                                        <button id="mysubmit-f1a-3" class="btn btn-primary" type="button" onClick="saveForm1A(3)">Submit Service(s)</button>
-                                        <a href="{% url 'ovc_view' id=form.person.value %}" onClick="resetForm1A(4)" class="btn btn-white">Cancel</a>
+                                        <button id="mysubmit-f1a-3" class="btn btn-primary" type="button" onClick="savePreventiveAttRegister(2)">Submit Service(s)</button>
+                                        <a href="{% url 'ovc_view' id=form.person.value %}" onClick="resetPreventiveAttRegister(4)" class="btn btn-white">Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -431,8 +431,8 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-4 col-sm-4"></label>
                                     <div class="col-md-6 col-sm-6">
-                                        <button id="mysubmit-f1a-0" class="btn btn-primary" type="button" onClick="saveForm1A(1)">Submit Assessment</button>
-                                        <a href="{% url 'ovc_view' id=form.person.value %}" onClick="resetForm1A(1)" class="btn btn-white">Cancel</a>
+                                        <button id="mysubmit-f1a-0" class="btn btn-primary" type="button" onClick="savePreventiveAttRegister(3)">Submit Assessment</button>
+                                        <a href="{% url 'ovc_view' id=form.person.value %}" onClick="resetPreventiveAttRegister(1)" class="btn btn-white">Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -552,6 +552,7 @@ function loadForm1aEvents()
     var data = new Array();
     var csrftoken = $.cookie('csrftoken');    
     var person = $('#person').val();
+    console.log("ppppppppppppp ooooo"+person);
     var values = {
                     'csrfmiddlewaretoken': csrftoken,
                     'person': person
@@ -631,12 +632,12 @@ function loadForm1aEvents()
                 },
                 error: function(xhr, status, error){
                     $(".alert").show();
-                    $('.invalid-form-message').html('Error loading Form1A events - ' + error);
+                    $('.invalid-form-message').html('Error loading PreventiveAttRegister events - ' + error);
                 }
             });
 }
 
-function resetForm1A(x)
+function resetPreventiveAttRegister(x)
 {
     if(x==1)
     {
@@ -683,7 +684,7 @@ function resetForm1A(x)
     }
 }
 
-function saveForm1A(x)
+function savePreventiveAttRegister(x)
 {
     var args = 0;
     var msg = ''
@@ -706,9 +707,8 @@ function saveForm1A(x)
         var date_of_assessment = $('#date_of_assessment').val();
         var olmis_assessment_provided_list = $('#preventive_assessment_provided_list').val(); 
         var person_id = '{{id}}'
-        console.log("============>>>>>> "+ olmis_assessment_provided_list);
+        console.log("============>>>>>> TTTTTTTTTTTTTTTTT "+ person);
         if(olmis_assessment_provided_list) 
-
         {
             values['olmis_assessment_provided_list'] = olmis_assessment_provided_list;
 
@@ -716,7 +716,7 @@ function saveForm1A(x)
             // {
             values['date_of_assessment'] = date_of_assessment;
             $.ajax({
-                url: '{% url 'preventiveattendanceregister' id=60 %}',
+                url: '{% url 'save_preventive_register' %}',
                 dataType: 'json',
                 method: 'POST',
                 data: values,
@@ -730,7 +730,7 @@ function saveForm1A(x)
                         $('#error-message-reuse').css({'display': 'none'});
                     });
                     loadForm1aEvents();
-                    resetForm1A(1);
+                    resetPreventiveAttRegister(1);
                 },
                 error: function(xhr, status, error){
                     $(".alert-danger").hide();
@@ -787,7 +787,7 @@ function saveForm1A(x)
                             $('#error-message-reuse').css({'display': 'none'});
                         });
                         loadForm1aEvents();
-                        resetForm1A(2);
+                        resetPreventiveAttRegister(2);
                     },
                     error: function(xhr, status, error){
                         $(".alert-danger").hide();
@@ -822,13 +822,13 @@ function saveForm1A(x)
         error_div = '#error_priority';
 
         var date_of_priority = $('#date_of_priority').val();
-        var olmis_priority_service_provided_list = $('#olmis_priority_service_provided_list').val();
+        var olmis_priority_service_provided_list = $('#preventive_assessment_provided_list').val();
         if(olmis_priority_service_provided_list) 
         {
             values['olmis_priority_service_provided_list'] = olmis_priority_service_provided_list;
 
-            if(date_of_priority)
-            {
+            // if(date_of_priority)
+            // {
                 values['date_of_priority'] = date_of_priority;
                 $.ajax({
                     url: '{% url 'save_form1a' %}',
@@ -845,7 +845,7 @@ function saveForm1A(x)
                             $('#error-message-reuse').css({'display': 'none'});
                         });
                         loadForm1aEvents();
-                        resetForm1A(3);
+                        resetPreventiveAttRegister(3);
                     },
                     error: function(xhr, status, error){
                         $(".alert-danger").hide();
@@ -853,15 +853,15 @@ function saveForm1A(x)
                         $("" + error_div + "").html(msg + error)
                     }
                 });
-            }
-            else
-            {
-                $('#success_message').css({'display': 'none'});
-                $(".alert-danger").show();
-                $('.invalid-form-message').html('Please provide required date of event.');
-                $('#date_errormsg2').css({'display': 'block'});
-                return false;            
-            }
+            // }
+            // else
+            // {
+            //     $('#success_message').css({'display': 'none'});
+            //     $(".alert-danger").show();
+            //     $('.invalid-form-message').html('Please provide required date of event.');
+            //     $('#date_errormsg2').css({'display': 'block'});
+            //     return false;            
+            // }
         }
         else
         {
@@ -903,7 +903,7 @@ function saveForm1A(x)
                             $('#error-message-reuse').css({'display': 'none'});
                         });
                         loadForm1aEvents();
-                        resetForm1A(4);
+                        resetPreventiveAttRegister(4);
                     },
                     error: function(xhr, status, error){
                         $(".alert-danger").hide();
@@ -1055,7 +1055,7 @@ function AddRow(x)
             'csrfmiddlewaretoken': csrftoken
         };
         var person_id = '{{id}}'
-        console.log("============>>>>>> "+ olmis_session_date_id);
+       
 
         // Validation and Ajax
         if(olmis_assessment_domain || olmis_assessment_domain == '')
@@ -1083,6 +1083,7 @@ function AddRow(x)
                     var cell3 = row.insertCell(3);
                     var cell4 = row.insertCell(4);
                     var cell5 = row.insertCell(5);
+                    var cell6 = row.insertCell(6);
 
                     var holmis_assessment_domain= "<input id='holmis_assessment_domain'  value='"+olmis_assessment_domain+"'>"
                     var holmis_assessment_coreservice = "<input id='holmis_assessment_coreservice'  value='"+olmis_assessment_coreservice+"'>"
@@ -1144,8 +1145,9 @@ function AddRow(x)
 
                     // Set olmis_assessment_provided_list
                     $('#preventive_assessment_provided_list').val(OlmisAssessmentData);
+                    var gishoki = $('#olmis_assessment_provided_list').val()
 
-                    console.log("------------>>>>>>> bbbbbb"+$('#olmis_assessment_provided_list').val())				}
+                    console.log("------------>>>>>>> bbbbbb"+gishoki)				}
 				else
 				{
 					$("#olmis_assessment_coreservice_status_errormsg").css({ 'display': "block" });
