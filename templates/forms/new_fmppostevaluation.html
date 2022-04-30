@@ -391,31 +391,31 @@
                                 {% for one_evaluation_data in fmp_evaluation %}
 
                                     <tr>
-                                        <td>{{one_evaluation_data.caregiver_know_where}}</td>
-                                        <td>{{one_evaluation_data.caregiver_know_what}}</td>
-                                        <td>{{one_evaluation_data.caregiver_know_who}}</td>
-                                        <td>{{one_evaluation_data.child_watch_often}}</td>
-                                        <td>{{one_evaluation_data.what_program}}</td>
-                                        <td>{{one_evaluation_data.specific_program}}</td>
-                                        <td>{{one_evaluation_data.talk_on_topic}}</td>
-                                        <td>{{one_evaluation_data.watch_with_child}}</td>
-                                        <td>{{one_evaluation_data.talk_on_sex}}</td>
-                                        <td>{{one_evaluation_data.talk_on_hiv}}</td>
-                                        <td>{{one_evaluation_data.talk_on_sti}}</td>
-                                        <td>{{one_evaluation_data.other_sexual_issues}}</td>
-                                        <td>{{one_evaluation_data.if_yes}}</td>
-                                        <td>{{one_evaluation_data.child_asks}}</td>
-                                        <td>{{one_evaluation_data.if_asks}}</td>
-                                        <td>{{one_evaluation_data.comfortable}}</td>
-                                        <td>{{one_evaluation_data.how_talk}}</td>
-                                        <td>{{one_evaluation_data.enough_information}}</td>
-                                        <td>{{one_evaluation_data.talk_bad_things}}</td>
-                                        <td>{{one_evaluation_data.ask_questions}}</td>
-                                        <td>{{one_evaluation_data.thoughts_on_sex}}</td>
-                                        <td>{{one_evaluation_data.ready_to_learn}}</td>
-                                        <td>{{one_evaluation_data.still_young}}</td>
-                                        <td>{{one_evaluation_data.have_someone}}</td>
-                                        <td>{{one_evaluation_data.guardian_responsibility}}</td>
+                                        <td>{{one_evaluation_data.know_where}}</td>
+                                        <td>{{one_evaluation_data.know_what}}</td>
+                                        <td>{{one_evaluation_data.know_who}}</td>
+                                        <td>{{one_evaluation_data.often_watch_tv}}</td>
+                                        <td>{{one_evaluation_data.know_what_watching_tv}}</td>
+                                        <td>{{one_evaluation_data.not_watch_programs_tv}}</td>
+                                        <td>{{one_evaluation_data.talk_sex_on_tv}}</td>
+                                        <td>{{one_evaluation_data.watch_tv_with_child}}</td>
+                                        <td>{{one_evaluation_data.what_sex_is}}</td>
+                                        <td>{{one_evaluation_data.talk_hiv}}</td>
+                                        <td>{{one_evaluation_data.talk_sti}}</td>
+                                        <td>{{one_evaluation_data.talk_sex_issues}}</td>
+                                        <td>{{one_evaluation_data.talk_sex_issue_what}}</td>
+                                        <td>{{one_evaluation_data.ask_sex_issue}}</td>
+                                        <td>{{one_evaluation_data.ask_sex_issue_respond}}</td>
+                                        <td>{{one_evaluation_data.question_about_sex_issue}}</td>
+                                        <td>{{one_evaluation_data.know_how_talk_sex_issue}}</td>
+                                        <td>{{one_evaluation_data.information_sex_issues}}</td>
+                                        <td>{{one_evaluation_data.bad_things_from_sex}}</td>
+                                        <td>{{one_evaluation_data.talk_sex_child_opinion}}</td>
+                                        <td>{{one_evaluation_data.ready_learn_sex_issues}}</td>
+                                        <td>{{one_evaluation_data.encourage_have_sex}}</td>
+                                        <td>{{one_evaluation_data.young_learn_sex_issues}}</td>
+                                        <td>{{one_evaluation_data.someone_talk_sex_issues}}</td>
+                                        <td>{{one_evaluation_data.parent_responsibility_talk_sex}}</td>
                                         <td>{{one_evaluation_data.happy_with_child}}</td>
                                         <td>{{one_evaluation_data.date_of_event}}</td>
                                         <td><a href="{% url 'edit_fmppostevaluation' one_evaluation_data.evaluation_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
@@ -484,10 +484,339 @@
 
 
 
+    jQuery(document).ready(function () {
+        //multi selects
+        $('#WB_AD_SCH_12_2').multiselect({
+            selectAllValue: 'multiselect-all',
+            includeSelectAllOption: true,
+            enableCaseInsensitiveFiltering: true,
+            numberDisplayed: 1,
+            maxHeight: 300,
+            buttonWidth: '100%',
+            buttonClass: 'btn btn-white'
+        });
+
+
+        $('#WB_AD_SCH_8_2').attr("disabled", 'disabled');
+        $('#WB_AD_SCH_8_2').prop("disabled", true);
+        // $('#WB_AD_SCH_8_2').addClass('hidden');
+
+        // function radioDecision(radioID,desiredValue,desiredFunc,desiredFuncParas) {
+        //     // console.log('radioDecision:->  rID:'+radioID+'desVal:'+desiredValue+'desFunc:'+desiredFunc+'desPars:'+desiredFuncParas);
+        //     var ival = $("input[name='"+radioID+"']:checked").val();
+        //     if(ival == desiredValue){
+        //         if(desiredFuncParas.length>1){
+        //             $.each(desiredFuncParas, function (pindx, fparas) {
+        //                 desiredFunc(fparas);
+        //             })
+        //         }else{
+        //             desiredFunc(desiredFuncParas);
+        //         }
+        //     }
+        // }
+
+        $("input[name='WB_AD_SCH_8_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_SCH_8_1']:checked").val();
+            if (ival == 'ANNO') {
+                unhideQn('WB_AD_SCH_8_2');
+                hideQn('id_WB_AD_SCH_9_1_0');
+                hideQn('id_WB_AD_SCH_9_1_1');
+                hideQn('id_WB_AD_SCH_9_1_2');
+            } else {
+                hideQn('WB_AD_SCH_8_2');
+                unhideQn('id_WB_AD_SCH_9_1_0');
+                unhideQn('id_WB_AD_SCH_9_1_1');
+                unhideQn('id_WB_AD_SCH_9_1_2');
+            }
+        });
+        $("input[name='WB_AD_SCH_12_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_SCH_12_1']:checked").val();
+            if (ival == 'AYES') {
+                hideQn('WB_AD_SCH_12_2');
+                hideQn('WB_AD_SCH_12_2_1');
+            } else {
+                unhideQn('WB_AD_SCH_12_2');
+                unhideQn('WB_AD_SCH_12_2_1');
+            }
+        });
+        $("input[name='WB_AD_HEL_17_2']").on('change', function () {
+            var ival = $("input[name='WB_AD_HEL_17_2']:checked").val();
+            if (ival == 'ANNO') {
+                hideQn('WB_AD_HEL_17_3');
+
+            } else {
+                unhideQn('WB_AD_HEL_17_3');
+            }
+        });
+        $("input[name='WB_AD_HEL_18_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_HEL_18_1']:checked").val();
+            if (ival == 'ANNO') {
+                hideQn('WB_AD_HEL_18_2');
+
+            } else {
+                unhideQn('WB_AD_HEL_18_2');
+            }
+        });
+        $("input[name='WB_AD_HEL_19_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_HEL_19_1']:checked").val();
+            if (ival == 'ANNO') {
+                hideQn('WB_AD_HEL_19_2');
+
+            } else {
+                unhideQn('WB_AD_HEL_19_2');
+            }
+        });
+        $("input[name='WB_AD_HEL_20_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_HEL_20_1']:checked").val();
+            if (ival == 'ANNO') {
+                hideQn('WB_AD_HEL_20_2');
+                hideQn('id_WB_AD_HEL_20_3_0');
+                hideQn('id_WB_AD_HEL_20_3_1');
+                hideQn('id_WB_AD_HEL_20_4_0');
+                hideQn('id_WB_AD_HEL_20_4_1');
+                hideQn('id_WB_AD_HEL_20_4_2');
+                hideQn('id_WB_AD_HEL_20_4_3');
+
+
+            } else {
+                unhideQn('WB_AD_HEL_20_2');
+                unhideQn('id_WB_AD_HEL_20_3_0');
+                unhideQn('id_WB_AD_HEL_20_3_1');
+                unhideQn('id_WB_AD_HEL_20_4_0');
+                unhideQn('id_WB_AD_HEL_20_4_1');
+                unhideQn('id_WB_AD_HEL_20_4_2');
+                unhideQn('id_WB_AD_HEL_20_4_3');
+            }
+        });
+        $("input[name='WB_AD_HEL_20_3']").on('change', function () {
+            var ival = $("input[name='WB_AD_HEL_20_3']:checked").val();
+            if (ival == 'ANNO') {
+                hideQn('id_WB_AD_HEL_20_4_0');
+                hideQn('id_WB_AD_HEL_20_4_1');
+                hideQn('id_WB_AD_HEL_20_4_2');
+                hideQn('id_WB_AD_HEL_20_4_3');
+
+
+            } else {
+                unhideQn('id_WB_AD_HEL_20_4_0');
+                unhideQn('id_WB_AD_HEL_20_4_1');
+                unhideQn('id_WB_AD_HEL_20_4_2');
+                unhideQn('id_WB_AD_HEL_20_4_3');
+            }
+        });
 
 
 
+        $("input[name='WB_AD_STA_13_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_STA_13_1']:checked").val();
+            if (ival == 'ANNO') {
+                hideQn('id_WB_AD_STA_13_2');
+                hideQn('id_WB_AD_STA_13_2_0');
+                hideQn('id_WB_AD_STA_13_2_1');
+                hideQn('id_WB_AD_STA_13_2_2');
+            } else {
+                unhideQn('id_WB_AD_STA_13_2');
+                unhideQn('id_WB_AD_STA_13_2_0');
+                unhideQn('id_WB_AD_STA_13_2_1');
+                unhideQn('id_WB_AD_STA_13_2_2');
 
+            }
+        });
+
+        $("input[name='WB_AD_HEL_16_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_HEL_16_1']:checked").val();
+            if (ival == 'ANNO') {
+                hideQn('id_WB_AD_STA_13_2_0');
+                hideQn('id_WB_AD_STA_13_2_1');
+                hideQn('id_WB_AD_STA_13_2_2');
+                hideQn('id_WB_AD_STA_13_2_3');
+            } else {
+                unhideQn('id_WB_AD_STA_13_2_0');
+                unhideQn('id_WB_AD_STA_13_2_1');
+                unhideQn('id_WB_AD_STA_13_2_2');
+                unhideQn('id_WB_AD_STA_13_2_3');
+            }
+        });
+        $("input[name='WB_AD_HEL_16_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_HEL_16_1']:checked").val();
+            if (ival == 'ANNO') {
+                hideQn('WB_AD_HEL_16_2');
+            } else {
+                unhideQn('WB_AD_HEL_16_2');
+
+            }
+        });
+
+
+        $("input[name='WB_AD_HEL_22_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_HEL_22_1']:checked").val();
+            if (ival == 'ANNO') {
+                hideQn('id_WB_AD_HEL_22_2_0');
+                hideQn('id_WB_AD_HEL_22_2_1');
+            } else {
+                unhideQn('id_WB_AD_HEL_22_2_0');
+                unhideQn('id_WB_AD_HEL_22_2_1');
+
+            }
+        });
+        $("input[name='WB_AD_HEL_22_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_HEL_22_1']:checked").val();
+            if (ival == 'AYES') {
+                hideQn('WB_AD_HEL_22_3');
+            } else {
+                unhideQn('WB_AD_HEL_22_3');
+            }
+        });
+        $("input[name='WB_AD_SAF_30_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_SAF_30_1']:checked").val();
+            if (ival == 'AYES') {
+                hideQn('WB_AD_SAF_30_2');
+            } else {
+                unhideQn('WB_AD_SAF_30_2');
+            }
+        });
+        $("input[name='WB_AD_SAF_31_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_SAF_31_1']:checked").val();
+            if (ival == 'ANNO') {
+                hideQn('id_WB_AD_SAF_31_2_0');
+                hideQn('id_WB_AD_SAF_31_2_1');
+                hideQn('id_WB_AD_SAF_31_3_0');
+                hideQn('id_WB_AD_SAF_31_3_1');
+            } else {
+                unhideQn('id_WB_AD_SAF_31_2_0');
+                unhideQn('id_WB_AD_SAF_31_2_1');
+                unhideQn('id_WB_AD_SAF_31_3_0');
+                unhideQn('id_WB_AD_SAF_31_3_1');
+            }
+        });
+
+        $("input[name='WB_AD_HEL_16_3']").on('change', function () {
+            var ival = $("input[name='WB_AD_HEL_16_3']:checked").val();
+            if (ival == 'ANNO') {
+                hideQn('WB_AD_HEL_16_4');
+            } else {
+                unhideQn('WB_AD_HEL_16_4');
+
+            }
+        });
+
+        $("input[name='WB_AD_HEL_17_4']").on('change', function () {
+            var ival = $("input[name='WB_AD_HEL_17_4']:checked").val();
+            if (ival == 'ANNO') {
+                hideQn('WB_AD_HEL_17_5');
+            } else {
+                unhideQn('WB_AD_HEL_17_5');
+
+            }
+        });
+
+        $("input[name='WB_AD_SAF_32_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_SAF_32_1']:checked").val();
+            if (ival == 'ANNO' || ival=='AREFUSE' ) {
+                hideQn('id_WB_AD_SAF_32_2_0');
+                hideQn('id_WB_AD_SAF_32_2_1');
+                hideQn('id_WB_AD_SAF_32_2_2');
+                hideQn('id_WB_AD_SAF_32_2_3');
+                hideQn('id_WB_AD_SAF_32_3_0');
+                hideQn('id_WB_AD_SAF_32_3_1');
+                hideQn('id_WB_AD_SAF_32_3_2');
+                hideQn('id_WB_AD_SAF_32_4_0');
+                hideQn('id_WB_AD_SAF_32_4_1');
+                hideQn('id_WB_AD_SAF_32_4_2');
+                hideQn('id_WB_AD_SAF_32_5_0');
+                hideQn('id_WB_AD_SAF_32_5_1');
+                hideQn('id_WB_AD_SAF_32_5_2');
+                hideQn('id_WB_AD_SAF_32_6_1_0');
+                hideQn('id_WB_AD_SAF_32_6_1_1');
+                hideQn('id_WB_AD_SAF_32_6_1_2');
+                hideQn('WB_AD_SAF_32_6_2');
+
+            } else {
+                unhideQn('id_WB_AD_SAF_32_2_0');
+                unhideQn('id_WB_AD_SAF_32_2_1');
+                unhideQn('id_WB_AD_SAF_32_2_2');
+                unhideQn('id_WB_AD_SAF_32_2_3');
+                unhideQn('id_WB_AD_SAF_32_3_0');
+                unhideQn('id_WB_AD_SAF_32_3_1');
+                unhideQn('id_WB_AD_SAF_32_3_2');
+                unhideQn('id_WB_AD_SAF_32_4_0');
+                unhideQn('id_WB_AD_SAF_32_4_1');
+                unhideQn('id_WB_AD_SAF_32_4_2');
+                unhideQn('id_WB_AD_SAF_32_5_0');
+                unhideQn('id_WB_AD_SAF_32_5_1');
+                unhideQn('id_WB_AD_SAF_32_5_2');
+                unhideQn('id_WB_AD_SAF_32_6_1_0');
+                unhideQn('id_WB_AD_SAF_32_6_1_1');
+                unhideQn('id_WB_AD_SAF_32_6_1_2');
+                unhideQn('WB_AD_SAF_32_6_2');
+
+
+            }
+        });
+        $("input[name='WB_AD_SAF_32_4']").on('change', function () {
+            var ival = $("input[name='WB_AD_SAF_32_4']:checked").val();
+            if (ival == 'ANNO' || ival == 'AREFUSE') {
+                hideQn('id_WB_AD_SAF_32_5_0');
+                hideQn('id_WB_AD_SAF_32_5_1');
+                hideQn('id_WB_AD_SAF_32_5_2');
+            } else {
+                unhideQn('id_WB_AD_SAF_32_5_0');
+                unhideQn('id_WB_AD_SAF_32_5_1');
+                unhideQn('id_WB_AD_SAF_32_5_2');
+            }
+        });
+
+        $("input[name='WB_AD_SAF_33_1']").on('change', function () {
+            var ival = $("input[name='WB_AD_SAF_33_1']:checked").val();
+            if (ival == 'ANNO'|| ival == 'AREFUSE' ) {
+                hideQn('WB_AD_SAF_33_2');
+            } else {
+                unhideQn('WB_AD_SAF_33_2');
+            }
+        });
+        $("input[name='WB_AD_SAF_32_5']").on('change', function () {
+            var ival = $("input[name='WB_AD_SAF_32_5']:checked").val();
+            if (ival == 'ANNO' || ival == 'AREFUSE') {
+                hideQn('id_WB_AD_SAF_32_6_1_0');
+                hideQn('id_WB_AD_SAF_32_6_1_1');
+                hideQn('id_WB_AD_SAF_32_6_1_2');
+                hideQn('WB_AD_SAF_32_6_2');
+            } else {
+                unhideQn('id_WB_AD_SAF_32_6_1_0');
+                unhideQn('id_WB_AD_SAF_32_6_1_1');
+                unhideQn('id_WB_AD_SAF_32_6_1_2');
+                unhideQn('WB_AD_SAF_32_6_2');
+            }
+        });
+
+
+
+        $('html,body').scrollTop(0);
+    });
+
+    function hideQn(qnID) {
+        // $('#' + qnID).addClass('hidden');
+        $('#' + qnID).attr("disabled", 'disabled');
+        // check if multiselect
+        var ms_attr = $('#' + qnID).attr('multiple');
+        if (typeof ms_attr !== typeof undefined && ms_attr !== false) {
+            $('#' + qnID).multiselect('disable');
+        }
+        // endCheck
+        $('#' + qnID).prop("disabled", true);
+        $('#' + qnID).removeAttr('required');
+    }
+    function unhideQn(qnID) {
+        // $('#' + qnID).removeClass('hidden');
+        // check if multiselect
+        var ms_attr = $('#' + qnID).attr('multiple');
+        if (typeof ms_attr !== typeof undefined && ms_attr !== false) {
+            $('#' + qnID).multiselect('enable');
+        }
+        // endCheck
+        $('#' + qnID).removeAttr('disabled');
+        $('#' + qnID).attr('required');
+    }
 </script>
 
 <script>

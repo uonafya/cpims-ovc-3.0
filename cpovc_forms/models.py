@@ -1402,41 +1402,108 @@ class OVCCaseLocation(models.Model):
         return '%s' % (str(self.case))
 
 
-class OVCFMPEvaluation(models.Model):
-    evaluation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    form_type = models.CharField(max_length=20, null=True)
-    caregiver_know_where = models.CharField(max_length=50, null=True)
-    caregiver_know_what = models.CharField(max_length=50, null=True)
-    caregiver_know_who = models.CharField(max_length=50, null=True)
-    child_watch_often = models.CharField(max_length=50, null=True)
-    what_program = models.CharField(max_length=50, null=True)
-    specific_program = models.CharField(max_length=50, null=True)
-    talk_on_topic = models.CharField(max_length=50, null=True)
-    watch_with_child = models.CharField(max_length=50, null=True)
-    talk_on_sex = models.CharField(max_length=50, null=True)
-    talk_on_hiv = models.CharField(max_length=50, null=True)
-    talk_on_sti = models.CharField(max_length=50, null=True)
-    other_sexual_issues = models.CharField(max_length=50, null=True)
-    if_yes = models.CharField(max_length=50, null=True)
-    child_asks = models.CharField(max_length=50, null=True)
-    if_asks = models.CharField(max_length=50, null=True)
-    comfortable = models.CharField(max_length=50, null=True)
-    how_talk = models.CharField(max_length=50, null=True)
-    enough_information = models.CharField(max_length=50, null=True)
-    talk_bad_things = models.CharField(max_length=50, null=True)
-    ask_questions = models.CharField(max_length=50, null=True)
-    thoughts_on_sex = models.CharField(max_length=50, null=True)
-    ready_to_learn = models.CharField(max_length=50, null=True)
-    still_young = models.CharField(max_length=50, null=True)
-    have_someone = models.CharField(max_length=50, null=True)
-    guardian_responsibility = models.CharField(max_length=50, null=True)
-    happy_with_child = models.CharField(max_length=50, null=True)
+# class OVCFMPEvaluation(models.Model):
+#     evaluation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+#     form_type = models.CharField(max_length=20, null=True)
+#     caregiver_know_where = models.CharField(max_length=50, null=True)
+#     caregiver_know_what = models.CharField(max_length=50, null=True)
+#     caregiver_know_who = models.CharField(max_length=50, null=True)
+#     child_watch_often = models.CharField(max_length=50, null=True)
+#     what_program = models.CharField(max_length=50, null=True)
+#     specific_program = models.CharField(max_length=50, null=True)
+#     talk_on_topic = models.CharField(max_length=50, null=True)
+#     watch_with_child = models.CharField(max_length=50, null=True)
+#     talk_on_sex = models.CharField(max_length=50, null=True)
+#     talk_on_hiv = models.CharField(max_length=50, null=True)
+#     talk_on_sti = models.CharField(max_length=50, null=True)
+#     other_sexual_issues = models.CharField(max_length=50, null=True)
+#     if_yes = models.CharField(max_length=50, null=True)
+#     child_asks = models.CharField(max_length=50, null=True)
+#     if_asks = models.CharField(max_length=50, null=True)
+#     comfortable = models.CharField(max_length=50, null=True)
+#     how_talk = models.CharField(max_length=50, null=True)
+#     enough_information = models.CharField(max_length=50, null=True)
+#     talk_bad_things = models.CharField(max_length=50, null=True)
+#     ask_questions = models.CharField(max_length=50, null=True)
+#     thoughts_on_sex = models.CharField(max_length=50, null=True)
+#     ready_to_learn = models.CharField(max_length=50, null=True)
+#     still_young = models.CharField(max_length=50, null=True)
+#     have_someone = models.CharField(max_length=50, null=True)
+#     guardian_responsibility = models.CharField(max_length=50, null=True)
+#     happy_with_child = models.CharField(max_length=50, null=True)
+#
+#     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+#     date_of_event = models.DateField(default=timezone.now, null=True)### date
+#     timestamp_created = models.DateTimeField(auto_now_add=True)
+#     timestamp_updated = models.DateTimeField(auto_now=True)
+#
+#     class Meta:
+#         db_table = 'ovc_fmp_evaluation'
 
-    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
-    date_of_event = models.DateField(default=timezone.now, null=True)### date
-    timestamp_created = models.DateTimeField(auto_now_add=True)
-    timestamp_updated = models.DateTimeField(auto_now=True)
+class OVCPreventiveEvents(models.Model):
+    event = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    event_type_id = models.CharField(max_length=10)
+    event_counter = models.IntegerField(default=0)
+    event_score = models.IntegerField(null=True, default=0)
+    date_of_event = models.DateField(default=timezone.now)
+    date_of_previous_event = models.DateTimeField(null=True)
+    created_by = models.IntegerField(null=True, default=404)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    is_void = models.BooleanField(default=False)
+    sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
+    app_user = models.ForeignKey(AppUser, default=1, on_delete=models.CASCADE)
+    person = models.ForeignKey(RegPerson, null=True, on_delete=models.CASCADE)
+    house_hold = models.ForeignKey(OVCHouseHold, null=True, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = 'ovc_fmp_evaluation'
+        db_table = 'ovc_preventive_events'
+
+
+
+class OVCPrevEvaluation(models.Model):
+    evaluation_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    # ref_caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='preval_caregiver')
+    form_type = models.CharField(max_length=20, null=True)
+    know_where = models.CharField(max_length=20)
+    know_what = models.CharField(max_length=20)
+    know_who = models.CharField(max_length=20)
+    often_watch_tv = models.CharField(max_length=20)
+    know_what_watching_tv = models.CharField(max_length=20)
+    not_watch_programs_tv = models.CharField(max_length=20)
+    talk_sex_on_tv = models.CharField(max_length=20)
+    watch_tv_with_child = models.CharField(max_length=20)
+    what_sex_is = models.CharField(max_length=20)
+    talk_hiv = models.CharField(max_length=20)
+    talk_sti = models.CharField(max_length=20)
+    talk_sex_issues = models.CharField(max_length=20)
+    talk_sex_issue_what = models.CharField(max_length=20)
+    ask_sex_issue = models.CharField(max_length=20)
+    ask_sex_issue_respond = models.CharField(max_length=20)
+    question_about_sex_issue = models.CharField(max_length=20)
+    know_how_talk_sex_issue = models.CharField(max_length=20)
+    information_sex_issues = models.CharField(max_length=20)
+    bad_things_from_sex = models.CharField(max_length=20)
+    talk_sex_child_opinion = models.CharField(max_length=20)
+    ready_learn_sex_issues = models.CharField(max_length=20)
+    encourage_have_sex = models.CharField(max_length=20)
+    young_learn_sex_issues = models.CharField(max_length=20)
+    someone_talk_sex_issues = models.CharField(max_length=20)
+    parent_responsibility_talk_sex = models.CharField(max_length=20)
+    happy_with_child = models.CharField(max_length=20)
+
+    event = models.ForeignKey(OVCPreventiveEvents, on_delete=models.CASCADE)
+    date_of_event = models.DateField(default=timezone.now, null=True)
+    fmp_pre_grouping_id = models.UUIDField(default=uuid.uuid1, editable=False)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(default=timezone.now)
+    is_void = models.BooleanField(default=False)
+    sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
+
+
+    class Meta:
+        db_table = 'ovc_prev_fmp_evaluation'
+
+        def __unicode__(self):
+            return str(self.evaluation_id)

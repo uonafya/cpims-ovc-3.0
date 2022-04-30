@@ -38,8 +38,8 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
-    OVCFMPEvaluation)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, OVCPrevEvaluation, OVCPreventiveEvents)
+
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -10059,10 +10059,10 @@ def new_fmppostevaluation(request, id):
 
             """ Save evaluation-event """
             # get event counter
-            event_counter = OVCCareEvents.objects.filter(
+            event_counter = OVCPreventiveEvents.objects.filter(
                 event_type_id=event_type_id, person=id, is_void=False).count()
             # save event
-            ovccareevent = OVCCareEvents(
+            ovcpre_event = OVCPreventiveEvents(
                 event_type_id=event_type_id,
                 event_counter=event_counter,
                 event_score=0,
@@ -10071,63 +10071,41 @@ def new_fmppostevaluation(request, id):
                 person=RegPerson.objects.get(pk=int(id)),
                 # house_hold=house_holds
             )
-            ovccareevent.save()
-            # OVCFMPEvaluation
+            ovcpre_event.save()
 
-            # Saving Benchmarks
-            OVCFMPEvaluation.objects.create(
+            # Saving Evaluations
+            OVCPrevEvaluation.objects.create(
                 person=person,
-                form_type=formtype,
-                caregiver_know_where=q1,
-                caregiver_know_what=q2,
-                caregiver_know_who=q3,
-                child_watch_often=q4,
-                what_program=q5,
-                specific_program=q6,
-                talk_on_topic=q7,
-                watch_with_child=q8,
-                talk_on_sex=q9,
-                talk_on_hiv=q10,
-                talk_on_sti=q11,
-                other_sexual_issues=q12a,
-                if_yes=q12b,
-                child_asks=q13,
-                if_asks=q14,
-                comfortable=q15,
-                how_talk=q16,
-                enough_information=q17,
-                talk_bad_things=q18,
-                ask_questions=q19,
-                thoughts_on_sex=q20,
-                ready_to_learn=q21,
-                still_young=q22,
-                have_someone=q23,
-                guardian_responsibility=q24,
+                know_where=q1,
+                know_what=q2,
+                know_who=q3,
+                often_watch_tv=q4,
+                know_what_watching_tv=q5,
+                not_watch_programs_tv=q6,
+                talk_sex_on_tv=q7,
+                watch_tv_with_child=q8,
+                what_sex_is=q9,
+                talk_hiv=q10,
+                talk_sti=q11,
+                talk_sex_issues=q12a,
+                talk_sex_issue_what=q12b,
+                ask_sex_issue=q13,
+                ask_sex_issue_respond=q14,
+                question_about_sex_issue=q15,
+                know_how_talk_sex_issue=q16,
+                information_sex_issues=q17,
+                bad_things_from_sex=q18,
+                talk_sex_child_opinion=q19,
+                ready_learn_sex_issues=q20,
+                encourage_have_sex=q21,
+                young_learn_sex_issues=q22,
+                someone_talk_sex_issues=q23,
+                parent_responsibility_talk_sex=q24,
                 happy_with_child=q25,
-                event=ovccareevent,
+                event=ovcpre_event,
                 # care_giver=RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id),
             )
 
-            # get questions for adolescent
-            # questions = OVCCareQuestions.objects.filter(code__startswith='wba')
-            # ovc_id = int(id)
-            # child = RegPerson.objects.get(is_void=False, id=ovc_id)
-            # care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-            # for question in questions:
-            #     answer = request.POST.get(question.question)
-            #     if answer is None:
-            #         answer = 'No'
-            #     OVCCareWellbeing.objects.create(
-            #         person=RegPerson.objects.get(pk=int(id)),
-            #         question=question,
-            #         answer=answer,
-            #         household=house_holds,
-            #         event=ovccareevent,
-            #         date_of_event=timezone.now(),
-            #         domain=question.domain,
-            #         question_type=question.question_type,
-            #         # caregiver=care_giver
-            #     )
             msg = 'form evaluation saved successful'
             messages.add_message(request, messages.INFO, msg)
             url = reverse('ovc_view', kwargs={'id': id})
@@ -10161,8 +10139,8 @@ def new_fmppostevaluation(request, id):
     child = RegPerson.objects.get(is_void=False, id=ovc_id)
 
     form = FmpPostEvaluation()
-    event = OVCCareEvents.objects.filter(person_id=id).values_list('event')
-    fmp_evaluation = OVCFMPEvaluation.objects.filter(event_id__in=event).order_by('date_of_event')
+    event = OVCPreventiveEvents.objects.filter(person_id=id).values_list('event')
+    fmp_evaluation = OVCPrevEvaluation.objects.filter(event_id__in=event).order_by('date_of_event')
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
 
     return render(request,
@@ -10181,8 +10159,9 @@ def new_fmppostevaluation(request, id):
 def edit_fmppostevaluation(request, id):
     """Some default page for Server Errors."""
 
+
     try:
-        fmpdata = OVCFMPEvaluation.objects.get(evaluation_id=id)
+        fmpdata = OVCPrevEvaluation.objects.get(evaluation_id=id)
         if request.method == 'POST':
             formtype = request.POST.get("FORMS_CHOICES")
             q1 = request.POST.get("WB_AD_PLC_7")
@@ -10217,65 +10196,66 @@ def edit_fmppostevaluation(request, id):
             # house_holds = OVCHouseHold.objects.get(pk=hse_uuid)
 
             # Save all details from the Bursary form
-            OVCFMPEvaluation.objects.filter(evaluation_id=id).update(
+            OVCPrevEvaluation.objects.filter(evaluation_id=id).update(
                 form_type=formtype,
-                caregiver_know_where=q1,
-                caregiver_know_what=q2,
-                caregiver_know_who=q3,
-                child_watch_often=q4,
-                what_program=q5,
-                specific_program=q6,
-                talk_on_topic=q7,
-                watch_with_child=q8,
-                talk_on_sex=q9,
-                talk_on_hiv=q10,
-                talk_on_sti=q11,
-                other_sexual_issues=q12a,
-                if_yes=q12b,
-                child_asks=q13,
-                if_asks=q14,
-                comfortable=q15,
-                how_talk=q16,
-                enough_information=q17,
-                talk_bad_things=q18,
-                ask_questions=q19,
-                thoughts_on_sex=q20,
-                ready_to_learn=q21,
-                still_young=q22,
-                have_someone=q23,
-                guardian_responsibility=q24,
+                know_where=q1,
+                know_what=q2,
+                know_who=q3,
+                often_watch_tv=q4,
+                know_what_watching_tv=q5,
+                not_watch_programs_tv=q6,
+                talk_sex_on_tv=q7,
+                watch_tv_with_child=q8,
+                what_sex_is=q9,
+                talk_hiv=q10,
+                talk_sti=q11,
+                talk_sex_issues=q12a,
+                talk_sex_issue_what=q12b,
+                ask_sex_issue=q13,
+                ask_sex_issue_respond=q14,
+                question_about_sex_issue=q15,
+                know_how_talk_sex_issue=q16,
+                information_sex_issues=q17,
+                bad_things_from_sex=q18,
+                talk_sex_child_opinion=q19,
+                ready_learn_sex_issues=q20,
+                encourage_have_sex=q21,
+                young_learn_sex_issues=q22,
+                someone_talk_sex_issues=q23,
+                parent_responsibility_talk_sex=q24,
                 happy_with_child=q25)
                 
         # fmpdata = OVCFMPEvaluation.objects.get(evaluation_id=id)
-        fmp={
+        fmp = {
             'FORMS_CHOICES': fmpdata.form_type,
-            'WB_AD_PLC_7': fmpdata.caregiver_know_where,
-            'WB_AD_PLC_8_1': fmpdata.caregiver_know_what,
-            'WB_AD_PLC_9_1': fmpdata.caregiver_know_who,
-            'WB_AD_TV_13_1': fmpdata.child_watch_often,
-            'WB_AD_TV_13_2': fmpdata.what_program,
-            'WB_AD_TV_13_3': fmpdata.specific_program,
-            'WB_AD_TV_13_4': fmpdata.talk_on_topic,
-            'WB_AD_TV_13_5': fmpdata.watch_with_child,
-            'WB_AD_HE_15_1': fmpdata.talk_on_sex,
-            'WB_AD_HE_15_2': fmpdata.talk_on_hiv,
-            'WB_AD_HE_15_3': fmpdata.talk_on_sti,
-            'WB_AD_HE_15_4': fmpdata.other_sexual_issues,
-            'WB_AD_HE_15_4_1': fmpdata.if_yes,
-            'WB_AD_HE_15_5': fmpdata.child_asks,
-            'WB_AD_HE_15_6': fmpdata.if_asks,
-            'WB_AD_HE_15_8': fmpdata.comfortable,
-            'WB_AD_HE_15_9': fmpdata.how_talk,
-            'WB_AD_HE_15_10': fmpdata.enough_information,
-            'WB_AD_HE_15_11': fmpdata.talk_bad_things,
-            'WB_AD_HE_15_12': fmpdata.ask_questions,
-            'WB_AD_THO_16_1': fmpdata.thoughts_on_sex,
-            'WB_AD_THO_16_2': fmpdata.ready_to_learn,
-            'WB_AD_THO_16_3': fmpdata.still_young,
-            'WB_AD_THO_16_4': fmpdata.have_someone,
-            'WB_AD_THO_16_5': fmpdata.guardian_responsibility,
+            'WB_AD_PLC_7': fmpdata.know_where,
+            'WB_AD_PLC_8_1': fmpdata.know_what,
+            'WB_AD_PLC_9_1': fmpdata.know_who,
+            'WB_AD_TV_13_1': fmpdata.often_watch_tv,
+            'WB_AD_TV_13_2': fmpdata.know_what_watching_tv,
+            'WB_AD_TV_13_3': fmpdata.not_watch_programs_tv,
+            'WB_AD_TV_13_4': fmpdata.talk_sex_on_tv,
+            'WB_AD_TV_13_5': fmpdata.watch_tv_with_child,
+            'WB_AD_HE_15_1': fmpdata.what_sex_is,
+            'WB_AD_HE_15_2': fmpdata.talk_hiv,
+            'WB_AD_HE_15_3': fmpdata.talk_sti,
+            'WB_AD_HE_15_4': fmpdata.talk_sex_issues,
+            'WB_AD_HE_15_4_1': fmpdata.talk_sex_issue_what,
+            'WB_AD_HE_15_5': fmpdata.ask_sex_issue,
+            'WB_AD_HE_15_6': fmpdata.ask_sex_issue_respond,
+            'WB_AD_HE_15_8': fmpdata.question_about_sex_issue,
+            'WB_AD_HE_15_9': fmpdata.know_how_talk_sex_issue,
+            'WB_AD_HE_15_10': fmpdata.information_sex_issues,
+            'WB_AD_HE_15_11': fmpdata.bad_things_from_sex,
+            'WB_AD_HE_15_12': fmpdata.talk_sex_child_opinion,
+            'WB_AD_THO_16_1': fmpdata.ready_learn_sex_issues,
+            'WB_AD_THO_16_2': fmpdata.encourage_have_sex,
+            'WB_AD_THO_16_3': fmpdata.young_learn_sex_issues,
+            'WB_AD_THO_16_4': fmpdata.someone_talk_sex_issues,
+            'WB_AD_THO_16_5': fmpdata.parent_responsibility_talk_sex,
             'WB_AD_THO_16_6': fmpdata.happy_with_child
         }
+        form = FmpPostEvaluation(data=fmp)
 
     except Exception as e:
         print("error with OVC viewing - %s" % (str(e)))
@@ -10283,11 +10263,11 @@ def edit_fmppostevaluation(request, id):
         msg = "Error occured during ovc edit"
         messages.error(request, msg)
 
-    form = FmpPostEvaluation(data=fmp)
+
     return render(request, 'forms/edit_fmppostevaluation.html', {'form': form, 'fmpdata': fmpdata, 'status': 200})
 
 
 def delete_evaluation(request, id):
-    new_eval = OVCFMPEvaluation.objects.get(evaluation_id=id)
+    new_eval = OVCPrevEvaluation.objects.get(evaluation_id=id)
     new_eval.delete()
     return redirect('new_fmppostevaluation', id=new_eval.person_id)
