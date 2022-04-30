@@ -8199,7 +8199,7 @@ class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
         choices=ATTENDANCE_CHOICES,
         attrs = {'placeholder': _('Select Date'),
                'class': 'form-control',
-               'name': 'MAKEUP_SESSION_DATE',
+               'name': 'SESSION_ATTENDED_DAYS',
                'id': 'session_attended_days'}))
 
     REFFERAL_SERVICES = forms.CharField(widget=forms.Select(
@@ -8222,7 +8222,7 @@ class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
         attrs={'placeholder': _('Date of Event'),
                'class': 'form-control',
                'name': 'date of makeup',
-               'id': 'makeup_session_id'
+               'id': 'makeup_session_date'
                #'data-parsley-required': "true",
                #'data-parsley-group': 'group3'
                }))
@@ -8318,3 +8318,7 @@ class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
     service_provided_list = forms.CharField(widget=forms.TextInput(
         attrs={'type': 'hidden',
                'id': 'service_provided_list'}))
+
+    preventive_assessment_provided_list = forms.CharField(widget=forms.TextInput(
+        attrs={'type': 'hidden',
+               'id': 'preventive_assessment_provided_list'}))
