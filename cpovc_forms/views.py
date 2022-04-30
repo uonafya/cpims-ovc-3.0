@@ -30,7 +30,7 @@ from cpovc_forms.forms import (
     HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessmentUpgrade)
 
 from .models import (
-    OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
+    OVCCareCpara_upgrade, OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
     OVCDocuments, OVCMedical, OVCCaseRecord, OVCNeeds, OVCCaseCategory,
     OVCCaseSubCategory, FormsLog, OVCCaseEvents, OVCCaseEventServices,
     OVCCaseEventCourt, OVCPlacement, OVCPlacementFollowUp,
@@ -8660,6 +8660,7 @@ def new_cpara(request, id):
         data = request.POST
 
         child = RegPerson.objects.get(id=id)
+        print (child)
         care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
         house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
         date_of_event = data.get('d_o_a')
@@ -8670,6 +8671,7 @@ def new_cpara(request, id):
             house_hold=house_hold
         )
         questions = OVCCareQuestions.objects.filter(code__startswith='cp')
+        # print(questions)
         exceptions = ['cp2d', 'cp2q', 'cp74q', 'cp34q', 'cp18q']
         for question in questions:  
             save_cpara_form_by_domain(
@@ -10006,16 +10008,56 @@ def new_dreamsform(request, id):
 def new_cpara_upgrade(request, id):
     if request.method == 'POST':
         data = request.POST
+        print (data)
+        
+       
+        child = RegPerson.objects.get(id=id)
+        form= CparaAssessmentUpgrade()
+        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+      
+            
+        questions = OVCCareQuestions.objects.filter(code__startswith='cp')
+        exceptions = ['cp2d', 'cp2q', 'cp74q', 'cp34q', 'cp18q']
+        date_of_event = data.get('d_o_a')
+        event = OVCCareEvents.objects.create(
+                event_type_id='cpr',
+                created_by=request.user.id,
+                person=child,
+                house_hold=house_hold
+            )
 
-    child = RegPerson.objects.get(id=id)
-    form= CparaAssessmentUpgrade()
+        for question in questions:  
+            save_cpara_form_by_domain(
+                id=id,
+                question=question,
+                answer=data.get(question.code.lower()),
+                house_hold=house_hold,
+                caregiver=care_giver,
+                event=event,
+                date_event=convert_date(date_of_event, fmt='%Y-%m-%d'),
+                exceptions=exceptions
+                )
+            # answer_value = {
+            #     'AYES': 1,
+            #     'ANNO': 0,
+            #     0: 0
+            #     } 
+        url = reverse('ovc_view', kwargs={'id': id})
+        return HttpResponseRedirect(url)
+
     
+        # get relations
+    guardians = RegPersonsGuardians.objects.select_related().filter(
+        child_person=id, is_void=False, date_delinked=None)
     siblings = RegPersonsSiblings.objects.select_related().filter(
         child_person=id, is_void=False, date_delinked=None)
+    # Reverse relationship
     osiblings = RegPersonsSiblings.objects.select_related().filter(
         sibling_person=id, is_void=False, date_delinked=None)
     oguardians = RegPersonsGuardians.objects.select_related().filter(
         guardian_person=id, is_void=False, date_delinked=None)
+    child = RegPerson.objects.get(id=id)
     ovc_id = int(id)
     creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
@@ -10065,6 +10107,11 @@ def new_cpara_upgrade(request, id):
         ward = SetupGeography.objects.get(area_id=ward_id)
         subcounty = SetupGeography.objects.get(area_id=ward.parent_area_id)
         county = SetupGeography.objects.get(area_id=subcounty.parent_area_id)
+
+    form = CparaAssessmentUpgrade()
+    ovc_id = int(id)
+    child = RegPerson.objects.get(is_void=False, id=ovc_id)
+    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
 
     # PAST CPARA
     past_cpara = []

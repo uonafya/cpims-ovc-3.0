@@ -1577,10 +1577,11 @@ jQuery(document).ready(function()
                     }else{
                         $('#messages').addClass('alert-success').removeClass('alert-danger').css({'display': 'block'});
                         $('#messages p').html(result[0].msg);
-                        var url = "{% url 'new_cpara' id=1234%}".replace(/1234/, personId.toString());
+                        var url = "{% url 'new_cpara_upgrade' id=1234%}".replace(/1234/, personId.toString());
+                        console.log({url})
                         window.open(url,"_self");
                     }
-                    console.log("delered");
+                    console.log("deleted");
                 },
                 error: function(xhr, status, error){
                     console.error('not deleted ==> status: '+ JSON.stringify(status) + ' & error: '+JSON.stringify(error));

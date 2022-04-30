@@ -822,7 +822,7 @@ class OVCGokBursary(models.Model):
 
 
 '''
-Classes below were added due to ovc case management
+Classes below were added due to ovc case managementOVCCareForms
 '''
 
 
@@ -845,39 +845,39 @@ class OVCCareBenchmarkScore(models.Model):
 
     bench_mark_score_id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
-    bench_mark_1 = models.IntegerField(default=0)
-    bench_mark_2 = models.IntegerField(default=0)
-    bench_mark_3 = models.IntegerField(default=0)
-    bench_mark_4 = models.IntegerField(default=0)
-    bench_mark_5 = models.IntegerField(default=0)
-    bench_mark_6 = models.IntegerField(default=0)
-    bench_mark_7 = models.IntegerField(default=0)
-    bench_mark_8 = models.IntegerField(default=0)
-    bench_mark_9 = models.IntegerField(default=0)
-    bench_mark_10 = models.IntegerField(default=0)
-    bench_mark_11 = models.IntegerField(default=0)
-    bench_mark_12 = models.IntegerField(default=0)
-    bench_mark_13 = models.IntegerField(default=0)
-    bench_mark_14 = models.IntegerField(default=0)
-    bench_mark_15 = models.IntegerField(default=0)
-    bench_mark_16 = models.IntegerField(default=0)
-    bench_mark_17 = models.IntegerField(default=0)
+    benchmark_1 = models.IntegerField(default=0)
+    benchmark_2 = models.IntegerField(default=0)
+    benchmark_3 = models.IntegerField(default=0)
+    benchmark_4 = models.IntegerField(default=0)
+    benchmark_5 = models.IntegerField(default=0)
+    benchmark_6 = models.IntegerField(default=0)
+    benchmark_7 = models.IntegerField(default=0)
+    benchmark_8 = models.IntegerField(default=0)
+    benchmark_9 = models.IntegerField(default=0)
+    benchmark_10 = models.IntegerField(default=0)
+    benchmark_11 = models.IntegerField(default=0)
+    benchmark_12 = models.IntegerField(default=0)
+    benchmark_13 = models.IntegerField(default=0)
+    benchmark_14 = models.IntegerField(default=0)
+    benchmark_15 = models.IntegerField(default=0)
+    benchmark_16 = models.IntegerField(default=0)
+    benchmark_17 = models.IntegerField(default=0)
     score = models.IntegerField(default=0)
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
-    care_giver = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    # care_giver = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     is_void = models.BooleanField(default=False)
     date_of_event = models.DateField(default=timezone.now)
     timestamp_created = models.DateTimeField(default=timezone.now)
     timestamp_updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return str(self.bench_mark_score_id)
+        return str(self.benchmark_score_id)
 
     class Meta:
         db_table = 'ovc_care_benchmark_score'
 
     def __unicode__(self):
-        return str(self.bench_mark_score_id)
+        return str(self.benchmark_score_id)
 
 
 class OVCCareCpara(models.Model):
@@ -1433,7 +1433,7 @@ class OVCCareCpara_upgrade(models.Model):
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver_upgrade')
     question_code = models.CharField(max_length=10, null=False, blank=True)
-    question = models.ForeignKey('OVCCareQuestions', on_delete=models.CASCADE)
+    # question = models.ForeignKey(OVCCareQuestions, on_delete=models.CASCADE)
     answer = models.CharField(max_length=15)
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
     question_type = models.CharField(max_length=50)

@@ -5,7 +5,7 @@ from cpovc_main.functions import get_general_list, convert_date
 from cpovc_forms.models import (
     FormsAuditTrail, OVCCareF1B, OVCCareEvents, OVCEducationFollowUp, OVCCareCpara, OVCCareCasePlan)
 from cpovc_ovc.functions import get_house_hold
-from .models import OVCGokBursary
+from .models import OVCCareCpara_upgrade, OVCGokBursary
 from cpovc_ovc.models import OVCFacility
 
 
@@ -282,7 +282,7 @@ def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event
     if question.code.lower() not in exceptions:
         answer = answer_value[answer]
     try:
-        OVCCareCpara.objects.create(
+        OVCCareCpara_upgrade.objects.create(
             person_id=id,
             question=question,
             caregiver=caregiver,

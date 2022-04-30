@@ -87,7 +87,7 @@ placementfollowup_type_list = get_list(
 alternative_family_care_type_list = get_list(
     'alternative_family_care_type_id', 'Please Select')
 type_of_adoption_list = get_list('adoption_id', 'Please Select')
-bursary_type_list = get_list('bursary_type_id', 'Select Bursary Type')
+bursary_type_list = get_list('bursary_type_id', 'Select Bursary Type')  
 school_type_list = get_list('school_category_id', 'Please Select')
 term_list = get_list('school_term_id', 'Select Term Awarded')
 schoolout_reason_list = get_list('out_of_school_id', 'Please Select')
@@ -104,6 +104,7 @@ csi_grade_list = get_list('csi_grade_id', 'Please Select')
 olmis_domain_list = get_list('olmis_domain_id', 'Please Select')
 olmis_assessment_domain_list = get_list(
     'olmis_assessment_domain_id', 'Please Select')
+print (olmis_assessment_domain_list)
 olmis_service_provider_list = get_list(
     'olmis_service_provider_id', 'Please Select')
 olmis_critical_events_list = get_list(

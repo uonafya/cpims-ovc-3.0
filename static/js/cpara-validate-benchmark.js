@@ -2,9 +2,9 @@
 
 
 // Healthy Goal 1 >> Benchmark 1
-validBench(['cphealth1', 'cphealth2', 'cphealth3', 'cphealth4', 'cphealth5'], ['AYES,ANNO','AYES,ANNO','AYES','AYES','AYES'], 'cp1b');
+validBench(['cphealth1', 'cphealth2', 'cphealth3', 'cphealth4', 'cphealth5'], ['AYES','AYES','AYES','AYES','AYES'], 'cp1b');
 // Healthy Goal 2 >> Benchmark 2
-validBench(['cphealth6','cphealth7','cphealth8','cphealth9','cphealth10','cphealth11','cphealth12','cphealth13','cphealth14'], ['AYES,ANNO','AYES,ANNO','AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'cp2b');
+validBench(['cphealth6','cphealth7','cphealth8','cphealth9','cphealth10','cphealth11','cphealth12','cphealth13','cphealth14'], ['AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'cp2b');
 // Healthy Goal 3 >> Benchmark 3
 validBench(['cphealth18','cphealth19','cphealth20'],['AYES','AYES','AYES'],'cp3b')
 // Healthy Goal 4 >> Benchmark 4
@@ -297,37 +297,12 @@ function validBench(arrayOfInputsToCheck, arrayOfExpectedValues, idOfBenchmarkQn
     $('input').change(function () {
         markBenchmark(idOfBenchmarkQn, false);
         var proceed = 0;
-        let thisValArr = [];
-
+      
         $.each(arrayOfInputsToCheck, function (inx, inpt) { 
             var thisval = $('input[name='+inpt+']:checked').val();
-            thisValArr.push(thisval)
-
-            if(arrayOfExpectedValues[inx].split(',').length > 1){
-                if(thisval == arrayOfExpectedValues[inx].split(',')[0] || thisval == arrayOfExpectedValues[inx].split(',')[1]){
-                    
-                    if(inpt == 'cphealth2' && thisval === 'ANNO' && thisValArr[inx-1] === 'ANNO') {  // Custom validation for q 1.1 & 1.2
-                        thisValArr = []
-                        return proceed
-                       
-                    }
-
-                    // condition = 
-
-                    // if(condition) {  // Custom validation for q 2.1 & 2.2
-                    //     return proceed
-                       
-                    // }
-
-                    proceed += 1;
-                    return proceed
-                }
-            }
-            else {
-                if(thisval == arrayOfExpectedValues[inx]){
-                    proceed += 1;
-                    return proceed
-                }
+            if(thisval == arrayOfExpectedValues[inx]){
+                proceed += 1;
+                return proceed
             }
            
         });
