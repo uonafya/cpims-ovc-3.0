@@ -1157,8 +1157,8 @@ class OVCHIVRiskScreening(models.Model):
 
     class Meta:
         db_table = 'ovc_risk_screening'
-    # def __unicode__(self):
-    #     return str(self.risk_id)
+    def __unicode__(self):
+        return str(self.risk_id)
 
 
 class OVCHIVManagement(models.Model):

@@ -178,7 +178,7 @@ urlpatterns = [
     re_path('dreamsform/new/(?P<id>\d+)/', views.new_dreamsform, name='new_dreamsform'),
 
     #edit hivriskscreening tool
-    path('hivriskscreeningtool/edit/<uuid:id>/', views.edit_hivriskscreeningtool, name='hivriskscreeningtool'),
+    path('hivriskscreeningtool/edit/(?P<id>\W+)/', views.edit_hivriskscreeningtool, name='hivriskscreeningtool'),
 
     #Delete hivscreening tool
     path('delete_hivriskscreening/(?P<id>)/', views.delete_hivriskscreening, name='delete_hivriskscreening'),
