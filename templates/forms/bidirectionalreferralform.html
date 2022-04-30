@@ -80,21 +80,48 @@
             <h4 class="panel-title"> Bidirectional Referral Details </h4>
         </div>
         <div class="panel-body">
+            <table width="100%" class="table table-profile align-right">
+                <tbody>
+                    <tr>
+                        <td class="field">Date: {{ child.first_name }}</td>
+                        <td class="field">Client Category: {{ child.first_name }}</td>
+                        <td class="field">Referring organization (LIP): {{ child.surname }}</td>  
+                        <td class="field">Name of Person Being Referred: {{ child.first_name }}</td>
+                        <td class="field">Organization referred to: {{ child.first_name }}</td>
+                    </tr>
+                    <tr>
+                        
+                    </tr>
+                   
+                </tbody>
+            </table>
             <form method="post" action=".">
                 {% csrf_token %}
-                {% comment %} <div class="row">
-                    <div class="form-group">
-                        <div class="col-md-4">
-                            {{ form.BIDIRECTIONAL_DATE }}
-                        </div>
-                    </div>
-                </div> {% endcomment %}
                 <div id="">
                     <!-- begin wizard step-1 -->
                     <div class="wizard-step-1">
                         <fieldset>
+                            
                             <!-- begin col-6 -->
                             <table id="assessment_manager_table" class="table">
+                                <thead>
+                                    <tr id="id_inputHeaders1">
+                                        <td width="3%"></td>
+                                        <th width="20%"><h6><b>Referral Date<span class=""></b></h6></th>
+                                        <th width="20%"><h6><b>Referral End Date<span class=""></b></h6></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr id="id_inputElements1">
+                                        <td></td>
+                                        <td width="20%">
+                                            {{form.BIDIRECTIONAL_DATE}}
+                                        </td>
+                                        <td width="20%">
+                                            {{form.BIDIRECTIONAL_DATE}}
+                                        </td>
+                                    </tr>
+                                </tbody>
                                 <thead>
                                 <tr id="id_inputHeaders1">
                                     <td width="3%"></td>
@@ -106,10 +133,25 @@
                                 <tr id="id_inputElements1">
                                     <td></td>
                                     <td width="20%">
-                                        {{ form.BIREFERRAL_DOMAIN }}
+                                        {{form.BIREFERRAL_DOMAIN}}
                                     </td>
                                     <td width="20%">
-                                            {{ form.BIREFERRAL_SERVICES }}
+                                        {{form.BIREFERRAL_SERVICES}}
+                                 
+                                        {% comment %} {% if form.BIREFERRAL_DOMAIN %}
+                                            {{ form.HEALTH_DOMAIN }}
+                                        {% else %}
+                                             {% if form.BIREFERRAL_DOMAIN %}
+                                                {{ form.STABLE_DOMAIN }}
+                                            {% else %}
+                                                {% if form.BIREFERRAL_DOMAIN %}
+                                                    {{ form.SAFE_DOMAIN }}
+                                                {% else %}  
+                                                    {{ form.BIREFERRAL_DEFAULT }}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}  {% endcomment %}
+                                   
                                         <div id="olmis_assessment_coreservice_errormsg" style="display:none;">
                                             <small><p class="dialog_paragraph">This value is required</p></small>
                                         </div>
@@ -181,6 +223,47 @@
 
     <!-- Bidirectional events -->
     <!-- End Bidirectional Events -->
+         <div class="panel-heading">
+{% comment %}     
+<!-- begin row -->
+<div class="row">
+    <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin panel -->
+        <div class="panel panel-info">
+               <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                </div>                          
+                <h4 class="panel-title"><b>Bidirectional Referral List  </b></h4>                    
+            </div>
+
+            <div class="panel-body">
+                <div  class="panel panel-inverse">
+                    <div id="case-events"  class="table-responsive">
+                        <table id="f1a_events_data_table" class="table table-striped table-bordered">
+                            <thead>
+                                <tr> 
+                                    <th>Domain Type</th>                                 
+                                    <th>Core Services</th> 
+                                          
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br><br>                           
+                </div>
+            </div>
+
+        </div>
+        <!-- end panel -->
+    </div>
+    <!-- end col-12 -->
+</div>
+<!-- end row --> {% endcomment %}
 
 {% endblock %}
 
@@ -210,6 +293,7 @@
 
                     switch (bireferral_domain) {
                         case '1':
+    
                             $("select[name='BIREFERRAL_SERVICES']").append(
                                         ` <option>Health insurance cover</option>
                                           <option>secticide Treated Mosquito net (ITN)</option>
@@ -233,43 +317,24 @@
                         case '2':
                             $("select[name='BIREFERRAL_SERVICES']")
                                 .append(
-                                ` <option>Stable </option>
-                                  <option>Insecticide Treated Mosquito net (ITN)</option>
-                                  <option>Enrollment to care and treatment</option>
-                                  <option>Enhance Adherence Counselling</option>
+                                ` <option>cash transfer OVC</option>
+                                  <option>cash transfer Elderly</option>
+                                  <option>cash transfer Disability</option>
+                                  <option>Safe shelter repair or construction</option>
                                   <option>Routine/ emergency healthcare</option>
-                                  <option>Perinatal care including PMTCT</option>
-                                  <option>HIV prevention support services_VMMC</option>
-                                  <option>HIV prevention support services_PrEP</option>
-                                  <option>HIV prevention support services_FM</option>
-                                  <option> prevention support services_Condom</option>
-                                  <option>STI treatment</option>
-                                  <option>MUAC and Bipedal Oedema Assessment</option>
-                                  <option>Nutrition support</option>
-                                  <option>immunization</option>
-                                  <option>HIV-related testing HTS</option>
-                                  <option>HIV-related testing EID</option>
+                                  <option>Perinatal care including PMTCT</option>    
                                  `
                             );
                             break;
                         case '3':
                             $("select[name='BIREFERRAL_SERVICES']").append(
-                                ` <option>safe domain </option>
-                                  <option>safe 1 Treated Mosquito net (ITN)</option>
-                                  <option>Enrollment to care and treatment</option>
-                                  <option>Enhance Adherence Counselling</option>
-                                  <option>Routine/ emergency healthcare</option>
-                                  <option>Perinatal care including PMTCT</option>
-                                  <option>HIV prevention support services_VMMC</option>
-                                  <option>HIV prevention support services_PrEP</option>
-                                  <option>HIV prevention support services_FM</option>
-                                  <option> prevention support services_Condom</option>
-                                  <option>STI treatment</option>
-                                  <option>MUAC and Bipedal Oedema Assessment</option>
-                                  <option>Nutrition support</option>
-                                  <option>immunization</option>
-                                  <option>HIV-related testing HTS</option>
-                                  <option>HIV-related testing EID</option>
+                                ` <option>Post Violence Counseling </option>
+                                  <option>Post Violence Medical care</option>
+                                  <option>Post violence Legal Care</option>
+                                  <option>Emergency shelter support</option>
+                                  <option>Re-enrollment</option>
+                                  <option>Bursary, tuition, school fees or fee exemption</option>
+                                  <option>School uniform, books, or other materials</option>                                 
                                  `
                             );
                             break;
@@ -281,9 +346,8 @@
                             )
                     }
 
-
                 }
-            )
+            ) 
 
             //multi selects
             $('#olmis_assessment_domain, #olmis_assessment_coreservice, #olmis_assessment_coreservice_status, #olmis_domain, #olmis_service_provider, #olmis_service, #olmis_priority_service, #olmis_priority_domain, #olmis_priority_health, #olmis_priority_education, #olmis_priority_shelter, #olmis_priority_protection, #olmis_priority_pss, #olmis_priority_hes, #olmis_critical_event').multiselect({

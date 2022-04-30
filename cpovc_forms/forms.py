@@ -8162,42 +8162,42 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
                       (4, 'Enhance Adherence Counselling'),
                       (5, 'Routine/ emergency healthcare'),
                       (6, 'Perinatal care including PMTCT'),
-                             (7,'HIV prevention support services_VMMC'),
-                             (8,'HIV prevention support services_PrEP'),
-                             (9,'HIV prevention support services_FM'),
-                             (10,'HIV prevention support services_Condom'),
-                             (11,'STI treatment'),
-                             (12,'MUAC and Bipedal Oedema Assessment'),
-                             (13,'Nutrition support'),
-                             (14,'immunization'),
-                             (15,'HIV-related testing HTS'),
-                             (16,'HIV-related testing EID'),)
+                        (7,'HIV prevention support services_VMMC'),
+                        (8,'HIV prevention support services_PrEP'),
+                        (9,'HIV prevention support services_FM'),
+                        (10,'HIV prevention support services_Condom'),
+                        (11,'STI treatment'),
+                        (12,'MUAC and Bipedal Oedema Assessment'),
+                        (13,'Nutrition support'),
+                        (14,'immunization'),
+                        (15,'HIV-related testing HTS'),
+                        (16,'HIV-related testing EID'),)
 
-    STABLE_DOMAIN_CHOICES = (('Please select', 'please select'),
-                     ('cash transfer OVC', 'cash transfer OVC'),
-                     ('cash transfer Elderly', 'cash transfer Elderly'),
-                     ('cash transfer Disability', 'cash transfer Disability'),
-                     ('Safe shelter repair or construction', 'Safe shelter repair or construction'),
-                     ('Routine/ emergency healthcare', 'Routine/ emergency healthcare'),
-                     ('Perinatal care including PMTCT', 'Perinatal care including PMTCT'))
+    STABLE_DOMAIN_CHOICES = ((0, 'please select'),
+                     (1, 'cash transfer OVC'),
+                     (2, 'cash transfer Elderly'),
+                     (3, 'cash transfer Disability'),
+                     (4, 'Safe shelter repair or construction'),
+                     (5, 'Routine/ emergency healthcare'),
+                     (6, 'Perinatal care including PMTCT'))
 
-    SAFE_DOMAIN_CHOICES = (('Please select', 'please select'),
-                   ('Post Violence Counseling', 'Post Violence Counseling'),
-                   ('Post Violence Medical care', 'Post Violence Medical care'),
-                   ('Post violence Legal Care', 'Post violence Legal Care'),
-                   ('Emergency shelter support', 'Emergency shelter support'),
-                   ('Re-enrollment ', 'Re-enrollment'),
-                   ('Bursary, tuition, school fees or fee exemption', 'Bursary, tuition, school fees or fee exemption'),
+    SAFE_DOMAIN_CHOICES = ((0, 'please select'),
+                   (1, 'Post Violence Counseling'),
+                   (2, 'Post Violence Medical care'),
+                   (3, 'Post violence Legal Care'),
+                   (4, 'Emergency shelter support'),
+                   (5, 'Re-enrollment'),
+                   (6, 'Bursary, tuition, school fees or fee exemption'),
                     ('School uniform, books, or other materials','School uniform, books, or other materials'))
 
 
-    SERVICE_CHOICES = ((0,'please select'),
-                    (1, 'Post Violence Counseling'),
-                     (2, 'Post Violence Medical care'),
-                     (3, 'Post violence Legal Care'),
-                     (4, 'Emergency shelter support'),
-                     (5, 'Re-enrollment'),
-                     (6, 'Bursary, tuition'))
+    # SERVICE_CHOICES = ((0,'please select'),
+    #                 (1, 'Post Violence Counseling'),
+    #                  (2, 'Post Violence Medical care'),
+    #                  (3, 'Post violence Legal Care'),
+    #                  (4, 'Emergency shelter support'),
+    #                  (5, 'Re-enrollment'),
+    #                  (6, 'Bursary, tuition'))
 
 
 
@@ -8205,14 +8205,35 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
                                                 initial='0',
                                                 widget=forms.Select(
                                                     attrs={'class': 'form-control',
+                                                           'id': 'BIREFERRAL_DOMAIN',
+                                                           }))
+
+    HEALTH_DOMAIN = forms.ChoiceField(choices=HEALTH_DOMAIN_CHOICES,
+                                                initial='0',
+                                                widget=forms.Select(
+                                                    attrs={'class': 'form-control',
                                                            'id': 'HEALTH_DOMAIN',
                                                            }))
 
-    BIREFERRAL_SERVICES = forms.MultipleChoiceField(choices=SERVICE_CHOICES,
+    STABLE_DOMAIN = forms.ChoiceField(choices=STABLE_DOMAIN_CHOICES,
+                                                initial='0',
+                                                widget=forms.Select(
+                                                    attrs={'class': 'form-control',
+                                                           'id': 'STABBLE_DOMAIN',
+                                                           }))
+
+    SAFE_DOMAIN = forms.ChoiceField(choices=SAFE_DOMAIN_CHOICES,
+                                                initial='0',
+                                                widget=forms.Select(
+                                                    attrs={'class': 'form-control',
+                                                           'id': 'SAFE_DOMAIN',
+                                                           }))
+
+    BIREFERRAL_SERVICES = forms.MultipleChoiceField(choices=HEALTH_DOMAIN_CHOICES,
                                               initial='0',
                                               widget=forms.Select(
                                                   attrs={'class': 'form-control',
-                                                         'id': 'SAFE_DOMAIN'})
+                                                         'id': 'BIREFERRAL_DEFAULT'})
                                               )
 
     # Feedback form entry
@@ -8222,10 +8243,11 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
             'class':'form-control',
             'rows':'3'
         }))
+
     BIDIRECTIONAL_DATE = forms.DateField(
         widget=forms.widgets.DateInput(
             format="%m/%d/%Y",
-            attrs={'placeholder': _('Refferal Date'),
+            attrs={'placeholder': _('Date'),
                    'class': 'form-control',
                    'name': 'refferalDate',
                    'id': 'refferalDate',
