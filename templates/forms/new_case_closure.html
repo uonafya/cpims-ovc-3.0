@@ -169,7 +169,7 @@
 
                                     <td>Case files completed per the protocol. </td>
                                     <td>
-                                        {{ form.CASE_CL006}}
+                                        {{ form.CASE_CL014}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -189,7 +189,7 @@
                                     <td>Q5</td>
                                     <td>Files stored in a safe place (locked cabinet).</td>
                                     <td>
-                                        {{ form.CASE_CL009 }}
+                                        {{ form.CASE_CL014 }}
 
                                     </td>
                                 </tr>
@@ -294,7 +294,7 @@
 
                                     <td>Files stored in a safe place (locked cabinet).</td>
                                     <td>
-                                        {{ form.CASE_CL028 }}
+                                        {{ form.CASE_CL014}}
                                     </td>
                                 </tr>
                                    <tr>
@@ -371,6 +371,8 @@
                             <th>Q12</th>
                             <th>Q13</th>
                              <th>Q14</th>
+                             <th>Q15</th>
+                             <th>Q16</th>
                              <th  colspan="2">Action</th>
 
 
@@ -402,7 +404,7 @@
                                     <td>{{ case_closure_data.exit_reason }}</td>
                                     <td>{{ case_closure_data.staff_certifying}}</td>
                                     <td>{{ case_closure_data.date_of_closure }}</td>
-                                <td>                <a href="{% url 'edit_case_closure' case_closure_data.case_clouse_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a> </td>
+                                <td> <a href="{% url 'edit_case_closure' case_closure_data.case_clouse_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a> </td>
                                     <td> <a href="{% url 'delete_case_closure' case_closure_data.case_clouse_id%}"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a> </td>
 
 
