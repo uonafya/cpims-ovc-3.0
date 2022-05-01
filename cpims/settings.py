@@ -96,8 +96,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'cpims',
-        'USER': 'username',
-        'PASSWORD': '123456ab',
+        'USER': 'cpmis_user',
+        'PASSWORD': '123456',
         'HOST': 'localhost',
         'PORT': '5432', },
     'reporting': {

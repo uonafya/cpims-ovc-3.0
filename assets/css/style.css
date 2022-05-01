@@ -6554,3 +6554,6 @@ td:focus{
 .overallScore {
     border: solid;
 }
+.btn-action {
+    width: 100% !important;
+}

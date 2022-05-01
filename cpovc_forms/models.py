@@ -1435,17 +1435,17 @@ class OVCBenchmarkMonitoring(models.Model):
     obm_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
     caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    Benchmark1 =models.BooleanField()
-    Benchmark2=models.BooleanField()
-    Benchmark3=models.BooleanField()
-    Benchmark4=models.BooleanField()
-    Benchmark5=models.BooleanField()
-    Benchmark6=models.BooleanField()
-    Benchmark7=models.BooleanField()
-    Benchmark8=models.BooleanField()
-    Benchmark9=models.BooleanField()
+    benchmark1 =models.BooleanField()
+    benchmark2=models.BooleanField()
+    benchmark3=models.BooleanField()
+    benchmark4=models.BooleanField()
+    benchmark5=models.BooleanField()
+    benchmark6=models.BooleanField()
+    benchmark7=models.BooleanField()
+    benchmark8=models.BooleanField()
+    benchmark9=models.BooleanField()
+    succesful_exit_checked=models.CharField(max_length=1)
     case_closure_checked=models.BooleanField()
-    succesful_exit_checked=models.BooleanField()
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
     is_void = models.BooleanField(default=False)
     event_date = models.DateField()
@@ -1453,8 +1453,7 @@ class OVCBenchmarkMonitoring(models.Model):
     timestamp_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = '`ovc_benchmark_monitoring`'
+        db_table = 'ovc_benchmark_monitoring'
 
     def __unicode__(self):
         return str(self.obm_id)
-

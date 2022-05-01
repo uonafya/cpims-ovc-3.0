@@ -8574,7 +8574,7 @@ class gradMonitoringToolform(forms.Form):
             attrs={'data-parsley-required': 'true',
                    'data-parsley-errors-container': "#signed_csac_error"}))
     cm13q = forms.ChoiceField(
-        choices=CPARA_MONITORING_CASE_CHOICES,
+        choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true',
