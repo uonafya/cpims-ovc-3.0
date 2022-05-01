@@ -1,0 +1,1094 @@
+{% extends 'base.html' %}
+{% load app_filters %}
+{% load static %}
+{% block page_title %} HEI Tracker {% endblock %}
+{% block style_code %}
+<link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet" />
+<style type="text/css">
+.dialog_paragraph {
+  color: #f00;
+}
+
+.table_data {
+  display: none;
+}
+
+.container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.td_style {
+  /*color: #000000;*/
+  color: #0057e7;
+}
+</style>
+{% endblock %}
+
+{% block javascript_code%}
+{% endblock javascript_code%}
+
+{% block primary %}
+
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+	<li><a href="#">Home</a></li>
+	<li class="active">Forms</li>
+</ol>
+<!-- end breadcrumb -->
+
+<!-- begin page-header -->
+
+{% for data in init_data %}
+
+	<h1 class="page-header">Forms <small>HEI Tracker<b>{{ data.first_name }} {{ data.surname }} | {{ data.sex_id|gen_value:vals }} | {% if data.date_of_birth|gen_age == 0 %}
+                            UNDER 1 YEAR
+                        {% else %}
+                            {{ data.date_of_birth|gen_age }} YRS 
+                        {% endif %}</b></small></h1>
+
+{% endfor %}
+<!-- end page-header -->
+
+<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-info fa-2x pull-left"></i>
+    <span class="invalid-form-message" id="invalid-form-message"></span>
+</div>
+
+<!-- begin row -->
+<div id='case_details' class="row">
+	<!-- begin col-12 -->
+    <div class="col-md-12">
+    	<!-- begin panel -->
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title"> HEI Tracker </h4>
+			</div>
+			<div style="overflow-x: auto; min-height: 300px;">
+		  		<div class="panel-body">
+            		<form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true"
+              		  name="form-wizard-hhva" id="new_hhva">
+                	{% csrf_token %}
+					<div id="wizard-hhva">
+						<ol>
+							<li>
+							    HEI Biodata/details
+							    <small>HEI Biodata/details</small>
+							</li>
+							<li>
+							    Caregiver biodata/details
+							    <small>Caregiver biodata/details</small>
+							</li>
+							<li>
+							    CHV details
+							    <small>CHV details</small>
+							</li>
+							<li>
+							    HEI Follow up (At first contact)
+							    <small>HEI Follow up (At first contact)</small>
+							</li>
+							<li>
+							    HEI Follow up (At 6 weeks)
+							    <small>HEI Follow up (At 6 weeks) </small>
+							</li>
+							<li>
+							    HEI Follow up (At 6 months)
+							    <small>HEI Follow up (At 6 months)</small>
+							</li>
+							<li>
+							    HEI Follow up (At 12 months)
+							    <small>HEI Follow up (At 12 months) </small>
+							</li>
+							<li>
+							    HEI Follow up (At 18 months)
+							    <small>HEI Follow up (At 18 months) </small>
+							</li>
+							<li>
+							    Others
+							    <small>Others.</small>
+							</li>
+						</ol>
+						
+
+						{{ form.person }}
+						{{ form.household_id }}
+						
+
+						<!-- begin wizard step-1 -->
+						<div class="wizard-step-1">
+							<div class="panel-body">
+
+								<div class="form-group">
+<!--									<label class="control-label col-md-4 col-sm-4" for="hhva_qs">Household Member(s) : </label>-->
+									<div class="col-md-4 col-sm-4">
+<!--										{% if guardians or siblings or osiblings or oguardians %}-->
+<!--							            <table class="table table-condensed">-->
+<!--							                <thead>-->
+<!--							                    <tr>-->
+<!--							                        <th>Name</th>-->
+<!--							                        <th>Relation</th>-->
+<!--							                        &lt;!&ndash;<th>Age</th>&ndash;&gt;-->
+<!--							                    </tr>-->
+<!--							                </thead>-->
+<!--							                <tbody>-->
+<!--							                    {% for guardian in guardians %}-->
+<!--							                    <tr>-->
+<!--							                        <td><a href="{% url 'view_person' id=guardian.guardian_person.id %}">{{ guardian.guardian_person.full_name }}</a></td>-->
+<!--							                        <td>{{ guardian.relationship|gen_value:vals }}</td>-->
+<!--							                        &lt;!&ndash; <td>{{ guardian.guardian_person.age }}</td> &ndash;&gt;-->
+<!--							                    </tr>-->
+<!--							                    {% endfor %}-->
+<!--							                    {% for oguardian in oguardians %}-->
+<!--							                    <tr>-->
+<!--							                        <td><a href="{% url 'view_person' id=oguardian.child_person.id %}">{{ oguardian.child_person.full_name }}</a></td>-->
+<!--							                        <td>-->
+<!--							                        {% if oguardian.child_person.sex_id == 'SFEM' %}-->
+<!--							                        Daughter-->
+<!--							                        {% else %}-->
+<!--							                        Son-->
+<!--							                        {% endif %}-->
+<!--							                        </td>-->
+<!--							                        &lt;!&ndash; <td>{{ oguardian.child_person.age }}</td> &ndash;&gt;-->
+<!--							                    </tr>-->
+<!--							                    {% endfor %}-->
+<!--							                    {% for sibling in siblings %}-->
+<!--							                    <tr>-->
+<!--							                        <td><a href="{% url 'view_person' id=sibling.sibling_person.id %}">{{ sibling.sibling_person.full_name }}</a></td>-->
+<!--							                        <td>-->
+<!--							                        {% if sibling.sibling_person.sex_id == 'SFEM' %}-->
+<!--							                        Sister-->
+<!--							                        {% else %}-->
+<!--							                        Brother-->
+<!--							                        {% endif %}-->
+<!--							                        </td>-->
+<!--							                        &lt;!&ndash; <td>{{ sibling.sibling_person.age }}</td> &ndash;&gt;-->
+<!--							                    </tr>-->
+<!--							                    {% endfor %}-->
+<!--							                    {% for osibling in osiblings %}-->
+<!--							                    <tr>-->
+<!--							                        <td><a href="{% url 'view_person' id=osibling.child_person.id %}">{{ osibling.child_person.full_name }}</a></td>-->
+<!--							                        <td>-->
+<!--							                        {% if osibling.child_person.sex_id == 'SFEM' %}-->
+<!--							                        Sister-->
+<!--							                        {% else %}-->
+<!--							                        Brother-->
+<!--							                        {% endif %}-->
+<!--							                        </td>-->
+<!--							                        &lt;!&ndash; <td>{{ osibling.child_person.age }}</td> &ndash;&gt;-->
+<!--							                    </tr>-->
+<!--							                    {% endfor %}-->
+<!--							                </tbody>-->
+<!--							            </table>-->
+<!--							            {% else %}-->
+<!--							                <br>-->
+<!--							                <p>&nbsp;No relative details provided for this person.</p>  -->
+<!--							            {% endif %}-->
+							        </div>
+							    </div>
+								
+							    <!-- add labels like HA1, HA2 .. -->
+							    
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE1: </b>Name of OVC : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.hei_he1_name }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Name of OVC"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE2: </b>Date of Birth: <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.hei_he1_dob }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Date of Birth"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE3: </b>OVC CPIMS ID: <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.hei_he1_ovc }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="OVC CPIMS ID"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE4: </b>Health Facility Name: <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+<!--										{{ form.hei_he1_facility }}-->
+										<input type="text" class="form-control" name="facility_field" id="facility_field" placeholder="Search for facility here">
+										<input type="hidden" name="hei_he1_facility" id="hei_he1_facility">
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Health Facility Name"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE5: </b>HEI Unique ID Number : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.hei_he1_unique_id }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="HEI Unique ID Number"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+							</div>                            
+						</div>
+						<!-- end wizard step-1 -->  
+
+						<!-- begin wizard step-2 -->
+						<div class="wizard-step-2">
+							<div class="panel-body">
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE6: </b>Name of Caregiver for the OVC as registered in CPIMS : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_caregiver }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Name of Caregiver for the OVC as registered in CPIMS"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE7: </b>Relationship of Caregiver to OVC : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_relationship }}
+										<br>
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Relationship of Caregiver to OVC"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE8: </b>Caregiver contacts (Phone):<span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_contacts }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Caregiver contacts (Phone)><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE9: </b>Caregiver CPIMS ID : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_cpims_id }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Caregiver CPIMS ID"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE10: </b>Caregiver HIV status : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_hiv_status }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Caregiver HIV status "><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE11: </b>If Positive, Care giver on ART  : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_hiv_positive }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="If Positive, Care giver on ART "><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE12: </b>Health facility for Care giver : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+<!--										{{ form.he_he2_cg_facility }}-->
+										<input type="text" class="form-control" name="he_facility_field" id="he_facility_field" placeholder="Search for facility here">
+										<input type="hidden" name="hei_he1_facility" id="he_he2_cg_facility">
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Health facility for Care giver "><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE13: </b>CCC number for care giver : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_cg_ccc }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="CCC number for care giver "><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE14: </b>Care giver latest VL results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_cg_vl }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Care giver latest VL results "><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE15: </b>Date of VL test for Care giver : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_cg_vldate }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="CDate of VL test for Care giver"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+							</div>
+						</div>
+						<!-- end wizard step-2 -->
+
+						<!-- begin wizard step-3 -->
+						<div class="wizard-step-3">
+							<div class="panel-body"> 
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE16: </b>Name of CHV : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he3_cpims_name }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Name of CHV "><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<br>
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE17: </b>CHV CPIMS ID  : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he3_cpims_id }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="CHV CPIMS ID"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+							</div>
+						</div> 
+						<!-- end wizard step-3 -->  
+
+						<!-- begin wizard step-4 -->
+						<div class="wizard-step-4">
+							<div class="panel-body"> 
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE18: </b>HIV test done : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he4_hiv_test }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="HIV test done"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE19: </b>Test results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he4_test_results }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Test results "><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE20: </b>HEI VL results (if positive) : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he4_vl_results }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="HEI VL results (if positive)"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE21: </b>Child on Prophylaxis : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he4_prophylaxis }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Child on Prophylaxis"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE22: </b>Mode of feeding : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he4_mode }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Mode of feeding"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+							</div>
+						</div> 
+						<!-- end wizard step-4 --> 
+
+						<!-- begin wizard step-5 -->
+						<div class="wizard-step-5">
+							<div class="panel-body">
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE23: </b>HIV test done : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he5_hiv_test }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="HIV test done"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE24: </b>Test results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he5_test_results }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Test results "><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE25: </b>HEI VL results (if positive) : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he5_vl_results }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="HEI VL results (if positive)"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE26: </b>Child on Prophylaxis : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he5_prophylaxis }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Child on Prophylaxis"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE27: </b>Immunization : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he5_immunization }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Child on Prophylaxis"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE28: </b>Mode of feeding : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he5_mode }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Mode of feeding"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+							</div>
+						</div> 
+						<!-- end wizard step-5 --> 
+
+						<!-- begin wizard step-6 -->
+						<div class="wizard-step-6">
+							<div class="panel-body">
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE29: </b>HIV test done : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he6_hiv_test }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="HIV test done"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE30: </b>Test results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he6_test_results }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Test results "><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE31: </b>HEI VL results (if positive) : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he6_vl_results }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="HEI VL results (if positive)"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE32: </b>Child on Prophylaxis : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he6_prophylaxis }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Child on Prophylaxis"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE33: </b>Immunization : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he6_immunization }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Child on Prophylaxis"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE34: </b>Mode of feeding : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he6_mode }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Mode of feeding"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+							</div>
+						</div> 
+						<!-- end wizard step-6 -->  
+
+						<!-- begin wizard step-7 -->
+						<div class="wizard-step-7">
+							<div class="panel-body">
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE35: </b>HIV test done : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he7_hiv_test }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="HIV test done"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE36: </b>Test results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he7_test_results }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Test results "><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE37: </b>HEI VL results (if positive) : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he7_vl_results }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="HEI VL results (if positive)"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE38: </b>Child on Prophylaxis : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he7_prophylaxis }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Child on Prophylaxis"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE39: </b>Immunization : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he7_immunization }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Child on Prophylaxis"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE40: </b>Mode of feeding : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he7_mode }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Mode of feeding"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+							</div>
+						</div> 
+						<!-- end wizard step-7 -->
+
+						<!-- begin wizard step-8 -->
+						<div class="wizard-step-8">
+							<div class="panel-body">
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE41: </b>HIV test done : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he8_hiv_test }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="HIV test done"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE41: </b>Test results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he8_test_results }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Test results "><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE42: </b>HEI VL results (if positive) : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he8_vl_results }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="HEI VL results (if positive)"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE43: </b>Child on Prophylaxis : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he8_prophylaxis }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Child on Prophylaxis"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE44: </b>Immunization : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he8_immunization }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Child on Prophylaxis"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE45: </b>Mode of feeding : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he8_mode }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Mode of feeding"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+							</div>
+						</div> 
+						<!-- end wizard step-8 -->
+
+						<!-- begin wizard step-9 -->
+						<div class="wizard-step-9">
+							<div class="panel-body"> 
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE46: </b>Exit/Attrition reason : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he9_attrition }}
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="Exit/Attrition reason"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE47: </b>Comments : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he9_comments }}
+
+									</div>
+<!--									<a href="#" data-toggle="tooltip" title="comments"><i class="fa fa-info-circle fa-sm"></i></a>-->
+								</div>
+							</div>
+						</div> 
+						<!-- end wizard step-9 --> 
+					</div>
+
+					<div class="panel-body panel-form">
+						<div class="form-group">
+							<label class="control-label col-md-4 col-sm-4"></label>
+							<div class="col-md-6 col-sm-6">
+								<button id="mysubmit-hhva" type="submit" class="btn btn-primary">Submit</button>
+								<a href="javascript:history.go(-1)" class="btn btn-white">Cancel</a>
+							</div>
+						</div>
+                    </div>
+
+				    </form>
+				</div>
+            </div>
+            <div class="badge pull-right m-4">Revised: Oct 6th 2016</div>
+        </div>
+        <!-- end panel -->
+
+    </div>
+    <!-- end col-12 -->
+
+</div>
+<!-- end row -->
+
+{% endblock %}
+
+{% block lazy_javascript_code %}
+<script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>	
+<script src="{% static 'plugins/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}"></script>
+<script src="{% static 'js/apps.js' %}"></script>
+<script src="{% static 'js/form-wizards.js' %}"></script>
+<script src="{% static 'js/tag-it.js' %}"></script>
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+<script>
+jQuery(document).ready(function()
+{
+	//multi selects
+    $('#hhva_ha6, #hhva_ha21, #hhva_ha22, #hhva_ha28, #hhva_ha29, #hhva_ha30, #hhva_ha31').multiselect({
+        selectAllValue: 'multiselect-all',
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true,
+        numberDisplayed: 1,
+        maxHeight: 300,
+        buttonWidth: '100%',
+		buttonClass: 'btn btn-white',
+		nonSelectedText: 'Please Select'
+    });
+
+	$('html,body').scrollTop(0);
+	FormWizardValidation.init();
+});
+</script>
+<script>
+	$("#hei_he1_dob").datepicker()
+
+	$( "#facility_field, #he_facility_field" ).autocomplete({
+		source: function( request, response ) {
+		$.ajax({
+			url: "{% url 'ovc_search' %}",
+			dataType: "json",
+			data: {q: request.term, id: 1},
+			success: function( data ) {
+				response( data );
+			}
+			});
+		},
+		minLength: 4,
+		select: function( event, ui ) {
+			$('#facility_field').val(ui.item.name);
+			$('#hei_he1_facility').val(ui.item.id);
+
+			$('#he_facility_field').val(ui.item.name);
+			$('#he_he2_cg_facility').val(ui.item.id)
+		},
+		open: function() {
+			$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+		},
+		close: function() {
+			$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+		}
+	});
+</script>
+<!--<script type="text/javascript">-->
+<!--function AddRow(x)-->
+<!--{-->
+<!--	if(x==1)-->
+<!--	{-->
+<!--		var OlmisWASHData = new Array();-->
+<!--        var type = $("#hhva_ha10_type").val();-->
+<!--        var number = $("#hhva_ha10_number").val();-->
+<!--        var condition = $("#hhva_ha10_condition").val();-->
+<!--        var csrftoken = $.cookie('csrftoken');        -->
+<!--        var values = {  -->
+<!--            'csrfmiddlewaretoken': csrftoken-->
+<!--        };-->
+
+<!--        // Validation and Ajax-->
+<!--        if(type)-->
+<!--		{-->
+<!--			if(number)-->
+<!--			{-->
+<!--				// Validate ifnumber-->
+<!--				var isnum = /^\d+$/.test(number);-->
+<!--				if(!isnum){-->
+<!--					// $(".alert").show();-->
+<!--			        // $('.invalid-form-message').html('Please use digits only to specify number of bedding.');-->
+<!--			        $('#hhva_ha10_number_errormsg_').css({'display': 'block'})-->
+<!--			        return false;-->
+<!--				}-->
+<!--				$('#hhva_ha10_number_errormsg_').css({'display': 'none'})-->
+
+<!--				if(condition)-->
+<!--				{					-->
+<!--					// Find a <table> element with id="ha10_manager_table":-->
+<!--                    var table = $('#ha10_manager_table')[0]; -->
+
+<!--                    // Create an empty <tr> element with id and add it to the 1st position of the table:-->
+<!--                    var rows_length = table.rows.length;-->
+<!--                    var row = table.insertRow(rows_length);-->
+<!--                    var index = rows_length - 2;-->
+<!--                    row_id = 'rowid0_' + index;-->
+<!--                    row.id = row_id;-->
+<!--                    var btnRemoveSvcId = 'btnRemoveSvc' + index;-->
+
+<!--                    // Insert new cells (<td> elements) of the "new" <tr> element:-->
+<!--                    var cell0 = row.insertCell(0);-->
+<!--                    var cell1 = row.insertCell(1);-->
+<!--                    var cell2 = row.insertCell(2);-->
+<!--                    var cell3 = row.insertCell(3);-->
+<!--                    var cell4 = row.insertCell(4);-->
+
+<!--                    var htype= "<input id='htype' type='hidden' value='"+type+"'>"-->
+<!--                    var hnumber = "<input id='hnumber' type='hidden' value='"+number+"'>"-->
+<!--                    var hcondition = "<input id='hcondition' type='hidden' value='"+condition+"'>"-->
+<!--                    var hstatus = "<input id='hstatus' type='hidden' value='new'>"-->
+
+<!--                    cell0.innerHTML = '<h6 class="td_style">' + hstatus + '</h6>';        -->
+<!--                    cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "hhva_ha10_type") + htype + '</h6>';-->
+<!--                    cell2.innerHTML = '<h6 class="td_style">' + $('#hhva_ha10_number').val() + hnumber + '</h6>';-->
+<!--                    cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "hhva_ha10_condition") + hcondition + '</h6>';-->
+<!--                    cell4.innerHTML  = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-sm btn-link m-r-5 href='#'>Remove</a>" + '</h6>';-->
+
+<!--                    // AddClick Event To Remove Button-->
+<!--                    $("#" + btnRemoveSvcId + "").click(function(e)-->
+<!--                    {-->
+<!--                        RemoveRow(1, '', row_id);-->
+<!--                    });-->
+
+<!--                    // Reset Input Elements/Error Divs-->
+<!--                    $("#hhva_ha10_type").val('');-->
+<!--                    $("#hhva_ha10_number").val('');-->
+<!--                    $("#hhva_ha10_condition").val('');-->
+<!--                    $(".alert").hide();-->
+
+<!--                    $('#ha10_manager_table tr').each(function(row, tr)-->
+<!--                    {                            -->
+<!--                        var type = $(tr).find('input[id="htype"]').val();-->
+<!--                        var number = $(tr).find('input[id="hnumber"]').val();-->
+<!--                        var condition = $(tr).find('input[id="hcondition"]').val();-->
+
+<!--                        OlmisWASHData[row]= {-->
+<!--                            "type" : type,-->
+<!--                            "number" : number,-->
+<!--                            "condition" : condition-->
+<!--                            }                                -->
+<!--                        -->
+<!--                    });-->
+<!--                    -->
+<!--                    OlmisWASHData.shift(); //remove first row(headers stuff)-->
+<!--                    OlmisWASHData.shift(); //remove second row(controls stuff)-->
+<!--                    OlmisWASHData = JSON.stringify(OlmisWASHData); -->
+
+<!--                    // Set hhva_wash_list-->
+<!--                    $('#hhva_wash_list').val(OlmisWASHData); -->
+<!--				}-->
+<!--				else-->
+<!--				{-->
+<!--					$("#hhva_ha10_condition_errormsg").css({ 'display': "block" });-->
+<!--				}-->
+
+<!--			}-->
+<!--			else-->
+<!--			{-->
+<!--				$("#hhva_ha10_number_errormsg").css({ 'display': "block" });-->
+<!--			}-->
+<!--		}-->
+<!--		else-->
+<!--		{-->
+<!--			$("#hhva_ha10_type_errormsg").css({ 'display': "block" });-->
+<!--		}-->
+<!--	}-->
+<!--	if(x == 2)-->
+<!--	{-->
+<!--		var OlmisAssetData = new Array();-->
+<!--        var asset = $("#hhva_ha15_asset").val();-->
+<!--        var number = $("#hhva_ha15_number").val();-->
+<!--        var size = $("#hhva_ha15_size").val();-->
+<!--        var csrftoken = $.cookie('csrftoken');        -->
+<!--        var values = {  -->
+<!--            'csrfmiddlewaretoken': csrftoken-->
+<!--        };-->
+
+<!--         // Validation and Ajax-->
+<!--        if(asset)-->
+<!--		{-->
+<!--			if(number)-->
+<!--			{-->
+<!--				// Validate if number-->
+<!--				var isnum = /^\d+$/.test(number);-->
+<!--				if(!isnum){-->
+<!--			        $('#hhva_ha15_number_errormsg_').css({'display': 'block'})-->
+<!--			        return false;-->
+<!--				}-->
+<!--				$('#hhva_ha15_number_errormsg_').css({'display': 'none'})-->
+
+<!--				if(size)-->
+<!--				{-->
+<!--					// Validate if size-->
+<!--					/**-->
+<!--					var isnum = /^\d+$/.test(size);-->
+<!--					if(!isnum){-->
+<!--				        $('#hhva_ha15_size_errormsg_').css({'display': 'block'})-->
+<!--				        return false;-->
+<!--					}-->
+<!--					$('#hhva_ha15_size_errormsg_').css({'display': 'none'})-->
+<!--					**/-->
+
+<!--					// Find a <table> element with id="ha15_manager_table":-->
+<!--                    var table = $('#ha15_manager_table')[0]; -->
+
+<!--                    // Create an empty <tr> element with id and add it to the 1st position of the table:-->
+<!--                    var rows_length = table.rows.length;-->
+<!--                    var row = table.insertRow(rows_length);-->
+<!--                    var index = rows_length - 2;-->
+<!--                    row_id = 'rowid1_' + index;-->
+<!--                    row.id = row_id;-->
+<!--                    var btnRemoveSvcId = 'btnRemoveSvc' + index;-->
+
+<!--                    // Insert new cells (<td> elements) of the "new" <tr> element:-->
+<!--                    var cell0 = row.insertCell(0);-->
+<!--                    var cell1 = row.insertCell(1);-->
+<!--                    var cell2 = row.insertCell(2);-->
+<!--                    var cell3 = row.insertCell(3);-->
+<!--                    var cell4 = row.insertCell(4);-->
+
+<!--                    var hasset= "<input id='hasset' type='hidden' value='"+asset+"'>"-->
+<!--                    var hnumber = "<input id='hnumber' type='hidden' value='"+number+"'>"-->
+<!--                    var hsize = "<input id='hsize' type='hidden' value='"+size+"'>"-->
+<!--                    var hstatus = "<input id='hstatus' type='hidden' value='new'>"-->
+
+<!--                    cell0.innerHTML = '<h6 class="td_style">' + hstatus + '</h6>';        -->
+<!--                    cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "hhva_ha15_asset") + hasset + '</h6>';-->
+<!--                    cell2.innerHTML = '<h6 class="td_style">' + $('#hhva_ha15_number').val() + hnumber + '</h6>';-->
+<!--                    cell3.innerHTML = '<h6 class="td_style">' + $('#hhva_ha15_size').val() + hsize + '</h6>';-->
+<!--                    cell4.innerHTML  = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-sm btn-link m-r-5 href='#'>Remove</a>" + '</h6>';-->
+
+<!--                    // AddClick Event To Remove Button-->
+<!--                    $("#" + btnRemoveSvcId + "").click(function(e)-->
+<!--                    {-->
+<!--                        RemoveRow(1, '', row_id);-->
+<!--                    });-->
+
+<!--                    // Reset Input Elements/Error Divs-->
+<!--                    $("#hhva_ha15_asset").val('');-->
+<!--                    $("#hhva_ha15_number").val('');-->
+<!--                    $("#hhva_ha15_size").val('');-->
+<!--                    $(".alert").hide();-->
+
+<!--                    $('#ha15_manager_table tr').each(function(row, tr)-->
+<!--                    {                            -->
+<!--                        var asset = $(tr).find('input[id="hasset"]').val();-->
+<!--                        var number = $(tr).find('input[id="hnumber"]').val();-->
+<!--                        var size = $(tr).find('input[id="hsize"]').val();-->
+
+<!--                        OlmisAssetData[row]= {-->
+<!--                            "asset" : asset,-->
+<!--                            "number" : number,-->
+<!--                            "size" : size-->
+<!--                            }                                -->
+<!--                        -->
+<!--                    });-->
+<!--                    -->
+<!--                    OlmisAssetData.shift(); //remove first row(headers stuff)-->
+<!--                    OlmisAssetData.shift(); //remove second row(controls stuff)-->
+<!--                    OlmisAssetData = JSON.stringify(OlmisAssetData); -->
+
+<!--                    // Set hhva_asset_list-->
+<!--                    $('#hhva_asset_list').val(OlmisAssetData); -->
+<!--				}-->
+<!--				else-->
+<!--				{-->
+<!--					$("#hhva_ha15_size_errormsg").css({ 'display': "block" });-->
+<!--				}-->
+<!--			}-->
+<!--			else-->
+<!--			{-->
+<!--				$("#hhva_ha15_number_errormsg").css({ 'display': "block" });-->
+<!--			}-->
+<!--		}-->
+<!--		else-->
+<!--		{-->
+<!--			$("#hhva_ha15_asset_errormsg").css({ 'display': "block" });-->
+<!--		}-->
+<!--	}-->
+<!--}-->
+
+<!--function RemoveRow(index, uuid, tr_id)-->
+<!--{-->
+<!--    if(index == 1)-->
+<!--    {-->
+<!--        // Delete Table Row-->
+<!--        $("#" + tr_id).remove();-->
+
+<!--        var OlmisWASHData = new Array();-->
+<!--        $('#ha10_manager_table tr').each(function(row, tr)-->
+<!--        {                            -->
+<!--            var type = $(tr).find('input[id="htype"]').val();-->
+<!--            var number = $(tr).find('input[id="hnumber"]').val();-->
+<!--            var condition = $(tr).find('input[id="hcondition"]').val();-->
+
+<!--            OlmisWASHData[row]= {-->
+<!--                "type" : type,-->
+<!--                "number" : number,-->
+<!--                "condition" : condition-->
+<!--                }                                -->
+<!--            -->
+<!--        });-->
+<!--        -->
+<!--        OlmisWASHData.shift(); //remove first row(headers stuff)-->
+<!--        OlmisWASHData.shift(); //remove second row(controls stuff)-->
+<!--        OlmisWASHData = JSON.stringify(OlmisWASHData); -->
+
+<!--        // Set hhva_wash_list-->
+<!--        $('#hhva_wash_list').val(OlmisWASHData);-->
+<!--    }-->
+<!--    if(index == 2)-->
+<!--    {-->
+<!--    	// Delete Table Row-->
+<!--        $("#" + tr_id).remove();-->
+
+<!--        var OlmisAssetData = new Array();-->
+<!--        $('#ha15_manager_table tr').each(function(row, tr)-->
+<!--        {                            -->
+<!--            var asset = $(tr).find('input[id="hasset"]').val();-->
+<!--            var number = $(tr).find('input[id="hnumber"]').val();-->
+<!--            var size = $(tr).find('input[id="hsize"]').val();-->
+
+<!--            OlmisAssetData[row]= {-->
+<!--                "asset" : asset,-->
+<!--                "number" : number,-->
+<!--                "size" : size-->
+<!--                }                                -->
+<!--            -->
+<!--        });-->
+<!--        -->
+<!--        OlmisAssetData.shift(); //remove first row(headers stuff)-->
+<!--        OlmisAssetData.shift(); //remove second row(controls stuff)-->
+<!--        OlmisAssetData = JSON.stringify(OlmisWASHData); -->
+
+<!--        // Set hhva_wash_list-->
+<!--        $('#hhva_asset_list').val(OlmisAssetData);-->
+<!--    }-->
+<!--}-->
+
+<!--function displayVals(x, value)-->
+<!--{-->
+<!--	var selections = [];-->
+<!--	var hselections = [];-->
+<!--	if(x == 1)-->
+<!--	{-->
+<!--	    $("#" + value + " option:selected").each(function () -->
+<!--	    {-->
+<!--	       var $this = $(this);-->
+<!--	       if ($this.length)-->
+<!--	       {-->
+<!--	            var selText = $this.text();-->
+<!--	            selections.push(selText);-->
+<!--	       }-->
+<!--	    });-->
+<!--	    $( "#sel_"+value ).html(selections.join( ", " ) );		-->
+<!--	}-->
+<!--	if(x==2)-->
+<!--	{-->
+<!--	    $("#" + value + " option:selected").each(function () -->
+<!--	    {-->
+<!--	       var $this = $(this);-->
+<!--	       if ($this.length)-->
+<!--	       {-->
+<!--	            var selText = $this.text();-->
+<!--	            selections.push(selText);-->
+<!--	            //console.log(selText);-->
+<!--	       }-->
+<!--	    });-->
+<!--	    -->
+<!--	    return selections.join( ", <br>" );-->
+<!--	}-->
+<!--}-->
+
+<!--$("#hhva_ha6").change(function(event) -->
+<!--{-->
+<!--	displayVals(1, 'hhva_ha6');-->
+<!--});-->
+
+<!--$("#hhva_ha10_type").change(function(event) -->
+<!--{-->
+<!--	$('#hhva_ha10_type_errormsg').css({'display': 'none'})-->
+<!--});-->
+
+<!--$("#hhva_ha10_number").keyup(function() -->
+<!--{-->
+<!--	if($(this).val())   -->
+<!--    {-->
+<!--		$('#hhva_ha10_number_errormsg_').css({'display': 'none'})-->
+<!--		$('#hhva_ha10_number_errormsg').css({'display': 'none'})-->
+<!--    }-->
+<!--});-->
+
+<!--$("#hhva_ha10_condition").change(function(event) -->
+<!--{-->
+<!--	$('#hhva_ha10_condition_errormsg').css({'display': 'none'})-->
+<!--});-->
+
+<!--$("#hhva_ha21").change(function(event) -->
+<!--{-->
+<!--	displayVals(1, 'hhva_ha21');-->
+<!--});-->
+
+<!--$("#hhva_ha22").change(function(event) -->
+<!--{-->
+<!--	displayVals(1, 'hhva_ha22');-->
+<!--});-->
+
+<!--$("#hhva_ha28").change(function(event) -->
+<!--{-->
+<!--	displayVals(1, 'hhva_ha28');-->
+<!--});-->
+
+<!--$("#hhva_ha29").change(function(event) -->
+<!--{-->
+<!--	displayVals(1, 'hhva_ha29');-->
+<!--});-->
+
+<!--$("#hhva_ha30").change(function(event) -->
+<!--{-->
+<!--	displayVals(1, 'hhva_ha30');-->
+<!--});-->
+
+<!--$("#hhva_ha31").change(function(event) -->
+<!--{-->
+<!--	displayVals(1, 'hhva_ha31');-->
+<!--});-->
+
+<!--$('select option:selected').each(function (index, easelect) {-->
+<!--	var sel_text = $(this).text();-->
+<!--	if(sel_text == 'Please Select'){-->
+<!--		$(this).attr('disabled', true);-->
+<!--	}-->
+<!--});-->
+<!--$('#hhva_ha6 option:first').attr('disabled',true);-->
+<!--</script>-->
+{% endblock %}

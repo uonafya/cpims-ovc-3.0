@@ -23,7 +23,7 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, OVCHEITrackerForm)
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -9403,12 +9403,12 @@ def new_wellbeing(request, id):
         for key in request.POST:
             if (str(key) != "safeanswer" and str(key) != "schooledanswer" and "WB_SCH_39" not in str(
                     key) and "WB_SCH_40" not in str(key) and "WB_SCH_41" not in str(key) and "WB_SCH_42" not in str(
-                    key) and "WB_SAF_31_1" not in str(key) and "WB_SCH_43" not in str(key) and "WB_SCH_44" not in str(
-                    key) and "WB_SCH_45" not in str(key) and "WB_SAF_37" not in str(key) and "WB_SAF_38" not in str(
-                    key) and "WB_SAF_39" not in str(key) and "WB_SAF_40" not in str(key) and "WB_HEL_17_2" not in str(
-                    key) and "WB_GEN_11" not in str(key) and "WB_GEN_13" not in str(key) and "WB_GEN_15" not in str(
-                    key) and "WB_GEN_14" not in str(key) and "WB_GEN_16" not in str(key) and "caretaker_id" not in str(
-                    key)):
+                key) and "WB_SAF_31_1" not in str(key) and "WB_SCH_43" not in str(key) and "WB_SCH_44" not in str(
+                key) and "WB_SCH_45" not in str(key) and "WB_SAF_37" not in str(key) and "WB_SAF_38" not in str(
+                key) and "WB_SAF_39" not in str(key) and "WB_SAF_40" not in str(key) and "WB_HEL_17_2" not in str(
+                key) and "WB_GEN_11" not in str(key) and "WB_GEN_13" not in str(key) and "WB_GEN_15" not in str(
+                key) and "WB_GEN_14" not in str(key) and "WB_GEN_16" not in str(key) and "caretaker_id" not in str(
+                key)):
 
                 if (key in ignore_request_values):
                     continue
@@ -9997,3 +9997,226 @@ def new_dreamsform(request, id):
                   'forms/new_dreamsform.html',
                   {'form': form, 'init_data': init_data,
                    'vals': vals})
+
+
+def new_hei_tracker(request, id):
+    try:
+        if request.method == 'POST':
+            my_kvals = []
+            event_type_id = 'FHSA'
+            household_id = request.POST.get('household_id')
+            hei_he1_dob = request.POST.get('hei_he1_dob')
+            if hei_he1_dob:
+                date_of_hhva = convert_date(hei_he1_dob)
+
+            """ Save CSIEvent """
+            event_counter = OVCCareEvents.objects.filter(
+                event_type_id=event_type_id, person=id, is_void=False).count()
+            ovccareevent = OVCCareEvents(
+                event_type_id=event_type_id,
+                event_counter=event_counter,
+                event_score=0,
+                date_of_event=date_of_hhva,
+                created_by=request.user.id,
+                # person=RegPerson.objects.get(pk=int(id)),
+                house_hold=OVCHouseHold.objects.get(pk=household_id)
+            )
+            ovccareevent.save()
+            new_pk = ovccareevent.pk
+
+            # Household Individuals
+            hhva_ha1_male = request.POST.get('hhva_ha1_male')
+            hhva_ha1_female = request.POST.get('hhva_ha1_female')
+            hhva_ha2_male = request.POST.get('hhva_ha2_male')
+            hhva_ha2_female = request.POST.get('hhva_ha2_female')
+            hhva_ha3_male = request.POST.get('hhva_ha3_male')
+            hhva_ha3_female = request.POST.get('hhva_ha3_female')
+            hhva_ha4_male = request.POST.get('hhva_ha4_male')
+            hhva_ha4_female = request.POST.get('hhva_ha4_female')
+            # ************************************************************
+            my_kvals.append({"entity": "HA1M", "attribute": "HA1M", "value": hhva_ha1_male, "value_for": ''})
+            my_kvals.append({"entity": "HA1F", "attribute": "HA1F", "value": hhva_ha1_female, "value_for": ''})
+            my_kvals.append({"entity": "HA2M", "attribute": "HA2M", "value": hhva_ha2_male, "value_for": ''})
+            my_kvals.append({"entity": "HA2F", "attribute": "HA2F", "value": hhva_ha2_female, "value_for": ''})
+            my_kvals.append({"entity": "HA3M", "attribute": "HA3M", "value": hhva_ha3_male, "value_for": ''})
+            my_kvals.append({"entity": "HA3F", "attribute": "HA3F", "value": hhva_ha3_female, "value_for": ''})
+            my_kvals.append({"entity": "HA4M", "attribute": "HA4M", "value": hhva_ha4_male, "value_for": ''})
+            my_kvals.append({"entity": "HA4F", "attribute": "HA4F", "value": hhva_ha4_female, "value_for": ''})
+
+            # Water, Sanitation & Hygiene
+            hhva_ha5 = request.POST.get('hhva_ha5')
+            hhva_ha6 = request.POST.getlist('hhva_ha6')
+            hhva_ha7 = request.POST.get('hhva_ha7')
+            hhva_ha8 = request.POST.get('hhva_ha8')
+            # ************************************************************
+            my_kvals.append({"entity": "HA5", "attribute": "HA5", "value": hhva_ha5, "value_for": ''})
+            for i, ha6 in enumerate(hhva_ha6):
+                ha6 = ha6.split(',')
+                for value in ha6:
+                    my_kvals.append({"entity": "HA6", "attribute": "HA6", "value": value, "value_for": ''})
+            my_kvals.append({"entity": "HA7", "attribute": "HA7", "value": hhva_ha7, "value_for": ''})
+            my_kvals.append({"entity": "HA8", "attribute": "HA8", "value": hhva_ha8, "value_for": ''})
+
+            # Shelter & Care
+            hhva_ha9 = request.POST.get('hhva_ha9')
+            hhva_wash_list = request.POST.get('hhva_wash_list')
+            hhva_wash_data = json.loads(hhva_wash_list)
+            # ************************************************************
+            my_kvals.append({"entity": "HA9", "attribute": "HA9", "value": hhva_ha9, "value_for": ''})
+            for data in hhva_wash_data:
+                type_ = data["type"]
+                condition = data["condition"]
+                number = data["number"]
+                my_kvals.append({"entity": 'HA10', "attribute": type_, "value": number, "value_for": 'NUMBER'})
+                my_kvals.append({"entity": 'HA10', "attribute": type_, "value": condition, "value_for": 'CONDITION'})
+
+            # Food Security & Nutrition
+            hhva_ha11 = request.POST.get('hhva_ha11')
+            hhva_ha12 = request.POST.get('hhva_ha12')
+            # ************************************************************
+            my_kvals.append({"entity": "HA11", "attribute": "HA11", "value": hhva_ha11, "value_for": ''})
+            my_kvals.append({"entity": "HA12", "attribute": "HA12", "value": hhva_ha12, "value_for": ''})
+
+            # Household Income & Property
+            hhva_asset_list = request.POST.get('hhva_asset_list')
+            hhva_asset_data = json.loads(hhva_asset_list)
+            hhva_ha13 = request.POST.get('hhva_ha13')
+            hhva_ha14 = request.POST.get('hhva_ha14')
+            hhva_ha16 = request.POST.get('hhva_ha16')
+            hhva_ha17 = request.POST.get('hhva_ha17')
+            hhva_ha18 = request.POST.get('hhva_ha18')
+            hhva_ha19 = request.POST.get('hhva_ha19')
+            hhva_ha20 = request.POST.get('hhva_ha20')
+            hhva_ha21 = request.POST.getlist('hhva_ha21')
+            # ************************************************************
+            for data in hhva_asset_data:
+                asset = data["asset"]
+                number = data["number"]
+                size = data["size"]
+                my_kvals.append({"entity": 'HA15', "attribute": asset, "value": number, "value_for": 'NUMBER'})
+                my_kvals.append({"entity": 'HA15', "attribute": asset, "value": size, "value_for": 'SIZE'})
+            my_kvals.append({"entity": "HA13", "attribute": "HA11", "value": hhva_ha13, "value_for": ''})
+            my_kvals.append({"entity": "HA14", "attribute": "HA14", "value": hhva_ha14, "value_for": ''})
+            my_kvals.append({"entity": "HA16", "attribute": "HA16", "value": hhva_ha16, "value_for": ''})
+            my_kvals.append({"entity": "HA17", "attribute": "HA17", "value": hhva_ha17, "value_for": ''})
+            my_kvals.append({"entity": "HA18", "attribute": "HA18", "value": hhva_ha18, "value_for": ''})
+            my_kvals.append({"entity": "HA19", "attribute": "HA19", "value": hhva_ha19, "value_for": ''})
+            my_kvals.append({"entity": "HA20", "attribute": "HA20", "value": hhva_ha20, "value_for": ''})
+            for i, ha21 in enumerate(hhva_ha21):
+                ha21 = ha21.split(',')
+                for value in ha21:
+                    my_kvals.append({"entity": "HA21", "attribute": "HA21", "value": value, "value_for": ''})
+
+            # Health Services and Health Seeking Behaviours
+            hhva_ha22 = request.POST.get('hhva_ha22')
+            hhva_ha23 = request.POST.get('hhva_ha23')
+            hhva_ha24 = request.POST.get('hhva_ha24')
+            hhva_ha25 = request.POST.get('hhva_ha25')
+            hhva_ha26_male = request.POST.get('hhva_ha26_male')
+            hhva_ha26_female = request.POST.get('hhva_ha26_female')
+            hhva_ha27_male = request.POST.get('hhva_ha27_male')
+            hhva_ha27_female = request.POST.get('hhva_ha27_female')
+            # ************************************************************
+            my_kvals.append({"entity": "HA22", "attribute": "HA22", "value": hhva_ha22, "value_for": ''})
+            my_kvals.append({"entity": "HA23", "attribute": "HA23", "value": hhva_ha23, "value_for": ''})
+            my_kvals.append({"entity": "HA24", "attribute": "HA24", "value": hhva_ha24, "value_for": ''})
+            my_kvals.append({"entity": "HA25", "attribute": "HA25", "value": hhva_ha25, "value_for": ''})
+            my_kvals.append({"entity": "HA26M", "attribute": "HA26M", "value": hhva_ha26_male, "value_for": ''})
+            my_kvals.append({"entity": "HA26F", "attribute": "HA26F", "value": hhva_ha26_female, "value_for": ''})
+            my_kvals.append({"entity": "HA27M", "attribute": "HA27M", "value": hhva_ha27_male, "value_for": ''})
+            my_kvals.append({"entity": "HA27F", "attribute": "HA27F", "value": hhva_ha27_female, "value_for": ''})
+
+            # Protection
+            hhva_ha28 = request.POST.getlist('hhva_ha28')
+            # ************************************************************
+            for i, ha28 in enumerate(hhva_ha28):
+                ha28 = ha28.split(',')
+                for value in ha28:
+                    my_kvals.append({"entity": "HA28", "attribute": "HA28", "value": value, "value_for": ''})
+
+            # Other Services
+            hhva_ha29 = request.POST.getlist('hhva_ha29')
+            hhva_ha30 = request.POST.getlist('hhva_ha30')
+            # ************************************************************
+            for i, ha29 in enumerate(hhva_ha29):
+                ha29 = ha29.split(',')
+                for value in ha29:
+                    my_kvals.append({"entity": "HA29", "attribute": "HA29", "value": value, "value_for": ''})
+            for i, ha30 in enumerate(hhva_ha30):
+                ha30 = ha30.split(',')
+                for value in ha30:
+                    my_kvals.append({"entity": "HA30", "attribute": "HA30", "value": value, "value_for": ''})
+
+            # Household Priorities
+            hhva_ha31 = request.POST.getlist('hhva_ha31')
+            for i, ha31 in enumerate(hhva_ha31):
+                ha31 = ha31.split(',')
+                for value in ha31:
+                    my_kvals.append({"entity": "HA31", "attribute": "HA31", "value": value, "value_for": ''})
+
+            print('my_kvals : %s' % my_kvals)
+            for kvals in my_kvals:
+                key = kvals["entity"]
+                attribute = kvals["attribute"]
+                value = kvals["value"]
+                value_for = kvals["value_for"] if kvals["value_for"] else None
+                OVCCareEAV(
+                    entity=key,
+                    attribute=attribute,
+                    value=value,
+                    value_for=value_for,
+                    event=OVCCareEvents.objects.get(pk=new_pk)
+                ).save()
+
+            msg = 'Household Vulnerability Assessment save successful'
+            messages.add_message(request, messages.INFO, msg)
+            url = reverse('ovc_view', kwargs={'id': id})
+            # return HttpResponseRedirect(reverse(forms_registry))
+            return HttpResponseRedirect(url)
+    except Exception as e:
+        msg = 'Household Vulnerability Assessment save error: (%s)' % (str(e))
+        messages.add_message(request, messages.ERROR, msg)
+        print('Error saving HHVA : %s' % str(e))
+        return HttpResponseRedirect(reverse(forms_registry))
+
+    # get household members/ caretaker/ household_id
+    household_id = None
+    try:
+        ovcreg = get_object_or_404(OVCRegistration, person_id=id, is_void=False)
+        caretaker_id = ovcreg.caretaker_id if ovcreg else None
+        ovchh = get_object_or_404(OVCHouseHold, head_person=caretaker_id, is_void=False)
+        household_id = ovchh.id if ovchh else None
+    except Exception as e:
+        print(str(e))
+        msg = 'Error getting household identifier: (%s)' % (str(e))
+        messages.add_message(request, messages.ERROR, msg)
+        return HttpResponseRedirect(reverse(forms_registry))
+
+        # get relations
+    guardians = RegPersonsGuardians.objects.select_related().filter(
+        child_person=id, is_void=False, date_delinked=None)
+    siblings = RegPersonsSiblings.objects.select_related().filter(
+        child_person=id, is_void=False, date_delinked=None)
+    # Reverse relationship
+    osiblings = RegPersonsSiblings.objects.select_related().filter(
+        sibling_person=id, is_void=False, date_delinked=None)
+    oguardians = RegPersonsGuardians.objects.select_related().filter(
+        guardian_person=id, is_void=False, date_delinked=None)
+
+    # get child data
+    init_data = RegPerson.objects.filter(pk=id)
+    check_fields = ['sex_id', 'relationship_type_id']
+    vals = get_dict(field_name=check_fields)
+    form = OVCHEITrackerForm(initial={'household_id': household_id})
+    return render(request,
+                  'forms/new_hei_tracker.html',
+                  {
+                      'form': form,
+                      'init_data': init_data,
+                      'vals': vals,
+                      'person': id,
+                      'guardians': guardians,
+                      'siblings': siblings,
+                      'osiblings': osiblings,
+                      'oguardians': oguardians
+                  })
