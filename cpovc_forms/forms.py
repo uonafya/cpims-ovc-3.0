@@ -8175,16 +8175,47 @@ class CparaAssessmentUpgrade(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-    cp5d = forms.ChoiceField(
+    cp5d = forms.ChoiceField(  
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-    cp6d = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
+
+    # Sub population
+    cp6d = forms.BooleanField(
+            widget=forms.CheckboxInput(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
+    cp7d = forms.BooleanField(
+            widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp6d = forms.BooleanField(
+            widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp8d = forms.BooleanField(
+            widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp9d = forms.BooleanField(
+            widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp10d = forms.BooleanField(
+                widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp11d = forms.BooleanField(
+                widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp12d = forms.BooleanField(
+                widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    
+
     
     # Domain Health
     cphealth1 = forms.ChoiceField(

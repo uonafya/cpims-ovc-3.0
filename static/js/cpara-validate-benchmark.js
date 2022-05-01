@@ -5,6 +5,11 @@
 validBench(['cphealth1', 'cphealth2', 'cphealth3', 'cphealth4', 'cphealth5'], ['AYES','AYES','AYES','AYES','AYES'], 'cp1b');
 // Healthy Goal 2 >> Benchmark 2
 validBench(['cphealth6','cphealth7','cphealth8','cphealth9','cphealth10','cphealth11','cphealth12','cphealth13','cphealth14'], ['AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'cp2b');
+
+// validBench(['cphealth15','cphealth16','cphealth17'],['AYES','AYES','AYES'],'cphealth18')
+// validBench(['cphealth15','cphealth16','cphealth17'],['AYES','AYES','AYES'],'cphealth19')
+// validBench(['cphealth15','cphealth16','cphealth17'],['AYES','AYES','AYES'],'cphealth20')
+
 // Healthy Goal 3 >> Benchmark 3
 validBench(['cphealth18','cphealth19','cphealth20'],['AYES','AYES','AYES'],'cp3b')
 // Healthy Goal 4 >> Benchmark 4
@@ -12,7 +17,7 @@ validBench(['cphealth21', 'cphealth22', 'cphealth23', 'cphealth24'], ['AYES','AY
 // Stable: Goal 5:
 validBench(['cpstable1','cpstable2','cpstable3'], ['AYES','AYES','AYES'], 'cp5b');
 // Safe: Goal 6:Benchmark 6
-validBench(['cpsafe1','cpsafe2','cpsafe3','cpsafe4','cpsafe5'],['AYES','AYES','AYES','AYES', 'AYES'],'cp6b')
+validBench(['cpsafe1','cpsafe2','cpsafe3','cpsafe6', 'cpsafe7'],['AYES','AYES','AYES,ANA','AYES','AYES'],'cp6b')
 // Safe: Benchmark 7:
 validBench(['cpsafe8','cpsafe9'],['AYES','AYES'],'cp7b')
 // Safe: Goal 8:
@@ -216,9 +221,7 @@ $('input[type=radio]').change(function (e) {
     $('input[name=bench_array]').val(JSON.stringify(bench_array));
     console.log('benchmark_score => '+JSON.stringify(bench_array));
 
-    changeQnOnCondition('cphealth6', 'AYES', 'cphealth7', false)
-    changeQnOnCondition('cphealth6', 'ANNO', 'cphealth7', true)
-    
+
     
 });
 
@@ -297,13 +300,23 @@ function validBench(arrayOfInputsToCheck, arrayOfExpectedValues, idOfBenchmarkQn
     $('input').change(function () {
         markBenchmark(idOfBenchmarkQn, false);
         var proceed = 0;
-      
+        
         $.each(arrayOfInputsToCheck, function (inx, inpt) { 
             var thisval = $('input[name='+inpt+']:checked').val();
-            if(thisval == arrayOfExpectedValues[inx]){
-                proceed += 1;
-                return proceed
+            if(arrayOfExpectedValues[inx].split(',').length > 1) {
+                // console.log(arrayOfExpectedValues[inx], arrayOfExpectedValues[inx][1])
+                if(thisval == arrayOfExpectedValues[inx].split(',')[0] || thisval == arrayOfExpectedValues[inx].split(',')[1] ){
+                    proceed += 1;
+                    return proceed
+                }
             }
+            else {
+                if(thisval == arrayOfExpectedValues[inx]){
+                    proceed += 1;
+                    return proceed
+                }
+            }
+           
            
         });
         
@@ -316,25 +329,6 @@ function validBench(arrayOfInputsToCheck, arrayOfExpectedValues, idOfBenchmarkQn
 }
 
 
-function changeQnOnCondition(q1, expectedVal, q2, tostate){
-   
-    var thisval = $('input[name='+q1+']:checked').val();
-     if(thisval === expectedVal) {  // Custom validation for q 2.1 & 2.2
-        if(tostate){
-            $('input[name='+q2+']').removeAttr('disabled');
-            $('input[name='+q2+'][value=ANNO]').prop("checked", false);
-            // $('input[name='+q2+']').attr('disabled', true);
-        }  
-        else {
-            $('input[name='+q2+']').removeAttr('disabled');
-            $('input[name='+q2+'][value=ANNO]').prop("checked", true);
-            $('input[name='+q2+']').attr('disabled', true);
-        }    
-        
-        // markBenchmark(q2, tostate)
-    }
-
-}
 
 function markBenchmark(benchmarkId, passOrFail) {
     console.log('marking benchmark' +benchmarkId)

@@ -828,7 +828,7 @@ Classes below were added due to ovc case managementOVCCareForms
 
 class OVCCareForms(models.Model):
     form_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
     description = models.CharField(max_length=255)
     is_void = models.BooleanField(default=False)
     timestamp_created = models.DateTimeField(default=timezone.now)
@@ -1421,6 +1421,7 @@ class OVCCareQuestions(models.Model):
     is_void = models.BooleanField(default=False)
     timestamp_created = models.DateTimeField(auto_now_add=True)
     timestamp_updated = models.DateTimeField(auto_now=True)
+    code_x = models.CharField(max_length=5, null=True)
 
     def __unicode__(self):
         return self.code
