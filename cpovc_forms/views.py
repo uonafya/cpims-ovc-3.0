@@ -10000,16 +10000,16 @@ def new_dreamsform(request, id):
 
 # get the form for Bidirectional Referral Form
 def bidirectionalreferralform(request, id):
+  
     if request.method == 'POST':
         data = request.POST
         # form = BIDIRECTIONALREFERRALFORM(request.POST, initial={'person': id})
-        print(data)
         child = RegPerson.objects.get(id=id)
         household_id = OVCHHMembers.objects.get(person=child).house_hold_id
         household_head = OVCHouseHold.objects.get(id=household_id)
 
         caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
-        caregiver_id = RegPerson.objects.get(id=caregiver_id)
+        caregiver_name = RegPerson.objects.get(id=caregiver_id)
         referral_date = convert_date(data.get('REFERRAL_DATE'))
         referral_end_date = convert_date(data.get('REFERRAL_END_DATE'))
         referral_domain= data.get('BIREFERRAL_DOMAIN')
@@ -10019,7 +10019,7 @@ def bidirectionalreferralform(request, id):
         try:
             OVCBiReferral.objects.create(
             person=child,
-            ref_caregiver=caregiver_id,
+            ref_caregiver=caregiver_name,
             refferal_date=referral_date,
             refferal_enddate=referral_end_date,
             refferal_domain=referral_domain,
@@ -10029,6 +10029,12 @@ def bidirectionalreferralform(request, id):
             print(e)
         url = reverse('ovc_view', kwargs={'id': id})
         return HttpResponseRedirect(url)
+    
+    import pdb
+    obj_all = OVCBiReferral.objects.all()
+
+    # pdb.set_trace()
+
 
 
     init_data = RegPerson.objects.filter(pk=id)
@@ -10042,8 +10048,13 @@ def bidirectionalreferralform(request, id):
         'init_data': init_data,
         'vals': vals,
         'creg':creg,
-        'caregiver': caregiver
+        'caregiver': caregiver,
+        'obj_all': obj_all
     }
+
+
+
+
     return render(request,
-                  'forms/bidirectionalreferralform.html',
-                  context)
+                  template_name='forms/bidirectionalreferralform.html',
+                  context=context)

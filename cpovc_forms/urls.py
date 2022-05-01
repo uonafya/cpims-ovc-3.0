@@ -177,6 +177,4 @@ urlpatterns = [
     # Dreams SerivceUptake Form
     re_path('bidirectionalreferralform/new/(?P<id>\d+)/', views.bidirectionalreferralform, name='bidirectionalreferralform'),
 
-
-
 ]
