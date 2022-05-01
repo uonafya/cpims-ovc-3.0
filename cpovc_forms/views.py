@@ -23,7 +23,7 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, BIDIRECTIONALREFERRALFORM)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,BIDIRECTIONALREFERRALFORM)
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -36,8 +36,7 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
-    OVCBiReferral)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,OVCBiReferral)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -9993,7 +9992,6 @@ def new_dreamsform(request, id):
         form = DREAMS_FORM(initial={'person': id})
     except:
         pass
-
     return render(request,
                   'forms/new_dreamsform.html',
                   {'form': form, 'init_data': init_data,
@@ -10002,26 +10000,41 @@ def new_dreamsform(request, id):
 
 # get the form for Bidirectional Referral Form
 def bidirectionalreferralform(request, id):
-    import pdb
     if request.method == 'POST':
-        data={}
-        data.insert()
         data = request.POST
+        # form = BIDIRECTIONALREFERRALFORM(request.POST, initial={'person': id})
         print(data)
+        child = RegPerson.objects.get(id=id)
+        household_id = OVCHHMembers.objects.get(person=child).house_hold_id
+        household_head = OVCHouseHold.objects.get(id=household_id)
 
+        caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
+        caregiver_id = RegPerson.objects.get(id=caregiver_id)
+        referral_date = convert_date(data.get('REFERRAL_DATE'))
+        referral_end_date = convert_date(data.get('REFERRAL_END_DATE'))
+        referral_domain= data.get('BIREFERRAL_DOMAIN')
+        referral_service = data.get('BIREFERRAL_SERVICES')
+        print(f'Hello {referral_date} {referral_end_date}')
+        print("rfDate: {}, rfendDate {}, feedback {}".format(data, referral_date, referral_end_date))
         try:
             OVCBiReferral.objects.create(
-            refferal_id=1
+            person=child,
+            ref_caregiver=caregiver_id,
+            refferal_date=referral_date,
+            refferal_enddate=referral_end_date,
+            refferal_domain=referral_domain,
+            refferal_service=referral_service,
             )
         except Exception as e:
             print(e)
-
         url = reverse('ovc_view', kwargs={'id': id})
         return HttpResponseRedirect(url)
+
+
     init_data = RegPerson.objects.filter(pk=id)
     check_fields = ['sex_id']
     vals = get_dict(field_name=check_fields)
-    form = BIDIRECTIONALREFERRALFORM(initial={'person': id})
+    form = BIDIRECTIONALREFERRALFORM(request.POST, initial={'person': id})
     creg = []
     caregiver = []
     context = {
@@ -10030,7 +10043,6 @@ def bidirectionalreferralform(request, id):
         'vals': vals,
         'creg':creg,
         'caregiver': caregiver
-
     }
     return render(request,
                   'forms/bidirectionalreferralform.html',

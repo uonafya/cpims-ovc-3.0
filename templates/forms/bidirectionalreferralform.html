@@ -115,10 +115,10 @@
                                     <tr id="id_inputElements1">
                                         <td></td>
                                         <td width="20%">
-                                            {{form.BIDIRECTIONAL_DATE}}
+                                            {{form.REFERRAL_DATE}}
                                         </td>
                                         <td width="20%">
-                                            {{form.BIDIRECTIONAL_DATE}}
+                                            {{form.REFERRAL_END_DATE}}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -167,7 +167,7 @@
                 <!-- end row -->
 
 
-                <!-- begin row -->
+                {% comment %} <!-- begin row -->
                 <div class="row">
                     <!-- begin col-12 -->
                     <div class="col-md-12">
@@ -202,7 +202,7 @@
                             </div>
                         </div>
                         <!-- end panel -->
-                    </div>
+                    </div> {% endcomment %}
                     <!-- end col-12 -->
                     <div class="panel-body panel-form">
                         <div class="form-group">
@@ -374,7 +374,8 @@
     </script>
 
     <script>
-         $("#refferalDate").datepicker()
+         $("#refferalDate").datepicker({format: 'yyyy-mm-dd'})
+         $("#refferalEndDate").datepicker({format: 'yyyy-mm-dd'})
     </script>
 
     <script>

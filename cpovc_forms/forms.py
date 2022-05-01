@@ -8236,15 +8236,15 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
                                                          'id': 'BIREFERRAL_DEFAULT'})
                                               )
 
-    # Feedback form entry
-    FEEDBACK_BIDIRECTIONALFORM = forms.CharField(widget =forms.Textarea(
-        attrs= {
-            'placeholder': _('Your feedback'),
-            'class':'form-control',
-            'rows':'3'
-        }))
+    # # Feedback form entry
+    # FEEDBACK_BIDIRECTIONALFORM = forms.CharField(widget =forms.Textarea(
+    #     attrs= {
+    #         'placeholder': _('Your feedback'),
+    #         'class':'form-control',
+    #         'rows':'3'
+    #     }))
 
-    BIDIRECTIONAL_DATE = forms.DateField(
+    REFERRAL_DATE = forms.DateField(
         widget=forms.widgets.DateInput(
             format="%m/%d/%Y",
             attrs={'placeholder': _('Date'),
@@ -8255,3 +8255,16 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
                    #     'data-parsley-required': "true",
                    'data-parsley-group': 'group0'
                    }))
+
+    REFERRAL_END_DATE = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%m/%d/%Y",
+            attrs={'placeholder': _('Date'),
+                   'class': 'form-control',
+                   'name': 'refferalDate',
+                   'id': 'refferalEndDate',
+                   'autocomplete': "off",
+                   #     'data-parsley-required': "true",
+                   'data-parsley-group': 'group0'
+                   }))
+    
