@@ -178,7 +178,7 @@ urlpatterns = [
     path('benchmarkmonitoring/new/<int:id>/', views.new_benchmarkmonitoring, name='benchmarkmonitoring'),
     #Case Closure Form
     path('caseclosure/new/(?P<id>\d+)/', views.new_caseclosure, name='new_caseclosure'),
-    path('edit_caseclosure/edit/(?P<id>\W+)/', views.edit_caseclosure, name='edit_caseclosure'),
-    path('delete_caseclosure/edit/(?P<id>\W+)/', views.delete_caseclosure, name='delete_caseclosure'),
+    path('edit_case_closure/edit/(?P<id>\W+)/', views.edit_case_closure, name='edit_case_closure'),
+    path('delete_case_closure/edit/(?P<id>\W+)/', views.delete_case_closure, name='delete_case_closure'),
 
 ]

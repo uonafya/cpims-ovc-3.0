@@ -8256,7 +8256,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                #'data-parsley-required': "True"
+                'data-parsley-required': "True"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8264,7 +8264,8 @@ class CaseClosureForm(forms.Form):
     )
     CASE_CL002= forms.CharField(
         widget=forms.TextInput(
-        attrs={'placeholder': _('Name of Receiving Organization')
+        attrs={'placeholder': _('Name of Receiving Organization'),
+               'data-parsley-required': "False"
                }))
 
     CASE_CL003= forms.ChoiceField(
@@ -8275,7 +8276,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                #'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8283,7 +8284,8 @@ class CaseClosureForm(forms.Form):
     )
     CASE_CL004 = forms.CharField(
         widget=forms.TextInput(
-            attrs={'placeholder': _('Any Other Reason')
+            attrs={'placeholder': _('Any Other Reason'),
+                   'data-parsley-required': "False"
                    }))
 
     CASE_CL005 = forms.ChoiceField(
@@ -8292,7 +8294,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8304,7 +8306,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8316,7 +8318,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8328,7 +8330,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8340,7 +8342,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8352,7 +8354,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8364,7 +8366,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8376,7 +8378,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8388,7 +8390,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8400,7 +8402,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8408,15 +8410,19 @@ class CaseClosureForm(forms.Form):
     )
     CASE_CL023 = forms.CharField(
         widget=forms.TextInput(
-            attrs={'placeholder': _('signature')
+            attrs={'placeholder': _('signature'),
+                                      'data-parsley-required': "False"
                    }))
     CASE_CL024 = forms.CharField(
         widget=forms.TextInput(
-            attrs={'placeholder': _('Case Worker')
+            attrs={'placeholder': _('Case Worker'),
+                    'data-parsley-required': "False"
+
                    }))
     CASE_CL025 = forms.CharField(
         widget=forms.TextInput(
-            attrs={'placeholder': _('Signature/stamp')
+            attrs={'placeholder': _('Signature/stamp'),
+                    'data-parsley-required': "False"
                    }))
 
     CASE_CL026 = forms.DateField(
@@ -8427,7 +8433,7 @@ class CaseClosureForm(forms.Form):
                    'name': 'CASE_CL026',
                    'id': 'CASE_CL026',
                    'autocomplete': "off",
-                   #     'data-parsley-required': "true",
+                   'data-parsley-required': "False",
                    'data-parsley-group': 'group0'
                    }))
 
@@ -8436,9 +8442,10 @@ class CaseClosureForm(forms.Form):
                  ('8', ' Self employed'),('9', '  Over 18 years and out of school'),('9', ' Relocation'), ('9', ' Relocation'),
                  ('9', '  Duplicated record'),('9', ' Any other reason? Specify ')),
                                       initial='0',
-                                      required=True,
+
                                       widget=forms.Select(
                                           attrs={
+                                              'data-parsley-required': "False"
 
                                           }))
     CASE_CL028 = forms.ChoiceField(
@@ -8447,7 +8454,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8459,7 +8466,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8471,7 +8478,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
@@ -8483,7 +8490,7 @@ class CaseClosureForm(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
-                # 'data-parsley-required': "True"
+                'data-parsley-required': "False"
                 # 'data-parsley-required': 'true',
                 #    'data-parsley-errors-container': "#in_school_error"
             }
