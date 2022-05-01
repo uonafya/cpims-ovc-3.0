@@ -10036,12 +10036,20 @@ def new_graduation_monitoring_form(request, id):
                            'new_graduation_form_month_2': new_graduation_form_month_2,
                            'new_graduation_form_month_3': new_graduation_form_month_3,
                            'recommended_action': recommended_action})
+
+
 import pdb
 def ovc_preventive_pre_post_program_assessment_view(request, id):
-    
+
+    user_id = request.user.id
+    username = request.user.get_username()
+
     child = RegPerson.objects.get(id=id)
     house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+    care_giver_id = care_giver.id
+    if care_giver.id == id:
+        care_giver_id = id
     care_giver_gender = care_giver.sex_id
     if care_giver_gender == 'SMAL':
         care_giver_gender = 'Male'
@@ -10055,43 +10063,26 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
             person=id,
             is_void=False,
         ).count()
-        #ovc_care_event = OVCCareEvents.objects.create(
-        #   event_type_id=event_type_id,
-        #   event_counter=event_counter,
-        #   event_score=0,
-        #   created_by=request.user.id,
-        #   person=RegPerson.objects.get(pk=int(id)),
-        #   house_hold=house_hold
-        # )
-
-       
-        #pdb.set_trace()
+        ovc_preventive_event = OVCPreventiveEvents(
+            event_type_id = event_type_id,
+            event_counter = event_counter,
+            event_score = 0,
+            date_of_event = timezone.now(),
+            date_of_previous_event = timezone.now(),
+            created_by = user_id,
+            app_user = AppUser.objects.get(username=username),
+            person = RegPerson.objects.get(pk=care_giver.id),
+            house_hold =house_hold
+                )
         if form.is_valid():
-            # save event
-            # ovc_preventive_events = OVCPreventiveEvents.objects.create(
-            # event_type_id=event_type_id,
-            # event_counter=event_counter,
-            # event_score=0,
-            # # date_of_previous_event=OVCPreventiveEvents.objects.get(event_type_id=event_type_id).date_of_event,
-            # created_by=request.user.id,
-            # is_void=False
-            #     event_type_id=event_type_id,
-            #     event_counter=event_counter,
-            #     event_score=0,
-            #     date_of_event=timezone.now(),
-            #     date_of_previous_event=timezone.now(),
-            #     created_by=request.user.id,
-            #     timestamp_created=timezone.now(),
-            #     is_void=False,
-            #     app_user=AppUser.objects.get(pk=request.user.id, is_active=True),
-            #     person=RegPerson.objects.get(id=request.user.id),
-            #     house_hold=house_hold,
-            # ).save()
+            ovc_preventive_event.save()
             form = form.cleaned_data
             OVCPrevSinovyoCaregiverEvaluation(
-                # event_id=ovc_preventive_events,
-                person_id=RegPerson.objects.get(id=request.user.id),
-                ref_caregiver_id=care_giver.id,
+                event_id=ovc_preventive_event.event,
+                person_id=user_id,
+                ref_caregiver_id=care_giver_id,
+                date_of_assessment=request.POST.get('date_of_assessment'),
+                type_of_assessment=request.POST.get('type_of_assessment'),
                 bd_age=care_giver.age,
                 bd_sex=care_giver.sex_id,
                 bd_read=request.POST.get('bd_read'),
@@ -10135,40 +10126,27 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
                 fs_hopeful=request.POST.get('fs_hopeful'),
                 fi_money_important_items=request.POST.get('fi_money_important_items'),
                 fi_worried_money=request.POST.get('fi_worried_money'),
-    
             ).save()
             messages.success(request, 'Form saved succesfully!')
         else:
             messages.error(request, 'Error saving form!')
-        return redirect('progress-assessment/<int:id>/')
-    else:
-        form = OVCPreventivePrePostProgramAssessmentForm()
-        instance = OVCPrevSinovyoCaregiverEvaluation.objects.all() # request.user.id
-        pdb.set_trace()
+        return redirect('progress-assessment/(?P<id>\d+)/')
+    form = OVCPreventivePrePostProgramAssessmentForm() 
+    event = OVCPreventiveEvents.objects.filter(person_id=care_giver.id).values_list('event')
+    evaluation = OVCPrevSinovyoCaregiverEvaluation.objects.filter(event_id__in=event).order_by('date_of_assessment')
 
-        return render(request=request, template_name='forms/caregiver_progress_assessment.html',
+    return render(request=request, template_name='forms/caregiver_progress_assessment.html',
                       context={'form': form, 'child': child, 'care_giver': care_giver,
-                            'care_giver_gender': care_giver_gender, "instance": instance}) # 'temporary_data':# temporary_data })
+                     'care_giver_gender': care_giver_gender, 'objects': evaluation})
+
 
 def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
-    child = RegPerson.objects.get(id=id)
-    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-    object = OVCPrevSinovyoCaregiverEvaluation.objects.get(ref_caregiver_id=care_giver.id)
-    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-    care_giver_gender = care_giver.sex_id
-    if care_giver_gender == 'SMAL':
-        care_giver_gender = 'Male'
-    else:
-        care_giver_gender = 'Female'
+    object = OVCPrevSinovyoCaregiverEvaluation.objects.get(evaluation_id=id)
     if request.method == 'POST':
         form = OVCPreventivePrePostProgramAssessmentForm(request.POST)
         #pdb.set_trace()
-        OVCPrevSinovyoCaregiverEvaluation.objects.filter(ref_caregiver_id=care_giver.id).update(
+        OVCPrevSinovyoCaregiverEvaluation.objects.filter(evaluation_id=id).update(
             # event_id=ovc_preventive_events,
-            person_id=RegPerson.objects.get(id=id),
-            ref_caregiver_id=care_giver.id,
-            bd_age=care_giver.age,
-            bd_sex=care_giver.sex_id,
             bd_read=request.POST.get('bd_read'),
             bd_education_level=request.POST.get('bd_education_level'),
             bd_biological_children=request.POST.get('bd_biological_children'),
@@ -10212,10 +10190,10 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
             fi_worried_money=request.POST.get('fi_worried_money') )
 
     data = {
-        # 'person_id': object.person_id,
-        # object.ref_caregiver_id,   
-        # 'bd_age': object.bd_age,
-        # 'bd_sex': object.bd_sex,    
+        'person_id': object.person_id,
+        'ref_caregiver_id': object.ref_caregiver_id,   
+        'bd_age': object.bd_age,
+        'bd_sex': object.bd_sex,    
         'bd_read': object.bd_read,     
         'bd_education_level': object.bd_education_level,    
         'bd_biological_children': object.bd_biological_children,      
@@ -10258,26 +10236,16 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
         'fi_money_important_items': object.fi_money_important_items, 
         'fi_worried_money': object.fi_worried_money,
     }
-
     form = OVCPreventivePrePostProgramAssessmentForm(data=data)
     edit = True
-    return render(request, template_name='forms/caregiver_progress_assessment.html', 
-    context={'form': form, 'edit_form':edit,'care_giver': care_giver, 'status': 200 })
+    return render(request, template_name='forms/delete_caregiver_progress_assessment.html', 
+    context={'form': form, 'edit_form':edit, 'status': 200 })
 
 
 
 def ovc_preventive_pre_post_program_assessment_delete_view(request, id):
-    child = RegPerson.objects.get(id=id)
+    delete_instance = OVCPrevSinovyoCaregiverEvaluation.objects.filter(evaluation_id=id)
+    delete_instance.delete()
+    delete_instance = True
     messages.success(request, 'Delete was Successfully!')
-    form = OVCPreventivePrePostProgramAssessmentForm()
-    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-    OVCPrevSinovyoCaregiverEvaluation.objects.filter(ref_caregiver_id=care_giver.id).delete()
-    house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-    messages.success(request, 'Delete was Successfully!')
-    return render(request=request, template_name='forms/caregiver_progress_assessment.html', context={
-        'child': child,
-        'form': form,
-        'care_giver': care_giver,
-    })
-
-
+    return render(request, template_name='forms/delete_caregiver_progress_assessment.html', context={'delete_instance': delete_instance})

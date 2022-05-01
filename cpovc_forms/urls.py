@@ -177,6 +177,8 @@ urlpatterns = [
     # 
     re_path('ovc-preventive-progress-assessment/(?P<id>\d+)/', views.ovc_preventive_pre_post_program_assessment_view, name='progress-assessment'),
     # 
-    re_path('ovc-preventive-progress-assessment-edit/(?P<id>\d+)/', views.ovc_preventive_pre_post_program_assessment_edit_view, name='progress-assessment-edit'),
+    re_path('ovc-preventive-progress-assessment-edit/(?P<id>[\w-]+)/$', views.ovc_preventive_pre_post_program_assessment_edit_view, name='progress-assessment-edit'),
+    
+    re_path('ovc-preventive-progress-assessment-delete/(?P<id>[\w-]+)/$', views.ovc_preventive_pre_post_program_assessment_delete_view, name='progress-assessment-delete')
 
 ]

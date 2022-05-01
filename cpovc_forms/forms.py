@@ -8317,7 +8317,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
         ('Often', 'Often')
     )
 
-    TYPE_ASSESSMENT = forms.ChoiceField(choices=CHOICES_TYPE_ASSESSMENT,
+    type_of_assessment = forms.ChoiceField(choices=CHOICES_TYPE_ASSESSMENT,
                                         widget = forms.RadioSelect())
 
     date_of_assessment = forms.DateTimeField(

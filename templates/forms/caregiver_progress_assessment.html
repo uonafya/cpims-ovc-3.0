@@ -56,14 +56,9 @@
 <h1 class="page-header">Forms
     <small>OVC Care Giver Preventive Pre and Post Program Assessment Form 
         {% if edit_form %}
-        <b>{{care_giver.first_name}} {{care_giver.surname}} | {{ form.bd_sex }} | {{ form.bd_age}} YRS
+        <b>{{care_giver.first_name}} {{care_giver.surname}} | {{ care_giver_gender }} | {{ care_giver.age}} YRS
         </b></small></h1>
         {%else%}
-        <b>{{ child.first_name }} {{ child.surname }} | {% if child.date_of_birth|gen_age == 0 %}
-                            UNDER 1 YEAR
-                        {% else %}
-                            {{ child.date_of_birth|gen_age }} YRS
-                        {% endif %}</b></small></h1>
         {%endif%}
     </b></small>
 </h1>
@@ -94,11 +89,10 @@
                             class="fa fa-minus"></i></a>
                     <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i
                             class="fa fa-times"></i></a>
+                    <br>
                 </div>
-                <h4 class="panel-title"> OVC Preventive Pre and Post Program Assessment Form </h4>
             </div>
             {% if edit_form %}
-
             <p></p>
             {% else %}
 
@@ -107,15 +101,15 @@
                             <div id="case-events"  class="table-responsive">
                                 <table id="" class="table table-striped ">
                                     <div class="" >
-                                        <h3 class="" style="color: dimgrey;"><b>  </b></h3>
+                                        <h3 class="" ><b>  </b></h3>
                                     </div>
                                     <thead>
 
                                     </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td><P style="padding-left: 5px;"><strong>Care giver name:</strong> {{care_giver.first_name}} {{care_giver.surname}}</p>
-                                                            <P style="padding-left: 5px;"><strong>Age:</strong> {{care_giver.age}}</p></td>
+                                                        <td><P style="padding-left: 45px;"><strong>Care giver name:</strong> {{care_giver.first_name}} {{care_giver.surname}}</p>
+                                                            <P style="padding-left: 45px;"><strong>Age:</strong> {{care_giver.age}}</p></td>
                                                                 <td><P><strong>Gender:</strong> {{care_giver_gender}}</p>
                                                                     <P><strong>Designation:</strong> {{care_giver.designation}}</p></td><td></td>
 
@@ -130,7 +124,7 @@
             {% endif %}
 
             <div class="panel-form">
-                <form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true"
+                <form class="form-horizontal form-bordered" action="{{ request.get_full_path }}" method="POST" data-parsley-validate="true"
                     name="form-wizard-hhva" id="new_hhva">
                     {% csrf_token %}
             <div class="panel-body">
@@ -141,7 +135,7 @@
                         <table class="table table-responsive">
                                 <td class="">
                                     <td><strong>Type of assessment: </strong><br><br>
-                                    {{ form.TYPE_ASSESSMENT }}</td>
+                                    {{ form.type_of_assessment }}</td>
 
                         <td><strong>Date of assessment: </strong><br><br>
                             {{ form.date_of_assessment }}</td>
@@ -605,37 +599,41 @@
     </div>
 
     <!-- List of fomrs start -->
-<div class="card-block table-border-style">
-            <div class="table-responsive">
-                   <table class="table table-success table-striped" border="1" id="past-hst">
-                            <thead>
-                                <tr>
-                                    <th colspan="3">Type of Assessment</th>
-                                    <th colspan="5">Name of Caregiver</th>
-                                    <th colspan="12">Date of assessment</th>
-                                    <th colspan="6">Action</th>
-                                </tr>
-                            </thead>
-                    {% if object %}
+                   
+                    <div class="card-block table-border-style">
+                        <div class="table-responsive">
+                                <table class="table table-success table-bordered" border="1" id="past-hst">
+                                        <thead>
+                                        <tbody>
+                                            <tr>
+                                                <th>Type of Assessment</th>
+                                                <th >Name of Caregiver</th>
+                                                <th>Date of assessment</th>
+                                                <th colspan="6">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% if objects %}
 
-                    {% for data in object %}
-
-                        <tr>
-
-                            <td>{{data.date_of_assessment}}</td>
-                            <td><a href="{% url 'edit_fmppostevaluation' data.assessment_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
-                            <a href="{% url 'delete_evaluation' data.assessment_id%}"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a></td>
-                        </tr>
-                    {% endfor %}
-                    {% else %}
+                                        {%for data in objects%}
+                                            <tr>
+                                                <td>{{data.date_of_assessment}}</td>
+                                                <td>{{data.ref_caregiver.first_name}} {{data.ref_caregiver.surname}}</td>
+                                                <td>{{data.type_of_assessment}}</td>
+                                                <td><a href="{% url 'progress-assessment-edit' data.evaluation_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
+                                                <a href="{% url 'progress-assessment-delete' data.evaluation_id%}"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a></td>
+                                            </tr>
+                                            {%endfor%}
+                                        </body>
+                                    </table>
+                                </div>
+                            </div>
+                        {% else %}
                     <div>
                         <h3>No data available</h3>
                     </div>
                     {% endif %}
-                </table>
-            </div>
-            </div>
-        </div>
+            
     <!-- list of forms end -->
 
             </div>
@@ -723,18 +721,6 @@
             });
 
         } );
-</script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
-  $("#RSA_1").click(function(){
-    $("#RSA_2").toggle();
-  });
-    $("#RSB_1").click(function(){
-      $("#RSB_2").toggle();
-    });
-});
 </script>
 
 

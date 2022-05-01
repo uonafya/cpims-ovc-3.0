@@ -1520,7 +1520,7 @@ class OVCPrevSinovyoCaregiverEvaluation(models.Model):
     fs_hopeful = models.CharField(max_length=80)
     fi_money_important_items = models.CharField(max_length=40)
     fi_worried_money = models.CharField(max_length=40)
-    event = models.ForeignKey(OVCPreventiveEvents,default='15657fa6-c860-11ec-b9d4-00e18c9fac49', on_delete=models.CASCADE)
+    event = models.ForeignKey(OVCPreventiveEvents, on_delete=models.CASCADE)
     fmp_pre_grouping_id = models.UUIDField(default=uuid.uuid1, editable=False)
     timestamp_created = models.DateTimeField(default=timezone.now)
     timestamp_updated = models.DateTimeField(default=timezone.now)
@@ -1533,4 +1533,6 @@ class OVCPrevSinovyoCaregiverEvaluation(models.Model):
     def __unicode__(self):
         return str(self.evaluation_id)
 
-
+    def get_all_objects(self):
+        queryset = self._meta.model.objects.all()
+        return queryset
