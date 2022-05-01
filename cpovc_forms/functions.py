@@ -3,9 +3,9 @@ from cpovc_registry.functions import (
 
 from cpovc_main.functions import get_general_list, convert_date
 from cpovc_forms.models import (
-    FormsAuditTrail, OVCCareF1B, OVCCareEvents, OVCEducationFollowUp, OVCCareCpara, OVCCareCasePlan)
+    FormsAuditTrail, OVCCareF1B, OVCCareEvents, OVCEducationFollowUp, OVCCareCasePlan)
 from cpovc_ovc.functions import get_house_hold
-from .models import OVCCareCpara_upgrade, OVCGokBursary
+from .models import OVCCareCpara_upgrade, OVCGokBursary, OVCSubPopulation
 from cpovc_ovc.models import OVCFacility
 
 
@@ -262,6 +262,21 @@ def save_bursary(request, person_id):
     else:
         return True
 
+def save_ovc_sub_population (id, criteria, date_event, time_created, time_updated):
+    try:
+        OVCSubPopulation.objects.create(
+            sub_population_id=id,
+            criteria=criteria,
+            date_of_event=date_event,
+            time_created=time_created,
+            time_updated=time_updated
+        )
+    except Exception as e:
+        print('%s :error saving sub population question - %s' % str(e))
+        return False
+    
+
+    
 
 def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event, date_event, exceptions=[]):
     answer_value = {

@@ -149,7 +149,7 @@ urlpatterns = [
     re_path(r'^bursary/edit/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.edit_bursary, name='edit_bursary'),
     re_path(r'^bursary/form/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.form_bursary, name='form_bursary'),
     # OVC Care - CPARA Form
-    re_path('cpara/new/(?P<id>\d+)/', views.new_cpara, name='new_cpara'),
+   
     re_path('cpara/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_cpara, name='delete_cpara'),
 
     # OVC Care - Case Plan Template

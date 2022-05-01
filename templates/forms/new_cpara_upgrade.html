@@ -1678,12 +1678,17 @@ jQuery(document).ready(function()
         function deleteCPARAentry(personId,btn_event_pk){
             $('#del_cpara_e').modal('hide');
             var cparaUrlToDelete= "{% url 'delete_cpara' id=1234 btn_event_pk=3456 %}".replace(/1234/, personId.toString()).replace(/3456/, btn_event_pk.toString());
+            // Debug
+            console.log({cparaUrlToDelete})
+
             $.ajax({
                 url: cparaUrlToDelete,
                 dataType: 'json',
                 method: 'GET',
                 success: function(result)
                 {
+                    // Debug
+                    console.log("Deleted result: ", result[0])
                     if (result[0].msg.includes("30")){
                         $('#messages').removeClass('alert-success').addClass('alert-danger').css({'display': 'block'});
                         $('#messages p').html(result[0].msg);
@@ -1695,7 +1700,7 @@ jQuery(document).ready(function()
                         console.log({url})
                         window.open(url,"_self");
                     }
-                    console.log("deleted");
+                    // console.log("deleted");
                 },
                 error: function(xhr, status, error){
                     console.error('not deleted ==> status: '+ JSON.stringify(status) + ' & error: '+JSON.stringify(error));

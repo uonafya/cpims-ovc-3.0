@@ -880,36 +880,6 @@ class OVCCareBenchmarkScore(models.Model):
         return str(self.benchmark_score_id)
 
 
-class OVCCareCpara(models.Model):
-    cpara_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver')
-    question_code = models.CharField(max_length=10, null=False, blank=True)
-    question = models.ForeignKey('OVCCareQuestions', on_delete=models.CASCADE)
-    answer = models.CharField(max_length=15)
-    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
-    question_type = models.CharField(max_length=50)
-    domain = models.CharField(max_length=50)
-    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
-    date_of_event = models.DateField()
-    date_of_previous_event =models.DateField(null=True, blank=True)
-    timestamp_created = models.DateTimeField(default=timezone.now)
-    is_void = models.BooleanField(default=False)
-    timestamp_updated = models.DateTimeField(auto_now=True)
-
-    def __unicode__(self):
-        return self.answer
-
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.question_code = self.question.code
-        super(OVCCareCpara, self).save(force_insert, force_update, using, update_fields)
-
-    class Meta:
-        db_table = 'ovc_care_cpara'
-
-    def __unicode__(self):
-        return str(self.cpara_id)
-
 
 class OVCCareWellbeing(models.Model):
     well_being_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -1412,16 +1382,15 @@ class OVCCaseLocation(models.Model):
 
 class OVCCareQuestions(models.Model):
     question_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
-    code = models.CharField(max_length=5)
-    question = models.CharField(max_length=55)
-    domain = models.CharField(max_length=10)
-    question_text = models.CharField(max_length=255)
+    code = models.CharField(max_length=5, null=True)
+    question = models.CharField(max_length=55, null=True)
+    domain = models.CharField(max_length=10, null=True)
+    question_text = models.CharField(max_length=255, null=True)
     question_type = models.CharField(max_length=20, null=False)
     form = models.ForeignKey(OVCCareForms, on_delete=models.CASCADE)
     is_void = models.BooleanField(default=False)
     timestamp_created = models.DateTimeField(auto_now_add=True)
     timestamp_updated = models.DateTimeField(auto_now=True)
-    code_x = models.CharField(max_length=5, null=True)
 
     def __unicode__(self):
         return self.code
@@ -1429,19 +1398,20 @@ class OVCCareQuestions(models.Model):
     class Meta:
         db_table = 'ovc_care_questions'
 
+
 class OVCCareCpara_upgrade(models.Model):
     cpara_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver_upgrade')
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver')
     question_code = models.CharField(max_length=10, null=False, blank=True)
-    # question = models.ForeignKey(OVCCareQuestions, on_delete=models.CASCADE)
+    question = models.ForeignKey('OVCCareQuestions', on_delete=models.CASCADE, null=True)
     answer = models.CharField(max_length=15)
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
-    question_type = models.CharField(max_length=50)
-    domain = models.CharField(max_length=50)
+    question_type = models.CharField(max_length=50, null=True)
+    domain = models.CharField(max_length=50, null=True)
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
     date_of_event = models.DateField()
-    date_of_previous_event = models.DateField(null=True, blank=True)
+    date_of_previous_event =models.DateField(null=True, blank=True)
     timestamp_created = models.DateTimeField(default=timezone.now)
     is_void = models.BooleanField(default=False)
     timestamp_updated = models.DateTimeField(auto_now=True)
@@ -1458,3 +1428,23 @@ class OVCCareCpara_upgrade(models.Model):
 
     def __unicode__(self):
         return str(self.cpara_id)
+
+
+# OVC sub population
+
+class OVCSubPopulation(models.Model):
+    sub_population_id = models.UUIDField(
+    primary_key=True, default=uuid.uuid4, editable=False)
+    person_id = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    criteria = models.CharField(max_length=10)
+    date_of_event = models.DateField()
+    is_void = models.BooleanField(default=False)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+
+    class Meta:
+            db_table = 'ovc_sub_population'
+
+    def __unicode__(self):
+        return str(self.sub_population_id)

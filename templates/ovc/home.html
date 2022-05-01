@@ -267,7 +267,7 @@ function OpenForm(id)
         }
         if(form_type == 'CPR')
         {
-            return window.location.href='{% url 'new_cpara' id=0 %}'.replace("0", id);
+            return window.location.href='{% url 'new_cpara_upgrade' id=0 %}'.replace("0", id);
         }
         if(form_type == 'CPT')
         {
