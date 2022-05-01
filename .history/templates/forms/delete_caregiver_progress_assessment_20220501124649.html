@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load app_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block page_title %}OVC Preventive Pre and Post Program Assessment Form  {% endblock %}
+{% block style_code %}
+<link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block javascript_code%}
+{% endblock javascript_code%}
+
+{% block primary %}
+
+<!--validation error messages-->
+
+{% if messages %}
+{% for message in messages %}
+{% if 'error' in message.tags %}
+    <div id="messages" class="alert alert-danger fade in">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-info fa-2x pull-left"></i>
+{% else %}
+    <div id="messages" class="alert alert-success fade in">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+{% endif %}    
+    <p>{{ message }}</p>
+</div>
+{% endfor %}
+{% endif %}
+<div id="message" class="alert alert-success fade in" style="display: none">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+
+    <span id="response"></span>
+</div>
+
+
+<!-- end validation error messages-->
+
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+    <li><a href="#">Home</a></li>
+    <li class="active">Forms</li>
+</ol>
+<!-- end breadcrumb -->
+
+<!-- begin page-header -->
+
+
+<!-- error messages -->
+
+
+
+
+<!-- end page-header -->
+
+<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-info fa-2x pull-left"></i>
+    <span class="invalid-form-message" id="invalid-form-message"></span>
+</div>
+
+<!-- begin row -->
+<div id='case_details' class="row">
+    <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin panel -->
+
+                    <div class="panel panel-default">
+                        <div  class="panel panel-inverse">
+                            <div id="case-events"  class="table-responsive">
+                                <div class="panel-body">
+                                    <div class="panel panel-form"           
+                                        {% if delete_instance %}
+                                        <div class="panel-body panel-form">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4 col-sm-4"></label>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <a href="{% url 'ovc_search'%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-search"></i>&nbsp;</button></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                             </div>
+                            <br><br>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+
+{% endblock %}
+
+{% block lazy_javascript_code %}
+<script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}"></script>
+<script src="{% static 'js/apps.js' %}"></script>
+<script src="{% static 'js/form-wizards.js' %}"></script>
+<script src="{% static 'js/tag-it.js' %}"></script>
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+
+{% endblock %}

@@ -10090,7 +10090,6 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
                 bd_biological_children=request.POST.get('bd_biological_children'),
                 bd_non_biological_children=request.POST.get('bd_non_biological_children'),
                 bd_children_not_in_school=request.POST.get('bd_children_not_in_school'),
-                watch_tv_with_child=request.POST.get('watch_tv_with_child'),
                 bd_source_income=request.POST.get('bd_source_income'),
                 bd_adults_contribute_hh_income=request.POST.get('bd_adults_contribute_hh_income'),
                 bd_children_contribute_hh_income=request.POST.get('bd_children_contribute_hh_income'),
@@ -10101,7 +10100,6 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
                 bd_money_basic_expenses=request.POST.get('bd_money_basic_expenses'),
                 bd_violence=request.POST.get('bd_violence'),
                 bd_adult_unwell=request.POST.get('bd_adult_unwell'),
-                bad_things_from_sex=request.POST.get('bad_things_from_sex'),
                 bd_child_unwell=request.POST.get('bd_child_unwell'),
                 bd_miss_school=request.POST.get('bd_miss_school'),
                 bd_hiv_status=request.POST.get('bd_hiv_status'),
@@ -10152,7 +10150,6 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
             bd_biological_children=request.POST.get('bd_biological_children'),
             bd_non_biological_children=request.POST.get('bd_non_biological_children'),
             bd_children_not_in_school=request.POST.get('bd_children_not_in_school'),
-            watch_tv_with_child=request.POST.get('watch_tv_with_child'),
             bd_source_income=request.POST.get('bd_source_income'),
             bd_adults_contribute_hh_income=request.POST.get('bd_adults_contribute_hh_income'),
             bd_children_contribute_hh_income=request.POST.get('bd_children_contribute_hh_income'),
@@ -10163,7 +10160,6 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
             bd_money_basic_expenses=request.POST.get('bd_money_basic_expenses'),
             bd_violence=request.POST.get('bd_violence'),
             bd_adult_unwell=request.POST.get('bd_adult_unwell'),
-            bad_things_from_sex=request.POST.get('bad_things_from_sex'),
             bd_child_unwell=request.POST.get('bd_child_unwell'),
             bd_miss_school=request.POST.get('bd_miss_school'),
             bd_hiv_status=request.POST.get('bd_hiv_status'),
@@ -10198,8 +10194,7 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
         'bd_education_level': object.bd_education_level,    
         'bd_biological_children': object.bd_biological_children,      
         'bd_non_biological_children': object.bd_non_biological_children,    
-        'bd_children_not_in_school': object.bd_children_not_in_school,    
-        'watch_tv_with_child': object.watch_tv_with_child,
+        'bd_children_not_in_school': object.bd_children_not_in_school,
         'bd_source_income': object.bd_source_income,  
         'bd_adults_contribute_hh_income': object.bd_adults_contribute_hh_income,
         'bd_children_contribute_hh_income': object.bd_children_contribute_hh_income,
@@ -10209,8 +10204,7 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
         'bd_bf_live_hh': object.bd_bf_live_hh,
         'bd_money_basic_expenses': object.bd_money_basic_expenses,  
         'bd_violence': object.bd_violence,
-        'bd_adult_unwell': object.bd_adult_unwell,     
-        'bad_things_from_sex': object.bad_things_from_sex,      
+        'bd_adult_unwell': object.bd_adult_unwell,
         'bd_child_unwell': object.bd_child_unwell,
         'bd_miss_school': object.bd_miss_school,
         'bd_hiv_status': object.bd_hiv_status,  
@@ -10238,7 +10232,7 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
     }
     form = OVCPreventivePrePostProgramAssessmentForm(data=data)
     edit = True
-    return render(request, template_name='forms/delete_caregiver_progress_assessment.html', 
+    return render(request, template_name='forms/caregiver_progress_assessment.html',
     context={'form': form, 'edit_form':edit, 'status': 200 })
 
 

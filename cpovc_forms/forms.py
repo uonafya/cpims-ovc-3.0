@@ -8352,12 +8352,6 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
              # renderer=RadioCustomRenderer,
         ))
 
-    watch_tv_with_child = forms.ChoiceField(
-        choices=YES_NO_CHOICES,
-        widget=forms.RadioSelect(
-             # renderer=RadioCustomRenderer,
-        ))
-
     bd_source_income = forms.ChoiceField(
         choices=CHOICES_INCOME,
         widget=forms.Select(attrs={
@@ -8420,13 +8414,6 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
         ))
 
     bd_adult_unwell = forms.ChoiceField(
-        choices=YES_NO_CHOICES,
-        widget=forms.RadioSelect(
-
-            # renderer=RadioCustomRenderer,
-        ))
-
-    bad_things_from_sex = forms.ChoiceField(
         choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
 
