@@ -8184,8 +8184,24 @@ ATTENDANCE_CHOICES= [
     ('SESSION 12', 'SESSION 12'),
     ('SESSION 13', 'SESSION 13'),
     ('SESSION 14', 'SESSION 14'),
+    ('MAKE UP SESSION 1', 'MAKE UP SESSION 1'),
+    ('MAKE UP SESSION 2', 'MAKE UP SESSION 2'),
+    ('MAKE UP SESSION 3', 'MAKE UP SESSION 3'),
+    ('MAKE UP SESSION 4', 'MAKE UP SESSION 4'),
+    ('MAKE UP SESSION 5', 'MAKE UP SESSION 5'),
+    ('MAKE UP SESSION 6', 'MAKE UP SESSION 6'),
+    ('MAKE UP SESSION 7', 'MAKE UP SESSION 7'),
+    ('MAKE UP SESSION 8', 'MAKE UP SESSION 8'),
+    ('MAKE UP SESSION 9', 'MAKE UP SESSION 9'),
+    ('MAKE UP SESSION 10', 'MAKE UP SESSION 10'),
+    ('MAKE UP SESSION 11', 'MAKE UP SESSION 11'),
+    ('MAKE UP SESSION 12', 'MAKE UP SESSION 12'),
+    ('MAKE UP SESSION 13', 'MAKE UP SESSION 13'),
+    ('MAKE UP SESSION 14', 'MAKE UP SESSION 14'),
     ]
-
+ATTENDANCE_CLIENT = [
+    ('OVC', 'OVC'),
+    ('CAREGIVER', 'CAREGIVER')]
 class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
     INTERVENTION = forms.CharField(widget=forms.Select(
         choices=INTERVENTION_CHOICES,
@@ -8217,12 +8233,29 @@ class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
                'name': 'REFERAL_MADE',
                'id': 'refferal_made_id',
     }))
+    ATTENDANCE_CLIENT = forms.CharField(widget=forms.Select(
+        choices=ATTENDANCE_CLIENT,
+        attrs = {'placeholder': _('Select Date'),
+               'class': 'form-control',
+               'name': 'ATTENDANCE_CLIENT',
+               'id': 'client_name'}
+        ))
 
-    MAKEUP_SESSION_DATE = forms.DateField(widget=forms.TextInput(
-        attrs={'placeholder': _('Date of Event'),
+    OTHER_SERVICES_SPECIFY = forms.CharField(widget=forms.TextInput(
+        attrs={'placeholder': _('Other Services Specify'),
+               'class': 'form-control',
+               'id': 'other_preventive_services_specified',
+               'data-parsley-required': "true",
+            #    'readonly': "true",
+                'name': 'OTHER_SERVICES_SPECIFY',
+               'data-parsley-group': 'group0'
+               }))
+
+    DATE_OF_SERVICE_ENCOUNTER = forms.DateField(widget=forms.TextInput(
+        attrs={'placeholder': _('Date of service encounter'),
                'class': 'form-control',
                'name': 'date of makeup',
-               'id': 'makeup_session_date'
+               'id': 'date_of_service_encounter'
                #'data-parsley-required': "true",
                #'data-parsley-group': 'group3'
                }))
