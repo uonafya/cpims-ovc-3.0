@@ -174,7 +174,9 @@ urlpatterns = [
     # Dreams SerivceUptake Form
     re_path('dreamsform/new/(?P<id>\d+)/', views.new_dreamsform, name='new_dreamsform'),
 
-    # Dreams SerivceUptake Form
+    # Bireferral Form
     re_path('bidirectionalreferralform/new/(?P<id>\d+)/', views.bidirectionalreferralform, name='bidirectionalreferralform'),
 
+    # Delete Bireferral
+    path('delete_bireferral/(?P<id>)/', views.delete_bireferral, name='delete_bireferral')
 ]
