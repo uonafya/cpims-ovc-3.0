@@ -10037,6 +10037,12 @@ def new_graduation_monitoring_form(request, id):
 
 
 def ovc_preventive_pre_post_program_assessment_view(request, id):
+    """ ovc care pre-post progrss assessment form view
+    Args:
+        request, id
+    Return:
+          render template
+          """
     user_id = request.user.id
     username = request.user.get_username()
     child = RegPerson.objects.get(id=id)
@@ -10070,8 +10076,8 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
             house_hold=house_hold
                 )
         if form.is_valid():
+            # save form input and event counter
             ovc_preventive_event.save()
-            form = form.cleaned_data
             OVCPrevSinovyoCaregiverEvaluation(
                 event_id=ovc_preventive_event.event,
                 person_id=user_id,
@@ -10123,7 +10129,7 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
             messages.success(request, 'Form saved succesfully!')
         else:
             messages.error(request, 'Error saving form!')
-        return redirect('progress-assessment/(?P<id>\d+)/')
+        return redirect('progress-assessment')
     form = OVCPreventivePrePostProgramAssessmentForm() 
     event = OVCPreventiveEvents.objects.filter(person_id=care_giver.id).values_list('event')
     evaluation = OVCPrevSinovyoCaregiverEvaluation.objects.filter(event_id__in=event).order_by('date_of_assessment')
@@ -10133,9 +10139,14 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
 
 
 def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
+    """edit a form instance
+
+    Args: id
+
+    Return: render template"""
     object = OVCPrevSinovyoCaregiverEvaluation.objects.get(evaluation_id=id)
     if request.method == 'POST':
-        form = OVCPreventivePrePostProgramAssessmentForm(request.POST)
+        # get update saved form instance
         OVCPrevSinovyoCaregiverEvaluation.objects.filter(evaluation_id=id).update(
             bd_read=request.POST.get('bd_read'),
             bd_education_level=request.POST.get('bd_education_level'),
@@ -10176,7 +10187,7 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
             fs_hopeful=request.POST.get('fs_hopeful'),
             fi_money_important_items=request.POST.get('fi_money_important_items'),
             fi_worried_money=request.POST.get('fi_worried_money') )
-
+    # fetch data from model
     data = {
         'person_id': object.person_id,
         'ref_caregiver_id': object.ref_caregiver_id,   
@@ -10225,13 +10236,16 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
     form = OVCPreventivePrePostProgramAssessmentForm(data=data)
     edit = True
     return render(request, template_name='forms/caregiver_progress_assessment.html',
-    context={'form': form, 'edit_form':edit, 'status': 200 })
-
-
+    context={'form': form, 'edit_form': edit, 'status': 200})
 
 def ovc_preventive_pre_post_program_assessment_delete_view(request):
-    import pdb
-    
+    """
+    Adelete a given form instance based on evaluation id
+
+    Args: request
+
+    Return: Json response
+    """
     id = request.GET.get('evaluation_id', None)
     # pdb.set_trace()
     delete_instance = OVCPrevSinovyoCaregiverEvaluation.objects.filter(evaluation_id=id)

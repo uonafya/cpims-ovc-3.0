@@ -95,54 +95,56 @@
             {% if edit_form %}
             <p></p>
             {% else %}
-
+            <form class="form-horizontal form-bordered" action="#" method="POST" data-parsley-validate="true"
+            name="form-wizard-hhva" id="new_hhva">
+                {% csrf_token %}
                     <div class="panel panel-default">
-                        <div  class="panel panel-inverse">
-                            <div id="case-events"  class="table-responsive">
-                                <table id="" class="table table-striped ">
+                        <div  class="panel ">
+                                 {% if edit_form %}
+                                <p></p>
+                                {% else %}
+                                     <table id="" class="table table-striped ">
+                                     <tbody>
+                                     <tr>
+                                                <td><strong>Type of assessment: </strong><br><br>
+                                                {{ form.type_of_assessment }}</td>
+                                            <td> </td>
+                                         <td> </td>
+                                    <td><strong>Date of assessment: </strong><br><br>
+                                        {{ form.date_of_assessment }}</td>
+                                            </tr>
+
+                                {% endif %}
+
                                     <div class="" >
                                         <h3 class="" style="color: dimgrey;"><b>  </b></h3>
                                     </div>
                                     <thead>
-
                                     </thead>
                                                 <tbody>
+                                                <tr>
+                                                    <br>
+                                                </tr>
                                                     <tr>
-                                                        <td><p style="padding-left: 5px;"><strong>Care giver name:</strong> {{care_giver.first_name}} {{care_giver.surname}}</p>
-                                                            <p style="padding-left: 5px;"><strong>Age:</strong> {{care_giver.age}}</p></td>
-                                                                <td><P><strong>Gender:</strong> {{care_giver_gender}}</p>
-                                                                    <P><strong>Designation:</strong> {{care_giver.designation}}</p></td><td></td>
+                                                        <td><p style="padding-left: 5px;"><strong>Care giver name:</strong> {{care_giver.first_name}} {{care_giver.surname}}</p></td>
+                                                            <td><p style="padding-left: 5px;"><strong>Age:</strong> {{care_giver.age}}</p></td>
+                                                                <td><P><strong>Gender:</strong> {{care_giver_gender}}</p></td>
+                                                                    <td><P><strong>Designation:</strong> {{care_giver.designation}}</p></td>
                                                     </tr>
 
                                                 </tbody>
-                                        <p>&nbsp;</p>
+
                                 </table>
-                            </div>
-                            <br><br>
                         </div>
-                    </div>
+                </div>
+
                 </div>
             {% endif %}
 
             <div class="panel-form">
-                <form class="form-horizontal form-bordered" action="{{ request.get_full_path }}" method="POST" data-parsley-validate="true"
-                    name="form-wizard-hhva" id="new_hhva">
-                    {% csrf_token %}
-            <div class="panel-body">
                 <div class="panel panel-form">
-                    {% if edit_form %}
-                    <p></p>
-                    {% else %}
-                        <table class="table table-responsive">
-                                    <td><strong>Type of assessment: </strong><br><br>
-                                    {{ form.type_of_assessment }}</td>
 
-                        <td><strong>Date of assessment: </strong><br><br>
-                            {{ form.date_of_assessment }}</td>
-                                </tr>
-                            </table>
-                    {% endif %}
-                    <div id="case-events"  class="table-responsive">
+                    <div   class="table-responsive">
                         <table id="" class="table ">
 
 
@@ -155,7 +157,6 @@
                                 <tbody>
 
                                         <tr>
-                                            <br><br>
                                             <td>   1. Can you read?</td>
                                             <td>
                                                 <div class="form-group m-r-10">
@@ -580,9 +581,9 @@
                         </div>
                     </div>
                     {% endif %}
+                <br><br>
                 </div>
             </div>
-
                 </form>
             </div>
         </div>
@@ -591,9 +592,9 @@
 
     <!-- List of fomrs start -->
                    {% if objects %}
-                    <div class="card-block table-border-style">
+                    <div class="panel panel-inverse">
                         <div class="table-responsive">
-                                <table id="tableData"  class="table table-success table-striped table-bordered" border="1" id="past-hst">
+                                <table id="tableData"  class="table table-success table-bordered" border="1" id="past-hst">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -612,7 +613,7 @@
                                                     <td>{{ data.type_of_assessment }}</td>
                                                     <td><a href="{% url 'progress-assessment-edit' data.evaluation_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
                                                     {% comment %} <input id='data_id_jx' typ="text"  value=""  hidden/> {% endcomment %}
-                                                    <a><button onClick="deleteEvaluation('{{data.evaluation_id}}')" type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></td></a>
+                                                    <a><button  onClick="deleteEvaluation('{{data.evaluation_id}}')" type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></td></a>
                                                 </tr>
                                                 {%endfor%}
                                         </tbody>
@@ -638,7 +639,6 @@
 
 </div>
 <!-- end row -->
-
 
 <script type="text/javascript">
 // Delete Django Ajax Call
