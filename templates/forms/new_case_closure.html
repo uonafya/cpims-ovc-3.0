@@ -37,9 +37,7 @@
 
 <!-- begin breadcrumb -->
 <ol class="breadcrumb pull-right">
-	<li><a href="#">Home</
-
-        a></li>
+	<li><a href="#">Home</a></li>
 	<li class="active">Forms</li>
 </ol>
 <!-- end breadcrumb -->
@@ -168,7 +166,7 @@
                                     <td>Q2</td>
 
                                     <td>Case files completed per the protocol. </td>
-                                    <td>
+                                    <td >
                                         {{ form.CASE_CL014}}
                                     </td>
                                 </tr>
@@ -437,7 +435,7 @@
 
 {% block lazy_javascript_code %}
 <script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
-<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>	
+<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
 <script src="{% static 'plugins/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}"></script>
 <script src="{% static 'js/apps.js' %}"></script>
 <script src="{% static 'js/form-wizards.js' %}"></script>
@@ -457,23 +455,52 @@ jQuery(document).ready(function()
             $("#cc_tab_003").hide();
             $("input[name='CASE_CL001']").on('change', function () {
       var ival = $("input[name='CASE_CL001']:checked").val();
-      if(ival == '2'){
+      if(ival == 2){
            $("#cc_001").show();
            $("#cc_tab_002").show();
            $("#cc_002").hide();
            $("#cc_tab_001").hide();
            $("#cc_tab_003").hide();
+           $('input[name="CASE_CL010').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL011').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL012').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL013').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL014').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           {#$('input[name="CASE_CL010').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});#}
+
+
+
+
+
+
       }else if(ival == '3'){
           $("#cc_002").show();
           $("#cc_tab_003").show();
           $("#cc_001").hide();
           $("#cc_tab_001").hide();
           $("#cc_tab_002").hide();
-      }else if(ival == '1'){
+          {#$('input[name="CASE_CL014').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});#}
+          $('input[name="CASE_CL024').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL026').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL026').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL027').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL029').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL030').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL031').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+
+      } else if(ival == '1'){
           $("#cc_tab_001").show();
           $("#cc_tab_003").hide();
           $("#cc_tab_002").hide();
+
+
       }
+
+      {#if ($("#cc_tab_001").show()==true){#}
+      {#     {{ form.CASE_CL014}}:{required:true};#}
+      {##}
+      {##}
+      {#          }#}
 
   });
 
@@ -487,4 +514,4 @@ jQuery(document).ready(function()
 
 
 
-{% endblock lazy_javascript_code %}
+{% endblock %}

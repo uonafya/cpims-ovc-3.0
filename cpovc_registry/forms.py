@@ -56,7 +56,7 @@ class RegistrationSearchForm(forms.Form):
     person_type = forms.ChoiceField(
         choices=person_type_list,
         initial='0',
-        required=True,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'person_type',
@@ -72,7 +72,7 @@ class RegistrationSearchForm(forms.Form):
     search_criteria = forms.ChoiceField(
         choices=psearch_criteria_list,
         initial='0',
-        required=True,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'search_criteria',

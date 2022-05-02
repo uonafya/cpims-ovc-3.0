@@ -1488,7 +1488,7 @@ class OVCCareCaseExit(models.Model):
     is_void = models.BooleanField(default=False)
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
     timestamp_created = models.DateTimeField(default=timezone.now)
-    timestamp_updated = models.DateTimeField(auto_now=True)
+    timestamp_updated = models.DateTimeField(auto_now=True,null=True)
 
     class Meta:
         """Override table details."""
