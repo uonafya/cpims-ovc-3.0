@@ -23,7 +23,7 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,PREGNANT_WOMEN_ADOLESCENT)
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -36,7 +36,7 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, OVCPregnantWomen)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -9997,3 +9997,219 @@ def new_dreamsform(request, id):
                   'forms/new_dreamsform.html',
                   {'form': form, 'init_data': init_data,
                    'vals': vals})
+
+#pregnant_women_adolescent
+def new_pregnantwomen(request, id):
+    try:
+        if request.method == 'POST':
+            import pdb
+
+
+            form = PREGNANT_WOMEN_ADOLESCENT(request.POST, initial={'person': id})
+            if True:
+                person = RegPerson.objects.get(pk=int(id))
+                child = RegPerson.objects.get(id=id)
+                house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+                event_type_id = 'HRST'
+
+
+                """ Save hiv_screening-event """
+                # get event counter
+                event_counter = OVCCareEvents.objects.filter(
+                    event_type_id=event_type_id, person=id, is_void=False).count()
+                # save event
+                ovccareevent = OVCCareEvents.objects.create(
+                    event_type_id=event_type_id,
+                    event_counter=event_counter,
+                    event_score=0,
+                    created_by=request.user.id,
+                    person=RegPerson.objects.get(pk=int(id)),
+                    house_hold=house_hold
+                )
+
+                q1 = request.POST.get("PWA_WA1_1")
+                q2 = request.POST.get("PWA_WA1_2A")
+                q3 = request.POST.get("PWA_WA1_2B")
+                # q4 = request.POST.get("PWA_WA1_3A")
+                q5 = request.POST.get("PWA_WA1_3B")
+                # q6= request.POST.get("PWA_WA1_4A")
+                q7 = request.POST.get("PWA_WA1_4B")
+                # q8 = request.POST.get("PWA_WA1_5A")
+                q9 = request.POST.get("PWA_WA1_5B")
+                q10 = request.POST.get("PWA_WA1_6")
+                q11 = request.POST.get("PWA_WA1_7")
+                q12 = request.POST.get("PWA_WA1_8")
+                q13 = request.POST.get("PWA_WA1_9")
+                q14 = request.POST.get("PWA_WA1_10")
+                q15 = request.POST.get("PWA_WA1_11")
+                q16 = request.POST.get("PWA_WA1_12")
+                q17 = request.POST.get("PWA_WA1_13")
+                q18 = request.POST.get("PWA_WA1_14")
+                # q19 = request.POST.get("PWA_WA1_15")
+
+                # Saving track
+                # pdb.set_trace()
+
+                ovc_preg = OVCPregnantWomen.objects.create(
+                    person=person,
+                    date_of_contact=q1,
+                    date_test_done2a=q2,
+                    test_result2b=q3,
+                    # date_test_done3a=q4,
+                    test_result3b=q5,
+                    # date_test_done4a=q6,
+                    test_result4b=q7,
+                    # date_test_done5a=q8,
+                    test_result5b=q9,
+                    anc_date1=q10,
+                    anc_date2=q11,
+                    anc_date3=q12,
+                    anc_date4=q13,
+                    mode_of_delivery=q14,
+                    facility_code=q15,
+                    ccc_no=q16,
+                    vl_result=q17,
+                    vl_test_date=q18,
+                    # disclosure_done=q19,
+                    event=ovccareevent,
+                )
+                # pdb.set_trace()
+
+                msg = 'form PWA tracker saved successful'
+                messages.add_message(request, messages.INFO, msg)
+                url = reverse('ovc_view', kwargs={'id': id})
+                return HttpResponseRedirect(url)
+            # url = reverse('ovc_view', kwargs={'id': id})
+            # # return HttpResponseRedirect(reverse(forms_registry))
+            # return HttpResponseRedirect(url)
+    except Exception as e:
+        msg = 'form PWA tracker save error : (%s)' % (str(e))
+        messages.add_message(request, messages.ERROR, msg)
+        print('Error saving form PWA tracker : %s' % str(e))
+        return HttpResponseRedirect(reverse(forms_home))
+
+    # get household members/ caretaker/ household_id
+    household_id = None
+
+    try:
+        ovcreg = get_object_or_404(OVCRegistration, person_id=id, is_void=False)
+        caretaker_id = ovcreg.caretaker_id if ovcreg else None
+        ovchh = get_object_or_404(OVCHouseHold, head_person=caretaker_id, is_void=False)
+        household_id = ovchh.id if ovchh else None
+    except Exception as e:
+        print(str(e))
+        msg = 'Error getting household identifier: (%s)' % (str(e))
+        messages.add_message(request, messages.ERROR, msg)
+        return HttpResponseRedirect(reverse(forms_registry))
+    # get child data
+    init_data = RegPerson.objects.filter(pk=id)
+    check_fields = ['sex_id', 'relationship_type_id']
+    vals = get_dict(field_name=check_fields)
+    ovc_id = int(id)
+    child = RegPerson.objects.get(is_void=False, id=ovc_id)
+    # if date_of_event:
+    #     date_of_event = convert_date(date_of_event)
+
+
+
+    form = PREGNANT_WOMEN_ADOLESCENT(initial={'person': id})
+    event = OVCPregnantWomen.objects.filter(person_id=id).values_list('event')
+    pwa_women = OVCPregnantWomen.objects.filter(event_id__in=event).order_by('date_of_event')
+    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+    return render(request,
+                  'forms/new_pregnantwomen.html',{'form': form, 'init_data': init_data, 'vals': vals, 'person': id, 'care_giver': care_giver, 'pwa_women': pwa_women})
+
+#Edit pregnant women tracker form
+
+def edit_pregnantwomen(request, id):
+    """Some default page for Server Errors."""
+
+    try:
+        hdata = OVCPregnantWomen.objects.get(preg_id=id)
+        if request.method == 'POST':
+            q1 = request.POST.get("PWA_WA1_1")
+            q2 = request.POST.get("PWA_WA1_2A")
+            q3 = request.POST.get("PWA_WA1_2B")
+            # q4 = request.POST.get("PWA_WA1_3A")
+            q5 = request.POST.get("PWA_WA1_3B")
+            # q6 = request.POST.get("PWA_WA1_4A")
+            q7 = request.POST.get("PWA_WA1_4B")
+            # q8 = request.POST.get("PWA_WA1_5A")
+            q9 = request.POST.get("PWA_WA1_5B")
+            q10 = request.POST.get("PWA_WA1_6")
+            q11 = request.POST.get("PWA_WA1_7")
+            q12 = request.POST.get("PWA_WA1_8")
+            q13 = request.POST.get("PWA_WA1_9")
+            q14 = request.POST.get("PWA_WA1_10")
+            q15 = request.POST.get("PWA_WA1_11")
+            q16 = request.POST.get("PWA_WA1_12")
+            q17 = request.POST.get("PWA_WA1_13")
+            q18 = request.POST.get("PWA_WA1_14")
+            # q19 = request.POST.get("PWA_WA1_15")
+
+            # household_id = request.POST.get('household_id')
+            # hse_uuid = uuid.UUID(household_id)
+            # house_holds = OVCHouseHold.objects.get(pk=hse_uuid)
+
+            # Save all details from the Bursary form
+            OVCPregnantWomen.objects.filter(preg_id=id).update(
+                date_of_contact=q1,
+                date_test_done2a=q2,
+                test_result2b=q3,
+                # date_test_done3a=q4,
+                test_result3b=q5,
+                # date_test_done4a=q6,
+                test_result4b=q7,
+                # date_test_done5a=q8,
+                test_result5b=q9,
+                anc_date1=q10,
+                anc_date2=q11,
+                anc_date3=q12,
+                anc_date4=q13,
+                mode_of_delivery=q14,
+                facility_code=q15,
+                ccc_no=q16,
+                vl_result=q17,
+                vl_test_date=q18,
+                # disclosure_done=q19,
+                )
+
+            return redirect('new_pregnantwomen', id=hdata.person_id)
+
+        # hdata = OVCPregnantWomen.objects.get(preg_id=id)
+        track = {
+            'PWA_WA1_1': hdata.date_of_contact,
+            'PWA_WA1_2A': hdata.date_test_done2a,
+            'PWA_WA1_2B': hdata.test_result2b,
+            # 'PWA_WA1_3A': hdata.date_test_done3a,
+            'PWA_WA1_3B': hdata.test_result3b,
+            # 'PWA_WA1_4A': hdata.date_test_done4a,
+            'PWA_WA1_4B': hdata.test_result4b,
+            # 'PWA_WA1_5A': hdata.date_test_done5a,
+            'PWA_WA1_5B': hdata.test_result5b,
+            'PWA_WA1_6': hdata.anc_date1,
+            'PWA_WA1_7': hdata.anc_date2,
+            'PWA_WA1_8': hdata.anc_date3,
+            'PWA_WA1_9': hdata.anc_date4,
+            'PWA_WA1_10': hdata.mode_of_delivery,
+            'PWA_WA1_11': hdata.facility_code,
+            'PWA_WA1_12': hdata.ccc_no,
+            'PWA_WA1_13': hdata.vl_result,
+            'PWA_WA1_14': hdata.vl_test_date,
+            # 'PWA_WA1_15': hdata.disclosure_done,
+        }
+        form = OVCPregnantWomen(data=track)
+
+    except Exception as e:
+        print("error with OVC viewing - %s" % (str(e)))
+        # raise e
+        msg = "Error occured during ovc edit"
+        messages.error(request, msg)
+
+    return render(request, 'forms/edit_pregnantwomen.html', {'form': form, 'hdata': hdata, 'status': 200})
+
+
+def delete_pregnantwomen(request, id):
+    new_tracker = OVCPregnantWomen.objects.get(preg_id=id)
+    new_tracker.delete()
+    return redirect('new_pregnantwomen', id=new_tracker.person_id)

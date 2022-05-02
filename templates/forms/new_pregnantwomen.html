@@ -140,7 +140,7 @@
 									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA3A: </b>HIV test done: <span class="asteriskField">* </label>
 									<div class="col-md-2 col-sm-4">
 										{{ form.PWA_WA1_3A }}
-										<h6><span id="sel_hhva_ha22"></span></h6>
+{#										<h6><span id="sel_hhva_ha22"></span></h6>#}
 									</div>
 								</div>
 
@@ -156,7 +156,7 @@
 									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA4A: </b>HIV test done: <span class="asteriskField">* </label>
 									<div class="col-md-2 col-sm-4">
 										{{ form.PWA_WA1_4A }}
-										<h6><span id="sel_hhva_ha22"></span></h6>
+{#										<h6><span id="sel_hhva_ha22"></span></h6>#}
 									</div>
 								</div>
 
@@ -172,7 +172,7 @@
 									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA5A: </b>HIV test done: <span class="asteriskField">* </label>
 									<div class="col-md-2 col-sm-4">
 										{{ form.PWA_WA1_5A }}
-										<h6><span id="sel_hhva_ha22"></span></h6>
+{#										<h6><span id="sel_hhva_ha22"></span></h6>#}
 									</div>
 								</div>
 
@@ -204,7 +204,7 @@
 									<div class="col-md-4 col-sm-4">
 										{{ form.PWA_WA1_7 }}
 										<br>
-										<h6><span id="sel_hhva_ha6"></span></h6>
+{#										<h6><span id="sel_hhva_ha6"></span></h6>#}
 									</div>
 								</div>
 
@@ -250,7 +250,7 @@
 									<label class="control-label col-md-3 col-sm-3" for="hhva_qs"><b>WA12: </b>CCC Number : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
 										{{ form.PWA_WA1_12 }}
-										<h6><span id="sel_hhva_ha28"></span></h6>
+{#										<h6><span id="sel_hhva_ha28"></span></h6>#}
 									</div>
 								</div>
 
@@ -258,7 +258,7 @@
 									<label class="control-label col-md-3 col-sm-3" for="hhva_qs"><b>WA13: </b>Latest VL results : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
 										{{ form.PWA_WA1_13 }}
-										<h6><span id="sel_hhva_ha28"></span></h6>
+{#										<h6><span id="sel_hhva_ha28"></span></h6>#}
 									</div>
 								</div>
 
@@ -266,7 +266,7 @@
 									<label class="control-label col-md-3 col-sm-3" for="hhva_qs"><b>WA14: </b>VL test date : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
 										{{ form.PWA_WA1_14 }}
-										<h6><span id="sel_hhva_ha28"></span></h6>
+{#										<h6><span id="sel_hhva_ha28"></span></h6>#}
 									</div>
 								</div>
 
@@ -274,7 +274,7 @@
 									<label class="control-label col-md-3 col-sm-3" for="hhva_qs"><b>WA15: </b>Disclosure done to family member : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
 										{{ form.PWA_WA1_15 }}
-										<h6><span id="sel_hhva_ha28"></span></h6>
+{#										<h6><span id="sel_hhva_ha28"></span></h6>#}
 									</div>
 								</div>
 							</div>
@@ -352,31 +352,34 @@
 
                                   </tr>
                                 </thead>
-                    {% if hiv_screen %}
+                    {% if pwa_women  %}
 
-                    {% for one_screening_data in hiv_screen %}
-
+                    {% for one_screening_data in pwa_women  %}
 
                         <tr>
-                          <!-- <td>{{one_screening_data.date_of_event}}</td> -->
-                          <td>{{one_screening_data.caregiver_know_status | yesno:"Yes, No, N/A"}}</td>
-                          <td>{{one_screening_data.caregiver_knowledge_yes | yesno:"Yes, No, N/A"}}</td>
-                          <td>{{one_screening_data.parent_PLWH | yesno:"Yes, No, N/A"}}</td>
-                          <td>{{one_screening_data.child_sick_malnourished | yesno:"Yes, No, N/A"}}</td>
-                          <td>{{one_screening_data.child_sexual_abuse | yesno:"Yes, No, N/A"}}</td>
-                          <td>{{one_screening_data.adol_sick | yesno:"Yes, No, N/A"}}</td>
-                          <td>{{one_screening_data.adol_sexual_abuse | yesno:"Yes, No, N/A"}}</td>
-                          <td>{{one_screening_data.sex | yesno:"Yes, No, N/A"}}</td>
-                          <td>{{one_screening_data.sti | yesno:"Yes, No"}}</td>
-                          <td>{{one_screening_data.hiv_test_required  | yesno:"Yes, No, N/A"}}</td>
-                          <td>{{one_screening_data.parent_consent_testing | yesno:"Yes, No, N/A"}}</td>
-                          <td>{{one_screening_data.referral_made | yesno:"Yes, No, N/A"}}</td>
-                          <td>{{one_screening_data.referral_completed  | yesno:"Yes, No, N/A"}}</td>
-                          <!-- <td>{{one_screening_data.not_completed}}</td> -->
-                          <!-- <td>{{one_screening_data.test_result | yesno:"Yes, No, Null"}}</td> -->
-                          <td>{{one_screening_data.art_referral | yesno:"Yes, No, N/A"}}</td>
-                          <td>{{one_screening_data.art_referral_completed  | yesno:"Yes, No, N/A"}}</td>
-                          <td>{{one_screening_data.date_of_event}}</td>
+                          <td>{{one_screening_data.date_of_contact}}</td>
+                          <td>{{one_screening_data.date_test_done2a}}</td>
+                          <td>{{one_screening_data.test_result2b}}</td>
+                          <td>{{one_screening_data.date_test_done3a}}</td>
+                          <td>{{one_screening_data.test_result3b}}</td>
+                          <td>{{one_screening_data.date_test_done4a}}</td>
+                          <td>{{one_screening_data.test_result4b}}</td>
+                          <td>{{one_screening_data.date_test_done5a}}</td>
+                          <td>{{one_screening_data.test_result5b}}</td>
+                          <td>{{one_screening_data.anc_date1}}</td>
+                          <td>{{one_screening_data.anc_date2}}</td>
+                          <td>{{one_screening_data.anc_date3}}</td>
+                          <td>{{one_screening_data.anc_date4}}</td>
+                          <td>{{one_screening_data.mode_of_delivery}}</td>
+                          <td>{{one_screening_data.facility_code}}</td>
+                          <td>{{one_screening_data.ccc_no}}</td>
+                          <td>{{one_screening_data.vl_result}}</td>
+                          <td>{{one_screening_data.vl_test_date}}</td>
+                          <td>{{one_screening_data.disclosure_done}}</td>
+                            <td>
+                                 <a href="{% url 'pregnantwomen' one_screening_data.preg_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
+                              <a href="{% url 'delete_pregnantwomen' one_screening_data.preg_id%}"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a>
+                            </td>
                         </tr>
                     {% endfor %}
                     {% else %}
@@ -430,16 +433,17 @@ jQuery(document).ready(function()
 </script>
 
 <script>
-$("#PWA_WA1_6, #PWA_WA1_7, #PWA_WA1_8, #PWA_WA1_9, #PWA_WA1_14, #PWA_WA1_1 ").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PWA_WA1_1 ").datepicker({ format: 'yyyy-mm-dd' }).val();
 $("#PWA_WA1_2A").datepicker({ format: 'yyyy-mm-dd' }).val();
 $("#PWA_WA1_3A").datepicker({ format: 'yyyy-mm-dd' }).val();
 $("#PWA_WA1_4A").datepicker({ format: 'yyyy-mm-dd' }).val();
 $("#PWA_WA1_5A").datepicker({ format: 'yyyy-mm-dd' }).val();
 $("#PWA_WA1_1").datepicker({ format: 'yyyy-mm-dd' }).val();
-{#$("#PWA_WA1_17").datepicker()#}
-{#$("#PWA_WA1_19").datepicker()#}
-{#$("#PWA_WA1_24").datepicker()#}
-{#$("#PWA_WA1_26").datepicker()#}
+$("#PWA_WA1_6").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PWA_WA1_7").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PWA_WA1_8").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PWA_WA1_9").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PWA_WA1_14").datepicker({ format: 'yyyy-mm-dd' }).val();
 $( "#facility_field" ).autocomplete({
     source: function( request, response ) {
     $.ajax({

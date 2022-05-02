@@ -178,5 +178,9 @@ urlpatterns = [
     path('pregnantwomen/new/(?P<id>\d+)/', views.new_pregnantwomen, name='new_pregnantwomen'),
 
     #Edit Pregant women/adolescent form
+    path('pregnantwomen/edit/(?P<id>\W+)/', views.edit_pregnantwomen, name='pregnantwomen'),
+
+    # Delete hivscreening tool
+    path('delete_pregnantwomen/(?P<id>)/', views.delete_pregnantwomen, name='delete_pregnantwomen'),
 
 ]
