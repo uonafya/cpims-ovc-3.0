@@ -1,0 +1,623 @@
+{% extends 'base.html' %}
+{% load app_filters %}
+{% load static %}
+{% block page_title %} HEI Tracker {% endblock %}
+{% block style_code %}
+<link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet" />
+<style type="text/css">
+.dialog_paragraph {
+  color: #f00;
+}
+
+.table_data {
+  display: none;
+}
+
+.container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.td_style {
+  /*color: #000000;*/
+  color: #0057e7;
+}
+</style>
+{% endblock %}
+
+{% block javascript_code%}
+{% endblock javascript_code%}
+
+{% block primary %}
+
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+	<li><a href="#">Home</a></li>
+	<li class="active">Forms</li>
+</ol>
+<!-- end breadcrumb -->
+
+<!-- begin page-header -->
+
+{% for data in init_data %}
+
+	<h1 class="page-header">Forms <small>HEI Tracker<b>{{ data.first_name }} {{ data.surname }} | {{ data.sex_id|gen_value:vals }} | {% if data.date_of_birth|gen_age == 0 %}
+                            UNDER 1 YEAR
+                        {% else %}
+                            {{ data.date_of_birth|gen_age }} YRS 
+                        {% endif %}</b></small></h1>
+
+{% endfor %}
+<!-- end page-header -->
+
+<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-info fa-2x pull-left"></i>
+    <span class="invalid-form-message" id="invalid-form-message"></span>
+</div>
+
+<!-- begin row -->
+<div id='case_details' class="row">
+	<!-- begin col-12 -->
+    <div class="col-md-12">
+    	<!-- begin panel -->
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title"> HEI Tracker </h4>
+			</div>
+			<div style="overflow-x: auto; min-height: 300px;">
+		  		<div class="panel-body">
+            		<form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true"
+              		  name="form-wizard-hhva" id="new_hhva">
+                	{% csrf_token %}
+					<div id="wizard-hhva">
+						<ol>
+							<li>
+							    Caregiver biodata/details
+							    <small>Caregiver biodata/details</small>
+							</li>
+							<li>
+							    HEI Follow up
+							    <small>HEI Follow up </small>
+							</li>
+
+							<li>
+							    Others
+							    <small>Others.</small>
+							</li>
+						</ol>
+						
+
+						{{ form.person }}
+						{{ form.household_id }}
+						
+
+						<!-- begin wizard step-1 -->
+
+						<!-- end wizard step-1 -->  
+
+						<!-- begin wizard step-2 -->
+						<div class="wizard-step-1">
+							<div class="panel-body">
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE1: </b>Caregiver HIV status : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_hiv_status }}
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE2: </b>If Positive, Care giver on ART  : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_hiv_positive }}
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE3: </b>Health facility for Care giver : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+<!--										{{ form.he_he2_cg_facility }}-->
+										<input type="text" class="form-control" name="he_facility_field" id="he_facility_field" placeholder="Search for facility here">
+										<input type="hidden" name="hei_he1_facility" id="he_he2_cg_facility">
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE4: </b>CCC number for care giver : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_cg_ccc }}
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE5: </b>Care giver latest VL results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_cg_vl }}
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE6: </b>Date of VL test for Care giver : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he2_cg_vldate }}
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<!-- end wizard step-2 -->
+
+						<!-- begin wizard step-4 -->
+						<div class="wizard-step-2">
+							<ul>
+								<li style=" display:inline-block;">{{form.Follow_Up}}</li>
+							</ul>
+
+							<div class="panel-body" id="1st_contact">
+                               <h3 class="text-center note note-info"><b>At first contact</b></h3>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE7: </b>HIV test done : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he4_hiv_test }}
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE8: </b>Test results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he4_test_results }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE9: </b>HEI VL results (if positive) : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he4_vl_results }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE10: </b>Child on Prophylaxis : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he4_prophylaxis }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE11: </b>Mode of feeding : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he4_mode }}
+									</div>
+								</div>
+							</div>
+
+							<div class="panel-body" id="6wks">
+     							<h3 class="text-center note note-info"><b>At 6 weeks</b></h3>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE12: </b>HIV test done : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he5_hiv_test }}
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE13: </b>Test results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he5_test_results }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE14: </b>HEI VL results (if positive) : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he5_vl_results }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE15: </b>Child on Prophylaxis : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he5_prophylaxis }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE16: </b>Immunization : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he5_immunization }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE17: </b>Mode of feeding : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he5_mode }}
+									</div>
+								</div>
+							</div>
+
+							<div class="panel-body" id="6mths">
+ 								<h3 class="text-center note note-info"><b>At 6 months</b></h3>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE18: </b>HIV test done : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he6_hiv_test }}
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE19: </b>Test results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he6_test_results }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE20: </b>HEI VL results (if positive) : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he6_vl_results }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE21: </b>Child on Prophylaxis : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he6_prophylaxis }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE22: </b>Immunization : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he6_immunization }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE23: </b>Mode of feeding : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he6_mode }}
+									</div>
+								</div>
+							</div>
+
+							<div class="panel-body" id="12mths">
+								<h3 class="text-center note note-info"><b>At 12 months</b></h3>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE24: </b>HIV test done : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he7_hiv_test }}
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE25: </b>Test results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he7_test_results }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE26: </b>HEI VL results (if positive) : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he7_vl_results }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE27: </b>Child on Prophylaxis : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he7_prophylaxis }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE28: </b>Immunization : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he7_immunization }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE29: </b>Mode of feeding : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he7_mode }}
+									</div>
+								</div>
+							</div>
+
+							<div class="panel-body" id="18mths">
+								<h3 class="text-center note note-info"><b>At 18 months</b></h3>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE30: </b>HIV test done : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he8_hiv_test }}
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE31: </b>Test results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he8_test_results }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE32: </b>HEI VL results (if positive) : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he8_vl_results }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE33: </b>Child on Prophylaxis : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he8_prophylaxis }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE34: </b>Immunization : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he8_immunization }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs"><b>HE35: </b>Mode of feeding : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he8_mode }}
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- begin wizard step-9 -->
+						<div class="wizard-step-7">
+							<div class="panel-body"> 
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE36: </b>Exit/Attrition reason : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he9_attrition }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>HE37: </b>Comments : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.he_he9_comments }}
+
+									</div>
+								</div>
+							</div>
+						</div> 
+						<!-- end wizard step-9 --> 
+					</div>
+
+					<div class="panel-body panel-form">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4"></label>
+                            <div class="col-md-6 col-sm-6">
+                                <button id="mysubmit-post-evaluation" type="submit"
+                                    class="btn btn-primary">Submit</button>
+                                <a href="javascript:history.go(-1)" class="btn btn-white">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+
+				    </form>
+				</div>
+            </div>
+            <div class="badge pull-right m-4">Revised: Oct 6th 2016</div>
+        </div>
+        <!-- end panel -->
+
+    </div>
+    <!-- end col-12 -->
+
+</div>
+<!-- end row -->
+
+<!--begin row-->
+
+<!--<div class="row">-->
+<!--    &lt;!&ndash; begin col-12 &ndash;&gt;-->
+<!--    <div class="col-md-12">-->
+<!--        &lt;!&ndash; begin panel &ndash;&gt;-->
+<!--        <div class="panel panel-info">-->
+<!--            <div class="panel-heading">-->
+<!--                <div class="panel-heading-btn">-->
+<!--                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>-->
+<!--                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
+<!--                </div>-->
+<!--                <h4 class="panel-title"><b>HEI Tracker Events List </b></h4>-->
+<!--            </div>-->
+
+<!--            <div class="panel-body">-->
+<!--                <div  class="panel panel-inverse">-->
+<!--                    <div id="case-events"  class="table-responsive">-->
+<!--                        <table id="f1a_events_data_table" class="table table-striped table-bordered" border="1">-->
+<!--                            <thead>-->
+<!--                                <tr>-->
+<!--                                    <th colspan="6">Caregiver biodata/details</th>-->
+<!--                                    <th colspan="5">HEI Follow up (At first contact)</th>-->
+<!--									<th colspan="6">At 6 weeks</th>-->
+<!--									<th colspan="6">At 6 months</th>-->
+<!--									<th colspan="6">At 12 months</th>-->
+<!--									<th colspan="6">At 18 months</th>-->
+<!--									<th colspan="2">Others</th>-->
+<!--                                    <th>Actions</th>-->
+<!--                                </tr>-->
+
+<!--                                <tr>-->
+<!--                            <th>HE1</th>-->
+<!--                            <th>HE2</th>-->
+<!--                            <th>HE3</th>-->
+<!--                            <th>HE4</th>-->
+<!--                            <th>HE5</th>-->
+<!--                            <th>HE6</th>-->
+<!--                            <th>HE7</th>-->
+<!--                            <th>HE8</th>-->
+<!--                            <th>HE9</th>-->
+<!--                            <th>HE10</th>-->
+<!--                            <th>HE11</th>-->
+<!--                            <th>HE12</th>-->
+<!--                            <th>HE13</th>-->
+<!--                            <th>HE14</th>-->
+<!--                            <th>HE15</th>-->
+<!--                            <th>HE16</th>-->
+<!--                            <th>HE17</th>-->
+<!--                            <th>HE18</th>-->
+<!--                            <th>HE19</th>-->
+<!--                            <th>HE20</th>-->
+<!--                            <th>HE21</th>-->
+<!--                            <th>HE22</th>-->
+<!--                            <th>HE23</th>-->
+<!--                            <th>HE24</th>-->
+<!--                            <th>HE25</th>-->
+<!--							<th>HE26</th>-->
+<!--                            <th>HE27</th>-->
+<!--                            <th>HE28</th>-->
+<!--                            <th>HE29</th>-->
+<!--                            <th>HE30</th>-->
+<!--                            <th>HE31</th>-->
+<!--                            <th>HE32</th>-->
+<!--                            <th>HE33</th>-->
+<!--                            <th>HE34</th>-->
+<!--                            <th>HE35</th>-->
+<!--                            <th>HE36</th>-->
+<!--                            <th>HE37</th>-->
+<!--                            <th>Date of Event</th>-->
+<!--                            <th> </th>-->
+<!--                        </tr>-->
+<!--							</thead>-->
+<!--                            <tbody>-->
+<!--                                {% if fmp_evaluation is not None %}-->
+<!--									{% for one_evaluation_data in fmp_evaluation %}-->
+<!--										<tr>-->
+<!--											<td>{{one_evaluation_data.know_where}}</td>-->
+<!--											<td>{{one_evaluation_data.know_what}}</td>-->
+<!--											<td>{{one_evaluation_data.know_who}}</td>-->
+<!--											<td>{{one_evaluation_data.often_watch_tv}}</td>-->
+<!--											<td>{{one_evaluation_data.know_what_watching_tv}}</td>-->
+<!--											<td>{{one_evaluation_data.not_watch_programs_tv}}</td>-->
+<!--											<td>{{one_evaluation_data.talk_sex_on_tv}}</td>-->
+<!--											<td>{{one_evaluation_data.watch_tv_with_child}}</td>-->
+<!--											<td>{{one_evaluation_data.what_sex_is}}</td>-->
+<!--											<td>{{one_evaluation_data.talk_hiv}}</td>-->
+<!--											<td>{{one_evaluation_data.talk_sti}}</td>-->
+<!--											<td>{{one_evaluation_data.talk_sex_issues}}</td>-->
+<!--											<td>{{one_evaluation_data.talk_sex_issue_what}}</td>-->
+<!--											<td>{{one_evaluation_data.ask_sex_issue}}</td>-->
+<!--											<td>{{one_evaluation_data.ask_sex_issue_respond}}</td>-->
+<!--											<td>{{one_evaluation_data.question_about_sex_issue}}</td>-->
+<!--											<td>{{one_evaluation_data.know_how_talk_sex_issue}}</td>-->
+<!--											<td>{{one_evaluation_data.information_sex_issues}}</td>-->
+<!--											<td>{{one_evaluation_data.bad_things_from_sex}}</td>-->
+<!--											<td>{{one_evaluation_data.talk_sex_child_opinion}}</td>-->
+<!--											<td>{{one_evaluation_data.ready_learn_sex_issues}}</td>-->
+<!--											<td>{{one_evaluation_data.encourage_have_sex}}</td>-->
+<!--											<td>{{one_evaluation_data.young_learn_sex_issues}}</td>-->
+<!--											<td>{{one_evaluation_data.someone_talk_sex_issues}}</td>-->
+<!--											<td>{{one_evaluation_data.parent_responsibility_talk_sex}}</td>-->
+<!--											<td>{{one_evaluation_data.happy_with_child}}</td>-->
+<!--											<td>{{one_evaluation_data.date_of_event}}</td>-->
+<!--											<td><a href="{% url 'edit_fmppostevaluation' one_evaluation_data.evaluation_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>-->
+<!--											<a href="{% url 'delete_evaluation' one_evaluation_data.evaluation_id%}"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a></td>-->
+<!--										</tr>-->
+<!--								    {% empty %}-->
+<!--&lt;!&ndash;								         <tr colspan="37">&ndash;&gt;-->
+<!--											<center><h3 colspan="37">No data available</h3> </center>-->
+<!--&lt;!&ndash;										 </tr>&ndash;&gt;-->
+<!--									{% endfor %}-->
+<!--                                {% endif %}-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                    <br><br>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--        </div>-->
+<!--        &lt;!&ndash; end panel &ndash;&gt;-->
+<!--    </div>-->
+<!--    &lt;!&ndash; end col-12 &ndash;&gt;-->
+<!--</div>-->
+
+<!--end row-->
+
+{% endblock %}
+
+{% block lazy_javascript_code %}
+<script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>	
+<script src="{% static 'plugins/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}"></script>
+<script src="{% static 'js/apps.js' %}"></script>
+<script src="{% static 'js/form-wizards.js' %}"></script>
+<script src="{% static 'js/tag-it.js' %}"></script>
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+<script>
+jQuery(document).ready(function()
+{
+	//multi selects
+    $('#hhva_ha6, #hhva_ha21, #hhva_ha22, #hhva_ha28, #hhva_ha29, #hhva_ha30, #hhva_ha31').multiselect({
+        selectAllValue: 'multiselect-all',
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true,
+        numberDisplayed: 1,
+        maxHeight: 300,
+        buttonWidth: '100%',
+		buttonClass: 'btn btn-white',
+		nonSelectedText: 'Please Select'
+    });
+
+	$('html,body').scrollTop(0);
+	FormWizardValidation.init();
+});
+</script>
+<script>
+	$("#he_he2_cg_hedate, #he_he2_cg_vldate").datepicker()
+
+	$( "#facility_field, #he_facility_field" ).autocomplete({
+		source: function( request, response ) {
+		$.ajax({
+			url: "{% url 'ovc_search' %}",
+			dataType: "json",
+			data: {q: request.term, id: 1},
+			success: function( data ) {
+				response( data );
+			}
+			});
+		},
+		minLength: 4,
+		select: function( event, ui ) {
+			$('#facility_field').val(ui.item.name);
+			$('#hei_he1_facility').val(ui.item.id);
+
+			$('#he_facility_field').val(ui.item.name);
+			$('#he_he2_cg_facility').val(ui.item.id)
+		},
+		open: function() {
+			$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+		},
+		close: function() {
+			$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+		}
+	});
+
+	$("#1st_contact, #6wks, #6mths, #12mths, #18mths").hide()
+	$(function(){
+	    $("input[name='Follow_Up']").on('change', function () {
+            var ival = $("input[name='Follow_Up']:checked").val();
+            if (ival == 'AtFirstContact') {
+                 $("#1st_contact").show()
+                 $("#6wks, #6mths, #12mths, #18mths").hide()
+            }else if(ival == 'At6wks'){
+                 $("#6wks").show()
+                 $("#1st_contact, #6mths, #12mths, #18mths").hide()
+            }else if(ival == 'At6mths'){
+                 $("#6mths").show()
+                 $("#1st_contact, #6wks, #12mths, #18mths").hide()
+            }else if(ival == 'At12mths'){
+                 $("#12mths").show()
+                 $("#1st_contact, #6wks, #6mths, #18mths").hide()
+            }else if(ival =='At18mths' ){
+                  $("#18mths").show()
+                 $("#1st_contact, #6wks, #6mths, #12mths").hide()
+            }
+
+        });
+	})
+
+</script>
+{% endblock %}

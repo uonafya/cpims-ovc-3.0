@@ -36,7 +36,7 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, OVCHEITracker)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -10002,182 +10002,139 @@ def new_dreamsform(request, id):
 def new_hei_tracker(request, id):
     try:
         if request.method == 'POST':
-            my_kvals = []
             event_type_id = 'FHSA'
-            household_id = request.POST.get('household_id')
-            hei_he1_dob = request.POST.get('hei_he1_dob')
-            if hei_he1_dob:
-                date_of_hhva = convert_date(hei_he1_dob)
+            # household_id = request.POST.get('household_id')
+            # hei_he1_dob = request.POST.get('hei_he1_dob')
+            # if hei_he1_dob:
+            date_of_hei_event = timezone.now()
+            person = RegPerson.objects.get(pk=int(id))
 
-            """ Save CSIEvent """
+            """ Save HEI CSIEvent """
             event_counter = OVCCareEvents.objects.filter(
                 event_type_id=event_type_id, person=id, is_void=False).count()
             ovccareevent = OVCCareEvents(
                 event_type_id=event_type_id,
                 event_counter=event_counter,
                 event_score=0,
-                date_of_event=date_of_hhva,
+                date_of_event=date_of_hei_event,
                 created_by=request.user.id,
-                # person=RegPerson.objects.get(pk=int(id)),
-                house_hold=OVCHouseHold.objects.get(pk=household_id)
+                person=RegPerson.objects.get(pk=int(id)),
+                # house_hold=OVCHouseHold.objects.get(pk=household_id)
             )
             ovccareevent.save()
-            new_pk = ovccareevent.pk
 
-            # Household Individuals
-            hhva_ha1_male = request.POST.get('hhva_ha1_male')
-            hhva_ha1_female = request.POST.get('hhva_ha1_female')
-            hhva_ha2_male = request.POST.get('hhva_ha2_male')
-            hhva_ha2_female = request.POST.get('hhva_ha2_female')
-            hhva_ha3_male = request.POST.get('hhva_ha3_male')
-            hhva_ha3_female = request.POST.get('hhva_ha3_female')
-            hhva_ha4_male = request.POST.get('hhva_ha4_male')
-            hhva_ha4_female = request.POST.get('hhva_ha4_female')
+            # Caregiver details
+            hei2 = request.POST.get('he_he2_hiv_status')
+            hei3 = request.POST.get('he_he2_hiv_positive')
+            hei4 = request.POST.get('he_he2_cg_facility')
+
+            if hei4:
+                facility_res = OVCFacility.objects.get(id=hei4).facility_code
+            else:
+                facility_res = None
+            hei5 = request.POST.get('he_he2_cg_ccc')
+            hei6 = request.POST.get('he_he2_cg_vl')
+            hei7 = request.POST.get('he_he2_cg_vldate')
+
+            # HEI follow up
+
+            # 1st contact
+            hei8 = request.POST.get('he_he4_hiv_test')
+            hei9 = request.POST.get('he_he4_test_results')
+            hei10 = request.POST.get('he_he4_vl_results')
+            hei11 = request.POST.get('he_he4_prophylaxis')
+            hei12 = request.POST.get('he_he4_mode')
+
+            # 6 weeks
+            hei13 = request.POST.get('he_he5_hiv_test')
+            hei14 = request.POST.get('he_he5_test_results')
+            hei15 = request.POST.get('he_he5_vl_results')
+            hei16 = request.POST.get('he_he5_prophylaxis')
+            hei17 = request.POST.get('he_he5_immunization')
+            hei18 = request.POST.get('he_he5_mode')
+
+            # 6 months
+            hei19 = request.POST.get('he_he6_hiv_test')
+            hei20 = request.POST.get('he_he6_test_results')
+            hei21 = request.POST.get('he_he6_vl_results')
+            hei22 = request.POST.get('he_he6_prophylaxis')
+            hei23 = request.POST.get('he_he6_immunization')
+            hei24 = request.POST.get('he_he6_mode')
+
+            # 12 months
+            hei25 = request.POST.get('he_he7_hiv_test')
+            hei26 = request.POST.get('he_he7_test_results')
+            hei27 = request.POST.get('he_he7_vl_results')
+            hei28 = request.POST.get('he_he7_prophylaxis')
+            hei29 = request.POST.get('he_he7_immunization')
+            hei30 = request.POST.get('he_he7_mode')
+
+            # 18 months
+            hei31 = request.POST.get('he_he8_hiv_test')
+            hei32 = request.POST.get('he_he8_test_results')
+            hei33 = request.POST.get('he_he8_vl_results')
+            hei34 = request.POST.get('he_he8_prophylaxis')
+            hei35 = request.POST.get('he_he8_immunization')
+            hei36 = request.POST.get('he_he8_mode')
+
+            # Others
+            hei37 = request.POST.get('he_he9_attrition')
+            hei38 = request.POST.get('he_he9_comments')
             # ************************************************************
-            my_kvals.append({"entity": "HA1M", "attribute": "HA1M", "value": hhva_ha1_male, "value_for": ''})
-            my_kvals.append({"entity": "HA1F", "attribute": "HA1F", "value": hhva_ha1_female, "value_for": ''})
-            my_kvals.append({"entity": "HA2M", "attribute": "HA2M", "value": hhva_ha2_male, "value_for": ''})
-            my_kvals.append({"entity": "HA2F", "attribute": "HA2F", "value": hhva_ha2_female, "value_for": ''})
-            my_kvals.append({"entity": "HA3M", "attribute": "HA3M", "value": hhva_ha3_male, "value_for": ''})
-            my_kvals.append({"entity": "HA3F", "attribute": "HA3F", "value": hhva_ha3_female, "value_for": ''})
-            my_kvals.append({"entity": "HA4M", "attribute": "HA4M", "value": hhva_ha4_male, "value_for": ''})
-            my_kvals.append({"entity": "HA4F", "attribute": "HA4F", "value": hhva_ha4_female, "value_for": ''})
 
-            # Water, Sanitation & Hygiene
-            hhva_ha5 = request.POST.get('hhva_ha5')
-            hhva_ha6 = request.POST.getlist('hhva_ha6')
-            hhva_ha7 = request.POST.get('hhva_ha7')
-            hhva_ha8 = request.POST.get('hhva_ha8')
-            # ************************************************************
-            my_kvals.append({"entity": "HA5", "attribute": "HA5", "value": hhva_ha5, "value_for": ''})
-            for i, ha6 in enumerate(hhva_ha6):
-                ha6 = ha6.split(',')
-                for value in ha6:
-                    my_kvals.append({"entity": "HA6", "attribute": "HA6", "value": value, "value_for": ''})
-            my_kvals.append({"entity": "HA7", "attribute": "HA7", "value": hhva_ha7, "value_for": ''})
-            my_kvals.append({"entity": "HA8", "attribute": "HA8", "value": hhva_ha8, "value_for": ''})
+            OVCHEITracker(
+                person=person,
+                hivstatus=hei2,
+                hivpositive=hei3,
+                facility=facility_res,
+                ccc=hei5,
+                vl=hei6,
+                vldate=hei7,
+                f1hivtest=hei8,
+                f1testresults=hei9,
+                f1vlresults=hei10,
+                f1prophylaxis=hei11,
+                f1mode=hei12,
+                f2hivtest=hei13,
+                f2testresults=hei14,
+                f2vlresults=hei15,
+                f2prophylaxis=hei16,
+                f2immunization=hei17,
+                f2mode=hei18,
+                f3hivtest=hei19,
+                f3testresults=hei20,
+                f3vlresults=hei21,
+                f3prophylaxis=hei22,
+                f3immunization=hei23,
+                f3mode=hei24,
+                f4hivtest=hei25,
+                f4testresults=hei26,
+                f4vlresults=hei27,
+                f4prophylaxis=hei28,
+                f4immunization=hei29,
+                f4mode=hei30,
+                f5hivtest=hei31,
+                f5testresults=hei32,
+                f5vlresults=hei33,
+                f5prophylaxis=hei34,
+                f5immunization=hei35,
+                f5mode=hei36,
+                reason=hei37,
+                comments=hei38,
+                event=ovccareevent,
+            ).save()
 
-            # Shelter & Care
-            hhva_ha9 = request.POST.get('hhva_ha9')
-            hhva_wash_list = request.POST.get('hhva_wash_list')
-            hhva_wash_data = json.loads(hhva_wash_list)
-            # ************************************************************
-            my_kvals.append({"entity": "HA9", "attribute": "HA9", "value": hhva_ha9, "value_for": ''})
-            for data in hhva_wash_data:
-                type_ = data["type"]
-                condition = data["condition"]
-                number = data["number"]
-                my_kvals.append({"entity": 'HA10', "attribute": type_, "value": number, "value_for": 'NUMBER'})
-                my_kvals.append({"entity": 'HA10', "attribute": type_, "value": condition, "value_for": 'CONDITION'})
 
-            # Food Security & Nutrition
-            hhva_ha11 = request.POST.get('hhva_ha11')
-            hhva_ha12 = request.POST.get('hhva_ha12')
-            # ************************************************************
-            my_kvals.append({"entity": "HA11", "attribute": "HA11", "value": hhva_ha11, "value_for": ''})
-            my_kvals.append({"entity": "HA12", "attribute": "HA12", "value": hhva_ha12, "value_for": ''})
-
-            # Household Income & Property
-            hhva_asset_list = request.POST.get('hhva_asset_list')
-            hhva_asset_data = json.loads(hhva_asset_list)
-            hhva_ha13 = request.POST.get('hhva_ha13')
-            hhva_ha14 = request.POST.get('hhva_ha14')
-            hhva_ha16 = request.POST.get('hhva_ha16')
-            hhva_ha17 = request.POST.get('hhva_ha17')
-            hhva_ha18 = request.POST.get('hhva_ha18')
-            hhva_ha19 = request.POST.get('hhva_ha19')
-            hhva_ha20 = request.POST.get('hhva_ha20')
-            hhva_ha21 = request.POST.getlist('hhva_ha21')
-            # ************************************************************
-            for data in hhva_asset_data:
-                asset = data["asset"]
-                number = data["number"]
-                size = data["size"]
-                my_kvals.append({"entity": 'HA15', "attribute": asset, "value": number, "value_for": 'NUMBER'})
-                my_kvals.append({"entity": 'HA15', "attribute": asset, "value": size, "value_for": 'SIZE'})
-            my_kvals.append({"entity": "HA13", "attribute": "HA11", "value": hhva_ha13, "value_for": ''})
-            my_kvals.append({"entity": "HA14", "attribute": "HA14", "value": hhva_ha14, "value_for": ''})
-            my_kvals.append({"entity": "HA16", "attribute": "HA16", "value": hhva_ha16, "value_for": ''})
-            my_kvals.append({"entity": "HA17", "attribute": "HA17", "value": hhva_ha17, "value_for": ''})
-            my_kvals.append({"entity": "HA18", "attribute": "HA18", "value": hhva_ha18, "value_for": ''})
-            my_kvals.append({"entity": "HA19", "attribute": "HA19", "value": hhva_ha19, "value_for": ''})
-            my_kvals.append({"entity": "HA20", "attribute": "HA20", "value": hhva_ha20, "value_for": ''})
-            for i, ha21 in enumerate(hhva_ha21):
-                ha21 = ha21.split(',')
-                for value in ha21:
-                    my_kvals.append({"entity": "HA21", "attribute": "HA21", "value": value, "value_for": ''})
-
-            # Health Services and Health Seeking Behaviours
-            hhva_ha22 = request.POST.get('hhva_ha22')
-            hhva_ha23 = request.POST.get('hhva_ha23')
-            hhva_ha24 = request.POST.get('hhva_ha24')
-            hhva_ha25 = request.POST.get('hhva_ha25')
-            hhva_ha26_male = request.POST.get('hhva_ha26_male')
-            hhva_ha26_female = request.POST.get('hhva_ha26_female')
-            hhva_ha27_male = request.POST.get('hhva_ha27_male')
-            hhva_ha27_female = request.POST.get('hhva_ha27_female')
-            # ************************************************************
-            my_kvals.append({"entity": "HA22", "attribute": "HA22", "value": hhva_ha22, "value_for": ''})
-            my_kvals.append({"entity": "HA23", "attribute": "HA23", "value": hhva_ha23, "value_for": ''})
-            my_kvals.append({"entity": "HA24", "attribute": "HA24", "value": hhva_ha24, "value_for": ''})
-            my_kvals.append({"entity": "HA25", "attribute": "HA25", "value": hhva_ha25, "value_for": ''})
-            my_kvals.append({"entity": "HA26M", "attribute": "HA26M", "value": hhva_ha26_male, "value_for": ''})
-            my_kvals.append({"entity": "HA26F", "attribute": "HA26F", "value": hhva_ha26_female, "value_for": ''})
-            my_kvals.append({"entity": "HA27M", "attribute": "HA27M", "value": hhva_ha27_male, "value_for": ''})
-            my_kvals.append({"entity": "HA27F", "attribute": "HA27F", "value": hhva_ha27_female, "value_for": ''})
-
-            # Protection
-            hhva_ha28 = request.POST.getlist('hhva_ha28')
-            # ************************************************************
-            for i, ha28 in enumerate(hhva_ha28):
-                ha28 = ha28.split(',')
-                for value in ha28:
-                    my_kvals.append({"entity": "HA28", "attribute": "HA28", "value": value, "value_for": ''})
-
-            # Other Services
-            hhva_ha29 = request.POST.getlist('hhva_ha29')
-            hhva_ha30 = request.POST.getlist('hhva_ha30')
-            # ************************************************************
-            for i, ha29 in enumerate(hhva_ha29):
-                ha29 = ha29.split(',')
-                for value in ha29:
-                    my_kvals.append({"entity": "HA29", "attribute": "HA29", "value": value, "value_for": ''})
-            for i, ha30 in enumerate(hhva_ha30):
-                ha30 = ha30.split(',')
-                for value in ha30:
-                    my_kvals.append({"entity": "HA30", "attribute": "HA30", "value": value, "value_for": ''})
-
-            # Household Priorities
-            hhva_ha31 = request.POST.getlist('hhva_ha31')
-            for i, ha31 in enumerate(hhva_ha31):
-                ha31 = ha31.split(',')
-                for value in ha31:
-                    my_kvals.append({"entity": "HA31", "attribute": "HA31", "value": value, "value_for": ''})
-
-            print('my_kvals : %s' % my_kvals)
-            for kvals in my_kvals:
-                key = kvals["entity"]
-                attribute = kvals["attribute"]
-                value = kvals["value"]
-                value_for = kvals["value_for"] if kvals["value_for"] else None
-                OVCCareEAV(
-                    entity=key,
-                    attribute=attribute,
-                    value=value,
-                    value_for=value_for,
-                    event=OVCCareEvents.objects.get(pk=new_pk)
-                ).save()
-
-            msg = 'Household Vulnerability Assessment save successful'
+            msg = 'HEI tracker saved successfully'
             messages.add_message(request, messages.INFO, msg)
             url = reverse('ovc_view', kwargs={'id': id})
-            # return HttpResponseRedirect(reverse(forms_registry))
             return HttpResponseRedirect(url)
     except Exception as e:
-        msg = 'Household Vulnerability Assessment save error: (%s)' % (str(e))
+        msg = 'HEI tracker save error: (%s)' % (str(e))
         messages.add_message(request, messages.ERROR, msg)
-        print('Error saving HHVA : %s' % str(e))
-        return HttpResponseRedirect(reverse(forms_registry))
+        print('Error saving HEI tracker : %s' % str(e))
+        url = reverse('ovc_view', kwargs={'id': id})
+        return HttpResponseRedirect(reverse(url))
 
     # get household members/ caretaker/ household_id
     household_id = None
@@ -10207,6 +10164,8 @@ def new_hei_tracker(request, id):
     init_data = RegPerson.objects.filter(pk=id)
     check_fields = ['sex_id', 'relationship_type_id']
     vals = get_dict(field_name=check_fields)
+    event = OVCCareEvents.objects.filter(person_id=id).values_list('event')
+    hei_tracker = OVCHEITracker.objects.filter(event_id__in=event).order_by('date_of_event')
     form = OVCHEITrackerForm(initial={'household_id': household_id})
     return render(request,
                   'forms/new_hei_tracker.html',
@@ -10218,5 +10177,170 @@ def new_hei_tracker(request, id):
                       'guardians': guardians,
                       'siblings': siblings,
                       'osiblings': osiblings,
-                      'oguardians': oguardians
+                      'oguardians': oguardians,
+                      'heidata': hei_tracker
                   })
+
+
+def edit_heitracker(request, id):
+    """Some default page for Server Errors."""
+
+    try:
+        heidata = OVCHEITracker.objects.get(hei_id=id)
+        if request.method == 'POST':
+            hei2 = request.POST.get('he_he2_hiv_status')
+            hei3 = request.POST.get('he_he2_hiv_positive')
+            hei4 = request.POST.get('he_he2_cg_facility')
+            hei5 = request.POST.get('he_he2_cg_ccc')
+            hei6 = request.POST.get('he_he2_cg_vl')
+            hei7 = request.POST.get('he_he2_cg_vldate')
+
+            # HEI follow up
+
+            # 1st contact
+            hei8 = request.POST.get('he_he4_hiv_test')
+            hei9 = request.POST.get('he_he4_test_results')
+            hei10 = request.POST.get('he_he4_vl_results')
+            hei11 = request.POST.get('he_he4_prophylaxis')
+            hei12 = request.POST.get('he_he4_mode')
+
+            # 6 weeks
+            hei13 = request.POST.get('he_he5_hiv_test')
+            hei14 = request.POST.get('he_he5_test_results')
+            hei15 = request.POST.get('he_he5_vl_results')
+            hei16 = request.POST.get('he_he5_prophylaxis')
+            hei17 = request.POST.get('he_he5_immunization')
+            hei18 = request.POST.get('he_he5_mode')
+
+            # 6 months
+            hei19 = request.POST.get('he_he6_hiv_test')
+            hei20 = request.POST.get('he_he6_test_results')
+            hei21 = request.POST.get('he_he6_vl_results')
+            hei22 = request.POST.get('he_he6_prophylaxis')
+            hei23 = request.POST.get('he_he6_immunization')
+            hei24 = request.POST.get('he_he6_mode')
+
+            # 12 months
+            hei25 = request.POST.get('he_he7_hiv_test')
+            hei26 = request.POST.get('he_he7_test_results')
+            hei27 = request.POST.get('he_he7_vl_results')
+            hei28 = request.POST.get('he_he7_prophylaxis')
+            hei29 = request.POST.get('he_he7_immunization')
+            hei30 = request.POST.get('he_he7_mode')
+
+            # 18 months
+            hei31 = request.POST.get('he_he8_hiv_test')
+            hei32 = request.POST.get('he_he8_test_results')
+            hei33 = request.POST.get('he_he8_vl_results')
+            hei34 = request.POST.get('he_he8_prophylaxis')
+            hei35 = request.POST.get('he_he8_immunization')
+            hei36 = request.POST.get('he_he8_mode')
+
+            # Others
+            hei37 = request.POST.get('he_he9_attrition')
+            hei38 = request.POST.get('he_he9_comments')
+
+            # household_id = request.POST.get('household_id')
+            # hse_uuid = uuid.UUID(household_id)
+            # house_holds = OVCHouseHold.objects.get(pk=hse_uuid)
+
+            # Save all details from the Bursary form
+            OVCHIVManagement.objects.filter(hei_id=id).update(
+                hivstatus=hei2,
+                hivpositive=hei3,
+                facility=hei4,
+                ccc=hei5,
+                vl=hei6,
+                vldate=hei7,
+                f1hivtest=hei8,
+                f1testresults=hei9,
+                f1vlresults=hei10,
+                f1prophylaxis=hei11,
+                f1mode=hei12,
+                f2hivtest=hei13,
+                f2testresults=hei14,
+                f2vlresults=hei15,
+                f2prophylaxis=hei16,
+                f2immunization=hei17,
+                f2mode=hei18,
+                f3hivtest=hei19,
+                f3testresults=hei20,
+                f3vlresults=hei21,
+                f3prophylaxis=hei22,
+                f3immunization=hei23,
+                f3mode=hei24,
+                f4hivtest=hei25,
+                f4testresults=hei26,
+                f4vlresults=hei27,
+                f4prophylaxis=hei28,
+                f4immunization=hei29,
+                f4mode=hei30,
+                f5hivtest=hei31,
+                f5testresults=hei32,
+                f5vlresults=hei33,
+                f5prophylaxis=hei34,
+                f5immunization=hei35,
+                f5mode=hei36,
+                reason=hei37,
+                comments=hei38
+            )
+
+            return redirect('new_fmppostevaluation', id=heidata.person_id)
+
+        # fmpdata = OVCFMPEvaluation.objects.get(evaluation_id=id)
+        hei = {
+                'he_he2_hiv_status': heidata.hivstatus,
+                'he_he2_hiv_positive': heidata.hivpositive,
+                'he_he2_cg_facility': heidata.facility,
+                'he_he2_cg_ccc': heidata.ccc,
+                'he_he2_cg_vl': heidata.vl,
+                'he_he2_cg_vldate': heidata.vldate,
+                'he_he4_hiv_test': heidata.f1hivtest,
+                'he_he4_test_results': heidata.f1testresults,
+                'he_he4_vl_results': heidata.f1vlresults,
+                'he_he4_prophylaxis': heidata.f1prophylaxis,
+                'he_he4_mode': heidata.f1mode,
+                'he_he5_hiv_test':  heidata.f2hivtest,
+                'he_he5_test_results': heidata.f2testresults,
+                'he_he5_vl_results': heidata.f2vlresults,
+                'he_he5_prophylaxis': heidata.f2prophylaxis,
+                'he_he5_immunization': heidata.f2immunization,
+                'he_he5_mode': heidata.f2mode,
+                'he_he6_hiv_test': heidata.f3hivtest,
+                'he_he6_test_results': heidata.f3testresults,
+                'he_he6_vl_results': heidata.f3vlresults,
+                'he_he6_prophylaxis': heidata.f3prophylaxis,
+                'he_he6_immunization': heidata.f3immunization,
+                'he_he6_mode': heidata.f3mode,
+                'he_he7_hiv_test': heidata.f4hivtest,
+                'he_he7_test_results': heidata.f4testresults,
+                'he_he7_vl_results': heidata.f4vlresults,
+                'he_he7_prophylaxis': heidata.f4prophylaxis,
+                'he_he7_immunization': heidata.f4immunization,
+                'he_he7_mode': heidata.f4mode,
+                'he_he8_hiv_test': heidata.f5hivtest,
+                'he_he8_test_results': heidata.f5testresults,
+                'he_he8_vl_results': heidata.f5vlresults,
+                'he_he8_prophylaxis':  heidata.f5prophylaxis,
+                'he_he8_immunization':  heidata.f5immunization,
+                'he_he8_mode': heidata.f5mode,
+                'he_he9_attrition': heidata.reason,
+                'he_he9_comments': heidata.comments,
+        }
+        form = OVCHEITrackerForm(data=hei)
+
+    except Exception as e:
+        print("error with OVC viewing - %s" % (str(e)))
+        # raise e
+        msg = "Error occured during ovc edit"
+        messages.error(request, msg)
+
+    return render(request, 'forms/edit_hei_tracker.html', {'form': form, 'status': 200})
+
+
+def delete_heitracker(request, id):
+    new_eval = OVCHEITracker.objects.get(hei_id=id)
+    new_eval.delete()
+    return redirect('new_hei_tracker', id=new_eval.person_id)
+
+
