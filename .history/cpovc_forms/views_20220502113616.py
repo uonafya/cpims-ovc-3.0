@@ -10232,11 +10232,12 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
 def ovc_preventive_pre_post_program_assessment_delete_view(request):
     import pdb
     
-    id = request.GET.get('evaluation_id', None)
-    # pdb.set_trace()
+    id = request.GET.get('evaluationid', None)
+    pdb.set_trace()
     delete_instance = OVCPrevSinovyoCaregiverEvaluation.objects.filter(evaluation_id=id)
     delete_instance.delete()
     data = {
-        'deleted': True
+        'deleted': True,
+        'cvbnm': False
     }
     return JsonResponse(data)

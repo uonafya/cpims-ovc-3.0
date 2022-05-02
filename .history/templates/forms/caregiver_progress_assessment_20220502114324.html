@@ -612,7 +612,7 @@
                                                     <td>{{ data.type_of_assessment }}</td>
                                                     <td><a href="{% url 'progress-assessment-edit' data.evaluation_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
                                                     {% comment %} <input id='data_id_jx' typ="text"  value=""  hidden/> {% endcomment %}
-                                                    <a><button onClick="deleteEvaluation('{{data.evaluation_id}}')" type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></td></a>
+                                                    <a><button " onClick="deleteEvaluation('{{data.evaluation_id}}')" type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></td></a>
                                                 </tr>
                                                 {%endfor%}
                                         </tbody>
@@ -638,7 +638,6 @@
 
 </div>
 <!-- end row -->
-
 
 <script type="text/javascript">
 // Delete Django Ajax Call

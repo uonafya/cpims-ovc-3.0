@@ -10237,6 +10237,6 @@ def ovc_preventive_pre_post_program_assessment_delete_view(request):
     delete_instance = OVCPrevSinovyoCaregiverEvaluation.objects.filter(evaluation_id=id)
     delete_instance.delete()
     data = {
-        'deleted': True
+        'deleted': True,
     }
     return JsonResponse(data)

@@ -605,14 +605,14 @@
                                         </thead>
                                             {%for data in objects%}
                                                  <tbody>
-                                                <tr id="evaluation-{{data.evaluation_id}}">
+                                                <tr id="evaluation-${data.evaluation_id}">
                                                     <td>{{ loop.counter }}</td>
                                                     <td>{{ data.date_of_assessment }}</td>
                                                     <td>{{ data.ref_caregiver.first_name }} {{data.ref_caregiver.surname}}</td>
                                                     <td>{{ data.type_of_assessment }}</td>
                                                     <td><a href="{% url 'progress-assessment-edit' data.evaluation_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
                                                     {% comment %} <input id='data_id_jx' typ="text"  value=""  hidden/> {% endcomment %}
-                                                    <a><button onClick="deleteEvaluation('{{data.evaluation_id}}')" type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></td></a>
+                                                    <a><button id="delete_token" onClick="deleteEvaluation('{{data.evaluation_id}}')" type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></td></a>
                                                 </tr>
                                                 {%endfor%}
                                         </tbody>
@@ -639,7 +639,6 @@
 </div>
 <!-- end row -->
 
-
 <script type="text/javascript">
 // Delete Django Ajax Call
 function deleteEvaluation(evaluation_id) {
@@ -649,17 +648,15 @@ function deleteEvaluation(evaluation_id) {
   var action = confirm("Are you sure you want to delete this user?");
   if (action != false) {
     $.ajax({
-        type: 'GET',
-        url: '{% url 'progress-assessment_delete' %}',
+        url: '{% url 'progress-assessment-delete' %}',
         
         data: {
             'evaluation_id': evaluation_id,
         },
         dataType: 'json',
-        
+        console.log({% url 'progress-assessment-delete' %})
         success: function (data) {
             if (data.deleted) {
-                console.log(data);
               $("#tableData #evaluation-" + evaluation_id).remove();
             }
         }
