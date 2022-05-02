@@ -68,151 +68,114 @@
 
     <!-- begin col-12 -->
     <div class="col-md-12">
-    <!-- begin panel -->
-    <div class="panel panel-inverse">
-        <div class="panel-heading">
-            <div class="panel-heading-btn">
-                <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i
-                        class="fa fa-minus"></i></a>
-                <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i
-                        class="fa fa-times"></i></a>
+        <!-- begin panel -->
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i
+                            class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i
+                            class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title"> REFERRAL FORM </h4>
             </div>
-            <h4 class="panel-title"> Bidirectional Referral Details </h4>
-        </div>
-        <div class="panel-body">
-            <table width="100%" class="table" >
-                <tbody>                                   
-                    <tr>                        
+            <div class="panel-body">
+                <table width="100%" class="table">
+                    <tbody>
+                    <tr>
                         <td class="field">Name of Person Being Referred: {{ all_domain_choices.refferal_domain }}</td>
                         <td class="field">Organization referred to: {{ all_domain_choices.refferal_service }}</td>
-                    </tr>                                                        
-                </tbody>
-            </table>
-            <form method="post" action=".">
-                {% csrf_token %}
-                <div id="">
+                    </tr>
+                    </tbody>
+                </table>
+                <form method="post" action=".">
+                    {% csrf_token %}
+                    <div id="">
 
-                    
-                 
-						<!-- begin wizard step-1 -->
-						<div class="wizard-step-1">
-                            <fieldset> 
+
+                        <!-- begin wizard step-1 -->
+                        <div class="wizard-step-1">
+                            <fieldset>
                                 <div id="error_assessment"></div>
-                            <div style="overflow-x: auto; min-height: 300px;">
-                                <!-- begin col-6 -->
-                                <table id="assessment_manager_table" class="table" style="min-height: 300px;">
-                                    <thead>
+                                <div style="overflow-x: auto; min-height: 300px;">
+                                    <!-- begin col-6 -->
+                                    <table id="assessment_manager_table" class="table" style="min-height: 300px;">
+                                        <thead>
                                         <tr id="id_inputHeaders1">
-                                        	<td width="5%"></td>
-                                        	<th width="15%"><h6><b>Domain<span class="asteriskField">*</h6></b></th>
-                                            <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6></th>
-                                            <th width="25%"><h6><b>Referral Date<span class="asteriskField">*</b></h6></th>
+                                            <td width="5%"></td>
+                                            <th width="15%"><h6><b>Domain<span class="asteriskField">*</h6></b></th>
+                                            <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6>
+                                            </th>
+                                            <th width="25%"><h6><b>Referral Date<span class="asteriskField">*</b></h6>
+                                            </th>
                                             <th width="5%"><h6><b>Actions</b></h6></th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
+                                        </thead>
+                                        <tbody>
                                         <tr id="id_inputElements1">
-                                        	<td></td>
-                                        	<td width="15%">
-                                        		{{ form.BIREFERRAL_DOMAIN }}
-                                        		<div id="BIREFERRAL_DOMAIN" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                                            <td></td>
+                                            <td width="15%">
+                                                {{ form.BIREFERRAL_DOMAIN }}
+                                                <div id="BIREFERRAL_DOMAIN" style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p></span>
+                                                    </small><span>
                                                 </div>
-                                        	</td>
+                                            </td>
                                             <td width="20%">
-                                            	{{ form.BIREFERRAL_SERVICES }}
-                                            	<div id="BIREFERRAL_SERVICES" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                                                {{ form.BIREFERRAL_SERVICES }}
+                                                <div id="BIREFERRAL_SERVICES" style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p></span>
+                                                    </small><span>
                                                 </div>
                                             </td>
                                             <td width="15%">
-                                            	{{ form.REFERRAL_DATE }}
-                                            	<h6><span id="REFERRAL_DATE"></span></h6>
-                                            	<!-- <input id='holmis_assessment_coreservice_status' type='hidden'> -->
-                                            	<div id="olmis_assessment_coreservice_status_errormsg" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                                                {{ form.REFERRAL_DATE }}
+                                                <h6><span id="REFERRAL_DATE"></span></h6>
+                                                <!-- <input id='holmis_assessment_coreservice_status' type='hidden'> -->
+                                                <div id="olmis_assessment_coreservice_status_errormsg"
+                                                     style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p></span>
+                                                    </small><span>
                                                 </div>
-                                            </td>                                         
-                                            <td width="5%">
-                                            <h6><b>
-	                                            <button type="button" class="btn btn-sm btn-inverse m-r-5" onClick="AddRow(1)">
-	                                                <i class="fa fa-plus"></i>  Add
-	                                            </button>
-                                            	</b></h6>
                                             </td>
-                                        </tr>		                                        
-                                    </tbody>
-                                    {% comment %} {{ form.olmis_assessment_provided_list }} {% endcomment %}
-                                </table>
-                            </div>
-							    <!-- end col-6 -->                                
-							</fieldset>
-
-                            <div class="panel-body panel-form">
-                                <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4">Date Assessment Recorded<span class="asteriskField">*</label>
-                                    <div class="col-md-2 col-sm-2">
-                                        {{ form.REFERRAL_DATE }}
-                                        <div id="date_errormsg0" style="display:none;">
-                                            <small><p class="dialog_paragraph">This value is required</p></small>
-                                        </div>
-                                    </div>
+                                            <td width="5%">
+                                                <h6><b>
+                                                    <button type="button" class="btn btn-sm btn-inverse m-r-5"
+                                                            onClick="AddRow()">
+                                                        <i class="fa fa-plus"></i> Add
+                                                    </button>
+                                                </b></h6>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <label class="control-label">Date Assessment
+                                                        Recorded<span
+                                                                class="asteriskField">*</label>
+                                                    <div class="">
+                                                        {{ form.REFERRAL_END_DATE }}
+                                                        <div id="date_errormsg0" style="display:none;">
+                                                            <small><p class="dialog_paragraph">This value is
+                                                                required</p></small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                            </div>
+                                <!-- end col-6 -->
+                            </fieldset>
 
-                            <div class="panel-body panel-form">
-                                <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4"></label>
-                                    <div class="col-md-6 col-sm-6">
-                                        <button id="mysubmit-f1a-0" class="btn btn-primary" type="button" onClick="saveForm1A(1)">Submit Assessment</button>
-                                        <a >Cancel</a>
-                                    </div>
-                                </div>
-                            </div>
-						</div>
-						<!-- end wizard step-1 -->                      
+                        </div>
 
-{% comment %} 
 
-                    <!-- begin wizard step-1 -->
-                    <div class="wizard-step-1">
-                        <fieldset>
-                            
-                            <!-- begin col-6 -->
-                            <table id="assessment_manager_table" class="table">
-                                <thead>
-                                    <tr id="id_inputHeaders1">
-                                      
-                                        <th width="20%"><h6><b>Domain<span class="asteriskField">*</b></h6></th>
-                                        <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6></th>                                    
-                                        <th width="20%"><h6><b>Referral Date<span class="asteriskField">*</b></h6></th>
-                                        <th width="20%"><h6><b>Actions</b></h6></th>
-                                    </tr>                                                                       
-                                    <tr id="id_inputElements1">
-                                        <td width="20%">
-                                            {{form.BIREFERRAL_DOMAIN}}
-                                        </td>
-                                        <td width="20%">
-                                            {{form.BIREFERRAL_SERVICES}} 
-                                        </td>                                       
-                                        <td width="20%">
-                                            {{form.REFERRAL_DATE}}
-                                        </td> 
-                                        <td width="20%">                                          
-                                        </td>                                       
-                                    </tr>                             
-                                <thead>                                                                                                                  
-                            </table>
-                            
-                            <!-- end col-6 -->
-                        </fieldset>
                     </div>
-                    <!-- end wizard step-1 --> {% endcomment %}
-
-
-
-                </div>
-                <!-- end row -->
+                    <!-- end wizard step-1 -->
+                    <!-- end row -->
 
                     <!-- end col-12 -->
                     <div class="panel-body panel-form">
@@ -227,25 +190,23 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>   <!-- end row -->
+                </form>   <!-- end row -->
+            </div>
         </div>
-    </div>
 
-    <!-- Bidirectional events -->
-    <!-- End Bidirectional Events -->
-         <div class="panel-heading">
-<!-- begin row -->
+        <!-- Bidirectional events -->
+    <!-- begin row -->
 <div class="row">
     <!-- begin col-12 -->
     <div class="col-md-12">
         <!-- begin panel -->
         <div class="panel panel-info">
-               <div class="panel-heading-btn">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                </div>                          
-                <h4 class="panel-title"><b>Bidirectional Referral List  </b></h4>                    
+                </div>
+                <h4 class="panel-title"><b>REFERRAL FORM Events List </b></h4>
             </div>
 
             <div class="panel-body">
@@ -253,19 +214,39 @@
                     <div id="case-events"  class="table-responsive">
                         <table id="f1a_events_data_table" class="table table-striped table-bordered">
                             <thead>
-                                <tr> 
-                                    <th>Domain Type</th>                                 
-                                    <th>Core Services</th>                              
+                                <tr>
+                                    <th>Domain Type</th>
+                                    <th>Core Services</th>
+                                    <th>Referral Date</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
+                            {% if obj_all %}
+                                {% for one_object in obj_all %}
+                                    <tr>
+                                        <td>{{ one_object.refferal_domain }}</td>
+                                        <td>{{ one_object.refferal_service }}</td>
+                                        <td>{{ one_object.refferal_date }}</td>
+                                        <td><a href="{% url 'delete_bireferral' one_object.refferal_id %}">
+                                            <button type="button" class="btn btn-sm btn-danger m-r-5"><i
+                                                    class="fa fa-trash"></i>&nbsp;Delete
+                                            </button>
+                                        </a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <div>
+                                    <h3>No data available</h3>
+                                </div>
+                            {% endif %}
                             </tbody>
                         </table>
                     </div>
-                    <br><br>                           
+                    <br><br>
                 </div>
             </div>
+
         </div>
         <!-- end panel -->
     </div>
@@ -301,9 +282,9 @@
 
                     switch (bireferral_domain) {
                         case '1':
-    
+
                             $("select[name='BIREFERRAL_SERVICES']").append(
-                                        ` <option>Health insurance cover</option>
+                                ` <option>Health insurance cover</option>
                                           <option>secticide Treated Mosquito net (ITN)</option>
                                           <option>Enrollment to care and treatment</option>
                                           <option>Enhance Adherence Counselling</option>
@@ -320,19 +301,19 @@
                                           <option>HIV-related testing HTS</option>
                                           <option>HIV-related testing EID</option>
                                          `
-                                    );
+                            );
                             break;
                         case '2':
                             $("select[name='BIREFERRAL_SERVICES']")
                                 .append(
-                                ` <option>cash transfer OVC</option>
-                                  <option>cash transfer Elderly</option>
-                                  <option>cash transfer Disability</option>
-                                  <option>Safe shelter repair or construction</option>
-                                  <option>Routine/ emergency healthcare</option>
-                                  <option>Perinatal care including PMTCT</option>    
+                                    ` <option value="cash transfer OVC">cash transfer OVC</option>
+                                  <option value="cash transfer Elderly">cash transfer Elderly</option>
+                                  <option value="cash transfer Disability">cash transfer Disability</option>
+                                  <option value="Safe shelter repair or construction">Safe shelter repair or construction</option>
+                                  <option value="Routine/ emergency healthcare">Routine/ emergency healthcare</option>
+                                  <option value="Perinatal care including PMTCT">Perinatal care including PMTCT</option>
                                  `
-                            );
+                                );
                             break;
                         case '3':
                             $("select[name='BIREFERRAL_SERVICES']").append(
@@ -349,13 +330,13 @@
 
                         default:
                             $("select[name='BIREFERRAL_SERVICES']").append(
-{#                                {{ form.BIREFERRAL_SERVICES }}#}
+                                {#                                {{ form.BIREFERRAL_SERVICES }}#}
                                 '<option>No value</option>'
                             )
                     }
 
                 }
-            ) 
+            )
 
             //multi selects
             $('#olmis_assessment_domain, #olmis_assessment_coreservice, #olmis_assessment_coreservice_status, #olmis_domain, #olmis_service_provider, #olmis_service, #olmis_priority_service, #olmis_priority_domain, #olmis_priority_health, #olmis_priority_education, #olmis_priority_shelter, #olmis_priority_protection, #olmis_priority_pss, #olmis_priority_hes, #olmis_critical_event').multiselect({
@@ -382,8 +363,8 @@
     </script>
 
     <script>
-         $("#refferalDate").datepicker({format: 'yyyy-mm-dd'})
-         $("#refferalEndDate").datepicker({format: 'yyyy-mm-dd'})
+        $("#refferalDate").datepicker({format: 'yyyy-mm-dd'})
+        $("#refferalEndDate").datepicker({format: 'yyyy-mm-dd'})
     </script>
 
     <script>
@@ -496,111 +477,26 @@
             });
         }
 
-        function AddRow(x) {
-            if (x == 1) {
-                var OlmisAssessmentData = new Array();
-                var olmis_assessment_domain = $("#olmis_assessment_domain").val();
-                var olmis_assessment_coreservice = $("#olmis_assessment_coreservice").val();
-                var olmis_assessment_coreservice_status = $("#olmis_assessment_coreservice_status").val();
-                var csrftoken = $.cookie('csrftoken');
-                var values = {
-                    'csrfmiddlewaretoken': csrftoken
-                };
+        function AddRow() {
 
-                // Validation and Ajax
-                if (olmis_assessment_domain) {
-                    if (olmis_assessment_coreservice) {
-                        if (olmis_assessment_coreservice_status) {
-                            // Find a <table> element with id="myTable":
-                            var table = $('#assessment_manager_table')[0];
+            var BireferralData = new Array();
+            var BIREFERRAL_DOMAIN = $("#BIREFERRAL_DOMAIN").val();
+            var BIREFERRAL_SERVICES = $("select[name=BIREFERRAL_SERVICES]:selected").val();
+            var REFERRAL_DATE = $("#refferalDate").val();
+            var csrftoken = $.cookie('csrftoken');
+            var values = {
+                'csrfmiddlewaretoken': csrftoken
+            };
 
-                            // Create an empty <tr> element with id and add it to the 1st position of the table:
-                            var rows_length = table.rows.length;
-                            var row = table.insertRow(rows_length);
-                            var index = rows_length - 2;
-                            row_id = 'rowid_' + index;
-                            row.id = row_id;
-                            var btnRemoveSvcId = 'btnRemoveSvc' + index;
+            console.clear()
+            console.log([{BireferralData}, {BIREFERRAL_DOMAIN}, {BIREFERRAL_SERVICES}, {REFERRAL_DATE}, {csrftoken}])
 
-                            // Insert new cells (<td> elements) of the "new" <tr> element:
-                            var cell0 = row.insertCell(0);
-                            var cell1 = row.insertCell(1);
-                            var cell2 = row.insertCell(2);
-                            var cell3 = row.insertCell(3);
-                            var cell4 = row.insertCell(4);
-
-                            var holmis_assessment_domain = "<input id='holmis_assessment_domain' type='hidden' value='" + olmis_assessment_domain + "'>"
-                            var holmis_assessment_coreservice = "<input id='holmis_assessment_coreservice' type='hidden' value='" + olmis_assessment_coreservice + "'>"
-                            var holmis_assessment_coreservice_status = "<input id='holmis_assessment_coreservice_status' type='hidden' value='" + olmis_assessment_coreservice_status + "'>"
-                            var holmis_assessment_status = "<input id='holmis_assessment_status' type='hidden' value='new'>"
-
-                            cell0.innerHTML = '<h6 class="td_style">#</h6>';
-                            cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_domain") + holmis_assessment_domain + '</h6>';
-                            cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice") + holmis_assessment_coreservice + '</h6>';
-                            cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice_status") + holmis_assessment_coreservice_status + '</h6>';
-                            cell4.innerHTML = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-sm btn-link m-r-5 href='#'>Remove</a>" + '</h6>';
-
-                            // AddClick Event To Remove Button
-                            $("#" + btnRemoveSvcId + "").click(function (e) {
-                                RemoveRow(1, '', row_id);
-                            });
-
-                            // Reset Input Elements/Error Divs
-                            $("#olmis_assessment_domain").multiselect("clearSelection");
-                            $("#olmis_assessment_domain").multiselect("refresh");
-                            $("#olmis_assessment_coreservice").multiselect("clearSelection");
-                            $("#olmis_assessment_coreservice").multiselect("refresh");
-                            $("#olmis_assessment_coreservice_status").multiselect("clearSelection");
-                            $("#olmis_assessment_coreservice_status").multiselect("refresh");
-                            $('#sel_olmis_assessment_coreservice_status').html('');
-
-                            $('#assessment_manager_table tr').each(function (row, tr) {
-                                var olmis_assessment_domain = $(tr).find('input[id="holmis_assessment_domain"]').val();
-                                var olmis_assessment_coreservice = $(tr).find('input[id="holmis_assessment_coreservice"]').val();
-                                var olmis_assessment_coreservice_status = $(tr).find('input[id="holmis_assessment_coreservice_status"]').val();
-
-                                OlmisAssessmentData[row] = {
-                                    "olmis_assessment_domain": olmis_assessment_domain,
-                                    "olmis_assessment_coreservice": olmis_assessment_coreservice,
-                                    "olmis_assessment_coreservice_status": olmis_assessment_coreservice_status
-                                }
-
-                            });
-
-                            OlmisAssessmentData.shift(); //remove first row(headers stuff)
-                            OlmisAssessmentData.shift(); //remove second row(controls stuff)
-                            OlmisAssessmentData = JSON.stringify(OlmisAssessmentData);
-
-                            // Set olmis_assessment_provided_list
-                            $('#olmis_assessment_provided_list').val(OlmisAssessmentData);
-
-                            console.log(OlmisAssessmentData)
-                        } else {
-                            $("#olmis_assessment_coreservice_status_errormsg").css({'display': "block"});
-                        }
-                    } else {
-                        $("#olmis_assessment_coreservice_errormsg").css({'display': "block"});
-                    }
-                } else {
-                    $("#olmis_assessment_domain_errormsg").css({'display': "block"});
-                }
-            }
-            if (x == 2) {
-                var OlmisServiceData = new Array();
-                var olmis_domain = $("#olmis_domain").val();
-                var olmis_service = $("#olmis_service").val();
-                var olmis_service_date = $("#olmis_service_date").val();
-                // var olmis_service_provider = $("#olmis_service_provider").val();
-                // var olmis_place_of_service = $("#olmis_place_of_service").val();
-                var csrftoken = $.cookie('csrftoken');
-                var values = {
-                    'csrfmiddlewaretoken': csrftoken
-                };
-
-                // Validation and Ajax
-                if (olmis_domain) {
-                    if (olmis_service) {
-                        var table = $('#services_manager_table')[0];
+            // Validation and Ajax
+           /* if (BIREFERRAL_DOMAIN) {
+                if (BIREFERRAL_SERVICES) {
+                    if (REFERR        alert("called Addrow")AL_DATE) {
+                        // Find a <table> element with id="myTable":
+                        var table = $('#assessment_manager_table')[0];
 
                         // Create an empty <tr> element with id and add it to the 1st position of the table:
                         var rows_length = table.rows.length;
@@ -617,140 +513,63 @@
                         var cell3 = row.insertCell(3);
                         var cell4 = row.insertCell(4);
 
-                        var holmis_domain = "<input id='holmis_domain' type='hidden' value='" + olmis_domain + "'>"
-                        var holmis_service = "<input id='holmis_service' type='hidden' value='" + olmis_service + "'>"
-                        var holmis_service_status = "<input id='holmis_service_status' type='hidden' value='new'>"
-                        var olmis_service_date = $('#olmis_service_date').val();
-                        if (!olmis_service_date) {
-                            olmis_service_date = 'None';
-                        }
+                        var BIREFERRAL_DOMAIN = "<input id='hBIREFERRAL_DOMAIN' type='hidden' value='" + BIREFERRAL_DOMAIN + "'>"
+                        var BIREFERRAL_SERVICES = "<input id='hBIREFERRAL_SERVICES' type='hidden' value='" + BIREFERRAL_SERVICES + "'>"
+                        var REFERRAL_DATE = "<input id='hREFERRAL_DATE' type='hidden' value='" + REFERRAL_DATE + "'>"
+                        var holmis_assessment_status = "<input id='holmis_assessment_status' type='hidden' value='new'>"
 
                         cell0.innerHTML = '<h6 class="td_style">#</h6>';
-                        cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_domain") + holmis_domain + '</h6>';
-                        cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_service") + holmis_service + '</h6>';
-                        cell3.innerHTML = '<h6 class="td_style">' + olmis_service_date + '</h6>';
-                        cell4.innerHTML = '<h6 class="dialog_paragraph">' + holmis_service_status + "<a id=" + btnRemoveSvcId + " class='btn btn-sm btn-link m-r-5 href='#'>Remove</a>" + '</h6>';
+                        cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "BIREFERRAL_DOMAIN") + hBIREFERRAL_DOMAIN + '</h6>';
+                        cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "BIREFERRAL_SERVICES") + hBIREFERRAL_SERVICES + '</h6>';
+                        cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "REFERRAL_DATE") + hREFERRAL_DATE + '</h6>';
+                        cell4.innerHTML = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-sm btn-link m-r-5 href='#'>Remove</a>" + '</h6>';
 
                         // AddClick Event To Remove Button
                         $("#" + btnRemoveSvcId + "").click(function (e) {
-                            RemoveRow(2, '', row_id);
+                            RemoveRow(1, '', row_id);
                         });
 
                         // Reset Input Elements/Error Divs
-                        $("#olmis_domain").multiselect("clearSelection");
-                        $("#olmis_domain").multiselect("refresh");
-                        $("#olmis_service").multiselect("clearSelection");
-                        $("#olmis_service").multiselect("refresh");
-                        $('#olmis_service_date').val('');
+                        $("#BIREFERRAL_DOMAIN").multiselect("clearSelection");
+                        $("#BIREFERRAL_DOMAIN").multiselect("refresh");
+                        $("#BIREFERRAL_SERVICES").multiselect("clearSelection");
+                        $("#BIREFERRAL_SERVICES").multiselect("refresh");
+                        $("#REFERRAL_DATE").multiselect("clearSelection");
+                        $("#REFERRAL_DATE").multiselect("refresh");
+                        $('#REFERRAL_DATE').html('');
 
-                        $('#services_manager_table tr').each(function (row, tr) {
-                            var olmis_domain = $(tr).find('input[id="holmis_domain"]').val();
-                            var olmis_service = $(tr).find('input[id="holmis_service"]').val();
-                            var olmis_service_date = $(tr).find('td:eq(3)').text();
-                            var olmis_service_status = $(tr).find('input[id="holmis_service_status"]').val();
+                        $('#assessment_manager_table tr').each(function (row, tr) {
+                            var BIREFERRAL_DOMAIN = $(tr).find('input[id="holmis_assessment_domain"]').val();
+                            var BIREFERRAL_SERVICES = $(tr).find('input[id="holmis_assessment_coreservice"]').val();
+                            var REFERRAL_DATE = $(tr).find('input[id="holmis_assessment_coreservice_status"]').val();
 
-                            OlmisServiceData[row] = {
-                                "olmis_domain": olmis_domain,
-                                "olmis_service": olmis_service,
-                                "olmis_service_date": olmis_service_date,
-                                "olmis_service_status": olmis_service_status
+                            BireferralData[row] = {
+                                "BIREFERRAL_DOMAIN": BIREFERRAL_DOMAIN,
+                                "BIREFERRAL_SERVICES": BIREFERRAL_SERVICES,
+                                "REFERRAL_DATE": REFERRAL_DATE
                             }
+
                         });
 
-                        OlmisServiceData.shift(); //remove first row(headers stuff)
-                        OlmisServiceData.shift(); //remove second row(controls stuff)
-                        OlmisServiceData = JSON.stringify(OlmisServiceData);
+                        BireferralData.shift(); //remove first row(headers stuff)
+                        BireferralData.shift(); //remove second row(controls stuff)
+                        BireferralData = JSON.stringify(OlmisAssessmentData);
 
-                        // Set service_provided_list
-                        $('#olmis_service_provided_list').val(OlmisServiceData);
+                        // Set bireferral_provided_list
+                        $('#bireferral_provided_list').val(BireferralDataata);
 
-                        console.log(OlmisServiceData)
+                        console.log(BireferralData)
                     } else {
-                        $("#olmis_service_errormsg").css({'display': "block"});
+                        $("#olmis_assessment_coreservice_status_errormsg").css({'display': "block"});
                     }
                 } else {
-                    $("#olmis_domain_errormsg").css({'display': "block"});
+                    $("#olmis_assessment_coreservice_errormsg").css({'display': "block"});
                 }
-            }
-            if (x == 3) {
-                var OlmisPriorityServiceData = new Array();
-                var olmis_priority_domain = $("#olmis_priority_domain").val();
-                var olmis_priority_service = $("#olmis_priority_service").val();
-                var csrftoken = $.cookie('csrftoken');
-                var values = {
-                    'csrfmiddlewaretoken': csrftoken
-                };
-
-                // Validation and Ajax
-                if (olmis_priority_domain) {
-                    if (olmis_priority_service) {
-                        // Find a <table> element with id="myTable":
-                        var table = $('#priority_manager_table')[0];
-
-                        // Create an empty <tr> element with id and add it to the 1st position of the table:
-                        var rows_length = table.rows.length;
-                        var row = table.insertRow(rows_length);
-                        // var index = rows_length - 2;
-                        // row_id = 'rowid_' + index;
-                        row_id = 'rowid_' + (rows_length - 2);
-                        row.id = row_id;
-                        var btnRemoveSvcId = 'btnRemoveSvc' + index;
-
-                        // Insert new cells (<td> elements) of the "new" <tr> element:
-                        var cell0 = row.insertCell(0);
-                        var cell1 = row.insertCell(1);
-                        var cell2 = row.insertCell(2);
-                        var cell3 = row.insertCell(3);
-
-                        var holmis_priority_domain = "<input id='holmis_priority_domain' type='hidden' value='" + olmis_priority_domain + "'>"
-                        var holmis_priority_service = "<input id='holmis_priority_service' type='hidden' value='" + olmis_priority_service + "'>"
-                        var holmis_priority_service_status = "<input id='holmis_priority_service_status' type='hidden' value='new'>"
-
-                        cell0.innerHTML = '<h6 class="td_style"></h6>';
-                        cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_priority_domain") + holmis_priority_domain + '</h6>';
-                        cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_priority_service") + holmis_priority_service + '</h6>';
-                        cell3.innerHTML = '<h6 class="dialog_paragraph">' + holmis_priority_service_status + "<a id=" + btnRemoveSvcId + " class='btn btn-sm btn-link m-r-5 href='#'>Remove</a>" + '</h6>';
-
-                        // AddClick Event To Remove Button
-                        $("#" + btnRemoveSvcId + "").click(function (e) {
-                            RemoveRow(3, '', row_id);
-                        });
+            } else {
+                $("#olmis_assessment_domain_errormsg").css({'display': "block"});
+            }*/
 
 
-                        //Show ClearGridOption
-                        // $("#btnClearGrid").css({'display': 'block'})
-
-                        // Reset Input Elements/Error Divs
-                        $("#olmis_priority_domain").multiselect("clearSelection");
-                        $("#olmis_priority_domain").multiselect("refresh");
-                        $("#olmis_priority_service").multiselect("clearSelection");
-                        $("#olmis_priority_service").multiselect("refresh");
-                        $("#sel_olmis_priority_service").html('');
-                        $(".alert").hide();
-
-                        $('#priority_manager_table tr').each(function (row, tr) {
-                            var olmis_priority_domain = $(tr).find('input[id="holmis_priority_domain"]').val();
-                            var olmis_priority_service = $(tr).find('input[id="holmis_priority_service"]').val();
-
-                            OlmisPriorityServiceData[row] = {
-                                "olmis_priority_domain": olmis_priority_domain,
-                                "olmis_priority_service": olmis_priority_service
-                            }
-                        });
-
-                        OlmisPriorityServiceData.shift(); //remove first row(headers stuff)
-                        OlmisPriorityServiceData.shift(); //remove second row(controls stuff)
-                        OlmisPriorityServiceData = JSON.stringify(OlmisPriorityServiceData);
-
-                        // Set olmis_priority_service_provided_list
-                        $('#olmis_priority_service_provided_list').val(OlmisPriorityServiceData);
-                    } else {
-                        $("#olmis_priority_service_errormsg").css({'display': "block"});
-                    }
-                } else {
-                    $("#olmis_priority_domain_errormsg").css({'display': "block"});
-                }
-            }
         }
 
         function RemoveRow(index, uuid, tr_id) {

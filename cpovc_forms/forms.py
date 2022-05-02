@@ -8150,7 +8150,11 @@ class DREAMS_FORM(forms.Form):
 # Bidirectional referral forms
 class BIDIRECTIONALREFERRALFORM(forms.Form):
 
-    DOMAIN_CHOICES=((0,'please select'),
+    bireferral_provided_list = forms.CharField(widget=forms.TextInput(
+        attrs={'type': 'hidden',
+               'id': 'bireferral_provided_list'}))
+
+    DOMAIN_CHOICES=((0,'Please select'),
                     (1,'Health Domain'),
                     (2, 'Stable Domain'),
                     (3, 'Safe Domain'))
@@ -8237,7 +8241,7 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
                                               )
 
     # # Feedback form entry
-    # FEEDBACK_BIDIRECTIONALFORM = forms.CharField(widget =forms.Textarea(
+    # FEEDBACK_BIDIRECTIONALFORM = forms.CharField(widget =forms.Tolmis_assessment_domain_listextarea(
     #     attrs= {
     #         'placeholder': _('Your feedback'),
     #         'class':'form-control',

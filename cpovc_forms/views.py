@@ -9999,15 +9999,18 @@ def new_dreamsform(request, id):
 
 
 # get the form for Bidirectional Referral Form
-def bidirectionalreferralform(request, id):  
+def bidirectionalreferralform(request, id):
+    import pdb
     if request.method == 'POST':
+        #pdb.set_trace()
         data = request.POST
-        # form = BIDIRECTIONALREFERRALFORM(request.POST, initial={'person': id})
+        #form = BIDIRECTIONALREFERRALFORM(request.POST)
         child = RegPerson.objects.get(id=id)
         household_id = OVCHHMembers.objects.get(person=child).house_hold_id
         household_head = OVCHouseHold.objects.get(id=household_id)
-
-        caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
+        # Care giver
+        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+        caregiver_id = care_giver.id
         caregiver_name = RegPerson.objects.get(id=caregiver_id)
         referral_date = convert_date(data.get('REFERRAL_DATE'))
         referral_end_date = convert_date(data.get('REFERRAL_END_DATE'))
@@ -10015,41 +10018,33 @@ def bidirectionalreferralform(request, id):
         referral_service = data.get('BIREFERRAL_SERVICES')
         print(f'Hello {referral_date} {referral_end_date}')
         print("rfDate: {}, rfendDate {}, feedback {}".format(data, referral_date, referral_end_date))
-        try:
-            OVCBiReferral.objects.create(
+
+        OVCBiReferral.objects.create(
             person=child,
             ref_caregiver=caregiver_name,
             refferal_date=referral_date,
             refferal_enddate=referral_end_date,
             refferal_domain=referral_domain,
             refferal_service=referral_service,
-            )
-        except Exception as e:
-            print(e)
+        ).save()
         url = reverse('bidirectionalreferralform', kwargs={'id': id})
         return HttpResponseRedirect(url)
-    
     import pdb
     obj_all = OVCBiReferral.objects.all()
-
-    # pdb.set_trace()
-
-
-
-    init_data = RegPerson.objects.filter(pk=id)
+    #init_data = RegPerson.objects.filter(pk=id)
     check_fields = ['sex_id']
     vals = get_dict(field_name=check_fields)
-    form = BIDIRECTIONALREFERRALFORM(request.POST, initial={'person': id})
-    creg = []
-    caregiver = []
+    form = BIDIRECTIONALREFERRALFORM(request.POST)
     context = {
         'form': form,
-        'init_data': init_data,
         'vals': vals,
-        'creg':creg,
-        'caregiver': caregiver,
         'obj_all': obj_all
     }
     return render(request,
                   template_name='forms/bidirectionalreferralform.html',
                   context=context)
+
+def delete_bireferral(request, id):
+    new_eval = OVCBiReferral.objects.get(refferal_id=id)
+    new_eval.delete()
+    return redirect('bidirectionalreferralform', id=new_eval.person_id)
