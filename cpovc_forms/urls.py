@@ -181,8 +181,8 @@ urlpatterns = [
        # New Graduation Monitoring Tool
     path('grad_monitor/new/<int:id>/', views.grad_monitor_tool, name='grad_monitor_tool'),
 
-    path('edit_grad_monitor/new/(?P<id>\d+)/', views.edit_grad_monitor, name='edit_grad_monitor'),
+    path('edit_grad_monitor/new/<uuid:id>/', views.edit_grad_monitor, name='edit_grad_monitor'),
     
-    path('delete_bench/(?P<id>\d+)/', views.delete_benchmark, name='delete_benchmark')
+    path('delete_bench/<uuid:id>/', views.delete_benchmark, name='delete_benchmark')
 
 ]

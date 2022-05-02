@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'cpims.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'cpims',
+        'NAME': 'cpims_test',
         'USER': 'cpmis_user',
         'PASSWORD': '123456',
         'HOST': 'localhost',

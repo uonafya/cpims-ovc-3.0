@@ -1,4 +1,3 @@
-from multiprocessing import context
 import re
 from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse, resolve
@@ -10172,11 +10171,12 @@ def grad_monitor_tool(request, id):
         data = request.POST
         print(data)
 
-        child = RegPerson.objects.get(id=id)
+        child = RegPerson.objects.get(id=id)      
         
         house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
         caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
         caregiver = RegPerson.objects.get(id=caregiver_id)
+        # child= OVCRegistration.objects.get(person=child)
  
         event_date = convert_date(data.get('gm1d'))
         month = event_date.month
@@ -10208,8 +10208,9 @@ def grad_monitor_tool(request, id):
         }
         try:
             OVCBenchmarkMonitoring.objects.create(
-                # household=house_hold,
+                household=house_hold,
                 # person=child,
+                caregiver=caregiver,
                 benchmark1=answer_value[data.get('cm2q')],
                 benchmark2=answer_value[data.get('cm3q')],
                 benchmark3=answer_value[data.get('cm4q')],
@@ -10248,9 +10249,9 @@ def grad_monitor_tool(request, id):
         event = OVCCareEvents.objects.filter(person_id=ovc_id).values_list('event')
         
         try:
-            # print('Helloo')
+            print('Helloo')
             # print(event)
-            benchmark_data = OVCBenchmarkMonitoring.objects.all()   #filter(event=event).order_by('event_date'))
+            benchmark_data = OVCBenchmarkMonitoring.objects.filter(is_void=False)   #filter(event=event).order_by('event_date'))
             # print(i for i in benchmark_data)
             print(type(benchmark_data))
         except Exception as e:
@@ -10267,12 +10268,13 @@ def grad_monitor_tool(request, id):
                 context)
 
 def delete_benchmark(request, id):
-    if request.method=='POST':
-        value = OVCBenchmarkMonitoring.objects.get(obm_id=id)    
-        value.delete()
+    value = OVCBenchmarkMonitoring.objects.filter(obm_id=id)
+    # person_id = value.caregiver_id
+    value.update(is_void=True)
+    # return HttpResponse(f'{value} Deleted Successfully')
+    url = reverse('ovc_home')
+    return HttpResponseRedirect(url)
 
-    return HttpResponseRedirect('forms/new_grad_monitor_tool.html')
-    # return render(request, 'forms/new_grad_monitor_tool.html')
 
 def edit_grad_monitor(request, id):
    
@@ -10284,6 +10286,7 @@ def edit_grad_monitor(request, id):
         }
         event_date = convert_date(data.get('gm1d'))
         time_updated = timezone.now()
+        household=OVCBenchmarkMonitoring.objects.filter(obm_id=id)
         
         try:
             OVCBenchmarkMonitoring.objects.filter(obm_id=id).update(
@@ -10303,7 +10306,8 @@ def edit_grad_monitor(request, id):
                 )
             msg = 'Graduation Monitoring edit saved successful'
             messages.add_message(request, messages.INFO, msg)
-            url = reverse('forms/edit_grad_monitor')
+            # url= reverse('forms/new_grad_monitor_tool.html', kwargs={'id':id})
+            url = reverse('ovc_home')
             return HttpResponseRedirect(url)
        
         except Exception as e:
@@ -10351,11 +10355,6 @@ def edit_grad_monitor(request, id):
     except Exception as e:
         print(f'The error is: {e}')
             # return HttpResponseRedirect('/forms/new_grad_monitor_tool.html')?
-
-        return render(request, 'forms/edit_grad_monitor_tool.html', {'form':form,
-                'status': 200,
-                # 'care_giver': care_giver,
-                # 'creg':creg,
-                # 'caregiver':caregiver
-                    })
+        
+        return render(request, 'forms/edit_grad_monitor_tool.html', {'form':form,'status': 200})
 

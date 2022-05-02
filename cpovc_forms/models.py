@@ -4,7 +4,7 @@ import datetime
 import uuid
 from cpovc_registry.models import (RegPerson, RegOrgUnit, AppUser)
 from cpovc_main.models import (SchoolList, SetupLocation)
-from cpovc_ovc.models import (OVCHouseHold, OVCFacility)
+from cpovc_ovc.models import (OVCHouseHold, OVCFacility, OVCRegistration)
 
 # Create your models here.
 class OVCBursary(models.Model):
@@ -1387,7 +1387,7 @@ class OVCCareQuestions(models.Model):
     question_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     code = models.CharField(max_length=5)
     question = models.CharField(max_length=55)
-    domain = models.CharField(max_length=10)
+    domain = models.CharField(max_length=100)
     question_text = models.CharField(max_length=255)
     question_type = models.CharField(max_length=20, null=False)
     form = models.ForeignKey(OVCCareForms, on_delete=models.CASCADE)
@@ -1405,7 +1405,7 @@ class OVCCareCpara_upgrade(models.Model):
     cpara_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver_upgrade')
-    question_code = models.CharField(max_length=10, null=False, blank=True)
+    question_code = models.CharField(max_length=200, null=False, blank=True)
     question = models.ForeignKey('OVCCareQuestions', on_delete=models.CASCADE)
     answer = models.CharField(max_length=15)
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
@@ -1434,7 +1434,8 @@ class OVCCareCpara_upgrade(models.Model):
 class OVCBenchmarkMonitoring(models.Model):
     obm_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
-    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name="caregiver")
+    # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name="child")
     benchmark1 =models.BooleanField()
     benchmark2=models.BooleanField()
     benchmark3=models.BooleanField()
@@ -1444,7 +1445,7 @@ class OVCBenchmarkMonitoring(models.Model):
     benchmark7=models.BooleanField()
     benchmark8=models.BooleanField()
     benchmark9=models.BooleanField()
-    succesful_exit_checked=models.CharField(max_length=1)
+    succesful_exit_checked=models.BooleanField()
     case_closure_checked=models.BooleanField()
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
     is_void = models.BooleanField(default=False)
