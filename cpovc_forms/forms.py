@@ -427,6 +427,8 @@ CPT_RESULTS = (
     ('IP', 'In Progress'),
     ('NA', 'Not Achieved')
 )
+#pregnant_women_adolescent
+ATTEND_CHOICES=(('1', 'Skilled'), ('0', 'Unskilled'))
 
 
 class OVCSchoolForm(forms.Form):
@@ -8146,3 +8148,213 @@ class DREAMS_FORM(forms.Form):
                #'data-parsley-required': "true",
                #'data-parsley-group': 'group0',
                'rows': '3'}))
+
+
+#Pregnant Women_Adolescent
+class PREGNANT_WOMEN_ADOLESCENT(forms.Form):
+    org_units_list = get_facility_list()
+    HIV_STATUS_CHOICES=(('1', ''), ('0', 'Unskilled'))
+    PWA_WA1_01 = forms.ChoiceField(
+        choices=(('contact', '1st Contact'), ('tri', '1st Trimester'),('3rd', '3rd Trimester'),('4th', 'Labour/Delivery'),),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+
+    PWA_WA1_2A = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%m/%d/%Y",
+            attrs={'placeholder': _('Date'),
+                   'class': 'form-control',
+                   'name': 'PWA_WA1_2A',
+                   'id': 'PWA_WA1_2A',
+                   'autocomplete': "off",
+                   #    'data-parsley-required': "true",
+                   #    'data-parsley-group': 'group0'
+                   }))
+
+    PWA_WA1_2B = forms.ChoiceField(
+        choices=(('1', 'HIV_Positive'), ('0', 'HIV_Negative'),),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+
+    PWA_WA1_3A = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%m/%d/%Y",
+            attrs={'placeholder': _('Date'),
+                   'class': 'form-control',
+                   'name': 'PWA_WA1_3A',
+                   'id': 'PWA_WA1_3A',
+                   'autocomplete': "off",
+                   #    'data-parsley-required': "true",
+                   #    'data-parsley-group': 'group0'
+                   }))
+
+    PWA_WA1_3B = forms.ChoiceField(
+        choices=(('1', 'HIV_Positive'), ('0', 'HIV_Negative'),),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+
+    PWA_WA1_4A = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%m/%d/%Y",
+            attrs={'placeholder': _('Date'),
+                   'class': 'form-control',
+                   'name': 'PWA_WA1_4A',
+                   'id': 'PWA_WA1_4A',
+                   'autocomplete': "off",
+                   #    'data-parsley-required': "true",
+                   #    'data-parsley-group': 'group0'
+                   }))
+
+    PWA_WA1_4B = forms.ChoiceField(
+        choices=(('1', 'HIV_Positive'), ('0', 'HIV_Negative'),),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+
+    PWA_WA1_5A = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%m/%d/%Y",
+            attrs={'placeholder': _('Date'),
+                   'class': 'form-control',
+                   'name': 'PWA_WA1_5A',
+                   'id': 'PWA_WA1_5A',
+                   'autocomplete': "off",
+                   #    'data-parsley-required': "true",
+                   #    'data-parsley-group': 'group0'
+                   }))
+
+    PWA_WA1_5B = forms.ChoiceField(
+        choices=(('1', 'HIV_Positive'), ('0', 'HIV_Negative'),),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+
+    PWA_WA1_6 = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%m/%d/%Y",
+            attrs={'placeholder': _('Date'),
+                   'class': 'form-control',
+                   'name': 'PWA_WA1_6',
+                   'id': 'PWA_WA1_6',
+                   'autocomplete': "off",
+                   #    'data-parsley-required': "true",
+                   #    'data-parsley-group': 'group0'
+                   }))
+
+    PWA_WA1_7 = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%m/%d/%Y",
+            attrs={'placeholder': _('Date'),
+                   'class': 'form-control',
+                   'name': 'PWA_WA1_7',
+                   'id': 'PWA_WA1_7',
+                   'autocomplete': "off",
+                   #    'data-parsley-required': "true",
+                   #    'data-parsley-group': 'group0'
+                   }))
+
+    PWA_WA1_8 = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%m/%d/%Y",
+            attrs={'placeholder': _('Date'),
+                   'class': 'form-control',
+                   'name': 'PWA_WA1_8',
+                   'id': 'PWA_WA1_8',
+                   'autocomplete': "off",
+                   #    'data-parsley-required': "true",
+                   #    'data-parsley-group': 'group0'
+                   }))
+
+    PWA_WA1_9 = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%m/%d/%Y",
+            attrs={'placeholder': _('Date'),
+                   'class': 'form-control',
+                   'name': 'PWA_WA1_9',
+                   'id': 'PWA_WA1_9',
+                   'autocomplete': "off",
+                   #    'data-parsley-required': "true",
+                   #    'data-parsley-group': 'group0'
+                   }))
+
+    PWA_WA1_10 = forms.ChoiceField(
+        choices=ATTEND_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+
+    PWA_WA1_11 = forms.CharField(widget=forms.TextInput(
+        attrs={'placeholder': _('Facility Name'),
+               'class': 'form-control',
+               'id': 'PWA_WA1_21',
+               #    'data-parsley-group': 'group0'
+               }))
+
+    PWA_WA1_12 = forms.CharField(widget=forms.TextInput(
+        attrs={'placeholder': _('CCC NO'),
+               'class': 'form-control',
+               #    'data-parsley-required': "False",
+               'data-parsley-type': "number",
+               #    'data-parsley-required': "False"
+               }))
+
+    PWA_WA1_13 = forms.CharField(widget=forms.TextInput(
+        attrs={'placeholder': _('VL result'),
+               'class': 'form-control',
+               #    'data-parsley-required': "False",
+               'data-parsley-type': "number",
+               #    'data-parsley-required': "False"
+               }))
+
+    PWA_WA1_14 = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%m/%d/%Y",
+            attrs={'placeholder': _('Date'),
+                   'class': 'form-control',
+                   'name': 'PWA_WA1_14',
+                   'id': 'PWA_WA1_14',
+                   'autocomplete': "off",
+                   #    'data-parsley-required': "true",
+                   #    'data-parsley-group': 'group0'
+                   }))
+
+    PWA_WA1_15 = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+
+    PWA_WA1_1 = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%m/%d/%Y",
+            attrs={'placeholder': _('Date'),
+                   'class': 'form-control',
+                   'name': 'PWA_WA1_1',
+                   'id': 'PWA_WA1_1',
+                   'autocomplete': "off",
+                      # 'data-parsley-required': "true",
+                   #    'data-parsley-group': 'group0'
+                   }))
+
+
