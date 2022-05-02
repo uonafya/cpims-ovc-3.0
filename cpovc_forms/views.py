@@ -38,7 +38,7 @@ from .models import (
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
     OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
-    OVCCareCaseExit)
+    OVCCareCaseExit )
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -10091,9 +10091,9 @@ def new_case_closure(request, id):
             file_stored1 = request.POST.get("CASE_CL014")
             attrition_reason2 = request.POST.get("CASE_CL030")
             manager_report = request.POST.get("CASE_CL029")
-            file_stored2 = request.POST.get("CASE_CL028}")
+            head_hh_linked= request.POST.get("CASE_CL028}")
             exit_reason = request.POST.get("CASE_CL031")
-            staff_certifying = request.POST.get("CASE_CL024")
+            #staff_certifying = request.POST.get("CASE_CL024")
             date = request.POST.get("CASE_CL026")
             files_completed = request.POST.get("CASE_CL006")
             phone_number = request.POST.get("CASE_CL007")
@@ -10101,6 +10101,7 @@ def new_case_closure(request, id):
 
 
             person = RegPerson.objects.get(pk=int(id))
+            receiving_org = RegOrgUnit.objects.get(pk=int(id))
             event_type_id = 'WBGA'
             date_of_closure = timezone.now()
 
@@ -10125,7 +10126,7 @@ def new_case_closure(request, id):
             # OVCaseClosure.objects.create(
             case_closing = OVCCareCaseExit(
                 person=RegPerson.objects.get(pk=int(id)),
-                receiving_org=receiving_org,
+                rec_organization =receiving_org,
                 closure_reason=closure_reason,
                 attrition_reason=attrition_reason1,
                 other=other,
@@ -10136,9 +10137,10 @@ def new_case_closure(request, id):
                 files_stored=file_stored1,
                 attrition_documented=attrition_reason2,
                 manager_report=manager_report,
+                head_hh_linked=head_hh_linked,
 
                 exit_reason_stored=exit_reason,
-                staff_certifying=staff_certifying,
+                # staff_certifying=staff_certifying,
                 date_of_closure=date,
                 case_files_completed=files_completed,
                 cw_phone_household=phone_number,
@@ -10193,8 +10195,7 @@ def edit_case_closure(request, id):
     """Some default page for Server Errors."""
 
     try:
-        # import pdb
-        # pdb.set_trace()
+
         posted_data = OVCCareCaseExit.objects.get(case_clouse_id=id)
         if request.method == 'POST':
             closure_reason = request.POST.get("CASE_CL001")
@@ -10208,7 +10209,7 @@ def edit_case_closure(request, id):
             file_stored1 = request.POST.get("CASE_CL014")
             attrition_reason2 = request.POST.get("CASE_CL030")
             manager_report = request.POST.get("CASE_CL029")
-            file_stored2 = request.POST.get("CASE_CL028}")
+            head_hh_linked= request.POST.get("CASE_CL028}")
             exit_reason = request.POST.get("CASE_CL031")
             staff_certifying = request.POST.get("CASE_CL024")
             date = request.POST.get("CASE_CL026")
@@ -10216,11 +10217,8 @@ def edit_case_closure(request, id):
             phone_number = request.POST.get("CASE_CL007")
             informed_graduation = request.POST.get("CASE_CL008")
 
-
-
-
-            OVCCareCaseExit.objects.filter(case_clouse_id=id).update(
-                receiving_org=receiving_org,
+        OVCCareCaseExit.objects.filter(
+                rec_organization =receiving_org,
                 closure_reason=closure_reason,
                 attrition_reason=attrition_reason1,
                 other=other,
@@ -10231,9 +10229,9 @@ def edit_case_closure(request, id):
                 files_stored=file_stored1,
                 attrition_documented=attrition_reason2,
                 manager_report=manager_report,
-
                 exit_reason_stored=exit_reason,
                 staff_certifying=staff_certifying,
+                head_hh_linked=head_hh_linked,
                 date_of_closure=date,
                 case_files_completed=files_completed,
                 cw_phone_household=phone_number,
@@ -10244,8 +10242,8 @@ def edit_case_closure(request, id):
             #return redirect('new_case_closure', id=posted_data.person_id)
         # fmpdata = OVCFMPEvaluation.objects.get(evaluation_id=id)
         gotten_data = {
-            'CASE_CL001': posted_data.closure_reason,
-            'CASE_CL002': posted_data.receiving_org,
+            'CASE_CL001': posted_data.reason,
+            'CASE_CL002': posted_data.rec_organization,
             'CASE_CL027': posted_data.attrition_reason,
             'CASE_CL004': posted_data.other,
             'CASE_CL011': posted_data.follow_up_frequency,
@@ -10254,7 +10252,7 @@ def edit_case_closure(request, id):
             'CASE_CL014': posted_data.files_stored,
             'CASE_CL030': posted_data.attrition_documented,
             'CASE_CL029': posted_data.manager_report,
-            'CASE_CL028': posted_data.files_stored,
+            'CASE_CL028': posted_data.head_hh_linked,
             'CASE_CL031': posted_data.exit_reason_stored,
             'CASE_CL024': posted_data.staff_certifying,
             'CASE_CL026': posted_data.date_of_closure,

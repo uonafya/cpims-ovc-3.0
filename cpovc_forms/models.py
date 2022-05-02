@@ -1463,11 +1463,11 @@ class OVCFMPEvaluation(models.Model):
 class OVCCareCaseExit(models.Model):
     case_clouse_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE,related_name='caseclouse_child')
-    #caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='caseclouse_caregiver')
-    #----cpa
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='caseclouse_caregiver')
+    rec_organization = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
     attrition_reason = models.CharField(max_length=10, null=True)
     transfer_completed = models.CharField(max_length=10, null=True)
-    closure_reason = models.CharField(max_length=10, null=True)
+    reason = models.CharField(max_length=10,null=False)
     exit_reason_stored = models.CharField(max_length=10, null=True)
     other = models.CharField(max_length=250, null=True)
     case_files_completed = models.CharField(max_length=5, null=True)
@@ -1476,6 +1476,7 @@ class OVCCareCaseExit(models.Model):
     sp_informed_graduation = models.CharField(max_length=5, null=True)
     files_stored = models.CharField(max_length=5, null=True)
     #--transfer
+
     transfer_form_completed = models.CharField(max_length=5, null=True)
     follow_up_frequency = models.CharField(max_length=5, null=True)
     sp_informed_tarnsfer = models.CharField(max_length=5, null=True)
@@ -1483,7 +1484,7 @@ class OVCCareCaseExit(models.Model):
     attrition_documented = models.CharField(max_length=5, null=True)
     manager_report = models.CharField(max_length=5, null=True)
     receiving_org = models.CharField(max_length=250, null=True)
-    staff_certifying = models.CharField(max_length=250, null=True)
+    #staff_certifying = models.CharField(max_length=250, null=True)
     date_of_closure = models.DateField()
     is_void = models.BooleanField(default=False)
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)

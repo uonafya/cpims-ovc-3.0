@@ -167,7 +167,7 @@
 
                                     <td>Case files completed per the protocol. </td>
                                     <td >
-                                        {{ form.CASE_CL014}}
+                                        {{ form.CASE_CL006}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -178,19 +178,20 @@
                                         {{ form.CASE_CL007 }}
                                     </td>
                                 </tr>
+                                  <tr>
+                                    <td>Q3</td>
+
+                                    <td>Case Worker has given phone number to household   Head of household linked to a family, which already graduated.</td>
+                                    <td>
+                                        {{ form.CASE_CL028}}
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>Q4</td>
                                     <td>Informed necessary service providers of graduation.</td>
                                     <td>{{ form.CASE_CL008 }}</td>
                                 </tr>
-                                <tr>
-                                    <td>Q5</td>
-                                    <td>Files stored in a safe place (locked cabinet).</td>
-                                    <td>
-                                        {{ form.CASE_CL014 }}
 
-                                    </td>
-                                </tr>
 
                                 </tbody>
                             </table>
@@ -213,7 +214,7 @@
 
                                 <tbody>
                                 <tr>
-                                    <td>Q6</td>
+                                    <td>Q5</td>
 
                                     <td>Case Transfer Form completed per the protocol.</td>
                                     <td>
@@ -221,7 +222,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Q7</td>
+                                    <td>Q6</td>
 
                                     <td>Referring Case Manager established time and frequency for follow up</td>
                                     <td>
@@ -229,26 +230,19 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Q8</td>
+                                    <td>Q7</td>
                                     <td>Informed necessary service providers of case transfer.</td>
                                     <td>{{ form.CASE_CL012 }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Q9</td>
+                                    <td>Q8</td>
                                     <td>Copy of family folder sent to receiving organization.</td>
                                     <td>
                                         {{ form.CASE_CL013 }}
 
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>Q10</td>
-                                    <td>Files stored in a safe place (locked cabinet). </td>
-                                    <td>
-                                        {{ form.CASE_CL014 }}
 
-                                    </td>
-                                </tr>
 
                                 </tbody>
                             </table>
@@ -271,7 +265,7 @@
 
                                 <tbody>
                                 <tr>
-                                    <td>Q11</td>
+                                    <td>Q9</td>
 
                                     <td>Reason for attrition documented in family folder. </td>
                                     <td>
@@ -279,7 +273,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Q12</td>
+                                    <td>Q10</td>
 
                                     <td>Case Manager Report</td>
                                     <td>
@@ -287,16 +281,8 @@
                                     </td>
                                 </tr>
 
-                                  <tr>
-                                      <td>Q13</td>
 
-                                    <td>Files stored in a safe place (locked cabinet).</td>
-                                    <td>
-                                        {{ form.CASE_CL014}}
-                                    </td>
-                                </tr>
-                                   <tr>
-                                       <td>Q14</td>
+                                       <td>Q11</td>
 
                                     <td>Exit reason recorded in OVC Database  </td>
                                     <td>
@@ -304,33 +290,71 @@
                                     </td>
                                 </tr>
                                    <tr>
-                                       <td>Q15</td>
+                                       <td>Q12</td>
 
-                                    <td>Name of Case Manager/LIP staff certifying</td>
-                                    <td required="False">
-                                        {{ form.CASE_CL024 }}
-                                    </td>
+{#                                    <td>Name of Case Manager/LIP staff certifying</td>#}
+{#                                    <td required="False">#}
+{#                                        {{ form.CASE_CL024 }}#}
+{#                                    </td>#}
                                 </tr>
 
 
-                                <tr>
-                                    <td>Q16</td>
 
-                                      <td>
-                                        Date
-                                    </td>
-                                     <td>
-                                             {{ form.CASE_CL026 }}
-                                    </td>
-                                </tr>
 
                                 </tbody>
                             </table>
+                                        <table>
+
+                                        </table>
 
                             <p>&nbsp;</p>
 
                         </div>
                             </div>
+                            <div id="cc_tab_004">
+
+                                <div class="form-group" >
+                        <table class="table table-bordered">
+                            <thead>
+
+                            </thead>
+
+                            <tbody>
+
+
+
+                              <tr>
+                                  <td>Q13</td>
+
+                                <td>Files stored in a safe place (locked cabinet).</td>
+                                <td>
+                                    {{ form.CASE_CL014}}
+                                </td>
+                            </tr>
+
+
+
+                            <tr>
+                                <td>Q14</td>
+
+                                  <td>
+                                    Date
+                                </td>
+                                 <td>
+                                         {{ form.CASE_CL026 }}
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                                    <table>
+
+                                    </table>
+
+                        <p>&nbsp;</p>
+
+                    </div>
+                        </div>
 
                         </div>
 
@@ -369,8 +393,7 @@
                             <th>Q12</th>
                             <th>Q13</th>
                              <th>Q14</th>
-                             <th>Q15</th>
-                             <th>Q16</th>
+
                              <th  colspan="2">Action</th>
 
 
@@ -448,41 +471,38 @@ jQuery(document).ready(function()
 {
 
         $('#CASE_CL026').datepicker({ format: 'yyyy-mm-dd' }).val();
-             $('#cc_001').hide();
-             $('#cc_002').hide();
+            $('#cc_001').hide();
+            $('#cc_002').hide();
             $("#cc_tab_001").hide();
             $("#cc_tab_002").hide();
             $("#cc_tab_003").hide();
+            $("#cc_tab_004").hide();
+            $('input[name="CASE_CL026').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+            $('input[name="CASE_CL014').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
             $("input[name='CASE_CL001']").on('change', function () {
       var ival = $("input[name='CASE_CL001']:checked").val();
       if(ival == 2){
            $("#cc_001").show();
            $("#cc_tab_002").show();
+           $("#cc_tab_004").show();
            $("#cc_002").hide();
            $("#cc_tab_001").hide();
            $("#cc_tab_003").hide();
+            $('input[name="CASE_CL002').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
            $('input[name="CASE_CL010').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
            $('input[name="CASE_CL011').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
            $('input[name="CASE_CL012').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
            $('input[name="CASE_CL013').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-           $('input[name="CASE_CL014').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-           {#$('input[name="CASE_CL010').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});#}
-
-
-
-
-
 
       }else if(ival == '3'){
           $("#cc_002").show();
           $("#cc_tab_003").show();
+          $("#cc_tab_004").show();
           $("#cc_001").hide();
           $("#cc_tab_001").hide();
           $("#cc_tab_002").hide();
-          {#$('input[name="CASE_CL014').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});#}
-          $('input[name="CASE_CL024').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL026').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL026').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+
+          $('input[name="CASE_CL004').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
           $('input[name="CASE_CL027').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
           $('input[name="CASE_CL029').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
           $('input[name="CASE_CL030').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
@@ -490,8 +510,17 @@ jQuery(document).ready(function()
 
       } else if(ival == '1'){
           $("#cc_tab_001").show();
+          $("#cc_tab_004").show();
+          $("#cc_001").hide();
           $("#cc_tab_003").hide();
           $("#cc_tab_002").hide();
+
+          $('input[name="CASE_CL006').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL007').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL008').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL028').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+
+
 
 
       }
@@ -507,6 +536,13 @@ jQuery(document).ready(function()
 	$('html,body').scrollTop(0);
 	FormWizardValidation.init();
 });
+    var table = document.getElementsByTagName('table')[0],
+      rows = table.getElementsByTagName('tr'),
+      text = 'textContent' in document ? 'textContent' : 'innerText';
+
+    for (var i = 0, len = rows.length; i < len; i++) {
+      rows[i].children[0][text] = i + ': ' + rows[i].children[0][text];
+    }
 
 
 </script>
