@@ -9999,8 +9999,7 @@ def new_dreamsform(request, id):
 
 
 # get the form for Bidirectional Referral Form
-def bidirectionalreferralform(request, id):
-  
+def bidirectionalreferralform(request, id):  
     if request.method == 'POST':
         data = request.POST
         # form = BIDIRECTIONALREFERRALFORM(request.POST, initial={'person': id})
@@ -10027,7 +10026,7 @@ def bidirectionalreferralform(request, id):
             )
         except Exception as e:
             print(e)
-        url = reverse('ovc_view', kwargs={'id': id})
+        url = reverse('bidirectionalreferralform', kwargs={'id': id})
         return HttpResponseRedirect(url)
     
     import pdb
@@ -10051,10 +10050,6 @@ def bidirectionalreferralform(request, id):
         'caregiver': caregiver,
         'obj_all': obj_all
     }
-
-
-
-
     return render(request,
                   template_name='forms/bidirectionalreferralform.html',
                   context=context)

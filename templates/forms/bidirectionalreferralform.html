@@ -91,6 +91,89 @@
             <form method="post" action=".">
                 {% csrf_token %}
                 <div id="">
+
+                    
+                 
+						<!-- begin wizard step-1 -->
+						<div class="wizard-step-1">
+                            <fieldset> 
+                                <div id="error_assessment"></div>
+                            <div style="overflow-x: auto; min-height: 300px;">
+                                <!-- begin col-6 -->
+                                <table id="assessment_manager_table" class="table" style="min-height: 300px;">
+                                    <thead>
+                                        <tr id="id_inputHeaders1">
+                                        	<td width="5%"></td>
+                                        	<th width="15%"><h6><b>Domain<span class="asteriskField">*</h6></b></th>
+                                            <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6></th>
+                                            <th width="25%"><h6><b>Referral Date<span class="asteriskField">*</b></h6></th>
+                                            <th width="5%"><h6><b>Actions</b></h6></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="id_inputElements1">
+                                        	<td></td>
+                                        	<td width="15%">
+                                        		{{ form.BIREFERRAL_DOMAIN }}
+                                        		<div id="BIREFERRAL_DOMAIN" style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                                                </div>
+                                        	</td>
+                                            <td width="20%">
+                                            	{{ form.BIREFERRAL_SERVICES }}
+                                            	<div id="BIREFERRAL_SERVICES" style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                                                </div>
+                                            </td>
+                                            <td width="15%">
+                                            	{{ form.REFERRAL_DATE }}
+                                            	<h6><span id="REFERRAL_DATE"></span></h6>
+                                            	<!-- <input id='holmis_assessment_coreservice_status' type='hidden'> -->
+                                            	<div id="olmis_assessment_coreservice_status_errormsg" style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                                                </div>
+                                            </td>                                         
+                                            <td width="5%">
+                                            <h6><b>
+	                                            <button type="button" class="btn btn-sm btn-inverse m-r-5" onClick="AddRow(1)">
+	                                                <i class="fa fa-plus"></i>  Add
+	                                            </button>
+                                            	</b></h6>
+                                            </td>
+                                        </tr>		                                        
+                                    </tbody>
+                                    {% comment %} {{ form.olmis_assessment_provided_list }} {% endcomment %}
+                                </table>
+                            </div>
+							    <!-- end col-6 -->                                
+							</fieldset>
+
+                            <div class="panel-body panel-form">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4 col-sm-4">Date Assessment Recorded<span class="asteriskField">*</label>
+                                    <div class="col-md-2 col-sm-2">
+                                        {{ form.REFERRAL_DATE }}
+                                        <div id="date_errormsg0" style="display:none;">
+                                            <small><p class="dialog_paragraph">This value is required</p></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel-body panel-form">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4 col-sm-4"></label>
+                                    <div class="col-md-6 col-sm-6">
+                                        <button id="mysubmit-f1a-0" class="btn btn-primary" type="button" onClick="saveForm1A(1)">Submit Assessment</button>
+                                        <a >Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+						<!-- end wizard step-1 -->                      
+
+{% comment %} 
+
                     <!-- begin wizard step-1 -->
                     <div class="wizard-step-1">
                         <fieldset>
@@ -124,7 +207,10 @@
                             <!-- end col-6 -->
                         </fieldset>
                     </div>
-                    <!-- end wizard step-1 -->
+                    <!-- end wizard step-1 --> {% endcomment %}
+
+
+
                 </div>
                 <!-- end row -->
 
