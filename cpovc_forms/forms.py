@@ -8151,9 +8151,7 @@ class DREAMS_FORM(forms.Form):
 class BIDIRECTIONALREFERRALFORM(forms.Form):
 
     DOMAIN_CHOICES=((0,'please select'),
-                    (1,'Health Domain'),
-                    (2, 'Stable Domain'),
-                    (3, 'Safe Domain'))
+                    ('DHES', 'Stable'), ('DPRO', 'Safe'), ('DHNU', 'Healthy'),('DEDU','Schooled'))
 
     HEALTH_DOMAIN_CHOICES = ((0, 'please select'),
                       (1, 'Health insurance cover'),
@@ -8200,26 +8198,26 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
     #                  (6, 'Bursary, tuition'))
 
 
-
     BIREFERRAL_DOMAIN = forms.ChoiceField(choices=DOMAIN_CHOICES,
                                                 initial='0',
                                                 widget=forms.Select(
                                                     attrs={'class': 'form-control',
                                                            'id': 'BIREFERRAL_DOMAIN',
+                                                           'name': 'BIREFERRAL_DOMAIN'
                                                            }))
 
     HEALTH_DOMAIN = forms.ChoiceField(choices=HEALTH_DOMAIN_CHOICES,
                                                 initial='0',
                                                 widget=forms.Select(
                                                     attrs={'class': 'form-control',
-                                                           'id': 'HEALTH_DOMAIN',
+                                                           'id': 'HEALTH_DOMAIN'
                                                            }))
 
     STABLE_DOMAIN = forms.ChoiceField(choices=STABLE_DOMAIN_CHOICES,
                                                 initial='0',
                                                 widget=forms.Select(
                                                     attrs={'class': 'form-control',
-                                                           'id': 'STABBLE_DOMAIN',
+                                                           'id': 'STABLE_DOMAIN'
                                                            }))
 
     SAFE_DOMAIN = forms.ChoiceField(choices=SAFE_DOMAIN_CHOICES,
@@ -8233,16 +8231,9 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
                                               initial='0',
                                               widget=forms.Select(
                                                   attrs={'class': 'form-control',
-                                                         'id': 'BIREFERRAL_DEFAULT'})
-                                              )
-
-    # # Feedback form entry
-    # FEEDBACK_BIDIRECTIONALFORM = forms.CharField(widget =forms.Textarea(
-    #     attrs= {
-    #         'placeholder': _('Your feedback'),
-    #         'class':'form-control',
-    #         'rows':'3'
-    #     }))
+                                                         'id': 'BIREFERRAL_DEFAULT',
+                                                         'name': 'BIREFERRAL_DEFAULT'
+                                                         }))
 
     REFERRAL_DATE = forms.DateField(
         widget=forms.widgets.DateInput(

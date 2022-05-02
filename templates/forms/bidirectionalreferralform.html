@@ -79,174 +79,83 @@
             </div>
             <h4 class="panel-title"> Bidirectional Referral Details </h4>
         </div>
+       
+
+    <!-- begin wizard step-4 -->
+    <div class="wizard-step-4">
         <div class="panel-body">
-            <table width="100%" class="table" >
-                <tbody>                                   
-                    <tr>                        
-                        <td class="field">Name of Person Being Referred: {{ all_domain_choices.refferal_domain }}</td>
-                        <td class="field">Organization referred to: {{ all_domain_choices.refferal_service }}</td>
-                    </tr>                                                        
+            <div id="error_service"></div>
+            <div style="overflow-x: auto; min-height: 300px;">
+            <table id="services_manager_table" class="table">
+                <thead>
+                    <tr id="id_inputHeaders">
+                        <td width="2%"></td>
+                        <th width="15%"><h6><b>Domain<span class="asteriskField">*</b></h6></th>
+                        <th width="20%"><h6><b>Service(s)<span class="asteriskField">*</b></h6></th>
+                        <th width="15%"><h6><b>Date Of Service<span class="asteriskField">*</b></h6></th>
+                        <!-- <th width="20%"><h6><b>Service(s) Provider</b></h6></th>
+                        <th width="20%"><h6><b>Place Of Service</b></h6></th>-->
+                        <th width="5%"><h6><b>Actions<span class="asteriskField">*</b></h6></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="id_inputElements13">
+                        <td width="2%"></td>
+                        <td width="15%">
+                            {{ form.BIREFERRAL_DOMAIN }}
+                            <div id="olmis_domain_errormsg" style="display:none;">
+                                <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                            </div>
+                        </td>
+                        <td width="20%">
+                            {{ form.BIREFERRAL_SERVICES }}
+                            <h6><span id="sel_olmis_service"></span></h6>
+                            <div id="olmis_service_errormsg" style="display:none;">
+                                <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                            </div>
+                        </td>
+                        <td width="15%">
+                            {{ form.REFERRAL_DATE }}
+                            <div id="olmis_service_date_errormsg" style="display:none;">
+                                <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                            </div>
+                        </td>
+                        <td width="5%">
+                        <h6><b>
+                            <button type="button" class="btn btn-sm btn-inverse m-r-5" onClick="AddRow(2)">
+                                <i class="fa fa-plus"></i>  Add
+                            </button>
+                            </b></h6>
+                        </td>
+                    </tr>                                               
                 </tbody>
-            </table>
-            <form method="post" action=".">
-                {% csrf_token %}
-                <div id="">
-
-                    
-                 
-						<!-- begin wizard step-1 -->
-						<div class="wizard-step-1">
-                            <fieldset> 
-                                <div id="error_assessment"></div>
-                            <div style="overflow-x: auto; min-height: 300px;">
-                                <!-- begin col-6 -->
-                                <table id="assessment_manager_table" class="table" style="min-height: 300px;">
-                                    <thead>
-                                        <tr id="id_inputHeaders1">
-                                        	<td width="5%"></td>
-                                        	<th width="15%"><h6><b>Domain<span class="asteriskField">*</h6></b></th>
-                                            <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6></th>
-                                            <th width="25%"><h6><b>Referral Date<span class="asteriskField">*</b></h6></th>
-                                            <th width="5%"><h6><b>Actions</b></h6></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr id="id_inputElements1">
-                                        	<td></td>
-                                        	<td width="15%">
-                                        		{{ form.BIREFERRAL_DOMAIN }}
-                                        		<div id="BIREFERRAL_DOMAIN" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                        	</td>
-                                            <td width="20%">
-                                            	{{ form.BIREFERRAL_SERVICES }}
-                                            	<div id="BIREFERRAL_SERVICES" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                            </td>
-                                            <td width="15%">
-                                            	{{ form.REFERRAL_DATE }}
-                                            	<h6><span id="REFERRAL_DATE"></span></h6>
-                                            	<!-- <input id='holmis_assessment_coreservice_status' type='hidden'> -->
-                                            	<div id="olmis_assessment_coreservice_status_errormsg" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                            </td>                                         
-                                            <td width="5%">
-                                            <h6><b>
-	                                            <button type="button" class="btn btn-sm btn-inverse m-r-5" onClick="AddRow(1)">
-	                                                <i class="fa fa-plus"></i>  Add
-	                                            </button>
-                                            	</b></h6>
-                                            </td>
-                                        </tr>		                                        
-                                    </tbody>
-                                    {% comment %} {{ form.olmis_assessment_provided_list }} {% endcomment %}
-                                </table>
-                            </div>
-							    <!-- end col-6 -->                                
-							</fieldset>
-
-                            <div class="panel-body panel-form">
-                                <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4">Date Assessment Recorded<span class="asteriskField">*</label>
-                                    <div class="col-md-2 col-sm-2">
-                                        {{ form.REFERRAL_DATE }}
-                                        <div id="date_errormsg0" style="display:none;">
-                                            <small><p class="dialog_paragraph">This value is required</p></small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="panel-body panel-form">
-                                <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4"></label>
-                                    <div class="col-md-6 col-sm-6">
-                                        <button id="mysubmit-f1a-0" class="btn btn-primary" type="button" onClick="saveForm1A(1)">Submit Assessment</button>
-                                        <a >Cancel</a>
-                                    </div>
-                                </div>
-                            </div>
-						</div>
-						<!-- end wizard step-1 -->                      
-
-{% comment %} 
-
-                    <!-- begin wizard step-1 -->
-                    <div class="wizard-step-1">
-                        <fieldset>
-                            
-                            <!-- begin col-6 -->
-                            <table id="assessment_manager_table" class="table">
-                                <thead>
-                                    <tr id="id_inputHeaders1">
-                                      
-                                        <th width="20%"><h6><b>Domain<span class="asteriskField">*</b></h6></th>
-                                        <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6></th>                                    
-                                        <th width="20%"><h6><b>Referral Date<span class="asteriskField">*</b></h6></th>
-                                        <th width="20%"><h6><b>Actions</b></h6></th>
-                                    </tr>                                                                       
-                                    <tr id="id_inputElements1">
-                                        <td width="20%">
-                                            {{form.BIREFERRAL_DOMAIN}}
-                                        </td>
-                                        <td width="20%">
-                                            {{form.BIREFERRAL_SERVICES}} 
-                                        </td>                                       
-                                        <td width="20%">
-                                            {{form.REFERRAL_DATE}}
-                                        </td> 
-                                        <td width="20%">                                          
-                                        </td>                                       
-                                    </tr>                             
-                                <thead>                                                                                                                  
-                            </table>
-                            
-                            <!-- end col-6 -->
-                        </fieldset>
-                    </div>
-                    <!-- end wizard step-1 --> {% endcomment %}
-
-
-
-                </div>
-                <!-- end row -->
-
-                    <!-- end col-12 -->
-                    <div class="panel-body panel-form">
-                        <div class="form-group">
-                            <label class="control-label col-md-4 col-sm-4"></label>
-                            <div class="col-md-6 col-sm-6">
-                                <button id="mysubmit-f1a-0" class="btn btn-primary" type="submit`">Submit
-                                    Assessment
-                                </button>
-                                <!--TODO  pass in the url and id for cancel-->
-                                <a href="#" onClick="resetForm1A(1)" class="btn btn-white">Cancel</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>   <!-- end row -->
+                {{ form.olmis_service_provided_list }}
+            </table>  
+        </div>                               
         </div>
-    </div>
 
-    <!-- Bidirectional events -->
-    <!-- End Bidirectional Events -->
-         <div class="panel-heading">
-<!-- begin row -->
-<div class="row">
-    <!-- begin col-12 -->
-    <div class="col-md-12">
-        <!-- begin panel -->
-        <div class="panel panel-info">
-               <div class="panel-heading-btn">
-                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                </div>                          
-                <h4 class="panel-title"><b>Bidirectional Referral List  </b></h4>                    
+        <div class="panel-body panel-form">
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4">Date Services Recorded<span class="asteriskField">*</label>
+                <div class="col-md-2 col-sm-2">
+                    {{ form.date_of_service }}
+                    <div id="date_errormsg3" style="display:none;">
+                        <small><p class="dialog_paragraph">This value is required</p></small>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <div class="panel-body panel-form">
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4"></label>
+                <div class="col-md-6 col-sm-6">
+                    <button id="mysubmit-f1a-3" class="btn btn-primary" type="button" onClick="saveForm1A(4)">Submit Service(s)</button>
+                    <a href="#" onClick="resetForm1A(4)" class="btn btn-white">Cancel</a>
+                </div>
+            </div>
+        </div>
+      
 
             <div class="panel-body">
                 <div  class="panel panel-inverse">
@@ -255,7 +164,8 @@
                             <thead>
                                 <tr> 
                                     <th>Domain Type</th>                                 
-                                    <th>Core Services</th>                              
+                                    <th>Domain Services</th>                              
+                                    <th>Date</th>   
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -300,7 +210,7 @@
 
 
                     switch (bireferral_domain) {
-                        case '1':
+                        case 'DHNU':
     
                             $("select[name='BIREFERRAL_SERVICES']").append(
                                         ` <option>Health insurance cover</option>
@@ -322,7 +232,7 @@
                                          `
                                     );
                             break;
-                        case '2':
+                        case 'DHES':
                             $("select[name='BIREFERRAL_SERVICES']")
                                 .append(
                                 ` <option>cash transfer OVC</option>
@@ -334,7 +244,7 @@
                                  `
                             );
                             break;
-                        case '3':
+                        case 'DPRO':
                             $("select[name='BIREFERRAL_SERVICES']").append(
                                 ` <option>Post Violence Counseling </option>
                                   <option>Post Violence Medical care</option>
@@ -346,7 +256,16 @@
                                  `
                             );
                             break;
-
+                        case 'DEDU':
+                            $("select[name='BIREFERRAL_SERVICES']").append(
+                                ` <option>Re-enrollment (i.e., for drop-outs or teen mothers) </option>
+                                  <option>Bursary, tuition, school fees or fee exemption</option>
+                                  <option>School uniform, books, or other materials</option>
+                                  <option>Other </option>
+                                                                  
+                                 `
+                            );
+                            break;
                         default:
                             $("select[name='BIREFERRAL_SERVICES']").append(
 {#                                {{ form.BIREFERRAL_SERVICES }}#}
@@ -358,7 +277,7 @@
             ) 
 
             //multi selects
-            $('#olmis_assessment_domain, #olmis_assessment_coreservice, #olmis_assessment_coreservice_status, #olmis_domain, #olmis_service_provider, #olmis_service, #olmis_priority_service, #olmis_priority_domain, #olmis_priority_health, #olmis_priority_education, #olmis_priority_shelter, #olmis_priority_protection, #olmis_priority_pss, #olmis_priority_hes, #olmis_critical_event').multiselect({
+            $('#BIREFERRAL_DEFAULT').multiselect({
                 selectAllValue: 'multiselect-all',
                 includeSelectAllOption: true,
                 enableCaseInsensitiveFiltering: true,

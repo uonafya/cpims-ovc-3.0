@@ -368,7 +368,7 @@
                         <div class="wizard-step-4">
                             <div class="panel-body">
                                 <div id="error_service"></div>
-                            <div style="overflow-x: auto; min-height: 300px;">
+                                <div style="overflow-x: auto; min-height: 300px;">
                                 <table id="services_manager_table" class="table">
                                     <thead>
                                         <tr id="id_inputHeaders">
@@ -385,7 +385,7 @@
                                         <tr id="id_inputElements13">
                                             <td width="2%"></td>
                                             <td width="15%">
-                                                {{ form.STABLE_DOMAIN }}
+                                                {{ form.olmis_assessment_domain}}
                                                 <div id="olmis_domain_errormsg" style="display:none;">
                                                     <small><p class="dialog_paragraph">This value is required</p></span></small><span>
                                                 </div>
@@ -564,6 +564,7 @@ arr_DPRO = new Array();
 arr_DHES = new Array();
 arr_DHNU = new Array();
 arr_DEDU = new Array();
+
 domain_log = { "DSHC": arr_DSHC, "DPSS": arr_DPSS, "DPRO": arr_DPRO, "DHES": arr_DHES, "DHNU": arr_DHNU, "DEDU": arr_DEDU }
 
 function loadForm1aEvents()
@@ -1058,7 +1059,7 @@ function AddRow(x)
 	if(x==1)
 	{
 		var OlmisAssessmentData = new Array();
-        var olmis_assessment_domain = $("#olmis_assessment_domain").val();
+        var olmis_assessment_domain = $("#olmis_assessment_domain").val(); 
         var olmis_assessment_coreservice = $("#olmis_assessment_coreservice").val();
         var olmis_assessment_coreservice_status = $("#olmis_assessment_coreservice_status").val();
         var csrftoken = $.cookie('csrftoken');        
