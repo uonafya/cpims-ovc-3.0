@@ -10033,7 +10033,7 @@ def preventive_attendance_register(request, id):
                   'forms/new_preventive_attendance_register.html',
                   {'form': form, 'init_data': init_data, 'vals': vals, 'id':id})
 
-from .models import OVCPreventiveEvents, OVC_preventive_registration, OVCPreventiveEbi
+from .models import OVCPreventiveEvents, OVC_preventive_registration, OVCPreventiveEbi, OVCPreventiveService
 def save_preventive_register(request):
     # date_of_previous_event
     jsonResponse = []
@@ -10051,19 +10051,17 @@ def save_preventive_register(request):
 
             event_type_id = 'FSAM'
             args = int(request.POST.get('args'))    
+            person = request.POST.get('person')
             event_counter = OVCPreventiveEvents.objects.filter(event_type_id=event_type_id, person=person,
                                                              is_void=False).count() 
 
             child = RegPerson.objects.get(id=person)
+            username = request.user.get_username()
             if args == 1:
                 date_of_assessment = request.POST.get('date_of_assessment')
-                person = request.POST.get('person')
+                
                 if date_of_assessment:
                     date_of_assessment = convert_date(date_of_assessment)
-
-                username = request.user.get_username()
-                
-                
                 ovcpreventiveevent = OVCPreventiveEvents(
                     event_type_id = event_type_id,
                     event_counter = event_counter,
@@ -10111,21 +10109,21 @@ def save_preventive_register(request):
                         ebi_session_type = ''
                         date_of_encounter_event = ''
                         if assessment_data.get('holmis_makeup_session_date') in assessment_data:
-                            ebi_session_type = "make"
+                            ebi_session_type = "make up"
                             date_of_encounter_event = assessment_data['holmis_makeup_session_date']
                         else:
-                            ebi_session_type = 'TYPE'
+                            ebi_session_type = 'General'
                             date_of_encounter_event = session_date
                         try:
                             
                             OVCPreventiveEbi(
                                 person_id = RegPerson.objects.get(pk=int(person)),
-                                domain = olmis_intervention_prevention,
-                                ebi_provided =  "service provided",
-                                ebi_provider = 'service_proviser',
-                                ebi_session = 'EBI',
+                                domain = olmis_intervention_prevention, 
+                                ebi_provided =  "",
+                                ebi_provider = 'service_proviser', # CBO
+                                ebi_session = 'Session 1,2,3...',
                                 ebi_session_type = ebi_session_type,
-                                place_of_ebi = 'SINOVUYU',
+                                place_of_ebi = 'SINOVUYU', # CBO
                                 date_of_encounter_event = convert_date(date_of_encounter_event),
                                 event = ovcpreventiveevent,
                             ).save()
@@ -10135,7 +10133,7 @@ def save_preventive_register(request):
 
             if args == 2:
                 import pdb
-                pdb.set_trace()
+                serveice_domain = 'HHNN'
 
                 ovcpreventiveevent = OVCPreventiveEvents(
                     event_type_id = event_type_id,
@@ -10149,7 +10147,29 @@ def save_preventive_register(request):
                     house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
                 )
                 ovcpreventiveevent.save()
-
+                service_provided_list = request.POST.get('olmis_assessment_provided_list')
+                import pdb
+                if service_provided_list:
+                    service_provided_list = json.loads(service_provided_list)
+                # 
+                    for service in service_provided_list:
+                        boolean_service_offered = service.get("olmis_reffered_for_service")
+                        service_offered = service.get("olmis_reffered_service")
+                        service_made = service.get("olmis_service_made")
+                        date_of_encounter = service.get("olmis_date_of_encounter")
+                        # pdb.set_trace()
+                        OVCPreventiveService(
+                            person_id = RegPerson.objects.get(pk=int(person)),
+                            domain =  serveice_domain,#sinovuyo or fmp or hcbf
+                            ebi_service_provided = "serv",
+                            ebi_provider = 'NAme',
+                            ebi_service_client = 'clie',
+                            ebi_service_reffered = service_offered,
+                            ebi_service_completed = service_made,
+                            place_of_ebi_service = 'plac',
+                            date_of_encounter_event = convert_date(date_of_encounter),
+                            event = ovcpreventiveevent
+                        ).save()
                         
             msg = 'Save Successful'
             jsonResponse.append({'msg': msg})
