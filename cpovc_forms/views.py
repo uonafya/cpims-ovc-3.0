@@ -10081,7 +10081,7 @@ def new_case_closure(request, id):
 
         if request.method == 'POST':
             closure_reason = request.POST.get("CASE_CL001")
-            receiving_org = request.POST.get("CASE_CL002")
+            # org_res  = request.POST.get("CASE_CL002")
             attrition_reason1 = request.POST.get("CASE_CL027")
             other = request.POST.get("CASE_CL004")
             transfer_completed = request.POST.get("CASE_CL010")
@@ -10098,12 +10098,19 @@ def new_case_closure(request, id):
             files_completed = request.POST.get("CASE_CL006")
             phone_number = request.POST.get("CASE_CL007")
             informed_graduation = request.POST.get("CASE_CL008")
+            receiving_org = request.POST.get.get("CASE_CL002")
+            if receiving_org:
+                org_res = RegOrgUnit.objects.get(id=receiving_org).org_unit_name
+            else:
+                org_res = None
 
 
             person = RegPerson.objects.get(pk=int(id))
             receiving_org = RegOrgUnit.objects.get(pk=int(id))
             event_type_id = 'WBGA'
             date_of_closure = timezone.now()
+
+
 
             """ Save evaluation-event """
             # get event counter
@@ -10126,7 +10133,7 @@ def new_case_closure(request, id):
             # OVCaseClosure.objects.create(
             case_closing = OVCCareCaseExit(
                 person=RegPerson.objects.get(pk=int(id)),
-                rec_organization =receiving_org,
+                rec_organization =org_res ,
                 closure_reason=closure_reason,
                 attrition_reason=attrition_reason1,
                 other=other,

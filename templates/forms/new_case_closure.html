@@ -92,7 +92,8 @@
 							    <!-- add labels like HA1, HA2 .. -->
                             <div id="wizard-caseclosureform">
 							    <h3 class="text-center note note-info"> Personal Information For The Child</h3>
-							<div class="form-group"> <table class="table table-bordered">
+							<div class="form-group">
+                                <table class="table table-bordered">
 
 
                                 <tbody>
@@ -488,7 +489,7 @@ jQuery(document).ready(function()
            $("#cc_002").hide();
            $("#cc_tab_001").hide();
            $("#cc_tab_003").hide();
-            $('input[name="CASE_CL002').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL002').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
            $('input[name="CASE_CL010').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
            $('input[name="CASE_CL011').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
            $('input[name="CASE_CL012').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
@@ -536,11 +537,11 @@ jQuery(document).ready(function()
 	$('html,body').scrollTop(0);
 	FormWizardValidation.init();
 });
-    var table = document.getElementsByTagName('table')[0],
+    var table[0] = document.getElementsByTagName('table')[0],
       rows = table.getElementsByTagName('tr'),
       text = 'textContent' in document ? 'textContent' : 'innerText';
 
-    for (var i = 0, len = rows.length; i < len; i++) {
+    for (var i = 1, len = rows.length; i < len; i++) {
       rows[i].children[0][text] = i + ': ' + rows[i].children[0][text];
     }
 
