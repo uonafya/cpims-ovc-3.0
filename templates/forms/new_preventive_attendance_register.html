@@ -176,7 +176,7 @@
                                     <thead>
                                         <tr id="id_inputHeaders1">
                                         	<td width="5%"></td>
-                                            <th width="10%"><h6><b>INTERVENTION <span class="asteriskField">*</h6></b></th>
+                                            <th width="10%"><h6><b>Domain <span class="asteriskField">*</h6></b></th>
                                             <th width="10%"><h6><b><center>Attendance <span class="asteriskField">*</center></h6></b></th>                                                
                                             <th width="15%"><h6><b>Date Attended<span class="asteriskField">*</b></h6></th>
                                             <!-- <th width="15%"><h6><b>make up Date<span class="asteriskField">*</b></h6></th> -->
@@ -275,7 +275,7 @@
                                             <th width="15%"><h6><b>Client<span class="asteriskField">*</b></h6></th>
                                             <th width="10%"><h6><b>Refferred/Completed<span class="asteriskField">*</b></h6></th>
                                             <th width="10%"><h6><b>Other Reasons Specified<span class="asteriskField">*</b></h6></th>
-                                            <th width="15%"><h6><b>Referal Made (R) <span class="asteriskField">*</b></h6></th>
+                                            <!-- <th width="15%"><h6><b>Referal Made (R) <span class="asteriskField">*</b></h6></th> -->
                                             <th width="20%"><h6><b>Referal Completed(C)</b></h6></th> 
                                             <th width="20%"><h6><b>Date of service</b></h6></th> 
                                             <th width="5%"><h6><b>Actions<span class="asteriskField">*</b></h6></th>
@@ -309,12 +309,12 @@
                                                     <small><p class="dialog_paragraph">This value is required</p></span></small><span>
                                                 </div>
                                             </td>
-                                            <td width="10%">
+                                            <!-- <td width="10%">
                                                 {{ form.REFERAL_MADE }}
                                                 <div id="olmis_service_date_errormsg" style="display:none;">
                                                     <small><p class="dialog_paragraph">This value is required</p></span></small><span>
                                                 </div>
-                                            </td>
+                                            </td> -->
                                             
                                             <td width="10%">
                                                 {{ form.OVC_REFFERAL_COMPLETED }}
@@ -322,7 +322,7 @@
                                                     <small><p class="dialog_paragraph">This value is required</p></span></small><span>
                                                 </div>
                                             </td>
-                                            <td width="10%">
+                                            <td width="5%">
                                                 {{ form.DATE_OF_SERVICE_ENCOUNTER }}
                                                 <div id="olmis_service_provider_errormsg" style="display:none;">
                                                     <small><p class="dialog_paragraph">This value is required</p></span></small><span>
@@ -364,89 +364,7 @@
                                 </div>
                             </div>
                         </div> 
-                        <!-- end wizard step-4 -->
-                        <!-- <div class="wizard-step-3">
-                            <fieldset> 
-                                <div id="error_assessment"></div>
-                            <div style="overflow-x: auto; min-height: 350px;">
-                                <table id="caregiver_assessment_manager_table" class="table" style="overflow-y: auto !important;">
-                                    <thead>
-                                        <tr id="id_inputHeaders3">
-                                        	<td width="5%"></td>
-                                            <th width="10%"><h6><b>CAREGIVER REFERRED FOR SERVICES (Y/N) <span class="asteriskField">*</h6></b></th>
-                                            <th width="20%" colspan="2" ><h6><b><center>Services <span class="asteriskField">*</center></h6></b></th>                                                
-                                            <th width="15%"><h6><b>Referal Made (R)<span class="asteriskField">*</b></h6></th>
-                                            <th width="15%"><h6><b>Referal Completed(C)<span class="asteriskField">*</b></h6></th>
-                                            <th width="15%"><h6><b>Comment<span class="asteriskField">*</b></h6></th>
-                                            <th width="5%"><h6><b>Actions</b></h6></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr id="id_inputElements14">
-                                        	<td></td>
-                                        	<td width="10%">
-                                        		{{ form.CAREGIVER_REFFERED_FOR_SERVICES }}
-                                        		<div id="olmis_assessment_domain_errormsg" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                            </td>
-                                            <td></td>
-                                            <td width="10%">
-                                            	{{ form.CAREGIVER_REFFERAL_SERVICES }}
-                                            	<div id="olmis_assessment_coreservice_errormsg" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                            </td>
-                                            <td width="10%">
-                                            	{{ form.CAREGIVER_REFERAL_MADE }}
-                                            	<div id="olmis_assessment_coreservice_errormsg" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                            </td>
-                                            <td width="15%">
-                                            	{{ form.CAREGIVER_REFFERAL_COMPLETED }}
-                                            	<div id="olmis_assessment_coreservice_errormsg" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                            </td>
-                                            <td width="15%">
-                                            	{{ form.COMMENTS }}
-                                            	<h6><span id="sel_olmis_assessment_coreservice_status"></span></h6>
-                                            	<div id="olmis_assessment_coreservice_status_errormsg" style="display:none;">
-                                                </div>
-                                            </td>    
-        
-                                            	<div id="preventive_cas_errormsg" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                            </td>                                         
-                                            <td width="5%">
-                                            <h6><b>
-	                                            <button type="button" class="btn btn-sm btn-inverse m-r-5" onClick="AddRow(3)">
-	                                                <i class="fa fa-plus"></i>  Add
-	                                            </button>
-                                            	</b></h6>
-                                            </td>
-                                        </tr>		                                        
-                                    </tbody>
-                                    {{ form.preventive_assessment_provided_list }}
-                                </table>
-                            </div>
-							</fieldset>
-
-
-                            <div class="panel-body panel-form">
-                                <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4"></label>
-                                    <div class="col-md-6 col-sm-6">
-                                        <button id="mysubmit-f1a-0" class="btn btn-primary" type="button" onClick="savePreventiveAttRegister(3)">Submit Assessment</button>
-                                        <a href="{% url 'ovc_view' id=form.person.value %}" onClick="resetPreventiveAttRegister(1)" class="btn btn-white">Cancel</a>
-                                    </div>
-                                </div>
-                            </div>
-						</div> -->
-
-						                         
+                        <!-- end wizard step-4 -->                      
 					</div>
 				</form>
             </div>
@@ -577,7 +495,7 @@ function loadForm1aEvents()
                  }; 
 
     $.ajax({
-                url: '{% url 'manage_form1a_events' %}',
+                url: '{% url 'manage_preventive_register' %}',
                 dataType: 'json',
                 method: 'POST',
                 data: values,
@@ -728,6 +646,7 @@ function savePreventiveAttRegister(x)
         if(olmis_assessment_provided_list) 
         {
             values['olmis_assessment_provided_list'] = olmis_assessment_provided_list;
+            console.log("000000000000000000 ------------>>>>>>>>>>>>> ");
 
             $.ajax({
                 url: '{% url 'save_preventive_register' %}',
@@ -808,108 +727,6 @@ function savePreventiveAttRegister(x)
         }     
     } 
 
-    // Priority(s)
-    // if(x == 3){
-    //     values['args'] = 3; 
-    //     error_msg='Error saving priority(s)';
-    //     error_div = '#error_priority';
-
-    //     var date_of_priority = $('#date_of_priority').val();
-    //     var olmis_priority_service_provided_list = $('#preventive_assessment_provided_list').val();
-    //     if(olmis_priority_service_provided_list) 
-    //     {
-    //         values['olmis_priority_service_provided_list'] = olmis_priority_service_provided_list;
-    //             values['date_of_priority'] = date_of_priority;
-    //             $.ajax({
-    //                 url: '{% url 'save_form1a' %}',
-    //                 dataType: 'json',
-    //                 method: 'POST',
-    //                 data: values,
-    //                 success: function(result)
-    //                 {
-    //                     $.each(result, function(i, val) 
-    //                     {
-    //                         $(".alert-danger").hide();
-    //                         $('#success_message').css({'display': 'block'});
-    //                         $('#success_message p').html(val.msg);
-    //                         $('#error-message-reuse').css({'display': 'none'});
-    //                     });
-    //                     loadForm1aEvents();
-    //                     resetPreventiveAttRegister(3);
-    //                 },
-    //                 error: function(xhr, status, error){
-    //                     $(".alert-danger").hide();
-    //                     $("" + error_div + "").addClass( "alert alert-danger fade in" );
-    //                     $("" + error_div + "").html(msg + error)
-    //                 }
-    //             });
-    //     }
-    //     else
-    //     {
-    //         $('#success_message').css({'display': 'none'});
-    //         $(".alert-danger").show();
-    //         $('.invalid-form-message').html('Please provide required priority response(s).');
-    //         return false;            
-    //     } 
-    // } 
-
-    // Services
-    // if(x == 4){
-
-    //     values['args'] = 4; 
-    //     error_msg='Error saving service(s)';
-    //     error_div = '#error_service';
-
-    //     var date_of_service = $('#date_of_service').val();
-    //     var olmis_service_provided_list = $('#olmis_service_provided_list').val();
-    //     if(olmis_service_provided_list) 
-    //     {
-    //         values['olmis_service_provided_list'] = olmis_service_provided_list;
-
-    //         if(date_of_service)
-    //         {
-    //             values['date_of_service'] = date_of_service;
-    //             $.ajax({
-    //                 url: '{% url 'save_form1a' %}',
-    //                 dataType: 'json',
-    //                 method: 'POST',
-    //                 data: values,
-    //                 success: function(result)
-    //                 {
-    //                     $.each(result, function(i, val) 
-    //                     {
-    //                         $(".alert-danger").hide();
-    //                         $('#success_message').css({'display': 'block'});
-    //                         $('#success_message p').html(val.msg);
-    //                         $('#error-message-reuse').css({'display': 'none'});
-    //                     });
-    //                     loadForm1aEvents();
-    //                     resetPreventiveAttRegister(4);
-    //                 },
-    //                 error: function(xhr, status, error){
-    //                     $(".alert-danger").hide();
-    //                     $("" + error_div + "").addClass( "alert alert-danger fade in" );
-    //                     $("" + error_div + "").html(msg + error)
-    //                 }
-    //             });
-    //         }
-    //         else
-    //         {
-    //             $('#success_message').css({'display': 'none'});
-    //             $(".alert-danger").show();
-    //             $('.invalid-form-message').html('Please provide required date of event.');
-    //             $('#date_errormsg3').css({'display': 'block'});
-    //             return false;            
-    //         }
-    //     }
-    //     else
-    //     {
-    //         $('#success_message').css({'display': 'none'});
-    //         $(".alert-danger").show();
-    //         $('.invalid-form-message').html('Please provide required service(s) response(s).');
-    //         return false;            
-    //     } 
-    // }    
 }
 function getServices(x, domain)
 {
@@ -1140,7 +957,7 @@ function AddRow(x)
         var olmis_reffered_for_service =  $('input[name="OVC_REFFEREDFOR_SERVICES"]:checked').val();
         var olmis_client = $("#client_name").val();
         var olmis_reffered_service = $("#refferal_services_id").val();
-        var olmis_service_made = $('input[name="REFERAL_MADE"]:checked').val();
+        // var olmis_service_made = $('input[name="REFERAL_MADE"]:checked').val();
         var olmis_refferal_completed = $('input[name="OVC_REFFERAL_COMPLETED"]:checked').val();
         var olmis_date_of_encounter = $("#date_of_service_encounter").val();
         // $("#refferal_made_id").val();
@@ -1175,12 +992,12 @@ function AddRow(x)
                 var cell4 = row.insertCell(4);
                 var cell5 = row.insertCell(5);
                 var cell6 = row.insertCell(6);
-                var cell7 = row.insertCell(7);
+                // var cell7 = row.insertCell(7);
 
                 var holmis_reffered_for_service= "<input disabled id='holmis_reffered_for_service' value='"+olmis_reffered_for_service+"'>"
                 var holmis_reffered_service = "<input disabled id='holmis_reffered_service' value='"+olmis_reffered_service+"'>"
                 var holmis_refferal_completed= "<input disabled id='holmis_refferal_completed'  value='"+olmis_refferal_completed+"'>"
-                var holmis_service_made= "<input disabled id='holmis_service_made' value='"+olmis_service_made+"'>"
+                // var holmis_service_made= "<input disabled id='holmis_service_made' value='"+olmis_service_made+"'>"
                 var holmis_date_of_encounter= "<input disabled id='holmis_date_of_encounter' value='"+olmis_date_of_encounter+"'>"
                 var holmis_client= "<input disabled id='holmis_client' value='"+olmis_client+"'>"
                 // olmis_client
@@ -1191,9 +1008,9 @@ function AddRow(x)
                 cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_client") + holmis_client + '</h6>';
                 cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_reffered_service") + holmis_reffered_service + '</h6>';
                 cell4.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_refferal_completed") + holmis_refferal_completed + '</h6>';
-                cell5.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_service_made") + holmis_service_made + '</h6>';
-                cell6.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_date_of_encounter") + holmis_date_of_encounter + '</h6>';
-                cell7.innerHTML  = '<h6 class="dialog_paragraph">' + '1' + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
+                // cell5.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_service_made") + holmis_service_made + '</h6>';
+                cell5.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_date_of_encounter") + holmis_date_of_encounter + '</h6>';
+                cell6.innerHTML  = '<h6 class="dialog_paragraph">' + '1' + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
 
                 // AddClick Event To Remove Button
                 $("#" + btnRemoveSvcId + "").click(function(e)
@@ -1215,7 +1032,7 @@ function AddRow(x)
                     var olmis_reffered_service = $(tr).find('input[id="holmis_reffered_service"]').val();
                     var olmis_refferal_completed = $(tr).find('input[id="holmis_refferal_completed"]').val();
                     console.log("0000000000000000000000 "+olmis_refferal_completed)
-                    var olmis_service_made = $(tr).find('input[id="holmis_service_made"]').val();
+                    // var olmis_service_made = $(tr).find('input[id="holmis_service_made"]').val();
                     var olmis_date_of_encounter = $(tr).find('input[id="holmis_date_of_encounter"]').val();
                     var olmis_client = $(tr).find('input[id="holmis_client"]').val();
 
@@ -1223,7 +1040,7 @@ function AddRow(x)
                         "olmis_reffered_for_service" : olmis_reffered_for_service,
                         "olmis_reffered_service" : olmis_reffered_service,
                         "olmis_refferal_completed" : olmis_refferal_completed,
-                        "olmis_service_made" : olmis_service_made,
+                        // "olmis_service_made" : olmis_service_made,
                         "olmis_date_of_encounter" : olmis_date_of_encounter,
                         "olmis_client" : olmis_client
                         }                                
