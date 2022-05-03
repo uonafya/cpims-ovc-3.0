@@ -1416,7 +1416,6 @@ class OVCBiReferral(models.Model):
     refferal_status = models.CharField(max_length=20, default='PENDING')
     refferal_date = models.DateField()
     refferal_enddate = models.DateField()
-    refferal_domain = models.IntegerField(null=False, default=1)
     refferal_service = models.CharField(max_length=100)
     referral_grouping_id = models.UUIDField(default=uuid.uuid1, editable=False)
     timestamp_created = models.DateTimeField(default=timezone.now)
@@ -1427,6 +1426,8 @@ class OVCBiReferral(models.Model):
     class Meta:
         db_table = 'ovc_bi_referrals'
 
-        # def __unicode__(self):
-        #     return str(self.refferal_id)
+        def __unicode__(self):
+            return str(self.refferal_id)
+
+
 

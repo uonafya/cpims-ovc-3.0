@@ -1,0 +1,570 @@
+{% extends 'base.html' %}
+{% load app_filters %}
+{% load static %}
+{% block page_title %} FMP Pre- Evaluation form {% endblock %}
+{% block style_code %}
+<link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block javascript_code%}
+{% endblock javascript_code%}
+
+{% block primary %}
+
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+    <li><a href="#">Home</a></li>
+    <li class="active">Forms</li>
+</ol>
+<!-- end breadcrumb -->
+
+<!-- begin page-header -->
+
+<h1 class="page-header">Forms
+    <small>FMP I Pre- Evaluation Form<b></b></small>
+        </b>
+</h1>
+
+
+<!-- end page-header -->
+
+<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-info fa-2x pull-left"></i>
+    <span class="invalid-form-message" id="invalid-form-message"></span>
+</div>
+
+<!-- begin row -->
+<div id='case_details' class="row">
+    <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin panel -->
+      <div style="overflow-x: auto; min-height: 300px;">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i
+                            class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i
+                            class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title"> This tool assesses parents/caregivers Knowledge, Attitudes and Practices before FMP sessions </h4>
+            </div>
+            <div class="row table">
+                <div class="form-group">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Date of the event: </td>
+                            <td>Name of the school/Religious org. (To which the participant is attached):</td>
+                        </tr>
+                        <tr>
+                            <td>Name of the participant <strong>(optional):</strong></td>
+                            <td>Category of the participant (Parents)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true"
+                    name="form-wizard-hhva" id="new_hhva">
+                    {% csrf_token %}
+                    <div id="wizard-dreamsform">
+                        <ol>
+
+                            <li>
+                                SECTION 1
+                                <small></small>
+                            </li>
+
+                            <li>
+                                SECTION 2
+                                <small></small>
+                            </li>
+                            <li>
+                                SECTION 3
+                                    <small></small>
+                             </li>
+                             <li>
+                                SECTION 4
+                                    <small></small>
+                            </li>
+
+                        </ol>
+
+                        <!-- begin wizard step-1 -->
+                        <div class="wizard-step-1">
+                            <h4 style="margin-top: 0;color:#55518a"> The questions asked below seeks to know how much you know about your 9-12 year old child
+                                Please circle your answer to each question
+                            </h4>
+                            <div class="form-group">
+
+                                <table class="table table-bordered">
+                                    <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Questions</th>
+                                                <th scope="col">Answer</th>
+
+                                            </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                           <td>1</td>
+                                            <td>About your 9-12  year old child, how often do you know where he/she is when he/she is not at home?</td>
+                                            <td>
+                                            {{ form.PREEVALUATION_001 }}
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>2</td>
+                                                <td>About your 9-12 year old child, how often do you know what he/she does when he/she is not at home?</td>
+                                                <td>
+                                                        {{ form.PREEVALUATION_001 }}
+                                                </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>3</td>
+                                                <td>About your 9-12 year old child, how often do you know who he/she is with when he/she is not at home?</td>
+                                                <td>
+                                                        {{ form.PREEVALUATION_001 }}
+                                                </td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                                <p>&nbsp;</p>
+
+                            </div>
+
+
+                        </div>
+                        <!-- end wizard step-1 -->
+
+                        <!-- begin wizard step-2 -->
+                        <div class="wizard-step-2">
+                            <h4 style="margin-top: 0;color:#55518a"> The next questions are about your child’s TV viewing, Please circle your answer to each question.</h4>
+                            <div class="form-group">
+                                <table class="table table-bordered">
+                                    <thead>
+                                            <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Questions</th>
+                                                    <th scope="col">Answer</th>
+
+                                            </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+                                            <td>4</td>
+                                            <td>
+                                                How often does your child watch TV?
+                                            </td>
+                                            <td>
+                                                    {{ form.PREEVALUATION_001 }}
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                                <td>5</td>
+                                                <td>
+                                                    How often do you know what your child is watching on TV?
+                                                </td>
+                                                <td>
+                                                        {{ form.PREEVALUATION_001 }}
+                                                </td>
+
+                                        </tr>
+
+                                        <tr>
+                                                <td>6</td>
+                                                <td>
+                                                    How often do you tell your child he/she may not watch certain programs on TV?
+                                                </td>
+                                                <td>
+                                                        {{ form.PREEVALUATION_001 }}
+                                                </td>
+
+                                        </tr>
+
+
+                                        <tr>
+                                                <td>7</td>
+                                                <td>
+                                                    How often do you talk to your child about sex that is shown or talked about on TV?
+                                                </td>
+                                                <td>
+                                                      {{ form.PREEVALUATION_001 }}
+                                                </td>
+
+                                        </tr>
+
+                                        <tr>
+                                                <td>8</td>
+                                                <td>
+                                                    In general how often do you watch TV with your child?
+                                                </td>
+                                                <td>
+                                                        {{ form.PREEVALUATION_001 }}
+                                                </td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                                <p>&nbsp;</p>
+
+                            </div>
+                        </div>
+                        <!-- end wizard step-2 -->
+
+                         <!-- begin wizard step-3 -->
+                         <div class="wizard-step-3">
+                                <h4 style="margin-top: 0;color:#55518a"> The next set of questions seek to know if you discuss issues on sex, HIV, STIs, e.t.c
+                                    with your 9-12 year old child. Please circle the answer to each question. </h4>
+                                <div class="form-group">
+
+                                    <table class="table table-bordered">
+                                        <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Questions</th>
+                                                    <th scope="col">Answer</th>
+                                                </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                               <td>9</td>
+                                                <td>Have you ever talked to your child about what sex is?</td>
+                                                <td>
+                                                        {{ form.PREEVALUATION_001 }}
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                    <td>10</td>
+                                                     <td>Have you ever talked to your child about HIV/AIDS? </td>
+                                                     <td>
+                                                            {{ form.PREEVALUATION_001 }}
+                                                     </td>
+
+                                            </tr>
+
+                                            <tr>
+                                                    <td>11</td>
+                                                     <td>Have you ever talked to your child over sexually transmitted infections?</td>
+                                                     <td>
+                                                            {{ form.PREEVALUATION_001 }}
+                                                     </td>
+
+                                            </tr>
+
+                                            <tr>
+                                                    <td>12</td>
+                                                     <td>Are there other sex issues you have to your child about?</td>
+                                                     <td>
+                                                            {{ form.PREEVALUATION_002 }}
+                                                     </td>
+
+                                            </tr>
+
+                                            <tr>
+                                                    <td>13</td>
+                                                     <td>If yes, what are they?</td>
+                                                     <td>
+                                                            {{ form.PREEVALUATION_002 }}
+                                                     </td>
+
+                                            </tr>
+
+                                            <tr>
+                                                    <td>14</td>
+                                                     <td>Has your child ever asked you about a sex issue?</td>
+                                                     <td>
+                                                            {{ form.PREEVALUATION_003 }}
+                                                     </td>
+
+                                            </tr>
+
+                                            <tr>
+                                                    <td>15</td>
+                                                     <td>If my child asked me a question about sex issue I would respond.</td>
+                                                     <td>
+                                                            {{ form.PREEVALUATION_004 }}
+                                                     </td>
+
+                                            </tr>
+
+                                            <tr>
+                                                    <td>16</td>
+                                                     <td>I would be comfortable answering if my child asked me a question about a sex issue</td>
+                                                     <td>
+                                                            {{ form.PREEVALUATION_004 }}
+                                                     </td>
+
+                                            </tr>
+
+                                            <tr>
+                                                    <td>17</td>
+                                                     <td>I know how to talk to my child about sex issues </td>
+                                                     <td>
+                                                            {{ form.PREEVALUATION_004 }}
+                                                     </td>
+
+                                            </tr>
+
+                                            <tr>
+                                                    <td>18</td>
+                                                     <td>I have enough information about sex issues to talk to my child.</td>
+                                                     <td>
+                                                            {{ form.PREEVALUATION_004 }}
+                                                     </td>
+
+                                            </tr>
+
+                                            <tr>
+                                                    <td>19</td>
+                                                     <td>When I talk to my child about sex issues I tell him/her about the bad things that come from sex.</td>
+                                                     <td>
+                                                            {{ form.PREEVALUATION_004 }}
+                                                     </td>
+
+                                            </tr>
+
+                                            <tr>
+                                                    <td>20</td>
+                                                     <td>When I talk to my child about sex I give him/her time to ask questions and give his or her opinion</td>
+                                                     <td>
+                                                            {{ form.PREEVALUATION_004 }}
+                                                     </td>
+
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
+
+                                    <p>&nbsp;</p>
+
+                                </div>
+
+
+                            </div>
+                            <!-- end wizard step-3 -->
+
+                             <!-- begin wizard step-4 -->
+                        <div class="wizard-step-4">
+                                <h4 style="margin-top: 0;color:#55518a"> The next sets of questions ask about your thoughts and feelings about your child on sex issues. Please circle the answer to each question.</h4>
+                                <div class="form-group">
+
+                                    <table class="table table-bordered">
+                                        <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Questions</th>
+                                                    <th scope="col">Answer</th>
+
+                                                </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>21</td>
+                                                        <td>
+                                                                I think my child is ready to learn about sex issues
+                                                        </td>
+                                                        <td>
+                                                                {{ form.PREEVALUATION_004 }}
+                                                        </td>
+
+                                                </tr>
+
+                                                <tr>
+                                                        <td>22</td>
+                                                        <td>
+                                                            I think that if I talk to my child about sex issues I would encourage him to have sex
+                                                        </td>
+                                                        <td>
+                                                                {{ form.PREEVALUATION_004 }}
+                                                        </td>
+
+                                                </tr>
+
+                                                <tr>
+                                                        <td>23</td>
+                                                        <td>
+                                                            I think my child is still young to learn about sex issues.
+                                                        </td>
+                                                        <td>
+                                                            {{ form.PREEVALUATION_004 }}
+                                                        </td>
+
+                                                </tr>
+
+                                                <tr>
+                                                        <td>24</td>
+                                                        <td>
+                                                            I would rather have someone else talk to my child about sex issues
+                                                        </td>
+                                                        <td>
+                                                                {{ form.PREEVALUATION_004 }}
+                                                        </td>
+
+                                                </tr>
+
+                                                <tr>
+                                                        <td>25</td>
+                                                        <td>
+                                                            It is a parent/guardian’s responsibility to talk to their children about sex issues
+                                                        </td>
+                                                        <td>
+                                                                {{ form.PREEVALUATION_004 }}
+                                                        </td>
+
+                                                </tr>
+
+                                                <tr>
+                                                        <td>26</td>
+                                                        <td>
+                                                            I am happy with my child and I get along
+                                                        </td>
+                                                        <td>
+                                                                {{ form.PREEVALUATION_004 }}
+                                                        </td>
+
+                                                </tr>
+
+                                                <tr>
+                                                        <td colspan="4" style="background-color: mediumturquoise">Thank you for filling this form and participating in this forum </td>
+
+                                                </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                    <p>&nbsp;</p>
+
+                                </div>
+
+
+                            </div>
+                            <!-- end wizard step-4 -->
+
+
+
+                    </div>
+
+                    <div class="panel-body panel-form">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4"></label>
+                            <div class="col-md-6 col-sm-6">
+                                <button id="mysubmit-hivscreeningtool" type="submit"
+                                    class="btn btn-primary">Submit</button>
+                                <a href="javascript:history.go(-1)" class="btn btn-white">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+            <div class="badge pull-right m-4">Revised: 4th July 2019</div>
+        </div>
+        <!-- end panel -->
+
+    </div>
+    <!-- end col-12 -->
+
+</div>
+<!-- end row -->
+
+{% endblock %}
+
+{% block lazy_javascript_code %}
+<script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}"></script>
+<script src="{% static 'js/apps.js' %}"></script>
+<script src="{% static 'js/form-wizards.js' %}"></script>
+<script src="{% static 'js/tag-it.js' %}"></script>
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+
+<script>
+        $( function() {
+
+            $('#DREAMS_001_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_002_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_003_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_004_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_005_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_006_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_007_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_010_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_012_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_014_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_017_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_019_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_021_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_022_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_023_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_024_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_025_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_026_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_027_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_028_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_029_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_030_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_031_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_032_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_033_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_034_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_035_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_036_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_037_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_038_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_039_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_040_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_041_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_042_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_043_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_044_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_045_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_046_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_047_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_048_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_049_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_050_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_051_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_052_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_053_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_054_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_055_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_056_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_057_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_058_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_059_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+            $('#DREAMS_060_DATE').datepicker({ format: 'yyyy-mm-dd' }).val();
+
+          $(document).ready(function () {
+                $("#wizard-dreamsform").bwizard();
+            });
+
+        } );
+</script>
+
+{% endblock %}
