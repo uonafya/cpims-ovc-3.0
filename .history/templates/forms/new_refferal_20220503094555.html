@@ -253,7 +253,31 @@
         <span class="mesagg" id="mesagg"></span>
     </div>
 
+    <!-- begin row -->
+    <div class="modal fade" id="delete-form1a-entry" style="margin-left: auto; margin-right: auto; width: 50%;"
+         role="dialog">
+        <div class="modal-dialog modal-sm">
 
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Delete Entry</h4>
+                </div>
+                <div class="modal-body">
+                    <p style="color: #ff0000; font-size: 16px;">Delete selected entry?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-default" onclick="deleteForm1aEntry()"
+                            data-dismiss="modal">Yes
+                    </button>
+                    <button type="button" class="btn btn-default btn-primary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- end row -->
 
     <!-- begin row -->
     <div id='case_details' class="row">
@@ -289,6 +313,8 @@
                                             <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6></th>
                                             <th width="15%"><h6><b>Date Of Referral<span class="asteriskField">*</b></h6>
                                             </th>
+                                            <!-- <th width="20%"><h6><b>Service(s) Provider</b></h6></th>
+                                            <th width="20%"><h6><b>Place Of Service</b></h6></th>-->
                                             <th width="5%"><h6><b>Actions<span class="asteriskField">*</b></h6></th>
                                         </tr>
                                         </thead>
@@ -514,7 +540,6 @@
 
 
             $('#CPT_ACTUAL_DATE_COMPLETION').removeAttr('required');
-
         });
 
         $('*[name=CPT_RESULTS]').prepend('<option selected value="">Pick an item</option>').attr('required', true)
@@ -545,7 +570,6 @@
             //     }
             // })
             let referral_date = $('#referral_date').val();
-            console.log({referral_date})
             $('.waleert').remove();
 
             $('input, select').change(function (e) {
@@ -574,7 +598,7 @@
 
 
             if (proceed) {
-                $('#submissions_table tbody').append('<tr id="row_' + randomID + '"> <td id="tbl_domain"></td> <td id="tbl_goal"><ul class="ul-flow"></ul></td>  <td id="tbl_referral_date"></td>  <td id="tbl_acts"></td></tr>');
+                $('#submissions_table tbody').append('<tr id="row_' + randomID + '"> <td id="tbl_domain"></td> <td id="tbl_goal"><ul class="ul-flow"></ul></td> <td id="tbl_needs"><ul class="ul-flow"></ul></td> <td id="tbl_actions"><ul class="ul-flow"></ul></td> <td id="tbl_services"><ul class="ul-flow"></ul></td> <td id="tbl_responsible"><ul class="ul-flow"></ul></td> <td id="tbl_datecompleted"></td> <td id="tbl_results"></td> <td id="tbl_reasons"></td> <td id="tbl_acts"></td></tr>');
                 // domain
                 $('#row_' + randomID + ' > td#tbl_domain').html($('select[name=BIREFERRAL_DOMAIN] option[value=' + domain + ']').text() + '<input type="hidden" name="h_CPT_DOMAIN" value="' + domain + '" />');
                 // -domain
@@ -583,21 +607,7 @@
                 $('#row_' + randomID + ' > td#tbl_goal').html($('.goals_cell > div:not(.hidden) > select option:selected').text() + '<input type="hidden" name="h_CPT_GOAL" value="' + goal + '" />');
                 // -goal
 
-                $('#row_' + randomID + ' > td#tbl_referral_date').html(referral_date + '<input type="hidden" name="referral_date" value="' + referral_date + '" />');
-
-
-                $('#row_' + randomID + ' td#tbl_acts').html('<a href="#" class="removerow btn btn-xs btn-danger"><i class="fa fa-trash"></i> Remove</a>');
-
-
-
-                $('#row_' + randomID + ' > td#tbl_acts > .removerow').click(function (e) {
-                    e.preventDefault();
-                    $('#row_' + randomID).empty();
-                    $('#row_' + randomID).remove();
-    
-                    // $(this).closest('tr').empty();
-                    // $(this).closest('tr').remove();
-                });
+                $('#row_' + randomID + ' > td, #tbl_referral_date').html(date + '<input type="hidden" name="referral_date" value="' + referral_date + '" />');
 
                 console.log(
                     'LOG: ' + JSON.stringify({
@@ -611,7 +621,14 @@
                 final_input['goal'].push(goal);
                 final_input['referral_date'].push(referral_date);
 
-               
+                $('#row_' + randomID + ' > td#tbl_acts > .removerow').click(function (e) {
+                    e.preventDefault();
+                    $('#row_' + randomID).empty();
+                    $('#row_' + randomID).remove();
+
+                    // $(this).closest('tr').empty();
+                    // $(this).closest('tr').remove();
+                });
             }
 
         }

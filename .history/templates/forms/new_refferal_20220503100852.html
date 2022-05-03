@@ -253,7 +253,31 @@
         <span class="mesagg" id="mesagg"></span>
     </div>
 
+    <!-- begin row -->
+    <div class="modal fade" id="delete-form1a-entry" style="margin-left: auto; margin-right: auto; width: 50%;"
+         role="dialog">
+        <div class="modal-dialog modal-sm">
 
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Delete Entry</h4>
+                </div>
+                <div class="modal-body">
+                    <p style="color: #ff0000; font-size: 16px;">Delete selected entry?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-default" onclick="deleteForm1aEntry()"
+                            data-dismiss="modal">Yes
+                    </button>
+                    <button type="button" class="btn btn-default btn-primary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- end row -->
 
     <!-- begin row -->
     <div id='case_details' class="row">
@@ -289,6 +313,8 @@
                                             <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6></th>
                                             <th width="15%"><h6><b>Date Of Referral<span class="asteriskField">*</b></h6>
                                             </th>
+                                            <!-- <th width="20%"><h6><b>Service(s) Provider</b></h6></th>
+                                            <th width="20%"><h6><b>Place Of Service</b></h6></th>-->
                                             <th width="5%"><h6><b>Actions<span class="asteriskField">*</b></h6></th>
                                         </tr>
                                         </thead>
@@ -515,6 +541,18 @@
 
             $('#CPT_ACTUAL_DATE_COMPLETION').removeAttr('required');
 
+            function onDeleteRow(randomID) {
+
+            $('#row_' + randomID + ' > td#tbl_acts > .removerow').click(function (e) {
+                e.preventDefault();
+                $('#row_' + randomID).empty();
+                $('#row_' + randomID).remove();
+
+                // $(this).closest('tr').empty();
+                // $(this).closest('tr').remove();
+            });
+
+        }
         });
 
         $('*[name=CPT_RESULTS]').prepend('<option selected value="">Pick an item</option>').attr('required', true)
@@ -590,15 +628,7 @@
 
 
 
-                $('#row_' + randomID + ' > td#tbl_acts > .removerow').click(function (e) {
-                    e.preventDefault();
-                    $('#row_' + randomID).empty();
-                    $('#row_' + randomID).remove();
-    
-                    // $(this).closest('tr').empty();
-                    // $(this).closest('tr').remove();
-                });
-
+                onDeleteRow
                 console.log(
                     'LOG: ' + JSON.stringify({
                         1: domain,
