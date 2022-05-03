@@ -1,140 +1,8 @@
 {% extends 'base.html' %}
 {% load app_filters %}
 {% load static %}
-{% block page_title %} Case Plan Template {% endblock %}
+{% block page_title %} Bidirection Refferal Final {% endblock %}
 {% block style_code %}
-    <div class="row">
-        <!-- begin col-12 -->
-        <div class="col-md-12">
-            <!-- begin panel -->
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <div class="panel-heading-btn">
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default"
-                           data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
-                           data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                    </div>
-                    <h4 class="panel-title"><b>Referral Events List </b></h4>
-                </div>
-
-                <div class="panel-body">
-                    <div class="panel panel-inverse">
-                        <div id="case-events" class="table-responsive">
-                            <table id="past_cpt_table" class="table table-condensed table-bordered table-striped">
-                                <thead>
-                                <tr>
-
-                                    <th>#</th>
-                                    <th>Domain</th>
-                                    <th>Core Services</th>
-                                    <th>Actions</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for one_bdt_event in bidirectional_events %}
-                                    {% if one_cpt_event %}
-                                        <tr>
-                                            <td rowspan="4" style="text-align: center;vertical-align: middle;"
-                                                width="40px" valign="center">{{ forloop.counter }}</td>
-                                            <td style="text-align: center;vertical-align: middle;"><b>HEALTHY</b></td>
-                                            <td>
-                                                {% for one_healthy in one_bdt_event.event_healthy %}
-                                                    <small><b>({{ forloop.counter }})</b></small>
-                                                    <small>{{ one_healthy.ev_goal }}</small>
-                                                    <hr class="m-t-0 m-b-0"/>
-                                                {% endfor %}
-                                            </td>
-                                            <td>
-                                                {% for one_healthy in one_bdt_event.event_healthy %}
-                                                    <small><b>({{ forloop.counter }})</b></small>
-                                                    <small>{{ one_healthy.ev_domain }}</small>
-                                                    <hr class="m-t-0 m-b-0"/>
-                                                {% endfor %}
-                                            </td>
-
-                                            <td rowspan="4" style="text-align: center;vertical-align: middle;"
-                                                width="40px" valign="center">
-                                                <a href="{% url 'update_caseplan' event_id=one_bdt_event.event_id ovcid=one_bdt_event.event_ovc %}"
-                                                   class="btn btn-sm btn-primary btn-outline btn-sm">Update</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="text-align: center;vertical-align: middle;"><b>STABLE</b></td>
-                                            <td>
-                                                {% for one_stable in one_cpt_event.event_stable %}
-                                                    <small><b>({{ forloop.counter }})</b></small>
-                                                    <small>{{ one_stable.ev_goal }}</small>
-                                                    <hr class="m-t-0 m-b-0"/>
-                                                {% endfor %}
-                                            </td>
-                                            <td>
-                                                {% for one_stable in one_cpt_event.event_stable %}
-                                                    <small><b>({{ forloop.counter }})</b></small>
-                                                    <small>{{ one_stable.ev_need }}</small>
-                                                    <hr class="m-t-0 m-b-0"/>
-                                                {% endfor %}
-                                            </td>
-
-                                        </tr>
-                                        <tr>
-                                            <td style="text-align: center;vertical-align: middle;"><b>SAFE</b></td>
-                                            <td>
-                                                {% for one_safe in one_cpt_event.event_safe %}
-                                                    <small><b>({{ forloop.counter }})</b></small>
-                                                    <small>{{ one_safe.ev_goal }}</small>
-                                                    <hr class="m-t-0 m-b-0"/>
-                                                {% endfor %}
-                                            </td>
-                                            <td>
-                                                {% for one_safe in one_cpt_event.event_safe %}
-                                                    <small><b>({{ forloop.counter }})</b></small>
-                                                    <small>{{ one_safe.ev_need }}</small>
-                                                    <hr class="m-t-0 m-b-0"/>
-                                                {% endfor %}
-                                            </td>
-
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-
-                            <table class="table hidden">
-                                <thead>
-                                <tr>
-                                    <td>Event ID</td>
-                                    <td>Event Date</td>
-                                    <td># Services</td>
-                                    <td>Actions</td>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for one_cpt_event in caseplan_events %}
-                                    {% if one_cpt_event %}
-                                        <tr>
-                                            <td><b>{{ one_cpt_event.event_id }}</b></td>
-                                            <td>{{ one_cpt_event.event_date }}</td>
-                                            <td>{{ one_cpt_event.event_services_count }}</td>
-                                            <td>
-                                                <a href="{% url 'update_caseplan' event_id=one_cpt_event.event_id ovcid=one_cpt_event.event_ovc %}"
-                                                   class="btn btn-sm btn-primary btn-outline">Update</a></td>
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        <br><br>
-                    </div>
-                </div>
-
-            </div>
-            <!-- end panel -->
-        </div>
-        })
-        <!-- end col-12 -->
-    </div>
     <link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet"/>
     <link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
     <link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
@@ -174,24 +42,24 @@
     <!-- begin page-header -->
     <!-- {% for data in init_data %} -->
 
-    <ol class="breadcrumb pull-right">
-        <li><a href="#">Home</a></li>
-        <li class="active">Forms</li>
-    </ol>
+        <ol class="breadcrumb pull-right">
+            <li><a href="#">Home</a></li>
+            <li class="active">Forms</li>
+        </ol>
 
         <!-- {% endfor %} -->
     <!-- end page-header -->
 
     <!-- #csi-warning-dialog -->
-        <h1 class="page-header">Forms <small>Bidirectional Plan Template <b> {% for cgvr in care_givers %}
-            {{ cgvr }} {% endfor %}
-            <!-- | {{ data.first_name }} {{ data.surname }} | {{ data.sex_id|gen_value:vals }} |
+    <h1 class="page-header">Forms <small>Bidirection Refferal Final Draft<b> {% for cgvr in care_givers %}
+        {{ cgvr }} {% endfor %}
+        <!-- | {{ data.first_name }} {{ data.surname }} | {{ data.sex_id|gen_value:vals }} |
                     {% if data.date_of_birth|gen_age == 0 %}
                             UNDER 1 YEAR
                         {% else %}
                             {{ data.date_of_birth|gen_age }} YRS
                         {% endif %} -->
-        </b></small></h1>
+    </b></small></h1>
     <!-- #end-csi-warning-dialog -->
 
     <div class="modal fade" id="csi-warning-dialog">
@@ -222,7 +90,8 @@
 
     <div id="error_message" class="alert alert-danger fade in" style="display: none;" tabindex="1">
         <!--<span class="close" data-dismiss="alert">×</span>-->
-        {% comment %} <button type="button" class="close" data-hide="alert">&times;</button> {% endcomment %}
+        {% comment %}
+            <button type="button" class="close" data-hide="alert">&times;</button> {% endcomment %}
         <i class="fa fa-info fa-2x pull-left"></i>
         <span class="invalid-form-message" id="invalid-form-message"></span>
     </div>
@@ -230,16 +99,17 @@
 
     {% comment %} {% if err_msgg %}
 
-    <div id="success_message" class="alert alert-success fade in" style="display: none;">
-        <!--<span class="close" data-dismiss="alert">×</span>-->
-        <button type="button" class="close" data-hide="alert">&times;</button>
-        <i class="fa fa-check fa-2x pull-left"></i>
-        <p></p>
-    </div>
+        <div id="success_message" class="alert alert-success fade in" style="display: none;">
+            <!--<span class="close" data-dismiss="alert">×</span>-->
+            <button type="button" class="close" data-hide="alert">&times;</button>
+            <i class="fa fa-check fa-2x pull-left"></i>
+            <p></p>
+        </div>
 
     {% endif %} {% endcomment %}
 
-        {% comment %} <div class="alert alert-danger" id="error-message-reuse">
+    {% comment %}
+        <div class="alert alert-danger" id="error-message-reuse">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
             <span class="mesgg"></span>
             {{ err_msgg }}
@@ -269,7 +139,7 @@
                         <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i
                                 class="fa fa-times"></i></a>
                     </div>
-                    <h4 class="panel-title"> Case Plan </h4>
+                    <h4 class="panel-title"> REFERRAL FORM </h4>
                 </div>
                 <div class="panel-body">
                     <div id="form1_info"></div>
@@ -286,8 +156,10 @@
                                         <tr id="id_inputHeaders">
                                             <td width="2%"></td>
                                             <th width="15%"><h6><b>Domain<span class="asteriskField">*</b></h6></th>
-                                            <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6></th>
-                                            <th width="15%"><h6><b>Date Of Referral<span class="asteriskField">*</b></h6>
+                                            <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6>
+                                            </th>
+                                            <th width="15%"><h6><b>Date Of Referral<span class="asteriskField">*</b>
+                                            </h6>
                                             </th>
                                             <th width="5%"><h6><b>Actions<span class="asteriskField">*</b></h6></th>
                                         </tr>
@@ -358,22 +230,24 @@
                                         </tbody>
 
                                     </table>
-                                </div>
-                                <div class="table-responsive">
-                                <table class="table table-condensed slimtable" id="submissions_table">
-                                    <thead>
-                                        <tr>
-                                            <th>Domain</th>
-                                            <th>Goal</th>
-                                            <th>Completed</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed slimtable" id="submissions_table">
+                                            <thead>
+                                            <tr>
+                                                <th>Domain</th>
+                                                <th>Goal</th>
+                                                <th>Completed</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
 
-                                    </tbody>
-                                </table>
-                            </div>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="panel-body panel-form">
@@ -393,7 +267,7 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-4 col-sm-4"></label>
                                     <div class="col-md-6 col-sm-6">
-                                        <button id="mysubmit-f1a-3" class="btn btn-primary" type="button"
+                                        <button id="mysubmit-birefferal" class="btn btn-primary" type="button"
                                                 onClick="saveForm1A(4)">Submit Refferal(s)
                                         </button>
                                         <a href="" onClick="cancelBtn()" class="btn btn-white">Cancel</a>
@@ -451,6 +325,8 @@
             window.location.reload();
         }
 
+
+
         $('input[name=if_first_cpara],input[name=date_first_cpara]').removeAttr('required');
         $('input[name=date_first_cpara]').attr('disabled', true);
         $('input[name=if_first_cpara]').change(function () {
@@ -465,8 +341,21 @@
         });
 
         $(document).ready(function () {
+
+            //multi selects
+            $('.goals_cell > div > select').multiselect({
+                // $('.services_cell > div > select').multiselect({
+                selectAllValue: 'multiselect-all',
+                includeSelectAllOption: true,
+                enableCaseInsensitiveFiltering: true,
+                numberDisplayed: 1,
+                maxHeight: 300,
+                buttonWidth: '100%',
+                buttonClass: 'btn btn-white'
+            });
+
             $('input, select').attr('required', true);
-            $('.goals_cell > div > select, .domain_cell  > select').prepend('<option value="" selected>Pick an item</option>');
+            $('.domain_cell  > select').prepend('<option value="" selected>Pick an item</option>');
 
             // $('.goals_cell > div > select').removeClass('hidden')
 
@@ -476,41 +365,41 @@
             {# Bireferral Domain drop down #}
             $('input[name=referral_end_date]').datepicker({format: 'yyyy-mm-dd'});
             $('select[name=BIREFERRAL_DOMAIN]').change(function (e) {
-                    e.preventDefault();
-                    var domain_val = $('select[name=BIREFERRAL_DOMAIN] option:selected').val();
-                    if (domain_val === 'HTD') {
-                        $('.healthy_form, .default_form').each(function () {
+                e.preventDefault();
+                var domain_val = $('select[name=BIREFERRAL_DOMAIN] option:selected').val();
+                if (domain_val === 'HTD') {
+                    $('.healthy_form, .default_form').each(function () {
 
-                            $(this).removeClass('hidden');
-                        });
-                        $('.stable_form, .safe_form, .school_form, .default_form').each(function () {
+                        $(this).removeClass('hidden');
+                    });
+                    $('.stable_form, .safe_form, .school_form, .default_form').each(function () {
 
-                            $(this).addClass('hidden');
-                        })
-                    } else if (domain_val === 'STD') {
-                        $('.stable_form, .default_form').each(function () {
+                        $(this).addClass('hidden');
+                    })
+                } else if (domain_val === 'STD') {
+                    $('.stable_form, .default_form').each(function () {
 
-                            $(this).removeClass('hidden');
-                        });
-                        $('.healthy_form, .safe_form, .school_form, .default_form').each(function () {
-                            $(this).addClass('hidden');
-                        })
-                    } else if (domain_val === 'SFD') {
-                        $('.healthy_form, .stable_form, .school_form, .default_form').each(function () {
-                            $(this).addClass('hidden');
-                        })
-                        $('.safe_form').each(function () {
-                            $(this).removeClass('hidden');
-                        })
-                    } else if (domain_val === 'SCH') {
-                        $('.healthy_form, .stable_form, .safe_form, .default_form').each(function () {
-                            $(this).addClass('hidden');
-                        })
-                        $('.school_form').each(function () {
-                            $(this).removeClass('hidden');
-                        })
-                    }
-                });
+                        $(this).removeClass('hidden');
+                    });
+                    $('.healthy_form, .safe_form, .school_form, .default_form').each(function () {
+                        $(this).addClass('hidden');
+                    })
+                } else if (domain_val === 'SFD') {
+                    $('.healthy_form, .stable_form, .school_form, .default_form').each(function () {
+                        $(this).addClass('hidden');
+                    })
+                    $('.safe_form').each(function () {
+                        $(this).removeClass('hidden');
+                    })
+                } else if (domain_val === 'SCH') {
+                    $('.healthy_form, .stable_form, .safe_form, .default_form').each(function () {
+                        $(this).addClass('hidden');
+                    })
+                    $('.school_form').each(function () {
+                        $(this).removeClass('hidden');
+                    })
+                }
+            });
 
 
             $('#CPT_ACTUAL_DATE_COMPLETION').removeAttr('required');
@@ -531,19 +420,106 @@
 
 
         })
+        function getServices(x, domain) {
+            var multiselect_data = [];
+            var data = new Array();
+            var csrftoken = $.cookie('csrftoken');
+            var index = 0;
+            var multiselect_id = ''
+
+            if (domain == 'DHNU') {
+                multiselect_id = '#olmis_priority_health';
+            }
+            if (domain == 'DSHC') {
+                multiselect_id = '#olmis_priority_shelter';
+            }
+            if (domain == 'DPRO') {
+                multiselect_id = '#olmis_priority_protection';
+            }
+            if (domain == 'DEDU') {
+                multiselect_id = '#olmis_priority_education';
+            }
+            if (domain == 'DPSS') {
+                multiselect_id = '#olmis_priority_pss';
+            }
+            if (domain == 'DHES') {
+                multiselect_id = '#olmis_priority_hes';
+            }
+
+            var values = {
+                'csrfmiddlewaretoken': csrftoken,
+                'domain_id': domain,
+                'index': index
+            };
+
+            // do an ajax_call
+            $.ajax({
+                url: '{% url 'manage_service_category' %}',
+                dataType: 'json',
+                method: 'POST',
+                contentType: 'application/x-www-form-urlencoded',
+                data: values,
+                success: function (result) {
+                    var status;
+                    var item_sub_category_id;
+                    var item_sub_category;
+                    var multiselect_dict = {};
+
+                    multiselect_data.push({label: 'Please Select', value: ''});
+
+                    $.each(result, function (i, val) {
+                        item_sub_category_id = val.item_sub_category_id;
+                        item_sub_category = val.item_sub_category;
+                        status = val.status;
+
+                        var multiselect_dict = {label: item_sub_category, value: item_sub_category_id};
+                        multiselect_data.push(multiselect_dict);
+                    });
+
+                    //add multi-select data
+                    $('' + multiselect_id + '').multiselect('destroy');
+                    $('' + multiselect_id + '').multiselect({
+                        selectAllValue: 'multiselect-all',
+                        enableCaseInsensitiveFiltering: true,
+                        numberDisplayed: 1,
+                        maxHeight: 300,
+                        buttonWidth: '100%',
+                        buttonClass: 'btn btn-white',
+                        nonSelectedText: 'Please Select'
+                    });
+                    $('' + multiselect_id + '').empty();
+                    $('' + multiselect_id + '').multiselect('dataprovider', multiselect_data);
+
+                    // if no subcategories found . . .
+                    if (status == 0) {
+                        $("" + multiselect_id + " option[value='" + item_sub_category_id + "']").prop("selected", true);
+                    }
+
+                    // refresh multiselect
+                    $('' + multiselect_id + '').multiselect("refresh");
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+
+            });
+        }
+
+
         function AddRow() {
             var randomID = randomNo();
 
             let domain = $('#BIREFERRAL_DOMAIN option:selected').val();
-            let goal = $('.goals_cell > div:not(.hidden) > select > option:selected').val();
+            //let goal = $('.goals_cell > div:not(.hidden) > select > option:selected').val();
 
-            // let goal = []
-            // $('.goals_cell > div:not(.hidden) > div.btn-group > ul.multiselect-container > li.active input[type=checkbox]').each(function () {
-            //     var vlu = $(this).val();
-            //     if(vlu !== 'multiselect-all'){
-            //         goal.push(vlu);
-            //     }
-            // })
+            let goal = []
+            $('.goals_cell > div:not(.hidden) > div.btn-group > ul.multiselect-container > li.active label[class=checkbox]').each(function () {
+                var vlu = $(this).text();
+                if (vlu !== 'multiselect-all') {
+                    goal.push(vlu);
+                }
+                    {#console.log({goal})#}
+            })
             let referral_date = $('#referral_date').val();
             console.log({referral_date})
             $('.waleert').remove();
@@ -554,7 +530,7 @@
             });
 
             //if (CPT_DATE_CASEPLAN == null || CPT_DATE_CASEPLAN == '' || actual_completion_date == null || actual_completion_date == '' || domain ==
-            if (domain == null || domain == '' && goal == null || goal == '' && referral_date == null || referral_date == '' ) {
+            if (domain == null || domain == '' || goal == '' || goal == null ||  goal.length < 1 || referral_date == null || referral_date == '') {
                 // $('input[name=CPT_DATE_CASEPLAN]').css('border', '1px solid red');
                 $('input:not(.d-c-1), select:not(.d-c-1), .multiselect.dropdown-toggle.btn.btn-white').not('a[tabindex] label.checkbox input[type=checkbox]').css('border', '1px solid red');
                 console.error('ERROR: can\'t add rows with empty fields')
@@ -580,8 +556,23 @@
                 // -domain
 
                 // goal
-                $('#row_' + randomID + ' > td#tbl_goal').html($('.goals_cell > div:not(.hidden) > select option:selected').text() + '<input type="hidden" name="h_CPT_GOAL" value="' + goal + '" />');
+                // $('#row_' + randomID + ' > td#tbl_goal').html($('.goals_cell > div:not(.hidden) > select option:selected').text() + '<input type="hidden" name="h_CPT_GOAL" value="' + goal + '" />');
                 // -goal
+
+                // goal multiselect
+                $('#row_' + randomID + ' > td#tbl_goal > ul.ul-flow').empty();
+                $('.goals_cell > div:not(.hidden) > div.btn-group > ul.multiselect-container > .dropdown-menu > li.active label[class=checkbox]').each(function () {
+                    var txt5 = stripHTML($(this).text());
+                    if (txt5 === 'Select all') {
+                    } else {
+                        $('#row_' + randomID + ' > td#tbl_goal > ul.ul-flow').append('<li>' + txt5 + '</li>');
+                    }
+                });
+
+                console.log({goal})
+
+                $('#row_'+randomID+' > td#tbl_goal').append('<li>'+ goal +'</li>');
+                // - goal multiselect
 
                 $('#row_' + randomID + ' > td#tbl_referral_date').html(referral_date + '<input type="hidden" name="referral_date" value="' + referral_date + '" />');
 
@@ -589,12 +580,11 @@
                 $('#row_' + randomID + ' td#tbl_acts').html('<a href="#" class="removerow btn btn-xs btn-danger"><i class="fa fa-trash"></i> Remove</a>');
 
 
-
                 $('#row_' + randomID + ' > td#tbl_acts > .removerow').click(function (e) {
                     e.preventDefault();
                     $('#row_' + randomID).empty();
                     $('#row_' + randomID).remove();
-    
+
                     // $(this).closest('tr').empty();
                     // $(this).closest('tr').remove();
                 });
@@ -611,7 +601,7 @@
                 final_input['goal'].push(goal);
                 final_input['referral_date'].push(referral_date);
 
-               
+
             }
 
         }

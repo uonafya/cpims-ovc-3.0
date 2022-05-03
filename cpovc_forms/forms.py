@@ -8213,22 +8213,22 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
                                                      }))
 
     HEALTH_DOMAIN = forms.MultipleChoiceField(choices=HEALTH_DOMAIN_CHOICES,
-                                              widget=forms.Select(
+                                              widget=forms.SelectMultiple(
                                                   attrs={'class': 'form-control'
                                                          }))
 
     STABLE_DOMAIN = forms.MultipleChoiceField(choices=STABLE_DOMAIN_CHOICES,
-                                              widget=forms.Select(
+                                              widget=forms.SelectMultiple(
                                                   attrs={'class': 'form-control'
                                                          }))
 
     SAFE_DOMAIN = forms.MultipleChoiceField(choices=SAFE_DOMAIN_CHOICES,
-                                            widget=forms.Select(
+                                            widget=forms.SelectMultiple(
                                                 attrs={'class': 'form-control'
                                                        }))
 
     SCHOOLED_DOMAIN = forms.MultipleChoiceField(choices=SCHOOLED_DOMAIN_CHOICES,
-                                                widget=forms.Select(
+                                                widget=forms.SelectMultiple(
                                                     attrs={'class': 'form-control'
                                                            }))
 
