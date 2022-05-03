@@ -208,6 +208,8 @@
                 </div>
                 <h4 class="panel-title"><b>REFERRAL FORM Events List </b></h4>
             </div>
+        </div>
+      
 
             <div class="panel-body">
                 <div  class="panel panel-inverse">
@@ -303,7 +305,7 @@
                                          `
                             );
                             break;
-                        case '2':
+                        case 'DHES':
                             $("select[name='BIREFERRAL_SERVICES']")
                                 .append(
                                     ` <option value="cash transfer OVC">cash transfer OVC</option>
@@ -315,7 +317,7 @@
                                  `
                                 );
                             break;
-                        case '3':
+                        case 'DPRO':
                             $("select[name='BIREFERRAL_SERVICES']").append(
                                 ` <option>Post Violence Counseling </option>
                                   <option>Post Violence Medical care</option>
@@ -327,7 +329,16 @@
                                  `
                             );
                             break;
-
+                        case 'DEDU':
+                            $("select[name='BIREFERRAL_SERVICES']").append(
+                                ` <option>Re-enrollment (i.e., for drop-outs or teen mothers) </option>
+                                  <option>Bursary, tuition, school fees or fee exemption</option>
+                                  <option>School uniform, books, or other materials</option>
+                                  <option>Other </option>
+                                                                  
+                                 `
+                            );
+                            break;
                         default:
                             $("select[name='BIREFERRAL_SERVICES']").append(
                                 {#                                {{ form.BIREFERRAL_SERVICES }}#}
@@ -339,7 +350,7 @@
             )
 
             //multi selects
-            $('#olmis_assessment_domain, #olmis_assessment_coreservice, #olmis_assessment_coreservice_status, #olmis_domain, #olmis_service_provider, #olmis_service, #olmis_priority_service, #olmis_priority_domain, #olmis_priority_health, #olmis_priority_education, #olmis_priority_shelter, #olmis_priority_protection, #olmis_priority_pss, #olmis_priority_hes, #olmis_critical_event').multiselect({
+            $('#BIREFERRAL_DEFAULT').multiselect({
                 selectAllValue: 'multiselect-all',
                 includeSelectAllOption: true,
                 enableCaseInsensitiveFiltering: true,
