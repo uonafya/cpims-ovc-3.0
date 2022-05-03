@@ -48,7 +48,7 @@ def pmtct_home(request):
             setattr(case, 'case_date', cdt)
             setattr(case, 'case_level', clv)
             setattr(case, 'case_id', crs_id)
-        return render(request, 'pmtct/home.html',
+        return render(request, 'pfs/pmtct/home.html',
                       {'status': 200, 'cases': cases, 'form': form})
     except Exception as e:
         print('fps error - %s' % (str(e)))
@@ -88,8 +88,10 @@ def new_pmtct(request, id):
         if request.method == 'POST':
             form = OVCPMTCTRegistrationForm(guids=pids, data=request.POST)
             user_id = request.user.id
-            intervention = request.POST.get('intervention')
+            ccc_number = request.POST.get('ccc_number')
+            facility_id = request.POST.get('facility_id')
             cbo_id = 1
+            caregiver_contact = '0700001001'
             # request.POST.get('cbo_id')
             school_level = request.POST.get('school_level')
             school_id = request.POST.get('school_id')
@@ -99,14 +101,16 @@ def new_pmtct(request, id):
             reg_date = convert_date(registration_date)
             obj, created = OVCPMTCTRegistration.objects.update_or_create(
                 person_id=person_id, is_void=False,
-                defaults={'intervention': intervention, 'child_cbo_id': cbo_id,
+                defaults={'ccc_no': ccc_number, 'child_cbo_id': cbo_id,
                           'school_id': school_id, 'created_by_id': user_id,
+                          'facility': facility_id,
+                          'caregiver_contact': caregiver_contact,
                           'registration_date': reg_date},
             )
             action = "Created" if created else "edited"
             msg = "Child registration %s Successfully in the Program" % action
             messages.info(request, msg)
-            url = reverse('view_pfs', kwargs={'id': id})
+            url = reverse('view_pmtct', kwargs={'id': id})
             return HttpResponseRedirect(url)
         else:
             cbo_id = 1
@@ -133,7 +137,7 @@ def new_pmtct(request, id):
                           "YER4,Year 4", "YER5,Year 5", "YER6,Year 6"]
         levels["SLTV"] = ["TVC1,Year 1", "TVC2,Year 2", "TVC3,Year 3",
                           "TVC4,Year 4", "TVC5,Year 5"]
-        return render(request, 'pmtct/new_registration.html',
+        return render(request, 'pfs/pmtct/new_registration.html',
                       {'form': form, 'child': child, 'levels': levels})
     except Exception as e:
         print('fps error - %s' % (str(e)))
@@ -173,29 +177,55 @@ def edit_pmtct(request, id):
         if request.method == 'POST':
             form = OVCPMTCTRegistrationForm(guids=pids, data=request.POST)
             user_id = request.user.id
-            intervention = request.POST.get('intervention')
+            ccc_number = request.POST.get('ccc_number')
+            facility_id = request.POST.get('facility_id')
+            cbo_id = 1
+            caregiver_contact = '0700001001'
+            # request.POST.get('cbo_id')
+            school_level = request.POST.get('school_level')
             cbo_id = 1
             # request.POST.get('cbo_id')
             school_level = request.POST.get('school_level')
             school_id = request.POST.get('school_id')
+            facility_id = request.POST.get('facility_id')
+            link_date = request.POST.get('link_date')
+            art_status = request.POST.get('art_status')
             if school_level == 'SLNS':
                 school_id = None
             registration_date = request.POST.get('registration_date')
             reg_date = convert_date(registration_date)
+            date_linked = convert_date(link_date) if link_date else None
             obj, created = OVCPMTCTRegistration.objects.update_or_create(
                 person_id=person_id, is_void=False,
-                defaults={'intervention': intervention, 'child_cbo_id': cbo_id,
+                defaults={'ccc_no': ccc_number, 'child_cbo_id': cbo_id,
                           'school_id': school_id, 'created_by_id': user_id,
+                          'facility_id': facility_id, 'link_date': date_linked,
+                          'caregiver_contact': caregiver_contact,
+                          'art_status': art_status,
                           'registration_date': reg_date},
             )
             action = "Created" if created else "edited"
             msg = "Child registration %s Successfully in the Program" % action
             messages.info(request, msg)
-            url = reverse('view_pfs', kwargs={'id': id})
+            url = reverse('view_pmtct', kwargs={'id': id})
             return HttpResponseRedirect(url)
         else:
+            ovc = OVCPMTCTRegistration.objects.get(
+                is_void=False, person_id=person_id)
             cbo_id = 1
             cbo_uid = 1
+            the_date = convert_date(ovc.registration_date, '%Y-%m-%d')
+            the_link_date = convert_date(ovc.link_date, '%Y-%m-%d')
+            reg_date = the_date.strftime('%d-%b-%Y')
+            link_date = the_link_date.strftime('%d-%b-%Y')
+            school_level = 'SLNS'
+            initial['registration_date'] = reg_date
+            initial['ccc_number'] = ovc.ccc_no
+            initial['facility_id'] = ovc.facility_id
+            initial['facility'] = ovc.facility.facility_name
+            initial['school_level'] = school_level
+            initial['art_status'] = ovc.art_status
+            initial['link_date'] = link_date
             initial['cbo_uid'] = cbo_uid
             initial['cbo_id'] = cbo_id
             initial['cbo_uid_check'] = cbo_uid
@@ -219,7 +249,7 @@ def edit_pmtct(request, id):
         levels["SLTV"] = ["TVC1,Year 1", "TVC2,Year 2", "TVC3,Year 3",
                           "TVC4,Year 4", "TVC5,Year 5"]
         allow_edit = True
-        return render(request, 'pmtct/new_registration.html',
+        return render(request, 'pfs/pmtct/new_registration.html',
                       {'form': form, 'child': child, 'levels': levels,
                        'allow_edit': allow_edit})
     except Exception as e:
@@ -236,7 +266,7 @@ def view_pmtct(request, id):
             is_void=False, person_id=ovc_id)
         check_fields = ['relationship_type_id', 'pfs_intervention_id']
         vals = get_dict(field_name=check_fields)
-        return render(request, 'pmtct/view_registration.html',
+        return render(request, 'pfs/pmtct/view_registration.html',
                       {'creg': creg, 'child': child, 'vals': vals})
     except Exception as e:
         print('error - %s' % e)
