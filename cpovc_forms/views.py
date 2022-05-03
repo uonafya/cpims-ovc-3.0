@@ -10039,33 +10039,29 @@ def save_preventive_register(request):
     try:
         if request.method == 'POST':
             import pdb
-            event_type_id = 'FSAM'
+            
+            
             args = int(request.POST.get('args'))    
             person = request.POST.get('person')
-            event_counter = OVCPreventiveEvents.objects.filter(event_type_id=event_type_id, person=person,
-                                                             is_void=False).count() 
+            
             registration_details = OVCRegistration.objects.get(person_id=int(person))
 
             child = RegPerson.objects.get(id=person)
             username = request.user.get_username()
 
-            date_of_assessment = request.POST.get('date_of_assessment')
+            date_of_assessment = request.POST.get('session_date_id')
+            date_of_assessment = convert_date(date_of_assessment)
+            date_today = datetime.now()
                 
-            if date_of_assessment:
-                date_of_assessment = convert_date(date_of_assessment)
-                ovcpreventiveevent = OVCPreventiveEvents(
-                event_type_id = event_type_id,
-                event_counter = event_counter,
-                event_score = 0,
-                date_of_event = '2022-01-04',
-                date_of_previous_event = '2022-01-04',
-                created_by = request.user.id,
-                app_user = AppUser.objects.get(username=username),
-                person = RegPerson.objects.get(pk=int(person)),
-                house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-            )
-            ovcpreventiveevent.save()
+
+
             if args == 1:
+
+                # pdb.set_trace()
+                event_type_id = 'REG'
+                event_counter = OVCPreventiveEvents.objects.filter(event_type_id=event_type_id, person=person,
+                                                             is_void=False).count()
+                
                 # preventive_assessment_provided_list
                 olmis_assessment_provided_list = request.POST.get('olmis_assessment_provided_list')
                 preventive_grouping_id = 'GROUP ID'
@@ -10078,46 +10074,53 @@ def save_preventive_register(request):
                         completed_all_session = assessment_data['holmis_completed_all_sessions']
                         session_attended = assessment_data['olmis_session_attended_days']
                         session_date = assessment_data['olmis_session_date']
-
-                        # OVC_preventive_registration(
-                        #     person = RegPerson.objects.get(pk=int(person)),
-                        #     group_name = 'SINOVUYO',
-                        #     school = 'SINOVUYO',
-                        #     child_cbo = RegOrgUnit.objects.get(id=registration_details.child_cbo_id),
-                        #     is_active = registration_details.is_active,
-                        #     exit_reason = registration_details.exit_reason,
-                        #     exit_date = '2022-04-01',
-                        #     event = ovcpreventiveevent,
-                        # ).save()
-                        ebi_session_type = ''
                         
-                        date_of_encounter_event = ''
-                        if 'S' in session_attended:
-                            ebi_session_type = 'GENERAL'#'General'
-                            date_of_encounter_event = session_date
-                        else:
-                            ebi_session_type =  'MAKE UP'#"make up"
+                        
+                        
+                        if session_date:
+                            ovcpreventiveevent = OVCPreventiveEvents(
+                                event_type_id = event_type_id,
+                                event_counter = event_counter,
+                                event_score = 0,
+                                # date_of_event = date_today,
+                                # date_of_previous_event = '2022-01-04',
+                                created_by = request.user.id,
+                                app_user = AppUser.objects.get(username=username),
+                                person = RegPerson.objects.get(pk=int(person)),
+                                house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+                            )
+                            ovcpreventiveevent.save()
+                            pdb.set_trace()
+                            ebi_session_type = ''
                             
-                            date_of_encounter_event = session_date
-                        try:
-                            OVCPreventiveEbi(
-                                person_id = RegPerson.objects.get(pk=int(person)),
-                                domain = olmis_intervention_prevention, 
-                                ebi_provided =  "",
-                                ebi_provider = registration_details.child_cbo,#'service_proviser', # CBO
-                                ebi_session = session_attended,#'Session 1,2,3...',
-                                ebi_session_type = ebi_session_type,
-                                place_of_ebi =  RegPersonsGeo.objects.get(person_id=RegPerson.objects.get(pk=int(person)).id), #'SINOVUYU', # CBO
-                                date_of_encounter_event = convert_date(date_of_encounter_event),
-                                event = ovcpreventiveevent,
-                            ).save()
+                            date_of_encounter_event = ''
+                            if 'S' in session_attended:
+                                ebi_session_type = 'GENERAL'#'General'
+                                date_of_encounter_event = session_date
+                            else:
+                                ebi_session_type =  'MAKE UP'#"make up"
+                                
+                                date_of_encounter_event = session_date
+                            try:
+                                OVCPreventiveEbi(
+                                    person_id = RegPerson.objects.get(pk=int(person)),
+                                    domain = olmis_intervention_prevention, 
+                                    ebi_provided =  "",
+                                    ebi_provider = registration_details.child_cbo,#'service_proviser', # CBO
+                                    ebi_session = session_attended,#'Session 1,2,3...',
+                                    ebi_session_type = ebi_session_type,
+                                    place_of_ebi =  RegPersonsGeo.objects.get(person_id=RegPerson.objects.get(pk=int(person)).id), #'SINOVUYU', # CBO
+                                    date_of_encounter_event = convert_date(date_of_encounter_event),
+                                    event = ovcpreventiveevent,
+                                ).save()
 
-                        except Exception as e:
-                            print(e)
+                            except Exception as e:
+                                print(e)
 
             if args == 2:
                 import pdb
                 serveice_domain = 'HHNN'
+                event_type_id = 'SERV'
                 import pdb
                 
                 olmis_assessment_provided_list = request.POST.get('olmis_assessment_provided_list')
@@ -10139,12 +10142,10 @@ def save_preventive_register(request):
                     service_provided_list = json.loads(service_provided_list)
                 # 
                     for service in service_provided_list:
-                        # pdb.set_trace()
                         boolean_service_offered = service.get("olmis_reffered_for_service")
                         service_offered = service.get("olmis_reffered_service")
                         service_made = service.get("olmis_service_made")
                         date_of_encounter = service.get("olmis_date_of_encounter")
-                        # pdb.set_trace()
                         OVCPreventiveService(
                             person_id = RegPerson.objects.get(pk=int(person)),
                             domain =  serveice_domain,#sinovuyo or fmp or hcbf
@@ -10158,8 +10159,8 @@ def save_preventive_register(request):
                             event = ovcpreventiveevent
                         ).save()
                         
-                    msg = 'Save Successful'
-                    jsonResponse.append({'msg': msg})
+            msg = 'Save Successful'
+            jsonResponse.append({'msg': msg})
     except Exception as e:
         msg = 'Save Error: (%s)' % (str(e))
     jsonResponse.append({'msg': msg})
@@ -10214,7 +10215,7 @@ def manage_preventive_register(request):
                 'event_keyword_group': event_keyword_group,
                 'event_date': event_date.strftime('%d-%b-%Y')
             })
-        pdb.set_trace()
+        # pdb.set_trace()
         # print jsonForm1AEventsData
         return JsonResponse(preventiveEventsData,
                             content_type='application/json',
@@ -10223,7 +10224,7 @@ def manage_preventive_register(request):
         msg = 'An error occured : %s' % str(e)
         print(str(e))
         preventiveEventsData.append({'msg': msg})
-        return JsonResponse(preventiveEventsData,
+    return JsonResponse(preventiveEventsData,
                             content_type='application/json',
                             safe=False)
 
