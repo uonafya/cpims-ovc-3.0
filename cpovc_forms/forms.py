@@ -8216,119 +8216,118 @@ class NewGraduationMonitoringForm(forms.Form):
 
 class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     CHOICES_TYPE_ASSESSMENT = (
-        ('Pre-Programme(before implementation)', 'Pre-Programme(before implementation)'),
-        ('Post-Programme(after implementation)', 'Post-Programme(after implementation)'),
+        (0, 'Pre-Programme(before implementation)'),
+        (1, 'Post-Programme(after implementation)'),
     )
 
     CHOICES_READ = (
         ('', '(select)'),
-        ('Cannot read at all', 'Cannot read at all'),
-        ('Can read but with lots of difficulty', 'Can read but with lots of difficulty'),
-        ('Can read with a little difficulty', 'Can read with a little difficulty'),
-        ('Can read with a little difficulty', 'Can read with a little difficulty')
+        (0, 'Cannot read at all'),
+        (1, 'Can read but with lots of difficulty'),
+        (2, 'Can read with a little difficulty'),
+        (3, 'Can read with a little difficulty')
     )
     CHOICES_EDUCATION = (
-        ('Primary', 'Primary'),
-        ('Secondary', 'Secondary'),
-        ('Tertiary', 'Tertiary'),
-        ('College/University', 'College/University'),
-        ('Not gone to school', 'Not gone to school')
+        (0, 'Primary'),
+        (1, 'Secondary'),
+        (2, 'Tertiary'),
+        (3, 'College/University'),
+        (4, 'Not gone to school')
     )
 
     YES_NO_CHOICES = (
-        ('Yes', 'Yes'),
-        ('No', 'No')
+        (1, 'Yes'),
+        (0, 'No')
     )
 
     CHOICES_INCOME = (
         ('', '(Select)'),
-        ('No, unemployed', 'No, unemployed'),
-        ('Yes, self-employed', 'Yes, self-employed'),
-        ('Yes, employed full-time', 'Yes, employed full-time'),
-        ('Yes, employed part-time', 'Yes, employed part-time')
+        (0, 'No, unemployed'),
+        (1, 'Yes, self-employed'),
+        (2, 'Yes, employed full-time'),
+        (3, 'Yes, employed part-time')
     )
 
     CHOICES_RELATIONSHIP = (
         ('', '(select)'),
-        ('Never', 'Never'),
-        ('Almost never', 'Almost never'),
-        ('Sometimes', 'Sometimes'),
-        ('Often', 'Often'),
-        ('Always', 'Always')
+        (0, 'Never'),
+        (1, 'Almost never'),
+        (2, 'Sometimes'),
+        (3, 'Often'),
+        (4, 'Always')
     )
 
     CHOICES_BEHAVIOR = (
         ('', '(select)'),
-        ('Not true', 'Not true'),
-        ('Somewhat true', 'Somewhat true'),
-        ('Very true', 'Very true')
+        (0, 'Not true'),
+        (1, 'Somewhat true'),
+        (2, 'Very true')
     )
 
     CHOICES_DISCIPLINE = (
         ('', '(select)'),
-        ('Never', 'Never'),
-        ('1 times', '1 times'),
-        ('2 times', '2 times'),
-        ('3 times', '3 times'),
-        ('4 times', '4 times'),
-        ('5 times', '5 times'),
-        ('6 times', '6 times'),
-        ('7 times', '7 times'),
-        (' or more times', ' or more times')
+        (0, 'Never'),
+        (1, '1 times'),
+        (2, '2 times'),
+        (3, '3 times'),
+        (4, '4 times'),
+        (5, '5 times'),
+        (6, '6 times'),
+        (7, '7 times'),
+        (8, ' or more times')
     )
 
     CHOICES_BIOLOGICAL=(
                     ('', '(select)'),
-                    ('Yes', 'Yes'),
-                    ('No, she passed away', 'No, she passed away'),
-                    ('No, she lives elsewhere', 'No, she lives elsewhere')
+                    (1, 'Yes'),
+                    (2, 'No, she passed away'),
+                    (3, 'No, she lives elsewhere')
                     )
 
     CHOICES_HIV = (
         ('', '(select)'),
-        ('No', 'No'),
-        ('Yes, all of them', 'Yes, all of them'),
-        ('Yes, some of them', 'Yes, some of them'),
+        (0, 'No'),
+        (1, 'Yes, all of them'),
+        (2, 'Yes, some of them'),
     )
 
     CHOICES_FEELING = (
         ('', '(select)'),
-        ('Strongly disagree', 'Strongly disagree'),
-        ('Disagree', 'Disagree'),
-        ('Not sure', 'Not sure'),
-        ('Not sure', 'Agree'),
-        ('Strongly agree', 'Strongly agree')
+        (1, 'Strongly disagree'),
+        (2, 'Disagree'),
+        (3, 'Not sure'),
+        (4, 'Agree'),
+        (5, 'Strongly agree')
     )
 
     CHOICES_SAD = (
         ('', '(select)'),
-        ('Rarely or none of the time (less than 1 day)', 'Rarely or none of the time (less than 1 day)'),
-        ('Some or a little of the time (1–2 days)', 'Some or a little of the time (1–2 days)'),
-        ('Occasionally or a moderate amount of time (3–4 days)', 'Occasionally or a moderate amount of time (3–4 days)'),
-        ('Most or all of the time (5–7 days)', 'Most or all of the time (5–7 days)')
+        (1, 'Rarely or none of the time (less than 1 day)'),
+        (2, 'Some or a little of the time (1–2 days)'),
+        (3, 'Occasionally or a moderate amount of time (3–4 days)'),
+        (4, 'Most or all of the time (5–7 days)')
 
     )
 
     CHOICES_FINANCE = (
         ('', '(select)'),
-        ('Never', 'Never'),
-        ('Rarely', 'Rarely'),
-        ('Sometimes', 'Sometimes'),
-        ('Often', 'Often')
+        (0, 'Never'),
+        (1, 'Rarely'),
+        (2, 'Sometimes'),
+        (3, 'Often')
     )
 
     type_of_assessment = forms.ChoiceField(choices=CHOICES_TYPE_ASSESSMENT,
                                         widget = forms.RadioSelect())
 
     date_of_assessment = forms.DateTimeField(
-        input_formats=['%d/%m/%Y '],
+        input_formats=['%d/%m/%Y'],
         widget=forms.DateTimeInput(attrs={
             'class': 'form-control datetimepicker-input',
             'type': 'date',
             'data-target': '#datetimepicker1'
         }))
    # SECTION 1: BACKGROUND DETAILS
-
     bd_read = forms.ChoiceField(
         choices=CHOICES_READ,
         widget=forms.Select(attrs={
@@ -8380,7 +8379,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
         ))
 
     bd_bm_live_hh = forms.ChoiceField(
-        choices=CHOICES_BIOLOGICAL,
+        choices=CHOICES_BIOLOGICAL,required=False,
         widget=forms.Select(attrs={
                            'class': 'form-control',
                            'id': 'bd_bm_live_hh',
@@ -8394,10 +8393,11 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
         ))
 
     bd_bf_live_hh = forms.ChoiceField(
-        choices=CHOICES_BIOLOGICAL,
+        choices=CHOICES_BIOLOGICAL,required=False,
         widget=forms.Select(attrs={
                            'class': 'form-control',
                            'id': 'bd_bf_live_hh',
+                            'type': 'radio',
                            }))
 
     bd_money_basic_expenses = forms.ChoiceField(
@@ -8480,21 +8480,21 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
                         }))
 
     rc_discipline = forms.ChoiceField(
-        choices=CHOICES_RELATIONSHIP, required=True,
+        choices=CHOICES_RELATIONSHIP,
         widget=forms.Select(attrs={
                             'class': 'form-control',
                             'id': 'rc_discipline',
                         }))
 
     rc_tells_bothering = forms.ChoiceField(
-        choices=CHOICES_RELATIONSHIP,required=True,
+        choices=CHOICES_RELATIONSHIP,
         widget=forms.Select(attrs={
                                    'class': 'form-control',
                                    'id': 'rc_tells_bothering',
                                    }))
 
     rc_involve_decisions = forms.ChoiceField(
-        choices=CHOICES_RELATIONSHIP,required=True,
+        choices=CHOICES_RELATIONSHIP,
         widget=forms.Select(attrs={
                                    'class': 'form-control',
                                    'id': 'rc_involve_decisions',
@@ -8503,14 +8503,14 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     # SECTION 3: MY CHILD’S BEHAVIOUR
 
     cb_child_obedient = forms.ChoiceField(
-        choices=CHOICES_BEHAVIOR, required=True,
+        choices=CHOICES_BEHAVIOR,
         widget=forms.Select(attrs={
                             'class': 'form-control',
                             'id': 'cb_child_obedient',
                             }))
 
     cb_figths_children = forms.ChoiceField(
-        choices=CHOICES_BEHAVIOR,required=True,
+        choices=CHOICES_BEHAVIOR,
         widget=forms.Select(attrs={
                             'class': 'form-control',
                             'id': 'cb_figths_children',
@@ -8519,20 +8519,20 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     # SECTION 4: DISCIPLINING MY CHILD
 
     dc_often_discipline = forms.ChoiceField(
-        choices=CHOICES_DISCIPLINE, required=True,
+        choices=CHOICES_DISCIPLINE,
         widget=forms.Select(attrs={
                             'class': 'form-control',
                             'id': 'dc_often_discipline',
     }))
     dc_physical_discipline = forms.ChoiceField(
-        choices=CHOICES_DISCIPLINE,required=True,
+        choices=CHOICES_DISCIPLINE,
         widget=forms.Select(attrs={
                             'class': 'form-control',
                             'id': 'dc_physical_discipline',
     }))
 
     dc_upstet_child = forms.ChoiceField(
-        choices=CHOICES_DISCIPLINE, required=True,
+        choices=CHOICES_DISCIPLINE,
         widget=forms.Select(attrs={
                             'class': 'form-control',
                             'id': 'dc_upstet_child',

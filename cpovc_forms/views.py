@@ -2,6 +2,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse, resolve
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.utils import timezone
 from django.core import serializers
@@ -62,6 +63,7 @@ from cpovc_registry.functions import get_list_types, extract_post_params
 from cpovc_ovc.functions import get_ovcdetails
 from .functions import create_fields, create_form_fields, save_form1b, save_bursary
 from .documents import create_mcert
+from django.utils.timezone import make_aware
 
 
 def validate_serialnumber(user_id, subcounty, serial_number):
@@ -10037,12 +10039,6 @@ def new_graduation_monitoring_form(request, id):
 
 
 def ovc_preventive_pre_post_program_assessment_view(request, id):
-    """ ovc care pre-post progrss assessment form view
-    Args:
-        request, id
-    Return:
-          render template
-          """
     user_id = request.user.id
     username = request.user.get_username()
     child = RegPerson.objects.get(id=id)
@@ -10075,8 +10071,9 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
             person=RegPerson.objects.get(pk=care_giver.id),
             house_hold=house_hold
                 )
+
+        #pdb.set_trace()
         if form.is_valid():
-            # save form input and event counter
             ovc_preventive_event.save()
             OVCPrevSinovyoCaregiverEvaluation(
                 event_id=ovc_preventive_event.event,
@@ -10128,26 +10125,28 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
             ).save()
             messages.success(request, 'Form saved succesfully!')
         else:
-            messages.error(request, 'Error saving form!')
-        return redirect('progress-assessment')
-    form = OVCPreventivePrePostProgramAssessmentForm() 
+            messages.error(request, form.errors)
+            print(form.errors)
+        return HttpResponseRedirect('progress-assessment')
+    else:
+        form = OVCPreventivePrePostProgramAssessmentForm() 
     event = OVCPreventiveEvents.objects.filter(person_id=care_giver.id).values_list('event')
-    evaluation = OVCPrevSinovyoCaregiverEvaluation.objects.filter(event_id__in=event).order_by('date_of_assessment')
+    queryset = OVCPrevSinovyoCaregiverEvaluation.objects.filter(event_id__in=event).order_by('date_of_assessment')
+    evaluation = []
+    for i in range(0, len(queryset)):
+         if queryset[i].is_void == False:
+            evaluation.append(queryset[i])
     return render(request=request, template_name='forms/caregiver_progress_assessment.html',
                 context={'form': form, 'child': child, 'care_giver': care_giver,
                 'care_giver_gender': care_giver_gender, 'objects': evaluation})
 
 
 def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
-    """edit a form instance
-
-    Args: id
-
-    Return: render template"""
     object = OVCPrevSinovyoCaregiverEvaluation.objects.get(evaluation_id=id)
     if request.method == 'POST':
-        # get update saved form instance
+        form = OVCPreventivePrePostProgramAssessmentForm(request.POST)
         OVCPrevSinovyoCaregiverEvaluation.objects.filter(evaluation_id=id).update(
+            type_of_assessment=request.POST.get('type_of_assessment'),
             bd_read=request.POST.get('bd_read'),
             bd_education_level=request.POST.get('bd_education_level'),
             bd_biological_children=request.POST.get('bd_biological_children'),
@@ -10186,11 +10185,13 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
             fs_effort=request.POST.get('fs_effort'),
             fs_hopeful=request.POST.get('fs_hopeful'),
             fi_money_important_items=request.POST.get('fi_money_important_items'),
-            fi_worried_money=request.POST.get('fi_worried_money') )
-    # fetch data from model
+            fi_worried_money=request.POST.get('fi_worried_money'))
+
+
     data = {
         'person_id': object.person_id,
-        'ref_caregiver_id': object.ref_caregiver_id,   
+        'ref_caregiver_id': object.ref_caregiver_id,
+        'type_of_assessment': object.type_of_assessment,   
         'bd_age': object.bd_age,
         'bd_sex': object.bd_sex,    
         'bd_read': object.bd_read,     
@@ -10236,21 +10237,28 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
     form = OVCPreventivePrePostProgramAssessmentForm(data=data)
     edit = True
     return render(request, template_name='forms/caregiver_progress_assessment.html',
-    context={'form': form, 'edit_form': edit, 'status': 200})
+    context={'form': form, 'edit_form':edit, 'status': 200})
 
 def ovc_preventive_pre_post_program_assessment_delete_view(request):
-    """
-    Adelete a given form instance based on evaluation id
-
-    Args: request
-
-    Return: Json response
-    """
     id = request.GET.get('evaluation_id', None)
-    # pdb.set_trace()
-    delete_instance = OVCPrevSinovyoCaregiverEvaluation.objects.filter(evaluation_id=id)
-    delete_instance.delete()
+    object = OVCPrevSinovyoCaregiverEvaluation.objects.get(evaluation_id=id)
+    date = object.date_of_assessment
+    delta = relativedelta(days=-60)
+    due_del_date = date - delta
+    today_date = date.today()
+
+    if today_date <= due_del_date:
+        OVCPrevSinovyoCaregiverEvaluation.objects.filter(evaluation_id=id).update(is_void=True)
+        object_void = OVCPrevSinovyoCaregiverEvaluation.objects.get(evaluation_id=id)
+        deleted = object_void.is_void
+        if deleted == True:
+            data = {
+                'deleted': True ,
+                'msg_info': 'Deleted successfully'
+            }
+            return JsonResponse(data)
     data = {
-        'deleted': True
+        'deleted': False ,
+        'msg_info': 'Cannot be deleted as from date {}'.format(due_del_date)
     }
     return JsonResponse(data)
