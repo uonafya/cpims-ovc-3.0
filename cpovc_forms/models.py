@@ -1463,8 +1463,8 @@ class OVCFMPEvaluation(models.Model):
 class OVCCareCaseExit(models.Model):
     case_clouse_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE,related_name='caseclouse_child')
-    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='caseclouse_caregiver')
-    rec_organization = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE,null=True)
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='caregiver')
+    rec_organization = models.CharField(max_length=250, null=True)
     attrition_reason = models.CharField(max_length=10, null=True)
     transfer_completed = models.CharField(max_length=10, null=True)
     reason = models.CharField(max_length=10,null=False)
@@ -1495,6 +1495,7 @@ class OVCCareCaseExit(models.Model):
         """Override table details."""
         """table name"""
         db_table = 'ovc_closure_exit'
+
 
 
 

@@ -92,7 +92,8 @@
 							    <!-- add labels like HA1, HA2 .. -->
                             <div id="wizard-caseclosureform">
 							    <h3 class="text-center note note-info"> Personal Information For The Child</h3>
-							<div class="form-group"> <table class="table table-bordered">
+							<div class="form-group">
+                                <table class="table table-bordered">
 
 
                                 <tbody>
@@ -115,9 +116,11 @@
 
                                     <td>For those Transferred (Name of receiving Organization/program):<span class="asteriskField">*</span>
                                     </td>
-                                    <td>
+                                    <td id="orgsearch">
 
-                                        {{form.CASE_CL002}}
+
+                                           <input type="text" class="form-control" name="organization_field" id="organization_field" placeholder="Search for organization here">
+                                                    <input type="hidden" name="CASE_CL002" id="CASE_CL002">
                                     </td>
                                 </tr>
                                 </div>
@@ -134,7 +137,8 @@
 
 
                                                 {{form.CASE_CL027}}
-                                                {{form.CASE_CL004}}
+                                                <input type="hidden" name="CASE_CL004" id="CASE_CL004">
+{#                                                {{form.CASE_CL004}}#}
 
                                             </div>
 
@@ -176,6 +180,14 @@
                                     <td>Case Worker has given phone number to household   Head of household linked to a family, which already graduated.</td>
                                     <td>
                                         {{ form.CASE_CL007 }}
+                                    </td>
+                                </tr>
+                                  <tr>
+                                    <td>Q3</td>
+
+                                    <td>Case Worker has given phone number to household   Head of household linked to a family, which already graduated.</td>
+                                    <td>
+                                        {{ form.CASE_CL028}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -284,10 +296,10 @@
                                    <tr>
                                        <td>Q12</td>
 
-                                    <td>Name of Case Manager/LIP staff certifying</td>
-                                    <td required="False">
-                                        {{ form.CASE_CL024 }}
-                                    </td>
+{#                                    <td>Name of Case Manager/LIP staff certifying</td>#}
+{#                                    <td required="False">#}
+{#                                        {{ form.CASE_CL024 }}#}
+{#                                    </td>#}
                                 </tr>
 
 
@@ -363,75 +375,9 @@
                 </div>
 
                 </form>
-{#                  <div class="card-block table-border-style">#}
-{#                <div class="table-responsive">#}
-{#                    <table class="table table-success table-striped" border="1" id="past-hst">#}
-{##}
-{#                        <thead>#}
-{#                        <tr>#}
-{#                            <th>Q1A</th>#}
-{#                            <th>Q1B</th>#}
-{#                            <th>Q1C</th>#}
-{#                            <th>Q2</th>#}
-{#                            <th>Q3</th>#}
-{#                            <th>Q4</th>#}
-{#                            <th>Q5</th>#}
-{#                            <th>Q6</th>#}
-{#                            <th>Q7</th>#}
-{#                            <th>Q8</th>#}
-{#                            <th>Q9</th>#}
-{#                            <th>Q10</th>#}
-{#                            <th>Q11</th>#}
-{#                            <th>Q12</th>#}
-{#                            <th>Q13</th>#}
-{#                             <th>Q14</th>#}
-{##}
-{#                             <th  colspan="2">Action</th>#}
-{##}
-{##}
-{##}
-{##}
-{#                            <th>Date of Event</th>#}
-{#                        </tr>#}
-{#                        </thead>#}
-{#                        {% if case_closure %}#}
-{##}
-{#                            {% for case_closure_data in case_closure %}#}
-{##}
-{#                                <tr>#}
-{#                                    <td>{{ case_closure_data.closure_reason }}</td>#}
-{#                                    <td>{{ case_closure_data.receiving_org}}</td>#}
-{#                                    <td>{{ case_closure_data.attrition_reason }} || {{ case_closure_data.other}}</td>#}
-{#                                    <td>{{ case_closure_data.case_files_completed }}</td>#}
-{#                                    <td>{{ case_closure_data.cw_phone_household  }}</td>#}
-{#                                    <td>{{ case_closure_data.sp_informed_graduation }}</td>#}
-{#                                    <td>{{ case_closure_data.files_stored  }}</td>#}
-{#                                    <td>{{ case_closure_data.transfer_form_completed  }}</td>#}
-{#                                    <td>{{ case_closure_data.follow_up_frequency}}</td>#}
-{#                                    <td>{{ case_closure_data.sp_informed_tarnsfer}}</td>#}
-{#                                    <td>{{ case_closure_data.family_folder_sent }}</td>#}
-{#                                    <td>{{ case_closure_data.files_stored }}</td>#}
-{#                                    <td>{{ case_closure_data.attrition_documented }}</td>#}
-{#                                    <td>{{ case_closure_data.manager_report }}</td>#}
-{#                                    <td>{{ case_closure_data.files_stored }}</td>#}
-{#                                    <td>{{ case_closure_data.exit_reason }}</td>#}
-{#                                    <td>{{ case_closure_data.staff_certifying}}</td>#}
-{#                                    <td>{{ case_closure_data.date_of_closure }}</td>#}
-{#                                <td> <a href="{% url 'edit_case_closure' case_closure_data.case_clouse_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a> </td>#}
-{#                                    <td> <a href="{% url 'delete_case_closure' case_closure_data.case_clouse_id%}"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a> </td>#}
-{##}
-{##}
-{##}
-{#                                </tr>#}
-{#                            {% endfor %}#}
-{#                        {% else %}#}
-{##}
-{#                        {% endif %}#}
-{#                    </table>#}
-{##}
-{##}
-{#                </div>#}
-{#            </div>#}
+                  <div class="card-block table-border-style">
+
+            </div>
 
             </div>
 
@@ -480,6 +426,7 @@ jQuery(document).ready(function()
            $("#cc_002").hide();
            $("#cc_tab_001").hide();
            $("#cc_tab_003").hide();
+           $('input[name="CASE_CL002').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
            $('input[name="CASE_CL010').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
            $('input[name="CASE_CL011').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
            $('input[name="CASE_CL012').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
@@ -493,7 +440,7 @@ jQuery(document).ready(function()
           $("#cc_tab_001").hide();
           $("#cc_tab_002").hide();
 
-          $('input[name="CASE_CL024').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL004').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
           $('input[name="CASE_CL027').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
           $('input[name="CASE_CL029').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
           $('input[name="CASE_CL030').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
@@ -509,26 +456,55 @@ jQuery(document).ready(function()
           $('input[name="CASE_CL006').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
           $('input[name="CASE_CL007').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
           $('input[name="CASE_CL008').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL028').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
 
 
 
 
       }
 
-      {#if ($("#cc_tab_001").show()==true){#}
-      {#     {{ form.CASE_CL014}}:{required:true};#}
-      {##}
-      {##}
-      {#          }#}
+
 
   });
 
 	$('html,body').scrollTop(0);
 	FormWizardValidation.init();
 });
+    var table = document.getElementsByTagName('table')[0],
+      rows = table.getElementsByTagName('tr'),
+      text = 'textContent' in document ? 'textContent' : 'innerText';
+
+    for (var i = 1, len = rows.length; i < len; i++) {
+      rows[i].children[0][text] = i + ': ' + rows[i].children[0][text];
+    }
 
 
 </script>
+    <script>
+    $( "#organization_field ,#CASE_CL002" ).autocomplete({
+            source: function( request, response ) {
+            $.ajax({
+                url: "{% url 'ovc_search' %}",
+                dataType: "json",
+                data: {q: request.term, id: 3},
+                success: function( data ) {
+                    response( data );
+                }
+                });
+            },
+            minLength: 4,
+            select: function( event, ui ) {
+                $('#organization_field').val(ui.item.name);
+                $('#CASE_CL002').val(ui.item.id);
+            },
+            open: function() {
+                $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+            },
+            close: function() {
+                $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+            }
+        });
+    </script>
 
 
 
