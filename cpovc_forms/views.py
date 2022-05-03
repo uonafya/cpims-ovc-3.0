@@ -10002,9 +10002,6 @@ def new_dreamsform(request, id):
 def new_pregnantwomen(request, id):
     try:
         if request.method == 'POST':
-            import pdb
-
-
             form = PREGNANT_WOMEN_ADOLESCENT(request.POST, initial={'person': id})
             if True:
                 person = RegPerson.objects.get(pk=int(id))
@@ -10120,38 +10117,44 @@ def new_pregnantwomen(request, id):
                   'forms/new_pregnantwomen.html',{'form': form, 'init_data': init_data, 'vals': vals, 'person': id, 'care_giver': care_giver, 'pwa_women': pwa_women})
 
 #Edit pregnant women tracker form
-
 def edit_pregnantwomen(request, id):
-    """Some default page for Server Errors."""
-
     try:
         hdata = OVCPregnantWomen.objects.get(preg_id=id)
         if request.method == 'POST':
-            q1 = request.POST.get("PWA_WA1_1")
-            q2 = request.POST.get("PWA_WA1_2A")
-            q3 = request.POST.get("PWA_WA1_2B")
-            # q4 = request.POST.get("PWA_WA1_3A")
-            q5 = request.POST.get("PWA_WA1_3B")
-            # q6 = request.POST.get("PWA_WA1_4A")
-            q7 = request.POST.get("PWA_WA1_4B")
-            # q8 = request.POST.get("PWA_WA1_5A")
-            q9 = request.POST.get("PWA_WA1_5B")
-            q10 = request.POST.get("PWA_WA1_6")
-            q11 = request.POST.get("PWA_WA1_7")
-            q12 = request.POST.get("PWA_WA1_8")
-            q13 = request.POST.get("PWA_WA1_9")
-            q14 = request.POST.get("PWA_WA1_10")
-            q15 = request.POST.get("PWA_WA1_11")
-            q16 = request.POST.get("PWA_WA1_12")
-            q17 = request.POST.get("PWA_WA1_13")
-            q18 = request.POST.get("PWA_WA1_14")
-            # q19 = request.POST.get("PWA_WA1_15")
+            boolean_fields = [
+                'PWA_WA1_15',
+            ]
 
-            # household_id = request.POST.get('household_id')
-            # hse_uuid = uuid.UUID(household_id)
-            # house_holds = OVCHouseHold.objects.get(pk=hse_uuid)
+            data_to_save = {}
 
-            # Save all details from the Bursary form
+            for key, value in request.POST.items():
+                if key in boolean_fields:
+                    data_to_save.update({
+                        key: True if value == "AYES" else False
+                    })
+                else:
+                    data_to_save.update({key: value})
+
+            q1 = data_to_save.get("PWA_WA1_1")
+            q2 = data_to_save.get("PWA_WA1_2A")
+            q3 = data_to_save.get("PWA_WA1_2B")
+            # q4 = data_to_save.get("PWA_WA1_3A")
+            q5 = data_to_save.get("PWA_WA1_3B")
+            # q6 = data_to_save.get("PWA_WA1_4A")
+            q7 = data_to_save.get("PWA_WA1_4B")
+            # q8 = data_to_save.get("PWA_WA1_5A")
+            q9 = data_to_save.get("PWA_WA1_5B")
+            q10 = data_to_save.get("PWA_WA1_6")
+            q11 = data_to_save.get("PWA_WA1_7")
+            q12 = data_to_save.get("PWA_WA1_8")
+            q13 = data_to_save.get("PWA_WA1_9")
+            q14 = data_to_save.get("PWA_WA1_10")
+            q15 = data_to_save.get("PWA_WA1_11")
+            q16 = data_to_save.get("PWA_WA1_12")
+            q17 = data_to_save.get("PWA_WA1_13")
+            q18 = data_to_save.get("PWA_WA1_14")
+            # q19 = data_to_save.get("PWA_WA1_15")
+
             OVCPregnantWomen.objects.filter(preg_id=id).update(
                 date_of_contact=q1,
                 date_test_done2a=q2,
@@ -10172,11 +10175,8 @@ def edit_pregnantwomen(request, id):
                 vl_result=q17,
                 vl_test_date=q18,
                 # disclosure_done=q19,
-                )
+            )
 
-            return redirect('new_pregnantwomen', id=hdata.person_id)
-
-        # hdata = OVCPregnantWomen.objects.get(preg_id=id)
         track = {
             'PWA_WA1_1': hdata.date_of_contact,
             'PWA_WA1_2A': hdata.date_test_done2a,
@@ -10197,19 +10197,29 @@ def edit_pregnantwomen(request, id):
             'PWA_WA1_13': hdata.vl_result,
             'PWA_WA1_14': hdata.vl_test_date,
             # 'PWA_WA1_15': hdata.disclosure_done,
+
         }
-        form = OVCPregnantWomen(data=track)
+        form = PREGNANT_WOMEN_ADOLESCENT(data=track)
+        return render(request, 'forms/edit_pregnantwomen.html', {'form': form, 'status': 200})
+
+        # Save all details from the Bursary form
+        # pdb.set_trace()
+
 
     except Exception as e:
-        print("error with OVC viewing - %s" % (str(e)))
-        # raise e
-        msg = "Error occured during ovc edit"
-        messages.error(request, msg)
+        msg = 'error'
+        messages.add_message(request, messages.INFO, msg)
+        url = reverse('new_hivscreeningtool', kwargs={'id': 60})
+        return HttpResponseRedirect(url)
 
-    return render(request, 'forms/edit_pregnantwomen.html', {'form': form, 'hdata': hdata, 'status': 200})
+
 
 
 def delete_pregnantwomen(request, id):
     new_tracker = OVCPregnantWomen.objects.get(preg_id=id)
     new_tracker.delete()
     return redirect('new_pregnantwomen', id=new_tracker.person_id)
+
+
+
+#testedit pregnant women
