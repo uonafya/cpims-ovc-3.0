@@ -111,7 +111,6 @@ urlpatterns = [
     re_path('bursary/followup/(?P<id>\d+)/', views.bursary_followup, name='bursary_followup'),
     path('bursary/manage/', views.manage_bursary, name='manage_bursary'),
     # OVC Care - CSI
-    
     path('csi/', views.csi, name='csi'),
     re_path('csi/new/(?P<id>\d+)/', views.new_csi, name='new_csi'),
     re_path('csi/edit/(?P<id>\w+)/', views.edit_csi, name='edit_csi'),

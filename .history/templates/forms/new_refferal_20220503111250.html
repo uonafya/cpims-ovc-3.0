@@ -257,7 +257,9 @@
                         {% csrf_token %}
                         <input type="hidden" name="final_submission"/>
                     </form>
-                </div>                
+                </div>
+                <a href="#" class="badge badge-primary m-4"> Back to OVC</a>
+                <div class="badge pull-right m-4">Revised: Oct 6th 2016</div>
             </div>
             <!-- end panel -->
 
@@ -426,7 +428,8 @@
 
         });
 
-        $('*[name=CPT_RESULTS]').prepend('<option selected value="">Pick an item</option>').attr('required', true)    
+        $('*[name=CPT_RESULTS]').prepend('<option selected value="">Pick an item</option>').attr('required', true)
+        ///////
         $('#div_CPT_ACTUAL_DATE_COMPLETION').addClass('hidden');
         $('#CPT_ACTUAL_DATE_COMPLETION').val('1900-01-01');
         $('*[name=CPT_RESULTS]').change(function () {
@@ -505,7 +508,6 @@
     
                     // $(this).closest('tr').empty();
                     // $(this).closest('tr').remove();
-                    
                 });
 
                 console.log(
@@ -526,6 +528,8 @@
         }
 
     </script>
+
+
     <script>
 
     </script>

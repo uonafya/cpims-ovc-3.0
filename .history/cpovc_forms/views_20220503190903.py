@@ -6947,7 +6947,7 @@ def form1a_events(request, id):
 
 
 
-def bidirectionalreferralform(request, id):
+def form1a_events(request, id):
     init_data = RegPerson.objects.filter(pk=id)
     check_fields = ['sex_id']
     vals = get_dict(field_name=check_fields)

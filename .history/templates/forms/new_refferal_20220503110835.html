@@ -3,7 +3,12 @@
 {% load static %}
 {% block page_title %} Case Plan Template {% endblock %}
 {% block style_code %}
-
+    <div class="row">
+        <!-- begin col-12 -->
+    
+        })
+        <!-- end col-12 -->
+    </div>
     <link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet"/>
     <link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
     <link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
@@ -88,6 +93,7 @@
         </div>
     </div>
 
+
     <div id="error_message" class="alert alert-danger fade in" style="display: none;" tabindex="1">
         <!--<span class="close" data-dismiss="alert">×</span>-->
         {% comment %} <button type="button" class="close" data-hide="alert">&times;</button> {% endcomment %}
@@ -95,6 +101,27 @@
         <span class="invalid-form-message" id="invalid-form-message"></span>
     </div>
 
+
+    {% comment %} {% if err_msgg %}
+
+    <div id="success_message" class="alert alert-success fade in" style="display: none;">
+        <!--<span class="close" data-dismiss="alert">×</span>-->
+        <button type="button" class="close" data-hide="alert">&times;</button>
+        <i class="fa fa-check fa-2x pull-left"></i>
+        <p></p>
+    </div>
+
+    {% endif %} {% endcomment %}
+
+        {% comment %} <div class="alert alert-danger" id="error-message-reuse">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <span class="mesgg"></span>
+            {{ err_msgg }}
+        </div> {% endcomment %}
+
+    <!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#delete-form1a-entry">Open Modal</button>-->
+
+    <!--Confirm form1a delete Modal -->
 
     <div id="warning_message" class="alert alert-warning hidden">
         <span class="mesagg" id="mesagg"></span>
@@ -116,7 +143,7 @@
                         <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i
                                 class="fa fa-times"></i></a>
                     </div>
-                    <h4 class="panel-title"> Bidirectional Referral Form </h4>
+                    <h4 class="panel-title"> Case Plan </h4>
                 </div>
                 <div class="panel-body">
                     <div id="form1_info"></div>
@@ -257,7 +284,9 @@
                         {% csrf_token %}
                         <input type="hidden" name="final_submission"/>
                     </form>
-                </div>                
+                </div>
+                <a href="#" class="badge badge-primary m-4"> Back to OVC</a>
+                <div class="badge pull-right m-4">Revised: Oct 6th 2016</div>
             </div>
             <!-- end panel -->
 
@@ -266,70 +295,6 @@
 
     </div>
     <!-- end row -->
-
-
-
-           
-    <!-- begin row -->
-<div class="row">
-    <!-- begin col-12 -->
-    <div class="col-md-12">
-        <!-- begin panel -->
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <div class="panel-heading-btn">
-                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                </div>
-                <h4 class="panel-title"><b>REFERRAL FORM Events List </b></h4>
-            </div>
-        </div>
-      
-
-            <div class="panel-body">
-                <div  class="panel panel-inverse">
-                    <div id="case-events"  class="table-responsive">
-                        <table id="f1a_events_data_table" class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Domain Type</th>
-                                    <th>Core Services</th>
-                                    <th>Referral Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% if obj_all %}
-                                {% for one_object in obj_all %}
-                                    <tr>
-                                        <td>{{ one_object.refferal_domain }}</td>
-                                        <td>{{ one_object.refferal_service }}</td>
-                                        <td>{{ one_object.refferal_date }}</td>
-                                        <td><a href="{% url 'delete_bireferral' one_object.refferal_id %}">
-                                            <button type="button" class="btn btn-sm btn-danger m-r-5"><i
-                                                    class="fa fa-trash"></i>&nbsp;Delete
-                                            </button>
-                                        </a></td>
-                                    </tr>
-                                {% endfor %}
-                            {% else %}
-                                <div>
-                                    <h3>No data available</h3>
-                                </div>
-                            {% endif %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <br><br>
-                </div>
-            </div>
-
-        </div>
-        <!-- end panel -->
-    </div>
-    <!-- end col-12 -->
-</div>
-<!-- end row -->
 
 
 {% endblock %}
@@ -426,7 +391,8 @@
 
         });
 
-        $('*[name=CPT_RESULTS]').prepend('<option selected value="">Pick an item</option>').attr('required', true)    
+        $('*[name=CPT_RESULTS]').prepend('<option selected value="">Pick an item</option>').attr('required', true)
+        ///////
         $('#div_CPT_ACTUAL_DATE_COMPLETION').addClass('hidden');
         $('#CPT_ACTUAL_DATE_COMPLETION').val('1900-01-01');
         $('*[name=CPT_RESULTS]').change(function () {
@@ -505,7 +471,6 @@
     
                     // $(this).closest('tr').empty();
                     // $(this).closest('tr').remove();
-                    
                 });
 
                 console.log(
@@ -526,6 +491,8 @@
         }
 
     </script>
+
+
     <script>
 
     </script>
