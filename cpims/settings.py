@@ -20,13 +20,13 @@ cpims_db_host = os.environ.get(
 cpims_db_pass = os.environ.get(
     'CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'Xaen!ee8'
 cpims_db_instance = os.environ.get(
-    'CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims_upgrade'
+    'CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims_newest'
 cpims_db_port = os.environ.get(
     'CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5432'
 cpims_db_user = os.environ.get(
     'CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'cpimsdbuser'
 cpims_debug = eval(os.environ.get(
-    'CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else False
+    'CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else True
 
 DEBUG = cpims_debug
 
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'cpovc_manage',
     'notifications',
     'cpovc_help',
+    'cpovc_pfs',
 ]
 
 
@@ -203,7 +204,7 @@ CACHES = {
 CSRF_FAILURE_VIEW = 'cpims.views.csrf_failure'
 
 OFFLINE_MODE_CAPABILITY_ENABLED = eval(
-    os.environ.get('CAN_WORK_OFFLINE', 'True'))
+    os.environ.get('CAN_WORK_OFFLINE', 'False'))
 
 # kmhfl API
 KMHFL_USERNAME = '10004'

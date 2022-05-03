@@ -287,7 +287,7 @@ def ovc_edit(request, id):
                       'admission_type': sch_adm_type,
                       'hiv_status': creg.hiv_status, 'link_date': date_linked,
                       'ccc_number': ccc_no, 'art_status': art_status,
-                      'eligibility': criterias, 'is_exited': exited,
+                      'eligibility': list(criterias), 'is_exited': exited,
                       'exit_reason': creg.exit_reason,
                       'ovc_exit_reason': creg.exit_reason,
                       'exit_date': exit_date,
@@ -318,7 +318,6 @@ def ovc_edit(request, id):
         vals = get_dict(field_name=check_fields)
         hiv_data = OVCHivStatus.objects.filter(
             person_id=ovc_id).order_by('date_of_event')
-        print(('ggggggg', hiv_data))
 
         # date manenos
         date_langu = datetime.now().month
@@ -433,12 +432,14 @@ def ovc_view(request, id):
         check_fields = ['relationship_type_id', 'school_level_id',
                         'hiv_status_id', 'immunization_status_id',
                         'art_status_id', 'school_type_id',
-                        'class_level_id']
+                        'class_level_id', 'eligibility_criteria_id']
         vals = get_dict(field_name=check_fields)
         wellbeing_services = {}
         wellbeing_services['wba'] = services['wba']
         wellbeing_services['WBG'] = services['WBG']
-        child_hiv_status = OVCRegistration.objects.get(person=id).hiv_status
+        child_hiv_status = creg.hiv_status
+        criterias = OVCEligibility.objects.filter(
+            is_void=False, person_id=child.id)
         try:
             care_giver = RegPerson.objects.get(
                 id=OVCRegistration.objects.get(person=child).caretaker_id)
@@ -453,8 +454,8 @@ def ovc_view(request, id):
                        'extids': gparams, 'health': health,
                        'hhmembers': hhmembers, 'school': school,
                        'care_giver': care_giver, 'services': services,
-                       'allow_edit': allow_edit,
-                       'suppression': vl_sup,
+                       'allow_edit': allow_edit, 'suppression': vl_sup,
+                       'criterias': criterias,
                        'well_being_count': wellbeing_services
                        })
     except Exception as e:
