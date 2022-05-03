@@ -207,6 +207,15 @@ def search_master(request):
 				val = {'id': agent_id, 'label': name,
 					   'value': name}
 				results.append(val)
+		elif query_id == 3:
+			agents =RegOrgUnit.objects.filter(
+				org_unit_name__icontains=query, is_void=False)
+			for agent in agents:
+				name = agent.org_unit_name
+				agent_id = agent.id
+				val = {'id': agent_id, 'label': name,
+					   'value': name}
+				results.append(val)
 	except Exception as e:
 		print('error searching master list - %s' % (str(e)))
 		return []

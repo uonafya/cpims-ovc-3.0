@@ -116,9 +116,11 @@
 
                                     <td>For those Transferred (Name of receiving Organization/program):<span class="asteriskField">*</span>
                                     </td>
-                                    <td>
+                                    <td id="orgsearch">
 
-                                        {{form.CASE_CL002}}
+
+                                           <input type="text" class="form-control" name="organization_field" id="organization_field" placeholder="Search for organization here">
+                                                    <input type="hidden" name="CASE_CL002" id="CASE_CL002">
                                     </td>
                                 </tr>
                                 </div>
@@ -135,7 +137,8 @@
 
 
                                                 {{form.CASE_CL027}}
-                                                {{form.CASE_CL004}}
+                                                <input type="hidden" name="CASE_CL004" id="CASE_CL004">
+{#                                                {{form.CASE_CL004}}#}
 
                                             </div>
 
@@ -537,7 +540,7 @@ jQuery(document).ready(function()
 	$('html,body').scrollTop(0);
 	FormWizardValidation.init();
 });
-    var table[0] = document.getElementsByTagName('table')[0],
+    var table = document.getElementsByTagName('table')[0],
       rows = table.getElementsByTagName('tr'),
       text = 'textContent' in document ? 'textContent' : 'innerText';
 
@@ -547,6 +550,31 @@ jQuery(document).ready(function()
 
 
 </script>
+    <script>
+    $( "#organization_field ,#CASE_CL002" ).autocomplete({
+            source: function( request, response ) {
+            $.ajax({
+                url: "{% url 'ovc_search' %}",
+                dataType: "json",
+                data: {q: request.term, id: 3},
+                success: function( data ) {
+                    response( data );
+                }
+                });
+            },
+            minLength: 4,
+            select: function( event, ui ) {
+                $('#organization_field').val(ui.item.name);
+                $('#CASE_CL002').val(ui.item.id);
+            },
+            open: function() {
+                $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+            },
+            close: function() {
+                $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+            }
+        });
+    </script>
 
 
 

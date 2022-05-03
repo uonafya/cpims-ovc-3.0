@@ -5,6 +5,7 @@ from cpovc_main.functions import get_general_list, convert_date
 from cpovc_forms.models import (
     FormsAuditTrail, OVCCareF1B, OVCCareEvents, OVCEducationFollowUp, OVCCareCpara, OVCCareCasePlan)
 from cpovc_ovc.functions import get_house_hold
+from cpovc_registry.models import RegOrgUnit
 from .models import OVCGokBursary
 from cpovc_ovc.models import OVCFacility
 
@@ -393,10 +394,21 @@ def get_facility_list():
     """Method to get list of facilities."""
     try:
         initial_list = [('', 'Please Select')]
-        flist = OVCFacility.objects.filter().values_list('id', 'facility_name')
+        flist = OVCFacility.objects.filter().values_list('id', 'org_unit_name')
         facility_list = initial_list + list(flist)
     except Exception as e:
         print('Error - %s' % e)
         return []
     else:
         return facility_list
+def get_organization_list():
+    """Method to get list of facilities."""
+    try:
+        initial_list = [('', 'Please Select')]
+        flist = RegOrgUnit.objects.filter().values_list('id', 'org_unit_name')
+        org_unit_name = initial_list + list(flist)
+    except Exception as e:
+        print('Error - %s' % e)
+        return []
+    else:
+        return org_unit_name

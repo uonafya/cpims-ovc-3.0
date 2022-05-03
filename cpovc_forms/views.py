@@ -42,14 +42,13 @@ from .models import (
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
-    get_persons_list, get_list_of_persons, get_list, form_id_generator,
+    get_persons_list, get_list_of_persons, get_list, form_id_generator,get_org_units_list,
     case_event_id_generator, convert_date, new_guid_32,
     beneficiary_id_generator, translate_geo, translate, translate_case,
     translate_reverse, translate_reverse_org, translate_school, get_days_difference)
 from cpovc_forms.functions import (save_audit_trail, save_cpara_form_by_domain, get_past_cpt)
 from cpovc_main.country import (COUNTRIES)
-from cpovc_registry.models import (
-    RegOrgUnit, RegOrgUnitContact, RegOrgUnitGeography, RegPerson, RegPersonsOrgUnits, AppUser, RegPersonsSiblings,
+from cpovc_registry.models import (RegOrgUnit, RegOrgUnitContact, RegOrgUnitGeography, RegPerson, RegPersonsOrgUnits, AppUser, RegPersonsSiblings,
     RegPersonsTypes, RegPersonsGuardians, RegPersonsGeo, RegPersonsExternalIds)
 from cpovc_main.models import (SetupList, SetupGeography, SchoolList, FacilityList)
 from cpovc_auth.models import CPOVCUserRoleGeoOrg
@@ -58,7 +57,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from cpovc_registry.functions import get_list_types, extract_post_params
-from cpovc_ovc.functions import get_ovcdetails
+from cpovc_ovc.functions import get_ovcdetails,search_master
 from .functions import create_fields, create_form_fields, save_form1b, save_bursary
 from .documents import create_mcert
 
@@ -10081,7 +10080,6 @@ def new_case_closure(request, id):
 
         if request.method == 'POST':
             closure_reason = request.POST.get("CASE_CL001")
-            # org_res  = request.POST.get("CASE_CL002")
             attrition_reason1 = request.POST.get("CASE_CL027")
             other = request.POST.get("CASE_CL004")
             transfer_completed = request.POST.get("CASE_CL010")
@@ -10093,12 +10091,11 @@ def new_case_closure(request, id):
             manager_report = request.POST.get("CASE_CL029")
             head_hh_linked= request.POST.get("CASE_CL028}")
             exit_reason = request.POST.get("CASE_CL031")
-            #staff_certifying = request.POST.get("CASE_CL024")
             date = request.POST.get("CASE_CL026")
             files_completed = request.POST.get("CASE_CL006")
             phone_number = request.POST.get("CASE_CL007")
             informed_graduation = request.POST.get("CASE_CL008")
-            receiving_org = request.POST.get.get("CASE_CL002")
+            receiving_org = request.POST.get("CASE_CL002")
             if receiving_org:
                 org_res = RegOrgUnit.objects.get(id=receiving_org).org_unit_name
             else:
@@ -10106,7 +10103,8 @@ def new_case_closure(request, id):
 
 
             person = RegPerson.objects.get(pk=int(id))
-            receiving_org = RegOrgUnit.objects.get(pk=int(id))
+            care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=person).caretaker_id)
+            # receiving_org = RegOrgUnit.objects.get(pk=int(id))
             event_type_id = 'WBGA'
             date_of_closure = timezone.now()
 
@@ -10124,6 +10122,7 @@ def new_case_closure(request, id):
                 date_of_event=date_of_closure,
                 created_by=request.user.id,
                 person=RegPerson.objects.get(pk=int(id)),
+
                 # house_hold=house_holds
             )
             ovccareevent.save()
@@ -10133,8 +10132,9 @@ def new_case_closure(request, id):
             # OVCaseClosure.objects.create(
             case_closing = OVCCareCaseExit(
                 person=RegPerson.objects.get(pk=int(id)),
-                rec_organization =org_res ,
-                closure_reason=closure_reason,
+                care_giver=RegPerson.objects.get(id=OVCRegistration.objects.get(person=person).caretaker_id),
+                rec_organization =org_res,
+                reason=closure_reason,
                 attrition_reason=attrition_reason1,
                 other=other,
                 transfer_completed=transfer_completed,
@@ -10145,9 +10145,7 @@ def new_case_closure(request, id):
                 attrition_documented=attrition_reason2,
                 manager_report=manager_report,
                 head_hh_linked=head_hh_linked,
-
                 exit_reason_stored=exit_reason,
-                # staff_certifying=staff_certifying,
                 date_of_closure=date,
                 case_files_completed=files_completed,
                 cw_phone_household=phone_number,
@@ -10198,7 +10196,7 @@ def delete_case_closure(request, id):
     delete_caseclosure.delete()
     return render(request,'forms/new_case_closure.html')
 
-def edit_case_closure(request, id):
+def edit_case_closure(request, id,value):
     """Some default page for Server Errors."""
 
     try:
@@ -10206,7 +10204,6 @@ def edit_case_closure(request, id):
         posted_data = OVCCareCaseExit.objects.get(case_clouse_id=id)
         if request.method == 'POST':
             closure_reason = request.POST.get("CASE_CL001")
-            receiving_org = request.POST.get("CASE_CL002")
             attrition_reason1 = request.POST.get("CASE_CL027")
             other = request.POST.get("CASE_CL004")
             transfer_completed = request.POST.get("CASE_CL010")
@@ -10216,17 +10213,47 @@ def edit_case_closure(request, id):
             file_stored1 = request.POST.get("CASE_CL014")
             attrition_reason2 = request.POST.get("CASE_CL030")
             manager_report = request.POST.get("CASE_CL029")
-            head_hh_linked= request.POST.get("CASE_CL028}")
+            head_hh_linked = request.POST.get("CASE_CL028}")
             exit_reason = request.POST.get("CASE_CL031")
-            staff_certifying = request.POST.get("CASE_CL024")
             date = request.POST.get("CASE_CL026")
             files_completed = request.POST.get("CASE_CL006")
             phone_number = request.POST.get("CASE_CL007")
             informed_graduation = request.POST.get("CASE_CL008")
+            receiving_org = request.POST.get("CASE_CL002")
+            if receiving_org:
+                org_res = RegOrgUnit.objects.get(id=receiving_org)
+            else:
+                org_res = None
 
-        OVCCareCaseExit.objects.filter(
-                rec_organization =receiving_org,
-                closure_reason=closure_reason,
+            person = RegPerson.objects.get(pk=int(id))
+            # receiving_org = RegOrgUnit.objects.get(pk=int(id))
+            event_type_id = 'WBGA'
+            date_of_closure = timezone.now()
+
+            """ Save evaluation-event """
+            # get event counter
+            event_counter = OVCCareEvents.objects.filter(
+                event_type_id=event_type_id, person=id, is_void=False).count()
+            # save event
+            ovccareevent = OVCCareEvents(
+                event_type_id=event_type_id,
+                event_counter=event_counter,
+                event_score=0,
+                date_of_event=date_of_closure,
+                created_by=request.user.id,
+                person=RegPerson.objects.get(pk=int(id)),
+                # house_hold=house_holds
+            )
+            ovccareevent.save()
+            # OVCFMPEvaluation
+
+            # Saving OVC Case Closure
+            # OVCaseClosure.objects.create(
+            case_closing = OVCCareCaseExit(
+                person=RegPerson.objects.get(pk=int(id)),
+                care_giver=RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id),
+                rec_organization=org_res,
+                reason=closure_reason,
                 attrition_reason=attrition_reason1,
                 other=other,
                 transfer_completed=transfer_completed,
@@ -10236,13 +10263,42 @@ def edit_case_closure(request, id):
                 files_stored=file_stored1,
                 attrition_documented=attrition_reason2,
                 manager_report=manager_report,
-                exit_reason_stored=exit_reason,
-                staff_certifying=staff_certifying,
                 head_hh_linked=head_hh_linked,
+                exit_reason_stored=exit_reason,
                 date_of_closure=date,
                 case_files_completed=files_completed,
                 cw_phone_household=phone_number,
                 sp_informed_graduation=informed_graduation,
+                event=ovccareevent, )
+
+            case_closing.save()
+
+            msg = 'form case closure saved successful'
+            messages.add_message(request, messages.INFO, msg)
+            url = reverse('ovc_view', kwargs={'id': id})
+            return HttpResponseRedirect(url)
+            # url = reverse('ovc_view', kwargs={'id': id})
+            # # return HttpResponseRedirect(reverse(forms_registry))
+            # return HttpResponseRedirect(url)
+
+        OVCCareCaseExit.objects.filter(
+            rec_organization=org_res,
+            reason=closure_reason,
+            attrition_reason=attrition_reason1,
+            other=other,
+            transfer_completed=transfer_completed,
+            follow_up_frequency=followup_time,
+            sp_informed_tarnsfer=informed,
+            family_folder_sent=copy_sent,
+            files_stored=file_stored1,
+            attrition_documented=attrition_reason2,
+            manager_report=manager_report,
+            head_hh_linked=head_hh_linked,
+            exit_reason_stored=exit_reason,
+            date_of_closure=date,
+            case_files_completed=files_completed,
+            cw_phone_household=phone_number,
+            sp_informed_graduation=informed_graduation,
 
             )
 
