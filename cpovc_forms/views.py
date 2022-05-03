@@ -10015,6 +10015,7 @@ def new_pregnantwomen(request, id):
                 event_counter = OVCCareEvents.objects.filter(
                     event_type_id=event_type_id, person=id, is_void=False).count()
                 # save event
+
                 ovccareevent = OVCCareEvents.objects.create(
                     event_type_id=event_type_id,
                     event_counter=event_counter,
@@ -10028,11 +10029,11 @@ def new_pregnantwomen(request, id):
                 q2 = request.POST.get("PWA_WA1_2A")
                 q3 = request.POST.get("PWA_WA1_2B")
                 # q4 = request.POST.get("PWA_WA1_3A")
-                q5 = request.POST.get("PWA_WA1_3B")
+                # q5 = request.POST.get("PWA_WA1_3B")
                 # q6= request.POST.get("PWA_WA1_4A")
-                q7 = request.POST.get("PWA_WA1_4B")
+                # q7 = request.POST.get("PWA_WA1_4B")
                 # q8 = request.POST.get("PWA_WA1_5A")
-                q9 = request.POST.get("PWA_WA1_5B")
+                # q9 = request.POST.get("PWA_WA1_5B")
                 q10 = request.POST.get("PWA_WA1_6")
                 q11 = request.POST.get("PWA_WA1_7")
                 q12 = request.POST.get("PWA_WA1_8")
@@ -10042,7 +10043,7 @@ def new_pregnantwomen(request, id):
                 q16 = request.POST.get("PWA_WA1_12")
                 q17 = request.POST.get("PWA_WA1_13")
                 q18 = request.POST.get("PWA_WA1_14")
-                # q19 = request.POST.get("PWA_WA1_15")
+                q19 = request.POST.get("PWA_WA1_15")
 
                 # Saving track
                 # pdb.set_trace()
@@ -10053,11 +10054,11 @@ def new_pregnantwomen(request, id):
                     date_test_done2a=q2,
                     test_result2b=q3,
                     # date_test_done3a=q4,
-                    test_result3b=q5,
+                    # test_result3b=q5,
                     # date_test_done4a=q6,
-                    test_result4b=q7,
+                    # test_result4b=q7,
                     # date_test_done5a=q8,
-                    test_result5b=q9,
+                    # test_result5b=q9,
                     anc_date1=q10,
                     anc_date2=q11,
                     anc_date3=q12,
@@ -10067,7 +10068,7 @@ def new_pregnantwomen(request, id):
                     ccc_no=q16,
                     vl_result=q17,
                     vl_test_date=q18,
-                    # disclosure_done=q19,
+                    disclosure_done=q19,
                     event=ovccareevent,
                 )
                 # pdb.set_trace()
@@ -10108,15 +10109,15 @@ def new_pregnantwomen(request, id):
     #     date_of_event = convert_date(date_of_event)
 
 
-
     form = PREGNANT_WOMEN_ADOLESCENT(initial={'person': id})
     event = OVCPregnantWomen.objects.filter(person_id=id).values_list('event')
-    pwa_women = OVCPregnantWomen.objects.filter(event_id__in=event).order_by('date_of_event')
+    pwa_women = OVCPregnantWomen.objects.filter(event_id__in=event, is_void=True).order_by('date_of_event')
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
     return render(request,
                   'forms/new_pregnantwomen.html',{'form': form, 'init_data': init_data, 'vals': vals, 'person': id, 'care_giver': care_giver, 'pwa_women': pwa_women})
 
 #Edit pregnant women tracker form
+
 def edit_pregnantwomen(request, id):
     try:
         hdata = OVCPregnantWomen.objects.get(preg_id=id)
@@ -10139,42 +10140,48 @@ def edit_pregnantwomen(request, id):
             q2 = data_to_save.get("PWA_WA1_2A")
             q3 = data_to_save.get("PWA_WA1_2B")
             # q4 = data_to_save.get("PWA_WA1_3A")
-            q5 = data_to_save.get("PWA_WA1_3B")
+            # q5 = data_to_save.get("PWA_WA1_3B")
             # q6 = data_to_save.get("PWA_WA1_4A")
-            q7 = data_to_save.get("PWA_WA1_4B")
+            # q7 = data_to_save.get("PWA_WA1_4B")
             # q8 = data_to_save.get("PWA_WA1_5A")
-            q9 = data_to_save.get("PWA_WA1_5B")
+            # q9 = data_to_save.get("PWA_WA1_5B")
             q10 = data_to_save.get("PWA_WA1_6")
             q11 = data_to_save.get("PWA_WA1_7")
             q12 = data_to_save.get("PWA_WA1_8")
             q13 = data_to_save.get("PWA_WA1_9")
             q14 = data_to_save.get("PWA_WA1_10")
             q15 = data_to_save.get("PWA_WA1_11")
+
+            if q15:
+                facility_res = OVCFacility.objects.get(id=q15).facility_code
+            else:
+                facility_res = None
+
             q16 = data_to_save.get("PWA_WA1_12")
             q17 = data_to_save.get("PWA_WA1_13")
             q18 = data_to_save.get("PWA_WA1_14")
-            # q19 = data_to_save.get("PWA_WA1_15")
+            q19 = data_to_save.get("PWA_WA1_15")
 
             OVCPregnantWomen.objects.filter(preg_id=id).update(
                 date_of_contact=q1,
                 date_test_done2a=q2,
                 test_result2b=q3,
                 # date_test_done3a=q4,
-                test_result3b=q5,
+                # test_result3b=q5,
                 # date_test_done4a=q6,
-                test_result4b=q7,
+                # test_result4b=q7,
                 # date_test_done5a=q8,
-                test_result5b=q9,
+                # test_result5b=q9,
                 anc_date1=q10,
                 anc_date2=q11,
                 anc_date3=q12,
                 anc_date4=q13,
                 mode_of_delivery=q14,
-                facility_code=q15,
+                facility_code=facility_res,
                 ccc_no=q16,
                 vl_result=q17,
                 vl_test_date=q18,
-                # disclosure_done=q19,
+                disclosure_done=q19,
             )
 
         track = {
@@ -10182,11 +10189,11 @@ def edit_pregnantwomen(request, id):
             'PWA_WA1_2A': hdata.date_test_done2a,
             'PWA_WA1_2B': hdata.test_result2b,
             # 'PWA_WA1_3A': hdata.date_test_done3a,
-            'PWA_WA1_3B': hdata.test_result3b,
+            # 'PWA_WA1_3B': hdata.test_result3b,
             # 'PWA_WA1_4A': hdata.date_test_done4a,
-            'PWA_WA1_4B': hdata.test_result4b,
+            # 'PWA_WA1_4B': hdata.test_result4b,
             # 'PWA_WA1_5A': hdata.date_test_done5a,
-            'PWA_WA1_5B': hdata.test_result5b,
+            # 'PWA_WA1_5B': hdata.test_result5b,
             'PWA_WA1_6': hdata.anc_date1,
             'PWA_WA1_7': hdata.anc_date2,
             'PWA_WA1_8': hdata.anc_date3,
@@ -10209,17 +10216,12 @@ def edit_pregnantwomen(request, id):
     except Exception as e:
         msg = 'error'
         messages.add_message(request, messages.INFO, msg)
-        url = reverse('new_hivscreeningtool', kwargs={'id': 60})
+        url = reverse('ovc_view', kwargs={'id': id})
         return HttpResponseRedirect(url)
 
 
-
-
 def delete_pregnantwomen(request, id):
-    new_tracker = OVCPregnantWomen.objects.get(preg_id=id)
-    new_tracker.delete()
-    return redirect('new_pregnantwomen', id=new_tracker.person_id)
-
-
-
-#testedit pregnant women
+    new_tracker = OVCPregnantWomen.objects.filter(preg_id=id)
+    new_tracker1 = OVCPregnantWomen.objects.get(preg_id=id)
+    new_tracker.update(is_void=True)
+    return redirect('new_pregnantwomen', id=new_tracker1.person_id)
