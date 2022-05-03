@@ -10048,3 +10048,81 @@ def delete_bireferral(request, id):
     new_eval = OVCBiReferral.objects.get(refferal_id=id)
     new_eval.delete()
     return redirect('bidirectionalreferralform', id=new_eval.person_id)
+
+def bidirectional(request, id):
+   if request.method == 'POST':
+       child = RegPerson.objects.get(id=id)
+       house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+       event_type_id = 'CPAR'
+
+       """ Save caseplan-event """
+       # get event counter
+       event_counter = OVCCareEvents.objects.filter(
+           event_type_id=event_type_id, person=id, is_void=False).count()
+       # save event
+       ovccareevent = OVCCareEvents.objects.create(
+           event_type_id=event_type_id,
+           event_counter=event_counter,
+           event_score=0,
+           created_by=request.user.id,
+           person=RegPerson.objects.get(pk=int(id)),
+           house_hold=house_hold
+       )
+
+       my_request = request.POST.get('final_submission')
+
+       # house_hold=
+       care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+       caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
+
+       if my_request:
+           bidirectiondata = json.loads(my_request)
+           print(("kkkkkkkkkkkk", bidirectiondata))
+           for all_data in bidirectiondata:
+               print(("my_reason", all_data))
+               my_domain = all_data['domain']
+               my_goal = all_data['goal']
+               my_service = all_data['services']
+               my_date_of_prev_evnt = timezone.now()
+               my_date_of_caseplan = all_data['CPT_DATE_CASEPLAN']
+               print(("my_reason", all_data))
+
+               xyz = RegPerson.objects.filter(id=caregiver_id).values('id')
+
+               for service in my_service:
+                   OVCCareBidirectionPlan(
+                       domain=my_domain,
+                       goal=my_goal,
+                       person_id=id,
+                       caregiver=RegPerson.objects.get(id=caregiver_id),
+                       household=house_hold,
+                       date_of_previous_event=my_date_of_prev_evnt,
+                       date_of_event=convert_date(my_date_of_caseplan, fmt='%Y-%m-%d'),
+                       form=OVCCareForms.objects.get(name='OVCCareCasePlan'),
+                       case_plan_status='D',
+                       event=ovccareevent
+                   ).save()
+
+       msg = 'Bidirection saved successfully'
+       messages.add_message(request, messages.INFO, msg)
+       url = reverse('ovc_view', kwargs={'id': id})
+       return HttpResponseRedirect(url)
+
+   # get child data
+   init_data = RegPerson.objects.filter(pk=id)
+   check_fields = ['sex_id', 'relationship_type_id']
+   vals = get_dict(field_name=check_fields)
+   ovc_id = int(id)
+   child = RegPerson.objects.get(is_void=False, id=ovc_id)
+   care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+   form = BIDIRECTIONALREFERRALFORM()
+
+   # past cpt
+   # bidirectional_events = get_past_bidirectional(child.id)
+
+   return render(request,
+                 'forms/new_refferal.html',
+                 {'form': form, 'init_data': init_data,
+                  'vals': vals,
+                  # 'bidirectional_events': bidirectional_events,
+                  'care_giver': care_giver})

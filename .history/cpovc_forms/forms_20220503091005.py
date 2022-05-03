@@ -8196,10 +8196,84 @@ bireferral_provided_list = forms.CharField(widget=forms.TextInput(
         attrs={'type': 'hidden',
                'id': 'bireferral_provided_list'}))
 
+<<<<<<< HEAD
+    DOMAIN_CHOICES=((0,'Please select'),
+                    (1,'Health Domain'),
+                    (2, 'Stable Domain'),
+                    (3, 'Safe Domain'))
+
+    HEALTH_DOMAIN_CHOICES = ((0, 'please select'),
+                      (1, 'Health insurance cover'),
+                      (2, 'secticide Treated Mosquito net (ITN)'),
+                      (3, 'Enrollment to care and treatment'),
+                      (4, 'Enhance Adherence Counselling'),
+                      (5, 'Routine/ emergency healthcare'),
+                      (6, 'Perinatal care including PMTCT'),
+                        (7,'HIV prevention support services_VMMC'),
+                        (8,'HIV prevention support services_PrEP'),
+                        (9,'HIV prevention support services_FM'),
+                        (10,'HIV prevention support services_Condom'),
+                        (11,'STI treatment'),
+                        (12,'MUAC and Bipedal Oedema Assessment'),
+                        (13,'Nutrition support'),
+                        (14,'immunization'),
+                        (15,'HIV-related testing HTS'),
+                        (16,'HIV-related testing EID'),)
+
+    STABLE_DOMAIN_CHOICES = ((0, 'please select'),
+                     (1, 'cash transfer OVC'),
+                     (2, 'cash transfer Elderly'),
+                     (3, 'cash transfer Disability'),
+                     (4, 'Safe shelter repair or construction'),
+                     (5, 'Routine/ emergency healthcare'),
+                     (6, 'Perinatal care including PMTCT'))
+
+    SAFE_DOMAIN_CHOICES = ((0, 'please select'),
+                   (1, 'Post Violence Counseling'),
+                   (2, 'Post Violence Medical care'),
+                   (3, 'Post violence Legal Care'),
+                   (4, 'Emergency shelter support'),
+                   (5, 'Re-enrollment'),
+                   (6, 'Bursary, tuition, school fees or fee exemption'),
+                    ('School uniform, books, or other materials','School uniform, books, or other materials'))
+
+
+    # SERVICE_CHOICES = ((0,'please select'),
+    #                 (1, 'Post Violence Counseling'),
+    #                  (2, 'Post Violence Medical care'),
+    #                  (3, 'Post violence Legal Care'),
+    #                  (4, 'Emergency shelter support'),
+    #                  (5, 'Re-enrollment'),
+    #                  (6, 'Bursary, tuition'))
+
+
+    BIREFERRAL_DOMAIN = forms.ChoiceField(choices=DOMAIN_CHOICES,
+                                                initial='0',
+                                                widget=forms.Select(
+                                                    attrs={'class': 'form-control',
+                                                           'id': 'BIREFERRAL_DOMAIN',
+                                                           'name': 'BIREFERRAL_DOMAIN'
+                                                           }))
+
+    HEALTH_DOMAIN = forms.ChoiceField(choices=HEALTH_DOMAIN_CHOICES,
+                                                initial='0',
+                                                widget=forms.Select(
+                                                    attrs={'class': 'form-control',
+                                                           'id': 'HEALTH_DOMAIN'
+                                                           }))
+
+    STABLE_DOMAIN = forms.ChoiceField(choices=STABLE_DOMAIN_CHOICES,
+                                                initial='0',
+                                                widget=forms.Select(
+                                                    attrs={'class': 'form-control',
+                                                           'id': 'STABLE_DOMAIN'
+                                                           }))
+=======
 # referal form
 
 
 class BIDIRECTIONALREFERRALFORM(forms.Form):
+>>>>>>> 733d6b8ea55a1c884df79408e04b25a269a4e499
 
     DEFAULT_DOMAIN = forms.ChoiceField(choices=(('', ''), ('', '')),
                                        widget=forms.Select(
