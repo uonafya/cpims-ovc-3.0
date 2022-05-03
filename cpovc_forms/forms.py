@@ -8147,129 +8147,103 @@ class DREAMS_FORM(forms.Form):
                #'data-parsley-group': 'group0',
                'rows': '3'}))
 
-# Bidirectional referral forms
-class BIDIRECTIONALREFERRALFORM(forms.Form):
+# Bidirectional referral form choices
+BDT_DOMAIN_CHOICES=(('HTD','Health Domain'),('STD', 'Stable Domain'),('SFD', 'Safe Domain'), ('SCH', 'Schooled Domain'))
 
-    bireferral_provided_list = forms.CharField(widget=forms.TextInput(
+HEALTH_DOMAIN_CHOICES = (
+                         ('HDC1', 'Health insurance cover'),
+                         ('HDC2', 'Insecticide Treated Mosquito net (ITN)'),
+                         ('HDC3', 'HIV-related testing HTS'),
+                         ('HDC4', 'HIV-related testing EID'),
+                         ('HDC5', 'HIV-related testing TB'),
+                         ('HDC6', 'HIV-related testing vL'),
+                         ('HDC7', 'Enrollment to care and treatment'),
+                         ('HDC8', 'Enhance Adherence Counselling'),
+                         ('HDC9', 'Routine/ emergency healthcare'),
+                         ('HDC10', 'Perinatal care including PMTCT'),
+                         ('HDC11', 'HIV prevention support services_VMMC'),
+                         ('HDC12', 'HIV prevention support services_PrEP'),
+                         ('HDC13', 'HIV prevention support services_FM'),
+                         ('HDC14', 'HIV prevention support services_Condom'),
+                         ('HDC15', 'STI treatment'),
+                         ('HDC16', 'MUAC and Bipedal Oedema Assessment'),
+                         ('HDC17', 'Nutrition support'),
+                         ('HDC18', 'Immunization')
+                         )
+
+STABLE_DOMAIN_CHOICES = (
+                        ('STC1', 'Cash transfer OVC'),
+                        ('STC2', 'Cash transfer Elderly'),
+                        ('STC3', 'Cash transfer Disability'),
+                        ('STC4', 'Safe shelter repair or construction'),
+                        ('STC5', 'Business Support (startup kit/business boost)'),
+                        ('STC6', 'Productive assets'),
+                        ('STC7', 'Financial literacy training to CG and adolescent'),
+                        ('STC8', 'Entrepreneurship training'),
+                        ('STC9', 'Agribusiness skills training'))
+
+SAFE_DOMAIN_CHOICES = (
+                      ('SFD1', 'Post Violence Counseling'),
+                      ('SFD2', 'Post Violence Medical care'),
+                      ('SFD3', 'Post violence Legal Care'),
+                      ('SFD4', 'Emergency shelter support'))
+
+SCHOOLED_DOMAIN_CHOICES = (
+                      ('SCH1', 'Re-enrollment (i.e., for dropouts or teen mothers)'),
+                      ('SCH2', 'Bursary, tuition, school fees or fee exemption'),
+                      ('SCH3', 'Other Specify'))
+bireferral_provided_list = forms.CharField(widget=forms.TextInput(
         attrs={'type': 'hidden',
                'id': 'bireferral_provided_list'}))
 
-    DOMAIN_CHOICES=((0,'Please select'),
-                    (1,'Health Domain'),
-                    (2, 'Stable Domain'),
-                    (3, 'Safe Domain'))
-
-    HEALTH_DOMAIN_CHOICES = ((0, 'please select'),
-                      (1, 'Health insurance cover'),
-                      (2, 'secticide Treated Mosquito net (ITN)'),
-                      (3, 'Enrollment to care and treatment'),
-                      (4, 'Enhance Adherence Counselling'),
-                      (5, 'Routine/ emergency healthcare'),
-                      (6, 'Perinatal care including PMTCT'),
-                        (7,'HIV prevention support services_VMMC'),
-                        (8,'HIV prevention support services_PrEP'),
-                        (9,'HIV prevention support services_FM'),
-                        (10,'HIV prevention support services_Condom'),
-                        (11,'STI treatment'),
-                        (12,'MUAC and Bipedal Oedema Assessment'),
-                        (13,'Nutrition support'),
-                        (14,'immunization'),
-                        (15,'HIV-related testing HTS'),
-                        (16,'HIV-related testing EID'),)
-
-    STABLE_DOMAIN_CHOICES = ((0, 'please select'),
-                     (1, 'cash transfer OVC'),
-                     (2, 'cash transfer Elderly'),
-                     (3, 'cash transfer Disability'),
-                     (4, 'Safe shelter repair or construction'),
-                     (5, 'Routine/ emergency healthcare'),
-                     (6, 'Perinatal care including PMTCT'))
-
-    SAFE_DOMAIN_CHOICES = ((0, 'please select'),
-                   (1, 'Post Violence Counseling'),
-                   (2, 'Post Violence Medical care'),
-                   (3, 'Post violence Legal Care'),
-                   (4, 'Emergency shelter support'),
-                   (5, 'Re-enrollment'),
-                   (6, 'Bursary, tuition, school fees or fee exemption'),
-                    ('School uniform, books, or other materials','School uniform, books, or other materials'))
+# referal form
 
 
-    # SERVICE_CHOICES = ((0,'please select'),
-    #                 (1, 'Post Violence Counseling'),
-    #                  (2, 'Post Violence Medical care'),
-    #                  (3, 'Post violence Legal Care'),
-    #                  (4, 'Emergency shelter support'),
-    #                  (5, 'Re-enrollment'),
-    #                  (6, 'Bursary, tuition'))
+class BIDIRECTIONALREFERRALFORM(forms.Form):
 
+    DEFAULT_DOMAIN = forms.ChoiceField(choices=(('', ''), ('', '')),
+                                       widget=forms.Select(
+                                           attrs={'class': 'form-control'
+                                                  }))
 
+    BIREFERRAL_DOMAIN = forms.ChoiceField(choices=BDT_DOMAIN_CHOICES,
+                                          widget=forms.Select(
+                                              attrs={'class': 'form-control',
+                                                     'id': 'BIREFERRAL_DOMAIN'
+                                                     }))
 
-    BIREFERRAL_DOMAIN = forms.ChoiceField(choices=DOMAIN_CHOICES,
-                                                initial='0',
-                                                widget=forms.Select(
-                                                    attrs={'class': 'form-control',
-                                                           'id': 'BIREFERRAL_DOMAIN',
-                                                           }))
-
-    HEALTH_DOMAIN = forms.ChoiceField(choices=HEALTH_DOMAIN_CHOICES,
-                                                initial='0',
-                                                widget=forms.Select(
-                                                    attrs={'class': 'form-control',
-                                                           'id': 'HEALTH_DOMAIN',
-                                                           }))
-
-    STABLE_DOMAIN = forms.ChoiceField(choices=STABLE_DOMAIN_CHOICES,
-                                                initial='0',
-                                                widget=forms.Select(
-                                                    attrs={'class': 'form-control',
-                                                           'id': 'STABBLE_DOMAIN',
-                                                           }))
-
-    SAFE_DOMAIN = forms.ChoiceField(choices=SAFE_DOMAIN_CHOICES,
-                                                initial='0',
-                                                widget=forms.Select(
-                                                    attrs={'class': 'form-control',
-                                                           'id': 'SAFE_DOMAIN',
-                                                           }))
-
-    BIREFERRAL_SERVICES = forms.MultipleChoiceField(choices=HEALTH_DOMAIN_CHOICES,
-                                              initial='0',
+    HEALTH_DOMAIN = forms.MultipleChoiceField(choices=HEALTH_DOMAIN_CHOICES,
                                               widget=forms.Select(
-                                                  attrs={'class': 'form-control',
-                                                         'id': 'BIREFERRAL_DEFAULT'})
-                                              )
+                                                  attrs={'class': 'form-control'
+                                                         }))
 
-    # # Feedback form entry
-    # FEEDBACK_BIDIRECTIONALFORM = forms.CharField(widget =forms.Tolmis_assessment_domain_listextarea(
-    #     attrs= {
-    #         'placeholder': _('Your feedback'),
-    #         'class':'form-control',
-    #         'rows':'3'
-    #     }))
+    STABLE_DOMAIN = forms.MultipleChoiceField(choices=STABLE_DOMAIN_CHOICES,
+                                              widget=forms.Select(
+                                                  attrs={'class': 'form-control'
+                                                         }))
 
-    REFERRAL_DATE = forms.DateField(
-        widget=forms.widgets.DateInput(
-            format="%m/%d/%Y",
-            attrs={'placeholder': _('Date'),
-                   'class': 'form-control',
-                   'name': 'refferalDate',
-                   'id': 'refferalDate',
-                   'autocomplete': "off",
-                   #     'data-parsley-required': "true",
-                   'data-parsley-group': 'group0'
-                   }))
+    SAFE_DOMAIN = forms.MultipleChoiceField(choices=SAFE_DOMAIN_CHOICES,
+                                            widget=forms.Select(
+                                                attrs={'class': 'form-control'
+                                                       }))
 
-    REFERRAL_END_DATE = forms.DateField(
-        widget=forms.widgets.DateInput(
-            format="%m/%d/%Y",
-            attrs={'placeholder': _('Date'),
-                   'class': 'form-control',
-                   'name': 'refferalDate',
-                   'id': 'refferalEndDate',
-                   'autocomplete': "off",
-                   #     'data-parsley-required': "true",
-                   'data-parsley-group': 'group0'
-                   }))
-    
+    SCHOOLED_DOMAIN = forms.MultipleChoiceField(choices=SCHOOLED_DOMAIN_CHOICES,
+                                                widget=forms.Select(
+                                                    attrs={'class': 'form-control'
+                                                           }))
 
+
+    referral_date = forms.DateField(widget=forms.widgets.DateInput(
+        format="%d/%m/%Y",
+        attrs={'placeholder': _('Date Of Referral'),
+               'class': 'form-control',
+               'id': 'referral_date'
+               }))
+
+
+    referral_end_date = forms.DateField(widget=forms.widgets.DateInput(
+        format="%d/%m/%Y",
+        attrs={'placeholder': _('Date Of Referral'),
+               'class': 'form-control',
+               'id': 'referral_end_date'
+               }))
