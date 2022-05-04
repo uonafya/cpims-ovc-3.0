@@ -1408,8 +1408,8 @@ class OVCCaseLocation(models.Model):
 
 class OVCBiReferral(models.Model):
     refferal_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
-    person = models.ForeignKey(RegPerson,on_delete=models.CASCADE, default=60)
-    ref_caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, default=59, related_name='refferal_caregiver')
+    person = models.ForeignKey(RegPerson,on_delete=models.CASCADE)
+    ref_caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='refferal_caregiver')
     client_category = models.CharField(max_length=100)
     refferal_urgency = models.CharField(max_length=100)
     refferal_to = models.CharField(max_length=100)

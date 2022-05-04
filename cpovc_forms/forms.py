@@ -8200,7 +8200,7 @@ bireferral_provided_list = forms.CharField(widget=forms.TextInput(
 urgent_choices = (
     ('Emergency','Emergency'),
     ('Urgent','Urgent'),
-    ('Routine/follow up','Routine/follow up')
+    ('Routine or follow up','Routine or follow up')
 )
 category_choices = (
     ('Caregiver','Caregiver'),
