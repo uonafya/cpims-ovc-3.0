@@ -182,5 +182,5 @@ urlpatterns = [
     re_path('delete_bireferral/(?P<id>\d+)/', views.delete_bireferral, name='delete_bireferral'),
 
     #bireferral test template
-    re_path('bidirectional/(?P<id>\d+)/', views.bidirectional, name='bidirectional')
+    re_path('bidirectional/(?P<id>\)/', views.bidirectional, name='bidirectional')
 ]
