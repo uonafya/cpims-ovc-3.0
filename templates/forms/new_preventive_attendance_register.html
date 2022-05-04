@@ -488,13 +488,13 @@ function loadForm1aEvents()
     var data = new Array();
     var csrftoken = $.cookie('csrftoken');    
     var person = $('#person').val();
-    console.log("ppppppppppppp ooooo"+person);
+    console.log("FFFFFFFFFFFFFFFFFFFFFFFFFFF ########################## "+person);
     var values = {
                     'csrfmiddlewaretoken': csrftoken,
                     'person': person
                  }; 
 
-    $.ajax({
+            $.ajax({
                 url: '{% url 'manage_preventive_register' %}',
                 dataType: 'json',
                 method: 'POST',
@@ -502,6 +502,7 @@ function loadForm1aEvents()
                 success: function(result)
                 {
                     // Clear <tbody>
+                    console.log("------------------->>>>>>>  "+result);
                     $("#f1a_events_data_table tbody").html('');
 
                     $.each(result, function(i, val) {
@@ -521,6 +522,8 @@ function loadForm1aEvents()
                             var viewItem = '<button id=' + btnView + ' type="submit" class="btn  btn-sm btn-primary m-r-5"><i class="fa fa-binoculars"></i></button>';
                             var editItem = '<button id=' + btnEdit + ' data-event_type='+event_type+' data-event_pk='+event_pk+' data-core_service="" data-core_service_status="" type="submit" class="btn  btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i></button>';
                             var deleteItem = '<button id=' + btnDelete + ' data-event_type='+event_type+' data-event_pk='+event_pk+' type="submit" class="btn  btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i></button>';
+
+                            console.log("000000000000000 "+deleteItem);
 
                             // Append to rows to table rows
                             $("#f1a_events_data_table tbody").append('<tr id=' + tableRowId + '>' +
@@ -542,8 +545,11 @@ function loadForm1aEvents()
                             {   var personId=$('#person').val();
                                 var btn_event_type=$(this).attr("data-event_type");
                                 var btn_event_pk=$(this).attr("data-event_pk");
+                                console.log("xxxxxxxxxxxxxxxxx ++++++++++ "+btn_event_type);
+
 
                                 var url = "{% url 'edit_form1a' id=1234 btn_event_type=2345 btn_event_pk=3456 %}".replace(/1234/, personId.toString()).replace(/2345/, btn_event_type.toString()).replace(/3456/, btn_event_pk.toString());
+                                console.log(url);
 
                                 window.open(url,"_self");
                             });
@@ -554,7 +560,8 @@ function loadForm1aEvents()
                                 var btn_event_type=$(this).attr("data-event_type");
                                 var btn_event_pk=$(this).attr("data-event_pk");
 
-                                var url = "{% url 'delete_form1a' id=1234 btn_event_type=2345 btn_event_pk=3456 %}".replace(/1234/, personId.toString()).replace(/2345/, btn_event_type.toString()).replace(/3456/, btn_event_pk.toString());
+                                var url = "{% url 'delete_preventive_event_entry' id=1234  btn_event_pk=3456 btn_event_type=2345%}".replace(/1234/, personId.toString()).replace(/3456/, btn_event_pk.toString()).replace(/2345/, btn_event_type.toString());
+
                                 window.form1aUrlToDelete=url;
                                 window.eventTypeToDelete=btn_event_type.toString();
                                 $("#delete-form1a-entry").modal();
@@ -646,7 +653,6 @@ function savePreventiveAttRegister(x)
         if(olmis_assessment_provided_list) 
         {
             values['olmis_assessment_provided_list'] = olmis_assessment_provided_list;
-            console.log("000000000000000000 ------------>>>>>>>>>>>>> ");
 
             $.ajax({
                 url: '{% url 'save_preventive_register' %}',
@@ -1065,128 +1071,7 @@ function AddRow(x)
 		{
 		    $("#olmis_domain_errormsg").css({ 'display': "block" }); 
 		} 
-	}
-	
-	// if(x==3)
-	// {
-	// 	var OlmisAssessmentData = new Array();
-    //     var olmis_assessment_domain = $('input[name="CAREGIVER_REFFERED_FOR_SERVICES"]:checked').val();
-    //     var olmis_assessment_coreservice = $("#caregiver_refferal_services_id").val();
-    //     var olmis_assessment_coreservice_status = $('input[name="CAREGIVER_REFFERAL_COMPLETED"]:checked').val();
-    //     var olmis_session_attended_days = $('input[name="CAREGIVER_REFERAL_MADE"]:checked').val();
-    //     var attendence_comments = $("#attendance_comments").val();
-    //     var csrftoken = $.cookie('csrftoken');        
-    //     var values = {  
-    //         'csrfmiddlewaretoken': csrftoken
-    //     };
-    //     console.log("------------------------>>>>>>>>>> "+olmis_session_attended_days);
-    //     // console.log("===========>>>> "+ olmis_assessment_coreservice + "########## "+olmis_assessment_domain+ 'xxxxxxxxxxx ') +olmis_assessment_coreservice_status;
-
-    //     // Validation and Ajax
-    //     if(olmis_assessment_domain || olmis_assessment_domain == '')
-	// 	{
-	// 		if(olmis_assessment_coreservice || olmis_assessment_coreservice == '')
-	// 		{
-	// 			if(olmis_assessment_coreservice_status || olmis_assessment_coreservice_status == '')
-	// 			{
-    //                 // console.log("Daaaaaataaa to be logged!!!!!");
-	// 				// Find a <table> element with id="myTable":
-    //                 var table = $('#caregiver_assessment_manager_table')[0]; 
-
-    //                 // Create an empty <tr> element with id and add it to the 1st position of the table:
-    //                 var rows_length = table.rows.length;
-    //                 var row = table.insertRow(rows_length);
-    //                 var index = rows_length - 2;
-    //                 row_id = 'rowid_' + index;
-    //                 row.id = row_id;
-    //                 var btnRemoveSvcId = 'btnRemoveSvc' + index;
-
-    //                 // Insert new cells (<td> elements) of the "new" <tr> element:
-    //                 var cell0 = row.insertCell(0);
-    //                 var cell1 = row.insertCell(1);
-    //                 var cell2 = row.insertCell(2);
-    //                 var cell3 = row.insertCell(3);
-    //                 var cell4 = row.insertCell(4);
-    //                 var cell5 = row.insertCell(5);
-    //                 var cell6 = row.insertCell(6);
-
-    //                 var holmis_assessment_domain= "<input id='holmis_assessment_domain'  value='"+olmis_assessment_domain+"'>"
-    //                 var holmis_assessment_coreservice = "<input id='holmis_assessment_coreservice'  value='"+olmis_assessment_coreservice+"'>"
-    //                 var holmis_assessment_coreservice_status = "<input id='holmis_assessment_coreservice_status' value='"+olmis_assessment_coreservice_status+"'>"
-    //                 var holmis_session_attended_days = "<input id='session_attended_days' value='"+olmis_session_attended_days+"'>"
-    //                 var holmis_attendence_comments = "<input id='session_attended_days' value='"+attendence_comments+"'>"
-                    
-                    
-                    
-
-    //                 cell0.innerHTML = '<h6 class="td_style">#</h6>';        
-    //                 cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice") + holmis_assessment_coreservice + '</h6>';
-    //                 cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_domain") + holmis_assessment_domain + '</h6>';
-    //                 cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "holmis_session_attended_days") + holmis_session_attended_days + '</h6>';
-    //                 cell4.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice_status") + holmis_assessment_coreservice_status + '</h6>';
-    //                 cell5.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_coreservice_status") + holmis_attendence_comments + '</h6>';
-    //                 cell6.innerHTML = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
-
-
-    //                 // AddClick Event To Remove Button
-    //                 $("#" + btnRemoveSvcId + "").click(function(e)
-    //                 {
-    //                     RemoveRow(1, '', row_id);
-    //                 });
-
-    //                 // Reset Input Elements/Error Divs
-    //                 $("#olmis_assessment_domain").multiselect("clearSelection");
-    //                 $("#olmis_assessment_domain").multiselect("refresh");
-    //                 $("#olmis_assessment_coreservice").multiselect("clearSelection");
-    //                 $("#olmis_assessment_coreservice").multiselect("refresh");
-    //                 $("#olmis_assessment_coreservice_status").multiselect("clearSelection");
-    //                 $("#olmis_assessment_coreservice_status").multiselect("refresh");
-    //                 $('#sel_olmis_assessment_coreservice_status').html('');                    
-
-    //                 $('#assessment_manager_table tr').each(function(row, tr)
-    //                 {                            
-    //                     var olmis_assessment_domain = $(tr).find('input[id="holmis_assessment_domain"]').val();
-    //                     var olmis_assessment_coreservice = $(tr).find('input[id="holmis_assessment_coreservice"]').val();
-    //                     var olmis_assessment_coreservice_status = $(tr).find('input[id="holmis_assessment_coreservice_status"]').val();
-    //                     var olmis_session_attended_days = $(tr).find('input[id="holmis_session_attended_days"]').val();
-    //                     var olmis_session_attended_comments = $(tr).find('input[id="holmis_attendence_comments"]').val();
-
-    //                     OlmisAssessmentData[row]= {
-    //                         "olmis_assessment_domain" : olmis_assessment_domain,
-    //                         "olmis_assessment_coreservice" : olmis_assessment_coreservice,
-    //                         "olmis_assessment_coreservice_status" : olmis_assessment_coreservice_status,
-    //                         "olmis_session_attended_days": olmis_session_attended_days,
-    //                         "olmis_session_attended_comments": olmis_session_attended_comments
-    //                         }                                
-                        
-    //                 });
-                    
-    //                 OlmisAssessmentData.shift(); //remove first row(headers stuff)
-    //                 OlmisAssessmentData.shift(); //remove second row(controls stuff)
-    //                 OlmisAssessmentData = JSON.stringify(OlmisAssessmentData); 
-
-    //                 // Set olmis_assessment_provided_list
-    //                 $('#preventive_assessment_provided_list').val(OlmisAssessmentData);
-
-    //                 // console.log("------------>>>>>>> bbbbbb"+$('#olmis_assessment_provided_list').val())
-	// 			}
-	// 			else
-	// 			{
-	// 				$("#olmis_assessment_coreservice_status_errormsg").css({ 'display': "block" });
-	// 			}
-	// 		}
-	// 		else
-	// 		{
-	// 			$("#olmis_assessment_coreservice_errormsg").css({ 'display': "block" });
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		$("#olmis_assessment_domain_errormsg").css({ 'display': "block" });
-	// 	}
-	// }
-	
-	
+	}	
 	
 }
 
