@@ -5,7 +5,7 @@ from cpovc_main.functions import get_general_list, convert_date
 from cpovc_forms.models import (
     FormsAuditTrail, OVCCareF1B, OVCCareEvents, OVCEducationFollowUp, OVCCareCasePlan)
 from cpovc_ovc.functions import get_house_hold
-from .models import OVCCareCpara_upgrade, OVCGokBursary, OVCSubPopulation
+from .models import OVCCareCpara_upgrade, OVCGokBursary , OVCSubPopulation
 from cpovc_ovc.models import OVCFacility
 
 
@@ -279,6 +279,7 @@ def save_ovc_sub_population (id, criteria, date_event, time_created, time_update
     
 
 def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event, date_event, exceptions=[]):
+    # import pdb
     answer_value = {
         'AYES': 'Yes',
         'ANNO': 'No',
@@ -295,6 +296,8 @@ def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event
     if answer is None:
         answer = 'No'
     if question.code.lower() not in exceptions:
+        # pdb.set_trace()
+
         answer = answer_value[answer]
     try:
         OVCCareCpara_upgrade.objects.create(
@@ -308,6 +311,7 @@ def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event
             event=event,
             date_of_event=date_event
         )
+        # pdb.set_trace()
     except Exception as e:
         print('%s :error saving cpara - %s' % (question.code, str(e)))
         return False

@@ -842,9 +842,9 @@ class OVCCareForms(models.Model):
 
 
 class OVCCareBenchmarkScore(models.Model):
-
+   
     bench_mark_score_id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
+    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE, null=True)
     benchmark_1 = models.IntegerField(default=0)
     benchmark_2 = models.IntegerField(default=0)
     benchmark_3 = models.IntegerField(default=0)
@@ -864,7 +864,7 @@ class OVCCareBenchmarkScore(models.Model):
     benchmark_17 = models.IntegerField(default=0)
     score = models.IntegerField(default=0)
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
-    # care_giver = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    care_giver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, null=True)
     is_void = models.BooleanField(default=False)
     date_of_event = models.DateField(default=timezone.now)
     timestamp_created = models.DateTimeField(default=timezone.now)
@@ -1404,7 +1404,7 @@ class OVCCareCpara_upgrade(models.Model):
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver')
     question_code = models.CharField(max_length=10, null=False, blank=True)
-    question = models.ForeignKey('OVCCareQuestions', on_delete=models.CASCADE, null=True)
+    question = models.ForeignKey(OVCCareQuestions, on_delete=models.CASCADE, null=True)
     answer = models.CharField(max_length=15)
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
     question_type = models.CharField(max_length=50, null=True)
@@ -1435,8 +1435,9 @@ class OVCCareCpara_upgrade(models.Model):
 class OVCSubPopulation(models.Model):
     sub_population_id = models.UUIDField(
     primary_key=True, default=uuid.uuid4, editable=False)
-    person_id = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     criteria = models.CharField(max_length=10)
+    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
     date_of_event = models.DateField()
     is_void = models.BooleanField(default=False)
     timestamp_created = models.DateTimeField(default=timezone.now)
