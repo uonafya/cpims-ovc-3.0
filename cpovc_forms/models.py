@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 import datetime
 import uuid
-from cpovc_registry.models import (RegPerson, RegOrgUnit, AppUser)
+from cpovc_registry.models import (RegPerson, RegOrgUnit, AppUser, RegPersonsOrgUnits)
 from cpovc_main.models import (SchoolList, SetupLocation)
 from cpovc_ovc.models import (OVCHouseHold, OVCFacility)
 
@@ -1464,12 +1464,13 @@ class OVCCareCaseExit(models.Model):
     case_clouse_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE,related_name='caseclouse_child')
     caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='caregiver')
+    organization = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
     rec_organization = models.CharField(max_length=250, null=True)
     attrition_reason = models.CharField(max_length=10, null=True)
-    transfer_completed = models.CharField(max_length=10, null=True)
+
     reason = models.CharField(max_length=10,null=False)
     exit_reason_stored = models.CharField(max_length=10, null=True)
-    other = models.CharField(max_length=250, null=True)
+
     case_files_completed = models.CharField(max_length=5, null=True)
     cw_phone_household = models.CharField(max_length=5, null=True)
     head_hh_linked = models.CharField(max_length=5, null=True)
@@ -1483,8 +1484,8 @@ class OVCCareCaseExit(models.Model):
     family_folder_sent = models.CharField(max_length=5, null=True)
     attrition_documented = models.CharField(max_length=5, null=True)
     manager_report = models.CharField(max_length=5, null=True)
-    receiving_org = models.CharField(max_length=250, null=True)
-    #staff_certifying = models.CharField(max_length=250, null=True)
+
+
     date_of_closure = models.DateField()
     is_void = models.BooleanField(default=False)
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)

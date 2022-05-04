@@ -140,6 +140,7 @@ CASE_CLOSURE_REASON =(   ('YES', 'Yes'),
     ('NO', 'No'),
     ('Refuse', 'I refuse to answer'),
     ('Other', 'Other (please specify)'))
+# '  $("input[name='CASE_CL001']").on('load', () => {'
 
 REASON_SS = (('1', 'Case Plan Achievement/Graduation'),('2', ' Transfer'),('3', 'Attrition'))
     #wellbeing

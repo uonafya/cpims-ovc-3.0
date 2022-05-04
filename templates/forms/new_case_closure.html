@@ -177,21 +177,21 @@
                                 <tr>
                                     <td>Q3</td>
 
-                                    <td>Case Worker has given phone number to household   Head of household linked to a family, which already graduated.</td>
+                                    <td>Case Worker has given phone number to household </td>
                                     <td>
                                         {{ form.CASE_CL007 }}
                                     </td>
                                 </tr>
                                   <tr>
-                                    <td>Q3</td>
+                                    <td>Q4</td>
 
-                                    <td>Case Worker has given phone number to household   Head of household linked to a family, which already graduated.</td>
+                                    <td>Head of household linked to a family, which already graduated.</td>
                                     <td>
                                         {{ form.CASE_CL028}}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Q4</td>
+                                    <td>Q5</td>
                                     <td>Informed necessary service providers of graduation.</td>
                                     <td>{{ form.CASE_CL008 }}</td>
                                 </tr>
@@ -218,7 +218,7 @@
 
                                 <tbody>
                                 <tr>
-                                    <td>Q5</td>
+                                    <td>Q6</td>
 
                                     <td>Case Transfer Form completed per the protocol.</td>
                                     <td>
@@ -226,7 +226,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Q6</td>
+                                    <td>Q7</td>
 
                                     <td>Referring Case Manager established time and frequency for follow up</td>
                                     <td>
@@ -234,12 +234,12 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Q7</td>
+                                    <td>Q8</td>
                                     <td>Informed necessary service providers of case transfer.</td>
                                     <td>{{ form.CASE_CL012 }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Q8</td>
+                                    <td>Q9</td>
                                     <td>Copy of family folder sent to receiving organization.</td>
                                     <td>
                                         {{ form.CASE_CL013 }}
@@ -269,7 +269,7 @@
 
                                 <tbody>
                                 <tr>
-                                    <td>Q9</td>
+                                    <td>Q10</td>
 
                                     <td>Reason for attrition documented in family folder. </td>
                                     <td>
@@ -277,7 +277,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Q10</td>
+                                    <td>Q11</td>
 
                                     <td>Case Manager Report</td>
                                     <td>
@@ -286,15 +286,15 @@
                                 </tr>
 
 
-                                       <td>Q11</td>
+                                       <td>Q12</td>
 
                                     <td>Exit reason recorded in OVC Database  </td>
                                     <td>
-                                        {{ form.CASE_CL031 }}
+                                        {{ form.CASE_CL031}}
                                     </td>
                                 </tr>
                                    <tr>
-                                       <td>Q12</td>
+                                       <td>Q13</td>
 
 {#                                    <td>Name of Case Manager/LIP staff certifying</td>#}
 {#                                    <td required="False">#}
@@ -345,7 +345,7 @@
                                     Date
                                 </td>
                                  <td>
-                                         {{ form.CASE_CL026 }}
+                                         {{form.CASE_CL026}}
                                 </td>
                             </tr>
 
@@ -396,7 +396,8 @@
                             <th>Q11</th>
                             <th>Q12</th>
                             <th>Q13</th>
-                             <th>Q14</th>
+                            <th>Q14</th>
+
 
                              <th  colspan="2">Action</th>
 
@@ -411,23 +412,24 @@
                             {% for case_closure_data in case_closure %}
 
                                 <tr>
-                                    <td>{{ case_closure_data.closure_reason }}</td>
-{#                                    <td>{{ case_closure_data.receiving_org}}</td>#}
+                                    <td>{{ case_closure_data.reason }}</td>
+                                    <td>{{ case_closure_data.rec_organization}}</td>
                                     <td>{{ case_closure_data.attrition_reason }} || {{ case_closure_data.other}}</td>
                                     <td>{{ case_closure_data.case_files_completed }}</td>
                                     <td>{{ case_closure_data.cw_phone_household  }}</td>
                                     <td>{{ case_closure_data.sp_informed_graduation }}</td>
-                                    <td>{{ case_closure_data.files_stored  }}</td>
+
                                     <td>{{ case_closure_data.transfer_form_completed  }}</td>
                                     <td>{{ case_closure_data.follow_up_frequency}}</td>
                                     <td>{{ case_closure_data.sp_informed_tarnsfer}}</td>
                                     <td>{{ case_closure_data.family_folder_sent }}</td>
-                                    <td>{{ case_closure_data.files_stored }}</td>
+
+
                                     <td>{{ case_closure_data.attrition_documented }}</td>
                                     <td>{{ case_closure_data.manager_report }}</td>
                                     <td>{{ case_closure_data.files_stored }}</td>
                                     <td>{{ case_closure_data.exit_reason }}</td>
-                                    <td>{{ case_closure_data.staff_certifying}}</td>
+                                    <td>{{ case_closure_data.files_stored }}</td>
                                     <td>{{ case_closure_data.date_of_closure }}</td>
                                 <td> <a href="{% url 'edit_case_closure' case_closure_data.case_clouse_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a> </td>
                                     <td> <a href="{% url 'delete_case_closure' case_closure_data.case_clouse_id%}"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a> </td>
@@ -474,7 +476,11 @@
 jQuery(document).ready(function()
 {
 
-        $('#CASE_CL026').datepicker({ format: 'yyyy-mm-dd' }).val();
+
+        $('#CASE_CL026').datepicker({ format: 'yyyy-mm-dd',  autoclose: true,
+        orientation: "top",
+        endDate: "today" }).val();
+
             $('#cc_001').hide();
             $('#cc_002').hide();
             $("#cc_tab_001").hide();
@@ -486,6 +492,7 @@ jQuery(document).ready(function()
             $("input[name='CASE_CL001']").on('change', function () {
       var ival = $("input[name='CASE_CL001']:checked").val();
       if(ival == 2){
+
            $("#cc_001").show();
            $("#cc_tab_002").show();
            $("#cc_tab_004").show();
@@ -497,6 +504,8 @@ jQuery(document).ready(function()
            $('input[name="CASE_CL011').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
            $('input[name="CASE_CL012').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
            $('input[name="CASE_CL013').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+
+
 
       }else if(ival == '3'){
           $("#cc_002").show();
@@ -512,6 +521,8 @@ jQuery(document).ready(function()
           $('input[name="CASE_CL030').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
           $('input[name="CASE_CL031').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
 
+
+
       } else if(ival == '1'){
           $("#cc_tab_001").show();
           $("#cc_tab_004").show();
@@ -523,7 +534,6 @@ jQuery(document).ready(function()
           $('input[name="CASE_CL007').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
           $('input[name="CASE_CL008').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
           $('input[name="CASE_CL028').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-
 
 
 
