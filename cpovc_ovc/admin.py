@@ -7,7 +7,7 @@ from import_export.admin import ImportExportModelAdmin
 
 from .models import (
     OVCAggregate, OVCFacility, OVCSchool, OVCCluster,
-    OVCClusterCBO, OVCRegistration)
+    OVCClusterCBO, OVCRegistration, OVCEligibility)
 
 
 def dump_to_csv(modeladmin, request, qs):
@@ -20,7 +20,7 @@ def dump_to_csv(modeladmin, request, qs):
     file_id = 'CPIMS_%s_%d' % (model.__name__, int(time.time()))
     file_name = 'attachment; filename=%s.csv' % (file_id)
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = file_name
+    response['Content-Disposition'] = file_name,
     writer = csv.writer(response, csv.excel)
 
     headers = []
@@ -39,13 +39,27 @@ def dump_to_csv(modeladmin, request, qs):
             row.append(val)
         writer.writerow(row)
     return response
+
+
 dump_to_csv.short_description = u"Dump to CSV"
+
+
+class OVCEligibilityAdmin(admin.ModelAdmin):
+    """Aggregate data admin."""
+
+    search_fields = ['person', ]
+    list_display = ['id', 'person', 'criteria', 'is_void']
+
+    list_filter = ['criteria', 'is_void']
+
+
+admin.site.register(OVCEligibility, OVCEligibilityAdmin)
 
 
 class OVCRegistrationAdmin(admin.ModelAdmin):
     """Aggregate data admin."""
 
-    search_fields = ['person',]
+    search_fields = ['person', ]
     list_display = ['id', 'person', 'child_cbo', 'child_chv',
                     'caretaker', 'registration_date', 'hiv_status',
                     'is_active', 'is_void']
@@ -54,6 +68,7 @@ class OVCRegistrationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(OVCRegistration, OVCRegistrationAdmin)
+
 
 class OVCAggregateAdmin(admin.ModelAdmin):
     """Aggregate data admin."""
