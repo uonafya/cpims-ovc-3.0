@@ -10075,6 +10075,7 @@ def new_fmppostevaluation(request, id):
 
             # Saving Evaluations
             OVCPrevEvaluation.objects.create(
+                form_type=formtype,
                 person=person,
                 know_where=q1,
                 know_what=q2,
@@ -10140,7 +10141,7 @@ def new_fmppostevaluation(request, id):
 
     form = FmpPostEvaluation()
     event = OVCPreventiveEvents.objects.filter(person_id=id).values_list('event')
-    fmp_evaluation = OVCPrevEvaluation.objects.filter(event_id__in=event).order_by('date_of_event')
+    fmp_evaluation = OVCPrevEvaluation.objects.filter(event_id__in=event, is_void=False).order_by('date_of_event')
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
 
     return render(request,
@@ -10161,7 +10162,7 @@ def edit_fmppostevaluation(request, id):
 
 
     try:
-        fmpdata = OVCPrevEvaluation.objects.get(evaluation_id=id)
+        fmpdata = OVCPrevEvaluation.objects.get(evaluation_id=id, is_void=False)
         if request.method == 'POST':
             formtype = request.POST.get("FORMS_CHOICES")
             q1 = request.POST.get("WB_AD_PLC_7")
@@ -10196,7 +10197,7 @@ def edit_fmppostevaluation(request, id):
             # house_holds = OVCHouseHold.objects.get(pk=hse_uuid)
 
             # Save all details from the Bursary form
-            OVCPrevEvaluation.objects.filter(evaluation_id=id).update(
+            OVCPrevEvaluation.objects.filter(evaluation_id=id, is_void=False).update(
                 form_type=formtype,
                 know_where=q1,
                 know_what=q2,
@@ -10269,5 +10270,5 @@ def edit_fmppostevaluation(request, id):
 
 def delete_evaluation(request, id):
     new_eval = OVCPrevEvaluation.objects.get(evaluation_id=id)
-    new_eval.delete()
+    OVCPrevEvaluation.objects.filter(evaluation_id=id).update(is_void=True)
     return redirect('new_fmppostevaluation', id=new_eval.person_id)

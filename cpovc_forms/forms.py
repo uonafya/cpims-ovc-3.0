@@ -8329,11 +8329,11 @@ class FmpPostEvaluation(forms.Form):
                                         attrs={'class': 'form-control',
                                                'id': 'WB_AD_HE_15_4'}))
     WB_AD_HE_15_4_1 = forms.CharField(
+        required=False,
         widget = forms.Textarea(
         attrs = {'placeholder': _('Response-What was It?'),
                'class': 'form-control',
                'id': 'WB_AD_HEL_16_2',
-            #    'data-parsley-group': 'group0',
                'rows': '2'})
         )
 
