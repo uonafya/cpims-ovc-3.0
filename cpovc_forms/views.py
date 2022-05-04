@@ -1,3 +1,5 @@
+import pdb
+
 from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse, resolve
 from django.shortcuts import render, get_object_or_404, redirect
@@ -10165,6 +10167,8 @@ def save_referal(request, id):
 
 
     qry_saver = OVCBiReferral(
+        ref_caregiver = child,
+        person = child,
         client_category = request.GET['category'],
         refferal_urgency = request.GET['urgent'],
         # refferal_to = request.GET[],
@@ -10182,11 +10186,18 @@ def save_referal(request, id):
     return JsonResponse(success)
 
 
+# def delete_referral(request, id):
+#
+#     new_eval = OVCBiReferral.objects.get(person_id=60)
+#     new_eval.delete()
+#
+#     return redirect('bidirectional', id=new_eval.person)
+
 def delete_referral(request, id):
-
-    new_eval = OVCBiReferral.objects.get(person_id=60)
+    import pdb
+    new_eval = OVCBiReferral.objects.get(refferal_id=id)
     new_eval.delete()
-
-    return redirect('bidirectional', id=new_eval.person)
+    # OVCBiReferral.objects.filter(refferal_id=id).update(is_void=True)
+    return redirect('bidirectional', id=new_eval.person_id)
 
 

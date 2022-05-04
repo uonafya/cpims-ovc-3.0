@@ -185,6 +185,5 @@ urlpatterns = [
     # Save Referal
     re_path('save_referal/(?P<id>\d+)/', views.save_referal, name='save_referal' ),
 
-    # Delete Referal
-    path('delete_referral/<int:id>/', views.delete_referral, name='delete_referral')
+    path('delete_referral/<id>', views.delete_referral, name='deletereferral')
 ]
