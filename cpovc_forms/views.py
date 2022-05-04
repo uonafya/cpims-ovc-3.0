@@ -23,7 +23,7 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,PREGNANT_WOMEN_ADOLESCENT)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, PREGNANT_WOMEN_ADOLESCENT)
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -36,7 +36,8 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, OVCPregnantWomen)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
+    OVCPregnantWomen, PMTCTEvents, OVCPreventiveEvents)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -9403,12 +9404,12 @@ def new_wellbeing(request, id):
         for key in request.POST:
             if (str(key) != "safeanswer" and str(key) != "schooledanswer" and "WB_SCH_39" not in str(
                     key) and "WB_SCH_40" not in str(key) and "WB_SCH_41" not in str(key) and "WB_SCH_42" not in str(
-                    key) and "WB_SAF_31_1" not in str(key) and "WB_SCH_43" not in str(key) and "WB_SCH_44" not in str(
-                    key) and "WB_SCH_45" not in str(key) and "WB_SAF_37" not in str(key) and "WB_SAF_38" not in str(
-                    key) and "WB_SAF_39" not in str(key) and "WB_SAF_40" not in str(key) and "WB_HEL_17_2" not in str(
-                    key) and "WB_GEN_11" not in str(key) and "WB_GEN_13" not in str(key) and "WB_GEN_15" not in str(
-                    key) and "WB_GEN_14" not in str(key) and "WB_GEN_16" not in str(key) and "caretaker_id" not in str(
-                    key)):
+                key) and "WB_SAF_31_1" not in str(key) and "WB_SCH_43" not in str(key) and "WB_SCH_44" not in str(
+                key) and "WB_SCH_45" not in str(key) and "WB_SAF_37" not in str(key) and "WB_SAF_38" not in str(
+                key) and "WB_SAF_39" not in str(key) and "WB_SAF_40" not in str(key) and "WB_HEL_17_2" not in str(
+                key) and "WB_GEN_11" not in str(key) and "WB_GEN_13" not in str(key) and "WB_GEN_15" not in str(
+                key) and "WB_GEN_14" not in str(key) and "WB_GEN_16" not in str(key) and "caretaker_id" not in str(
+                key)):
 
                 if (key in ignore_request_values):
                     continue
@@ -9998,8 +9999,12 @@ def new_dreamsform(request, id):
                   {'form': form, 'init_data': init_data,
                    'vals': vals})
 
-#pregnant_women_adolescent
+
+# pregnant_women_adolescent
 def new_pregnantwomen(request, id):
+    q3 = q5 = q7 = q9 = ''
+    q2 = q4 = q6 = q8 = '1900-01-01'
+    import pdb
     try:
         if request.method == 'POST':
             form = PREGNANT_WOMEN_ADOLESCENT(request.POST, initial={'person': id})
@@ -10008,7 +10013,6 @@ def new_pregnantwomen(request, id):
                 child = RegPerson.objects.get(id=id)
                 house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
                 event_type_id = 'HRST'
-
 
                 """ Save hiv_screening-event """
                 # get event counter
@@ -10026,14 +10030,20 @@ def new_pregnantwomen(request, id):
                 )
 
                 q1 = request.POST.get("PWA_WA1_1")
-                q2 = request.POST.get("PWA_WA1_2A")
-                q3 = request.POST.get("PWA_WA1_2B")
-                # q4 = request.POST.get("PWA_WA1_3A")
-                # q5 = request.POST.get("PWA_WA1_3B")
-                # q6= request.POST.get("PWA_WA1_4A")
-                # q7 = request.POST.get("PWA_WA1_4B")
-                # q8 = request.POST.get("PWA_WA1_5A")
-                # q9 = request.POST.get("PWA_WA1_5B")
+                test = request.POST.get("PWA_WA1_01")
+
+                if test == 'contact':
+                    q2 = request.POST.get("PWA_WA1_2A")
+                    q3 = request.POST.get("PWA_WA1_2B")
+                if test == 'tri':
+                    q4 = request.POST.get("PWA_WA1_2A")
+                    q5 = request.POST.get("PWA_WA1_2B")
+                if test == '3rd':
+                    q6= request.POST.get("PWA_WA1_2A")
+                    q7 = request.POST.get("PWA_WA1_2B")
+                if test == '4th':
+                    q8 = request.POST.get("PWA_WA1_2A")
+                    q9 = request.POST.get("PWA_WA1_2B")
                 q10 = request.POST.get("PWA_WA1_6")
                 q11 = request.POST.get("PWA_WA1_7")
                 q12 = request.POST.get("PWA_WA1_8")
@@ -10053,12 +10063,12 @@ def new_pregnantwomen(request, id):
                     date_of_contact=q1,
                     date_test_done2a=q2,
                     test_result2b=q3,
-                    # date_test_done3a=q4,
-                    # test_result3b=q5,
-                    # date_test_done4a=q6,
-                    # test_result4b=q7,
-                    # date_test_done5a=q8,
-                    # test_result5b=q9,
+                    date_test_done3a=q4,
+                    test_result3b=q5,
+                    date_test_done4a=q6,
+                    test_result4b=q7,
+                    date_test_done5a=q8,
+                    test_result5b=q9,
                     anc_date1=q10,
                     anc_date2=q11,
                     anc_date3=q12,
@@ -10108,15 +10118,17 @@ def new_pregnantwomen(request, id):
     # if date_of_event:
     #     date_of_event = convert_date(date_of_event)
 
-
     form = PREGNANT_WOMEN_ADOLESCENT(initial={'person': id})
     event = OVCPregnantWomen.objects.filter(person_id=id).values_list('event')
-    pwa_women = OVCPregnantWomen.objects.filter(event_id__in=event, is_void=True).order_by('date_of_event')
+    pwa_women = OVCPregnantWomen.objects.filter(event_id__in=event, is_void=False).order_by('date_of_event')
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
     return render(request,
-                  'forms/new_pregnantwomen.html',{'form': form, 'init_data': init_data, 'vals': vals, 'person': id, 'care_giver': care_giver, 'pwa_women': pwa_women})
+                  'forms/new_pregnantwomen.html',
+                  {'form': form, 'init_data': init_data, 'vals': vals, 'person': id, 'care_giver': care_giver,
+                   'pwa_women': pwa_women})
 
-#Edit pregnant women tracker form
+
+# Edit pregnant women tracker form
 
 def edit_pregnantwomen(request, id):
     try:
