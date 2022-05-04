@@ -175,5 +175,11 @@ urlpatterns = [
     re_path('dreamsform/new/(?P<id>\d+)/', views.new_dreamsform, name='new_dreamsform'),
 
     path('preventiveattendanceregister/new/<int:id>/', views.preventive_attendance_register, name='preventiveattendanceregister'),
+    path('preventiveattendanceregister/save/', views.save_preventive_register, name='save_preventive_register'),
+    path('preventiveattendanceregister/manage/', views.manage_preventive_register, name='manage_preventive_register'),
+#     re_path('preventiveattendanceregister/delete_preventive_event_entry/<uuid:btn_event_pk>/<str:btn_event_type>/',views.delete_preventive_event_entry, name='delete_preventive_event_entry'),
+    re_path('preventiveattendanceregister/delete/(?P<id>\d+)/(?P<btn_event_type>\w+)/(?P<btn_event_pk>.+)/', views.delete_preventive_event_entry,
+            name='delete_preventive_event_entry'),
+
 
 ]
