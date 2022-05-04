@@ -140,6 +140,7 @@ CASE_CLOSURE_REASON =(   ('YES', 'Yes'),
     ('NO', 'No'),
     ('Refuse', 'I refuse to answer'),
     ('Other', 'Other (please specify)'))
+# '  $("input[name='CASE_CL001']").on('load', () => {'
 
 REASON_SS = (('1', 'Case Plan Achievement/Graduation'),('2', ' Transfer'),('3', 'Attrition'))
     #wellbeing
@@ -8473,7 +8474,7 @@ class CaseClosureForm(forms.Form):
     CASE_CL026 = forms.DateField(
         required=False,
         widget=forms.widgets.DateInput(
-            format="%m/%d/%Y",
+            format="%Y-%m-%d",
             attrs={
                 'class': 'form-control',
                 'placeholder': _('date'),
