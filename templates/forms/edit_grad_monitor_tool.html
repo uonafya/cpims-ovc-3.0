@@ -75,18 +75,6 @@
             	<form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true">
                 	{% csrf_token %}
 							<div class="panel-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <div class="col-md-2">
-                                                <label class="control-label formlabel" for="csi_qs">Date of Monitoring : <span class="asteriskField">* </span></label>
-                                            </div>
-                                            <div class="col-md-3 col-sm-3">
-                                                {{ form.gm1d }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="panel-body">
                                     {#<form action="." method="post" name="ovcreg_form" id="ovcreg_form" data-parsley-validate="true">#}
                                         {#{% csrf_token %}#}
@@ -115,6 +103,32 @@
                                     {# </form>#}
                                 </div>
                                 <hr/> 
+
+                                <div class="row">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div class="col-md-2">
+                                                    <label class="control-label formlabel" for="csi_qs">Form Type :</label>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                  <h4> <u> <strong> {{ benchmark }} </strong> </u> </h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="col-md-2">
+                                                <label class="control-label formlabel" for="csi_qs">Date of Monitoring : <span class="asteriskField">* </span></label>
+                                            </div>
+                                            <div class="col-md-3 col-sm-3">
+                                                {{ form.gm1d }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
 							    <!-- add labels like HA1, HA2 .. -->
 							    <h2 class="text-left note note-info">Healthy</h2>
 							<div class="form-group">

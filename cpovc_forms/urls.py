@@ -183,6 +183,7 @@ urlpatterns = [
 
     path('edit_grad_monitor/new/<uuid:id>/', views.edit_grad_monitor, name='edit_grad_monitor'),
     
+#     path('delete_bench/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_benchmark, name='delete_benchmark')
     path('delete_bench/<uuid:id>/', views.delete_benchmark, name='delete_benchmark')
 
 ]

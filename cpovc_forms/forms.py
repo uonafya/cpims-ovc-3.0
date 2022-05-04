@@ -8501,12 +8501,23 @@ class CparaAssessmentUpgrade(forms.Form):
         }))
 
 class gradMonitoringToolform(forms.Form):
+
+    form1_type = forms.ChoiceField(
+        choices=(
+            ('bm','Benchmark Monitoring'),('hhrcpa','Households Reaching Case Plan Achievement')),
+            widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}
+        )
+    )
     gm1d = forms.DateField(widget=forms.TextInput(
         attrs={'class': 'form-control',
                'id': 'monitoring_date',
                'data-parsley-required': "true",
                'data-parsley-group': 'group1'
-               }))
+               }),
+               input_formats='dd-mm-yyyy')
     cm2q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(

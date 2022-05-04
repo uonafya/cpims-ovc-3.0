@@ -1436,6 +1436,7 @@ class OVCBenchmarkMonitoring(models.Model):
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
     caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name="caregiver")
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name="child")
+    form_type = models.CharField(max_length=50, null=True)
     benchmark1 =models.BooleanField()
     benchmark2=models.BooleanField()
     benchmark3=models.BooleanField()
