@@ -1,0 +1,719 @@
+{% extends 'base.html' %}
+{% load app_filters %}
+{% load static %}
+{% block page_title %} Bidirection Refferal Final {% endblock %}
+{% block style_code %}
+    <link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet"/>
+    <link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
+    <link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block javascript_code %}
+
+{% endblock javascript_code %}
+
+{% block primary %}
+
+    <!-- begin breadcrumb -->
+    <style type="text/css">
+        .dialog_paragraph {
+            color: #f00;
+        }
+
+        .table_data {
+            display: none;
+        }
+
+        .container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .td_style {
+            /* color: #000000;*/
+            color: #0057e7;
+        }
+    </style>
+    <!-- end breadcrumb -->
+
+    <!-- begin page-header -->
+    <!-- {% for data in init_data %} -->
+
+        <ol class="breadcrumb pull-right">
+            <li><a href="#">Home</a></li>
+            <li class="active">Forms</li>
+        </ol>
+
+        <!-- {% endfor %} -->
+    <!-- end page-header -->
+
+    <!-- #csi-warning-dialog -->
+    <h1 class="page-header">Forms <small>Bidirection Refferal Final Draft<b> {% for cgvr in care_givers %}
+        {{ cgvr }} {% endfor %}
+        <!-- | {{ data.first_name }} {{ data.surname }} | {{ data.sex_id|gen_value:vals }} |
+                    {% if data.date_of_birth|gen_age == 0 %}
+                            UNDER 1 YEAR
+                        {% else %}
+                            {{ data.date_of_birth|gen_age }} YRS
+                        {% endif %} -->
+    </b></small></h1>
+    <!-- #end-csi-warning-dialog -->
+
+    <div class="modal fade" id="csi-warning-dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">
+                        <div id="closure-warning-dialog-header">
+                            Warning
+                        </div>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <h4><i class="fa fa-info-circle"></i> <small><b><span id="span_csi_alert"
+                                                                              class="dialog_paragraph"></span></b></small>
+                        </h4>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="error_message" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+        <!--<span class="close" data-dismiss="alert">×</span>-->
+        {% comment %}
+            <button type="button" class="close" data-hide="alert">&times;</button> {% endcomment %}
+        <i class="fa fa-info fa-2x pull-left"></i>
+        <span class="invalid-form-message" id="invalid-form-message"></span>
+    </div>
+
+
+    {% comment %} {% if err_msgg %}
+
+        <div id="success_message" class="alert alert-success fade in" style="display: none;">
+            <!--<span class="close" data-dismiss="alert">×</span>-->
+            <button type="button" class="close" data-hide="alert">&times;</button>
+            <i class="fa fa-check fa-2x pull-left"></i>
+            <p></p>
+        </div>
+
+    {% endif %} {% endcomment %}
+
+    {% comment %}
+        <div class="alert alert-danger" id="error-message-reuse">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <span class="mesgg"></span>
+            {{ err_msgg }}
+        </div> {% endcomment %}
+
+    <!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#delete-form1a-entry">Open Modal</button>-->
+
+    <!--Confirm form1a delete Modal -->
+
+    <div id="warning_message" class="alert alert-warning hidden">
+        <span class="mesagg" id="mesagg"></span>
+    </div>
+
+
+
+    <!-- begin row -->
+    <div id='referal_details' class="row">
+
+        <!-- begin col-12 -->
+        <div class="col-md-12">
+            <!-- begin panel -->
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <div class="panel-heading-btn">
+                        <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i
+                                class="fa fa-minus"></i></a>
+                        <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i
+                                class="fa fa-times"></i></a>
+                    </div>
+                    <h4 class="panel-title"> REFERRAL FORM </h4>
+                </div>
+                <div class="panel-body">
+                    <div id="form1_info"></div>
+
+
+
+
+                    <div id="wizard-f1a">
+                        <!-- begin wizard step-1 -->
+                        <div class="wizard-step-4">
+                            <div class="panel-body">
+                                <table width="100%" class="table">
+                                    <tbody>
+                                    <tr>
+                                        <td class="field">Name of Person Being
+                                            Referred: {{ all_domain_choices.refferal_domain }}</td>
+                                        <td class="field">Organization referred
+                                            to: {{ all_domain_choices.refferal_service }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field">
+                                            Client Category
+                                               {{ form.CATEGORY }}
+                                        </td>
+                                        <td class="field">
+                                            How urgent is this referral?
+                                               {{ form.URGENT }}
+                                        </td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div id="error_service"></div>
+                                <div style="overflow-x: auto; min-height: 300px;">
+                                    <table id="services_manager_table" class="table">
+                                        <thead>
+                                        <tr id="id_inputHeaders">
+                                            <td width="2%"></td>
+                                            <th width="15%"><h6><b>Domain<span class="asteriskField">*</b></h6></th>
+                                            <th width="20%"><h6><b>Core Services<span class="asteriskField">*</b></h6>
+                                            </th>
+                                            <th width="15%"><h6><b>Date Of Referral<span class="asteriskField">*</b>
+                                            </h6>
+                                            </th>
+                                            <th width="5%"><h6><b>Actions<span class="asteriskField">*</b></h6></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr id="id_inputElements13">
+                                            <td width="2%"></td>
+                                            <td width="15%" class="domain_cell">
+                                                {{ form.BIREFERRAL_DOMAIN }}
+                                                <div id="olmis_domain_errormsg" style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p></span>
+                                                    </small><span>
+                                                </div>
+                                            </td>
+                                            <td width="20%" class="goals_cell" style="min-width: 300px;">
+                                                <div class="default_form">
+                                                    {{ form.DEFAULT_DOMAIN }}
+                                                </div>
+
+                                                <div class="healthy_form hidden">
+                                                    {{ form.HEALTH_DOMAIN }}
+                                                </div>
+                                                <div class="stable_form hidden">
+                                                    {{ form.STABLE_DOMAIN }}
+                                                </div>
+                                                <div class="safe_form hidden">
+                                                    {{ form.SAFE_DOMAIN }}
+                                                </div>
+                                                <div class="school_form hidden">
+                                                    {{ form.SCHOOLED_DOMAIN }}
+                                                </div>
+                                                <div id="olmis_assessment_coreservice_errormsg" style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p>
+                                                    </small>
+                                                </div>
+                                            </td>
+                                            <td width="15%">
+                                                {{ form.referral_date }}
+                                                <div id="olmis_service_date_errormsg" style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p></span>
+                                                    </small><span>
+                                                </div>
+                                            </td>
+                                            <!--
+                                            <td width="20%">
+{#                                                {{ form.olmis_service_provider }}#}
+                                                <div id="olmis_service_provider_errormsg" style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                                                </div>
+                                            </td>
+
+                                            <td width="20%">
+{#                                                {{ form.olmis_place_of_service }}#}
+                                                <div id="olmis_place_of_service_errormsg" style="display:none;">
+                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
+                                                </div>
+                                            </td>
+                                            -->
+                                            <td width="5%">
+                                                <h6><b>
+                                                    <button type="button" class="btn btn-sm btn-inverse m-r-5"
+                                                            onClick="AddRow()">
+                                                        <i class="fa fa-plus"></i> Add
+                                                    </button>
+                                                </b></h6>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+
+                                    </table>
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed slimtable" id="submissions_table">
+                                            <thead>
+                                            <tr>
+                                                <th>Domain</th>
+                                                <th>Goal</th>
+                                                <th>Completed</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="panel-body panel-form">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4 col-sm-4">Date Referral was Recorded<span
+                                            class="asteriskField">*</label>
+                                    <div class="col-md-2 col-sm-2">
+                                        {{ form.referral_end_date }}
+                                        <div id="date_errormsg3" style="display:none;">
+                                            <small><p class="dialog_paragraph">This value is required</p></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel-body panel-form">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4 col-sm-4"></label>
+                                    <div class="col-md-6 col-sm-6">
+                                        <button id="mysubmit-birefferal" class="btn btn-primary" type="button"
+                                                onClick="submitRef()">Submit Refferal(s)
+                                        </button>
+                                        <a href="" onClick="cancelBtn()" class="btn btn-white">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end wizard step-1 -->
+
+                    </div>
+                    <form class="hidden" action="." method="POST" data-parsley-validate="true" name="form-wizard-f1a"
+                          id="new_f1a">
+                        {% csrf_token %}
+                        <input type="hidden" name="final_submission"/>
+                    </form>
+                </div>                
+            </div>
+            <!-- end panel -->
+
+        </div>
+        <!-- end col-12 -->
+{#    <input  value="{{ child.id }}" type="number"  name="child_reg_id" hidden/>#}
+
+    </div>
+    <!-- end row -->
+
+
+<<<<<<< HEAD
+
+           
+    <!-- begin row -->
+<div class="row">
+    <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin panel -->
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                </div>
+                <h4 class="panel-title"><b>REFERRAL FORM Events List </b></h4>
+            </div>
+        </div>
+      
+
+            <div class="panel-body">
+                <div  class="panel panel-inverse">
+                    <div id="case-events"  class="table-responsive">
+                        <table id="f1a_events_data_table" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Domain Type</th>
+                                    <th>Core Services</th>
+                                    <th>Referral Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% if obj_all %}
+                                {% for one_object in obj_all %}
+                                    <tr>
+                                        <td>{{ one_object.refferal_domain }}</td>
+                                        <td>{{ one_object.refferal_service }}</td>
+                                        <td>{{ one_object.refferal_date }}</td>
+                                        <td><a href="{% url 'delete_bireferral' one_object.refferal_id %}">
+=======
+    <div class="panel-body">
+                    <div class="panel panel-inverse">
+                        <div id="case-events" class="table-responsive">
+                            <table id="referal-events" class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Client Category</th>
+                                    <th>Referal Urgency</th>
+                                    <th>Services</th>
+                                    <th>Referal Date</th>
+                                    <th>Referal End Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if all_ref %}
+                                    {% for ref in all_ref %}
+                                        <tr>
+                                            <td>{{ ref.client_category }}</td>
+                                            <td>{{ ref.refferal_urgency }}</td>
+                                            <td>{{ ref.refferal_service }}</td>
+                                            <td>{{ ref.refferal_date }}</td>
+                                            <td>{{ ref.refferal_enddate }}</td>
+                                             <td><a href="">
+>>>>>>> 7b112a548ef35332ac13e82f34a7dc06ad3e7051
+                                            <button type="button" class="btn btn-sm btn-danger m-r-5"><i
+                                                    class="fa fa-trash"></i>&nbsp;Delete
+                                            </button>
+                                        </a></td>
+<<<<<<< HEAD
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <div>
+                                    <h3>No data available</h3>
+                                </div>
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <br><br>
+                </div>
+            </div>
+
+        </div>
+        <!-- end panel -->
+    </div>
+    <!-- end col-12 -->
+</div>
+<!-- end row -->
+=======
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <h4>No referals available</h4>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <br><br>
+                    </div>
+                </div>
+
+
+
+
+>>>>>>> 7b112a548ef35332ac13e82f34a7dc06ad3e7051
+
+
+{% endblock %}
+
+{% block lazy_javascript_code %}
+    <script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}"></script>
+    <script src="{% static 'js/apps.js' %}"></script>
+    <script src="{% static 'js/form-wizards.js' %}"></script>
+    <script src="{% static 'js/tag-it.js' %}"></script>
+    <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+
+    $('.stable_form').each(function () {
+    $(this).removeClass('hidden');
+    <script>
+        function randomNo() {
+            var min = 101;
+            var max = 1999;
+            var random = Math.random() * (+max - +min) + +min;
+            random = random.toFixed(0);
+            return random;
+
+        }
+
+        function cancelBtn() {
+            window.location.reload();
+        }
+
+
+        $(document).ready(function () {
+
+            //multi selects
+            $('.goals_cell > div > select').multiselect({
+                // $('.services_cell > div > select').multiselect({
+                selectAllValue: 'multiselect-all',
+                includeSelectAllOption: true,
+                enableCaseInsensitiveFiltering: true,
+                numberDisplayed: 1,
+                maxHeight: 300,
+                buttonWidth: '100%',
+                buttonClass: 'btn btn-white'
+            });
+
+            $('input, select').attr('required', true);
+            $('.domain_cell  > select').prepend('<option value="" selected>Pick an item</option>');
+
+            // $('.goals_cell > div > select').removeClass('hidden')
+
+            $('input[name=referral_date]').datepicker({format: 'yyyy-mm-dd'});
+
+            {# Bireferral Domain drop down #}
+            $('input[name=referral_end_date]').datepicker({format: 'yyyy-mm-dd'});
+            $('select[name=BIREFERRAL_DOMAIN]').change(function (e) {
+                e.preventDefault();
+                var domain_val = $('select[name=BIREFERRAL_DOMAIN] option:selected').val();
+                if (domain_val === 'HTD') {
+                    $('.healthy_form, .default_form').each(function () {
+
+                        $(this).removeClass('hidden');
+                    });
+                    $('.stable_form, .safe_form, .school_form, .default_form').each(function () {
+
+                        $(this).addClass('hidden');
+                    })
+                } else if (domain_val === 'STD') {
+                    $('.stable_form, .default_form').each(function () {
+
+                        $(this).removeClass('hidden');
+                    });
+                    $('.healthy_form, .safe_form, .school_form, .default_form').each(function () {
+                        $(this).addClass('hidden');
+                    })
+                } else if (domain_val === 'SFD') {
+                    $('.healthy_form, .stable_form, .school_form, .default_form').each(function () {
+                        $(this).addClass('hidden');
+                    })
+                    $('.safe_form').each(function () {
+                        $(this).removeClass('hidden');
+                    })
+                } else if (domain_val === 'SCH') {
+                    $('.healthy_form, .stable_form, .safe_form, .default_form').each(function () {
+                        $(this).addClass('hidden');
+                    })
+                    $('.school_form').each(function () {
+                        $(this).removeClass('hidden');
+                    })
+                }
+            });
+
+
+            $('#CPT_ACTUAL_DATE_COMPLETION').removeAttr('required');
+
+        });
+
+        $('*[name=CPT_RESULTS]').prepend('<option selected value="">Pick an item</option>').attr('required', true)    
+        $('#div_CPT_ACTUAL_DATE_COMPLETION').addClass('hidden');
+        $('#CPT_ACTUAL_DATE_COMPLETION').val('1900-01-01');
+        $('*[name=CPT_RESULTS]').change(function () {
+            var thisval = $('*[name=CPT_RESULTS] option:selected').val();
+            if (thisval == 'NA') {
+                $('#div_CPT_ACTUAL_DATE_COMPLETION').removeClass('hidden');
+            } else {
+                $('#div_CPT_ACTUAL_DATE_COMPLETION').addClass('hidden');
+            }
+
+
+        })
+
+        let goal = []
+        function AddRow() {
+            var randomID = randomNo();
+
+            let domain = $('#BIREFERRAL_DOMAIN option:selected').val();
+            //let goal = $('.goals_cell > div:not(.hidden) > select > option:selected').val();
+
+
+            $('.goals_cell > div:not(.hidden) > div.btn-group > ul.multiselect-container > li.active label[class=checkbox]').each(function () {
+                var vlu = $(this).text();
+                if (vlu !== 'multiselect-all') {
+                    goal.push(vlu);
+                }
+                    {#console.log({goal})#}
+            })
+            let referral_date = $('#referral_date').val();
+            console.log({referral_date})
+            $('.waleert').remove();
+
+            $('input, select').change(function (e) {
+                // $(this).attr('data-change', 1)
+                $(this).addClass('d-c-1')
+            });
+
+            //if (CPT_DATE_CASEPLAN == null || CPT_DATE_CASEPLAN == '' || actual_completion_date == null || actual_completion_date == '' || domain ==
+            if (domain == null || domain == '' || goal == '' || goal == null ||  goal.length < 1 || referral_date == null || referral_date == '') {
+                // $('input[name=CPT_DATE_CASEPLAN]').css('border', '1px solid red');
+                $('input:not(.d-c-1), select:not(.d-c-1), .multiselect.dropdown-toggle.btn.btn-white').not('a[tabindex] label.checkbox input[type=checkbox]').css('border', '1px solid red');
+                console.error('ERROR: can\'t add rows with empty fields')
+                // $('#CPT_DATE_CASEPLAN_state').empty();
+                // $('input[name=CPT_DATE_CASEPLAN]').after("<small id='CPT_DATE_CASEPLAN_state' style='color: red'>This field is required</small>");
+                $('input:not(.d-c-1), select:not(.d-c-1)').not('a[tabindex] label.checkbox input[type=checkbox]').before("<small id='referral_date_state' class='waleert' style='color: red'>This field is required</small>");
+                var proceed = false;
+            } else {
+                var proceed = true
+            }
+            $('input, select').focus(function (e) {
+                // $('input[name=CPT_DATE_CASEPLAN]').css('border', '1px solid #9fa2a5');
+                $('input, select, .multiselect.dropdown-toggle.btn.btn-white').css('border', '1px solid #9fa2a5');
+                // $('#CPT_DATE_CASEPLAN_state').empty();
+                $('.waleert').remove();
+            });
+
+
+            if (proceed) {
+                $('#submissions_table tbody').append('<tr id="row_' + randomID + '"> <td id="tbl_domain"></td> <td id="tbl_goal"><ul class="ul-flow"></ul></td>  <td id="tbl_referral_date"></td>  <td id="tbl_acts"></td></tr>');
+                // domain
+                $('#row_' + randomID + ' > td#tbl_domain').html($('select[name=BIREFERRAL_DOMAIN] option[value=' + domain + ']').text() + '<input type="hidden" name="h_CPT_DOMAIN" value="' + domain + '" />');
+                // -domain
+
+                // goal
+                // $('#row_' + randomID + ' > td#tbl_goal').html($('.goals_cell > div:not(.hidden) > select option:selected').text() + '<input type="hidden" name="h_CPT_GOAL" value="' + goal + '" />');
+                // -goal
+
+                // goal multiselect
+                $('#row_' + randomID + ' > td#tbl_goal > ul.ul-flow').empty();
+                $('.goals_cell > div:not(.hidden) > div.btn-group > ul.multiselect-container > .dropdown-menu > li.active label[class=checkbox]').each(function () {
+                    var txt5 = stripHTML($(this).text());
+                    if (txt5 === 'Select all') {
+                    } else {
+                        $('#row_' + randomID + ' > td#tbl_goal > ul.ul-flow').append('<li>' + txt5 + '</li>');
+                    }
+                });
+
+                console.log({goal})
+
+                $('#row_'+randomID+' > td#tbl_goal').append('<li>'+ goal +'</li>');
+                // - goal multiselect
+
+                $('#row_' + randomID + ' > td#tbl_referral_date').html(referral_date + '<input type="hidden" name="referral_date" value="' + referral_date + '" />');
+
+
+                $('#row_' + randomID + ' td#tbl_acts').html('<a href="#" class="removerow btn btn-xs btn-danger"><i class="fa fa-trash"></i> Remove</a>');
+
+
+                $('#row_' + randomID + ' > td#tbl_acts > .removerow').click(function (e) {
+                    e.preventDefault();
+                    $('#row_' + randomID).empty();
+                    $('#row_' + randomID).remove();
+
+                    // $(this).closest('tr').empty();
+                    // $(this).closest('tr').remove();
+                    
+                });
+
+                console.log(
+                    'LOG: ' + JSON.stringify({
+                        1: domain,
+                        2: goal,
+                        3: referral_date
+                    })
+                )
+
+                final_input['domain'].push(domain);
+                final_input['goal'].push(goal);
+                final_input['referral_date'].push(referral_date);
+            }
+
+        }
+
+        function submitRef() {
+
+            console.log(goal)
+
+            ref_end_date = document.getElementById('referral_end_date').value
+            ref_date = document.getElementById('referral_date').value
+            {#category = document.getElementById('CATEGORY').value#}
+            category = document.querySelector('input[name="CATEGORY"]:checked').value;
+            urgent = document.querySelector('input[name="URGENT"]:checked').value;
+
+            console.log("category: "+ category)
+            console.log("urgent: "+ urgent)
+
+            $.ajax({
+                url: '{% url 'save_referal' child.id %}',
+                method: 'GET',
+                data: {
+                    'referral_service': goal,
+                    'ref_end_date': ref_end_date,
+                    'ref_date': ref_date,
+                    'category': category,
+                    'urgent': urgent,
+                },
+                success: function (result) {
+                   console.log(result)
+                },
+                error: function (error) {
+                    location.reload()
+                    console.log(error)
+                }
+            });
+
+            console.log(ref_end_date)
+            console.log(ref_date)
+        // e.preventDefault();goal
+        var row_count = 0;
+        $('#submissions_table tbody tr').each(function (index, element) {
+            row_count = row_count + 1;
+        });
+
+        if(row_count < 1){
+            var msg = "Please add some rows of data to be submitted first";
+            console.error('ERROR: no rows of data entered');
+            $('#js_error span.mesgg').html(msg);
+            $('#js_error').removeClass('hidden');
+            $(window).scrollTop(0);
+            return false;
+        }else{
+            var msg = "";
+            $('#js_error span.mesgg').html(msg);
+            $('#js_error').addClass('hidden');
+        }
+
+        // console.log("final_input: "+JSON.stringify(final_input));
+        var referral_end_date = $('input[name=referral_end_date]').val();
+
+            $.each(final_input['domain'], function (indexDomain, oneDomain) {
+                var answrs = {};
+
+                answrs['domain'] = [];
+                answrs['goal'] = [];
+                answrs['referral_date'] = [];
+                answrs['referral_end_date'] = [];
+
+                answrs['domain'] = final_input['domain'][indexDomain];
+                answrs['goal'] = final_input['goal'][indexDomain];
+                answrs['referral_date'] = final_input['referral_date'][indexDomain];
+                answrs['referral_end_date'] = final_input['referral_end_date'][indexDomain];
+                fd2.push(answrs);
+            });
+            console.log("answrs: "+JSON.stringify(fd2));
+            $('input[name=final_submission]').val(JSON.stringify(fd2));
+            $('#new_f1a').submit();
+
+}
+
+var fd2 = [];
+
+    </script>
+    <script>
+
+    </script>
+{% endblock %}

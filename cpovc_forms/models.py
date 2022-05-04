@@ -1408,16 +1408,15 @@ class OVCCaseLocation(models.Model):
 
 class OVCBiReferral(models.Model):
     refferal_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
-    person = models.ForeignKey(RegPerson,on_delete=models.CASCADE)
-    ref_caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='refferal_caregiver')
-    client_category = models.CharField(max_length=20)
-    refferal_urgency = models.CharField(max_length=10)
-    refferal_to = models.CharField(max_length=10)
-    refferal_status = models.CharField(max_length=20, default='PENDING')
+    person = models.ForeignKey(RegPerson,on_delete=models.CASCADE, default=60)
+    ref_caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, default=59, related_name='refferal_caregiver')
+    client_category = models.CharField(max_length=100)
+    refferal_urgency = models.CharField(max_length=100)
+    refferal_to = models.CharField(max_length=100)
+    refferal_status = models.CharField(max_length=200, default='PENDING')
     refferal_date = models.DateField()
     refferal_enddate = models.DateField()
-    refferal_domain = models.IntegerField(null=False, default=1)
-    refferal_service = models.CharField(max_length=100)
+    refferal_service = models.CharField(max_length=2256)
     referral_grouping_id = models.UUIDField(default=uuid.uuid1, editable=False)
     timestamp_created = models.DateTimeField(default=timezone.now)
     timestamp_updated = models.DateTimeField(default=timezone.now)
@@ -1427,6 +1426,8 @@ class OVCBiReferral(models.Model):
     class Meta:
         db_table = 'ovc_bi_referrals'
 
-        # def __unicode__(self):
-        #     return str(self.refferal_id)
+        def __unicode__(self):
+            return str(self.refferal_id)
+
+
 
