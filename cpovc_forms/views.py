@@ -10151,12 +10151,12 @@ def edit_pregnantwomen(request, id):
             q1 = data_to_save.get("PWA_WA1_1")
             q2 = data_to_save.get("PWA_WA1_2A")
             q3 = data_to_save.get("PWA_WA1_2B")
-            # q4 = data_to_save.get("PWA_WA1_3A")
-            # q5 = data_to_save.get("PWA_WA1_3B")
-            # q6 = data_to_save.get("PWA_WA1_4A")
-            # q7 = data_to_save.get("PWA_WA1_4B")
-            # q8 = data_to_save.get("PWA_WA1_5A")
-            # q9 = data_to_save.get("PWA_WA1_5B")
+            q4 = data_to_save.get("PWA_WA1_3A")
+            q5 = data_to_save.get("PWA_WA1_3B")
+            q6 = data_to_save.get("PWA_WA1_4A")
+            q7 = data_to_save.get("PWA_WA1_4B")
+            q8 = data_to_save.get("PWA_WA1_5A")
+            q9 = data_to_save.get("PWA_WA1_5B")
             q10 = data_to_save.get("PWA_WA1_6")
             q11 = data_to_save.get("PWA_WA1_7")
             q12 = data_to_save.get("PWA_WA1_8")
@@ -10178,12 +10178,12 @@ def edit_pregnantwomen(request, id):
                 date_of_contact=q1,
                 date_test_done2a=q2,
                 test_result2b=q3,
-                # date_test_done3a=q4,
-                # test_result3b=q5,
-                # date_test_done4a=q6,
-                # test_result4b=q7,
-                # date_test_done5a=q8,
-                # test_result5b=q9,
+                date_test_done3a=q4,
+                test_result3b=q5,
+                date_test_done4a=q6,
+                test_result4b=q7,
+                date_test_done5a=q8,
+                test_result5b=q9,
                 anc_date1=q10,
                 anc_date2=q11,
                 anc_date3=q12,
@@ -10200,12 +10200,12 @@ def edit_pregnantwomen(request, id):
             'PWA_WA1_1': hdata.date_of_contact,
             'PWA_WA1_2A': hdata.date_test_done2a,
             'PWA_WA1_2B': hdata.test_result2b,
-            # 'PWA_WA1_3A': hdata.date_test_done3a,
-            # 'PWA_WA1_3B': hdata.test_result3b,
-            # 'PWA_WA1_4A': hdata.date_test_done4a,
-            # 'PWA_WA1_4B': hdata.test_result4b,
-            # 'PWA_WA1_5A': hdata.date_test_done5a,
-            # 'PWA_WA1_5B': hdata.test_result5b,
+            'PWA_WA1_3A': hdata.date_test_done3a,
+            'PWA_WA1_3B': hdata.test_result3b,
+            'PWA_WA1_4A': hdata.date_test_done4a,
+            'PWA_WA1_4B': hdata.test_result4b,
+            'PWA_WA1_5A': hdata.date_test_done5a,
+            'PWA_WA1_5B': hdata.test_result5b,
             'PWA_WA1_6': hdata.anc_date1,
             'PWA_WA1_7': hdata.anc_date2,
             'PWA_WA1_8': hdata.anc_date3,
@@ -10215,7 +10215,7 @@ def edit_pregnantwomen(request, id):
             'PWA_WA1_12': hdata.ccc_no,
             'PWA_WA1_13': hdata.vl_result,
             'PWA_WA1_14': hdata.vl_test_date,
-            # 'PWA_WA1_15': hdata.disclosure_done,
+            'PWA_WA1_15': hdata.disclosure_done,
 
         }
         form = PREGNANT_WOMEN_ADOLESCENT(data=track)
@@ -10227,7 +10227,7 @@ def edit_pregnantwomen(request, id):
 
     except Exception as e:
         msg = 'error'
-        messages.add_message(request, messages.INFO, msg)
+        messages.error(request, msg)
         url = reverse('ovc_view', kwargs={'id': id})
         return HttpResponseRedirect(url)
 
