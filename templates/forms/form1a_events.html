@@ -565,6 +565,8 @@
     <!-- end row -->
 
 
+
+
 {% endblock %}
 
 {% block lazy_javascript_code %}
@@ -780,7 +782,7 @@
                             url: '{% url 'save_form1a' %}',
                             dataType: 'json',
                             method: 'POST',
-                            data: values,
+                            data: valu3es,
                             success: function (result) {
                                 $.each(result, function (i, val) {
                                     $(".alert-danger").hide();

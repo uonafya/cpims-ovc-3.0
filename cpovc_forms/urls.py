@@ -64,9 +64,6 @@ urlpatterns = [
     path('view_closure/', views.view_closure, name='view_closure'),
     path('delete_closure/', views.delete_closure, name='delete_closure'),
 
-    # Referrals
-    path('delete_referral/', views.delete_referral, name='delete_referral'),
-
     # Management paths
     path('manage_refferal/', views.manage_refferal, name='manage_refferal'),
     path('manage_refferal001/', views.manage_refferal001, name='manage_refferal001'),
@@ -178,8 +175,15 @@ urlpatterns = [
     re_path('bidirectionalreferralform/new/(?P<id>\d+)/', views.bidirectionalreferralform, name='bidirectionalreferralform'),
 
     # Delete Bireferral
-    path('delete_bireferral/(?P<id>)/', views.delete_bireferral, name='delete_bireferral'),
+    re_path('delete_bireferral/(?P<id>\d+)/', views.delete_bireferral, name='delete_bireferral'),
+
 
     #bireferral test template
-    path('bidirectional/(?P<id>\)/', views.bidirectional, name='bidirectional')
+    re_path('bidirectional/(?P<id>\d+)/', views.bidirectional, name='bidirectional'),
+
+    # Save Referal
+    re_path('save_referal/(?P<id>\d+)/', views.save_referal, name='save_referal' ),
+
+    # Delete Referal
+    path('delete_referral/<int:id>/', views.delete_referral, name='delete_referral')
 ]

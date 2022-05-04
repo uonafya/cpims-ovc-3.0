@@ -12,6 +12,8 @@ import random
 import ast
 import uuid
 import time
+
+from numpy.distutils.conv_template import exclude_re
 from reportlab.pdfgen import canvas
 # from itertools import chain #
 from datetime import datetime, timedelta
@@ -10093,25 +10095,25 @@ def bidirectional(request, id):
                my_domain = all_data['domain']
                my_goal = all_data['goal']
                my_service = all_data['services']
-               my_date_of_prev_evnt = timezone.now()
-               my_date_of_caseplan = all_data['CPT_DATE_CASEPLAN']
+               refferal_date = timezone.now()
+               refferal_end_date = all_data['CPT_DATE_CASEPLAN']
                print(("my_reason", all_data))
 
                xyz = RegPerson.objects.filter(id=caregiver_id).values('id')
 
-               for service in my_service:
-                   OVCCareBidirectionPlan(
-                       domain=my_domain,
-                       goal=my_goal,
-                       person_id=id,
-                       caregiver=RegPerson.objects.get(id=caregiver_id),
-                       household=house_hold,
-                       date_of_previous_event=my_date_of_prev_evnt,
-                       date_of_event=convert_date(my_date_of_caseplan, fmt='%Y-%m-%d'),
-                       form=OVCCareForms.objects.get(name='OVCCareCasePlan'),
-                       case_plan_status='D',
-                       event=ovccareevent
-                   ).save()
+               # for service in my_service:
+               #     OVCCareBidirectionPlan(
+               #         domain=my_domain,
+               #         goal=my_goal,
+               #         person_id=id,
+               #         caregiver=RegPerson.objects.get(id=caregiver_id),
+               #         household=house_hold,
+               #         date_of_previous_event=my_date_of_prev_evnt,
+               #         date_of_event=convert_date(my_date_of_caseplan, fmt='%Y-%m-%d'),
+               #         form=OVCCareForms.objects.get(name='OVCCareCasePlan'),
+               #         case_plan_status='D',
+               #         event=ovccareevent
+               #     ).save()
 
        msg = 'Referal saved successfully'
        messages.add_message(request, messages.INFO, msg)
@@ -10129,10 +10131,49 @@ def bidirectional(request, id):
 
    # past cpt
    # bidirectional_events = get_past_bidirectional(child.id)
-
+   all_ref = OVCBiReferral.objects.all()
    return render(request,
                  'forms/new_refferal.html',
                  {'form': form, 'init_data': init_data,
                   'vals': vals,
+                  'child':child,
+                  'all_ref':all_ref,
                   # 'bidirectional_events': bidirectional_events,
                   'care_giver': care_giver})
+
+
+def save_referal(request, id):
+    import pdb
+
+
+    child = RegPerson.objects.get(id=id)
+    house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+    event_type_id = 'CPAR'
+
+
+    qry_saver = OVCBiReferral(
+        client_category = request.GET['category'],
+        refferal_urgency = request.GET['urgent'],
+        # refferal_to = request.GET[],
+        refferal_date = request.GET['ref_date'],
+        refferal_enddate = request.GET['ref_end_date'],
+        refferal_service = request.GET['referral_service[]']
+        # event = ovccareevent
+    ).save()
+    # pdb.set_trace()
+    
+    success: {
+        'message': 'worked',
+    }
+    
+    return JsonResponse(success)
+
+
+def delete_referral(request, id):
+
+    new_eval = OVCBiReferral.objects.get(person_id=60)
+    new_eval.delete()
+
+    return redirect('bidirectional', id=new_eval.person)
+
+

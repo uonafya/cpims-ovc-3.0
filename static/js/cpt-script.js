@@ -154,7 +154,7 @@ function submitCPT() {
                 fd2.push(answrs);
             });
             console.log("answrs: "+JSON.stringify(fd2));
-            $('input[name=final_submission').val(JSON.stringify(fd2));
+            $('input[name=final_submission]').val(JSON.stringify(fd2));
             $('#new_f1a').submit();
     
 }

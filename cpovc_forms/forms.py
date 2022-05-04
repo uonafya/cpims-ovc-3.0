@@ -8192,9 +8192,20 @@ SCHOOLED_DOMAIN_CHOICES = (
                       ('SCH1', 'Re-enrollment (i.e., for dropouts or teen mothers)'),
                       ('SCH2', 'Bursary, tuition, school fees or fee exemption'),
                       ('SCH3', 'Other Specify'))
+
 bireferral_provided_list = forms.CharField(widget=forms.TextInput(
         attrs={'type': 'hidden',
                'id': 'bireferral_provided_list'}))
+
+urgent_choices = (
+    ('Emergency','Emergency'),
+    ('Urgent','Urgent'),
+    ('Routine/follow up','Routine/follow up')
+)
+category_choices = (
+    ('Caregiver','Caregiver'),
+    ('OVC','OVC')
+)
 
 # referal form
 
@@ -8231,6 +8242,13 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
                                                 widget=forms.SelectMultiple(
                                                     attrs={'class': 'form-control'
                                                            }))
+
+    URGENT = forms.ChoiceField(choices=urgent_choices,
+                                                widget=forms.RadioSelect(
+                                                ))
+    CATEGORY = forms.ChoiceField(choices=category_choices,
+                               widget=forms.RadioSelect(
+                               ))
 
 
     referral_date = forms.DateField(widget=forms.widgets.DateInput(

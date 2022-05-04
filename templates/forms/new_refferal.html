@@ -126,7 +126,7 @@
 
 
     <!-- begin row -->
-    <div id='case_details' class="row">
+    <div id='referal_details' class="row">
 
         <!-- begin col-12 -->
         <div class="col-md-12">
@@ -145,10 +145,33 @@
                     <div id="form1_info"></div>
 
 
+
+
                     <div id="wizard-f1a">
                         <!-- begin wizard step-1 -->
                         <div class="wizard-step-4">
                             <div class="panel-body">
+                                <table width="100%" class="table">
+                                    <tbody>
+                                    <tr>
+                                        <td class="field">Name of Person Being
+                                            Referred: {{ all_domain_choices.refferal_domain }}</td>
+                                        <td class="field">Organization referred
+                                            to: {{ all_domain_choices.refferal_service }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field">
+                                            Client Category
+                                               {{ form.CATEGORY }}
+                                        </td>
+                                        <td class="field">
+                                            How urgent is this referral?
+                                               {{ form.URGENT }}
+                                        </td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
                                 <div id="error_service"></div>
                                 <div style="overflow-x: auto; min-height: 300px;">
                                     <table id="services_manager_table" class="table">
@@ -268,7 +291,7 @@
                                     <label class="control-label col-md-4 col-sm-4"></label>
                                     <div class="col-md-6 col-sm-6">
                                         <button id="mysubmit-birefferal" class="btn btn-primary" type="button"
-                                                onClick="saveForm1A(4)">Submit Refferal(s)
+                                                onClick="submitRef()">Submit Refferal(s)
                                         </button>
                                         <a href="" onClick="cancelBtn()" class="btn btn-white">Cancel</a>
                                     </div>
@@ -276,7 +299,6 @@
                             </div>
                         </div>
                         <!-- end wizard step-1 -->
-
 
                     </div>
                     <form class="hidden" action="." method="POST" data-parsley-validate="true" name="form-wizard-f1a"
@@ -292,9 +314,55 @@
 
         </div>
         <!-- end col-12 -->
+{#    <input  value="{{ child.id }}" type="number"  name="child_reg_id" hidden/>#}
 
     </div>
     <!-- end row -->
+
+
+    <div class="panel-body">
+                    <div class="panel panel-inverse">
+                        <div id="case-events" class="table-responsive">
+                            <table id="referal-events" class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Client Category</th>
+                                    <th>Referal Urgency</th>
+                                    <th>Services</th>
+                                    <th>Referal Date</th>
+                                    <th>Referal End Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if all_ref %}
+                                    {% for ref in all_ref %}
+                                        <tr>
+                                            <td>{{ ref.client_category }}</td>
+                                            <td>{{ ref.refferal_urgency }}</td>
+                                            <td>{{ ref.refferal_service }}</td>
+                                            <td>{{ ref.refferal_date }}</td>
+                                            <td>{{ ref.refferal_enddate }}</td>
+                                             <td><a href="">
+                                            <button type="button" class="btn btn-sm btn-danger m-r-5"><i
+                                                    class="fa fa-trash"></i>&nbsp;Delete
+                                            </button>
+                                        </a></td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <h4>No referals available</h4>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <br><br>
+                    </div>
+                </div>
+
+
+
+
 
 
 {% endblock %}
@@ -326,20 +394,6 @@
         }
 
 
-
-        $('input[name=if_first_cpara],input[name=date_first_cpara]').removeAttr('required');
-        $('input[name=date_first_cpara]').attr('disabled', true);
-        $('input[name=if_first_cpara]').change(function () {
-            var valu = $(this).val();
-            if (valu === 'AYES') {
-                $('input[name=date_first_cpara]').val('');
-                $('input[name=date_first_cpara]').attr('disabled', true);
-            } else if (valu === 'ANNO') {
-                $('input[name=date_first_cpara]').val('');
-                $('input[name=date_first_cpara]').removeAttr('disabled');
-            }
-        });
-
         $(document).ready(function () {
 
             //multi selects
@@ -359,7 +413,6 @@
 
             // $('.goals_cell > div > select').removeClass('hidden')
 
-            $('#CPT_DATE').datepicker({format: 'yyyy-mm-dd'});
             $('input[name=referral_date]').datepicker({format: 'yyyy-mm-dd'});
 
             {# Bireferral Domain drop down #}
@@ -420,99 +473,15 @@
 
 
         })
-        function getServices(x, domain) {
-            var multiselect_data = [];
-            var data = new Array();
-            var csrftoken = $.cookie('csrftoken');
-            var index = 0;
-            var multiselect_id = ''
 
-            if (domain == 'DHNU') {
-                multiselect_id = '#olmis_priority_health';
-            }
-            if (domain == 'DSHC') {
-                multiselect_id = '#olmis_priority_shelter';
-            }
-            if (domain == 'DPRO') {
-                multiselect_id = '#olmis_priority_protection';
-            }
-            if (domain == 'DEDU') {
-                multiselect_id = '#olmis_priority_education';
-            }
-            if (domain == 'DPSS') {
-                multiselect_id = '#olmis_priority_pss';
-            }
-            if (domain == 'DHES') {
-                multiselect_id = '#olmis_priority_hes';
-            }
-
-            var values = {
-                'csrfmiddlewaretoken': csrftoken,
-                'domain_id': domain,
-                'index': index
-            };
-
-            // do an ajax_call
-            $.ajax({
-                url: '{% url 'manage_service_category' %}',
-                dataType: 'json',
-                method: 'POST',
-                contentType: 'application/x-www-form-urlencoded',
-                data: values,
-                success: function (result) {
-                    var status;
-                    var item_sub_category_id;
-                    var item_sub_category;
-                    var multiselect_dict = {};
-
-                    multiselect_data.push({label: 'Please Select', value: ''});
-
-                    $.each(result, function (i, val) {
-                        item_sub_category_id = val.item_sub_category_id;
-                        item_sub_category = val.item_sub_category;
-                        status = val.status;
-
-                        var multiselect_dict = {label: item_sub_category, value: item_sub_category_id};
-                        multiselect_data.push(multiselect_dict);
-                    });
-
-                    //add multi-select data
-                    $('' + multiselect_id + '').multiselect('destroy');
-                    $('' + multiselect_id + '').multiselect({
-                        selectAllValue: 'multiselect-all',
-                        enableCaseInsensitiveFiltering: true,
-                        numberDisplayed: 1,
-                        maxHeight: 300,
-                        buttonWidth: '100%',
-                        buttonClass: 'btn btn-white',
-                        nonSelectedText: 'Please Select'
-                    });
-                    $('' + multiselect_id + '').empty();
-                    $('' + multiselect_id + '').multiselect('dataprovider', multiselect_data);
-
-                    // if no subcategories found . . .
-                    if (status == 0) {
-                        $("" + multiselect_id + " option[value='" + item_sub_category_id + "']").prop("selected", true);
-                    }
-
-                    // refresh multiselect
-                    $('' + multiselect_id + '').multiselect("refresh");
-                },
-                error: function (xhr, status, error) {
-                    console.log(error);
-                }
-
-            });
-        }
-
-
+        let goal = []
         function AddRow() {
             var randomID = randomNo();
 
             let domain = $('#BIREFERRAL_DOMAIN option:selected').val();
             //let goal = $('.goals_cell > div:not(.hidden) > select > option:selected').val();
 
-            let goal = []
+
             $('.goals_cell > div:not(.hidden) > div.btn-group > ul.multiselect-container > li.active label[class=checkbox]').each(function () {
                 var vlu = $(this).text();
                 if (vlu !== 'multiselect-all') {
@@ -600,11 +569,87 @@
                 final_input['domain'].push(domain);
                 final_input['goal'].push(goal);
                 final_input['referral_date'].push(referral_date);
-
-
             }
 
         }
+
+        function submitRef() {
+
+            console.log(goal)
+
+            ref_end_date = document.getElementById('referral_end_date').value
+            ref_date = document.getElementById('referral_date').value
+            {#category = document.getElementById('CATEGORY').value#}
+            category = document.querySelector('input[name="CATEGORY"]:checked').value;
+            urgent = document.querySelector('input[name="URGENT"]:checked').value;
+
+            console.log("category: "+ category)
+            console.log("urgent: "+ urgent)
+
+            $.ajax({
+                url: '{% url 'save_referal' child.id %}',
+                method: 'GET',
+                data: {
+                    'referral_service': goal,
+                    'ref_end_date': ref_end_date,
+                    'ref_date': ref_date,
+                    'category': category,
+                    'urgent': urgent,
+                },
+                success: function (result) {
+                   console.log(result)
+                },
+                error: function (error) {
+                    location.reload()
+                    console.log(error)
+                }
+            });
+
+            console.log(ref_end_date)
+            console.log(ref_date)
+        // e.preventDefault();goal
+        var row_count = 0;
+        $('#submissions_table tbody tr').each(function (index, element) {
+            row_count = row_count + 1;
+        });
+
+        if(row_count < 1){
+            var msg = "Please add some rows of data to be submitted first";
+            console.error('ERROR: no rows of data entered');
+            $('#js_error span.mesgg').html(msg);
+            $('#js_error').removeClass('hidden');
+            $(window).scrollTop(0);
+            return false;
+        }else{
+            var msg = "";
+            $('#js_error span.mesgg').html(msg);
+            $('#js_error').addClass('hidden');
+        }
+
+        // console.log("final_input: "+JSON.stringify(final_input));
+        var referral_end_date = $('input[name=referral_end_date]').val();
+
+            $.each(final_input['domain'], function (indexDomain, oneDomain) {
+                var answrs = {};
+
+                answrs['domain'] = [];
+                answrs['goal'] = [];
+                answrs['referral_date'] = [];
+                answrs['referral_end_date'] = [];
+
+                answrs['domain'] = final_input['domain'][indexDomain];
+                answrs['goal'] = final_input['goal'][indexDomain];
+                answrs['referral_date'] = final_input['referral_date'][indexDomain];
+                answrs['referral_end_date'] = final_input['referral_end_date'][indexDomain];
+                fd2.push(answrs);
+            });
+            console.log("answrs: "+JSON.stringify(fd2));
+            $('input[name=final_submission]').val(JSON.stringify(fd2));
+            $('#new_f1a').submit();
+
+}
+
+var fd2 = [];
 
     </script>
 
