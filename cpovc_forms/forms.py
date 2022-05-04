@@ -7828,7 +7828,7 @@ class CparaAssessmentUpgrade(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-    CP26q_ctl = forms.ChoiceField(
+    CP26q_ctl = forms.ChoiceField(required=False,
         choices=(('AYES', "YES"), ('ANNO', "NO"), ('ANA', "N/A")),
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,

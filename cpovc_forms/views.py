@@ -1,5 +1,3 @@
-from multiprocessing import context
-import re
 from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse, resolve
 from django.shortcuts import render, get_object_or_404, redirect
@@ -10,7 +8,7 @@ from django.core import serializers
 from django.conf import settings
 from django.db.models import Q
 import json
-import random
+import random   
 import ast
 import uuid
 import time
@@ -9795,16 +9793,16 @@ def new_dreamsform(request, id):
 def new_cpara_upgrade(request, id):
     if request.method == 'POST':
         data = request.POST
-        print (data)
+        # print (data)
         
-       
+        import pdb
         child = RegPerson.objects.get(id=id)
         form= CparaAssessmentUpgrade()
         care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
         house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
       
             
-        questions = OVCCareQuestions.objects.filter(code__startswith='CP', is_void=False)
+        questions = OVCCareQuestions.objects.filter(code__startswith='CP', is_void=False).values()
         exceptions = ['cp2d', 'd_o_a']
         date_of_event = data.get('d_o_a')
         event = OVCCareEvents.objects.create(
@@ -9818,21 +9816,43 @@ def new_cpara_upgrade(request, id):
 
         for question in questions: 
             # print (id, question, answer, house, caregiver, event, date_event, exceptions) 
-            save_cpara_form_by_domain(
-                id=id,
-                question=question,
-                answer=data.get(question.code.lower()),
-                house_hold=house_hold,
-                caregiver=care_giver,
-                event=event,
-                date_event=convert_date(date_of_event, fmt='%Y-%m-%d'),
-                exceptions=exceptions
+            if question['code'] == 'CP2d':
+                if data.get('CP2d') is not None:
+                    date_previous=data.get('CP2d')
+                else:
+                    date_previous='1900-01-01'
+
+            answer = data.get(question['code'])
+            print(answer)
+            if answer is None:
+                answer = 'No'
+            elif answer == 'AYES':
+                answer=True
+            elif answer=='ANNO':
+                answer=False
+            else:
+                answer='No'    
+            try:
+                OVCCareCpara_upgrade.objects.create(
+                    person=child,
+                    caregiver=care_giver,
+                    question=OVCCareQuestions.objects.get(question_id=question['question_id']),
+                    question_code=question['code'],
+                    answer=answer,
+                    household=house_hold,
+                    question_type=question['question_type'],
+                    domain=question['domain'],
+                    event=event,
+                    date_of_event=convert_date(data.get('d_o_a'),'%Y-%m-%d'),
+                    date_of_previous_event=date_previous, 
                 )
+                    
+            except Exception as e:
+                print(f'The OVC Cpara Form didnt save:  {e}')
 
         ovc_score = data.get('bench_array').replace('[', '').replace(']', '').split(',')
 
-        # import pdb
-        # pdb.set_trace()
+        pdb.set_trace()
         try:
             OVCCareBenchmarkScore.objects.create(
                 household=house_hold,
@@ -9855,16 +9875,14 @@ def new_cpara_upgrade(request, id):
 
 
         sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC'}
-        # import pdb
-        # pdb.set_trace()
-        # hshsh
+
         try:
             for q, v in sub_pop.items():
                 if data.get(q) == 'on':
                     OVCSubPopulation.objects.create(
                         person=child,
                         criteria=v,
-                        date_of_event=date_of_event,
+                        date_of_event=convert_date(date_of_event),
                         timestamp_created = timezone.now(),
                         event=event
                     )
@@ -9942,7 +9960,7 @@ def new_cpara_upgrade(request, id):
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
 
     # PAST CPARA
-    import pdb
+    
     past_cpara = []
     cpara_events = OVCCareEvents.objects.filter(event_type_id='cpr', person_id=id, is_void=False)
     if cpara_events:
@@ -9963,14 +9981,7 @@ def new_cpara_upgrade(request, id):
                     bm_array.append("Yes" if one_cpara_bench.benchmark_7 == 1 else "No")
                     bm_array.append("Yes" if one_cpara_bench.benchmark_8 == 1 else "No")
                     bm_array.append("Yes" if one_cpara_bench.benchmark_9 == 1 else "No")
-                    # bm_array.append("Yes" if one_cpara_bench.benchmark_10 == 1 else "No")
-                    # bm_array.append("Yes" if one_cpara_bench.benchmark_11 == 1 else "No")
-                    # bm_array.append("Yes" if one_cpara_bench.benchmark_12 == 1 else "No")
-                    # bm_array.append("Yes" if one_cpara_bench.benchmark_13 == 1 else "No")
-                    # bm_array.append("Yes" if one_cpara_bench.benchmark_14 == 1 else "No")
-                    # bm_array.append("Yes" if one_cpara_bench.benchmark_15 == 1 else "No")
-                    # bm_array.append("Yes" if one_cpara_bench.benchmark_16 == 1 else "No")
-                    # bm_array.append("Yes" if one_cpara_bench.benchmark_17 == 1 else "No")
+
                     
                     benchmark_1 = "Benchmark 1: (Yes)" if one_cpara_bench.benchmark_1 == 1 else "Benchmark 1: (No)"
                     benchmark_2 = "Benchmark 2: (Yes)" if one_cpara_bench.benchmark_2 == 1 else "Benchmark 2: (No)"
@@ -9981,32 +9992,18 @@ def new_cpara_upgrade(request, id):
                     benchmark_7 = "Benchmark 7: (Yes)" if one_cpara_bench.benchmark_7 == 1 else "Benchmark 7: (No)"
                     benchmark_8 = "Benchmark 8: (Yes)" if one_cpara_bench.benchmark_8 == 1 else "Benchmark 8: (No)"
                     benchmark_9 = "Benchmark 9: (Yes)" if one_cpara_bench.benchmark_9 == 1 else "Benchmark 9: (No)"
-                    # benchmark_10 = "Benchmark 10: (Yes)" if one_cpara_bench.benchmark_10 == 1 else "Benchmark 10: (No)"
-                    # benchmark_11 = "Benchmark 11: (Yes)" if one_cpara_bench.benchmark_11 == 1 else "Benchmark 11: (No)"
-                    # benchmark_12 = "Benchmark 12: (Yes)" if one_cpara_bench.benchmark_12 == 1 else "Benchmark 12: (No)"
-                    # benchmark_13 = "Benchmark 13: (Yes)" if one_cpara_bench.benchmark_13 == 1 else "Benchmark 13: (No)"
-                    # benchmark_14 = "Benchmark 14: (Yes)" if one_cpara_bench.benchmark_14 == 1 else "Benchmark 14: (No)"
-                    # benchmark_15 = "Benchmark 15: (Yes)" if one_cpara_bench.benchmark_15 == 1 else "Benchmark 15: (No)"
-                    # benchmark_16 = "Benchmark 16: (Yes)" if one_cpara_bench.benchmark_16 == 1 else "Benchmark 16: (No)"
-                    # benchmark_17 = "Benchmark 17: (Yes)" if one_cpara_bench.benchmark_17 == 1 else "Benchmark 17: (No)"
 
                     str_1 = benchmark_1 + ", " + benchmark_2 + ", " + benchmark_3 + ", " + benchmark_4 + ", " + benchmark_5 + ", "
                     str_2 = benchmark_6 + ", " + benchmark_7 + ", " + benchmark_8 + ", " + benchmark_9 + ", "
-                    # str_3 = benchmark_10 + ", " + benchmark_11 + ", " + benchmark_12 + ", " + benchmark_13 + ", "
-                    # str_4 = benchmark_14 + ", " + benchmark_15 + ", " + benchmark_16 + ", " + benchmark_17
+                    
 
                     total_benchmark_score = int(one_cpara_bench.benchmark_1) + int(one_cpara_bench.benchmark_2) + int(
                         one_cpara_bench.benchmark_3) + int(one_cpara_bench.benchmark_4) + int(
                         one_cpara_bench.benchmark_5) + int(one_cpara_bench.benchmark_6) + int(
                         one_cpara_bench.benchmark_7) + int(one_cpara_bench.benchmark_8) + int(
                         one_cpara_bench.benchmark_9) 
-                        #+ int(one_cpara_bench.benchmark_10) + int(
-                        # one_cpara_bench.benchmark_11) + int(one_cpara_bench.benchmark_12) + int(
-                        # one_cpara_bench.benchmark_13) + int(one_cpara_bench.benchmark_14) + int(
-                        # one_cpara_bench.benchmark_15) + int(one_cpara_bench.benchmark_16) + int(
-                        # one_cpara_bench.benchmark_17)
+                        
                     full_str = str_1 + str_2 # + str_3 + str_4
-                    # qn_string = str(one_cpara_bench.question_code) + " (" + str(one_cpara_bench.answer) + "), "
                     event_detail = event_detail + full_str
             else:
                 event_detail = "No answered questions found"
@@ -10040,54 +10037,49 @@ def new_cpara_upgrade(request, id):
                 'past_cpara': past_cpara
                 
                 }
-    # pdb.set_trace()
+    
     msg = f'Cpara data saved succesfully'
     messages.add_message(request, messages.INFO,msg)
     return render(request,'forms/new_cpara_upgrade.html',context)
 
 def edit_cpara_upgrade(request, id):
     if request.method == 'POST':
+        import pdb
         data = request.POST
-        print (data)
         
-        cpara_id=OVCCareCpara_upgrade.objects.get(event=id)
-        child = RegPerson.objects.get(id=cpara_id)
-        form= CparaAssessmentUpgrade()
-        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-      
-            
-        questions = OVCCareQuestions.objects.filter(code__startswith='cp', is_void=False)
-        exceptions = ['cp2d', 'cp74q']
+        update_time=timezone.now()
+        ovc_event = OVCCareEvents.objects.filter(event=id)
         date_of_event = data.get('d_o_a')
-        event = OVCCareEvents.objects.create(
-                event_type_id='cpr',
-                created_by=request.user.id,
-                person=child,
-                house_hold=house_hold,
-                date_of_event=date_of_event
-            )
-        
-
-        for question in questions: 
-            # print (id, question, answer, house, caregiver, event, date_event, exceptions) 
-            save_cpara_form_by_domain(
-                id=id,
-                question=question,
-                answer=data.get(question.code.lower()),
-                house_hold=house_hold,
-                caregiver=care_giver,
-                event=event,
-                date_event=convert_date(date_of_event, fmt='%Y-%m-%d'),
-                exceptions=exceptions
-                )
+        cpara_saved = OVCCareCpara_upgrade.objects.filter(event=id)     
 
         ovc_score = data.get('bench_array').replace('[', '').replace(']', '').split(',')
 
-        
+        # Update OVC CPARA Table
         try:
-            OVCCareBenchmarkScore.objects.create(
-                household=house_hold,
+            for question in cpara_saved:
+                answer=data.get(question.question_code)
+                if answer is None:
+                    answer = 'No'
+                elif answer == 'AYES':
+                    answer=True
+                elif answer=='ANNO':
+                    answer=False
+                else:
+                    answer='No' 
+                OVCCareCpara_upgrade.objects.filter(event=id).update(
+                    question=question,
+                    answer=answer,
+                    date_of_event=convert_date(date_of_event, fmt='%Y-%m-%d'),
+                    timestamp_updated=update_time,
+                    event=id
+            )
+        except Exception as e:
+            print(f'The table OVC Cpara didnt update: {e} ')
+
+    
+        # Update OVC Benchmark Score Table
+        try:
+            OVCCareBenchmarkScore.objects.filter(event=id).update(
                 benchmark_1=int(ovc_score[0]),
                 benchmark_2=int(ovc_score[1]),
                 benchmark_3=int(ovc_score[2]),
@@ -10098,53 +10090,77 @@ def edit_cpara_upgrade(request, id):
                 benchmark_8=int(ovc_score[7]),
                 benchmark_9=int(ovc_score[8]),
                 score=sum([int(i) for i in ovc_score]),
-                event=event,
-                care_giver=care_giver    
-            
+                timestamp_updated=update_time
             )
         except Exception as e:
-            print (f"Error while saving to ovccarebenchmark: {e}" )
+            print (f"Error while updating to ovccarebenchmark: {e}" )
 
 
         sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC'}
-        # import pdb
-        # pdb.set_trace()
-        # hshsh 
+     
+        # Update OVC Sub Popuplation Table
         try:
             for q, v in sub_pop.items():
                 if data.get(q) == 'on':
-                    OVCSubPopulation.objects.create(
-                        person_id=child,
+                    OVCSubPopulation.objects.filter(event=id).update_or_create(
                         criteria=v,
-                        date_of_event=date_of_event,
-                        timestamp_created = timezone.now()
+                        date_of_event=convert_date(date_of_event, fmt='%Y-%m-%d'),
+                        timestamp_updated = update_time
                     )
         except Exception as e:
-            print(f'The error is {e}')
-        
-        url = reverse('ovc_view', kwargs={'id': id})
+            print(f'Error while updating to OVC sub population {e}')
+
+        person_id = OVCCareEvents.objects.filter(event=id)[0].person_id
+
+        url = reverse('ovc_view', kwargs={'id':person_id})
+        # pdb.set_trace()
         return HttpResponseRedirect(url)
 
-        # Get method starts here
-        # get relations
-    cpara_id=OVCCareCpara_upgrade.objects.get(event=id,question_code='CP9b')
+        # cpara_id=OVCCareCpara_upgrade.objects.get(event=id,is_void=False)
+    import pdb
+    cpara_data=OVCCareCpara_upgrade.objects.filter(event=id,is_void=False).values()
+    # date_event = cpara_data.get('date_of_event')
+   
+    # pull OVC sub population get
 
-    # pull OVC get
+    ovc_sub_pop_data = {}    
+    ovc_sub_population = OVCSubPopulation.objects.filter(event=id,is_void=False).values()
+    # OVCSubPopulation.objects.filter(event=id,is_void=False).delete()
+    sub_pop = {'double' :'CP6d_1','AGYW':'CP6d_2','HEI':'CP6d_3','FSW':'CP6d_4','PLHIV':'CP6d_5','CLHIV':'CP6d_6','SVAC':'CP6d_7'}
+    for ovc_sub in ovc_sub_population:
+        # pdb.set_trace()
+        ovc_sub_q = ovc_sub.get('criteria')
+        ovc_sub_pop_data[sub_pop[ovc_sub_q]] = 'on'
 
-    ovc_benchmark = OVCCareBenchmarkScore.objects.filter(event=id)
-    ovc_cpara_score = OVCCareCpara_upgrade.objects.filter(event=id).values()
-    ovc_sub_population = OVCSubPopulation.objects.filter(event=id)
+    
+    # cpara = cpara_id.values_list()
+    edit_data_cpara={}
+    answer_value={
+        'False': 'ANNO',
+        'True': 'AYES',
+        'No':'ANA'
+    }
 
+    for one_data in cpara_data:
+        one_data_q = one_data.get('question_code')
+        one_data_a = one_data.get('answer')
+        if one_data_q == 'CP2d':
+            one_data_a
+            edit_data_cpara[one_data_q]=one_data_a
+        else:
+            one_data_a = answer_value[one_data_a]
+            edit_data_cpara[one_data_q]=one_data_a
+    
+    # edit_data_cpara['d_o_a'] = date_event
+    edit_data_cpara.update(ovc_sub_pop_data)
+    # print(edit_data_cpara)
 
+    answer_data = {
+        'YES': True 
+    }
 
-    # import pdb
     # pdb.set_trace()
-
-
-
-    # import pdb
-    # pdb.set_trace()
-    person_id=cpara_id.person.id
+    person_id=OVCSubPopulation.objects.filter(event=id).first().person_id
     child = RegPerson.objects.filter(id=person_id)
     guardians = RegPersonsGuardians.objects.select_related().filter(
         child_person=child, is_void=False, date_delinked=None)
@@ -10158,7 +10174,7 @@ def edit_cpara_upgrade(request, id):
     # child = RegPerson.objects.get(id=id)
     ovc_id = int(person_id)
     creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
-    # pdb.set_trace()
+
     # care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
         
     # house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
@@ -10170,7 +10186,7 @@ def edit_cpara_upgrade(request, id):
     hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
     hhmembers2 = hhmqs.exclude(person_id=person_id)
     
-
+    # pdb.set_trace()
     # Get child geo
     child_geos = RegPersonsGeo.objects.select_related().filter(
         person=person_id, is_void=False, date_delinked=None)
@@ -10207,7 +10223,8 @@ def edit_cpara_upgrade(request, id):
         subcounty = SetupGeography.objects.get(area_id=ward.parent_area_id)
         county = SetupGeography.objects.get(area_id=subcounty.parent_area_id)
 
-    form = CparaAssessmentUpgrade()
+    
+    form = CparaAssessmentUpgrade(data=edit_data_cpara)
     ovc_id = int(person_id)
     child = RegPerson.objects.get(is_void=False, id=ovc_id)
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)

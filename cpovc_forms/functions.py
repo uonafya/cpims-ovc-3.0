@@ -1,3 +1,4 @@
+from django.forms import NullBooleanField
 from cpovc_registry.functions import (
     get_client_ip, get_meta_data)
 
@@ -279,15 +280,15 @@ def save_ovc_sub_population (id, criteria, date_event, time_created, time_update
     
 
 def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event, date_event, exceptions=[]):
-    # import pdb
+    import pdb
     answer_value = {
         'AYES': 'Yes',
         'ANNO': 'No',
-        'No': 'No'
+        'ANA': 'Na'
     }
     if question.code.lower() == 'cp2d':
         if answer == '':
-            answer = None
+            answer = NullBooleanField
         if answer is not None:
             answer = convert_date(answer)
             answer = answer.date().strftime(format='%Y-%m-%d')
@@ -295,10 +296,11 @@ def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event
             answer = '1900-01-01'
     if answer is None:
         answer = 'No'
-    if question.code.lower() not in exceptions:
+    if question.code not in exceptions:
         # pdb.set_trace()
 
         answer = answer_value[answer]
+        pdb.set_trace()
     try:
         OVCCareCpara_upgrade.objects.create(
             person_id=id,

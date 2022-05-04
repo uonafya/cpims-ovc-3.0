@@ -31,6 +31,13 @@ print(blu.sing("'Happy'"))
 .parsley-error{
     bottom: -8px !important;
 }
+#table_view td {
+    border: solid;
+}
+
+#table_view th {
+    border: solid;
+}
 
 
 </style>
@@ -347,7 +354,7 @@ print(blu.sing("'Happy'"))
                                         <div class="col-md-12 containsTable">
                                             <div class="form-group">
                                                 <input type="text" class="hidden" name="q3p6" value=""/>
-                                                <table class="table table-condensed table-responsive">
+                                                <table id="table_view" class="table table-condensed table-responsive">
                                                     <thead>
                                                         <tr>
                                                             <th>Name</th>
@@ -1638,10 +1645,13 @@ print(blu.sing("'Happy'"))
                                     </td>
                                     <!-- one_past_event.ev_id -->
                                     <td  style="text-align: center;vertical-align: middle;">{{one_past_event.ev_score}} <hr/> </td>
-                                    <td><a href="{% url 'edit_cpara_upgrade' one_past_event.ev_id %}"><button class="btn btn-primary"><i class="fa fa-pencil">&nbsp;Edit</i></button></a></td>
                                     <td valign="center" style="text-align: center;vertical-align: middle;">
-                                            <a class="btn btn-danger" data-toggle="modal" href='#del_CPara_e'> <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
-                                            <div class="modal fade" id="del_CPara_e">
+                                        <a class="btn btn-primary" data-toggle="modal" href="{% url 'edit_cpara_upgrade' one_past_event.ev_id %}"> <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                    </td>
+                                        <!-- <a class="btn btn-primary" href="{% url 'edit_cpara_upgrade' one_past_event.ev_id %}"><i class="fa fa-pencil"> Edit</i></a></td> -->
+                                    <td valign="center" style="text-align: center;vertical-align: middle;">
+                                            <a class="btn btn-danger" data-toggle="modal" href='#del_cpara_e'> <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                                            <div class="modal fade" id="del_cpara_e">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
