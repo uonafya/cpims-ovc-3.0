@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c7d762fe-37a7-4d88-be08-a9ab473aa047" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< Updated upstream
+      <change beforePath="$PROJECT_DIR$/cpovc_forms/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/cpovc_forms/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/forms/bidirectionalreferralform.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/bidirectionalreferralform.html" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/cpovc_forms/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/cpovc_forms/views.py" afterDir="false" />
+>>>>>>> Stashed changes
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="28O4Gd9HaRo7tCr4vyyjc6a32q9" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/timz/Timz/code/python/django/events&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration name="cpims-ovc-3.0" type="Python.DjangoServer" factoryName="Django server">
+      <module name="cpims-ovc-3.0" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c7d762fe-37a7-4d88-be08-a9ab473aa047" name="Changes" comment="" />
+      <created>1651074203285</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1651074203285</updated>
+      <workItem from="1651074204515" duration="1742000" />
+      <workItem from="1651076674627" duration="541000" />
+      <workItem from="1651077227509" duration="954000" />
+      <workItem from="1651078195016" duration="453000" />
+      <workItem from="1651078810122" duration="11372000" />
+      <workItem from="1651093912297" duration="108000" />
+      <workItem from="1651094253330" duration="27621000" />
+      <workItem from="1651148877840" duration="3974000" />
+      <workItem from="1651161057242" duration="2678000" />
+      <workItem from="1651164210294" duration="2993000" />
+      <workItem from="1651168309983" duration="1662000" />
+      <workItem from="1651170922650" duration="2196000" />
+      <workItem from="1651173801545" duration="1391000" />
+      <workItem from="1651212509096" duration="3983000" />
+      <workItem from="1651216523896" duration="13364000" />
+      <workItem from="1651235486679" duration="338000" />
+      <workItem from="1651236138422" duration="1029000" />
+      <workItem from="1651237278703" duration="16499000" />
+      <workItem from="1651260933003" duration="6754000" />
+      <workItem from="1651296957271" duration="8541000" />
+      <workItem from="1651306640796" duration="7464000" />
+      <workItem from="1651315678694" duration="415000" />
+      <workItem from="1651321949578" duration="9000" />
+      <workItem from="1651669622619" duration="618000" />
+      <workItem from="1651694605105" duration="1470000" />
+      <workItem from="1651725446588" duration="305000" />
+      <workItem from="1651725800248" duration="24000" />
+      <workItem from="1651727335089" duration="4412000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
