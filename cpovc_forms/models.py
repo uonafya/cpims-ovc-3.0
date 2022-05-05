@@ -1405,28 +1405,28 @@ class OVCCaseLocation(models.Model):
         """To be returned by admin actions."""
         return '%s' % (str(self.case))
 
-
-class OVCBiReferral(models.Model):
-    refferal_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
-    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, default=60)
-    ref_caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, default=59, related_name='refferal_caregiver')
-    client_category = models.CharField(max_length=20, default='Caregiver')
-    refferal_urgency = models.CharField(max_length=10, default='OVC')
-    refferal_to = models.CharField(max_length=10)
-    refferal_status = models.CharField(max_length=20, default='PENDING')
-    refferal_date = models.DateField(default=datetime.date.today)
-    refferal_enddate = models.DateField(null=True)
-    refferal_service = models.CharField(max_length=10)
-    referral_grouping_id = models.UUIDField(default=uuid.uuid1, editable=False)
-    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
-    timestamp_created = models.DateTimeField(default=timezone.now)
-    timestamp_updated = models.DateTimeField(default=timezone.now)
-    is_void = models.BooleanField(default=False)
-    sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
-
-
-    class Meta:
-        db_table = 'ovc_bi_referrals'
-
-        def __unicode__(self):
-            return str(self.refferal_id)
+#
+# class OVCBiReferral(models.Model):
+#     refferal_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+#     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, default=60)
+#     ref_caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, default=59, related_name='refferal_caregiver')
+#     client_category = models.CharField(max_length=20, default='Caregiver')
+#     refferal_urgency = models.CharField(max_length=10, default='OVC')
+#     refferal_to = models.CharField(max_length=10)
+#     refferal_status = models.CharField(max_length=20, default='PENDING')
+#     refferal_date = models.DateField(default=datetime.date.today)
+#     refferal_enddate = models.DateField(null=True)
+#     refferal_service = models.CharField(max_length=10)
+#     referral_grouping_id = models.UUIDField(default=uuid.uuid1, editable=False)
+#     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+#     timestamp_created = models.DateTimeField(default=timezone.now)
+#     timestamp_updated = models.DateTimeField(default=timezone.now)
+#     is_void = models.BooleanField(default=False)
+#     sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
+#
+#
+#     class Meta:
+#         db_table = 'ovc_bi_referrals'
+#
+#         def __unicode__(self):
+#             return str(self.refferal_id)
