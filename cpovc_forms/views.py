@@ -10209,7 +10209,7 @@ def edit_case_closure(request, id):
 
     try:
 
-
+        posted_data = OVCCareCaseExit.objects.get(case_clouse_id=id, is_void=False)
         if request.method == 'POST':
             #closure_reason = request.POST.get("CASE_CL001")
             attrition_reason1 = request.POST.get("CASE_CL027")
@@ -10256,9 +10256,9 @@ def edit_case_closure(request, id):
 
             msg = 'form case closure edited successful'
             messages.add_message(request, messages.INFO, msg)
-            url = reverse('ovc_view', kwargs={'id': id})
+            url = reverse('new_case_closure', kwargs={'id': id})
             return HttpResponseRedirect(url)
-        posted_data = OVCCareCaseExit.objects.get(case_clouse_id=id)
+
 
         gotten_data = {
             'CASE_CL001': posted_data.reason,
@@ -10283,15 +10283,18 @@ def edit_case_closure(request, id):
         # pdb.set_trace()
         form = CaseClosureForm(data=gotten_data)
         return render(request, 'forms/edit_case_closure.html',
-                      {'form': form, 'status': 200})
+                        {'form': form, 'status': 200})
+
+
 
     except Exception as e:
         print("error with OVC case closure Editing - %s" % (str(e)))
         # raise e
         msg = "Error occured during OVC case closure edit"
         messages.add_message(request, messages.ERROR, msg)
-        url = reverse('ovc_view', kwargs={'id': 60})
+        url = reverse('new_case_closure', kwargs={'id': 60})
         return HttpResponseRedirect(url)
+
 
 
 
