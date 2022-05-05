@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c7d762fe-37a7-4d88-be08-a9ab473aa047" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpovc_forms/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/cpovc_forms/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpovc_forms/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/cpovc_forms/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/forms/bidirectionalreferralform.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/bidirectionalreferralform.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

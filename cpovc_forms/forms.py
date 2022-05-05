@@ -8207,7 +8207,7 @@ category_choices = (
     ('OVC','OVC')
 )
 
-# referal form
+# referral form
 
 
 class BIDIRECTIONALREFERRALFORM(forms.Form):

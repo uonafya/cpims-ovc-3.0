@@ -46,15 +46,39 @@
 
     {% for data in init_data %}
 
-        <h1 class="page-header">Referral Form <small>Bidirectional Referral Form<b>{{ data.first_name }} {{ data.surname }}
-            | {{ data.sex_id|gen_value:vals }} | {% if data.date_of_birth|gen_age == 0 %}
-                UNDER 1 YEAR
-            {% else %}
-                {{ data.date_of_birth|gen_age }} YRS
-            {% endif %}</b></small></h1>
+        <h1 class="page-header">Referral Form <small>Bidirectional Referral
+            Form<b>{{ data.first_name }} {{ data.surname }}
+                | {{ data.sex_id|gen_value:vals }} | {% if data.date_of_birth|gen_age == 0 %}
+                    UNDER 1 YEAR
+                {% else %}
+                    {{ data.date_of_birth|gen_age }} YRS
+                {% endif %}</b></small></h1>
 
     {% endfor %}
     <!-- end page-header -->
+
+
+{#    <table width="100%" class="table" >#}
+{#        <tbody>#}
+{#        <tr>#}
+{#            <td class="field">Name of Person Being#}
+{#                Referred: {{ all_domain_choices.refferal_domain }}</td>#}
+{#            <td class="field">Organization referred#}
+{#                to: {{ all_domain_choices.refferal_service }}</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td class="field">#}
+{#                Client Category#}
+{#                {{ form.CATEGORY }}#}
+{#            </td>#}
+{#            <td class="field">#}
+{#                How urgent is this referral?#}
+{#                {{ form.URGENT }}#}
+{#            </td>#}
+{#        </tr>#}
+{#        </tbody>#}
+{#    </table>#}
+
 
     <!-- #csi-warning-dialog -->
     <div class="modal fade" id="csi-warning-dialog">
@@ -161,7 +185,7 @@
                         {% csrf_token %}
                         {{ form.person }}
                         <div id="wizard-f1a">
-                            <ol>                               
+                            <ol>
                                 <li>
                                     Services
                                     <small>Services details</small>
@@ -213,7 +237,7 @@
                                                             required</p></span></small><span>
                                                     </div>
                                                 </td> {% endcomment %}
-                                                
+
                                                 <td width="15%">
                                                     {{ form.olmis_service_date }}
                                                     <div id="olmis_service_date_errormsg" style="display:none;">
@@ -282,7 +306,7 @@
 
                         </div>
                     </form>
-                </div>               
+                </div>
             </div>
             <!-- end panel -->
 
