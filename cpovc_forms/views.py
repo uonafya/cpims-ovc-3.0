@@ -1,3 +1,4 @@
+from distutils.log import error
 import re
 from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse, resolve
@@ -10171,39 +10172,34 @@ def new_cpara_upgrade(request, id):
 def grad_monitor_tool(request, id):
     if request.method == 'POST':
         data = request.POST
-        print(data)
+        # print(data)
 
-        child = RegPerson.objects.get(id=id)      
-        
+        child = RegPerson.objects.get(id=id)       
         house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
         caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
         caregiver = RegPerson.objects.get(id=caregiver_id)
-        # child= OVCRegistration.objects.get(person=child)
  
         event_date = convert_date(data.get('gm1d'))
-        month = event_date.month
-        quarter = 0
         event_type_id = 'obm'
         time_saved = timezone.now()
+
         event_counter = OVCCareEvents.objects.filter(
             event_type_id=event_type_id, person=id, is_void=False).count()
+
         # SAVE EVENT
-        ovccareevent = OVCCareEvents.objects.create(
-            event_type_id=event_type_id,
-            event_counter=event_counter,
-            event_score=0,
-            created_by=request.user.id,
-            person=RegPerson.objects.get(pk=int(id)),
-            house_hold=house_hold
-        )
-        if month in [10, 11, 12]:
-            quarter = 1
-        elif month in [1, 2, 3]:
-            quarter = 2
-        elif month in [4, 5, 6]:
-            quarter = 3
-        elif month in [7, 8, 9]:
-            quarter = 4
+        try:
+            ovccareevent = OVCCareEvents.objects.create(
+                event_type_id=event_type_id,
+                event_counter=event_counter,
+                event_score=0,
+                created_by=request.user.id,
+                person=RegPerson.objects.get(pk=int(id)),
+                house_hold=house_hold
+            )
+        except Exception as e:
+            error_message = f'Events didn\'t save : {e}'
+            print(error_message)
+       
         answer_value = {
             'AYES': True,
             'ANNO': False
@@ -10229,25 +10225,24 @@ def grad_monitor_tool(request, id):
                 event=ovccareevent,
                 timestamp_created=time_saved
             )
-            print('Data Saved successsfully')
+
         except Exception as e:
-            print('error saving graduation monitoring tool - %s' % (str(e)))
-            # return False
+            error_message = 'error saving graduation monitoring tool - %s' % (str(e))
+            messages.add_message(request, messages.INFO, error_message)
+
         msg = 'Graduation Monitoring saved successful'
         messages.add_message(request, messages.INFO, msg)
         url = reverse('ovc_view', kwargs={'id': id})
-        return HttpResponseRedirect(url)
-    else:
-        form = gradMonitoringToolform()
+        return HttpResponseRedirect(url)        
 
+    else:
         ovc_id = int(id)
-        child = RegPerson.objects.get(is_void=False, id=ovc_id)
-        
+        child = RegPerson.objects.get(is_void=False, id=ovc_id)        
         care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
         creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
         caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
         caregiver = RegPerson.objects.get(id=caregiver_id)
-        print(f'>>>>>>>>>>>>>>>>>{caregiver}')
+
         # Show previous cpara monitoring events
         event = OVCCareEvents.objects.filter(person_id=ovc_id).values_list('event')
         
@@ -10255,48 +10250,49 @@ def grad_monitor_tool(request, id):
             benchmark_data = OVCBenchmarkMonitoring.objects.filter(is_void=False)   #filter(event=event).order_by('event_date'))
         except Exception as e:
             print(e)
+        
+        form = gradMonitoringToolform()
              
-    context = {
-        'form': form, 
-        'care_giver': care_giver,
-        'creg':creg,
-        'child':child,
-        'ovc_id':ovc_id,
-        'caregiver':caregiver,
-        'benchmark_data': benchmark_data
-        }
-    return render(request, 'forms/new_grad_monitor_tool.html',
-                context)
+        context = {
+            'form': form, 
+            'care_giver': care_giver,
+            'creg':creg,
+            'child':child,
+            'ovc_id':ovc_id,
+            'caregiver':caregiver,
+            'benchmark_data': benchmark_data
+            }
+        
+        return render(request, 'forms/new_grad_monitor_tool.html',context)
 
 def delete_benchmark(request, id):
     ovc_bench = OVCBenchmarkMonitoring.objects.filter(obm_id=id)
+
     # Gets the instance
     household1 =OVCBenchmarkMonitoring.objects.get(obm_id=id)
     re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).person.id
     
-    ovc_bench.update(is_void=True)    
+    ovc_bench.update(is_void=True)
     url = reverse('ovc_view', kwargs={'id':re_person})
     msg=f"Event id: {id} deleted successfully"
-    messages.add_message(request, messages.INFO, msg)
+    messages.add_message(request, messages.WARNING, msg)
     return HttpResponseRedirect(url)    
 
     
 def edit_grad_monitor(request, id):
     
     if request.method=='POST':
-        import pdb
         data=request.POST
         answer_value = {
             'AYES': True,
             'ANNO': False
         }
+
         event_date = convert_date(data.get('gm1d'))
-        # event_date = datetime.strptime(event_date,'%d-%M-%Y').date()
         time_updated = timezone.now()
-        household=OVCBenchmarkMonitoring.objects.filter(obm_id=id)
         household1 =OVCBenchmarkMonitoring.objects.get(obm_id=id)
         re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).person.id
-        # pdb.set_trace()
+        
         try:
             OVCBenchmarkMonitoring.objects.filter(obm_id=id).update(
                     benchmark1=answer_value[data.get('cm2q')],
@@ -10313,8 +10309,7 @@ def edit_grad_monitor(request, id):
                     event_date=event_date,
                     timestamp_updated = time_updated,
                     
-                )
-            
+                )         
            
             
         except Exception as e:
@@ -10322,10 +10317,10 @@ def edit_grad_monitor(request, id):
 
         msg = 'Graduation Monitoring edit saved successful'
         messages.add_message(request, messages.INFO, msg)
-        # url= reverse('forms/new_grad_monitor_tool.html', kwargs={'id':id})
         url = reverse('ovc_view', kwargs={'id':re_person})
         return HttpResponseRedirect(url)
     
+    # Get Method to pick the values of edit form
     try:
         data_db = OVCBenchmarkMonitoring.objects.filter(obm_id=id).values()
         def map_yes_no(value):
@@ -10333,10 +10328,9 @@ def edit_grad_monitor(request, id):
                 return 'AYES'
             else:
                 return 'ANNO'
-        date_updated = data_db[0]['timestamp_created']
-        # import pdb
+
         edit_data= {
-            'gm1d': data_db[0]['event_date'].strftime("%d-%b-%Y"),
+            'gm1d': data_db[0]['event_date'].strftime("%Y-%m-%d"),
             'cm2q': map_yes_no(data_db[0]['benchmark1']),
             'cm3q': map_yes_no(data_db[0]['benchmark2']),
             'cm4q': map_yes_no(data_db[0]['benchmark3']),
@@ -10351,34 +10345,35 @@ def edit_grad_monitor(request, id):
             
 
         }
-        # pdb.set_trace()
         
         
     except Exception as e:
         print(f'The error is: {e}')
-            # return HttpResponseRedirect('/forms/new_grad_monitor_tool.html')?
-    import pdb
+
+    form = gradMonitoringToolform(data=edit_data)
+
     household1 =OVCBenchmarkMonitoring.objects.get(obm_id=id)
     re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).person.id
-    form = gradMonitoringToolform(data=edit_data)
+    
     ovc_id = int(re_person)
     child = RegPerson.objects.get(is_void=False, id=ovc_id)
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
     creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
     caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
     caregiver = RegPerson.objects.get(id=caregiver_id)
-    benchmark_data = OVCBenchmarkMonitoring.objects.filter(obm_id=id,is_void=False).values_list()[0][3]
-    if benchmark_data == 'bm':
-        benchmark_data = 'Benchmark Monitoring'
+    form_type = OVCBenchmarkMonitoring.objects.filter(obm_id=id,is_void=False).values_list()[0][3]
+    
+    if form_type == 'bm':
+        form_type = 'Benchmark Monitoring'
     else:
-        benchmark_data = 'Households Reaching Case Plan Achievement'
-    # pdb.set_trace()
+        form_type = 'Households Reaching Case Plan Achievement'
+    
     context = {'form':form,
             'status': 200,
             'care_giver': care_giver,
             'creg':creg,
             'caregiver':caregiver,
-            'benchmark':benchmark_data
+            'form_type':form_type
                     }
         
     return render(request, 'forms/edit_grad_monitor_tool.html', context)

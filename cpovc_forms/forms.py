@@ -8596,9 +8596,3 @@ class gradMonitoringToolform(forms.Form):
             attrs={'data-parsley-required': 'true',
                     'data-parsley-errors-container': "#signed_csac_error"
             }))
-    cm15q = forms.CharField(widget=forms.Textarea(
-        attrs={'placeholder': _('Reccomended action'),
-               'class': 'form-control',
-               'id': 'education_comments',
-               'data-parsley-group': 'group0',
-               'rows': '3'}))
