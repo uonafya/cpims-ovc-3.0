@@ -175,6 +175,20 @@ urlpatterns = [
     # Bireferral Form
     re_path('bidirectionalreferralform/new/(?P<id>\d+)/', views.bidirectionalreferralform, name='bidirectionalreferralform'),
 
+    # Edit Bidirection Referal
+    re_path('referal/edit/(?P<id>\d+)/(?P<btn_event_type>\w+)/(?P<btn_event_pk>.+)/', views.edit_referal,
+            name='edit_referal'),
+
+    # update referals
+    path('referal/update/', views.update_referal, name='update_referal'),
+
+    # Delete referal
+    re_path('referal/delete/(?P<id>\d+)/(?P<btn_event_type>\w+)/(?P<btn_event_pk>.+)/', views.delete_referal,
+            name='delete_referal'),
+
+    #Manage referal events
+    path('referals/manage/', views.manage_referal_events, name='manage_referal_events'),
+
     # Delete Bireferral
     re_path('delete_bireferral/(?P<id>\d+)/', views.delete_bireferral, name='delete_bireferral'),
 
@@ -185,5 +199,6 @@ urlpatterns = [
     # Save Referal
     re_path('save_referal/(?P<id>\d+)/', views.save_referal, name='save_referal' ),
 
+    # Delete Referal
     path('delete_referral/<id>', views.delete_referral, name='deletereferral')
 ]
