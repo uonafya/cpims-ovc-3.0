@@ -9793,7 +9793,7 @@ def new_dreamsform(request, id):
 def new_cpara_upgrade(request, id):
     if request.method == 'POST':
         data = request.POST
-        # print (data)
+        print (data)
         
         import pdb
         child = RegPerson.objects.get(id=id)
@@ -9803,7 +9803,6 @@ def new_cpara_upgrade(request, id):
       
             
         questions = OVCCareQuestions.objects.filter(code__startswith='CP', is_void=False).values()
-        exceptions = ['cp2d', 'd_o_a']
         date_of_event = data.get('d_o_a')
         event = OVCCareEvents.objects.create(
                 event_type_id='cpr',
@@ -9815,15 +9814,10 @@ def new_cpara_upgrade(request, id):
         
 
         for question in questions: 
-            # print (id, question, answer, house, caregiver, event, date_event, exceptions) 
-            if question['code'] == 'CP2d':
-                if data.get('CP2d') is not None:
-                    date_previous=data.get('CP2d')
-                else:
-                    date_previous='1900-01-01'
-
+            date_previous=data.get('CP2d')
+          
             answer = data.get(question['code'])
-            print(answer)
+            
             if answer is None:
                 answer = 'No'
             elif answer == 'AYES':
@@ -9832,6 +9826,9 @@ def new_cpara_upgrade(request, id):
                 answer=False
             else:
                 answer='No'    
+
+            event_date = convert_date(data.get('d_o_a'),'%Y-%m-%d')
+            
             try:
                 OVCCareCpara_upgrade.objects.create(
                     person=child,
@@ -9843,13 +9840,14 @@ def new_cpara_upgrade(request, id):
                     question_type=question['question_type'],
                     domain=question['domain'],
                     event=event,
-                    date_of_event=convert_date(data.get('d_o_a'),'%Y-%m-%d'),
+                    date_of_event=event_date,
                     date_of_previous_event=date_previous, 
                 )
                     
             except Exception as e:
                 print(f'The OVC Cpara Form didnt save:  {e}')
 
+        # converts the filtered objects to a list
         ovc_score = data.get('bench_array').replace('[', '').replace(']', '').split(',')
 
         pdb.set_trace()
@@ -10119,6 +10117,9 @@ def edit_cpara_upgrade(request, id):
         # cpara_id=OVCCareCpara_upgrade.objects.get(event=id,is_void=False)
     import pdb
     cpara_data=OVCCareCpara_upgrade.objects.filter(event=id,is_void=False).values()
+
+    # Get an event date of a single question for that event id
+    d_o_a=OVCCareCpara_upgrade.objects.get(event=id,is_void=False,question_code='CP10q').date_of_event
     # date_event = cpara_data.get('date_of_event')
    
     # pull OVC sub population get
@@ -10144,17 +10145,19 @@ def edit_cpara_upgrade(request, id):
     for one_data in cpara_data:
         one_data_q = one_data.get('question_code')
         one_data_a = one_data.get('answer')
-        if one_data_q == 'CP2d':
+        if one_data_q == 'CP2d' and one_data_a == 'No':
             one_data_a
             edit_data_cpara[one_data_q]=one_data_a
+            edit_data_cpara['CP2d']='1900-01-01'
         else:
             one_data_a = answer_value[one_data_a]
             edit_data_cpara[one_data_q]=one_data_a
     
     # edit_data_cpara['d_o_a'] = date_event
     edit_data_cpara.update(ovc_sub_pop_data)
+    edit_data_cpara['d_o_a']=d_o_a
     # print(edit_data_cpara)
-
+    
     answer_data = {
         'YES': True 
     }
@@ -10223,7 +10226,7 @@ def edit_cpara_upgrade(request, id):
         subcounty = SetupGeography.objects.get(area_id=ward.parent_area_id)
         county = SetupGeography.objects.get(area_id=subcounty.parent_area_id)
 
-    
+    print(edit_data_cpara)
     form = CparaAssessmentUpgrade(data=edit_data_cpara)
     ovc_id = int(person_id)
     child = RegPerson.objects.get(is_void=False, id=ovc_id)

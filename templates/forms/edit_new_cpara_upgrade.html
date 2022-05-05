@@ -122,10 +122,11 @@ print(blu.sing("'Happy'"))
                                 <div class="wizard-step-1">
                                     <div class="panel-body">
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label class="control-label formlabel">Date of Assessment:</label><br/>
-                                                    <input type="text" class="form-control display-flex flex-direction-row flex-grow" name="d_o_a">
+                                                    <!-- <input type="text" class="form-control display-flex flex-direction-row flex-grow" name="d_o_a"> -->
+                                                    {{ form.d_o_a }}
                                                 </div>
                                             </div>                                           
                                         </div>
@@ -1703,8 +1704,11 @@ print(blu.sing("'Happy'"))
 jQuery(document).ready(function()
 {
     // date = new Date(edit_data_cpara.d_o_a)
+    // date = $("#hidden_div").append(
+    //     `<input value=${new Date().getDate()} type=hidden>`
+    // )
+    // $('input[name=d_o_a]').datepicker().val('2020-01-01')
 
-    $('input[name=d_o_a]').datepicker().val('12/12/2020')
 	// $('input[name="d_o_a"]').val(edit_data_cpara.d_o_a);
 	//multi selects
     $('#hhva_ha6, #hhva_ha21, #hhva_ha22, #hhva_ha28, #hhva_ha29, #hhva_ha30, #hhva_ha31').multiselect({

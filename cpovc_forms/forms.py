@@ -7630,6 +7630,13 @@ class CparaAssessmentUpgrade(forms.Form):
     # Details
     
 
+    d_o_a = forms.DateField(widget=forms.TextInput(
+        attrs={'class': 'form-control',
+               'id': 'assessment_date',
+            #    'data-parsley-required': "true",
+            #    'data-parsley-group': 'group1'
+            #    'type': 'hidden'
+               }))
     CP1d = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
@@ -7832,7 +7839,7 @@ class CparaAssessmentUpgrade(forms.Form):
         choices=(('AYES', "YES"), ('ANNO', "NO"), ('ANA', "N/A")),
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
+            attrs={'data-parsley-required': 'false'}))
     
     CP27q = forms.ChoiceField(
         choices=YESNO_CHOICES,

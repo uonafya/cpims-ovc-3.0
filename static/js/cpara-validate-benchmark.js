@@ -1,6 +1,8 @@
 // validBench(['CP3d','CP4d','CP5d','CP6d','if_ovc', 'CP1q', 'CP3q', 'CP4q'], ['AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'CP1b');
 
-
+jQuery(document).ready(function()
+{
+	
 // Healthy Goal 1 >> Benchmark 1
 validBench(['CP1q', 'CP2q', 'CP3q', 'CP4q', 'CP5q'], ['AYES','AYES','AYES','AYES','AYES'], 'CP1b');
 // Healthy Goal 2 >> Benchmark 2
@@ -25,6 +27,7 @@ validBench(['CP32q'],['AYES'],'CP8b')
 // Schooled: Goal 8: Benachmark 9
 validBench(['CP33q','CP34q','CP35q','CP36q'],['AYES','AYES','AYES','AYES'],'CP9b')
 
+});
 
 validDate('CP2d','CP1d','AYES','ANNO');
 // validDate('CP2q','CP1q','ANNO','AYES');
@@ -344,20 +347,21 @@ function markBenchmark(benchmarkId, passOrFail) {
         $('input[name='+benchmarkId+']').attr('disabled', true);
     }
 }
-
+// validDate('CP2d','CP1d','AYES','ANNO');
 function validDate(dateFieldName, radioToCheck, rightValue, wrongValue) {
-    $('input[name='+dateFieldName+']').attr('disabled', true);
+    // $('input[name='+dateFieldName+']').attr('disabled', true);
 	$('input[name='+radioToCheck+']').change(function(){
 		var valu = $(this).val();
 		if(valu === rightValue){
-			$('input[name='+dateFieldName+']').val('');
-			$('input[name='+dateFieldName+']').attr('disabled', true);
+			$('input[name='+dateFieldName+']').datepicker().val('1900-01-01');
+			// $('input[name='+dateFieldName+']').attr('readonly', true);
 			$('input[name='+dateFieldName+']').removeAttr('required');
 			$('input[name='+dateFieldName+']').attr('data-parsley-required', false);
-			$('input[name='+dateFieldName+']').removeClass('parsley-error');
-            var dpid = $('input[name='+dateFieldName+']').attr('data-parsley-id');
-            $('#parsley-id-'+dpid).addClass('hidden');
+			// $('input[name='+dateFieldName+']').removeClass('parsley-error');
+            // var dpid = $('input[name='+dateFieldName+']').attr('data-parsley-id');
+            // $('#parsley-id-'+dpid).addClass('hidden');
 		}else if(valu === wrongValue){
+            $('input[name='+dateFieldName+']').attr('readonly', false);
 			$('input[name='+dateFieldName+']').attr('data-parsley-required', true);
 			$('input[name='+dateFieldName+']').val('');
 			$('input[name='+dateFieldName+']').removeAttr('disabled');
