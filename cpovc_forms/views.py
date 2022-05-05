@@ -9850,7 +9850,7 @@ def new_cpara_upgrade(request, id):
         # converts the filtered objects to a list
         ovc_score = data.get('bench_array').replace('[', '').replace(']', '').split(',')
 
-        pdb.set_trace()
+        # pdb.set_trace()
         try:
             OVCCareBenchmarkScore.objects.create(
                 household=house_hold,
@@ -9891,7 +9891,6 @@ def new_cpara_upgrade(request, id):
         return HttpResponseRedirect(url)
 
     
-        # get relations
     guardians = RegPersonsGuardians.objects.select_related().filter(
         child_person=id, is_void=False, date_delinked=None)
     siblings = RegPersonsSiblings.objects.select_related().filter(
@@ -9915,7 +9914,6 @@ def new_cpara_upgrade(request, id):
     hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
     hhmembers2 = hhmqs.exclude(person_id=id)
     hhmembers = hhmembers2.exclude(person=care_giver)
-
     # Get child geo
     child_geos = RegPersonsGeo.objects.select_related().filter(
         person=child, is_void=False, date_delinked=None)
@@ -9940,8 +9938,6 @@ def new_cpara_upgrade(request, id):
     if all_geos_county:
         geo_county = ', '.join(all_geos_county)
     # geo_wards = geo_wards
-
-    # geo_wards = geo_wards
     if geo_wards is None:
         ward = None
         subcounty = None
@@ -9952,6 +9948,7 @@ def new_cpara_upgrade(request, id):
         subcounty = SetupGeography.objects.get(area_id=ward.parent_area_id)
         county = SetupGeography.objects.get(area_id=subcounty.parent_area_id)
 
+    # orgunit = RegPersonsOrgUnits.objects.get(person=child)
     form = CparaAssessmentUpgrade()
     ovc_id = int(id)
     child = RegPerson.objects.get(is_void=False, id=ovc_id)
@@ -10159,7 +10156,7 @@ def edit_cpara_upgrade(request, id):
     edit_data_cpara['d_o_a']=d_o_a
     edit_data_cpara['CP2d']=CP2d
     # print(edit_data_cpara)
-    pdb.set_trace()
+    # pdb.set_trace()
     answer_data = {
         'YES': True 
     }

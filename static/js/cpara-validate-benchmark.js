@@ -1,28 +1,21 @@
-// validBench(['CP3d','CP4d','CP5d','CP6d','if_ovc', 'CP1q', 'CP3q', 'CP4q'], ['AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'CP1b');
-
 jQuery(document).ready(function()
 {
-	
-// Healthy Goal 1 >> Benchmark 1
+// Benchmark 1
 validBench(['CP1q', 'CP2q', 'CP3q', 'CP4q', 'CP5q'], ['AYES','AYES','AYES','AYES','AYES'], 'CP1b');
-// Healthy Goal 2 >> Benchmark 2
+// Benchmark 2
 validBench(['CP6q','CP7q','CP8q','CP9q','CP10q','CP11q','CP12q','CP13q','CP14q'], ['AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'CP2b');
-
-// validBench(['CPhealth15','CPhealth16','CPhealth17'],['AYES','AYES','AYES'],'CPhealth18')
-// validBench(['CPhealth15','CPhealth16','CPhealth17'],['AYES','AYES','AYES'],'CPhealth19')
-// validBench(['CPhealth15','CPhealth16','CPhealth17'],['AYES','AYES','AYES'],'CPhealth20')
 
 // Healthy Goal 3 >> Benchmark 3
 validBench(['CP15q','CP16q','CP17q'],['AYES','AYES','AYES'],'CP3b')
 // Healthy Goal 4 >> Benchmark 4
 validBench(['CP18q', 'CP19q', 'CP20q', 'CP21q'], ['AYES','AYES', 'AYES','AYES'], 'CP4b');
-// Stable: Goal 5:
+// Stable: Goal 5: >> Benchmark 5
 validBench(['CP22q','CP23q','CP24q'], ['AYES','AYES','AYES'], 'CP5b');
-// Safe: Goal 6:Benchmark 6
+// Safe: Goal 6 >> Benchmark 6
 validBench(['CP25q','CP26q','CP27q','CP28q', 'CP29q'],['AYES','AYES','AYES,ANA','AYES','AYES'],'CP6b')
 // Safe: Benchmark 7:
 validBench(['CP30q','CP31q'],['AYES','AYES'],'CP7b')
-// Safe: Goal 8q
+// Safe: Goal 8  >> Benchmark 8
 validBench(['CP32q'],['AYES'],'CP8b')
 // Schooled: Goal 8: Benachmark 9
 validBench(['CP33q','CP34q','CP35q','CP36q'],['AYES','AYES','AYES','AYES'],'CP9b')
@@ -30,7 +23,7 @@ validBench(['CP33q','CP34q','CP35q','CP36q'],['AYES','AYES','AYES','AYES'],'CP9b
 });
 
 validDate('CP2d','CP1d','AYES','ANNO');
-// validDate('CP2q','CP1q','ANNO','AYES');
+
 validDate('children_rsk_hiv_assess_date','CP1q','ANNO','AYES');
 
 
@@ -140,12 +133,15 @@ $('input[type=radio]').change(function (e) {
    
     $('input[name=CP74q]').val(benchmarkScore); //  Overall number of points
 
+    total_score = healthScore+stableScore+safeScore+schoolScore
+
+
     $('input[name=p75q]').val(healthScore); // Healthy Domain
     $('input[name=p76q]').val(stableScore); // Stable Domain
     $('input[name=p77q]').val(safeScore); // Safe Domain
     $('input[name=p78q]').val(schoolScore); // Schooled Domain
-    $('input[name=p79q]').val(healthScore+stableScore+safeScore+schoolScore); //Total Score
-    total_score = healthScore+stableScore+safeScore+schoolScore
+    $('input[name=p79q]').val(total_score); //Total Score
+    
     $('input[name=CP_b_total]').val(total_score); //Total Score
     $('input[name=bench_array]').val(JSON.stringify(bench_array));
     console.log('benchmark_score => '+JSON.stringify(bench_array));
@@ -281,7 +277,7 @@ function validBench(arrayOfInputsToCheck, arrayOfExpectedValues, idOfBenchmarkQn
                 }
             }
            
-           
+           return
         });
         
         if(proceed == arrayOfInputsToCheck.length){
