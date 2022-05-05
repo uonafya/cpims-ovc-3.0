@@ -7718,30 +7718,32 @@ def delete_form1a(request, id, btn_event_type, btn_event_pk):
 def delete_referal(request, id, btn_event_type, btn_event_pk):
     jsonForm1AData = []
     msg = ''
-
     try:
         event_id = uuid.UUID(btn_event_pk)
-        event = OVCCareEvents.objects.filter(pk=event_id)
-        print("we are here")
-        if event:
-            if btn_event_type == 'ASSESSMENT':
-                OVCCareAssessment.objects.filter(event=event).delete()
-            elif btn_event_type == 'PRIORITY':
-                OVCCarePriority.objects.filter(event=event).delete()
-            elif 'CRITICAL' in btn_event_type:
-                OVCCareEAV.objects.filter(event=event).delete()
-            elif btn_event_type == 'SERVICES':
-                OVCCareServices.objects.filter(event=event).delete()
-            msg = 'Deleted successfully'
-
+        d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created
+        delta = get_days_difference(d_event)
+        if delta < 90:
+            event = OVCCareEvents.objects.filter(pk=event_id)
+            print("we are here")
+            if event:
+                if btn_event_type == 'ASSESSMENT':
+                    OVCCareAssessment.objects.filter(event=event).delete()
+                elif btn_event_type == 'PRIORITY':
+                    OVCCarePriority.objects.filter(event=event).delete()
+                elif 'CRITICAL' in btn_event_type:
+                    OVCCareEAV.objects.filter(event=event).delete()
+                elif btn_event_type == 'SERVICES':
+                    OVCCareServices.objects.filter(event=event).delete()
+                msg = 'Deleted successfully'
+        else:
+            msg = "Can't delete after 90 days"
     except Exception as e:
         msg = 'An error occured : %s' % str(e)
         print(str(e))
     jsonForm1AData.append({'msg': msg})
     return JsonResponse(jsonForm1AData,
                         content_type='application/json',
-                        safe=True)
-
+                        safe=False)
 
 @login_required(login_url='/')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -10520,33 +10522,33 @@ def bidirectional(request, id):
                   'care_giver': care_giver})
 
 
-def save_referal(request, id):
-    import pdb
-
-
-    child = RegPerson.objects.get(id=id)
-    house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-    event_type_id = 'CPAR'
-
-
-    qry_saver = OVCBiReferral(
-        ref_caregiver = child,
-        person = child,
-        client_category = request.GET['category'],
-        refferal_urgency = request.GET['urgent'],
-        # refferal_to = request.GET[],
-        refferal_date = request.GET['ref_date'],
-        refferal_enddate = request.GET['ref_end_date'],
-        refferal_service = request.GET['referral_service[]']
-        # event = ovccareevent
-    ).save()
-    # pdb.set_trace()
-
-    success: {
-        'message': 'worked',
-    }
-
-    return JsonResponse(success)
+# def save_referal(request, id):
+#     import pdb
+#
+#
+#     child = RegPerson.objects.get(id=id)
+#     house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+#     event_type_id = 'CPAR'
+#
+#
+#     qry_saver = OVCBiReferral(
+#         ref_caregiver = child,
+#         person = child,
+#         client_category = request.GET['category'],
+#         refferal_urgency = request.GET['urgent'],
+#         # refferal_to = request.GET[],
+#         refferal_date = request.GET['ref_date'],
+#         refferal_enddate = request.GET['ref_end_date'],
+#         refferal_service = request.GET['referral_service[]']
+#         # event = ovccareevent
+#     ).save()
+#     # pdb.set_trace()
+#
+#     success: {
+#         'message': 'worked',
+#     }
+#
+#     return JsonResponse(success)
 
 
 # def delete_referral(request, id):
@@ -10564,3 +10566,68 @@ def delete_referral(request, id):
     return redirect('bidirectional', id=new_eval.person_id)
 
 
+def save_referal(request):
+    jsonResponse = []
+    try:
+        if request.method == 'POST':
+            # get CBO
+            org_unit = None
+            ou_primary = request.session.get('ou_primary')
+            ou_attached = request.session.get('ou_attached')
+            ou_attached = ou_attached.split(',');
+
+            event_type_id = 'FSAM'
+            args = int(request.POST.get('args'))
+            person = request.POST.get('person')
+
+            if args == 4:
+                date_of_service = request.POST.get('date_of_service')
+                if date_of_service:
+                    date_of_service = convert_date(date_of_service)
+
+                # Save F1AEvent
+                event_counter = OVCCareEvents.objects.filter(event_type_id=event_type_id, person=person,
+                                                             is_void=False).count()
+                ovccareevent = OVCCareEvents(
+                    event_type_id=event_type_id,
+                    event_counter=event_counter,
+                    event_score=0,
+                    date_of_event=date_of_service,
+                    created_by=request.user.id,
+                    person=RegPerson.objects.get(pk=int(person))
+                )
+                ovccareevent.save()
+                new_pk = ovccareevent.pk
+
+                # Support/Services
+                olmis_service_provided_list = request.POST.get('olmis_service_provided_list')
+                if olmis_service_provided_list:
+                    olmis_service_data = json.loads(olmis_service_provided_list)
+                    # print 'olmis_service_data >> %s' % olmis_service_data
+                    org_unit = ou_primary if ou_primary else ou_attached[0]
+
+                    for service_data in olmis_service_data:
+                        service_grouping_id = new_guid_32()
+                        olmis_domain = service_data['olmis_domain']
+                        olmis_service_date = service_data['olmis_service_date']
+                        olmis_service_date = convert_date(olmis_service_date) if olmis_service_date != 'None' else None
+                        olmis_service = service_data['olmis_service']
+                        print('olmis_service: %s' % olmis_service)
+                        services = olmis_service.split(',')
+                        for service in services:
+                            OVCBiReferral(
+                                #domain=olmis_domain,
+                                refferal_service=service,
+                                #service_provider=org_unit,
+                                # place_of_service = olmis_place_of_service,
+                                refferal_enddate=olmis_service_date,
+                                event=OVCCareEvents.objects.get(pk=new_pk),
+                                referral_grouping_id=service_grouping_id
+                            ).save()
+
+            msg = 'Save Successful'
+            jsonResponse.append({'msg': msg})
+    except Exception as e:
+        msg = 'Save Error: (%s)' % (str(e))
+    jsonResponse.append({'msg': msg})
+    return JsonResponse(jsonResponse, content_type='application/json', safe=False)

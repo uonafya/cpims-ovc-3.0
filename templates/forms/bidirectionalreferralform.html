@@ -549,7 +549,7 @@
                     if (date_of_assessment) {
                         values['date_of_assessment'] = date_of_assessment;
                         $.ajax({
-                            url: '{% url 'save_form1a' %}',
+                            url: '{% url 'save_referal' %}',
                             dataType: 'json',
                             method: 'POST',
                             data: valu3es,
@@ -598,7 +598,7 @@
                     if (date_of_cevent) {
                         values['date_of_cevent'] = date_of_cevent;
                         $.ajax({
-                            url: '{% url 'save_form1a' %}',
+                            url: '{% url 'save_referal' %}',
                             dataType: 'json',
                             method: 'POST',
                             data: values,
@@ -648,7 +648,7 @@
                     if (date_of_priority) {
                         values['date_of_priority'] = date_of_priority;
                         $.ajax({
-                            url: '{% url 'save_form1a' %}',
+                            url: '{% url 'save_referal' %}',
                             dataType: 'json',
                             method: 'POST',
                             data: values,
@@ -698,7 +698,7 @@
                     if (date_of_service) {
                         values['date_of_service'] = date_of_service;
                         $.ajax({
-                            url: '{% url 'save_form1a' %}',
+                            url: '{% url 'save_referal' %}',
                             dataType: 'json',
                             method: 'POST',
                             data: values,
@@ -1533,7 +1533,7 @@
                     } else {
                         $('#success_message').css({'display': 'block'});
                         $('#success_message p').html(result[0].msg);
-                        $('#error-message-reuse').css({'display': 'none'});
+                        $('#error-messadge-reuse').css({'display': 'none'});
                         $('#error_message').css({'display': 'none'});
                         var personId = $('#person').val();
                         var url = "{% url 'bidirectionalreferralform' id=1234%}".replace(/1234/, personId.toString());
