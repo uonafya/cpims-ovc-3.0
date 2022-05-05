@@ -10056,6 +10056,7 @@ def edit_cpara_upgrade(request, id):
         try:
             for question in cpara_saved:
                 answer=data.get(question.question_code)
+                print(type(answer))
                 if answer is None:
                     answer = 'No'
                 elif answer == 'AYES':
@@ -10119,7 +10120,8 @@ def edit_cpara_upgrade(request, id):
     cpara_data=OVCCareCpara_upgrade.objects.filter(event=id,is_void=False).values()
 
     # Get an event date of a single question for that event id
-    d_o_a=OVCCareCpara_upgrade.objects.get(event=id,is_void=False,question_code='CP10q').date_of_event
+    d_o_a=OVCCareCpara_upgrade.objects.get(event=id, question_code='CP10q').date_of_event
+    CP2d=OVCCareCpara_upgrade.objects.get(event=id, question_code='CP10q').date_of_previous_event
     # date_event = cpara_data.get('date_of_event')
    
     # pull OVC sub population get
@@ -10145,10 +10147,9 @@ def edit_cpara_upgrade(request, id):
     for one_data in cpara_data:
         one_data_q = one_data.get('question_code')
         one_data_a = one_data.get('answer')
-        if one_data_q == 'CP2d' and one_data_a == 'No':
+        if one_data_q == 'CP2d':
             one_data_a
             edit_data_cpara[one_data_q]=one_data_a
-            edit_data_cpara['CP2d']='1900-01-01'
         else:
             one_data_a = answer_value[one_data_a]
             edit_data_cpara[one_data_q]=one_data_a
@@ -10156,8 +10157,9 @@ def edit_cpara_upgrade(request, id):
     # edit_data_cpara['d_o_a'] = date_event
     edit_data_cpara.update(ovc_sub_pop_data)
     edit_data_cpara['d_o_a']=d_o_a
+    edit_data_cpara['CP2d']=CP2d
     # print(edit_data_cpara)
-    
+    pdb.set_trace()
     answer_data = {
         'YES': True 
     }
