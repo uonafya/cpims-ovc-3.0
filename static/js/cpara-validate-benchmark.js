@@ -70,37 +70,7 @@ $('input[name=CP8b]').click(function(){return false;});
 // $('input[name=CP9b]').attr('disabled', true);
 $('input[name=CP9b]').click(function(){return false;});
 
-// // $('input[name=CP10b]').attr('disabled', true);
-// $('input[name=CP10b]').click(function(){return false;});
 
-// // $('input[name=CP11b]').attr('disabled', true);
-// $('input[name=CP11b]').click(function(){return false;});
-
-// // $('input[name=CP12b]').attr('disabled', true);
-// $('input[name=CP12b]').click(function(){return false;});
-
-// // $('input[name=CP13b]').attr('disabled', true);
-// $('input[name=CP13b]').click(function(){return false;});
-
-// // $('input[name=CP14b]').attr('disabled', true);
-// $('input[name=CP14b]').click(function(){return false;});
-
-// // $('input[name=CP15b]').attr('disabled', true);
-// $('input[name=CP15b]').click(function(){return false;});
-
-// // $('input[name=CP16b]').attr('disabled', true);
-// $('input[name=CP16b]').click(function(){return false;});
-
-// // $('input[name=CP17b]').attr('disabled', true);
-// $('input[name=CP17b]').click(function(){return false;});
-
-
-// disable benchmark editing
-
-// benchmark score after change of last benchmark radio
-// $('input[name=CP17b], input[name=CP1b], input[name=CP2b], input[name=CP3b], input[name=CP4b], input[name=CP5b], input[name=CP6b], input[name=CP7b], input[name=CP8b], input[name=CP9b], input[name=CP10b], input[name=CP11b], input[name=CP12b], input[name=CP13b], input[name=CP14b], input[name=CP15b], input[name=CP16b], input[name=CP17b]').change(function (e) { 
-
-// $('input[name=CP17b]').change(function (e) {  
 $('input[type=radio]').change(function (e) {  
     var CP1b = $('input[name=CP1b]:checked').val();
     if(CP1b === 'AYES'){CP1b = 1;}
@@ -147,45 +117,6 @@ $('input[type=radio]').change(function (e) {
     else{CP9b = 0;}
     console.log('benchScore CP9b=> '+CP9b);
 
-    // var CP10b = $('input[name=CP10b]:checked').val();
-    // if(CP10b === 'AYES'){CP10b = 1;}
-    // else{CP10b = 0;}
-    // console.log('benchScore CP10b=> '+CP10b);
-
-    // var CP11b = $('input[name=CP11b]:checked').val();
-    // if(CP11b === 'AYES'){CP11b = 1;}
-    // else{CP11b = 0;}
-    // console.log('benchScore CP11b=> '+CP11b);
-
-    // var CP12b = $('input[name=CP12b]:checked').val();
-    // if(CP12b === 'AYES'){CP12b = 1;}
-    // else{CP12b = 0;}
-    // console.log('benchScore CP12b=> '+CP12b);
-
-    // var CP13b = $('input[name=CP13b]:checked').val();
-    // if(CP13b === 'AYES'){CP13b = 1;}
-    // else{CP13b = 0;}
-    // console.log('benchScore CP13b=> '+CP13b);
-
-    // var CP14b = $('input[name=CP14b]:checked').val();
-    // if(CP14b === 'AYES'){CP14b = 1;}
-    // else{CP14b = 0;}
-    // console.log('benchScore CP14b=> '+CP14b);
-
-    // var CP15b = $('input[name=CP15b]:checked').val();
-    // if(CP15b === 'AYES'){CP15b = 1;}
-    // else{CP15b = 0;}
-    // console.log('benchScore CP15b=> '+CP15b);
-
-    // var CP16b = $('input[name=CP16b]:checked').val();
-    // if(CP16b === 'AYES'){CP16b = 1;}
-    // else{CP16b = 0;}
-    // console.log('benchScore CP16b=> '+CP16b);
-
-    // var CP17b = $('input[name=CP17b]:checked').val();
-    // if(CP17b === 'AYES'){CP17b = 1;}
-    // else{CP17b = 0;}
-    // console.log('benchScore CP17b=> '+CP17b);
     
     benchmarkScore =  parseFloat(CP1b) + parseFloat(CP2b) + parseFloat(CP3b) + parseFloat(CP4b) + parseFloat(CP5b) + parseFloat(CP6b) + parseFloat(CP7b) + parseFloat(CP8b) + parseFloat(CP9b) // + parseFloat(CP10b) + parseFloat(CP11b) + parseFloat(CP12b) + parseFloat(CP13b) + parseFloat(CP14b) + parseFloat(CP15b) + parseFloat(CP16b) + parseFloat(CP17b);
     healthScore = parseFloat(CP1b)+parseFloat(CP2b)+parseFloat(CP3b)+parseFloat(CP4b)
@@ -206,14 +137,7 @@ $('input[type=radio]').change(function (e) {
     bench_array.push( CP7b );
     bench_array.push( CP8b );
     bench_array.push( CP9b );
-    // bench_array.push( CP10b );
-    // bench_array.push( CP11b );
-    // bench_array.push( CP12b );
-    // bench_array.push( CP13b );
-    // bench_array.push( CP14b );
-    // bench_array.push( CP15b );
-    // bench_array.push( CP16b );
-    // bench_array.push( CP17b );
+   
     $('input[name=CP74q]').val(benchmarkScore); //  Overall number of points
 
     $('input[name=p75q]').val(healthScore); // Healthy Domain
@@ -221,9 +145,45 @@ $('input[type=radio]').change(function (e) {
     $('input[name=p77q]').val(safeScore); // Safe Domain
     $('input[name=p78q]').val(schoolScore); // Schooled Domain
     $('input[name=p79q]').val(healthScore+stableScore+safeScore+schoolScore); //Total Score
-    $('input[name=CP_b_total]').val(healthScore+stableScore+safeScore+schoolScore); //Total Score
+    total_score = healthScore+stableScore+safeScore+schoolScore
+    $('input[name=CP_b_total]').val(total_score); //Total Score
     $('input[name=bench_array]').val(JSON.stringify(bench_array));
     console.log('benchmark_score => '+JSON.stringify(bench_array));
+    
+    
+
+    if(total_score <= 4){
+        
+        $('#score_key_1').addClass('bg-primary p-5')
+        $('#score_key_2, #score_key_3, #score_key_4').removeClass('bg-primary')
+        $('#score_key_2, #score_key_3, #score_key_4').addClass('bg-default')
+    }
+    else if(total_score >= 5 && total_score <= 7) {
+        $('#score_key_2').addClass('bg-primary p-5')
+
+        $('#score_key_1').removeClass('bg-primary')
+        $('#score_key_3').removeClass('bg-primary') 
+        $('#score_key_4').removeClass('bg-primary') 
+        
+        $('#score_key_1').addClass('bg-default')
+        $('#score_key_3').addClass('bg-default') 
+        $('#score_key_4').addClass('bg-default') 
+      
+    }
+    else if(total_score == 8) {
+        $('#score_key_3').addClass('bg-primary p-5')
+        $('#score_key_1, #score_key_2, #score_key_4').removeClass('bg-primary')
+        $('#score_key_1, #score_key_2, #score_key_4').addClass('bg-default')
+    }
+    else {
+       
+            $('#score_key_4').addClass('bg-primary p-5')
+            $('#score_key_1, #score_key_3, #score_key_2').removeClass('bg-primary')
+            $('#score_key_1, #score_key_3, #score_key_2').addClass('bg-default')
+        
+    }
+
+
 
 
     
