@@ -111,46 +111,47 @@
 								<div class="form-group">
 									<label class="control-label col-md-4 col-sm-4" for="hhva_qs">Caregiver HIV status : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he2_hiv_status }}
+										{{ form.PMTCT_HEI5q }}
 									</div>
 								</div>
-
+								<div id="status">
 								<div class="form-group">
 									<label class="control-label col-md-4 col-sm-4" for="hhva_qs">If Positive, Care giver on ART  : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he2_hiv_positive }}
+										{{ form.PMTCT_HEI6q }}
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="control-label col-md-4 col-sm-4" for="hhva_qs">Health facility for Care giver : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-<!--										{{ form.he_he2_cg_facility }}-->
-										<input type="text" class="form-control" name="he_facility_field" id="he_facility_field" placeholder="Search for facility here">
-										<input type="hidden" name="he_he2_cg_facility" id="he_he2_cg_facility">
+										{{ form.PMTCT_HEI7q }}
+<!--										<input type="text" class="form-control" name="he_facility_field" id="he_facility_field" placeholder="Search for facility here">-->
+<!--										<input type="text" name="he_he2_cg_facility" id="he_he2_cg_facility">-->
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="control-label col-md-4 col-sm-4" for="hhva_qs">CCC number for care giver : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he2_cg_ccc }}
+										{{ form.PMTCT_HEI8q }}
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="control-label col-md-4 col-sm-4" for="hhva_qs">Care giver latest VL results : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he2_cg_vl }}
+										{{ form.PMTCT_HEI9q }}
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="control-label col-md-4 col-sm-4" for="hhva_qs">Date of VL test for Care giver : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he2_cg_vldate }}
+										{{ form.PMTCT_HEI10q }}
 									</div>
 								</div>
+								 </div>
 
 							</div>
 						</div>
@@ -165,34 +166,40 @@
 							<div class="panel-body" id="1st_contact">
                                <h3 class="text-center note note-info"><b>At first contact</b></h3>
 								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Date of 1st contact : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_HEI42q }}
+									</div>
+								</div>
+								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">HIV test done : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he4_hiv_test }}
+										{{ form.PMTCT_HEI3q }}
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Test results : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he4_test_results }}
+										{{ form.PMTCT_HEI4q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">HEI VL results (if positive) : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he4_vl_results }}
+										{{ form.PMTCT_HEI5q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Child on Prophylaxis : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he4_prophylaxis }}
+										{{ form.PMTCT_HEI6q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Mode of feeding : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he4_mode }}
+										{{ form.PMTCT_HEI7q }}
 									</div>
 								</div>
 							</div>
@@ -200,40 +207,46 @@
 							<div class="panel-body" id="6wks">
      							<h3 class="text-center note note-info"><b>At 6 weeks</b></h3>
 								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Date of contact : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_HEI43q }}
+									</div>
+								</div>
+								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">HIV test done : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he5_hiv_test }}
+										{{ form.PMTCT_HEI8q }}
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Test results : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he5_test_results }}
+										{{ form.PMTCT_HEI19q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">HEI VL results (if positive) : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he5_vl_results }}
+										{{ form.PMTCT_HEI20q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Child on Prophylaxis : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he5_prophylaxis }}
+										{{ form.PMTCT_HEI21q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Immunization : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he5_immunization }}
+										{{ form.PMTCT_HEI22q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Mode of feeding : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he5_mode }}
+										{{ form.PMTCT_HEI23q }}
 									</div>
 								</div>
 							</div>
@@ -241,40 +254,46 @@
 							<div class="panel-body" id="6mths">
  								<h3 class="text-center note note-info"><b>At 6 months</b></h3>
 								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Date of contact : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_HEI44q }}
+									</div>
+								</div>
+								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">HIV test done : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he6_hiv_test }}
+										{{ form.PMTCT_HEI24q }}
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Test results : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he6_test_results }}
+										{{ form.PMTCT_HEI25q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">HEI VL results (if positive) : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he6_vl_results }}
+										{{ form.PMTCT_HEI26q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Child on Prophylaxis : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he6_prophylaxis }}
+										{{ form.PMTCT_HEI27q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Immunization : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he6_immunization }}
+										{{ form.PMTCT_HEI28q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Mode of feeding : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he6_mode }}
+										{{ form.PMTCT_HEI29q }}
 									</div>
 								</div>
 							</div>
@@ -282,40 +301,46 @@
 							<div class="panel-body" id="12mths">
 								<h3 class="text-center note note-info"><b>At 12 months</b></h3>
 								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Date of contact : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_HEI45q }}
+									</div>
+								</div>
+								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">HIV test done : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he7_hiv_test }}
+										{{ form.PMTCT_HEI30q }}
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Test results : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he7_test_results }}
+										{{ form.PMTCT_HEI31q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">HEI VL results (if positive) : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he7_vl_results }}
+										{{ form.PMTCT_HEI32q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Child on Prophylaxis : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he7_prophylaxis }}
+										{{ form.PMTCT_HEI33q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Immunization : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he7_immunization }}
+										{{ form.PMTCT_HEI34q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Mode of feeding : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he7_mode }}
+										{{ form.PMTCT_HEI35q }}
 									</div>
 								</div>
 							</div>
@@ -323,40 +348,46 @@
 							<div class="panel-body" id="18mths">
 								<h3 class="text-center note note-info"><b>At 18 months</b></h3>
 								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Date of contact : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_HEI45q }}
+									</div>
+								</div>
+								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">HIV test done : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he8_hiv_test }}
+										{{ form.PMTCT_HEI36q }}
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Test results : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he8_test_results }}
+										{{ form.PMTCT_HEI37q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">HEI VL results (if positive) : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he8_vl_results }}
+										{{ form.PMTCT_HEI38q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Child on Prophylaxis : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he8_prophylaxis }}
+										{{ form.PMTCT_HEI39q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Immunization : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he8_immunization }}
+										{{ form.PMTCT_HEI40q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Mode of feeding : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he8_mode }}
+										{{ form.PMTCT_HEI41q }}
 									</div>
 								</div>
 							</div>
@@ -368,13 +399,13 @@
 								<div class="form-group">
 									<label class="control-label col-md-4 col-sm-4" for="hhva_qs">Exit/Attrition reason : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he9_attrition }}
+										{{ form.PMTCT_HEI47q }}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-md-4 col-sm-4" for="hhva_qs">Comments : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
-										{{ form.he_he9_comments }}
+										{{ form.PMTCT_HEI48q }}
 
 									</div>
 								</div>
@@ -439,31 +470,35 @@ jQuery(document).ready(function()
 });
 </script>
 <script>
-	$("#he_he2_cg_hedate, #he_he2_cg_vldate").datepicker()
-
-	$( "#he_facility_field" ).autocomplete({
-		source: function( request, response ) {
-		$.ajax({
-			url: "{% url 'ovc_search' %}",
-			dataType: "json",
-			data: {q: request.term, id: 1},
-			success: function( data ) {
-				response( data );
-			}
-			});
-		},
-		minLength: 4,
-		select: function( event, ui ) {
-			$('#he_facility_field').val(ui.item.name);
-			$('#he_he2_cg_facility').val(ui.item.id)
-		},
-		open: function() {
-			$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-		},
-		close: function() {
-			$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-		}
-	});
+    $("#PMTCT_HEI42q").datepicker({format: 'yyyy-mm-dd'}).val();
+    $("#PMTCT_HEI43q").datepicker({format: 'yyyy-mm-dd'}).val();
+    $("#PMTCT_HEI44q").datepicker({format: 'yyyy-mm-dd'}).val();
+    $("#PMTCT_HEI45q").datepicker({format: 'yyyy-mm-dd'}).val();
+    $("#PMTCT_HEI46q").datepicker({format: 'yyyy-mm-dd'}).val();
+    $("#PMTCT_HEI10q").datepicker({format: 'yyyy-mm-dd'}).val();
+<!--	$( "#he_facility_field" ).autocomplete({-->
+<!--		source: function( request, response ) {-->
+<!--		$.ajax({-->
+<!--			url: "{% url 'ovc_search' %}",-->
+<!--			dataType: "json",-->
+<!--			data: {q: request.term, id: 1},-->
+<!--			success: function( data ) {-->
+<!--				response( data );-->
+<!--			}-->
+<!--			});-->
+<!--		},-->
+<!--		minLength: 4,-->
+<!--		select: function( event, ui ) {-->
+<!--			$('#he_facility_field').val(ui.item.name);-->
+<!--			$('#PMTCT_HEI5q').val(ui.item.id)-->
+<!--		},-->
+<!--		open: function() {-->
+<!--			$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );-->
+<!--		},-->
+<!--		close: function() {-->
+<!--			$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );-->
+<!--		}-->
+<!--	});-->
 
 	$("#1st_contact, #6wks, #6mths, #12mths, #18mths").hide()
 	$(function(){
@@ -488,6 +523,24 @@ jQuery(document).ready(function()
 
         });
 	})
+
+	 $("#he_he2_hiv_status").on('change', function () {
+            var ival = $("#he_he2_hiv_status").val();
+            if (ival == 'Negative' || ival=='Unknown') {
+               $('#status').hide()
+            } else {
+               $('#status').show()
+            }
+     });
+
+	window.onload = function() {
+			   var ival = $("#he_he2_hiv_status").val();
+				if (ival == 'Negative' || ival=='Unknown') {
+				   $('#status').hide()
+				} else {
+				   $('#status').show()
+				}
+	};
 
 </script>
 {% endblock %}

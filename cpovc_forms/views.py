@@ -37,7 +37,7 @@ from .models import (
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
     OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
-    OVCHEITracker)
+    OVCHEITracker, OVCPreventiveEvents, pmtct_registration)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -10002,10 +10002,10 @@ def new_dreamsform(request, id):
 
 def new_hei_tracker(request, id):
     hei8 = hei9 = hei10 = hei11 = hei12 = hei13 = hei14 = hei15 = hei16 = hei17 = hei18 = hei19 = hei20 = hei21 = hei22 = hei23 = hei24 = hei25 = hei26 = hei27 = hei28 = hei29 = hei30 = hei31 = hei32 = hei33 = hei34 = hei35 = hei36 = ''
+    contact_date1 = contact_date2 = contact_date3 = contact_date4 = contact_date5 = '1900-01-01'
     try:
-        # import pdb
+        import pdb
 
-        # pdb.set_trace()
         if request.method == 'POST':
             event_type_id = 'FHSA'
             # household_id = request.POST.get('household_id')
@@ -10029,61 +10029,69 @@ def new_hei_tracker(request, id):
             ovccareevent.save()
 
             # Caregiver details
-            hei2 = request.POST.get('he_he2_hiv_status')
-            hei3 = request.POST.get('he_he2_hiv_positive')
-            hei4 = request.POST.get('he_he2_cg_facility')
+            hei2 = request.POST.get('PMTCT_HEI5q')
+            hei3 = request.POST.get('PMTCT_HEI6q')
+            hei4 = request.POST.get('PMTCT_HEI7q')
             if hei4:
                 facility_res = OVCFacility.objects.get(id=hei4).facility_code
             else:
                 facility_res = None
-            hei5 = request.POST.get('he_he2_cg_ccc')
-            hei6 = request.POST.get('he_he2_cg_vl')
-            hei7 = request.POST.get('he_he2_cg_vldate')
-            contact = request.POST.get('Follow_Up')
+            hei5 = request.POST.get('PMTCT_HEI8q')
+            hei6 = request.POST.get('PMTCT_HEI9q')
+            hei7 = request.POST.get('PMTCT_HEI10q')
+            if hei7 == '':
+                hei7 = '1990-01-01'
+            contact = request.POST.get('PMTCT_HEI42q')
             # pdb.set_trace()
 
             if contact == 'AtFirstContact':
-                hei8 = request.POST.get('he_he4_hiv_test')
-                hei9 = request.POST.get('he_he4_test_results')
-                hei10 = request.POST.get('he_he4_vl_results')
-                hei11 = request.POST.get('he_he4_prophylaxis')
-                hei12 = request.POST.get('he_he4_mode')
+                contact_date1 = request.POST.get('PMTCT_HEI42q')
+                hei8 = request.POST.get('PMTCT_HEI13q')
+                hei9 = request.POST.get('PMTCT_HEI14q')
+                hei10 = request.POST.get('PMTCT_HEI15q')
+                hei11 = request.POST.get('PMTCT_HEI16q')
+                hei12 = request.POST.get('PMTCT_HEI17q')
 
             if contact == 'At6wks':
-                hei13 = request.POST.get('he_he4_hiv_test')
-                hei14 = request.POST.get('he_he4_test_results')
-                hei15 = request.POST.get('he_he4_vl_results')
-                hei16 = request.POST.get('he_he4_prophylaxis')
-                hei17 = request.POST.get('he_he8_immunization')
-                hei18 = request.POST.get('he_he4_mode')
+                contact_date2 = request.POST.get('PMTCT_HEI42q')
+                hei13 = request.POST.get('PMTCT_HEI13q')
+                hei14 = request.POST.get('PMTCT_HEI14q')
+                hei15 = request.POST.get('PMTCT_HEI15q')
+                hei16 = request.POST.get('PMTCT_HEI16q')
+                hei17 = request.POST.get('PMTCT_HEI22q')
+                hei18 = request.POST.get('PMTCT_HEI17q')
 
             if contact == 'At6mths':
-                hei19 = request.POST.get('he_he4_hiv_test')
-                hei20 = request.POST.get('he_he4_test_results')
-                hei21 = request.POST.get('he_he4_vl_results')
-                hei22 = request.POST.get('he_he4_prophylaxis')
-                hei23 = request.POST.get('he_he8_immunization')
-                hei24 = request.POST.get('he_he4_mode')
+                contact_date3 = request.POST.get('PMTCT_HEI42q')
+                hei19 = request.POST.get('PMTCT_HEI13q')
+                hei20 = request.POST.get('PMTCT_HEI14q')
+                hei21 = request.POST.get('PMTCT_HEI15q')
+                hei22 = request.POST.get('PMTCT_HEI16q')
+                hei23 = request.POST.get('PMTCT_HEI22q')
+                hei24 = request.POST.get('PMTCT_HEI17q')
 
             if contact == 'At12mths':
-                hei25 = request.POST.get('he_he4_hiv_test')
-                hei26 = request.POST.get('he_he4_test_results')
-                hei27 = request.POST.get('he_he4_vl_results')
-                hei28 = request.POST.get('he_he4_prophylaxis')
-                hei29 = request.POST.get('he_he8_immunization')
-                hei30 = request.POST.get('he_he4_mode')
+                contact_date4 = request.POST.get('PMTCT_HEI42q')
+                hei25 = request.POST.get('PMTCT_HEI13q')
+                hei26 = request.POST.get('PMTCT_HEI14q')
+                hei27 = request.POST.get('PMTCT_HEI15q')
+                hei28 = request.POST.get('PMTCT_HEI16q')
+                hei29 = request.POST.get('PMTCT_HEI22q')
+                hei30 = request.POST.get('PMTCT_HEI17q')
 
             if contact == 'At18mths':
-                hei31 = request.POST.get('he_he4_hiv_test')
-                hei32 = request.POST.get('he_he4_test_results')
-                hei33 = request.POST.get('he_he4_vl_results')
-                hei34 = request.POST.get('he_he4_prophylaxis')
-                hei35 = request.POST.get('he_he8_immunization')
-                hei36 = request.POST.get('he_he4_mode')
+                contact_date5 = request.POST.get('PMTCT_HEI42q')
+                hei31 = request.POST.get('PMTCT_HEI13q')
+                hei32 = request.POST.get('PMTCT_HEI14q')
+                hei33 = request.POST.get('PMTCT_HEI15q')
+                hei34 = request.POST.get('PMTCT_HEI16q')
+                hei35 = request.POST.get('PMTCT_HEI22q')
+                hei36 = request.POST.get('PMTCT_HEI17q')
 
             # Others
-            hei37 = request.POST.get('he_he9_attrition')
-            hei38 = request.POST.get('he_he9_comments')
+            hei37 = request.POST.get('PMTCT_HEI47q')
+            hei38 = request.POST.get('PMTCT_HEI48q')
+
             # ************************************************************
 
             query = OVCHEITracker(
@@ -10094,29 +10102,34 @@ def new_hei_tracker(request, id):
                 ccc=hei5,
                 vl=hei6,
                 vldate=hei7,
+                f1date= contact_date1,
                 f1hivtest=hei8,
                 f1testresults=hei9,
                 f1vlresults=hei10,
                 f1prophylaxis=hei11,
                 f1mode=hei12,
+                f2date=contact_date2,
                 f2hivtest=hei13,
                 f2testresults=hei14,
                 f2vlresults=hei15,
                 f2prophylaxis=hei16,
                 f2immunization=hei17,
                 f2mode=hei18,
+                f3date=contact_date3,
                 f3hivtest=hei19,
                 f3testresults=hei20,
                 f3vlresults=hei21,
                 f3prophylaxis=hei22,
                 f3immunization=hei23,
                 f3mode=hei24,
+                f4date=contact_date4,
                 f4hivtest=hei25,
                 f4testresults=hei26,
                 f4vlresults=hei27,
                 f4prophylaxis=hei28,
                 f4immunization=hei29,
                 f4mode=hei30,
+                f5date=contact_date5,
                 f5hivtest=hei31,
                 f5testresults=hei32,
                 f5vlresults=hei33,
@@ -10127,6 +10140,7 @@ def new_hei_tracker(request, id):
                 comments=hei38,
                 event=ovccareevent,
             ).save()
+            # pdb.set_trace()
 
             msg = 'HEI tracker saved successfully'
             messages.add_message(request, messages.INFO, msg)
@@ -10189,63 +10203,69 @@ def edit_heitracker(request, id):
     """Some default page for Server Errors."""
 
     try:
+        import pdb
         heidata = OVCHEITracker.objects.get(hei_id=id, is_void=False)
         if request.method == 'POST':
-            hei2 = request.POST.get('he_he2_hiv_status')
-            hei3 = request.POST.get('he_he2_hiv_positive')
-            hei4 = request.POST.get('he_he2_cg_facility')
+            hei2 = request.POST.get('PMTCT_HEI5q')
+            hei3 = request.POST.get('PMTCT_HEI6q')
+            hei4 = request.POST.get('PMTCT_HEI7q')
             if hei4:
                 facility_res = OVCFacility.objects.get(id=hei4).facility_code
             else:
                 facility_res = None
-            hei5 = request.POST.get('he_he2_cg_ccc')
-            hei6 = request.POST.get('he_he2_cg_vl')
-            hei7 = request.POST.get('he_he2_cg_vldate')
+            hei5 = request.POST.get('PMTCT_HEI8q')
+            hei6 = request.POST.get('PMTCT_HEI9q')
+            hei7 = request.POST.get('PMTCT_HEI10q')
 
             # HEI follow up
 
             # 1st contact
-            hei8 = request.POST.get('he_he4_hiv_test')
-            hei9 = request.POST.get('he_he4_test_results')
-            hei10 = request.POST.get('he_he4_vl_results')
-            hei11 = request.POST.get('he_he4_prophylaxis')
-            hei12 = request.POST.get('he_he4_mode')
+            contact_date1 = request.POST.get('PMTCT_HEI42q')
+            hei8 = request.POST.get('PMTCT_HEI13q')
+            hei9 = request.POST.get('PMTCT_HEI14q')
+            hei10 = request.POST.get('PMTCT_HEI15q')
+            hei11 = request.POST.get('PMTCT_HEI16q')
+            hei12 = request.POST.get('PMTCT_HEI17q')
 
             # 6 weeks
-            hei13 = request.POST.get('he_he5_hiv_test')
-            hei14 = request.POST.get('he_he5_test_results')
-            hei15 = request.POST.get('he_he5_vl_results')
-            hei16 = request.POST.get('he_he5_prophylaxis')
-            hei17 = request.POST.get('he_he5_immunization')
-            hei18 = request.POST.get('he_he5_mode')
+            contact_date2 = request.POST.get('PMTCT_HEI43q')
+            hei13 = request.POST.get('PMTCT_HEI18q')
+            hei14 = request.POST.get('PMTCT_HEI19q')
+            hei15 = request.POST.get('PMTCT_HEI20q')
+            hei16 = request.POST.get('PMTCT_HEI21q')
+            hei17 = request.POST.get('PMTCT_HEI22q')
+            hei18 = request.POST.get('PMTCT_HEI23q')
 
             # 6 months
-            hei19 = request.POST.get('he_he6_hiv_test')
-            hei20 = request.POST.get('he_he6_test_results')
-            hei21 = request.POST.get('he_he6_vl_results')
-            hei22 = request.POST.get('he_he6_prophylaxis')
-            hei23 = request.POST.get('he_he6_immunization')
-            hei24 = request.POST.get('he_he6_mode')
+            contact_date3 = request.POST.get('PMTCT_HEI44q')
+            hei19 = request.POST.get('PMTCT_HEI24q')
+            hei20 = request.POST.get('PMTCT_HEI25q')
+            hei21 = request.POST.get('PMTCT_HEI26q')
+            hei22 = request.POST.get('PMTCT_HEI27q')
+            hei23 = request.POST.get('PMTCT_HEI28q')
+            hei24 = request.POST.get('PMTCT_HEI29q')
 
             # 12 months
-            hei25 = request.POST.get('he_he7_hiv_test')
-            hei26 = request.POST.get('he_he7_test_results')
-            hei27 = request.POST.get('he_he7_vl_results')
-            hei28 = request.POST.get('he_he7_prophylaxis')
-            hei29 = request.POST.get('he_he7_immunization')
-            hei30 = request.POST.get('he_he7_mode')
+            contact_date4 = request.POST.get('PMTCT_HEI45q')
+            hei25 = request.POST.get('PMTCT_HEI30q')
+            hei26 = request.POST.get('PMTCT_HEI31q')
+            hei27 = request.POST.get('PMTCT_HEI32q')
+            hei28 = request.POST.get('PMTCT_HEI33q')
+            hei29 = request.POST.get('PMTCT_HEI34q')
+            hei30 = request.POST.get('PMTCT_HEI35q')
 
             # 18 months
-            hei31 = request.POST.get('he_he8_hiv_test')
-            hei32 = request.POST.get('he_he8_test_results')
-            hei33 = request.POST.get('he_he8_vl_results')
-            hei34 = request.POST.get('he_he8_prophylaxis')
-            hei35 = request.POST.get('he_he8_immunization')
-            hei36 = request.POST.get('he_he8_mode')
+            contact_date5 = request.POST.get('PMTCT_HEI46q')
+            hei31 = request.POST.get('PMTCT_HEI36q')
+            hei32 = request.POST.get('PMTCT_HEI37q')
+            hei33 = request.POST.get('PMTCT_HEI38q')
+            hei34 = request.POST.get('PMTCT_HEI39q')
+            hei35 = request.POST.get('PMTCT_HEI40q')
+            hei36 = request.POST.get('PMTCT_HEI41q')
 
             # Others
-            hei37 = request.POST.get('he_he9_attrition')
-            hei38 = request.POST.get('he_he9_comments')
+            hei37 = request.POST.get('PMTCT_HEI47q')
+            hei38 = request.POST.get('PMTCT_HEI48q')
 
             # household_id = request.POST.get('household_id')
             # hse_uuid = uuid.UUID(household_id)
@@ -10259,29 +10279,34 @@ def edit_heitracker(request, id):
                 ccc=hei5,
                 vl=hei6,
                 vldate=hei7,
+                f1date=contact_date1,
                 f1hivtest=hei8,
                 f1testresults=hei9,
                 f1vlresults=hei10,
                 f1prophylaxis=hei11,
                 f1mode=hei12,
+                f2date=contact_date2,
                 f2hivtest=hei13,
                 f2testresults=hei14,
                 f2vlresults=hei15,
                 f2prophylaxis=hei16,
                 f2immunization=hei17,
                 f2mode=hei18,
+                f3date=contact_date3,
                 f3hivtest=hei19,
                 f3testresults=hei20,
                 f3vlresults=hei21,
                 f3prophylaxis=hei22,
                 f3immunization=hei23,
                 f3mode=hei24,
+                f4date=contact_date4,
                 f4hivtest=hei25,
                 f4testresults=hei26,
                 f4vlresults=hei27,
                 f4prophylaxis=hei28,
                 f4immunization=hei29,
                 f4mode=hei30,
+                f5date=contact_date5,
                 f5hivtest=hei31,
                 f5testresults=hei32,
                 f5vlresults=hei33,
@@ -10293,45 +10318,60 @@ def edit_heitracker(request, id):
             )
 
             return redirect('new_hei_tracker', id=heidata.person_id)
-
+        if heidata.facility:
+            facility_name = OVCFacility.objects.get(facility_code=heidata.facility).facility_name
+        else:
+            facility_name = ''
+        # pdb.set_trace()
         hei = {
-            'he_he2_hiv_status': heidata.hivstatus,
-            'he_he2_hiv_positive': heidata.hivpositive,
-            'he_he2_cg_facility': heidata.facility,
-            'he_he2_cg_ccc': heidata.ccc,
-            'he_he2_cg_vl': heidata.vl,
-            'he_he2_cg_vldate': heidata.vldate,
-            'he_he4_hiv_test': heidata.f1hivtest,
-            'he_he4_test_results': heidata.f1testresults,
-            'he_he4_vl_results': heidata.f1vlresults,
-            'he_he4_prophylaxis': heidata.f1prophylaxis,
-            'he_he4_mode': heidata.f1mode,
-            'he_he5_hiv_test': heidata.f2hivtest,
-            'he_he5_test_results': heidata.f2testresults,
-            'he_he5_vl_results': heidata.f2vlresults,
-            'he_he5_prophylaxis': heidata.f2prophylaxis,
-            'he_he5_immunization': heidata.f2immunization,
-            'he_he5_mode': heidata.f2mode,
-            'he_he6_hiv_test': heidata.f3hivtest,
-            'he_he6_test_results': heidata.f3testresults,
-            'he_he6_vl_results': heidata.f3vlresults,
-            'he_he6_prophylaxis': heidata.f3prophylaxis,
-            'he_he6_immunization': heidata.f3immunization,
-            'he_he6_mode': heidata.f3mode,
-            'he_he7_hiv_test': heidata.f4hivtest,
-            'he_he7_test_results': heidata.f4testresults,
-            'he_he7_vl_results': heidata.f4vlresults,
-            'he_he7_prophylaxis': heidata.f4prophylaxis,
-            'he_he7_immunization': heidata.f4immunization,
-            'he_he7_mode': heidata.f4mode,
-            'he_he8_hiv_test': heidata.f5hivtest,
-            'he_he8_test_results': heidata.f5testresults,
-            'he_he8_vl_results': heidata.f5vlresults,
-            'he_he8_prophylaxis': heidata.f5prophylaxis,
-            'he_he8_immunization': heidata.f5immunization,
-            'he_he8_mode': heidata.f5mode,
-            'he_he9_attrition': heidata.reason,
-            'he_he9_comments': heidata.comments,
+            'PMTCT_HEI5q': heidata.hivstatus,
+            'PMTCT_HEI6q': heidata.hivpositive,
+            'PMTCT_HEI7q': facility_name,
+            'PMTCT_HEI8q': heidata.ccc,
+            'PMTCT_HEI9q': heidata.vl,
+            'PMTCT_HEI10q': heidata.vldate,
+
+            'PMTCT_HEI42q': heidata.f1date,
+            'PMTCT_HEI13q': heidata.f1hivtest,
+            'PMTCT_HEI14q': heidata.f1testresults,
+            'PMTCT_HEI15q': heidata.f1vlresults,
+            'PMTCT_HEI16q': heidata.f1prophylaxis,
+            'PMTCT_HEI17q': heidata.f1mode,
+
+            'PMTCT_HEI43q': heidata.f2date,
+            'PMTCT_HEI18q': heidata.f2hivtest,
+            'PMTCT_HEI19q': heidata.f2testresults,
+            'PMTCT_HEI20q': heidata.f2vlresults,
+            'PMTCT_HEI21q': heidata.f2prophylaxis,
+            'PMTCT_HEI22q': heidata.f2immunization,
+            'PMTCT_HEI23q': heidata.f2mode,
+
+            'PMTCT_HEI44q': heidata.f3date,
+            'PMTCT_HEI24q': heidata.f3hivtest,
+            'PMTCT_HEI25q': heidata.f3testresults,
+            'PMTCT_HEI26q': heidata.f3vlresults,
+            'PMTCT_HEI27q': heidata.f3prophylaxis,
+            'PMTCT_HEI28q': heidata.f3immunization,
+            'PMTCT_HEI29q': heidata.f3mode,
+
+            'PMTCT_HEI45q': heidata.f4date,
+            'PMTCT_HEI30q': heidata.f4hivtest,
+            'PMTCT_HEI31q': heidata.f4testresults,
+            'PMTCT_HEI32q': heidata.f4vlresults,
+            'PMTCT_HEI33q': heidata.f4prophylaxis,
+            'PMTCT_HEI34q': heidata.f4immunization,
+            'PMTCT_HEI35q': heidata.f4mode,
+
+            'PMTCT_HEI46q': heidata.f5date,
+            'PMTCT_HEI36q': heidata.f5hivtest,
+            'PMTCT_HEI37q': heidata.f5testresults,
+            'PMTCT_HEI38q': heidata.f5vlresults,
+            'PMTCT_HEI39q': heidata.f5prophylaxis,
+            'PMTCT_HEI40q': heidata.f5immunization,
+            'PMTCT_HEI41q': heidata.f5mode,
+
+            'PMTCT_HEI47q': heidata.reason,
+            'PMTCT_HEI48q': heidata.comments,
         }
 
         form = OVCHEITrackerForm(data=hei)
