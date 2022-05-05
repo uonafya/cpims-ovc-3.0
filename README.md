@@ -22,7 +22,7 @@ Revised tools implementation (Version March 2022)
 
 ## Installation
 
-git clone https://github.com/uonafya/cpims-ovc-3.0\
+git clone https://github.com/uonafya/cpims-ovc-3.0 
 Edit cpims/settings.py with your credentials\
 
 python manage.py makemigrations\
