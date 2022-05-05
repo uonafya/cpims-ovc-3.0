@@ -8147,61 +8147,13 @@ class DREAMS_FORM(forms.Form):
                #'data-parsley-group': 'group0',
                'rows': '3'}))
 
-INTERVENTION_CHOICES= [
-    ('SINOVUYO', 'SINOVUYO'),
-    ('CBIM', 'CBIM'),
-    ('FAMILY MATTERS', 'FAMILY MATTERS'),
-    ('HCBF', 'HCBF'),
-    ]
+INTERVENTION_CHOICES = get_list('attendance_reg_domains', 'Please Select')
 
-OVC_REFFERAL_SERVICES = [
-    ('VMMC','VMMC'),
-    ('PSS','PSS'),
-    ('HTS','HTS'),
-    ('Legal Aid', 'Legal Aid'),
-    ('DREAMS','DREAMS'),
-    ('OVC COMPREHENSIVE','OVC COMPREHENSIVE'),
-    ('Others','Others')]
+OVC_REFFERAL_SERVICES =  get_list('attendance_reg_services', 'Please Select')
 
-CAREGIVER_REFFERAL_SERVICES = [
-    ('PSS','PSS'),
-    ('HTS','HTS'),
-    ('Legal Aid', 'Legal Aid'),
-    ('Others','Others')]
+ATTENDANCE_CHOICES= get_list('session_id', 'Please Select')
 
-ATTENDANCE_CHOICES= [
-    ('SESSION 1', 'SESSION 1'),
-    ('SESSION 2', 'SESSION 2'),
-    ('SESSION 3', 'SESSION 3'),
-    ('SESSION 4', 'SESSION 4'),
-    ('SESSION 5', 'SESSION 5'),
-    ('SESSION 6', 'SESSION 6'),
-    ('SESSION 7', 'SESSION 7'),
-    ('SESSION 8', 'SESSION 8'),
-    ('SESSION 9', 'SESSION 9'),
-    ('SESSION 10', 'SESSION 10'),
-    ('SESSION 11', 'SESSION 11'),
-    ('SESSION 12', 'SESSION 12'),
-    ('SESSION 13', 'SESSION 13'),
-    ('SESSION 14', 'SESSION 14'),
-    ('MAKE UP SESSION 1', 'MAKE UP SESSION 1'),
-    ('MAKE UP SESSION 2', 'MAKE UP SESSION 2'),
-    ('MAKE UP SESSION 3', 'MAKE UP SESSION 3'),
-    ('MAKE UP SESSION 4', 'MAKE UP SESSION 4'),
-    ('MAKE UP SESSION 5', 'MAKE UP SESSION 5'),
-    ('MAKE UP SESSION 6', 'MAKE UP SESSION 6'),
-    ('MAKE UP SESSION 7', 'MAKE UP SESSION 7'),
-    ('MAKE UP SESSION 8', 'MAKE UP SESSION 8'),
-    ('MAKE UP SESSION 9', 'MAKE UP SESSION 9'),
-    ('MAKE UP SESSION 10', 'MAKE UP SESSION 10'),
-    ('MAKE UP SESSION 11', 'MAKE UP SESSION 11'),
-    ('MAKE UP SESSION 12', 'MAKE UP SESSION 12'),
-    ('MAKE UP SESSION 13', 'MAKE UP SESSION 13'),
-    ('MAKE UP SESSION 14', 'MAKE UP SESSION 14'),
-    ]
-ATTENDANCE_CLIENT = [
-    ('OVC', 'OVC'),
-    ('CAREGIVER', 'CAREGIVER')]
+ATTENDANCE_CLIENT = get_list('attendance_reg_client', 'Please Select')
 class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
     INTERVENTION = forms.CharField(widget=forms.Select(
         choices=INTERVENTION_CHOICES,
@@ -8299,21 +8251,21 @@ class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
                #'data-parsley-group': 'group3'
                }))
 
-    CAREGIVER_REFFERED_FOR_SERVICES = forms.ChoiceField(
-        choices = (('Yes', 'Yes'), ('No', 'No')),
-        widget = forms.RadioSelect(
-            attrs = {
-            #    'class': 'form-control',
-               'name': 'CAREGIVER_REFFERED_FOR_SERVICES',
-               'id': 'caregiver_reffered_for_service',
+    # CAREGIVER_REFFERED_FOR_SERVICES = forms.ChoiceField(
+    #     choices = (('Yes', 'Yes'), ('No', 'No')),
+    #     widget = forms.RadioSelect(
+    #         attrs = {
+    #         #    'class': 'form-control',
+    #            'name': 'CAREGIVER_REFFERED_FOR_SERVICES',
+    #            'id': 'caregiver_reffered_for_service',
               
-    }))
-    CAREGIVER_REFFERAL_SERVICES = forms.CharField(widget=forms.Select(
-        choices=CAREGIVER_REFFERAL_SERVICES,
-        attrs = {'placeholder': _('Select Date'),
-               'class': 'form-control',
-               'name': 'REFFERAL_SERVICES',
-               'id': 'caregiver_refferal_services_id'}))
+    # }))
+    # CAREGIVER_REFFERAL_SERVICES = forms.CharField(widget=forms.Select(
+    #     choices=CAREGIVER_REFFERAL_SERVICES,
+    #     attrs = {'placeholder': _('Select Date'),
+    #            'class': 'form-control',
+    #            'name': 'REFFERAL_SERVICES',
+    #            'id': 'caregiver_refferal_services_id'}))
 
     COMMENTS = forms.CharField(widget=forms.Textarea(
         attrs={'placeholder': _('Attendance Comments'),
@@ -8321,22 +8273,22 @@ class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
                'id': 'attendance_comments',
                'rows': '2'}))
     
-    CAREGIVER_REFFERAL_COMPLETED = forms.ChoiceField(
-        choices = (('Yes', 'Yes'), ('No', 'No')),
-        widget = forms.RadioSelect(
-            attrs = {'placeholder': _('Select Date'),
-               'name': 'CAREGIVER_REFFERAL_COMPLETED',
-               'id': 'caregiver_refferal_completed'}
-        ))
+    # CAREGIVER_REFFERAL_COMPLETED = forms.ChoiceField(
+    #     choices = (('Yes', 'Yes'), ('No', 'No')),
+    #     widget = forms.RadioSelect(
+    #         attrs = {'placeholder': _('Select Date'),
+    #            'name': 'CAREGIVER_REFFERAL_COMPLETED',
+    #            'id': 'caregiver_refferal_completed'}
+    #     ))
 
-    CAREGIVER_REFERAL_MADE = forms.ChoiceField(
-        choices = (('yes', 'Yes'), ('No', 'No')),
-        widget = forms.RadioSelect(
-            attrs = {'placeholder': _('Select Date'),
-            #    'class': 'form-control',
-               'name': 'CAREGIVER_REFERAL_MADE',
-               'id': 'caregiver_refferal_made_id',
-    }))
+    # CAREGIVER_REFERAL_MADE = forms.ChoiceField(
+    #     choices = (('yes', 'Yes'), ('No', 'No')),
+    #     widget = forms.RadioSelect(
+    #         attrs = {'placeholder': _('Select Date'),
+    #         #    'class': 'form-control',
+    #            'name': 'CAREGIVER_REFERAL_MADE',
+    #            'id': 'caregiver_refferal_made_id',
+    # }))
 
     person = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control',
