@@ -8251,44 +8251,11 @@ class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
                #'data-parsley-group': 'group3'
                }))
 
-    # CAREGIVER_REFFERED_FOR_SERVICES = forms.ChoiceField(
-    #     choices = (('Yes', 'Yes'), ('No', 'No')),
-    #     widget = forms.RadioSelect(
-    #         attrs = {
-    #         #    'class': 'form-control',
-    #            'name': 'CAREGIVER_REFFERED_FOR_SERVICES',
-    #            'id': 'caregiver_reffered_for_service',
-              
-    # }))
-    # CAREGIVER_REFFERAL_SERVICES = forms.CharField(widget=forms.Select(
-    #     choices=CAREGIVER_REFFERAL_SERVICES,
-    #     attrs = {'placeholder': _('Select Date'),
-    #            'class': 'form-control',
-    #            'name': 'REFFERAL_SERVICES',
-    #            'id': 'caregiver_refferal_services_id'}))
-
     COMMENTS = forms.CharField(widget=forms.Textarea(
         attrs={'placeholder': _('Attendance Comments'),
                'class': 'form-control',
                'id': 'attendance_comments',
                'rows': '2'}))
-    
-    # CAREGIVER_REFFERAL_COMPLETED = forms.ChoiceField(
-    #     choices = (('Yes', 'Yes'), ('No', 'No')),
-    #     widget = forms.RadioSelect(
-    #         attrs = {'placeholder': _('Select Date'),
-    #            'name': 'CAREGIVER_REFFERAL_COMPLETED',
-    #            'id': 'caregiver_refferal_completed'}
-    #     ))
-
-    # CAREGIVER_REFERAL_MADE = forms.ChoiceField(
-    #     choices = (('yes', 'Yes'), ('No', 'No')),
-    #     widget = forms.RadioSelect(
-    #         attrs = {'placeholder': _('Select Date'),
-    #         #    'class': 'form-control',
-    #            'name': 'CAREGIVER_REFERAL_MADE',
-    #            'id': 'caregiver_refferal_made_id',
-    # }))
 
     person = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control',

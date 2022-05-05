@@ -309,13 +309,6 @@
                                                     <small><p class="dialog_paragraph">This value is required</p></span></small><span>
                                                 </div>
                                             </td>
-                                            <!-- <td width="10%">
-                                                {{ form.REFERAL_MADE }}
-                                                <div id="olmis_service_date_errormsg" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                            </td> -->
-                                            
                                             <td width="10%">
                                                 {{ form.OVC_REFFERAL_COMPLETED }}
                                                 <div id="olmis_service_provider_errormsg" style="display:none;">
@@ -545,10 +538,8 @@ function loadForm1aEvents()
                             {   var personId=$('#person').val();
                                 var btn_event_type=$(this).attr("data-event_type");
                                 var btn_event_pk=$(this).attr("data-event_pk");
-                                console.log("xxxxxxxxxxxxxxxxx ++++++++++ "+btn_event_type);
 
-
-                                var url = "{% url 'edit_form1a' id=1234 btn_event_type=2345 btn_event_pk=3456 %}".replace(/1234/, personId.toString()).replace(/2345/, btn_event_type.toString()).replace(/3456/, btn_event_pk.toString());
+                                var url = "{% url 'edit_preventive_event_entry' id=1234 btn_event_type=2345 btn_event_pk=3456 %}".replace(/1234/, personId.toString()).replace(/2345/, btn_event_type.toString()).replace(/3456/, btn_event_pk.toString());
                                 console.log(url);
 
                                 window.open(url,"_self");
@@ -848,10 +839,13 @@ function AddRow(x)
 		var OlmisAssessmentData = new Array();
         
         var olmis_intervention_prevention = $("#intervention_prevention_register").val();
+        console.log("jjjjjjjjjjjjjjj "+olmis_intervention_prevention);
         var olmis_completed_all_sessions = $('input[name="COMPLETED_ALL_SESSIONS"]:checked').val();
         // var olmis_makeup_session_date = $("#makeup_session_date").val();
         var olmis_session_attended_days = $("#session_attended_days").val();
         var olmis_session_date_id = $("#session_date_id").val();
+
+        console.log("==================== >>>>>>> "+olmis_session_date_id);
 
 
         var csrftoken = $.cookie('csrftoken');        
@@ -885,21 +879,18 @@ function AddRow(x)
                     var cell3 = row.insertCell(3);
                     var cell4 = row.insertCell(4);
                     var cell5 = row.insertCell(5);
-                    // var cell6 = row.insertCell(6);
 
                     var holmis_intervention_prevention= "<input disabled id='holmis_intervention_prevention'  value='"+olmis_intervention_prevention+"'>"
                     var holmis_completed_all_sessions = "<input disabled id='holmis_completed_all_sessions' value='"+olmis_completed_all_sessions+"'>"
                     var holmis_session_attended_days = "<input disabled id='holmis_session_attended_days' value='"+olmis_session_attended_days+"'>"
                     var holmis_session_date = "<input disabled id='holmis_session_date' value='"+olmis_session_date_id+"'>"
-                    // var holmis_assessment_status= "<input id='holmis_assessment_status'  value='new'>"
+                    console.log("vvvvvvvvvvvvvvvvvv "+holmis_session_date);
 
-                    
                     
                     cell0.innerHTML = '<h6 class="td_style">#</h6>';  
                     cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_assessment_domain") + holmis_intervention_prevention + '</h6>';  
                     cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_session_attended_days") + holmis_session_attended_days + '</h6>';
                     cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_session_date") + holmis_session_date + '</h6>';    
-                    // cell4.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_makeup_session_date") + holmis_makeup_session_date + '</h6>';
                     cell4.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_completed_all_sessions") + holmis_completed_all_sessions + '</h6>';
                     cell5.innerHTML = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
 
@@ -922,7 +913,6 @@ function AddRow(x)
                     $('#assessment_manager_table tr').each(function(row, tr)
                     {                            
                         var holmis_intervention_prevention = $(tr).find('input[id="holmis_intervention_prevention"]').val();
-                        // var holmis_makeup_session_date = $(tr).find('input[id="holmis_makeup_session_date"]').val();
                         var holmis_completed_all_sessions = $(tr).find('input[id="holmis_completed_all_sessions"]').val();
                         var holmis_session_attended_days = $(tr).find('input[id="holmis_session_attended_days"]').val();
                         var holmis_session_date = $(tr).find('input[id="holmis_session_date"]').val();
@@ -963,7 +953,6 @@ function AddRow(x)
         var olmis_reffered_for_service =  $('input[name="OVC_REFFEREDFOR_SERVICES"]:checked').val();
         var olmis_client = $("#client_name").val();
         var olmis_reffered_service = $("#refferal_services_id").val();
-        // var olmis_service_made = $('input[name="REFERAL_MADE"]:checked').val();
         var olmis_refferal_completed = $('input[name="OVC_REFFERAL_COMPLETED"]:checked').val();
         var olmis_date_of_encounter = $("#date_of_service_encounter").val();
         // $("#refferal_made_id").val();
@@ -971,7 +960,6 @@ function AddRow(x)
         var values = {  
             'csrfmiddlewaretoken': csrftoken
         };
-        console.log("ppppppppppppppppppppppppppppp "+olmis_refferal_completed);
         
 
         // Validation and Ajax
@@ -1037,8 +1025,6 @@ function AddRow(x)
                     var olmis_reffered_for_service = $(tr).find('input[id="holmis_reffered_for_service"]').val();
                     var olmis_reffered_service = $(tr).find('input[id="holmis_reffered_service"]').val();
                     var olmis_refferal_completed = $(tr).find('input[id="holmis_refferal_completed"]').val();
-                    console.log("0000000000000000000000 "+olmis_refferal_completed)
-                    // var olmis_service_made = $(tr).find('input[id="holmis_service_made"]').val();
                     var olmis_date_of_encounter = $(tr).find('input[id="holmis_date_of_encounter"]').val();
                     var olmis_client = $(tr).find('input[id="holmis_client"]').val();
 
@@ -1183,9 +1169,11 @@ function displayVals(x, value)
 	    $("#" + value + " option:selected").each(function () 
 	    {
 	       var $this = $(this);
+           
 	       if ($this.length)
 	       {
 	            var selText = $this.text();
+                
 	            selections.push(selText);
 	       }
 	    });
@@ -1195,10 +1183,14 @@ function displayVals(x, value)
 	{
 	    $("#" + value + " option:selected").each(function () 
 	    {
+           console.log("kkkkkkkkkkkkkkkkkkkk   }}}}}}}}}}}}}}}}}}} ");
 	       var $this = $(this);
+
+           console.log("(((((((((( )))))))))))))))))))) "+$this.text());
 	       if ($this.length)
 	       {
 	            var selText = $this.text();
+                
 	            selections.push(selText);
 	            //console.log(selText);
 	       }
@@ -1421,7 +1413,7 @@ function deletePreventive(){
                         $('#error-message-reuse').css({'display': 'none'});
                         $('#error_message').css({'display': 'none'});
                          var personId=$('#person').val();
-                         var url = "{% url 'form1a_events' id=1234%}".replace(/1234/, personId.toString());
+                         var url = "{% url 'preventiveattendanceregister' id=1234%}".replace(/1234/, personId.toString());
                          window.open(url,"_self");
 
                     }
