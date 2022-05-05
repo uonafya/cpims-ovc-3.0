@@ -10290,7 +10290,7 @@ def edit_grad_monitor(request, id):
             'AYES': True,
             'ANNO': False
         }
-        event_date = data.get('gm1d')
+        event_date = convert_date(data.get('gm1d'))
         # event_date = datetime.strptime(event_date,'%d-%M-%Y').date()
         time_updated = timezone.now()
         household=OVCBenchmarkMonitoring.objects.filter(obm_id=id)
@@ -10336,7 +10336,7 @@ def edit_grad_monitor(request, id):
         date_updated = data_db[0]['timestamp_created']
         # import pdb
         edit_data= {
-            'gm1d': data_db[0]['event_date'], #.strftime("%d-%m-%Y"),
+            'gm1d': data_db[0]['event_date'].strftime("%d-%b-%Y"),
             'cm2q': map_yes_no(data_db[0]['benchmark1']),
             'cm3q': map_yes_no(data_db[0]['benchmark2']),
             'cm4q': map_yes_no(data_db[0]['benchmark3']),
