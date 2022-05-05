@@ -34,10 +34,9 @@ from .models import (
     OVCAdverseEventsFollowUp, OVCAdverseEventsOtherFollowUp,
     OVCCaseEventClosure, OVCCaseGeo, OVCMedicalSubconditions, OVCBursary,
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
-    OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
-    OVCCareForms, OVCExplanations, OVCCareF1B,
+    OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions, OVCExplanations, OVCCareF1B,
     OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
-    OVCPregnantWomen, PMTCTEvents, OVCPreventiveEvents)
+    OVCPregnantWomen, PMTCTEvents, OVCPreventiveEvents,PMTCTPregnantWA, pmtct_registration, PMTCTQuestions)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -10000,105 +9999,63 @@ def new_dreamsform(request, id):
                    'vals': vals})
 
 
-# pregnant_women_adolescent
 def new_pregnantwomen(request, id):
-    q3 = q5 = q7 = q9 = ''
-    q2 = q4 = q6 = q8 = '1900-01-01'
-    import pdb
-    try:
-        if request.method == 'POST':
-            form = PREGNANT_WOMEN_ADOLESCENT(request.POST, initial={'person': id})
-            if True:
-                person = RegPerson.objects.get(pk=int(id))
-                child = RegPerson.objects.get(id=id)
-                house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-                event_type_id = 'HRST'
+    if request.method == 'POST':
+        data = request.POST
+        import pdb
+        person = RegPerson.objects.get(pk=int(id))
+        appuser = request.user.id
+        event_type_id = 'WBGA'
+        date_of_event = timezone.now()
 
-                """ Save hiv_screening-event """
-                # get event counter
-                event_counter = OVCCareEvents.objects.filter(
-                    event_type_id=event_type_id, person=id, is_void=False).count()
-                # save event
+        """ Save Wellbeing-event """
 
-                ovccareevent = OVCCareEvents.objects.create(
-                    event_type_id=event_type_id,
-                    event_counter=event_counter,
-                    event_score=0,
-                    created_by=request.user.id,
+        # get event counter
+        event_counter = PMTCTEvents.objects.filter(
+            event_type_id=event_type_id, person=id, is_void=False).count()
+        # save event
+        # try:
+        pmtctevent = PMTCTEvents.objects.create(
+            event_type_id=event_type_id,
+            event_counter=event_counter,
+            event_score=0,
+            date_of_event=date_of_event,
+            created_by=appuser,
+            person=person,
+            # house_hold=house_holds
+        )
+            # except Exception as e:
+            #     error_message = f'Pmtct Events failed: {e}'
+
+        # get questions for adolescent
+        questions = PMTCTQuestions.objects.filter(code__startswith='PWA', is_void=False)
+        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=person).caretaker_id)
+        for question in questions:
+            question_code_q=question.code
+            question_ansr_a=data.get(question.question)
+            if question_ansr_a is None:
+                question_ansr_a = 'No'
+            try:
+                PMTCTPregnantWA.objects.create(
                     person=RegPerson.objects.get(pk=int(id)),
-                    house_hold=house_hold
+                    caregiver=care_giver,
+                    question=question,
+                    question_code=question_code_q,
+                    answer=question_ansr_a,
+                    timestamp_created=date_of_event,
+                    event=pmtctevent,
                 )
+            except Exception as e:
+                error_message = f'PMTCT Pregnant table failed: {e}'
+                print(error_message)
 
-                q1 = request.POST.get("PWA_WA1_1")
-                test = request.POST.get("PWA_WA1_01")
+        msg = ' saved successful'
+        messages.add_message(request, messages.INFO, msg)
+        url = reverse('ovc_view', kwargs={'id': id})
+        return HttpResponseRedirect(url)
 
-                if test == 'contact':
-                    q2 = request.POST.get("PWA_WA1_2A")
-                    q3 = request.POST.get("PWA_WA1_2B")
-                if test == 'tri':
-                    q4 = request.POST.get("PWA_WA1_2A")
-                    q5 = request.POST.get("PWA_WA1_2B")
-                if test == '3rd':
-                    q6= request.POST.get("PWA_WA1_2A")
-                    q7 = request.POST.get("PWA_WA1_2B")
-                if test == '4th':
-                    q8 = request.POST.get("PWA_WA1_2A")
-                    q9 = request.POST.get("PWA_WA1_2B")
-                q10 = request.POST.get("PWA_WA1_6")
-                q11 = request.POST.get("PWA_WA1_7")
-                q12 = request.POST.get("PWA_WA1_8")
-                q13 = request.POST.get("PWA_WA1_9")
-                q14 = request.POST.get("PWA_WA1_10")
-                q15 = request.POST.get("PWA_WA1_11")
-                q16 = request.POST.get("PWA_WA1_12")
-                q17 = request.POST.get("PWA_WA1_13")
-                q18 = request.POST.get("PWA_WA1_14")
-                q19 = request.POST.get("PWA_WA1_15")
-
-                # Saving track
-                # pdb.set_trace()
-
-                ovc_preg = OVCPregnantWomen.objects.create(
-                    person=person,
-                    date_of_contact=q1,
-                    date_test_done2a=q2,
-                    test_result2b=q3,
-                    date_test_done3a=q4,
-                    test_result3b=q5,
-                    date_test_done4a=q6,
-                    test_result4b=q7,
-                    date_test_done5a=q8,
-                    test_result5b=q9,
-                    anc_date1=q10,
-                    anc_date2=q11,
-                    anc_date3=q12,
-                    anc_date4=q13,
-                    mode_of_delivery=q14,
-                    facility_code=q15,
-                    ccc_no=q16,
-                    vl_result=q17,
-                    vl_test_date=q18,
-                    disclosure_done=q19,
-                    event=ovccareevent,
-                )
-                # pdb.set_trace()
-
-                msg = 'form PWA tracker saved successful'
-                messages.add_message(request, messages.INFO, msg)
-                url = reverse('ovc_view', kwargs={'id': id})
-                return HttpResponseRedirect(url)
-            # url = reverse('ovc_view', kwargs={'id': id})
-            # # return HttpResponseRedirect(reverse(forms_registry))
-            # return HttpResponseRedirect(url)
-    except Exception as e:
-        msg = 'form PWA tracker save error : (%s)' % (str(e))
-        messages.add_message(request, messages.ERROR, msg)
-        print('Error saving form PWA tracker : %s' % str(e))
-        return HttpResponseRedirect(reverse(forms_home))
-
-    # get household members/ caretaker/ household_id
-    household_id = None
-
+    # Get request Method
+    import pdb
     try:
         ovcreg = get_object_or_404(OVCRegistration, person_id=id, is_void=False)
         caretaker_id = ovcreg.caretaker_id if ovcreg else None
@@ -10114,126 +10071,88 @@ def new_pregnantwomen(request, id):
     check_fields = ['sex_id', 'relationship_type_id']
     vals = get_dict(field_name=check_fields)
     ovc_id = int(id)
-    child = RegPerson.objects.get(is_void=False, id=ovc_id)
-    # if date_of_event:
-    #     date_of_event = convert_date(date_of_event)
+    # Past Data
+    past_data = PMTCTPregnantWA.objects.filter(person=id, is_void=False).values()
+    questions = PMTCTQuestions.objects.filter(code__startswith='PWA', is_void=False).values()
+    code_question = {}
+    for question in questions:
+        code_question[question['code']]=question['question']
+    data_get = {}
+    for one_past_data in past_data:
+        one_past_data_q=one_past_data['question_code']
+        one_past_data_a = one_past_data['answer']
 
-    form = PREGNANT_WOMEN_ADOLESCENT(initial={'person': id})
-    event = OVCPregnantWomen.objects.filter(person_id=id).values_list('event')
-    pwa_women = OVCPregnantWomen.objects.filter(event_id__in=event, is_void=False).order_by('date_of_event')
-    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-    return render(request,
-                  'forms/new_pregnantwomen.html',
-                  {'form': form, 'init_data': init_data, 'vals': vals, 'person': id, 'care_giver': care_giver,
-                   'pwa_women': pwa_women})
+        data_get[code_question[one_past_data_q]]=one_past_data_a
 
-
-# Edit pregnant women tracker form
+    # pdb.set_trace()
+    print(data_get)
+    form = PREGNANT_WOMEN_ADOLESCENT()
+    # care_giver = RegPerson.objects.get(id=pmtct_registration.objects.get(person=child).caretaker_id)
+    context = {
+              'form': form,
+              'init_data': init_data,
+              'vals': vals,
+              'person': id,
+              'data_get':data_get
+                }
+    return render(request, 'forms/new_pregnantwomen.html', context)
 
 def edit_pregnantwomen(request, id):
-    try:
-        hdata = OVCPregnantWomen.objects.get(preg_id=id)
-        if request.method == 'POST':
-            boolean_fields = [
-                'PWA_WA1_15',
-            ]
+    if request.method == 'POST':
+        data = request.POST
 
-            data_to_save = {}
+        date_of_event = timezone.now()
 
-            for key, value in request.POST.items():
-                if key in boolean_fields:
-                    data_to_save.update({
-                        key: True if value == "AYES" else False
-                    })
-                else:
-                    data_to_save.update({key: value})
+        PMTCTEvents.objects.filter(event=id).update(
+                timestamp_updated=date_of_event,
+                event=id
+        )
+        # get questions for adolescent
+        data_saved = PMTCTPregnantWA.objects.filter(event=id)
+        for question in questions:
+            question_code_q=question.code
+            question_ansr_a=data.get(question.question)
+            if question_ansr_a is None:
+                question_ansr_a = 'No'
+            try:
+                PMTCTPregnantWA.objects.create(
+                    person=RegPerson.objects.get(pk=int(id)),
+                    caregiver=care_giver,
+                    question=question,
+                    question_code=question_code_q,
+                    answer=question_ansr_a,
+                    timestamp_created=date_of_event,
+                    event=pmtctevent,
+                )
+            except Exception as e:
+                error_message = f'PMTCT Pregnant table failed: {e}'
+                print(error_message)
 
-            q1 = data_to_save.get("PWA_WA1_1")
-            q2 = data_to_save.get("PWA_WA1_2A")
-            q3 = data_to_save.get("PWA_WA1_2B")
-            q4 = data_to_save.get("PWA_WA1_3A")
-            q5 = data_to_save.get("PWA_WA1_3B")
-            q6 = data_to_save.get("PWA_WA1_4A")
-            q7 = data_to_save.get("PWA_WA1_4B")
-            q8 = data_to_save.get("PWA_WA1_5A")
-            q9 = data_to_save.get("PWA_WA1_5B")
-            q10 = data_to_save.get("PWA_WA1_6")
-            q11 = data_to_save.get("PWA_WA1_7")
-            q12 = data_to_save.get("PWA_WA1_8")
-            q13 = data_to_save.get("PWA_WA1_9")
-            q14 = data_to_save.get("PWA_WA1_10")
-            q15 = data_to_save.get("PWA_WA1_11")
-
-            if q15:
-                facility_res = OVCFacility.objects.get(id=q15).facility_code
-            else:
-                facility_res = None
-
-            q16 = data_to_save.get("PWA_WA1_12")
-            q17 = data_to_save.get("PWA_WA1_13")
-            q18 = data_to_save.get("PWA_WA1_14")
-            q19 = data_to_save.get("PWA_WA1_15")
-
-            OVCPregnantWomen.objects.filter(preg_id=id).update(
-                date_of_contact=q1,
-                date_test_done2a=q2,
-                test_result2b=q3,
-                date_test_done3a=q4,
-                test_result3b=q5,
-                date_test_done4a=q6,
-                test_result4b=q7,
-                date_test_done5a=q8,
-                test_result5b=q9,
-                anc_date1=q10,
-                anc_date2=q11,
-                anc_date3=q12,
-                anc_date4=q13,
-                mode_of_delivery=q14,
-                facility_code=facility_res,
-                ccc_no=q16,
-                vl_result=q17,
-                vl_test_date=q18,
-                disclosure_done=q19,
-            )
-
-        track = {
-            'PWA_WA1_1': hdata.date_of_contact,
-            'PWA_WA1_2A': hdata.date_test_done2a,
-            'PWA_WA1_2B': hdata.test_result2b,
-            'PWA_WA1_3A': hdata.date_test_done3a,
-            'PWA_WA1_3B': hdata.test_result3b,
-            'PWA_WA1_4A': hdata.date_test_done4a,
-            'PWA_WA1_4B': hdata.test_result4b,
-            'PWA_WA1_5A': hdata.date_test_done5a,
-            'PWA_WA1_5B': hdata.test_result5b,
-            'PWA_WA1_6': hdata.anc_date1,
-            'PWA_WA1_7': hdata.anc_date2,
-            'PWA_WA1_8': hdata.anc_date3,
-            'PWA_WA1_9': hdata.anc_date4,
-            'PWA_WA1_10': hdata.mode_of_delivery,
-            'PWA_WA1_11': hdata.facility_code,
-            'PWA_WA1_12': hdata.ccc_no,
-            'PWA_WA1_13': hdata.vl_result,
-            'PWA_WA1_14': hdata.vl_test_date,
-            'PWA_WA1_15': hdata.disclosure_done,
-
-        }
-        form = PREGNANT_WOMEN_ADOLESCENT(data=track)
-        return render(request, 'forms/edit_pregnantwomen.html', {'form': form, 'status': 200})
-
-        # Save all details from the Bursary form
-        # pdb.set_trace()
-
-
-    except Exception as e:
-        msg = 'error'
-        messages.error(request, msg)
+        msg = ' saved successful'
+        messages.add_message(request, messages.INFO, msg)
         url = reverse('ovc_view', kwargs={'id': id})
         return HttpResponseRedirect(url)
 
+    # Get request Method
+    import pdb
+    data_saved = PMTCTPregnantWA.objects.filter(event=id)
+    pdb.set_trace()
+    messages.add_message(request, messages.ERROR, msg)
+    return HttpResponseRedirect(reverse(forms_registry))
+    # get child data
+    init_data = RegPerson.objects.filter(pk=id)
+    check_fields = ['sex_id', 'relationship_type_id']
+    vals = get_dict(field_name=check_fields)
+    ovc_id = int(id)
+    child = RegPerson.objects.get(is_void=False, id=ovc_id)
 
-def delete_pregnantwomen(request, id):
-    new_tracker = OVCPregnantWomen.objects.filter(preg_id=id)
-    new_tracker1 = OVCPregnantWomen.objects.get(preg_id=id)
-    new_tracker.update(is_void=True)
-    return redirect('new_pregnantwomen', id=new_tracker1.person_id)
+    form = PREGNANT_WOMEN_ADOLESCENT(initial={'household_id': household_id})
+    # care_giver = RegPerson.objects.get(id=pmtct_registration.objects.get(person=child).caretaker_id)
+    context = {
+              'form': form,
+              'init_data': init_data,
+              'vals': vals,
+              'person': id
+                }
+    return render(request, 'forms/new_pregnantwomen.html', context)
+

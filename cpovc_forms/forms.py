@@ -427,8 +427,6 @@ CPT_RESULTS = (
     ('IP', 'In Progress'),
     ('NA', 'Not Achieved')
 )
-#pregnant_women_adolescent
-ATTEND_CHOICES=(('1', 'Skilled'), ('0', 'Unskilled'))
 
 
 class OVCSchoolForm(forms.Form):
@@ -8153,7 +8151,7 @@ class DREAMS_FORM(forms.Form):
 #Pregnant Women_Adolescent
 class PREGNANT_WOMEN_ADOLESCENT(forms.Form):
     org_units_list = get_facility_list()
-    HIV_STATUS_CHOICES=(('1', ''), ('0', 'Unskilled'))
+    # HIV_STATUS_CHOICES=(('1', 'Skilled'), ('0', 'Unskilled'))
     PWA_WA1_01 = forms.ChoiceField(
         choices=(('contact', '1st Contact'), ('tri', '1st Trimester'),('3rd', '3rd Trimester'),('4th', 'Labour/Delivery'),),
         widget=forms.RadioSelect(
@@ -8162,19 +8160,21 @@ class PREGNANT_WOMEN_ADOLESCENT(forms.Form):
                 # 'data-parsley-errors-container': "#errorfield"
             }))
 
-    PWA_WA1_2A = forms.DateField(
+    PMTCT_PWA6q = forms.DateField(
+        required=False,
         widget=forms.widgets.DateInput(
-            format="%m/%d/%Y",
+            # format="%m/%d/%Y",
             attrs={'placeholder': _('Date'),
                    'class': 'form-control',
-                   'name': 'PWA_WA1_2A',
-                   'id': 'PWA_WA1_2A',
+                   'name': 'PMTCT_PWA6q',
+                   'id': 'PMTCT_PWA6q',
                    'autocomplete': "off",
                    #    'data-parsley-required': "true",
                    #    'data-parsley-group': 'group0'
                    }))
 
-    PWA_WA1_2B = forms.ChoiceField(
+    PMTCT_PWA7q = forms.ChoiceField(
+        required=False,
         choices=(('1', 'HIV_Positive'), ('0', 'HIV_Negative'),),
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
@@ -8183,19 +8183,21 @@ class PREGNANT_WOMEN_ADOLESCENT(forms.Form):
                 # 'data-parsley-errors-container': "#errorfield"
             }))
 
-    PWA_WA1_3A = forms.DateField(
+    PMTCT_PWA8q = forms.DateField(
+        required=False,
         widget=forms.widgets.DateInput(
-            format="%m/%d/%Y",
+            # format="%Y/%m/%d",
             attrs={'placeholder': _('Date'),
                    'class': 'form-control',
-                   'name': 'PWA_WA1_3A',
-                   'id': 'PWA_WA1_3A',
+                   'name': 'PMTCT_PWA8q',
+                   'id': 'PMTCT_PWA8q',
                    'autocomplete': "off",
                    #    'data-parsley-required': "true",
                    #    'data-parsley-group': 'group0'
                    }))
 
-    PWA_WA1_3B = forms.ChoiceField(
+    PMTCT_PWA9q = forms.ChoiceField(
+        required=False,
         choices=(('1', 'HIV_Positive'), ('0', 'HIV_Negative'),),
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
@@ -8204,19 +8206,21 @@ class PREGNANT_WOMEN_ADOLESCENT(forms.Form):
                 # 'data-parsley-errors-container': "#errorfield"
             }))
 
-    PWA_WA1_4A = forms.DateField(
+    PMTCT_PWA10q = forms.DateField(
+        required=False,
         widget=forms.widgets.DateInput(
-            format="%m/%d/%Y",
+            # format="%Y/%m/%d",
             attrs={'placeholder': _('Date'),
                    'class': 'form-control',
-                   'name': 'PWA_WA1_4A',
-                   'id': 'PWA_WA1_4A',
+                   'name': 'PMTCT_PWA10q',
+                   'id': 'PMTCT_PWA10q',
                    'autocomplete': "off",
                    #    'data-parsley-required': "true",
                    #    'data-parsley-group': 'group0'
                    }))
 
-    PWA_WA1_4B = forms.ChoiceField(
+    PMTCT_PWA11q = forms.ChoiceField(
+        required=False,
         choices=(('1', 'HIV_Positive'), ('0', 'HIV_Negative'),),
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
@@ -8225,19 +8229,21 @@ class PREGNANT_WOMEN_ADOLESCENT(forms.Form):
                 # 'data-parsley-errors-container': "#errorfield"
             }))
 
-    PWA_WA1_5A = forms.DateField(
+    PMTCT_PWA12q = forms.DateField(
+        required=False,
         widget=forms.widgets.DateInput(
-            format="%m/%d/%Y",
+            # format="%Y/%m/%d",
             attrs={'placeholder': _('Date'),
                    'class': 'form-control',
-                   'name': 'PWA_WA1_5A',
-                   'id': 'PWA_WA1_5A',
+                   'name': 'PMTCT_PWA12q',
+                   'id': 'PMTCT_PWA12q',
                    'autocomplete': "off",
                    #    'data-parsley-required': "true",
                    #    'data-parsley-group': 'group0'
                    }))
 
-    PWA_WA1_5B = forms.ChoiceField(
+    PMTCT_PWA13q = forms.ChoiceField(
+        required=False,
         choices=(('1', 'HIV_Positive'), ('0', 'HIV_Negative'),),
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
@@ -8246,70 +8252,71 @@ class PREGNANT_WOMEN_ADOLESCENT(forms.Form):
                 # 'data-parsley-errors-container': "#errorfield"
             }))
 
-    PWA_WA1_6 = forms.DateField(
+    PMTCT_PWA1q = forms.DateField(
         widget=forms.widgets.DateInput(
-            format="%m/%d/%Y",
+            # format="%Y/%m/%d",
             attrs={'placeholder': _('Date'),
                    'class': 'form-control',
-                   'name': 'PWA_WA1_6',
-                   'id': 'PWA_WA1_6',
+                   'name': 'PMTCT_PWA1q',
+                   'id': 'PMTCT_PWA1q',
                    'autocomplete': "off",
                    #    'data-parsley-required': "true",
                    #    'data-parsley-group': 'group0'
                    }))
 
-    PWA_WA1_7 = forms.DateField(
+    PMTCT_PWA2q = forms.DateField(
         widget=forms.widgets.DateInput(
-            format="%m/%d/%Y",
+            # format="%Y/%m/%d",
             attrs={'placeholder': _('Date'),
                    'class': 'form-control',
-                   'name': 'PWA_WA1_7',
-                   'id': 'PWA_WA1_7',
+                   'name': 'PMTCT_PWA2q',
+                   'id': 'PMTCT_PWA2q',
                    'autocomplete': "off",
                    #    'data-parsley-required': "true",
                    #    'data-parsley-group': 'group0'
                    }))
 
-    PWA_WA1_8 = forms.DateField(
+    PMTCT_PWA3q = forms.DateField(
         widget=forms.widgets.DateInput(
-            format="%m/%d/%Y",
+            # format="%Y/%m/%d",
             attrs={'placeholder': _('Date'),
                    'class': 'form-control',
-                   'name': 'PWA_WA1_8',
-                   'id': 'PWA_WA1_8',
+                   'name': 'PMTCT_PWA3q',
+                   'id': 'PMTCT_PWA3q',
                    'autocomplete': "off",
                    #    'data-parsley-required': "true",
                    #    'data-parsley-group': 'group0'
                    }))
 
-    PWA_WA1_9 = forms.DateField(
+    PMTCT_PWA4q = forms.DateField(
         widget=forms.widgets.DateInput(
-            format="%m/%d/%Y",
+            # format="%Y/%m/%d",
             attrs={'placeholder': _('Date'),
                    'class': 'form-control',
-                   'name': 'PWA_WA1_9',
-                   'id': 'PWA_WA1_9',
+                   'name': 'PMTCT_PWA4q',
+                   'id': 'PMTCT_PWA4q',
                    'autocomplete': "off",
                    #    'data-parsley-required': "true",
                    #    'data-parsley-group': 'group0'
                    }))
 
-    PWA_WA1_10 = forms.ChoiceField(
-        choices=ATTEND_CHOICES,
+    PMTCT_PWA5q = forms.ChoiceField(
+        choices=(('1', 'Skilled'), ('0', 'Unskilled'),),
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
                 # 'data-parsley-errors-container': "#errorfield"
             }))
 
-    PWA_WA1_11 = forms.CharField(widget=forms.TextInput(
+    PMTCT_PWA14q = forms.CharField(widget=forms.TextInput(
         attrs={'placeholder': _('Facility Name'),
                'class': 'form-control',
-               'id': 'PWA_WA1_21',
+               'id': 'PMTCT_PWA14q',
+               'readonly':'True',
                #    'data-parsley-group': 'group0'
                }))
 
-    PWA_WA1_12 = forms.CharField(widget=forms.TextInput(
+    PMTCT_PWA15q = forms.CharField(widget=forms.TextInput(
         attrs={'placeholder': _('CCC NO'),
                'class': 'form-control',
                #    'data-parsley-required': "False",
@@ -8317,7 +8324,7 @@ class PREGNANT_WOMEN_ADOLESCENT(forms.Form):
                #    'data-parsley-required': "False"
                }))
 
-    PWA_WA1_13 = forms.CharField(widget=forms.TextInput(
+    PMTCT_PWA16q = forms.CharField(widget=forms.TextInput(
         attrs={'placeholder': _('VL result'),
                'class': 'form-control',
                #    'data-parsley-required': "False",
@@ -8325,33 +8332,40 @@ class PREGNANT_WOMEN_ADOLESCENT(forms.Form):
                #    'data-parsley-required': "False"
                }))
 
-    PWA_WA1_14 = forms.DateField(
+    PMTCT_PWA17q = forms.DateField(
         widget=forms.widgets.DateInput(
-            format="%m/%d/%Y",
+            # format="%Y/%m/%d",
             attrs={'placeholder': _('Date'),
                    'class': 'form-control',
-                   'name': 'PWA_WA1_14',
-                   'id': 'PWA_WA1_14',
+                   'name': 'PMTCT_PWA17q',
+                   'id': 'PMTCT_PWA17q',
                    'autocomplete': "off",
                    #    'data-parsley-required': "true",
                    #    'data-parsley-group': 'group0'
                    }))
 
-    PWA_WA1_15 = forms.ChoiceField(
-        choices=YESNO_CHOICES,
+    # PWA_WA1_15 = forms.ChoiceField(
+    #     choices=YESNO_CHOICES,
+    #     widget=forms.RadioSelect(
+    #         # renderer=RadioCustomRenderer,
+    #         attrs={
+    #             # 'data-parsley-errors-container': "#errorfield"
+    #         }))
+    PMTCT_PWA18q = forms.ChoiceField(
+        choices=(('1', 'YES'), ('0', 'NO')),
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
+                # 'data-parsley-required': 'true',
                 # 'data-parsley-errors-container': "#errorfield"
             }))
 
-    PWA_WA1_1 = forms.DateField(
+    PMTCT_PWA19q = forms.DateField(
         widget=forms.widgets.DateInput(
-            format="%m/%d/%Y",
             attrs={'placeholder': _('Date'),
                    'class': 'form-control',
-                   'name': 'PWA_WA1_1',
-                   'id': 'PWA_WA1_1',
+                   'name': 'PMTCT_PWA19q',
+                   'id': 'PMTCT_PWA19q',
                    'autocomplete': "off",
                       # 'data-parsley-required': "true",
                    #    'data-parsley-group': 'group0'
