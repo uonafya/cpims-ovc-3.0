@@ -98,7 +98,7 @@ class SetupList(models.Model):
 
     item_id = models.CharField(max_length=10)
     item_description = models.CharField(max_length=255)
-    item_description_short = models.CharField(max_length=150, null=True)
+    item_description_short = models.CharField(max_length=100, null=True)
     item_category = models.CharField(max_length=255, null=True, blank=True)
     item_sub_category = models.CharField(max_length=255, null=True, blank=True)
     the_order = models.IntegerField(null=True)
