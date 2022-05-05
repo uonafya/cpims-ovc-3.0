@@ -175,6 +175,9 @@ urlpatterns = [
     # Bireferral Form
     re_path('bidirectionalreferralform/new/(?P<id>\d+)/', views.bidirectionalreferralform, name='bidirectionalreferralform'),
 
+    # Safe referal
+    path('referal/save/', views.save_referal, name='save_referal'),
+
     # Edit Bidirection Referal
     re_path('referal/edit/(?P<id>\d+)/(?P<btn_event_type>\w+)/(?P<btn_event_pk>.+)/', views.edit_referal,
             name='edit_referal'),
