@@ -10083,7 +10083,7 @@ def new_case_closure(request, id):
 
             closure_reason = request.POST.get("CASE_CL001")
             attrition_reason1 = request.POST.get("CASE_CL027")
-            # other = request.POST.get("CASE_CL004")
+
             transfer_completed = request.POST.get("CASE_CL010")
             followup_time = request.POST.get("CASE_CL011")
             informed = request.POST.get("CASE_CL012")
@@ -10102,7 +10102,7 @@ def new_case_closure(request, id):
             if receiving_org:
                 org_res = RegOrgUnit.objects.get(id=receiving_org).org_unit_name
             else:
-                org_res = None
+                org_res = ''
 
 
             person = RegPerson.objects.get(pk=int(id))
@@ -10125,7 +10125,7 @@ def new_case_closure(request, id):
                 created_by=request.user.id,
                 person=RegPerson.objects.get(pk=int(id)),
 
-                # house_hold=house_holds
+
             )
             ovccareevent.save()
             # Saving OVC Case Closure
@@ -10136,7 +10136,6 @@ def new_case_closure(request, id):
                 organization=organization,
                 reason=closure_reason,
                 attrition_reason=attrition_reason1,
-                # other=other,
                 transfer_form_completed=transfer_completed,
                 follow_up_frequency=followup_time,
                 sp_informed_tarnsfer=informed,
@@ -10176,15 +10175,16 @@ def new_case_closure(request, id):
 
     form = CaseClosureForm()
     event = OVCCareEvents.objects.filter(person_id=id).values_list('event')
-    case_closure_date = OVCCareCaseExit.objects.filter(event_id__in=event,is_void=False).order_by('date_of_closure')
-    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
 
+    case_closure_date= OVCCareCaseExit.objects.filter(event_id__in=event,is_void=False).order_by('date_of_closure')
+    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
     return render(request,
                   'forms/new_case_closure.html',
                   {'form': form,
                    'init_data': init_data,
                    'care_giver': care_giver,
                    'case_closure': case_closure_date,
+
                    'id': id,
                    'vals': vals})
 
@@ -10192,7 +10192,7 @@ def new_case_closure(request, id):
 
 
 def delete_case_closure(request, id):
-    import pdb
+
     delete_caseclosure = OVCCareCaseExit.objects.filter(case_clouse_id=id)
     person_id = OVCCareCaseExit.objects.get(case_clouse_id=id).person_id
     delete_caseclosure.update(is_void=True)
@@ -10204,14 +10204,16 @@ def delete_case_closure(request, id):
 
 def edit_case_closure(request, id):
     """Some default page for Server Errors."""
+    import pdb
+
 
     try:
 
 
         if request.method == 'POST':
-            # closure_reason = request.POST.get("CASE_CL001")
+            #closure_reason = request.POST.get("CASE_CL001")
             attrition_reason1 = request.POST.get("CASE_CL027")
-            # other = request.POST.get("CASE_CL004")
+
             transfer_completed = request.POST.get("CASE_CL010")
             followup_time = request.POST.get("CASE_CL011")
             informed = request.POST.get("CASE_CL012")
@@ -10229,9 +10231,9 @@ def edit_case_closure(request, id):
             if receiving_org:
                 org_res = RegOrgUnit.objects.get(id=receiving_org).org_unit_name
             else:
-                org_res = None
+                org_res = ''
 
-            OVCCareCaseExit.objects.filter(case_clouse_id=id,is_void=False).update(
+            OVCCareCaseExit.objects.filter(case_clouse_id=id).update(
                 rec_organization=org_res,
                 # reason=closure_reason,
                 attrition_reason=attrition_reason1,
@@ -10257,6 +10259,7 @@ def edit_case_closure(request, id):
             url = reverse('ovc_view', kwargs={'id': id})
             return HttpResponseRedirect(url)
         posted_data = OVCCareCaseExit.objects.get(case_clouse_id=id)
+
         gotten_data = {
             'CASE_CL001': posted_data.reason,
             'CASE_CL002': posted_data.rec_organization,
@@ -10277,9 +10280,8 @@ def edit_case_closure(request, id):
             'CASE_CL008': posted_data.sp_informed_graduation,
 
         }
-        form = CaseClosureForm(data=gotten_data)
-        # import pdb
         # pdb.set_trace()
+        form = CaseClosureForm(data=gotten_data)
         return render(request, 'forms/edit_case_closure.html',
                       {'form': form, 'status': 200})
 

@@ -120,6 +120,7 @@
 
 
                                            <input type="text" class="form-control" name="organization_field" id="organization_field" placeholder="Search for organization here">
+
                                                     <input type="hidden" name="CASE_CL002" id="CASE_CL002">
                                     </td>
                                 </tr>
@@ -137,7 +138,7 @@
 
 
                                                 {{form.CASE_CL027}}
-                                                <input type="hidden" name="CASE_CL004" id="CASE_CL004">
+{#                                                <input type="hidden" name="CASE_CL004" id="CASE_CL004">#}
 {#                                                {{form.CASE_CL004}}#}
 
                                             </div>
@@ -293,14 +294,7 @@
                                         {{ form.CASE_CL031}}
                                     </td>
                                 </tr>
-                                   <tr>
-                                       <td>Q13</td>
 
-{#                                    <td>Name of Case Manager/LIP staff certifying</td>#}
-{#                                    <td required="False">#}
-{#                                        {{ form.CASE_CL024 }}#}
-{#                                    </td>#}
-                                </tr>
 
 
 
@@ -396,7 +390,9 @@
                             <th>Q11</th>
                             <th>Q12</th>
                             <th>Q13</th>
-                            <th>Q14</th>
+
+                            <th>Q15</th>
+
 
 
                              <th  colspan="2">Action</th>
@@ -414,7 +410,7 @@
                                 <tr>
                                     <td>{{ case_closure_data.reason }}</td>
                                     <td>{{ case_closure_data.rec_organization}}</td>
-                                    <td>{{ case_closure_data.attrition_reason }} || {{ case_closure_data.other}}</td>
+                                    <td>{{ case_closure_data.attrition_reason }} </td>
                                     <td>{{ case_closure_data.case_files_completed }}</td>
                                     <td>{{ case_closure_data.cw_phone_household  }}</td>
                                     <td>{{ case_closure_data.sp_informed_graduation }}</td>
@@ -427,7 +423,7 @@
 
                                     <td>{{ case_closure_data.attrition_documented }}</td>
                                     <td>{{ case_closure_data.manager_report }}</td>
-                                    <td>{{ case_closure_data.files_stored }}</td>
+
                                     <td>{{ case_closure_data.exit_reason }}</td>
                                     <td>{{ case_closure_data.files_stored }}</td>
                                     <td>{{ case_closure_data.date_of_closure }}</td>
@@ -463,6 +459,7 @@
 {% endblock %}
 
 {% block lazy_javascript_code %}
+
 <script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
 <script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
 <script src="{% static 'plugins/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}"></script>
@@ -471,6 +468,7 @@
 <script src="{% static 'js/tag-it.js' %}"></script>
 <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+
     <script>
 
 jQuery(document).ready(function()
@@ -487,9 +485,9 @@ jQuery(document).ready(function()
             $("#cc_tab_002").hide();
             $("#cc_tab_003").hide();
             $("#cc_tab_004").hide();
-            $('input[name="CASE_CL026').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-            $('input[name="CASE_CL014').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-            $("input[name='CASE_CL001']").on('change', function () {
+            $('input[name="CASE_CL026"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+            $('input[name="CASE_CL014"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+            $('input[name="CASE_CL001"]').on('change', function () {
       var ival = $("input[name='CASE_CL001']:checked").val();
 
       if(ival == 2){
@@ -500,23 +498,23 @@ jQuery(document).ready(function()
            $("#cc_002").hide();
            $("#cc_tab_001").hide();
            $("#cc_tab_003").hide();
-           $('input[name="CASE_CL002').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-           $('input[name="CASE_CL010').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-           $('input[name="CASE_CL011').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-           $('input[name="CASE_CL012').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-           $('input[name="CASE_CL013').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL002"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL010"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL011"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL012"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL013"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
 
-          $('input[name="CASE_CL004').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL027').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL029').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL030').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL031').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          {#$('input[name="CASE_CL004').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});#}
+          $('input[name="CASE_CL027"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL029"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL030"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL031"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
 
 
-          $('input[name="CASE_CL006').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL007').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL008').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL028').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL006"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL007"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL008"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL028"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
 
 
 
@@ -529,22 +527,22 @@ jQuery(document).ready(function()
           $("#cc_tab_001").hide();
           $("#cc_tab_002").hide();
 
-          $('input[name="CASE_CL004').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL027').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL029').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL030').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL031').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          {#$('input[name="CASE_CL004').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});#}
+          $('input[name="CASE_CL027"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL029"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL030"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL031"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
 
-          $('input[name="CASE_CL006').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL007').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL008').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL028').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL006"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL007"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL008"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL028"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
 
-           $('input[name="CASE_CL002').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-           $('input[name="CASE_CL010').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-           $('input[name="CASE_CL011').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-           $('input[name="CASE_CL012').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-           $('input[name="CASE_CL013').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL002"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL010"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL011"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL012"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL013"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
 
 
 
@@ -555,23 +553,23 @@ jQuery(document).ready(function()
           $("#cc_tab_003").hide();
           $("#cc_tab_002").hide();
 
-          $('input[name="CASE_CL006').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL007').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL008').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL028').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL006"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL007"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL008"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL028"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
 
-          $('input[name="CASE_CL004').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL027').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL029').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL030').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL031').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          {#$('input[name="CASE_CL004').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});#}
+          $('input[name="CASE_CL027"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL029"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL030"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL031"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
 
 
-          $('input[name="CASE_CL002').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL010').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL011').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL012').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL013').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL002"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL010"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL011"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL012"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL013"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
 
 
 
@@ -603,7 +601,7 @@ jQuery(document).ready(function()
                 }
                 });
             },
-            minLength: 4,
+            minLength: 3,
             select: function( event, ui ) {
                 $('#organization_field').val(ui.item.name);
                 $('#CASE_CL002').val(ui.item.id);
@@ -615,6 +613,8 @@ jQuery(document).ready(function()
                 $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
             }
         });
+
+
 
     </script>
 

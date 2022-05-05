@@ -8281,9 +8281,9 @@ class CaseClosureForm(forms.Form):
     CASE_CL003= forms.ChoiceField(
         required=False,
         choices=(('1', 'Voluntary withdrawal'),('2', '  Death'),('3', ' Married'),('4', '  Family re-integration'),
-                 ('5', '  Family reconciliation'),('4', '  Family re-integration'),('6', '   Fostered'),('7', '  Adopted'),
-                 ('8', ' Self employed'),('9', '  Over 18 years and out of school'),('9', ' Relocation'), ('9', ' Relocation'),
-                 ('9', '  Duplicated record'),('9', ' Any other reason? Specify ')),
+                 ('5', '  Family reconciliation'),('6', '  Family re-integration'),('7', '   Fostered'),('8', '  Adopted'),
+                 ('9', ' Self employed'),('10', '  Over 18 years and out of school'),('11', ' Relocation'), ('12', ' Relocation'),
+                 ('13', '  Duplicated record'),('14', ' Any other reason? Specify ')),
         widget=forms.RadioSelect(
 
             # renderer=RadioCustomRenderer,
@@ -8488,7 +8488,7 @@ class CaseClosureForm(forms.Form):
 
     CASE_CL027= forms.ChoiceField(
         required=False,
-        choices=(('1', 'Voluntary withdrawal'),('2', '  Death'),('3', ' Married'),('4', '  Family re-integration'),
+        choices=(('', 'select attrition reason'),('1', 'Voluntary withdrawal'),('2', '  Death'),('3', ' Married'),('4', '  Family re-integration'),
                  ('5', '  Family reconciliation'),('4', '  Family re-integration'),('6', '   Fostered'),('7', '  Adopted'),
                  ('8', ' Self employed'),('9', '  Over 18 years and out of school'),('9', ' Relocation'), ('9', ' Relocation'),
                  ('9', '  Duplicated record'),('9', ' Any other reason? Specify ')),
