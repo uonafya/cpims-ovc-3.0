@@ -1,0 +1,1212 @@
+{% extends 'base.html' %}
+{% load app_filters %}
+{% load static %}
+{% block page_title %} SINOVUYO Teen{% endblock %}
+{% block style_code %}
+<link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+{% endblock %}
+
+{% block javascript_code%}
+{% endblock javascript_code%}
+
+{% block primary %}
+
+<style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    /* Create two equal columns that floats next to each other */
+    .column {
+      float: left;
+      width: 50%;
+      padding: 10px;
+    }
+    
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    </style>
+
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+    <li><a href="#">Home</a></li>
+    <li class="active">Forms</li>
+</ol>
+<!-- end breadcrumb -->
+
+<!-- <form method="POST" enctype="multipart/form-data"> -->
+ 
+    <!-- <!- Security token -> -->
+    <!-- {% csrf_token %} -->
+ 
+    <!-- <!- Using the formset -> -->
+    <!-- {{ sinovuyo_teen.media }} -->
+    <!-- {{ sinovuyo_teen.as_p }} -->
+     
+    <!-- <input type="submit" value="Submit"> -->
+<!-- </form> -->
+
+
+
+<!-- end page-header -->
+<!-- begin row -->
+<div id='case_details' class="row">
+    <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin panel -->
+      <div style="overflow-x: auto; min-height: 300px;">
+
+        <!-- <div class="card">
+            <div style="background-color: #55518a;" class="card-header">
+                <a class="float-right" data-toggle="collapse" href="#test-block" aria-expanded="true" aria-controls="test-block">
+                    X
+                </a>
+            </div>
+            <div id="test-block" class="collapse">
+                <div class="card-block">
+                    card block
+                </div>
+            </div>
+        </div> -->
+
+
+        <!-- begin row -->
+
+<!-- end row -->
+
+  
+       <p class="h4" ><b>Sinovuyo</b> Teen Pre And Post Assesment Revised Final Draft Form <b> &nbsp;{{ child.first_name }} {{ child.surname }} | 
+            {% if child.date_of_birth|gen_age == 0 %}
+                        UNDER 1 YEAR
+                    {% else %}
+                        {{ child.date_of_birth|gen_age }} YRS 
+                    {% endif %}</b>
+        </b> 
+    </p>
+    <form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true"
+                    name="form-wizard-hhva" id="new_hhva">
+        {% csrf_token %}
+        
+
+        <div class="col-md-12">
+            <!-- begin panel -->
+        <div style="overflow-x: auto; min-height: 300px;">
+            <div class="panel panel-inverse">
+                <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                    <div class="panel-heading-btn">
+                    </div>
+                    <h4 class="panel-title"> Sinovuyo Teen Pre And Post Assesment Revised Final Draft Form  </h4>
+                </div>
+            <div class="panel panel-default">
+                <div  class="panel panel-inverse">
+                    <div id="case-events"  class="table-responsive">
+                        <table id="" class="table table-striped ">
+                            <div class="" >
+                                <h3 class="" style="color: dimgrey;"><b>  </b></h3>
+                            </div>
+                                        <tbody>
+                                            <tr>
+                                                <td><P style="padding-left: 5px;"><strong>Care giver name:</strong> {{care_giver.first_name}} {{care_giver.surname}}</p>
+                                                    <P style="padding-left: 5px;"><strong>Age:</strong> {{care_giver.age}}</p></td>
+                                                        <td><P><strong>Gender:</strong> {{care_giver_gender}}</p>
+                                                            <P><strong>Designation:</strong> {{care_giver.designation}}</p></td><td></td>
+
+                                            </tr>
+                                                <td><strong>Type of assessment: </strong>
+                                                {{ sinovuyo_teen.ASSESSMENT_TYPE }}
+                                                </td>
+
+                                                <td><strong>Date of assessment: </strong>
+                                                    {{ sinovuyo_teen.assessment_date }}
+                                                    
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                <p>&nbsp;</p>
+                        </table>
+                    </div>
+                    <br><br>
+                </div>
+            </div>
+        </div>
+
+        <!-- {% if messages %}
+            <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-info" role="alert">
+                <!- This is a info alert—check it out! ->
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+
+            </div>
+        {% endfor %}
+            </ul>
+        {% endif %} -->
+
+        {% if messages %}
+            {% for message in messages %}
+            {% if 'error' in message.tags %}
+                <div id="messages" class="alert alert-danger fade in">
+                <span class="close" data-dismiss="alert">×</span>
+                <i class="fa fa-info fa-2x pull-left"></i>
+            {% else %}
+                <div id="messages" class="alert alert-success fade in">
+                <span class="close" data-dismiss="alert">×</span>
+                <i class="fa fa-check fa-2x pull-left"></i>
+            {% endif %}    
+                <p>{{ message }}</p>
+            </div>
+        {% endfor %}
+        {% endif %}
+        <div id="message" class="alert alert-success fade in" style="display: none">
+            <span class="close" data-dismiss="alert">×</span>
+            <i class="fa fa-check fa-2x pull-left"></i>
+        </div>
+        
+
+        <div class="panel panel-inverse">
+            <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                <div class="panel-heading-btn">
+                    <!-- <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a> -->
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-plus"></i></a>
+                </div>  
+                <h4 class="panel-title"> Monitoring Tool for OVC Households Reaching Case Plan Achievement Instructions: </h4>
+                <!-- {% if messages %}
+                {% for msg in messages %}
+                <p>{{msg}}</p>
+                {% endfor %}
+                {% endif %} -->
+            </div>
+            <div class="panel-body">
+                
+                    <!-- <div class="panel-body">
+                        <div class="card">
+                        <div style="background-color: rgb(0, 164, 164); color: white;" class="card-header">
+                            
+                        </div>
+                        <div class="card-body">
+                          <h5 class="card-title">Special title treatment</h5>
+                          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        </div>
+                      </div>
+                    </div>
+                     -->
+
+
+                    <div id="wizard-dreamsform">
+                        <ol>
+
+                            <li>
+                                <small></small>
+                                SECTION: 
+
+                            </li>
+
+                            <li>
+                                SECTION 2: 
+                                <small></small>
+                            </li>
+                            <!-- <li>
+                                SECTION 3: MY BEHAVIOUR  
+                                    <small></small>
+                             </li>
+                             <li>
+                                SECTION 4: DISCIPLINE FROM MY CAREGIVER
+                                    <small></small>
+                            </li>
+                            <li>
+                                SECTION 5: FEELING SAD 
+                                <small></small>
+                            </li> -->
+                            
+                        </ol>
+                        <form method="post" >
+                        <!-- begin wizard step-1 -->
+                        <div class="wizard-step-1">
+                            
+                            <!-- BACKGROUND DETAILS ABOUT THE TEEN -->
+                            <div class="row">
+                                <!-- begin col-12 -->
+                                <div class="col-md-12">
+                                    <!-- begin panel -->
+                                    <div class="panel panel-info">
+                                        <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                                            <div class="panel-heading-btn">
+                                                <!-- <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a> -->
+                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i style="width: 30%; height: 30%;" class="fa fa-plus"></i></a>
+                                            </div>                          
+                                            <h4 style="color:bro" class="panel-title"><b>BACKGROUND DETAILS ABOUT THE TEEN </b></h4>                    
+                                        </div>
+                            
+                                        <div class="panel-body">
+                                            <div  class="panel panel-inverse">
+                                                
+                                                <div id="case-events"  class="table-responsive">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <table class="table">
+                                                                <tbody>
+                                                                    <th scope="row">
+                                                                        <h4 for='l' style="margin-top: 0;color:#55518a">Q1: <small style="color:#55518a; font-size-adjust: 0.68;">Age?</small></h4>
+                                                                    </th>
+                                                                    <td>                            
+                                
+                                                                        <div class="form-check form-check-inline">
+                                                                            {{ sinovuyo_teen.bd_age }}
+                                                                        </div>
+                                                                    <td>
+                                                                </tbody>
+
+                                                                <tbody>
+                                                                    <th scope="row">
+                                                                        <h4 for='l' style="margin-top: 0;color:#55518a">Q2: <small style="color:#55518a; font-size-adjust: 0.68;">Gender?</small></h4>
+                                                                    </th>
+                                                                    <td>                            
+                                
+                                                                        <div class="form-check form-check-inline">
+                                                                            {{ sinovuyo_teen.bd_sex }}
+                                                                        </div>
+                                                                    <td>
+                                                                </tbody>
+
+                                                                <tbody>
+                                                                    <th scope="row">
+                                                                        <h4 for='l' style="margin-top: 0;color:#55518a">Q3: <small style="color:#55518a; font-size-adjust: 0.68;">Can you read?</small></h4>
+                                                                    </th>
+                                                                    <td>                            
+                                
+                                                                        <div class="form-check form-check-inline">
+                                                                            {{ sinovuyo_teen.bd_read }}
+                                                                        </div>
+                                                                    <td>
+                                                                </tbody>
+
+                                                                <tbody>
+                                                                    <tr>
+                                                                      <th scope="row">
+                                                                          <h4 for='l' style="margin-top: 0;color:#55518a">Q4:  <small style="color:#55518a; font-size-adjust: 0.68;">School level</small></h4>
+                                                                      </th>
+                                                                      <td>
+                                  
+                                                                          <div class="form-check form-check-inline">
+                                  
+                                                                              {{ sinovuyo_teen.bd_education_level }}
+                                  
+                                                                            </div>
+                                                                      <td>
+                                                                          
+                                                                    </tr>
+                                  
+                                                                  </tbody>
+
+                                                                  <!-- <tbody>
+                                                                    <tr>
+                                                                      <th scope="row">
+                                                                          <h4 for='l' style="margin-top: 0;color:#55518a">Q5:  <small style="color:#55518a; font-size-adjust: 0.68;">Boarding Status</small></h4>
+                                                                      </th>
+                                                                      <td>
+                                  
+                                                                          <div class="form-check form-check-inline">
+                                  
+                                                                              {{ sinovuyo_teen.bd_bd_boarding_status }}
+                                  
+                                                                            </div>
+                                                                      <td>
+                                                                          
+                                                                    </tr>
+                                  
+                                                                  </tbody> -->
+
+                                                                 
+
+                                                                <tbody>
+                                                                    <tr>
+                                                                      <th scope="row">
+                                                                          <h4 for='l' style="margin-top: 0;color:#55518a">Q6:  <small style="color:#55518a; font-size-adjust: 0.68;">Class/Grade/Form</small></h4>
+                                                                      </th>
+                                                                      <td>
+                                  
+                                                                          <div class="form-check form-check-inline">
+                                  
+                                                                              {{ sinovuyo_teen.bd_class }}
+                                  
+                                                                            </div>
+                                                                      <td>
+                                                                          
+                                                                    </tr>
+                                  
+                                                                  </tbody>
+
+                                                                <tbody>
+                                                                    <tr>
+                                                                      <th scope="row">
+                                                                          <h4 for='l' style="margin-top: 0;color:#55518a">Q7:  <small style="color:#55518a; font-size-adjust: 0.68;"> Boarding Status?</small></h4>
+                                                                      </th>
+                                                                      <td>
+                                  
+                                                                          <div class="form-check form-check-inline">
+                                  
+                                                                              {{ sinovuyo_teen.bd_bd_boarding_status }}
+                                  
+                                                                            </div>
+                                                                      <td>
+                                                                          
+                                                                    </tr>
+                                  
+                                                                  </tbody>
+                                  
+                                
+                                
+                                                                <tbody>
+                                                                  <tr>
+                                                                    <th scope="row">
+                                                                        <h4 for='l' style="margin-top: 0;color:#55518a">Q8:  <small style="color:#55518a; font-size-adjust: 0.68;">Do you have any children of your own?</small></h4>
+                                                                    </th>
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.bd_biological_children }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                        
+                                                                  </tr>
+                                
+                                                                </tbody>
+                                
+                                                                    <tbody>
+                                                                  <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q9: <small style="color:#55518a; font-size-adjust: 0.68;">Do you live with your biological mother?</small></h4>
+                                                                    </th>
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                                                            {{ sinovuyo_teen.bd_live_bilogical_mother }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                  </tr>
+                                
+                                                                </tbody>
+                                
+                                                                    <tbody>
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q10: <small style="color:#55518a; font-size-adjust: 0.68;">Do you live with your biological father?</small></h4>
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.bd_live_biological_father }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+                                                                
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q11: <small style="color:#55518a; font-size-adjust: 0.68;">Do you have any form of disability?</small></h4>
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.bd_disability }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+                                                                
+                                                                
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q12: <small style="color:#55518a; font-size-adjust: 0.68;"></small>
+                                                                            In the last month, did your family run out of money for food or essentials such as school fees, medical expenses, rent expenses, clothes?
+                                                                        </small></h4>
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.bd_money_essentials }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+                                                                
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q13: <small style="margin-top: 0;color:#55518a; font-size-adjust: 0.68; ">
+                                                                            In the last month have there been any arguments in the home with shouting, hitting, sexual violence or threats    
+                                                                        </small></h4>
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.bd_violence }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+                                                                
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q14: <small style="margin-top: 0;color:#55518a; font-size-adjust: 0.68;">
+                                                                            In the past month has there been an adult who was unwell – in hospital or in bed a lot of the time?</small></h4>
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.bd_adult_unwell }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+                                                                
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q15: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">In the past month is there a child who has been unwell?</small> </h4>
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.bd_child_unwell }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+                                                                
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q16: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">In the past term did you ever had to miss school more than 15 days because you were unwell?</small> </h4>
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.bd_miss_school }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+                                                                
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q17: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">Are you aware of your HIV status?</small> </h4>
+                                
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                                                            
+                                                                            {{ sinovuyo_teen.bd_hiv_status }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+                                                                
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q18: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">Has your caregiver ever discussed HIV prevention/sexual and reproductive health with you?</small> </h4>
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.bd_hiv_prevention }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+                                                                
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q19: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">Do you eat two or more meals a day?</small> </h4>
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.bd_two_meals }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+                                                                
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q20: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">In the past month are there times you have gone a day without eating a meal?</small> </h4>
+                                
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.bd_missing_meal }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>      
+                                                </div>
+                                                <br><br>                           
+                                            </div>
+                                        </div>
+                            
+                                        <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                                            <div class="panel-heading-btn">
+                                            </div>                          
+                                        </div>
+                            
+                                    </div>
+                                    <!-- end panel -->
+                                </div>
+                                <!-- end col-12 -->
+                            </div>
+
+                            <!--  MY RELATIONSHIP WITH MY CAREGIVER-->
+                            <div class="row">
+                                <!-- begin col-12 -->
+                                <div class="col-md-12">
+                                    <!-- begin panel -->
+                                    <div class="panel panel-info">
+                                        <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                                            <div class="panel-heading-btn">
+                                                <!-- <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a> -->
+                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-plus"></i></a>
+                                            </div>                          
+                                            <h4 style="color:bro" class="panel-title"><b> MY RELATIONSHIP WITH MY CAREGIVER </b></h4>                    
+                                        </div>
+                            
+                                        <div class="panel-body">
+                                            <div  class="panel panel-inverse">
+                                                
+                                                <div id="case-events"  class="table-responsive">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <table class="table">
+                                                            
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q21: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">
+                                                                            Do you spend time to discuss your needs (wishes,aspirations, studies, achievements) with yourcaregiver?</small> </h4>
+
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.rc_discuss_child_needs }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q22: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">
+                                                                            Are you subjected to any form of discipline if you fail to adhere to your family rules?</small> </h4>
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.rc_discipline }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q23: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">
+                                                                            I feel generally free to disclose something that bothers    me to my caregiver</small> </h4>
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.rc_tells_bothering }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th scope="row">
+                                                                        <h4 style="margin-top: 0;color:#55518a">Q24: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">
+                                                                            My caregiver involves me in important decisions of my family</small> </h4>
+                                                                    </th>
+                                
+                                                                    <td>
+                                
+                                                                        <div class="form-check form-check-inline">
+                                
+                                                                            {{ sinovuyo_teen.rc_involve_decisions }}
+                                
+                                                                          </div>
+                                                                    <td>
+                                                                </tr>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>      
+                                                </div>
+                                                <br><br>                           
+                                            </div>
+                                        </div>
+                            
+                                        <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                                            <div class="panel-heading-btn">
+                                            </div>                          
+                                        </div>
+                            
+                                    </div>
+                                    <!-- end panel -->
+                                </div>
+                                <!-- end col-12 -->
+                            </div>
+
+                        </div>
+                        <!-- end wizard step-1 -->
+
+                        <!-- begin wizard step-2 -->
+                        <div class="wizard-step-2">
+                            <div class="row">
+                                <!-- begin col-12 -->
+                                
+                                <!-- MY BEHAVIOUR -->
+                                <div class="col-md-12">
+                                    <!-- begin panel -->
+                                    <div class="panel panel-info">
+                                        <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                                            <div class="panel-heading-btn">
+                                                <!-- <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a> -->
+                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-plus"></i></a>
+                                            </div>                          
+                                            <h4 style="color:bro" class="panel-title"><b> MY BEHAVIOUR </b></h4>                    
+                                        </div>
+                            
+                                        <div class="panel-body">
+                                            <div  class="panel panel-inverse">
+                                                
+                                                <div id="case-events"  class="table-responsive">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <table class="table">
+                                                                <tbody>
+                                                                    <th scope="row">
+                                                                        <h4 for='l' style="margin-top: 0;color:#55518a">Q25: <small style="color:#55518a; font-size-adjust: 0.68;">I usually do as I am told ?</small></h4>
+                                                                    </th>
+                                                                    <td>                            
+                                
+                                                                        <div class="form-check form-check-inline">
+                                                                            {{ sinovuyo_teen.cb_child_obedient }}
+                                                                        </div>
+                                                                    <td>
+
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            <h4 style="margin-top: 0;color:#55518a">Q26: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">
+                                                                                I fight a lot. I can make people do what I want</small> </h4>
+    
+                                                                        </th>
+                                    
+                                                                        <td>
+                                    
+                                                                            <div class="form-check form-check-inline">
+                                    
+                                                                                {{ sinovuyo_teen.cb_figths_children }}
+                                    
+                                                                                </div>
+                                                                        <td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>      
+                                                </div>
+                                                <br><br>                           
+                                            </div>
+                                        </div>
+                            
+                                        <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                                            <div class="panel-heading-btn">
+                                            </div>                          
+                                        </div>
+                            
+                                    </div>
+                                    <!-- end panel -->
+                                </div>
+                                <!-- end col-12 -->
+
+                                <!-- DISCIPLINE FROM MY CAREGIVER -->
+                                <div class="col-md-12">
+                                    <!-- begin panel -->
+                                    <div class="panel panel-info">
+                                        <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                                            <div class="panel-heading-btn">
+                                                <!-- <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a> -->
+                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-plus"></i></a>
+                                            </div>                          
+                                            <h4 style="color:bro" class="panel-title"><b> DISCIPLINE FROM MY CAREGIVER </b></h4>                    
+                                        </div>
+                            
+                                        <div class="panel-body">
+                                            <div  class="panel panel-inverse">
+                                                
+                                                <div id="case-events"  class="table-responsive">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <table class="table">
+                                                                <tbody>
+                                                                    <th scope="row">
+                                                                        <h4 for='l' style="margin-top: 0;color:#55518a">Q27: <small style="color:#55518a; font-size-adjust: 0.68;">In the past 4 weeks, how often did your caregiver spank, slap or hit you with his/her hand?</small></h4>
+                                                                    </th>
+                                                                    <td>                            
+                                
+                                                                        <div class="form-check form-check-inline">
+                                                                            {{ sinovuyo_teen.dc_often_discipline }}
+                                                                        </div>
+                                                                    <td>
+
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            <h4 style="margin-top: 0;color:#55518a">Q28: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">
+                                                                                Can you tell me how many times in the past 4 weeks your caregiver used any form of physical discipline on you?</small> </h4>
+    
+                                                                        </th>
+                                    
+                                                                        <td>
+                                    
+                                                                            <div class="form-check form-check-inline">
+                                    
+                                                                                {{ sinovuyo_teen.dc_physical_discipline }}
+                                    
+                                                                                </div>
+                                                                        <td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            <h4 style="margin-top: 0;color:#55518a">Q29: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">
+                                                                                In the past 4 weeks, how often did your caregiver say things about you that upset you?</small> </h4>
+    
+                                                                        </th>
+                                    
+                                                                        <td>
+                                    
+                                                                            <div class="form-check form-check-inline">
+                                    
+                                                                                {{ sinovuyo_teen.dc_upset_child }}
+                                    
+                                                                                </div>
+                                                                        <td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            <h4 style="margin-top: 0;color:#55518a">Q30: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">
+                                                                                In order to bring up, raise, or educate a childproperly, a child needs to be physically punished</small> </h4>
+    
+                                                                        </th>
+                                    
+                                                                        <td>
+                                    
+                                                                            <div class="form-check form-check-inline">
+                                    
+                                                                                {{ sinovuyo_teen.sp_physical_punish }}
+                                    
+                                                                                </div>
+                                                                        <td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>      
+                                                </div>
+                                                <br><br>                           
+                                            </div>
+                                        </div>
+                            
+                                        <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                                            <div class="panel-heading-btn">
+                                            </div>                          
+                                        </div>
+                            
+                                    </div>
+                                    <!-- end panel -->
+                                </div>
+
+                                <!--  FEELING SAD -->
+                                <div class="col-md-12">
+                                    <!-- begin panel -->
+                                    <div class="panel panel-info">
+                                        <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                                            <div class="panel-heading-btn">
+                                                <!-- <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a> -->
+                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-plus"></i></a>
+                                            </div>                          
+                                            <h4 style="color:bro" class="panel-title"><b>FEELING SAD</b></h4>                    
+                                        </div>
+                            
+                                        <div class="panel-body">
+                                            <div  class="panel panel-inverse">
+                                                
+                                                <div id="case-events"  class="table-responsive">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <table class="table">
+                                                                <tbody>
+                                                                    <th scope="row">
+                                                                        <h4 for='l' style="margin-top: 0;color:#55518a">Q25: <small style="color:#55518a; font-size-adjust: 0.68;"> How often in the past week have you felt down and unhappy? </small></h4>
+                                                                    </th>
+                                                                    <td>                            
+                                
+                                                                        <div class="form-check form-check-inline">
+                                                                            {{ sinovuyo_teen.fs_unhappy }}
+                                                                        </div>
+                                                                    <td>
+
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            <h4 style="margin-top: 0;color:#55518a">Q31: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">
+                                                                                How often in the past week have you felt like you were too tired to do things?</small> </h4>
+    
+                                                                        </th>
+                                    
+                                                                        <td>
+                                    
+                                                                            <div class="form-check form-check-inline">
+                                    
+                                                                                {{ sinovuyo_teen.fs_too_tired }}
+                                    
+                                                                                </div>
+                                                                        <td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            <h4 style="margin-top: 0;color:#55518a">Q32: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">
+                                                                                How often in the past week have you felt like something good was going to happen</small> </h4>
+    
+                                                                        </th>
+                                    
+                                                                        <td>
+                                    
+                                                                            <div class="form-check form-check-inline">
+                                    
+                                                                                {{ sinovuyo_teen.fs_hopeful }}
+                                    
+                                                                                </div>
+                                                                        <td>
+                                                                    </tr>
+
+                                                                    <!-- <tr>
+                                                                        <th scope="row">
+                                                                            <h4 style="margin-top: 0;color:#55518a">Q33: <small style="margin-top: 0;color:#55518a ; font-size-adjust: 0.68;">
+                                                                                In order to bring up, raise, or educate a childproperly, a child needs to be physically punished</small> </h4>
+    
+                                                                        </th>
+                                    
+                                                                        <td>
+                                    
+                                                                            <div class="form-check form-check-inline">
+                                    
+                                                                                {{ sinovuyo_teen.fmp_pre_grouping_id }}
+                                    
+                                                                                </div>
+                                                                        <td>
+                                                                    </tr> -->
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>      
+                                                </div>
+                                                <br><br>                           
+                                            </div>
+                                        </div>
+                            
+                                        <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                                            <div class="panel-heading-btn">
+                                            </div>                          
+                                        </div>
+                            
+                                    </div>
+                                    <!-- end panel -->
+                                </div>
+                            </div>
+                              
+
+                             
+                        </div>
+
+                      
+                       
+
+
+                    </div>
+
+                    {% if edit_flag %}
+
+                    <div class="panel-body panel-form">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4"></label>
+                            <div class="col-md-6 col-sm-6">
+                                <button id="mysubmit-hivscreeningtool" type="submit"
+                                    class="btn btn-success">Update Info</button>
+                                <a href="javascript:history.go(-1)" class="btn btn-white">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+
+                        
+                    {% else %}
+
+                    <div class="panel-body panel-form">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4"></label>
+                            <div class="col-md-6 col-sm-6">
+                                <button id="mysubmit-hivscreeningtool" type="submit"
+                                    class="btn btn-primary">Submit</button>
+                                <a href="javascript:history.go(-1)" class="btn btn-white">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                        
+                    {% endif %}
+
+                   
+                </form>
+            </div>
+        
+            {% if edit_flag %}
+                
+            {% else %}
+            {% if sinavuyo_teen_evaluation %}
+
+            <div style="overflow-x: auto; min-height: 300px;">
+                <div class="panel panel-inverse">
+                    <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                        <div class="panel-heading-btn">
+                        </div>
+                        <h4 class="panel-title"> Sinovuyo Teen Pre And Post Assesment Revised Final Draft Form  </h4>
+                    </div>
+                <div class="panel panel-default">
+                    <div  class="panel panel-inverse">
+                        <div id="case-events"  class="table-responsive">
+                            <table id="" class="table table-striped ">
+                                <div class="" >
+                                    <h3 class="" style="color: dimgrey;"><b>  </b></h3>
+                                </div>
+                                <table class="table table-striped">
+                                    <thead>
+                                      <tr>
+                                        <th>Q 1</th>
+                                        <th>Q 2</th>
+                                        <th>Q 3</th>
+                                        <th>Q 4</th>
+                                        <th>Q 5</th>
+                                        <th>Q 6</th>
+                                        <th>Q 7</th>
+                                        <th>Q 8</th>
+                                        <th>Q 9</th>
+                                        <th>Q 10</th>
+                                        <th>Q 11</th>
+                                        <th>Q 12a</th>
+                                        <th>Q 12b</th>
+                                        <th>Q 13</th>
+                                        <th>Q 14</th>
+                                        <th>Q 15</th>
+                                        <th>Q 16</th>
+                                        <th>Q 17</th>
+                                        <th>Q 18</th>
+                                        <th>Q 19</th>
+                                        <th>Q 20</th>
+                                        <th>Q 21</th>
+                                        <th>Q 22</th>
+                                        <th>Q 23</th>
+                                        <th>Q 24</th>
+                                        <th>Q 25</th>
+                                        <th>Q 26</th>
+                                        <th>Q 27</th>
+                                        <th>Q 28</th>
+                                        <th>Q 29</th>
+                                        <th>Q 30</th>
+                                        <th>Q 31</th>
+                                        <th>Q 32</th>
+                                        <th>Date of Event</th>
+                                        <th> </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      
+                                        {% for teen_evaluation in sinavuyo_teen_evaluation %}
+    
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>{{sinavuyo_teen_evaluation.ASSESSMENT_TYPE}}</td>
+                                            <td>{{sinavuyo_teen_evaluation.bd_age}}</</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+    
+                                            
+                                            <td><a href="{% url 'new_sinovuyoteen_form_edit' teen_evaluation.evaluation_id %}" ><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a><br>
+                                                <a href="{% url 'new_sinovuyoteen_form_delete' teen_evaluation.evaluation_id %}"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a></td>
+                                            </tr>
+                                          </tr> 
+                                            
+                                        {% endfor %}
+                                      
+                                  </table>
+                                    <p>&nbsp;</p>
+                            </table>
+                        </div>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+            {% else %}
+            <div style="overflow-x: auto; min-height: 300px;">
+                <div class="panel panel-inverse">
+                    <div style="background-color: rgb(17, 170, 170)" class="panel-heading">
+                        <div class="panel-heading-btn">
+                        </div>
+                        <h4 class="panel-title"> No Data available! ... </h4>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div  class="panel panel-inverse">
+                        <div id="case-events"  class="table-responsive">
+                            <table id="" class="table table-striped ">
+                                <div class="" >
+                                    <h3 class="" style="color: dimgrey;"><b>  </b></h3>
+                                </div>
+    
+                                <div id="messages" class="alert alert-danger fade in">
+                                    This child has no data...
+                                    <span class="close" data-dismiss="alert">×</span>
+                                    <i class="fa fa-check fa-2x pull-left"></i>
+                                </div>
+    
+                        </div>
+                        <br><br>
+                    </div>
+                </div>
+            </div>            
+            {% endif %}
+                
+            {% endif %}
+            
+        <div class="badge pull-right m-4">Revised: 4th July 2019</div>
+        </div>
+        <!-- end panel -->
+
+    </div>
+    <!-- end col-12 -->
+
+</div>
+<!-- end row -->
+
+
+{% endblock %}
+
+{% block lazy_javascript_code %}
+<script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}"></script>
+<script src="{% static 'js/apps.js' %}"></script>
+<script src="{% static 'js/form-wizards.js' %}"></script>
+<script src="{% static 'js/tag-it.js' %}"></script>
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/admin/RelatedObjectLookups.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/actions.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/calendar.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>
+
+
+
+<script>
+        $( function() {
+   
+
+          $(document).ready(function () {
+                $("#wizard-dreamsform").bwizard();
+            });
+
+        } );        
+</script>
+
+{% endblock %}

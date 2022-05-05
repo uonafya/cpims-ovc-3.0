@@ -1,0 +1,420 @@
+sinovuyoteen{% extends 'base.html' %}
+{% load app_filters %}
+{% load static %}
+{% block page_title %} DREAMS Service Uptake Form {% endblock %}
+{% block style_code %}
+<link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block javascript_code%}
+{% endblock javascript_code%}
+
+{% block primary %}
+
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+    <li><a href="#">Home</a></li>
+    <li class="active">Forms</li>
+</ol>
+<!-- end breadcrumb -->
+
+<!-- begin page-header -->
+<!-- {% for data in init_data %}
+<h1 class="page-header">Forms
+    <small>DREAMS Service Uptake Form<b> &nbsp;{{ data.first_name }} {{ data.surname }} | {{ data.sex_id|gen_value:vals }} | 
+        {% if data.date_of_birth|gen_age == 0 %}
+                    UNDER 1 YEAR
+                {% else %}
+                    {{ data.date_of_birth|gen_age }} YRS 
+                {% endif %}</b></small>
+        </b>
+</h1>
+{% endfor %} -->
+
+<!-- end page-header -->
+
+<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-info fa-2x pull-left"></i>
+    <span class="invalid-form-message" id="invalid-form-message"></span>
+</div>
+
+<!-- begin row -->
+<div id='case_details' class="row">
+    <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin panel -->
+      <div style="overflow-x: auto; min-height: 300px;">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i
+                            class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i
+                            class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title"> Monitoring Tool for OVC Households Reaching Case Plan Achievement Instructions: </h4>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true"
+                    name="form-wizard-hhva" id="new_hhva">
+                    {% csrf_token %}
+                    {% if messages %}
+                        <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <div id="wizard-dreamsform">
+                        <ol>
+
+                            <li>
+                                DOMAIN: HEALTHY
+                                <small></small>
+                            </li>
+
+                            <li>
+                                DOMAIN: STABLE
+                                <small></small>
+                            </li>
+                            <li>
+                                DOMAIN: SAFE  
+                                    <small></small>
+                             </li>
+                             <li>
+                                DOMAIN: SCHOOLED
+                                    <small></small>
+                            </li>
+                            <li>
+                                Recommended action 
+                                <small></small>
+                            </li>
+                            
+                        </ol>
+
+                        <!-- begin wizard step-1 -->
+                        <div class="wizard-step-1">
+
+                            <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Month 1</th>
+                                    <th scope="col">Month 2</th>
+                                    <th scope="col">Month 3</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <th scope="row">
+                                        <h3 for='l' style="margin-top: 0;color:#55518a"> Benchmark 1: <small>All children, adolescents, and caregivers in the household have known HIV status or a test is not required based on risk assessment </small></h3>
+                                    </th>
+                                    <td>                            
+
+                                        <div class="form-check form-check-inline">
+
+                                            {{ new_graduation_form_month_1.BNMRK_1}}
+                                          </div>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_2.BNMRK_1}}
+                                          </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_3.BNMRK_1}}
+                                          </div></td>
+                                    </td>
+                                  </tr>
+                                  
+                                </tbody>
+
+
+                                <tbody>
+                                  <tr>
+                                    <th scope="row">
+                                        <h3 for='l' style="margin-top: 0;color:#55518a">Benchmark 2: <small>All HIV+ children, adolescents, and caregivers in the household with a viral load result documented in the medical record and/or laboratory information systems (LIS) have been virally suppressed for the last 12 months. </small></h3>
+                                    </th>
+                                    <td>
+
+                                        <div class="form-check form-check-inline">
+
+                                            {{ new_graduation_form_month_1.BNMRK_2}}
+                                          </div>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_2.BNMRK_2}}
+                                          </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_3.BNMRK_2}}
+                                          </div></td>
+                                    </td>
+                                  </tr>
+
+                                </tbody>
+
+                                    <tbody>
+                                  <tr>
+                                    <th scope="row">
+                                        <h3 style="margin-top: 0;color:#55518a"> Benchmark 3: <small> All HIV+ children, adolescents, and caregivers in the household with a viral load result documented in the medical record and/or laboratory information systems (LIS) have been virally suppressed for the last 12 months.</small></h3>
+                                    </th>
+                                    <td>
+
+                                        <div class="form-check form-check-inline">
+
+                                            {{ new_graduation_form_month_1.BNMRK_3}}
+                                          </div>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_2.BNMRK_3}}
+                                          </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_3.BNMRK_3}}
+                                          </div></td>
+                                    </td>
+                                  </tr>
+
+                                </tbody>
+
+                                    <tbody>
+                                <tr>
+                                    <th scope="row">
+                                        <h3 style="margin-top: 0;color:#55518a"> Benchmark 4: <small>No children < 5 years in the household are undernourished</small></h3></th>
+
+                            <td>
+
+                                        <div class="form-check form-check-inline">
+
+                                            {{ new_graduation_form_month_1.BNMRK_4}}
+                                          </div>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_2.BNMRK_4}}
+                                          </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_3.BNMRK_4}}
+                                          </div></td>
+                                    </td>
+                                </tr>
+                                </tbody>
+                                </table>
+                        </div>
+                        <!-- end wizard step-1 -->
+
+                        <!-- begin wizard step-2 -->
+                        <div class="wizard-step-2">
+                            <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Month 1</th>
+                                    <th scope="col">Month 2</th>
+                                    <th scope="col">Month 3</th>
+                                  </tr>
+                                </thead>
+                                <th scope="row">
+                                    <h3 style="margin-top: 0;color:#55518a"> Benchmark 5: <small>Caregivers are able to access money (without selling productive assets) to pay for school fees, medical costs (buy medicine, transport to facility etc), legal and other administrative fees (related to guardianship, civil registration, or inheritance) for children 0-17 years </small></h3></th>
+
+                            <div class="form-check form-check-inline">
+                                <td>
+
+                                        <div class="form-check form-check-inline">
+
+                                            {{ new_graduation_form_month_1.BNMRK_5}}
+                                          </div>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_2.BNMRK_5}}
+                                          </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_3.BNMRK_5}}
+                                          </div></td>
+                                    </td>
+                              </div>
+                            </table>
+
+                              
+
+                             
+                        </div>
+                        <!-- end wizard step-2 -->
+
+                         <!-- begin wizard step-3 -->
+                         <div class="wizard-step-3">
+                             <table class="table">
+                                 <thead>
+                                  <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Month 1</th>
+                                    <th scope="col">Month 2</th>
+                                    <th scope="col">Month 3</th>
+                                  </tr>
+                                </thead>
+                                 <th scope="row">
+                            <h3 style="margin-top: 0;color:#55518a"> Benchmark 6: <small> No children, adolescents, and caregivers in the household report experiences of violence (including physical violence, emotional violence, sexual violence, gender-based violence, and neglect) in the last six months. </small></h3></th>
+
+                            <div class="form-check form-check-inline">
+                                <td>
+
+                                        <div class="form-check form-check-inline">
+
+                                            {{ new_graduation_form_month_1.BNMRK_6}}
+                                          </div>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_2.BNMRK_6}}
+                                          </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_3.BNMRK_6}}
+                                          </div></td>
+                                    </td>
+                              </div>
+                                 <tbody>
+                                <th scope="row">
+                                    <h3 style="margin-top: 0;color:#55518a"> Benchmark 7: <small>All children and adolescents in the household are under the care of a stable adult caregiver</small></h3></th>
+
+                          <div class="form-check form-check-inline">
+                              <td>
+                                        <div class="form-check form-check-inline">
+
+                                            {{ new_graduation_form_month_1.BNMRK_7}}
+                                          </div>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_2.BNMRK_7}}
+                                          </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_3.BNMRK_7}}
+                                          </div></td>
+                                    </td>
+                            </div>
+                                </tbody>
+                             </table>
+                         </div>
+                             <!-- begin wizard step-4 -->
+                        <div class="wizard-step-4">
+                            <table class="table">
+                                <tbody>
+                                <thead>
+                                  <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Month 1</th>
+                                    <th scope="col">Month 2</th>
+                                    <th scope="col">Month 3</th>
+                                  </tr>
+                                </thead>
+                                  <tr>
+                                    <th scope="row">
+                                        <h3 style="margin-top: 0;color:#55518a"> Benchmark 9: <small>All school-aged children (4-17) and adolescents aged 18-20 enrolled in secondary school in the household regularly attended school and progressed during the last year.</small></h3>                                    </th>
+                                    <td>
+
+                                        <div class="form-check form-check-inline">
+
+                                            {{ new_graduation_form_month_1.BNMRK_9}}
+                                          </div>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_2.BNMRK_9}}
+                                          </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-check-inline">
+                                            {{ new_graduation_form_month_3.BNMRK_9}}
+                                          </div></td>
+                                    </td>
+                                </tr>
+                                </tbody>
+                                </table>
+                            </div>
+                            <!-- end wizard step-4 -->
+
+                             <!-- begin wizard step-5 -->
+                            <div class="wizard-step-5">
+                                    <h3 style="margin-top: 0;color:#55518a"> 5. Recommendation </h3>
+                                    <div class="form-floating">
+                                        <div>{{recommended_action}}</div>
+                                        <label for="floatingTextarea">Please write your Reccomendations Here...</label>
+                                      </div>
+        
+        
+                                </div>
+                            <!-- end wizard step-5 -->
+
+
+                    </div>
+
+                    <div class="panel-body panel-form">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4"></label>
+                            <div class="col-md-6 col-sm-6">
+                                <button id="mysubmit-hivscreeningtool" type="submit"
+                                    class="btn btn-primary">Submit</button>
+                                <a href="javascript:history.go(-1)" class="btn btn-white">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+            <div class="badge pull-right m-4">Revised: 4th July 2019</div>
+        </div>
+        <!-- end panel -->
+
+    </div>
+    <!-- end col-12 -->
+
+</div>
+<!-- end row -->
+
+{% endblock %}
+
+{% block lazy_javascript_code %}
+<script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}"></script>
+<script src="{% static 'js/apps.js' %}"></script>
+<script src="{% static 'js/form-wizards.js' %}"></script>
+<script src="{% static 'js/tag-it.js' %}"></script>
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+
+<script>
+        $( function() {
+   
+
+          $(document).ready(function () {
+                $("#wizard-dreamsform").bwizard();
+            });
+
+        } );
+</script>
+
+{% endblock %}

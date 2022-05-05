@@ -1,0 +1,10 @@
+<form method="POST" enctype="multipart/form-data">
+ 
+    <!-- Security token -->
+    {% csrf_token %}
+ 
+    <!-- Using the formset -->
+    {{ form }}
+     
+    <input type="submit" value="Submit">
+</form>
