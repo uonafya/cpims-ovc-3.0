@@ -58,6 +58,13 @@
     <!-- end page-header -->
 
 
+    <table width="50%" class="table">
+       <tbody>
+        
+        </tbody>
+    </table>
+
+
     <!-- #csi-warning-dialog -->
     <div class="modal fade" id="csi-warning-dialog">
         <div class="modal-dialog">
@@ -179,9 +186,10 @@
                                         <table id="services_manager_table" class="table">
                                             <thead>                                                                                             
                                                 <tr>
-                                                    <td ></td>
+                                                    <td class="col-md-1 p-r-2"></td>
                                                     <td>
-                                                        Client Category :  {{ form.CATEGORY }}
+                                                        Client Category
+                                                        {{ form.olmis_c }}
                                                     </td>
                                                     <td>
                                                         How urgent is this referral?

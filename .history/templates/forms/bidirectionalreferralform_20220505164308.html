@@ -58,6 +58,13 @@
     <!-- end page-header -->
 
 
+    <table width="50%" class="table">
+       <tbody>
+        
+        </tbody>
+    </table>
+
+
     <!-- #csi-warning-dialog -->
     <div class="modal fade" id="csi-warning-dialog">
         <div class="modal-dialog">
@@ -177,16 +184,16 @@
                                     <div id="error_service"></div>
                                     <div style="overflow-x: auto; min-height: 300px;">
                                         <table id="services_manager_table" class="table">
-                                            <thead>                                                                                             
+                                            <thead>                                               
                                                 <tr>
-                                                    <td ></td>
-                                                    <td>
-                                                        Client Category :  {{ form.CATEGORY }}
+                                                    <td class="field">
+                                                        Client Category
+                                                        {{ form.category }}
                                                     </td>
-                                                    <td>
+                                                    <td class="field">
                                                         How urgent is this referral?
                                                         {{ form.URGENT }}
-                                                    </td>                                                
+                                                    </td>
                                                 </tr>
                                             </thead>
                                             <thead>

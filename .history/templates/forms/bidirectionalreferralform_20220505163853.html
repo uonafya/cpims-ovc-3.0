@@ -58,6 +58,24 @@
     <!-- end page-header -->
 
 
+    <table width="50%" class="table">
+       <tbody>
+        <thead>                                               
+            <tr>
+                <td class="field">
+                    Client Category
+                    {{ form.category }}
+                </td>
+                <td class="field">
+                    How urgent is this referral?
+                    {{ form.URGENT }}
+                </td>
+            </tr>
+        </thead>
+        </tbody>
+    </table>
+
+
     <!-- #csi-warning-dialog -->
     <div class="modal fade" id="csi-warning-dialog">
         <div class="modal-dialog">
@@ -176,19 +194,7 @@
                                 <div class="panel-body">
                                     <div id="error_service"></div>
                                     <div style="overflow-x: auto; min-height: 300px;">
-                                        <table id="services_manager_table" class="table">
-                                            <thead>                                                                                             
-                                                <tr>
-                                                    <td ></td>
-                                                    <td>
-                                                        Client Category :  {{ form.CATEGORY }}
-                                                    </td>
-                                                    <td>
-                                                        How urgent is this referral?
-                                                        {{ form.URGENT }}
-                                                    </td>                                                
-                                                </tr>
-                                            </thead>
+                                        <table id="services_manager_table" class="table">                                           
                                             <thead>
                                             <tr id="id_inputHeaders">
                                                 <td width="2%"></td>
@@ -206,7 +212,7 @@
                                             <tr id="id_inputElements13">
                                                 <td width="2%"></td>
                                                 <td width="15%">
-                                                    {{ form.olmis_domain }}
+                                                    {{ form.olim }}
                                                     <div id="olmis_domain_errormsg" style="display:none;">
                                                         <small><p class="dialog_paragraph">This value is
                                                             required</p></span></small><span>

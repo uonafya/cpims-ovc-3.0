@@ -6952,7 +6952,7 @@ def bidirectionalreferralform(request, id):
     init_data = RegPerson.objects.filter(pk=id)
     check_fields = ['sex_id']
     vals = get_dict(field_name=check_fields)
-    form = OVCF1AForm(initial={'person': id})
+    form = BIDIRECTIONALREFERRALFORM(initial={'person': id})
     return render(request,
                   'forms/bidirectionalreferralform.html',
                   {'form': form, 'init_data': init_data,

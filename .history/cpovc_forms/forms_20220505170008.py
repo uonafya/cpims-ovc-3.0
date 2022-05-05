@@ -8248,8 +8248,8 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
                                                 widget=forms.Select(
                                                     attrs={'class':'form-control'}
                                                 ))
-    CATEGORY = forms.ChoiceField(choices=category_choices,
-                               widget=forms.Select(
+    CATEGORY = forms.SelectMultiple(choices=category_choices,
+                               widget=forms.S(
                                    attrs={'class':'form-control'}
                                ))
 

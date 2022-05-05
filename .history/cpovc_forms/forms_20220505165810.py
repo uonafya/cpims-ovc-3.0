@@ -8244,12 +8244,11 @@ class BIDIRECTIONALREFERRALFORM(forms.Form):
                                                     attrs={'class': 'form-control'
                                                            }))
 
-    URGENT = forms.ChoiceField(choices=urgent_choices,
+    URGENT = forms.SelectMultiple(choices=urgent_choices,
                                                 widget=forms.Select(
                                                     attrs={'class':'form-control'}
                                                 ))
-    CATEGORY = forms.ChoiceField(choices=category_choices,
-                               widget=forms.Select(
+Select                               widget=forms.RadioSelect(
                                    attrs={'class':'form-control'}
                                ))
 
