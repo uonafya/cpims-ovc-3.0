@@ -408,25 +408,25 @@
                             {% for case_closure_data in case_closure %}
 
                                 <tr>
-                                    <td>{{ case_closure_data.reason }}</td>
-                                    <td>{{ case_closure_data.rec_organization}}</td>
-                                    <td>{{ case_closure_data.attrition_reason }} </td>
-                                    <td>{{ case_closure_data.case_files_completed }}</td>
-                                    <td>{{ case_closure_data.cw_phone_household  }}</td>
-                                    <td>{{ case_closure_data.sp_informed_graduation }}</td>
+                                    <td>{{ case_closure_data.reason |gen_value:vals }}</td>
+                                    <td>{{ case_closure_data.rec_organization |gen_value:vals}}</td>
+                                    <td>{{ case_closure_data.attrition_reason |gen_value:vals}} </td>
+                                    <td>{{ case_closure_data.case_files_completed |gen_value:vals}}</td>
+                                    <td>{{ case_closure_data.cw_phone_household |gen_value:vals }}</td>
+                                    <td>{{ case_closure_data.sp_informed_graduation |gen_value:vals}}</td>
 
-                                    <td>{{ case_closure_data.transfer_form_completed  }}</td>
-                                    <td>{{ case_closure_data.follow_up_frequency}}</td>
-                                    <td>{{ case_closure_data.sp_informed_tarnsfer}}</td>
-                                    <td>{{ case_closure_data.family_folder_sent }}</td>
+                                    <td>{{ case_closure_data.transfer_form_completed |gen_value:vals }}</td>
+                                    <td>{{ case_closure_data.follow_up_frequency |gen_value:vals}}</td>
+                                    <td>{{ case_closure_data.sp_informed_tarnsfer|gen_value:vals}}</td>
+                                    <td>{{ case_closure_data.family_folder_sent |gen_value:vals}}</td>
 
 
-                                    <td>{{ case_closure_data.attrition_documented }}</td>
-                                    <td>{{ case_closure_data.manager_report }}</td>
+                                    <td>{{ case_closure_data.attrition_documented |gen_value:vals}}</td>
+                                    <td>{{ case_closure_data.manager_report |gen_value:vals }}</td>
 
-                                    <td>{{ case_closure_data.exit_reason_stored }}</td>
-                                    <td>{{ case_closure_data.files_stored }}</td>
-                                    <td>{{ case_closure_data.date_of_closure }}</td>
+                                    <td>{{ case_closure_data.exit_reason_stored |gen_value:vals}}</td>
+                                    <td>{{ case_closure_data.files_stored |gen_value:vals }}</td>
+                                    <td>{{ case_closure_data.date_of_closure |gen_value:vals}}</td>
                                 <td> <a href="{% url 'edit_case_closure' case_closure_data.case_clouse_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a> </td>
                                     <td> <a href="{% url 'delete_case_closure' case_closure_data.case_clouse_id%}"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a> </td>
 

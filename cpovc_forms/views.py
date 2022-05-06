@@ -10167,7 +10167,7 @@ def new_case_closure(request, id):
         return HttpResponseRedirect(reverse(forms_home))
 
     init_data = RegPerson.objects.filter(pk=id)
-    check_fields = ['sex_id', 'relationship_type_id']
+    check_fields = ['sex_id', 'relationship_type_id','yesno_id']
     vals = get_dict(field_name=check_fields)
     ovc_id = int(id)
     print(f'This is ovc {ovc_id} Thisid {id}')

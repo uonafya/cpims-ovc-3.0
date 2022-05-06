@@ -8251,6 +8251,7 @@ class BenchmarkMonitoringForm(forms.Form):
 
 class CaseClosureForm(forms.Form):
     get_org_units_list=get_organization_list()
+    # YESNO_CHOICES=get_list('yes_id')
 
 
 
@@ -8296,14 +8297,6 @@ class CaseClosureForm(forms.Form):
             }
         )
     )
-    CASE_CL004 = forms.CharField(
-        required=False,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'placeholder': _('Any Other Reason'),
-                'data-parsley-required': "false"
-                   }))
 
     CASE_CL005 = forms.ChoiceField(
         required=False,
