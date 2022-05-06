@@ -7626,7 +7626,9 @@ def edit_referal(request, id, btn_event_type, btn_event_pk):
             date_of_event_edit = str(event_obj.date_of_event)
             services_list = []
             ## get Services
-            ovccareservices = OVCCareServices.objects.filter(event=event_obj, is_void=False)
+            ovccareservices = OVCBiReferral.objects.filter(event=event_obj, is_void=False)
+            import pdb
+            # pdb.set_trace()
             olmis_domain_list = get_list('olmis_domain_id', 'Please Select')
             for ovccareservice in ovccareservices:
                 service = {}
@@ -7943,9 +7945,9 @@ def manage_referal_events(request):
                 prioritys.append(translate(ovcpriority.service))
 
             ## get Services
-            ovccareservices = OVCCareServices.objects.filter(event=ovccareevent.pk)
+            ovccareservices = OVCBiReferral.objects.filter(event=ovccareevent.pk)
             for ovccareservice in ovccareservices:
-                services.append(translate(ovccareservice.service_provided))
+                services.append(translate(ovccareservice.refferal_service))
 
             if (services):
                 event_type = 'SERVICES'
