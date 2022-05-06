@@ -476,7 +476,9 @@
                                 var btn_event_type = $(this).attr("data-event_type");
                                 var btn_event_pk = $(this).attr("data-event_pk");
 
-                                var url = "{% url 'edit_referal' id=1234 btn_event_type=2345 btn_event_pk=3456 %}".replace(/1234/, personId.toString()).replace(/2345/, btn_event_type.toString()).replace(/3456/, btn_event_pk.toString());
+                                var url = "{% url 'edit_referal' btn_event_pk=3456 %}".replace(/3456/, btn_event_pk.toString());
+                                {#var url = "{% url 'edit_referal'  btn_event_pk=3456 %}".replace(/3456/, btn_event_pk.toString());#}
+                                console.log(url)
 
                                 window.open(url, "_self");
                             });

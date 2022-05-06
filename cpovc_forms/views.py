@@ -6949,7 +6949,7 @@ def form1a_events(request, id):
 
 def bidirectionalreferralform(request, id):
     init_data = RegPerson.objects.filter(pk=id)
-    check_fields = ['sex_id']
+    check_fields = ['sex_id', 'olmis_health_service_id_0']
     vals = get_dict(field_name=check_fields)
     form = OVCF1AForm(initial={'person': id})
     return render(request,
@@ -7560,124 +7560,47 @@ def edit_form1a(request, id, btn_event_type, btn_event_pk):
                        'vals': vals, 'event_pk': btn_event_pk, 'event_type': btn_event_type, 'err_msgg': err_msgg})
 
 
-def edit_referal(request, id, btn_event_type, btn_event_pk):
+def edit_referal(request, btn_event_pk):
+    import pdb
+
+    event_id = uuid.UUID(btn_event_pk)
+    event_instance = OVCCareEvents.objects.filter(event=event_id)
+    id = event_instance[0].person_id
     init_data = RegPerson.objects.filter(pk=id)
-    check_fields = ['sex_id']
-    vals = get_dict(field_name=check_fields)
     form = OVCF1AForm(initial={'person': id})
     event_obj = OVCCareEvents.objects.get(pk=btn_event_pk)
-    event_id = uuid.UUID(btn_event_pk)
-    d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created
-    delta = get_days_difference(d_event)
-    print("stop 1")
-    print(delta)
+    btn_event_type = 'SERVICES'
+    check_fields = ['sex_id']
+    vals = get_dict(field_name=check_fields)
+    date_of_event_edit = str(event_obj.date_of_event)
+    services_list = []
+    ## get Services
+    ovccareservices = OVCBiReferral.objects.filter(event=event_obj, is_void=False)
+    olmis_domain_list = get_list('olmis_health_service_id_1', 'Please Select')
+    for ovccareservice in ovccareservices:
 
-    print('check delta')
-    print(delta)
-    if delta < 90:
-        if btn_event_type == 'ASSESSMENT':
-            ovc_care_assessments = OVCCareAssessment.objects.filter(event=event_obj)
-
-            service_type_list = []
-            olmis_assessment_domain_list = get_list(
-                'olmis_assessment_domain_id', 'Please Select')
-            date_of_event_edit = event_obj.date_of_event
-            for ovc_care_assessment in ovc_care_assessments:
-                domain_entry = {}
-                assessment_entry = []
-                domain_full_name = [domain for domain in olmis_assessment_domain_list if
-                                    domain[0] == ovc_care_assessment.domain]
-
-                assessment_entry.append(domain_full_name[0][1])
-                assessment_entry.append(translate(ovc_care_assessment.service))
-                assessment_entry.append(translate(ovc_care_assessment.service_status))
-                domain_entry[ovc_care_assessment.assessment_id] = assessment_entry
-                service_type_list.append(domain_entry)
-
-                form = OVCF1AForm(initial={'person': id})
-                date_of_event_edit = str(date_of_event_edit)
-                print(service_type_list)
-            return render(request,
-                          'forms/edit_referal.html',
-                          {'form': form, 'init_data': init_data,
-                           'vals': vals, 'event_pk': btn_event_pk, 'event_type': btn_event_type,
-                           'service_type_list': service_type_list, 'date_of_event_edit': date_of_event_edit})
-
-
-        elif btn_event_type == 'CRITICAL':
-            print('---------------- stop point 1')
-            critical_events = OVCCareEAV.objects.filter(event=event_obj)
-            critical_events_lst = ''
-            loop_count = 0
-            for critical_event in critical_events:
-                if loop_count == 0:
-                    critical_events_lst = critical_events_lst + str(critical_event.value)
-                    loop_count = loop_count + 1
-                else:
-                    critical_events_lst = critical_events_lst + ',' + str(critical_event.value)
-            date_of_event_edit = str(event_obj.date_of_event)
-            return render(request,
-                          'forms/edit_referal.html',
-                          {'form': form, 'init_data': init_data,
-                           'critical_events_lst': critical_events_lst, 'vals': vals, 'event_pk': btn_event_pk,
-                           'event_type': btn_event_type, 'date_of_event_edit': date_of_event_edit})
-
-        elif btn_event_type == 'SERVICES':
-            date_of_event_edit = str(event_obj.date_of_event)
-            services_list = []
-            ## get Services
-            ovccareservices = OVCBiReferral.objects.filter(event=event_obj, is_void=False)
-            import pdb
-            # pdb.set_trace()
-            olmis_domain_list = get_list('olmis_domain_id', 'Please Select')
-            for ovccareservice in ovccareservices:
                 service = {}
                 assessment_entry = []
-                domain_full_name = [domain for domain in olmis_domain_list if
-                                    domain[0] == ovccareservice.domain]
-                print(ovccareservice.domain)
+                event_name = [event for event in olmis_domain_list if
+                                    event[0] == ovccareservice.event]
+                print(ovccareservice.event)
                 print('')
                 print(olmis_domain_list)
                 print('')
-                print(domain_full_name)
-                service['id'] = ovccareservice.service_id
-                service['detail'] = translate(ovccareservice.service_provided)
-                service['date'] = (str(ovccareservice.date_of_encounter_event))
-                service['domain'] = domain_full_name[0][1]
+                print(event_name)
+                service['id'] = ovccareservice.event_id
+                service['detail'] = translate(ovccareservice.refferal_service)
+                service['date'] = (str(ovccareservice.refferal_enddate))
+                service['domain'] = 'SERVICE'
                 services_list.append(service)
-            return render(request,
-                          'forms/edit_referal.html',
-                          {'form': form, 'init_data': init_data,
-                           'vals': vals, 'event_pk': btn_event_pk, 'event_type': btn_event_type,
-                           'services_list': services_list, 'date_of_event_edit': date_of_event_edit})
+    return render(request,'forms/edit_referal.html',
+                  {'form': form, 'init_data': init_data,
+                   'event_pk': btn_event_pk, 'event_type': btn_event_type,
+                   'services_list': services_list, 'date_of_event_edit': date_of_event_edit, 'vals': vals})
 
-        else:
-            date_of_event_edit = str(event_obj.date_of_event)
-            priority_lists = []
-            olmis_domain_list = get_list('olmis_domain_id', 'Please Select')
-            ## get Prioritys
-            ovcprioritys = OVCCarePriority.objects.filter(event=event_obj, is_void=False)
-            for ovcpriority in ovcprioritys:
-                priorty = {}
-                domain_full_name = [domain for domain in olmis_domain_list if
-                                    domain[0] == ovcpriority.domain]
-                priorty['id'] = str(ovcpriority.pk)
-                priorty['domain'] = domain_full_name[0][1]
-                priorty['need'] = translate(ovcpriority.service)
-                priority_lists.append(priorty)
-            print(priority_lists)
-            return render(request,
-                          'forms/edit_referal.html',
-                          {'form': form, 'init_data': init_data,
-                           'vals': vals, 'event_pk': btn_event_pk, 'event_type': btn_event_type,
-                           'priority_lists': priority_lists, 'date_of_event_edit': date_of_event_edit})
-    else:
-        err_msgg = "Can't alter after 90 days"
-        # return HttpResponseRedirect(reverse('form1a_events', args=(id,)))
-        return render(request,
-                      'forms/form1a_events.html',
-                      {'form': form, 'init_data': init_data,
-                       'vals': vals, 'event_pk': btn_event_pk, 'event_type': btn_event_type, 'err_msgg': err_msgg})
+
+
+
 
 
 
@@ -7717,30 +7640,25 @@ def delete_form1a(request, id, btn_event_type, btn_event_pk):
 @login_required(login_url='/')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_referal(request, id, btn_event_type, btn_event_pk):
-    jsonForm1AData = []
     msg = ''
-    try:
-        event_id = uuid.UUID(btn_event_pk)
-        d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created
-        delta = get_days_difference(d_event)
-        if delta < 90:
-            event = OVCCareEvents.objects.filter(pk=event_id)
-            print("we are here")
-            if event:
-                if btn_event_type == 'ASSESSMENT':
-                    OVCCareAssessment.objects.filter(event=event).delete()
-                elif btn_event_type == 'PRIORITY':
-                    OVCCarePriority.objects.filter(event=event).delete()
-                elif 'CRITICAL' in btn_event_type:
-                    OVCCareEAV.objects.filter(event=event).delete()
-                elif btn_event_type == 'SERVICES':
-                    OVCCareServices.objects.filter(event=event).delete()
+    import pdb
+    event = uuid.UUID(btn_event_pk)
+    print("we are here")
+    if event:
+        if btn_event_type == 'SERVICES':
+            OVCBiReferral.objects.filter(event_id=event).update(is_void=True)
+            object_void =  OVCBiReferral.objects.filter(event_id=event).all()
+            flag = ''
+            for i in range(0, len(object_void)):
+                if object_void[i].is_void == True:
+                    flag = True
+                else:
+                    flag = False
+            if flag == True:
                 msg = 'Deleted successfully'
-        else:
-            msg = "Can't delete after 90 days"
-    except Exception as e:
-        msg = 'An error occured : %s' % str(e)
-        print(str(e))
+            else:
+                msg = "Error deleting!"
+    jsonForm1AData = []
     jsonForm1AData.append({'msg': msg})
     return JsonResponse(jsonForm1AData,
                         content_type='application/json',
@@ -7922,46 +7840,19 @@ def manage_referal_events(request):
             services = []
             event_keywords = []
             event_keyword_group = []
-            assessments = []
-            prioritys = []
-            critical_events = []
             event_date = ovccareevent.date_of_event
 
-            ## get Assessment
-            ovccareassessments = OVCCareAssessment.objects.filter(event=ovccareevent.pk)
-            for ovccareassessment in ovccareassessments:
-                assessments.append(
-                    translate(ovccareassessment.service) + '(' + translate(ovccareassessment.service_status) + ')')
-                event_keywords.append(ovccareassessment.service)
-
-            ## get CriticalEvents
-            ovccriticalevents = OVCCareEAV.objects.filter(event=ovccareevent.pk)
-            for ovccriticalevent in ovccriticalevents:
-                critical_events.append(translate(ovccriticalevent.value))
-
-            ## get Prioritys
-            ovcprioritys = OVCCarePriority.objects.filter(event=ovccareevent.pk)
-            for ovcpriority in ovcprioritys:
-                prioritys.append(translate(ovcpriority.service))
 
             ## get Services
             ovccareservices = OVCBiReferral.objects.filter(event=ovccareevent.pk)
-            for ovccareservice in ovccareservices:
-                services.append(translate(ovccareservice.refferal_service))
-
+            for i in range(0, len(ovccareservices)):
+                if ovccareservices[i].is_void == False:
+                    for ovccareservice in ovccareservices:
+                        services.append(translate(ovccareservice.refferal_service))
+            import pdb
             if (services):
                 event_type = 'SERVICES'
                 event_details = ', '.join(services)
-            elif (assessments):
-                event_type = 'ASSESSMENT'
-                event_details = ', '.join(assessments)
-                event_keyword_group = ', '.join(event_keywords)
-            elif (prioritys):
-                event_type = 'PRIORITY'
-                event_details = ', '.join(prioritys)
-            elif (critical_events):
-                event_type = 'CRITICAL EVENT'
-                event_details = ', '.join(critical_events)
 
             jsonForm1AEventsData.append({
                 'event_pk': str(ovccareevent.pk),
@@ -10559,12 +10450,12 @@ def bidirectional(request, id):
 #
 #     return redirect('bidirectional', id=new_eval.person)
 
-def delete_referral(request, id):
-    import pdb
-    new_eval = OVCBiReferral.objects.get(refferal_id=id)
-    new_eval.delete()
-    # OVCBiReferral.objects.filter(refferal_id=id).update(is_void=True)
-    return redirect('bidirectional', id=new_eval.person_id)
+# def delete_referral(request, id):
+#     import pdb
+#     new_eval = OVCBiReferral.objects.get(refferal_id=id)
+#     new_eval.delete()
+#     # OVCBiReferral.objects.filter(refferal_id=id).update(is_void=True)
+#     return redirect('bidirectional', id=new_eval.person_id)
 
 
 def save_referal(request):
