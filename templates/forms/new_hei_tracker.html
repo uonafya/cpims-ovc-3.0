@@ -119,7 +119,7 @@
 									<label class="control-label col-md-4 col-sm-4" for="hhva_qs">If Positive, Care giver on ART  : <span class="asteriskField">* </label>
 									<div class="col-md-4 col-sm-4">
 <!--										{{ form.he_he2_hiv_positive }}-->
-										{{ form.PMTCT_HEI6q }}
+										{{ form.PMTCT_HEI6q|gen_value:vals }}
 									</div>
 								</div>
 
@@ -205,12 +205,12 @@
 										{{ form.PMTCT_HEI17q }}
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Immunization : <span class="asteriskField">* </label>
-									<div class="col-md-4 col-sm-4">
-										{{ form.PMTCT_HEI22q }}
-									</div>
-								</div>
+<!--								<div class="form-group">-->
+<!--									<label class="control-label col-md-5 col-sm-5" for="hhva_qs">Immunization : <span class="asteriskField">* </label>-->
+<!--									<div class="col-md-4 col-sm-4">-->
+<!--										{{ form.PMTCT_HEI22q }}-->
+<!--									</div>-->
+<!--								</div>-->
 							</div>
 
 						</div>
@@ -291,111 +291,74 @@
 									<th colspan="2">Others</th>
                                     <th>Actions</th>
                                 </tr>
-
-                                <tr>
-                            <th>HE1</th>
-                            <th>HE2</th>
-                            <th>HE3</th>
-                            <th>HE4</th>
-                            <th>HE5</th>
-                            <th>HE6</th>
-							<th>Contact</th>
-                            <th>HE7</th>
-                            <th>HE8</th>
-                            <th>HE9</th>
-                            <th>HE10</th>
-                            <th>HE11</th>
-							<th>Contact</th>
-                            <th>HE12</th>
-                            <th>HE13</th>
-                            <th>HE14</th>
-                            <th>HE15</th>
-                            <th>HE16</th>
-                            <th>HE17</th>
-							<th>Contact</th>
-                            <th>HE18</th>
-                            <th>HE19</th>
-                            <th>HE20</th>
-                            <th>HE21</th>
-                            <th>HE22</th>
-                            <th>HE23</th>
-							<th>Contact</th>
-                            <th>HE24</th>
-                            <th>HE25</th>
-							<th>HE26</th>
-                            <th>HE27</th>
-                            <th>HE28</th>
-                            <th>HE29</th>
-							<th>Contact</th>
-                            <th>HE30</th>
-                            <th>HE31</th>
-                            <th>HE32</th>
-                            <th>HE33</th>
-                            <th>HE34</th>
-                            <th>HE35</th>
-                            <th>HE36</th>
-                            <th>HE37</th>
-                            <th>Date of Event</th>
-                            <th> </th>
-                        </tr>
+								<tr>
+									<th>HEI1q</th>
+									<th>HEI2q</th>
+									<th>HEI3q</th>
+									<th>HEI4q</th>
+									<th>HEI5q</th>
+									<th>HEI6q</th>
+									<th>HEI7q</th>
+									<th>HEI8q</th>
+									<th>HEI9q</th>
+									<th>HEI10q</th>
+									<th>HEI11q</th>
+									<th>HEI12q</th>
+									<th>HEI13q</th>
+									<th>HEI14q</th>
+									<th>HEI15q</th>
+									<th>HEI16q</th>
+									<th>HEI17q</th>
+									<th>HEI18q</th>
+									<th>HEI19q</th>
+									<th>HEI20q</th>
+									<th>HEI21q</th>
+									<th>HEI22q</th>
+									<th>HEI23q</th>
+									<th>HEI24q</th>
+									<th>HEI25q</th>
+									<th>HEI26q</th>
+									<th>HEI27q</th>
+									<th>HEI28q</th>
+									<th>HEI29q</th>
+									<th>HEI30q</th>
+									<th>HEI31q</th>
+									<th>HEI32q</th>
+									<th>HEI33q</th>
+									<th>HEI34q</th>
+									<th>HEI35q</th>
+									<th>HEI36q</th>
+									<th>HEI37q</th>
+									<th>HEI38q</th>
+									<th>HEI39q</th>
+									<th>HEI40q</th>
+									<th>HEI41q</th>
+									<th>HEI42q</th>
+									<th>HEI43q</th>
+									<th>HEI44q</th>
+									<th>HEI45q</th>
+									<th>HEI46q</th>
+									<th>HEI47q</th>
+									<th>HEI48q</th>
+									<th>Action</th>
+								</tr>
 							</thead>
-                            <tbody>
-                                {% if heidata is not None %}
-									{% for one_hei_data in heidata %}
+                            <tr>
+								 {% if heidata %}
+									{% for hei in heidata %}
 										<tr>
-											<td>{{one_hei_data.hivstatus}}</td>
-											<td>{{one_hei_data.hivpositive}}</td>
-											<td>{{one_hei_data.facility}}</td>
-											<td>{{one_hei_data.ccc}}</td>
-											<td>{{one_hei_data.vl}}</td>
-											<td>{{one_hei_data.vldate}}</td>
-											<td>{{one_hei_data.f1date}}</td>
-											<td>{{one_hei_data.f1hivtest}}</td>
-											<td>{{one_hei_data.f1testresults}}</td>
-											<td>{{one_hei_data.f1vlresults}}</td>
-											<td>{{one_hei_data.f1prophylaxis}}</td>
-											<td>{{one_hei_data.f1mode}}</td>
-											<td>{{one_hei_data.f2date}}</td>
-											<td>{{one_hei_data.f2hivtest}}</td>
-											<td>{{one_hei_data.f2testresults}}</td>
-											<td>{{one_hei_data.f2vlresults}}</td>
-											<td>{{one_hei_data.f2prophylaxis}}</td>
-											<td>{{one_hei_data.f2immunization}}</td>
-											<td>{{one_hei_data.f2mode}}</td>
-											<td>{{one_hei_data.f3date}}</td>
-											<td>{{one_hei_data.f3hivtest}}</td>
-											<td>{{one_hei_data.f3testresults}}</td>
-											<td>{{one_hei_data.f3vlresults}}</td>
-											<td>{{one_hei_data.f3prophylaxis}}</td>
-											<td>{{one_hei_data.f3immunization}}</td>
-											<td>{{one_hei_data.f3mode}}</td>
-											<td>{{one_hei_data.f4date}}</td>
-											<td>{{one_hei_data.f4hivtest}}</td>
-											<td>{{one_hei_data.f4testresults}}</td>
-											<td>{{one_hei_data.f4vlresults}}</td>
-											<td>{{one_hei_data.f4prophylaxis}}</td>
-											<td>{{one_hei_data.f4immunization}}</td>
-											<td>{{one_hei_data.f4mode}}</td>
-											<td>{{one_hei_data.f5date}}</td>
-											<td>{{one_hei_data.f5hivtest}}</td>
-											<td>{{one_hei_data.f5testresults}}</td>
-											<td>{{one_hei_data.f5vlresults}}</td>
-											<td>{{one_hei_data.f5prophylaxis}}</td>
-											<td>{{one_hei_data.f5immunization}}</td>
-											<td>{{one_hei_data.f5mode}}</td>
-											<td>{{one_hei_data.reason}}</td>
-											<td>{{one_hei_data.comments}}</td>
-											<td>{{one_hei_data.date_of_event}}</td>
-											<td><a href="{% url 'edit_heitracker' one_hei_data.hei_id%}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
-											<a href="{% url 'delete_heitracker' one_hei_data.hei_id%}"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a></td>
+											{% for k, i in hei %}
+												<td>{{ i }}</td>
+											{% endfor %}
+												<td>
+													 <a href="#"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
+													<a href="#"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a>
+												</td>
+
 										</tr>
-								    {% empty %}
-<!--								         <tr colspan="37">-->
-											<center><h3 colspan="37">No data available</h3> </center>
-<!--										 </tr>-->
 									{% endfor %}
                                 {% endif %}
-                            </tbody>
+                            </tr>
                         </table>
                     </div>
                     <br><br>
@@ -468,11 +431,9 @@ jQuery(document).ready(function()
 			$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 		}
 	});
-<!--	 var ival = $("input[name='he_he2_hiv_status']:selected").val()-->
-<!--	$('#he_he2_hiv_status').val()-->
 
-	 $("#he_he2_hiv_status").on('change', function () {
-            var ival = $("#he_he2_hiv_status").val();
+	 $("#PMTCT_HEI5q").on('change', function () {
+            var ival = $("#PMTCT_HEI5q").val();
             if (ival == 'Negative' || ival=='Unknown') {
                $('#status').hide()
             } else {

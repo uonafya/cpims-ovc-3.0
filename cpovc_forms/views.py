@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.core import serializers
 from django.conf import settings
 from django.db.models import Q
+from collections import defaultdict
 import json
 import random
 import ast
@@ -37,7 +38,7 @@ from .models import (
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
     OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
-    OVCHEITracker, OVCPreventiveEvents, pmtct_registration)
+    OVCHEITracker, OVCPreventiveEvents, pmtct_registration, PMTCTQuestions, PMTCTHEI, PMTCTEvents)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -10006,146 +10007,199 @@ def new_hei_tracker(request, id):
     try:
         import pdb
 
-        if request.method == 'POST':
-            event_type_id = 'FHSA'
-            # household_id = request.POST.get('household_id')
-            # hei_he1_dob = request.POST.get('hei_he1_dob')
-            # if hei_he1_dob:
-            date_of_hei_event = timezone.now()
-            person = RegPerson.objects.get(pk=int(id))
+        # if request.method == 'POST':
+        #     event_type_id = 'FHSA'
+        #     # household_id = request.POST.get('household_id')
+        #     # hei_he1_dob = request.POST.get('hei_he1_dob')
+        #     # if hei_he1_dob:
+        #     date_of_hei_event = timezone.now()
+        #     person = RegPerson.objects.get(pk=int(id))
+        #
+        #     """ Save HEI CSIEvent """
+        #     event_counter = OVCCareEvents.objects.filter(
+        #         event_type_id=event_type_id, person=id, is_void=False).count()
+        #     ovccareevent = OVCCareEvents(
+        #         event_type_id=event_type_id,
+        #         event_counter=event_counter,
+        #         event_score=0,
+        #         date_of_event=date_of_hei_event,
+        #         created_by=request.user.id,
+        #         person=RegPerson.objects.get(pk=int(id)),
+        #         # house_hold=OVCHouseHold.objects.get(pk=household_id)
+        #     )
+        #     ovccareevent.save()
+        #
+        #     # Caregiver details
+        #     hei2 = request.POST.get('PMTCT_HEI5q')
+        #     hei3 = request.POST.get('PMTCT_HEI6q')
+        #     hei4 = request.POST.get('PMTCT_HEI7q')
+        #     if hei4:
+        #         facility_res = OVCFacility.objects.get(id=hei4).facility_code
+        #     else:
+        #         facility_res = None
+        #     hei5 = request.POST.get('PMTCT_HEI8q')
+        #     hei6 = request.POST.get('PMTCT_HEI9q')
+        #     hei7 = request.POST.get('PMTCT_HEI10q')
+        #     if hei7 == '':
+        #         hei7 = '1990-01-01'
+        #     contact = request.POST.get('PMTCT_HEI42q')
+        #     # pdb.set_trace()
+        #
+        #     if contact == 'AtFirstContact':
+        #         contact_date1 = request.POST.get('PMTCT_HEI42q')
+        #         hei8 = request.POST.get('PMTCT_HEI13q')
+        #         hei9 = request.POST.get('PMTCT_HEI14q')
+        #         hei10 = request.POST.get('PMTCT_HEI15q')
+        #         hei11 = request.POST.get('PMTCT_HEI16q')
+        #         hei12 = request.POST.get('PMTCT_HEI17q')
+        #
+        #     if contact == 'At6wks':
+        #         contact_date2 = request.POST.get('PMTCT_HEI42q')
+        #         hei13 = request.POST.get('PMTCT_HEI13q')
+        #         hei14 = request.POST.get('PMTCT_HEI14q')
+        #         hei15 = request.POST.get('PMTCT_HEI15q')
+        #         hei16 = request.POST.get('PMTCT_HEI16q')
+        #         hei17 = request.POST.get('PMTCT_HEI22q')
+        #         hei18 = request.POST.get('PMTCT_HEI17q')
+        #
+        #     if contact == 'At6mths':
+        #         contact_date3 = request.POST.get('PMTCT_HEI42q')
+        #         hei19 = request.POST.get('PMTCT_HEI13q')
+        #         hei20 = request.POST.get('PMTCT_HEI14q')
+        #         hei21 = request.POST.get('PMTCT_HEI15q')
+        #         hei22 = request.POST.get('PMTCT_HEI16q')
+        #         hei23 = request.POST.get('PMTCT_HEI22q')
+        #         hei24 = request.POST.get('PMTCT_HEI17q')
+        #
+        #     if contact == 'At12mths':
+        #         contact_date4 = request.POST.get('PMTCT_HEI42q')
+        #         hei25 = request.POST.get('PMTCT_HEI13q')
+        #         hei26 = request.POST.get('PMTCT_HEI14q')
+        #         hei27 = request.POST.get('PMTCT_HEI15q')
+        #         hei28 = request.POST.get('PMTCT_HEI16q')
+        #         hei29 = request.POST.get('PMTCT_HEI22q')
+        #         hei30 = request.POST.get('PMTCT_HEI17q')
+        #
+        #     if contact == 'At18mths':
+        #         contact_date5 = request.POST.get('PMTCT_HEI42q')
+        #         hei31 = request.POST.get('PMTCT_HEI13q')
+        #         hei32 = request.POST.get('PMTCT_HEI14q')
+        #         hei33 = request.POST.get('PMTCT_HEI15q')
+        #         hei34 = request.POST.get('PMTCT_HEI16q')
+        #         hei35 = request.POST.get('PMTCT_HEI22q')
+        #         hei36 = request.POST.get('PMTCT_HEI17q')
+        #
+        #     # Others
+        #     hei37 = request.POST.get('PMTCT_HEI47q')
+        #     hei38 = request.POST.get('PMTCT_HEI48q')
+        #
+        #     # ************************************************************
+        #
+        #     query = OVCHEITracker(
+        #         person=person,
+        #         hivstatus=hei2,
+        #         hivpositive=hei3,
+        #         facility=facility_res,
+        #         ccc=hei5,
+        #         vl=hei6,
+        #         vldate=hei7,
+        #         f1date= contact_date1,
+        #         f1hivtest=hei8,
+        #         f1testresults=hei9,
+        #         f1vlresults=hei10,
+        #         f1prophylaxis=hei11,
+        #         f1mode=hei12,
+        #         f2date=contact_date2,
+        #         f2hivtest=hei13,
+        #         f2testresults=hei14,
+        #         f2vlresults=hei15,
+        #         f2prophylaxis=hei16,
+        #         f2immunization=hei17,
+        #         f2mode=hei18,
+        #         f3date=contact_date3,
+        #         f3hivtest=hei19,
+        #         f3testresults=hei20,
+        #         f3vlresults=hei21,
+        #         f3prophylaxis=hei22,
+        #         f3immunization=hei23,
+        #         f3mode=hei24,
+        #         f4date=contact_date4,
+        #         f4hivtest=hei25,
+        #         f4testresults=hei26,
+        #         f4vlresults=hei27,
+        #         f4prophylaxis=hei28,
+        #         f4immunization=hei29,
+        #         f4mode=hei30,
+        #         f5date=contact_date5,
+        #         f5hivtest=hei31,
+        #         f5testresults=hei32,
+        #         f5vlresults=hei33,
+        #         f5prophylaxis=hei34,
+        #         f5immunization=hei35,
+        #         f5mode=hei36,
+        #         reason=hei37,
+        #         comments=hei38,
+        #         event=ovccareevent,
+        #     ).save()
+        #     # pdb.set_trace()
+        #
+        #     msg = 'HEI tracker saved successfully'
+        #     messages.add_message(request, messages.INFO, msg)
+        #     url = reverse('ovc_view', kwargs={'id': id})
+        #     return HttpResponseRedirect(url)
 
-            """ Save HEI CSIEvent """
+        if request.method == 'POST':
+            comments = ['WB_AD_GEN_4_2']
+            ignore_request_values = ['household_id', 'csrfmiddlewaretoken']
+
+            # household_id = request.POST.get('household_id')
+            # hse_uuid = uuid.UUID(household_id)
+            # house_holds = OVCHouseHold.objects.get(pk=hse_uuid)
+            person = RegPerson.objects.get(pk=int(id))
+            event_type_id = 'WBGA'
+            date_of_wellbeing_event = timezone.now()
+
+            """ Save Wellbeing-event """
+            # get event counter
             event_counter = OVCCareEvents.objects.filter(
                 event_type_id=event_type_id, person=id, is_void=False).count()
-            ovccareevent = OVCCareEvents(
+            # save event
+            pmtctevent = PMTCTEvents(
                 event_type_id=event_type_id,
                 event_counter=event_counter,
                 event_score=0,
-                date_of_event=date_of_hei_event,
+                date_of_event=date_of_wellbeing_event,
                 created_by=request.user.id,
                 person=RegPerson.objects.get(pk=int(id)),
-                # house_hold=OVCHouseHold.objects.get(pk=household_id)
             )
-            ovccareevent.save()
+            pmtctevent.save()
+            # get questions for adolescent
+            questions = PMTCTQuestions.objects.filter(code__startswith='HEI')
+            ovc_id = int(id)
+            child = RegPerson.objects.get(is_void=False, id=ovc_id)
+            care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+            for question in questions:
+                answer = request.POST.get(question.question)
+                if answer is None:
+                    answer = ''
+                PMTCTHEI(
+                    person=RegPerson.objects.get(pk=int(id)),
+                    question_code=question.code,
+                    question=question,
+                    answer=answer,
+                    event=pmtctevent,
+                    # date_of_event=timezone.now(),
+                    question_id=question.question_id,
+                    caregiver=care_giver
+                ).save()
 
-            # Caregiver details
-            hei2 = request.POST.get('PMTCT_HEI5q')
-            hei3 = request.POST.get('PMTCT_HEI6q')
-            hei4 = request.POST.get('PMTCT_HEI7q')
-            if hei4:
-                facility_res = OVCFacility.objects.get(id=hei4).facility_code
-            else:
-                facility_res = None
-            hei5 = request.POST.get('PMTCT_HEI8q')
-            hei6 = request.POST.get('PMTCT_HEI9q')
-            hei7 = request.POST.get('PMTCT_HEI10q')
-            if hei7 == '':
-                hei7 = '1990-01-01'
-            contact = request.POST.get('PMTCT_HEI42q')
-            # pdb.set_trace()
-
-            if contact == 'AtFirstContact':
-                contact_date1 = request.POST.get('PMTCT_HEI42q')
-                hei8 = request.POST.get('PMTCT_HEI13q')
-                hei9 = request.POST.get('PMTCT_HEI14q')
-                hei10 = request.POST.get('PMTCT_HEI15q')
-                hei11 = request.POST.get('PMTCT_HEI16q')
-                hei12 = request.POST.get('PMTCT_HEI17q')
-
-            if contact == 'At6wks':
-                contact_date2 = request.POST.get('PMTCT_HEI42q')
-                hei13 = request.POST.get('PMTCT_HEI13q')
-                hei14 = request.POST.get('PMTCT_HEI14q')
-                hei15 = request.POST.get('PMTCT_HEI15q')
-                hei16 = request.POST.get('PMTCT_HEI16q')
-                hei17 = request.POST.get('PMTCT_HEI22q')
-                hei18 = request.POST.get('PMTCT_HEI17q')
-
-            if contact == 'At6mths':
-                contact_date3 = request.POST.get('PMTCT_HEI42q')
-                hei19 = request.POST.get('PMTCT_HEI13q')
-                hei20 = request.POST.get('PMTCT_HEI14q')
-                hei21 = request.POST.get('PMTCT_HEI15q')
-                hei22 = request.POST.get('PMTCT_HEI16q')
-                hei23 = request.POST.get('PMTCT_HEI22q')
-                hei24 = request.POST.get('PMTCT_HEI17q')
-
-            if contact == 'At12mths':
-                contact_date4 = request.POST.get('PMTCT_HEI42q')
-                hei25 = request.POST.get('PMTCT_HEI13q')
-                hei26 = request.POST.get('PMTCT_HEI14q')
-                hei27 = request.POST.get('PMTCT_HEI15q')
-                hei28 = request.POST.get('PMTCT_HEI16q')
-                hei29 = request.POST.get('PMTCT_HEI22q')
-                hei30 = request.POST.get('PMTCT_HEI17q')
-
-            if contact == 'At18mths':
-                contact_date5 = request.POST.get('PMTCT_HEI42q')
-                hei31 = request.POST.get('PMTCT_HEI13q')
-                hei32 = request.POST.get('PMTCT_HEI14q')
-                hei33 = request.POST.get('PMTCT_HEI15q')
-                hei34 = request.POST.get('PMTCT_HEI16q')
-                hei35 = request.POST.get('PMTCT_HEI22q')
-                hei36 = request.POST.get('PMTCT_HEI17q')
-
-            # Others
-            hei37 = request.POST.get('PMTCT_HEI47q')
-            hei38 = request.POST.get('PMTCT_HEI48q')
-
-            # ************************************************************
-
-            query = OVCHEITracker(
-                person=person,
-                hivstatus=hei2,
-                hivpositive=hei3,
-                facility=facility_res,
-                ccc=hei5,
-                vl=hei6,
-                vldate=hei7,
-                f1date= contact_date1,
-                f1hivtest=hei8,
-                f1testresults=hei9,
-                f1vlresults=hei10,
-                f1prophylaxis=hei11,
-                f1mode=hei12,
-                f2date=contact_date2,
-                f2hivtest=hei13,
-                f2testresults=hei14,
-                f2vlresults=hei15,
-                f2prophylaxis=hei16,
-                f2immunization=hei17,
-                f2mode=hei18,
-                f3date=contact_date3,
-                f3hivtest=hei19,
-                f3testresults=hei20,
-                f3vlresults=hei21,
-                f3prophylaxis=hei22,
-                f3immunization=hei23,
-                f3mode=hei24,
-                f4date=contact_date4,
-                f4hivtest=hei25,
-                f4testresults=hei26,
-                f4vlresults=hei27,
-                f4prophylaxis=hei28,
-                f4immunization=hei29,
-                f4mode=hei30,
-                f5date=contact_date5,
-                f5hivtest=hei31,
-                f5testresults=hei32,
-                f5vlresults=hei33,
-                f5prophylaxis=hei34,
-                f5immunization=hei35,
-                f5mode=hei36,
-                reason=hei37,
-                comments=hei38,
-                event=ovccareevent,
-            ).save()
-            # pdb.set_trace()
-
-            msg = 'HEI tracker saved successfully'
+            msg = 'hei  saved successful'
             messages.add_message(request, messages.INFO, msg)
             url = reverse('ovc_view', kwargs={'id': id})
             return HttpResponseRedirect(url)
+            # url = reverse('ovc_view', kwargs={'id': id})
+            # # return HttpResponseRedirect(reverse(forms_registry))
+            # return HttpResponseRedirect(url)
     except Exception as e:
         msg = 'HEI tracker save error: (%s)' % (str(e))
         messages.add_message(request, messages.ERROR, msg)
@@ -10179,10 +10233,35 @@ def new_hei_tracker(request, id):
 
     # get child data
     init_data = RegPerson.objects.filter(pk=id)
-    check_fields = ['sex_id', 'relationship_type_id']
+    check_fields = ['sex_id', 'relationship_type_id', 'yesno_id']
     vals = get_dict(field_name=check_fields)
-    event = OVCCareEvents.objects.filter(person_id=id).values_list('event')
-    hei_tracker = OVCHEITracker.objects.filter(event_id__in=event, is_void=False).order_by('date_of_event')
+    event = PMTCTEvents.objects.filter(person_id=id).values_list('event')
+    hei_tracker = PMTCTHEI.objects.filter(event_id__in=event, is_void=False).values('event_id').distinct()
+    # hei = defaultdict(list)
+    hei = []
+    hei_dict = []
+    for b in range(len(hei_tracker)):
+        hei.append([])
+        for n in range(len(hei_tracker)):
+            hei_array = PMTCTHEI.objects.filter(event_id__in=event, is_void=False, event_id=hei_tracker[b]['event_id'])
+            for one_hei in hei_array:
+                hei[b].append((one_hei.question_code, one_hei.answer))
+                # hei[0].append(one_hei.event_id)
+        hei_dict.append(hei[b])
+
+        # hei_tracker1 = PMTCTHEI.objects.filter(event_id__in=event, is_void=False)
+        # data_get = []
+        # for data in hei_tracker1:
+        #     data_get.append(data)
+
+        # for w in hei_tracker:
+        #     hei = []
+        #     hei_array = PMTCTHEI.objects.filter(event_id__in=event, is_void=False, event_id=w['event_id'])
+        # for i in range(len(hei_tracker)):
+        #         for one_hei in hei_array:
+        #             hei.append((one_hei.event_id, one_hei.question_code, one_hei.answer))
+
+    pdb.set_trace()
     form = OVCHEITrackerForm(initial={'household_id': household_id})
     return render(request,
                   'forms/new_hei_tracker.html',
@@ -10195,7 +10274,9 @@ def new_hei_tracker(request, id):
                       'siblings': siblings,
                       'osiblings': osiblings,
                       'oguardians': oguardians,
-                      'heidata': hei_tracker
+                      'heidata': hei_dict
+                      # 'heidata': hei.items(),
+                      # 'data_get': data_get
                   })
 
 
@@ -10388,6 +10469,6 @@ def edit_heitracker(request, id):
 
 
 def delete_heitracker(request, id):
-    new_eval = OVCHEITracker.objects.get(hei_id=id)
-    OVCHEITracker.objects.filter(hei_id=id).update(is_void=True)
+    new_eval = PMTCTHEI.objects.get(hei_id=id)
+    PMTCTHEI.objects.filter(event_id=id).update(is_void=True)
     return redirect('new_hei_tracker', id=new_eval.person_id)

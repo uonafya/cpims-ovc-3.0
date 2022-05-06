@@ -135,6 +135,9 @@ olmis_ha29_list = get_list('olmis_ha29_id', 'Please Select')
 olmis_ha30_list = get_list('olmis_ha30_id', 'Please Select')
 olmis_ha31_list = get_list('olmis_ha31_id', 'Please Select')
 
+# hei_tracker
+yes_no = get_list('yesno_id', 'Please Select')
+
 
 #wellbeing
 YESNO_CHOICES_REFUSE = (('AYES', 'Yes'), ('ANNO', 'No'), ('AREFUSE', 'Refuse'))
@@ -8156,7 +8159,7 @@ class OVCHEITrackerForm(forms.Form):
                     ('Replacementfeeding', 'Replacement feeding'),
                     ('Mixedfeeding', 'Mixed feeding'),)
     ON_Track = (('', 'Select'), ('OnTrack', 'On Track'), ('NotOnTrack', 'Not On Track'),)
-    yes_no = (('', 'Select'), ('Yes', 'Yes'), ('No', 'No'),)
+    # yes_no = (('', 'Select'), ('Yes', 'Yes'), ('No', 'No'),)
     Follow_Up = forms.ChoiceField(
         choices=(
             ('AtFirstContact', 'At first contact'),
@@ -8451,7 +8454,7 @@ class OVCHEITrackerForm(forms.Form):
     )
 
     # HEI Follow up at 6wks
-    PMTCT_HEI8q = forms.ChoiceField(
+    PMTCT_HEI18q = forms.ChoiceField(
         required=False,
         choices=yes_no,
         widget=forms.Select(

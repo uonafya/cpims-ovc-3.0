@@ -1511,7 +1511,7 @@ class PMTCTHEI(models.Model):
     caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='pmtct_hei')
     question_code = models.CharField(max_length=10, null=False, blank=True)
     question = models.ForeignKey('PMTCTQuestions', on_delete=models.CASCADE, )
-    answer = models.CharField(max_length=15)
+    answer = models.CharField(max_length=100)
     event = models.ForeignKey(PMTCTEvents, on_delete=models.CASCADE)
 
     timestamp_created = models.DateTimeField(default=timezone.now)
