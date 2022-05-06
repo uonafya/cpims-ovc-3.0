@@ -1419,36 +1419,14 @@ class OVCPreventiveEvents(models.Model):
     class Meta:
         db_table = 'ovc_preventive_events'
 
-class OVC_preventive_registration(models.Model):
-    preventive_reg_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
-    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    group_name = models.CharField(max_length=10)
-    school = models.CharField(max_length=10)
-    child_cbo = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
-    is_active = models.BooleanField(default=True)
-    exit_reason = models.CharField(max_length=4, null=True)
-    exit_date = models.DateField(default=timezone.now, null=True)
-    event = models.ForeignKey(OVCPreventiveEvents, on_delete=models.CASCADE)
-    preventive_grouping_id = models.UUIDField(default=uuid.uuid1, editable=False)
-    timestamp_created = models.DateTimeField(default=timezone.now)
-    timestamp_updated = models.DateTimeField(default=timezone.now)
-    is_void = models.BooleanField(default=False)
-    sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
-
-    class Meta:
-        db_table = 'ovc_preventive_registration'
-        def __unicode__(self):
-            return str(self.preventive_reg_id)
-
-
 class OVCPreventiveEbi(models.Model):
     """ This table will hold Sessions Data """
     ebi_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     person_id = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    domain = models.CharField(max_length=10, null=True) #sinovuyo or fmp or hcbf
+    domain = models.CharField(max_length=25, null=True) #sinovuyo or fmp or hcbf
     ebi_provided = models.CharField(max_length=25)
     ebi_provider = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE, related_name='ebi_provider_fk')
-    ebi_session = models.CharField(max_length=4)
+    ebi_session = models.CharField(max_length=10)
     ebi_session_type = models.CharField(max_length=10)
     place_of_ebi = models.ForeignKey('cpovc_registry.RegPersonsGeo',on_delete=models.CASCADE, related_name='ebi_registration_place', null=True) # change to child cbo in prevent registration
     date_of_encounter_event = models.DateField(default=timezone.now, null=True)

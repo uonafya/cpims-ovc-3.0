@@ -231,16 +231,18 @@
                                             	</b></h6>
                                             </td>
                                         </tr>	
-                                        <tr><td colspan="4"><h4 style="text-align: center;">Assessment list</h4></td></tr>
+                                        <tr>
+                                        <td colspan="4"><h4 style="text-align: center;">Assessment list</h4></td>
+                                    </tr>
                                     {% for domain in service_type_list %}
                                         {% for key, values in domain.items %}
                                                 <tr>
                                                     <td> <h6 class="td_style">#</h6> </td>
                                                     <td> <h6 class="td_style"> {{values.0}} </h6></td>
-                                                    <td> <h6 class="td_style"> {{values.1}} </h6> </td>
+                                                    <td> <h6 class="td_style" value="{{values.1}}"> {{values.1}} </h6> </td>
 
                                                     <td colspan="2" style="text-align: center;"> <h6 class="td_style"> {{values.2}} </h6> </td>
-                                                    <td> <h6 class="dialog_paragraph"><a id="{{key}}" data-event_type={{event_type}} class="delete_saved_preventive_event_element btn btn-danger btn-xs m-r-5" href='#'>Delete</a> </h6> </td>
+                                                    <td> <h6 class="dialog_paragraph"><a id="{{key}}" value="" data-event_type={{event_type}} class="delete_saved_preventive_event_element btn btn-danger btn-xs m-r-5" href='#'>Delete</a> </h6> </td>
                                                 </tr>
                                          {% endfor %}
                                     {% endfor %}
@@ -330,7 +332,24 @@
                                                 </button>
                                                 </b></h6>
                                             </td>
-                                        </tr>                                               
+                                        </tr>   
+                                        
+                                    <tr><td colspan="4"><h4 style="text-align: center;">Assessment list</h4></td></tr>
+                                    {% for domain in service_type_list %}
+                                    <h1>{{domain.0}}</h1>
+                                        <!-- {% for values in domain.items %} -->
+                                        
+                                                <tr>
+                                                    <td> <h6 class="td_style">#</h6> </td>
+                                                    <!-- <td> <h6 class="td_style"> {{values}} </h6></td> -->
+                                                    <!-- <td> <h6 class="td_style"> {{values}} </h6> </td> -->
+
+                                                    <!-- <td colspan="2" style="text-align: center;"> <h6 class="td_style"> {{values}} </h6> </td> -->
+                                                    <td> <h6 class="dialog_paragraph"><a id="{{key}}" data-event_type={{event_type}} class="delete_saved_preventive_event_element btn btn-danger btn-xs m-r-5" href='#'>Delete</a> </h6> </td>
+                                                </tr>
+                                         <!-- {% endfor %} -->
+                                    {% endfor %}
+                                    <tr><td colspan="4"><hr style="border-color: red;"></td></tr>	  
                                     </tbody>
                                     {{ form.preventive_assessment_provided_list }}
                                     </table>  
@@ -485,9 +504,10 @@ var personId = $('#person').val();
 var btn_event_type = "{{ event_type }}";
 var btn_event_pk="{{event_pk}}";
 
+console.log('sssssssssssss '+btn_event_pk);
+
 // var event_type=$("#"+id).attr("data-event_type");
 
-console.log("------------>>>>>>>>>>>          oooooooooooooooooooooooooooooo"+ btn_event_pk);
 
 var url = "{% url 'delete_preventive_event_entry' id=1234  btn_event_pk=3456 btn_event_type=2345%}".replace(/1234/, personId.toString()).replace(/3456/, btn_event_pk.toString()).replace(/2345/, btn_event_type.toString());
 
@@ -513,7 +533,6 @@ function loadForm1aEvents()
     var data = new Array();
     var csrftoken = $.cookie('csrftoken');    
     var person = $('#person').val();
-    console.log("FFFFFFFFFFFFFFFFFFFFFFFFFFF ########################## "+person);
     var values = {
                     'csrfmiddlewaretoken': csrftoken,
                     'person': person
@@ -663,22 +682,33 @@ function savePreventiveAttRegister(x)
                     'person': person
                  }; 
 
+    var personId = $('#person').val();
+    var btn_event_type = "{{ event_type }}";
+    var btn_event_pk="{{event_pk}}";
+
+    console.log("ppppppppppppppppp "+btn_event_pk+"bbbbbbbbbbbbbbbb"+btn_event_type + "oooooooooooooooooooo");
+
     // Assessment
     if(x == 1)
     { 
         values['args'] = 1;
+        values['btn_event_type'] = btn_event_type;
+        values['btn_event_pk'] = btn_event_pk;
+
         error_msg='Error saving assessment - '; 
         error_div = '#error_assessment';
 
         var date_of_assessment = $('#date_of_assessment').val();
         var olmis_assessment_provided_list = $('#preventive_assessment_provided_list').val(); 
         var person_id = '{{id}}'
+        var url = "{% url 'edit_preventive_event_entry' id=1234 btn_event_type=2345 btn_event_pk=3456 %}".replace(/1234/, personId.toString()).replace(/2345/, btn_event_type.toString()).replace(/3456/, btn_event_pk.toString());
+                               
         if(olmis_assessment_provided_list) 
         {
             values['olmis_assessment_provided_list'] = olmis_assessment_provided_list;
 
             $.ajax({
-                url: '{% url 'save_preventive_register' %}',
+                url: url,
                 dataType: 'json',
                 method: 'POST',
                 data: values,
@@ -868,11 +898,11 @@ function AddRow(x)
 {
 	if(x==1)
 	{
-		var OlmisAssessmentData = new Array();
+		var EbiData = new Array();
+        // OlmisAssessmentData
         
         var olmis_intervention_prevention = $("#intervention_prevention_register").val();
         var olmis_completed_all_sessions = $('input[name="COMPLETED_ALL_SESSIONS"]:checked').val();
-        // var olmis_makeup_session_date = $("#makeup_session_date").val();
         var olmis_session_attended_days = $("#session_attended_days").val();
         var olmis_session_date_id = $("#session_date_id").val();
 
@@ -942,32 +972,36 @@ function AddRow(x)
                     $('#sel_olmis_assessment_coreservice_status').html('');                    
 
                     $('#assessment_manager_table tr').each(function(row, tr)
-                    {                            
+                    {            
+                        console.log("eeeeeeeeeeeeeeeeeeeee"+row);                
                         var holmis_intervention_prevention = $(tr).find('input[id="holmis_intervention_prevention"]').val();
                         var holmis_completed_all_sessions = $(tr).find('input[id="holmis_completed_all_sessions"]').val();
                         var holmis_session_attended_days = $(tr).find('input[id="holmis_session_attended_days"]').val();
                         var holmis_session_date = $(tr).find('input[id="holmis_session_date"]').val();
                     
 
-                        OlmisAssessmentData[row]= {
+                        EbiData[row]= {
                             "olmis_intervention_prevention" : holmis_intervention_prevention,
-                            // "holmis_makeup_session_date" : holmis_makeup_session_date,
                             "holmis_completed_all_sessions" : holmis_completed_all_sessions,
                             "olmis_session_attended_days" : holmis_session_attended_days,
                             "olmis_session_date" : holmis_session_date
                             }                                
                         
                     });
-                    
-                    OlmisAssessmentData.shift(); //remove first row(headers stuff)
-                    OlmisAssessmentData.shift(); //remove second row(controls stuff)
-                    OlmisAssessmentData = JSON.stringify(OlmisAssessmentData); 
+                    // console.log("****************** ================ >>>>>> "+EbiData);
+                    // var kaka = EbiData.shift(); //remove first row(headers stuff)
+                    // EbiData.shift(); //remove second row(controls stuff)
+                    EbiData = EbiData[EbiData.length - 1]
+                    EbiData = JSON.stringify(EbiData); 
+
+                    console.log("uuuuuuuuuuuuuuuuuuuuu "+EbiData);
 
                     // Set olmis_assessment_provided_list
-                    $('#preventive_assessment_provided_list').val(OlmisAssessmentData);
+                    $('#preventive_assessment_provided_list').val(EbiData);
                     var gishoki = $('#preventive_assessment_provided_list').val()
 
-                    console.log("------------>>>>>>> bbbbbb"+gishoki)				}
+                    console.log("------------>>>>>>> bbbbbb"+typeof(gishoki))				
+                }
 				else
 				{
 					$("#olmis_assessment_coreservice_status_errormsg").css({ 'display': "block" });
