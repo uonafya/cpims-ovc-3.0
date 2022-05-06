@@ -390,6 +390,8 @@ def get_past_cpt(ovc_id):
         return caseplan_events
 
 
+
+
 def get_facility_list():
     """Method to get list of facilities."""
     try:

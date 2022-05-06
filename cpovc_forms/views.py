@@ -10101,7 +10101,7 @@ def new_case_closure(request, id):
             import pdb
 
             if receiving_org:
-                org_res = RegOrgUnit.objects.get(id=receiving_org).id
+                org_res = RegOrgUnit.objects.get(id=receiving_org).org_unit_name
                 pdb.set_trace()
             else:
                 org_res = ''

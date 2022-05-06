@@ -8252,8 +8252,9 @@ class BenchmarkMonitoringForm(forms.Form):
 class CaseClosureForm(forms.Form):
     get_org_units_list=get_organization_list()
     YES_NO_CHOICES=get_list('yesno_id')
-
-
+    YES_NO_CHOICES = get_list('yesno_id')
+    transfer_choices = get_list('exit_reason_id')
+    transfer_choices_list = (transfer_choices[13], transfer_choices[14])
 
     CASE_CL001 = forms.ChoiceField(
         required=True,
@@ -8279,7 +8280,7 @@ class CaseClosureForm(forms.Form):
                    #    'data-parsley-group': 'group0'
                    }))
 
-
+   
 
     CASE_CL005 = forms.ChoiceField(
         required=False,
@@ -8421,14 +8422,20 @@ class CaseClosureForm(forms.Form):
             }
         )
     )
-    # CASE_CL023 = forms.CharField(
-    #     required=False,
-    #     widget=forms.TextInput(
-    #         attrs={
-    #             'placeholder': _('signature'),
-    #             'class': 'form-control',
-    #                                   'data-parsley-required': "false"
-    #                }))
+    CASE_CL023 = forms.ChoiceField(
+        required=False,
+        choices= transfer_choices_list,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'class': 'form-control',
+                'data-parsley-required': "false"
+                # 'data-parsley-required': 'true',
+                #    'data-parsley-errors-container': "#in_school_error"
+            }
+        )
+    )
+
     CASE_CL024 = forms.CharField(
         required=False,
         widget=forms.TextInput(
@@ -8464,7 +8471,7 @@ class CaseClosureForm(forms.Form):
 
     CASE_CL027= forms.ChoiceField(
         required=False,
-        choices=get_list('exit_reason_id'),
+        choices= get_list('exit_reason_id'),
                                       initial='0',
 
                                       widget=forms.Select(
