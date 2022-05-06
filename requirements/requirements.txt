@@ -31,7 +31,6 @@ openpyxl
 packaging
 pandas
 Pillow
-psycopg2
 psycopg2-binary
 pycairo
 pymdown-extensions

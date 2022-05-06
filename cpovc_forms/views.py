@@ -10100,7 +10100,7 @@ def new_case_closure(request, id):
             receiving_org = request.POST.get("CASE_CL002")
 
             if receiving_org:
-                org_res = RegOrgUnit.objects.get(id=receiving_org).org_unit_name
+                org_res = RegOrgUnit.objects.get(id=receiving_org).id
             else:
                 org_res = ''
 
@@ -10210,6 +10210,7 @@ def edit_case_closure(request, id):
     try:
 
         posted_data = OVCCareCaseExit.objects.get(case_clouse_id=id, is_void=False)
+        person_id = OVCCareCaseExit.objects.get(case_clouse_id=id).person_id
         if request.method == 'POST':
             #closure_reason = request.POST.get("CASE_CL001")
             attrition_reason1 = request.POST.get("CASE_CL027")
@@ -10256,7 +10257,7 @@ def edit_case_closure(request, id):
 
             msg = 'form case closure edited successful'
             messages.add_message(request, messages.INFO, msg)
-            url = reverse('new_case_closure', kwargs={'id': id})
+            url = reverse('new_case_closure', kwargs={'id': person_id})
             return HttpResponseRedirect(url)
 
 
@@ -10292,7 +10293,7 @@ def edit_case_closure(request, id):
         # raise e
         msg = "Error occured during OVC case closure edit"
         messages.add_message(request, messages.ERROR, msg)
-        url = reverse('new_case_closure', kwargs={'id': 60})
+        url = reverse('ovc_view', kwargs={'id': person_id})
         return HttpResponseRedirect(url)
 
 
