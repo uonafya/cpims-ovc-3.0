@@ -192,16 +192,12 @@ urlpatterns = [
     #Manage referal events
     path('referals/manage/', views.manage_referal_events, name='manage_referal_events'),
 
-    # Delete Bireferral
-    re_path('delete_bireferral/(?P<id>\d+)/', views.delete_bireferral, name='delete_bireferral'),
 
-
-    #bireferral test template
-    re_path('bidirectional/(?P<id>\d+)/', views.bidirectional, name='bidirectional'),
 
     # Save Referal
     re_path('save_referal/(?P<id>\d+)/', views.save_referal, name='save_referal' ),
 
-    # Delete Referal
-    path('delete_referral/<id>', views.delete_referral, name='deletereferral')
+    # Delete previous referal event
+    re_path('refferal/delete_previous_referal_entry/(?P<btn_event_type>\w+)/(?P<entry_id>.+)/',
+            views.delete_previous_referal_entry, name='delete_previous_referal_entry')
 ]

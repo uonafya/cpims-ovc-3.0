@@ -216,7 +216,7 @@
                                                 <!--<td> <h6 class="td_style"> {{values.1}} </h6> </td>-->
 
                                                 <td style="text-align: center;"> <h6 class="td_style"> {{service.date}} </h6> </td>
-                                                <td> <h6 class="dialog_paragraph"><a id="{{service.id}}" data-event_type={{event_type}} class="delete_savedF1_element btn btn-danger btn-xs m-r-5" href='#'>Delete</a> </h6> </td>
+                                                <td> <h6 class="dialog_paragraph"><a id="{{service.id}}" data-event_type={{event_type}} class='delete_savedF1_element btn btn-danger btn-xs m-r-5' href='#'>Delete</a> </h6> </td>
                                             </tr>
                                         {% endfor %}
                                         <tr><td colspan="4"><hr style="border-color: red;"></td></tr>
@@ -1592,13 +1592,15 @@ $(".delete_savedF1_element").click(function(event) {
 
         id=event.target.id;
         var event_type=$("#"+id).attr("data-event_type");
-        var url = "{% url 'delete_previous_event_entry' btn_event_type=1234  entry_id=2345 %}".replace(/1234/, event_type).replace(/2345/, id);
+        console.log({event_type})
+        var url = "{% url 'delete_previous_referal_entry' btn_event_type=1234  entry_id=2345 %}".replace(/1234/, event_type).replace(/2345/, id)
         $.ajax({
             url: url,
             dataType: 'json',
             method: 'GET',
             success: function(result)
             {
+                {#window.alert("Test")#}
                 //$(".alert").show();
                 //$('.invalid-form-message').html('Error loading Form1A events - ' + error);
                 location.reload();
