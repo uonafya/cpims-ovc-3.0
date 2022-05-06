@@ -2684,50 +2684,50 @@ jQuery(document).ready(function()
     </script>
     {% if hhmembers %}
         <script>
-            $('input[type=radio]').on('change', function () {
+            // $('input[type=radio]').on('change', function () {
                 // 3.1 - 3.6
-                if(
-                    $('input[name=cp8q]:checked').val() == 'AYES' &&
-                    $('input[name=cp9q]:checked').val() == 'AYES' &&
-                    $('input[name=cp10q]:checked').val() == 'AYES' &&
-                    $('input[name=cp11q]:checked').val() == 'AYES' &&
-                    $('input[name=cp12q]:checked').val() == 'AYES' &&
-                    $('input[name=cp13q]:checked').val() == 'AYES' &&
-                    $('input[name=cp14q]:checked').val() == 'AYES' &&
-                    $('input[name=cp15q]:checked').val() == 'AYES' &&
-                    $('input[name=cp16q]:checked').val() == 'AYES' &&
-                    $('input[name=cp17q]:checked').val() == 'AYES'
-                ){
-                    $('input[name=cp3b][value=AYES]').prop('checked', true);
-                    $('#id_cp3b_0').prop('checked', true);
-                    console.info( ' YESS 17q == ' + $('input[name=cp17q]:checked').val() )
-                }
-                else{
-                    console.info( 'NOO 17q == ' + $('input[name=cp17q]:checked').val() )
-                    $('input[name=cp3b][value=ANNO]').prop('checked', true);
-                }
+            //     if(
+            //         $('input[name=cp8q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp9q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp10q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp11q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp12q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp13q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp14q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp15q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp16q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp17q]:checked').val() == 'AYES'
+            //     ){
+            //         $('input[name=cp3b][value=AYES]').prop('checked', true);
+            //         $('#id_cp3b_0').prop('checked', true);
+            //         console.info( ' YESS 17q == ' + $('input[name=cp17q]:checked').val() )
+            //     }
+            //     else{
+            //         console.info( 'NOO 17q == ' + $('input[name=cp17q]:checked').val() )
+            //         $('input[name=cp3b][value=ANNO]').prop('checked', true);
+            //     }
 
                 
-                // 12.4 a-c
-                if(
-                    $('input[name=cp49q]:checked').val() == 'AYES' &&
-                    $('input[name=cp50q]:checked').val() == 'AYES' &&
-                    $('input[name=cp51q]:checked').val() == 'AYES' &&
-                    $('input[name=cp52q]:checked').val() == 'AYES' &&
-                    $('input[name=cp53q]:checked').val() == 'AYES' &&
-                    $('input[name=cp54q]:checked').val() == 'AYES'
-                ){
-                    $('input[name=cp12b][value=AYES]').prop('checked', true);
-                    $('#id_cp12b_0').prop('checked', true);
-                    console.info( ' YESS 54q == ' + $('input[name=cp54q]:checked').val() )
-                }
-                else{
-                    console.info( 'NOO 54q == ' + $('input[name=cp54q]:checked').val() )
-                    $('input[name=cp12b][value=ANNO]').prop('checked', true);
-                }
+            //     // 12.4 a-c
+            //     if(
+            //         $('input[name=cp49q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp50q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp51q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp52q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp53q]:checked').val() == 'AYES' &&
+            //         $('input[name=cp54q]:checked').val() == 'AYES'
+            //     ){
+            //         $('input[name=cp12b][value=AYES]').prop('checked', true);
+            //         $('#id_cp12b_0').prop('checked', true);
+            //         console.info( ' YESS 54q == ' + $('input[name=cp54q]:checked').val() )
+            //     }
+            //     else{
+            //         console.info( 'NOO 54q == ' + $('input[name=cp54q]:checked').val() )
+            //         $('input[name=cp12b][value=ANNO]').prop('checked', true);
+            //     }
 
 
-            })
+            // })
         </script>
 
 

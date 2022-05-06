@@ -9792,6 +9792,7 @@ def new_dreamsform(request, id):
 
 def new_cpara_upgrade(request, id):
     if request.method == 'POST':
+
         data = request.POST
         print (data)
         
@@ -9801,7 +9802,7 @@ def new_cpara_upgrade(request, id):
         care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
         house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
       
-            
+         
         questions = OVCCareQuestions.objects.filter(code__startswith='CP', is_void=False).values()
         date_of_event = data.get('d_o_a')
         event = OVCCareEvents.objects.create(
@@ -9850,7 +9851,7 @@ def new_cpara_upgrade(request, id):
         # converts the filtered objects to a list
         ovc_score = data.get('bench_array').replace('[', '').replace(']', '').split(',')
 
-        # pdb.set_trace()
+        
         try:
             OVCCareBenchmarkScore.objects.create(
                 household=house_hold,
@@ -9890,16 +9891,8 @@ def new_cpara_upgrade(request, id):
         url = reverse('ovc_view', kwargs={'id': id})
         return HttpResponseRedirect(url)
 
-    
-    guardians = RegPersonsGuardians.objects.select_related().filter(
-        child_person=id, is_void=False, date_delinked=None)
-    siblings = RegPersonsSiblings.objects.select_related().filter(
-        child_person=id, is_void=False, date_delinked=None)
-    # Reverse relationship
-    osiblings = RegPersonsSiblings.objects.select_related().filter(
-        sibling_person=id, is_void=False, date_delinked=None)
-    oguardians = RegPersonsGuardians.objects.select_related().filter(
-        guardian_person=id, is_void=False, date_delinked=None)
+    import pdb
+
     child = RegPerson.objects.get(id=id)
     ovc_id = int(id)
     creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
@@ -9954,6 +9947,7 @@ def new_cpara_upgrade(request, id):
     child = RegPerson.objects.get(is_void=False, id=ovc_id)
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
 
+    # pdb.set_trace()  
     # PAST CPARA
     
     past_cpara = []
@@ -10017,10 +10011,7 @@ def new_cpara_upgrade(request, id):
             
     context = {'form':form,
                 'person': id,
-                'siblings': siblings,
                 'hhmembers': hhmembers,
-                'osiblings': osiblings,
-                'oguardians': oguardians,
                 'child': child,
                 'creg': creg,
                 'caregiver': care_giver,

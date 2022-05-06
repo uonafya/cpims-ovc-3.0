@@ -1,19 +1,28 @@
 jQuery(document).ready(function()
 {
+
+markBenchmark('CP23q_b_1', false)
+
+markBenchmark('CP23q_b_2', false)
+
+markBenchmark('CP23q_b_3', false)
+
+markBenchmark('cp58q', false)
+
 // Benchmark 1
 validBench(['CP1q', 'CP2q', 'CP3q', 'CP4q', 'CP5q'], ['AYES','AYES','AYES','AYES','AYES'], 'CP1b');
 // Benchmark 2
 validBench(['CP6q','CP7q','CP8q','CP9q','CP10q','CP11q','CP12q','CP13q','CP14q'], ['AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'CP2b');
 
 // Healthy Goal 3 >> Benchmark 3
-validBench(['CP15q','CP16q','CP17q'],['AYES','AYES','AYES'],'CP3b')
+validBench(['CP23q_b_1','CP23q_b_2','CP23q_b_3'],['AYES','AYES','AYES'],'CP3b')
 // Healthy Goal 4 >> Benchmark 4
 validBench(['CP18q', 'CP19q', 'CP20q', 'CP21q'], ['AYES','AYES', 'AYES','AYES'], 'CP4b');
 // Stable: Goal 5: >> Benchmark 5
 validBench(['CP22q','CP23q','CP24q'], ['AYES','AYES','AYES'], 'CP5b');
 // Safe: Goal 6 >> Benchmark 6
 validBench(['CP25q','CP26q','CP27q','CP28q', 'CP29q'],['AYES','AYES','AYES,ANA','AYES','AYES'],'CP6b')
-// Safe: Benchmark 7:
+// Safe: Benchmark 7:   
 validBench(['CP30q','CP31q'],['AYES','AYES'],'CP7b')
 // Safe: Goal 8  >> Benchmark 8
 validBench(['CP32q'],['AYES'],'CP8b')

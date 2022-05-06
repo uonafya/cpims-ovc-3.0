@@ -1402,7 +1402,7 @@ class OVCCareQuestions(models.Model):
 class OVCCareCpara_upgrade(models.Model):
     cpara_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver')
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='ovc_cpara_caregiver')
     question_code = models.CharField(max_length=10, null=False, blank=True)
     question = models.ForeignKey(OVCCareQuestions, on_delete=models.CASCADE, null=True)
     answer = models.CharField(max_length=15)
@@ -1449,3 +1449,32 @@ class OVCSubPopulation(models.Model):
 
     def __unicode__(self):
         return str(self.sub_population_id)
+class OVCCareIndividaulCpara(models.Model):
+    cpara_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_person')
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver')
+    question_code = models.CharField(max_length=10, null=False, blank=True)
+    question = models.ForeignKey(OVCCareQuestions, on_delete=models.CASCADE)
+    answer = models.CharField(max_length=15)
+    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
+    question_type = models.CharField(max_length=50)
+    domain = models.CharField(max_length=50)
+    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+    date_of_event = models.DateField()
+    date_of_previous_event =models.DateField(null=True, blank=True)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    is_void = models.BooleanField(default=False)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return self.answer
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.question_code = self.question.code
+        super(OVCCareIndividualCpara, self).save(force_insert, force_update, using, update_fields)
+
+    class Meta:
+        db_table = 'ovc_care_Individual_cpara'
+
+    def __unicode__(self):
+        return str(self.cpara_id)
