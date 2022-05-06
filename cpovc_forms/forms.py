@@ -8213,109 +8213,25 @@ class NewGraduationMonitoringForm(forms.Form):
             ))
 
 
-
+# Sinovuyo Preventive Pre and Post Program Assessment Form
 class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
-    CHOICES_TYPE_ASSESSMENT = (
-        (0, 'Pre-Programme(before implementation)'),
-        (1, 'Post-Programme(after implementation)'),
-    )
-
-    CHOICES_READ = (
-        ('', '(select)'),
-        (0, 'Cannot read at all'),
-        (1, 'Can read but with lots of difficulty'),
-        (2, 'Can read with a little difficulty'),
-        (3, 'Can read with a little difficulty')
-    )
-    CHOICES_EDUCATION = (
-        (0, 'Primary'),
-        (1, 'Secondary'),
-        (2, 'Tertiary'),
-        (3, 'College/University'),
-        (4, 'Not gone to school')
-    )
-
-    YES_NO_CHOICES = (
-        (1, 'Yes'),
-        (0, 'No')
-    )
-
-    CHOICES_INCOME = (
-        ('', '(Select)'),
-        (0, 'No, unemployed'),
-        (1, 'Yes, self-employed'),
-        (2, 'Yes, employed full-time'),
-        (3, 'Yes, employed part-time')
-    )
-
-    CHOICES_RELATIONSHIP = (
-        ('', '(select)'),
-        (0, 'Never'),
-        (1, 'Almost never'),
-        (2, 'Sometimes'),
-        (3, 'Often'),
-        (4, 'Always')
-    )
-
-    CHOICES_BEHAVIOR = (
-        ('', '(select)'),
-        (0, 'Not true'),
-        (1, 'Somewhat true'),
-        (2, 'Very true')
-    )
-
-    CHOICES_DISCIPLINE = (
-        ('', '(select)'),
-        (0, 'Never'),
-        (1, '1 times'),
-        (2, '2 times'),
-        (3, '3 times'),
-        (4, '4 times'),
-        (5, '5 times'),
-        (6, '6 times'),
-        (7, '7 times'),
-        (8, ' or more times')
-    )
-
-    CHOICES_BIOLOGICAL=(
-                    ('', '(select)'),
-                    (1, 'Yes'),
-                    (2, 'No, she passed away'),
-                    (3, 'No, she lives elsewhere')
-                    )
-
-    CHOICES_HIV = (
-        ('', '(select)'),
-        (0, 'No'),
-        (1, 'Yes, all of them'),
-        (2, 'Yes, some of them'),
-    )
-
-    CHOICES_FEELING = (
-        ('', '(select)'),
-        (1, 'Strongly disagree'),
-        (2, 'Disagree'),
-        (3, 'Not sure'),
-        (4, 'Agree'),
-        (5, 'Strongly agree')
-    )
-
-    CHOICES_SAD = (
-        ('', '(select)'),
-        (1, 'Rarely or none of the time (less than 1 day)'),
-        (2, 'Some or a little of the time (1–2 days)'),
-        (3, 'Occasionally or a moderate amount of time (3–4 days)'),
-        (4, 'Most or all of the time (5–7 days)')
-
-    )
-
-    CHOICES_FINANCE = (
-        ('', '(select)'),
-        (0, 'Never'),
-        (1, 'Rarely'),
-        (2, 'Sometimes'),
-        (3, 'Often')
-    )
+    """
+    Sinovuyo Preventive Pre and Post Program Assessment Form
+    """
+    CHOICES_TYPE_ASSESSMENT = get_list("programme_id")
+    CHOICES_READ = get_list('literacy_lvl_id', "Please select")
+    CHOICES_EDUCATION = get_list("school_level_id")
+    YES_NO_CHOICES = yesno_list = get_list('yesno_id')
+    CHOICES_INCOME = get_list("employed_id", "Please select")
+    CHOICES_RELATIONSHIP = get_list('relationship_caregiver_id', "Please select")
+    CHOICES_BEHAVIOR = get_list("my_behaviour_id", "Please select")
+    CHOICES_DISCIPLINE = get_list("dsp_times_id", "Please select")
+    CHOICES_BIOLOGICAL_FATHER = get_list("father_mortality_id", "Please select")          
+    CHOICES_BIOLOGICAL_MOTHER = get_list("mother_mortality_id", "Please select")
+    CHOICES_HIV = get_list("under_care_id", "Please select")
+    CHOICES_FEELING = get_list("agree_id", "Please select")
+    CHOICES_SAD = get_list("feeling_sad_id", "Please select")
+    CHOICES_FINANCE = get_list("often_id", "Please select")
 
     type_of_assessment = forms.ChoiceField(choices=CHOICES_TYPE_ASSESSMENT,
                                         widget = forms.RadioSelect())
@@ -8331,6 +8247,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     bd_read = forms.ChoiceField(
         choices=CHOICES_READ,
         widget=forms.Select(attrs={
+                                    'intial': 'Please select',
                                    'class': 'form-control',
                                    'id': 'bd_read',
                                    }))
@@ -8346,7 +8263,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     bd_non_biological_children = forms.IntegerField()
 
     bd_children_not_in_school = forms.ChoiceField(
-        choices=YES_NO_CHOICES,
+        choices=yesno_list,
         widget=forms.RadioSelect(
              # renderer=RadioCustomRenderer,
         ))
@@ -8354,16 +8271,16 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     bd_source_income = forms.ChoiceField(
         choices=CHOICES_INCOME,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                            'class': 'form-control',
                            'id': 'bd_source_income',
                            }))
 
     bd_adults_contribute_hh_income = forms.ChoiceField(
-        choices=CHOICES_INCOME,
-        widget=forms.Select(attrs={
-                           'class': 'form-control',
-                           'id': 'bd_adults_contribute_hh_income',
-                           }))
+        choices=YES_NO_CHOICES,
+        widget=forms.RadioSelect(
+             # renderer=RadioCustomRenderer,
+        ))
 
     bd_children_contribute_hh_income = forms.ChoiceField(
         choices=YES_NO_CHOICES,
@@ -8379,8 +8296,9 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
         ))
 
     bd_bm_live_hh = forms.ChoiceField(
-        choices=CHOICES_BIOLOGICAL,required=False,
+        choices=CHOICES_BIOLOGICAL_MOTHER,required=False,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                            'class': 'form-control',
                            'id': 'bd_bm_live_hh',
                            }))
@@ -8393,8 +8311,9 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
         ))
 
     bd_bf_live_hh = forms.ChoiceField(
-        choices=CHOICES_BIOLOGICAL,required=False,
+        choices=CHOICES_BIOLOGICAL_FATHER,required=False,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                            'class': 'form-control',
                            'id': 'bd_bf_live_hh',
                             'type': 'radio',
@@ -8444,6 +8363,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     bd_children_hiv_status = forms.ChoiceField(
         choices=CHOICES_HIV,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'bd_children_hiv_status',
                         }
@@ -8475,6 +8395,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     rc_discuss_child_needs = forms.ChoiceField(
         choices=CHOICES_RELATIONSHIP,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'rc_discuss_child_needs',
                         }))
@@ -8482,6 +8403,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     rc_discipline = forms.ChoiceField(
         choices=CHOICES_RELATIONSHIP,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'rc_discipline',
                         }))
@@ -8489,6 +8411,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     rc_tells_bothering = forms.ChoiceField(
         choices=CHOICES_RELATIONSHIP,
         widget=forms.Select(attrs={
+                                    'intial': 'Please select',
                                    'class': 'form-control',
                                    'id': 'rc_tells_bothering',
                                    }))
@@ -8496,6 +8419,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     rc_involve_decisions = forms.ChoiceField(
         choices=CHOICES_RELATIONSHIP,
         widget=forms.Select(attrs={
+                                    'intial': 'Please select',
                                    'class': 'form-control',
                                    'id': 'rc_involve_decisions',
                                    }))
@@ -8505,6 +8429,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     cb_child_obedient = forms.ChoiceField(
         choices=CHOICES_BEHAVIOR,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'cb_child_obedient',
                             }))
@@ -8512,6 +8437,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     cb_figths_children = forms.ChoiceField(
         choices=CHOICES_BEHAVIOR,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'cb_figths_children',
     }))
@@ -8521,12 +8447,14 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     dc_often_discipline = forms.ChoiceField(
         choices=CHOICES_DISCIPLINE,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'dc_often_discipline',
     }))
     dc_physical_discipline = forms.ChoiceField(
         choices=CHOICES_DISCIPLINE,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'dc_physical_discipline',
     }))
@@ -8534,6 +8462,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     dc_upstet_child = forms.ChoiceField(
         choices=CHOICES_DISCIPLINE,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'dc_upstet_child',
     }))
@@ -8542,12 +8471,14 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     sp_caring_energy = forms.ChoiceField(
         choices=CHOICES_FEELING,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'sp_caring_energy',
     }))
     sp_source_stress = forms.ChoiceField(
         choices=CHOICES_FEELING,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'sp_source_stress',
     }))
@@ -8555,6 +8486,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     sp_physical_punish = forms.ChoiceField(
         choices=CHOICES_FEELING,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'sp_physical_punish',
     }))
@@ -8564,6 +8496,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     fs_depressed = forms.ChoiceField(
         choices=CHOICES_SAD,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'fs_depressed',
     }))
@@ -8571,6 +8504,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     fs_effort = forms.ChoiceField(
         choices=CHOICES_SAD,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'fs_depressed',
     }))
@@ -8578,6 +8512,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     fs_hopeful = forms.ChoiceField(
         choices=CHOICES_SAD,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'fs_depressed',
     }))
@@ -8587,6 +8522,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     fi_money_important_items = forms.ChoiceField(
         choices=CHOICES_FINANCE,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'fi_money_important_items',
     }))
@@ -8594,6 +8530,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     fi_worried_money = forms.ChoiceField(
         choices=CHOICES_FINANCE,
         widget=forms.Select(attrs={
+                            'intial': 'Please select',
                             'class': 'form-control',
                             'id': 'fi_worried_money',
     }))

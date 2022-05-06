@@ -1,0 +1,36 @@
+pk,the_order,field_name,item_category,item_id,item_description,item_description_short,item_sub_category,user_configurable,sms_keyword,is_void
+32045,1,adoption_unit_type_id,Adoption,TNSA,Adoption Society,Adoption,,FALSE,FALSE,FALSE
+32046,1,dsp_times_id,Displine,DSPN,Never,Never,,FALSE,FALSE,FALSE
+32047,2,dsp_times_id,Displine,DSP1,1 time,1 time,,FALSE,FALSE,FALSE
+32048,3,dsp_times_id,Displine,DSP2,2 times,2 times,,FALSE,FALSE,FALSE
+32049,4,dsp_times_id,Displine,DSP3,3 times,3 times,,FALSE,FALSE,FALSE
+32050,5,dsp_times_id,Displine,DSP4,4 times,4 times,,FALSE,FALSE,FALSE
+32051,6,dsp_times_id,Displine,DSP5,5 times,5 times,,FALSE,FALSE,FALSE
+32052,7,dsp_times_id,Displine,DSP6,6 times,6 times,,FALSE,FALSE,FALSE
+32053,8,dsp_times_id,Displine,DSP7,7 times,7 times,,FALSE,FALSE,FALSE
+32054,9,dsp_times_id,Displine,DSP8,8 times,8 times,,FALSE,FALSE,FALSE
+32055,1,feeling_sad_id,Feeling_Sad,FSD1,Rarely or none of the time less than 1 day,Rarely,,FALSE,FALSE,FALSE
+32056,2,feeling_sad_id,Feeling_Sad,FSD2,Some or a little of the time (1-2 days),Some,,FALSE,FALSE,FALSE
+32057,3,feeling_sad_id,Feeling_Sad,FSD3,Occasionally or a moderate amount of time (3-4 days),Occassionally,,FALSE,FALSE,FALSE
+32058,4,feeling_sad_id,Feeling_Sad,FSD4,Most or all of the time (5-7 days),Most,,FALSE,FALSE,FALSE
+32059,1,my_behaviour_id,Behaviour,MBHV1,Not true,Not true,,FALSE,FALSE,FALSE
+32060,2,my_behaviour_id,Behaviour,MBHV2,Somewhat true,Somewhat true,,FALSE,FALSE,FALSE
+32061,3,my_behaviour_id,Behaviour,MBHV3,Very true,Very true,,FALSE,FALSE,FALSE
+32062,1,relationship_caregiver_id,Relationship_caregiver,RTN1,Never,Never,,FALSE,FALSE,FALSE
+32063,2,relationship_caregiver_id,Relationship_caregiver,RTN2,Almost never,Almost never,,FALSE,FALSE,FALSE
+32064,3,relationship_caregiver_id,Relationship_caregiver,RTN3,Sometimes,Sometimes,,FALSE,FALSE,FALSE
+32065,4,relationship_caregiver_id,Relationship_caregiver,RTN4,Often,Often,,FALSE,FALSE,FALSE
+32066,5,relationship_caregiver_id,Relationship_caregiver,RTN5,Always,Always,,FALSE,FALSE,FALSE
+32067,1,father_mortality_id,Father_mortality,FMT1,Yes,Yes,,FALSE,FALSE,FALSE
+32068,2,father_mortality_id,Father_mortality,FMT2,"No, he passed away","No, he passed away",,FALSE,FALSE,FALSE
+32069,3,father_mortality_id,Father_mortality,FMT3,"No, he lives elsewhere","No, he lives elsewhere",,FALSE,FALSE,FALSE
+32070,4,mother_mortality_id,Mother_mortality,MMT1,Yes,Yes,,FALSE,FALSE,FALSE
+32071,5,mother_mortality_id,Mother_mortality,MMT2,"No, she passed away","No, she passed away",,FALSE,FALSE,FALSE
+32072,6,mother_mortality_id,Mother_mortality,MMT3,"No, she lives elsewhere","No, she lives elsewhere",,FALSE,FALSE,FALSE
+32073,1,literacy_lvl_id,Literacy_lvl,LIT1,Cannot read at all,Cannot read at all,,FALSE,FALSE,FALSE
+32074,2,literacy_lvl_id,Literacy_lvl,LIT2,Can read but with lots of difficulty,Can read but with lots of difficulty,,FALSE,FALSE,FALSE
+32075,3,literacy_lvl_id,Literacy_lvl,LIT3,Can read with a little difficulty,Can read with a little difficulty,,FALSE,FALSE,FALSE
+32076,4,literacy_lvl_id,Literacy_lvl,LIT4,Can read easily,Can read easily,,FALSE,FALSE,FALSE
+32077,1,under_care_id,Under_care,UCR,No,No,,FALSE,FALSE,FALSE
+32078,2,under_care_id,Under_care,UCR1,"Yes, all of them",Yes,,FALSE,FALSE,FALSE
+32079,3,under_care_id,Under_care,UCR2,"Yes, some of them","Yes, some of them",,FALSE,FALSE,FALSE
