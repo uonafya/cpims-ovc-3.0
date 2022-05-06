@@ -10098,9 +10098,11 @@ def new_case_closure(request, id):
             phone_number = request.POST.get("CASE_CL007")
             informed_graduation = request.POST.get("CASE_CL008")
             receiving_org = request.POST.get("CASE_CL002")
+            import pdb
 
             if receiving_org:
                 org_res = RegOrgUnit.objects.get(id=receiving_org).id
+                pdb.set_trace()
             else:
                 org_res = ''
 
@@ -10167,7 +10169,7 @@ def new_case_closure(request, id):
         return HttpResponseRedirect(reverse(forms_home))
 
     init_data = RegPerson.objects.filter(pk=id)
-    check_fields = ['sex_id', 'relationship_type_id','yesno_id']
+    check_fields = ['sex_id', 'relationship_type_id','yesno_id','exit_reason_id']
     vals = get_dict(field_name=check_fields)
     ovc_id = int(id)
     print(f'This is ovc {ovc_id} Thisid {id}')
@@ -10177,7 +10179,21 @@ def new_case_closure(request, id):
     event = OVCCareEvents.objects.filter(person_id=id).values_list('event')
 
     case_closure_date= OVCCareCaseExit.objects.filter(event_id__in=event,is_void=False).order_by('date_of_closure')
+    import pdb
+
+
+    org_names = []
+
+    i = 0
+    for org_name in range(len(case_closure_date)):
+        if case_closure_date[i].rec_organization != '':
+            print (RegOrgUnit.objects.get(id=case_closure_date[i].rec_organization))
+            i += 1
+
+    # pdb.set_trace()
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+
+
     return render(request,
                   'forms/new_case_closure.html',
                   {'form': form,

@@ -8251,7 +8251,7 @@ class BenchmarkMonitoringForm(forms.Form):
 
 class CaseClosureForm(forms.Form):
     get_org_units_list=get_organization_list()
-    # YESNO_CHOICES=get_list('yes_id')
+    YES_NO_CHOICES=get_list('yesno_id')
 
 
 
@@ -8279,29 +8279,12 @@ class CaseClosureForm(forms.Form):
                    #    'data-parsley-group': 'group0'
                    }))
 
-    CASE_CL003= forms.ChoiceField(
-        required=False,
-        choices=(('1', 'Voluntary withdrawal'),('2', '  Death'),('3', ' Married'),('4', '  Family re-integration'),
-                 ('5', '  Family reconciliation'),('6', '  Family re-integration'),('7', '   Fostered'),('8', '  Adopted'),
-                 ('9', ' Self employed'),('10', '  Over 18 years and out of school'),('11', ' Relocation'), ('12', ' Relocation'),
-                 ('13', '  Duplicated record'),('14', ' Any other reason? Specify ')),
-        widget=forms.RadioSelect(
 
-            # renderer=RadioCustomRenderer,
-            attrs={
-                'class': 'form-control',
-                'data-parsley-required': "false",
-                'name':'reason'
-                # 'data-parsley-required': 'true',
-                #    'data-parsley-errors-container': "#in_school_error"
-            }
-        )
-    )
 
     CASE_CL005 = forms.ChoiceField(
         required=False,
 
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
@@ -8315,7 +8298,7 @@ class CaseClosureForm(forms.Form):
     CASE_CL006 = forms.ChoiceField(
         required=False,
 
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
@@ -8328,7 +8311,7 @@ class CaseClosureForm(forms.Form):
     )
     CASE_CL007 = forms.ChoiceField(
         required=False,
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
@@ -8343,7 +8326,7 @@ class CaseClosureForm(forms.Form):
         required=False,
 
 
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
@@ -8357,7 +8340,7 @@ class CaseClosureForm(forms.Form):
     CASE_CL009 = forms.ChoiceField(
         required=False,
 
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
@@ -8371,7 +8354,7 @@ class CaseClosureForm(forms.Form):
     CASE_CL010 = forms.ChoiceField(
         required=False,
 
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
@@ -8386,7 +8369,7 @@ class CaseClosureForm(forms.Form):
     CASE_CL011 = forms.ChoiceField(
         required=False,
 
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
@@ -8400,7 +8383,7 @@ class CaseClosureForm(forms.Form):
     CASE_CL012 = forms.ChoiceField(
         required=False,
 
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
@@ -8414,7 +8397,7 @@ class CaseClosureForm(forms.Form):
     CASE_CL013 = forms.ChoiceField(
         required=False,
 
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
@@ -8427,7 +8410,7 @@ class CaseClosureForm(forms.Form):
     )
     CASE_CL014 = forms.ChoiceField(
         required=False,
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
@@ -8481,10 +8464,7 @@ class CaseClosureForm(forms.Form):
 
     CASE_CL027= forms.ChoiceField(
         required=False,
-        choices=(('', 'select attrition reason'),('1', 'Voluntary withdrawal'),('2', '  Death'),('3', ' Married'),('4', '  Family re-integration'),
-                 ('5', '  Family reconciliation'),('4', '  Family re-integration'),('6', '   Fostered'),('7', '  Adopted'),
-                 ('8', ' Self employed'),('9', '  Over 18 years and out of school'),('9', ' Relocation'), ('9', ' Relocation'),
-                 ('9', '  Duplicated record'),('9', ' Any other reason? Specify ')),
+        choices=get_list('exit_reason_id'),
                                       initial='0',
 
                                       widget=forms.Select(
@@ -8497,7 +8477,7 @@ class CaseClosureForm(forms.Form):
     CASE_CL028 = forms.ChoiceField(
         required=False,
 
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
@@ -8511,7 +8491,7 @@ class CaseClosureForm(forms.Form):
     CASE_CL029 = forms.ChoiceField(
         required=False,
 
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
@@ -8525,7 +8505,7 @@ class CaseClosureForm(forms.Form):
     CASE_CL030 = forms.ChoiceField(
         required=False,
 
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
@@ -8539,7 +8519,7 @@ class CaseClosureForm(forms.Form):
     CASE_CL031 = forms.ChoiceField(
         required=False,
 
-        choices=YESNO_CHOICES,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={
