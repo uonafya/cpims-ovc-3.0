@@ -13,10 +13,6 @@
     padding: 15px;
     border-bottom: 1px solid #ccc;
   }
-  td.field{
-    text-align: right;
-    font-weight: bold;
-  }
 </style>
 {% endblock %}
 
@@ -29,8 +25,7 @@
 <!-- end breadcrumb -->
 <!-- begin page-header -->
 
-<h1 class="page-header"><i class="fa fa-child"></i> OVC Care <small>
-Caregiver details | {{care_giver}}
+<h1 class="page-header"><i class="fa fa-child"></i> Preventive and Family Support <small>Status |
 {% if creg.is_active %}
 <span class="label label-primary">Active</span>
 {% else %}
@@ -65,115 +60,126 @@ Caregiver details | {{care_giver}}
 <div class="row">
    <!-- begin col-2 -->
     <div class="col-md-2">
-        <div class="m-b-10 text-inverse f-s-12"><b>Available Forms</b></div>
+        
 
         <table class="text-inverse m-b-20 width-full">
             <tr>
-                <td>
-                    <a href="{% url 'new_csi' id=creg.person_id %}">
-                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">{{ services.fcsi }}</span>
-                    <div class="m-t-4">CSI</div></a>
-                </td>
+                <td><div class="m-b-10 m-t-10 text-inverse f-s-12"><b>Common Forms</b></div></td>
             </tr>
             <tr>
                 <td>
-                    <a href="{% url 'new_hhva' id=creg.person_id %}">
-                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">{{ services.fhva }}</span>
-                    <div class="m-t-4">HHVA</div></a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{% url 'form1a_events' id=creg.person_id %}">
-                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">{{ services.f1a }}</span>
-                    <div class="m-t-4">Form 1A</div></a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{% url 'new_form1b' id=creg.person_id %}">
+                    <a href="#">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
                     <span class="badge pull-right">N</span>
-                    <div class="m-t-4">Form 1B</div></a>
+                    <div class="m-t-4">Attendance</div></a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{% url 'new_cpara' id=creg.person_id %}">
-                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">{{ services.cpr }}</span>
-                    <div class="m-t-4">CPARA</div></a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{% url 'new_caseplan' id=creg.person_id %}">
-                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right"> {{ services.CPAR }}</span>
-                    <div class="m-t-4">Case Plan Template</div></a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{% url 'new_caseplan_monitoring' id=creg.person_id %}">
+                    <a href="#">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
                     <span class="badge pull-right">N</span>
-                    <div class="m-t-4">Monitoring HHRCPA</div></a>
+                    <div class="m-t-4">Services and Referrals</div></a>
                 </td>
             </tr>
             <tr>
-                <td>
-                    <a href="{% url 'new_wellbeing' id=creg.person_id%}">
-                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">{{ well_being_count.WBG|add:well_being_count.wba }}</span>
-                    <div class="m-t-4">Wellbeing</div></a>
-                </td>
+                <td><div class="m-b-10 m-t-10 text-inverse f-s-12"><b>SINOVUYO Forms</b></div></td>
             </tr>
             <tr>
                 <td>
-                    <a href="{% url 'new_wellbeingadolescent' id=creg.person_id%}">
+                    <a href="#">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
                     <span class="badge pull-right">N</span>
-                    <div class="m-t-4">Wellbeing Adolescent</div></a>
+                    <div class="m-t-4">Caregiver Pre/Post Assessment</div></a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{% url 'new_hivscreeningtool' id=creg.person_id%}">
+                    <a href="#">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
                     <span class="badge pull-right">N</span>
-                    <div class="m-t-4">HIV Risk Screening</div></a>
+                    <div class="m-t-4">Teen Pre/Post Assessment</div></a>
+                </td>
+            </tr>
+            <tr>
+                <td><div class="m-b-10 m-t-10 text-inverse f-s-12"><b>FMP Forms</b></div></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="#">
+                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
+                    <span class="badge pull-right">N</span>
+                    <div class="m-t-4">Screening</div></a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{% url 'new_hivmanagementform' id=creg.person_id%}" {% if child_hiv_status != 'HSTP' %} disabled {% endif %}>
+                    <a href="#">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
                     <span class="badge pull-right">N</span>
-                    <div class="m-t-4">HIV Management</div></a>
+                    <div class="m-t-4 m-t-4">Pre/Post Assessment Form</div></a>
+                </td>
+            </tr>
+            <tr>
+                <td><div class="m-b-10 m-t-10 text-inverse f-s-12"><b>HCBF Forms</b></div></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="#">
+                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
+                    <span class="badge pull-right">N</span>
+                    <div class="m-t-4">Screening</div></a>
+                </td>
+            </tr>
+            <tr>
+                <td><div class="m-b-10 m-t-10 text-inverse f-s-12"><b>CBIM Forms</b></div></td>
+            </tr>
+            <tr>
+                <td>
+                    <p>None</p>
+                </td>
+            </tr>
+            <tr>
+                <td><div class="m-b-10 m-t-10 text-inverse f-s-12"><b>Other Family Support Forms</b></div></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="#">
+                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
+                    <span class="badge pull-right">N</span>
+                    <div class="m-t-4">Initial-Assessment</div></a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{% url 'new_dreamsform' id=creg.person_id%}">
+                    <a href="#">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
                     <span class="badge pull-right">N</span>
-                    <div class="m-t-4">DREAMS Service Uptake</div></a>
+                    <div class="m-t-4">FS-Family-Registration</div></a>
                 </td>
             </tr>
-        </table>
-        <div class="m-b-10 text-inverse f-s-12"><b>New Forms</b></div>
-
-        <table class="text-inverse m-b-20 width-full">
             <tr>
                 <td>
-                    <a href="{% url 'new_case_transfer' id=creg.person_id%}">
+                    <a href="#">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
                     <span class="badge pull-right">N</span>
-                    <div class="m-t-4">Case Transfer</div></a>
+                    <div class="m-t-4">FS-Child-YoungPerson-Registration</div></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="#">
+                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
+                    <span class="badge pull-right">N</span>
+                    <div class="m-t-4">FS-Core-Assessment (0 - 4)</div></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="#">
+                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
+                    <span class="badge pull-right">N</span>
+                    <div class="m-t-4">FS-Core-Assessment (5 - 8)</div></a>
                 </td>
             </tr>
         </table>
@@ -209,97 +215,52 @@ Caregiver details | {{care_giver}}
                 <form action="." method="post" name="ovcreg_form" id="ovcreg_form" data-parsley-validate="true">
                 {% csrf_token %}
                 <input type="hidden" name="ovc_id" id="ovc_id" value="{{ creg.person_id }}">
-                <table width="100%" class="table">
+                <table width="100%" class="table table-profile">
                     <tbody>
                         <tr>
-                            <td class="field">First Name</td>
-                            <td width="30%">{{ child.first_name }}</td>
+                            <td class="field" style="width: 150px">First Name</td>
+                            <td width="40%">{{ child.first_name }}</td>
                             <td class="field">Surname</td>
-                            <td width="30%">{{ child.surname }}</td>
+                            <td>{{ child.surname }}</td>
                         </tr>
                         <tr>
                             <td class="field">Other Names</td>
                             <td>{{ child.other_names }}</td>
                             <td class="field">DOB</td>
-                            <td>{{ child.date_of_birth }}
-                            ({{ child.age }})
-                            </td>
+                            <td>{{ child.date_of_birth }} ({{ child.age }})</td>
                         </tr>
                         <tr>
-                            <td class="field">CBO</td>
-                            <td>{{ creg.child_cbo.org_unit_name }}</td>
-                            <td class="field">CHV</td>
-                            <td>{{ creg.child_chv.full_name }}</td>
-                        </tr>
-                        <tr>
-                            <td class="field">OVC CPIMS ID</td>
+                            <td class="field">CPIMS ID</td>
                             <td>{{ child.id }}</td>
                             <td class="field">Registration&nbsp;Date</td>
                             <td>{{ creg.registration_date }}</td>
                         </tr>
                         <tr>
-                            <td class="field">Has BCert</td>
-                            <td>
-                                {% if creg.has_bcert %}Yes{% else %}No{% endif %} (
-                                Birth Cert No: {% if params.ISOV %}{{ params.ISOV }}{% else %}N/A{% endif %})
-                            </td>                        
-                            <td class="field">Is Disabled</td>
-                            <td>
-                                {% if creg.is_disabled %}Yes{% else %}No{% endif %} (
-                                NCPWD No: {% if params.ISDN %}{{ params.ISDN }}{% else %}N/A{% endif %})
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="field">Eligibility criteria(I)</td>
-                            <td colspan="3">
-                                <ul>
-                                    {% for criteria in criterias %}
-                                        <li>{{ criteria.criteria|gen_value:vals }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </td>
+                            <td class="field">CBO</td>
+                            <td>{{ creg.child_cbo.org_unit_name }}</td>
+                            <td class="field">Program</td>
+                            <td>{{ creg.intervention|gen_value:vals }}</td>
                         </tr>
                     </tbody>
                 </table>
                  <fieldset>
-                <legend class="pull-left width-full">Health and Education details</legend>
+                <legend class="pull-left width-full">Education details</legend>
                 <!-- begin row -->
                  <div class="row">
                     <table width="100%" class="table table-profile">
                     <tbody>
                         <tr>
-                            <td class="field">Immunization</td>
-                            <td>{{ creg.immunization_status|gen_value:vals }}</td>
                             <td class="field">School Level</td>
-                            <td>{{ creg.school_level|gen_value:vals }}</td>
-                            <td class="field">HIV Status</td>
-                            <td>{{ creg.hiv_status|gen_value:vals }}</td>
+                            <td colspan="5">{{ school_level|gen_value:vals }}</td>
                         </tr>
-                        {% if creg.hiv_status == 'HSTP' %}
+
+                         {% if creg.school %}
                         <tr>
-                            <td class="field">Facility</td>
-                            <td>{{ health.facility.facility_name }}</td>
-                            <td class="field">ART Status</td>
-                            <td>{{ health.art_status|gen_value:vals }}</td>
-                            <td class="field">Date&nbsp;of&nbsp;Linkage</td>
-                            <td>{{ health.date_linked }}</td>
-                        </tr>
-                        <tr>
-                            <td class="field">Suppressed</td>
-                            <td>{{ suppression }}</td>
-                            <td class="field">CCC No.</td>
-                            <td>{{ health.ccc_number }}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        {% endif %}
-                         {% if creg.school_level != 'SLNS' %}
-                        <tr>
-                            <td class="field">School Name</td>
-                            <td>{{ school.school.school_name }}</td>
-                            <td class="field">Class</td>
-                            <td>{{ school.school_class|gen_value:vals }}</td>
-                            <td class="field">Boarding / Day</td>
+                            <td class="field">School Name:</td>
+                            <td width="30%">{{ school.school.school_name }}</td>
+                            <td class="field">Class:</td>
+                            <td width="20%">{{ school.school_class|gen_value:vals }}</td>
+                            <td class="field">Boarding/Day:</td>
                             <td>{{ school.admission_type|gen_value:vals }}</td>
                         </tr>
                         {% endif %}
@@ -313,6 +274,7 @@ Caregiver details | {{care_giver}}
                 <!-- begin row -->
                  <div class="row">
                     <div class="col-md-12">
+                        {% if hhmembers %}
                         <table class="table">
                             <thead>
                                 <tr>
@@ -323,8 +285,7 @@ Caregiver details | {{care_giver}}
                                     <th>Type</th>
                                     <th>Telephone</th>
                                     <th>Alive</th>
-                                    <th>HIV Status</th>
-                                    <th>Head</th>
+                                    <th>Enrolled</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -359,28 +320,15 @@ Caregiver details | {{care_giver}}
                                     No
                                 {% endif %}
                                     </td>
-                                    <td>
-                                    {% if hhmember.hiv_status %}
-                                        {{ hhmember.hiv_status|gen_value:vals }}
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                    </td>
-                                    <td>
-                                    {% if not hhmember.hh_head %}
-                                        {% if hhmember.member_type == 'TBVC' or hhmember.member_type == 'TOVC' %}
-                                       N/A
-                                    {% else %}
-                                       No
-                                    {% endif %}
-                                    {% else %}
-                                        Yes ({{ hhold.house_hold.head_identifier }})
-                                    {% endif %}
+                                    <td>                               
                                     </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
+                        {% else %}
+                            <p>No Household details available.</p>
+                        {% endif %}
 
                     </div>
                 </div>
@@ -390,16 +338,9 @@ Caregiver details | {{care_giver}}
 
                 <div class="row pull-left" id="form_actions">
                     
-                       <a href="{% url 'ovc_home' %}" ><type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-arrow-left"></i> &nbsp;<b>Back to search</b>&nbsp; </button></a> 
+                       <a href="{% url 'pfs_home' %}" ><type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-arrow-left"></i> &nbsp;<b>Back to search</b>&nbsp; </button></a> 
 
-                        {% if allow_edit %}
-
-                        <a href="{% url 'ovc_edit' id=creg.person_id %}"><button type="button" class="btn btn-primary"> <i class="fa fa-child"></i> Edit OVC</button></a>
-
-                        <a href="{% url 'hh_manage' hhid=hhold.house_hold.id %}">
-                        <button type="button" class="btn btn-primary"> <i class="fa fa-users"></i> Manage HH </button>
-                        </a>
-                        {% endif %}
+                        <a href="{% url 'edit_pfs' id=creg.person_id %}"><button type="button" class="btn btn-primary"> <i class="fa fa-child"></i> Edit Registration details</button></a>
                 </div>
             <!-- end panel body -->
         </div>

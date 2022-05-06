@@ -1,0 +1,850 @@
+[
+    {
+        "pk": 31075,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP11HEGs",
+            "item_description_short": "Facilitated to obtain HIV test",
+            "sms_keyword": false,
+            "item_description": "CP11HEGs  - Facilitated to obtain HIV test",
+            "the_order": 1
+        }
+    },
+    {
+        "pk": 31076,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP12HEGs",
+            "item_description_short": "Completed a referral for HIV test",
+            "sms_keyword": false,
+            "item_description": "CP12HEGs  - Completed a referral for HIV test",
+            "the_order": 2
+        }
+    },
+    {
+        "pk": 31077,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP21HEGs",
+            "item_description_short": "Completed a referral for enrollment to care and treatment",
+            "sms_keyword": false,
+            "item_description": "CP21HEGs  - Completed a referral for enrollment to care and treatment",
+            "the_order": 3
+        }
+    },
+    {
+        "pk": 31078,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP22aHEGs",
+            "item_description_short": "Facilitated to access viral load testing services",
+            "sms_keyword": false,
+            "item_description": "CP22aHEGs  - Facilitated to access viral load testing services",
+            "the_order": 4
+        }
+    },
+    {
+        "pk": 31079,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP22bHEGs",
+            "item_description_short": "Completed referral to access viral load testing services",
+            "sms_keyword": false,
+            "item_description": "CP22bHEGs  - Completed referral to access viral load testing services",
+            "the_order": 5
+        }
+    },
+    {
+        "pk": 31080,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP23HEGs",
+            "item_description_short": "Provided with transport to clinic appointment",
+            "sms_keyword": false,
+            "item_description": "CP23HEGs  - Provided with transport to clinic appointment",
+            "the_order": 6
+        }
+    },
+    {
+        "pk": 31081,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP24HEGs",
+            "item_description_short": "Provided with appointment reminder messages",
+            "sms_keyword": false,
+            "item_description": "CP24HEGs  - Provided with appointment reminder messages",
+            "the_order": 7
+        }
+    },
+    {
+        "pk": 31082,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP25HEGs",
+            "item_description_short": "Provided with counseling and HIV disclosure support",
+            "sms_keyword": false,
+            "item_description": "CP25HEGs  - Provided with counseling and HIV disclosure support",
+            "the_order": 8
+        }
+    },
+    {
+        "pk": 31083,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP26HEGs",
+            "item_description_short": "Provided with health literacy messages",
+            "sms_keyword": false,
+            "item_description": "CP26HEGs  - Provided with health literacy messages",
+            "the_order": 9
+        }
+    },
+    {
+        "pk": 31084,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP27HEGs",
+            "item_description_short": "Completed a referral for HIV related opportunistic infection treatment and care",
+            "sms_keyword": false,
+            "item_description": "CP27HEGs  - Completed a referral for HIV related opportunistic infection treatment and care",
+            "the_order": 10
+        }
+    },
+    {
+        "pk": 31085,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP29HEGs",
+            "item_description_short": "Linked to a structured PLHA support group",
+            "sms_keyword": false,
+            "item_description": "CP29HEGs  - Linked to a structured PLHA support group",
+            "the_order": 11
+        }
+    },
+    {
+        "pk": 31086,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP210HEGs",
+            "item_description_short": "Provided with HIV adherence support (EAC, DWI, Counseling, MDT)",
+            "sms_keyword": false,
+            "item_description": "CP210HEGs  - Provided with HIV adherence support (EAC, DWI, Counseling, MDT)",
+            "the_order": 12
+        }
+    },
+    {
+        "pk": 31087,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP211aHEGs",
+            "item_description_short": "Facilitated to obtain routine/ emergency healthcare",
+            "sms_keyword": false,
+            "item_description": "CP211aHEGs  - Facilitated to obtain routine/ emergency healthcare",
+            "the_order": 13
+        }
+    },
+    {
+        "pk": 31088,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP211bHEGs",
+            "item_description_short": "Completed a referral to obtain routine/ emergency healthcare",
+            "sms_keyword": false,
+            "item_description": "CP211bHEGs  - Completed a referral to obtain routine/ emergency healthcare",
+            "the_order": 14
+        }
+    },
+    {
+        "pk": 31089,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP213aHEGs",
+            "item_description_short": "Facilitated to obtain STI treatment",
+            "sms_keyword": false,
+            "item_description": "CP213aHEGs  - Facilitated to obtain STI treatment",
+            "the_order": 15
+        }
+    },
+    {
+        "pk": 31090,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP213bHEGs",
+            "item_description_short": "Completed a referral to obtain STI treatment",
+            "sms_keyword": false,
+            "item_description": "CP213bHEGs  - Completed a referral to obtain STI treatment",
+            "the_order": 16
+        }
+    },
+    {
+        "pk": 31091,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP45aHEGs",
+            "item_description_short": "Provided with Insecticide Treated Mosquito net (ITN)",
+            "sms_keyword": false,
+            "item_description": "CP45aHEGs - Provided with Insecticide Treated Mosquito net (ITN)",
+            "the_order": 17
+        }
+    },
+    {
+        "pk": 31092,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP45bHEGs",
+            "item_description_short": "Completed a referral for provision of  Insecticide Treated Mosquito net (ITN)",
+            "sms_keyword": false,
+            "item_description": "CP45bHEGs - Completed a referral for provision of  Insecticide Treated Mosquito net (ITN)",
+            "the_order": 18
+        }
+    },
+    {
+        "pk": 31093,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP46aHEGs",
+            "item_description_short": "Facilitated to obtain perinatal care including PMTCT",
+            "sms_keyword": false,
+            "item_description": "CP46aHEGs - Facilitated to obtain perinatal care including PMTCT",
+            "the_order": 19
+        }
+    },
+    {
+        "pk": 31094,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP46bHEGs",
+            "item_description_short": "Completed referral to obtain perinatal care including PMTCT",
+            "sms_keyword": false,
+            "item_description": "CP46bHEGs - Completed referral to obtain perinatal care including PMTCT",
+            "the_order": 20
+        }
+    },
+    {
+        "pk": 31095,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP47HEGs",
+            "item_description_short": "Provided with hygiene counseling and WASH messaging",
+            "sms_keyword": false,
+            "item_description": "CP47HEGs - Provided with hygiene counseling and WASH messaging",
+            "the_order": 21
+        }
+    },
+    {
+        "pk": 31096,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP51STGs",
+            "item_description_short": "Linked to GOK and other social safety nets (OVC, Elderly or Disability cash transfers)",
+            "sms_keyword": false,
+            "item_description": "CP51STGs  - Linked to GOK and other social safety nets (OVC, Elderly or Disability cash transfers)",
+            "the_order": 1
+        }
+    },
+    {
+        "pk": 31097,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP52aSTGs",
+            "item_description_short": "Provided with Emergency/cash transfer",
+            "sms_keyword": false,
+            "item_description": "CP52aSTGs  - Provided with Emergency/cash transfer",
+            "the_order": 2
+        }
+    },
+    {
+        "pk": 31098,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP52bSTGs",
+            "item_description_short": "Completed a referral for emergency cash transfer",
+            "sms_keyword": false,
+            "item_description": "CP52bSTGs  - Completed a referral for emergency cash transfer",
+            "the_order": 3
+        }
+    },
+    {
+        "pk": 31099,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP53aSTGs",
+            "item_description_short": "Provided with business support (startup kit)",
+            "sms_keyword": false,
+            "item_description": "CP53aSTGs  - Provided with business support (startup kit)",
+            "the_order": 4
+        }
+    },
+    {
+        "pk": 31100,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP53bSTGs",
+            "item_description_short": "Completed referral for business support (startup kit)",
+            "sms_keyword": false,
+            "item_description": "CP53bSTGs  - Completed referral for business support (startup kit)",
+            "the_order": 5
+        }
+    },
+    {
+        "pk": 31101,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP53cSTGs",
+            "item_description_short": "Provided with business support (business boost)",
+            "sms_keyword": false,
+            "item_description": "CP53cSTGs  - Provided with business support (business boost)",
+            "the_order": 6
+        }
+    },
+    {
+        "pk": 31102,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP53dSTGs",
+            "item_description_short": "Completed referral for business support (business boost)",
+            "sms_keyword": false,
+            "item_description": "CP53dSTGs  - Completed referral for business support (business boost)",
+            "the_order": 7
+        }
+    },
+    {
+        "pk": 31103,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP54aSTGs",
+            "item_description_short": "Provided with productive assets",
+            "sms_keyword": false,
+            "item_description": "CP54aSTGs  - Provided with productive assets",
+            "the_order": 8
+        }
+    },
+    {
+        "pk": 31104,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP54bSTGs",
+            "item_description_short": "Completed referral for productive assets",
+            "sms_keyword": false,
+            "item_description": "CP54bSTGs  - Completed referral for productive assets",
+            "the_order": 9
+        }
+    },
+    {
+        "pk": 31105,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP55STGs",
+            "item_description_short": "Enrolled to saving groups (VSLA/SILC)",
+            "sms_keyword": false,
+            "item_description": "CP55STGs - Enrolled to saving groups (VSLA/SILC)",
+            "the_order": 10
+        }
+    },
+    {
+        "pk": 31106,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP56STGs",
+            "item_description_short": "Linked to financial institutions",
+            "sms_keyword": false,
+            "item_description": "CP56STGs - Linked to financial institutions",
+            "the_order": 11
+        }
+    },
+    {
+        "pk": 31107,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP57aSTGs",
+            "item_description_short": "Caregiver provided with financial literacy training",
+            "sms_keyword": false,
+            "item_description": "CP57aSTGs - Caregiver provided with financial literacy training",
+            "the_order": 12
+        }
+    },
+    {
+        "pk": 31108,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP57bSTGs",
+            "item_description_short": "Completed referral for financial literacy training to Caregiver",
+            "sms_keyword": false,
+            "item_description": "CP57bSTGs - Completed referral for financial literacy training to Caregiver",
+            "the_order": 13
+        }
+    },
+    {
+        "pk": 31109,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP58aSTGs",
+            "item_description_short": "Caregiver Trained on entrepreneurship",
+            "sms_keyword": false,
+            "item_description": "CP58aSTGs - Caregiver Trained on entrepreneurship",
+            "the_order": 14
+        }
+    },
+    {
+        "pk": 31110,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP58bSTGs",
+            "item_description_short": "Completed referral for Entrepreneurship training",
+            "sms_keyword": false,
+            "item_description": "CP58bSTGs - Completed referral for Entrepreneurship training",
+            "the_order": 15
+        }
+    },
+    {
+        "pk": 31111,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP59aSTGs",
+            "item_description_short": "Provided with Agribusiness skills training",
+            "sms_keyword": false,
+            "item_description": "CP59aSTGs - Provided with Agribusiness skills training",
+            "the_order": 16
+        }
+    },
+    {
+        "pk": 31112,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP59bSTGs",
+            "item_description_short": "Completed referral for Agribusiness skills training",
+            "sms_keyword": false,
+            "item_description": "CP59bSTGs - Completed referral for Agribusiness skills training",
+            "the_order": 17
+        }
+    },
+    {
+        "pk": 31113,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP512aSTGs",
+            "item_description_short": "Facilitated to Enrol in health insurance plan ( e.g. NHIF, UHC)",
+            "sms_keyword": false,
+            "item_description": "CP512aSTGs - Facilitated to Enrol in health insurance plan ( e.g. NHIF, UHC)",
+            "the_order": 18
+        }
+    },
+    {
+        "pk": 31114,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP512bSTGs",
+            "item_description_short": "Completed referral for health insurance plan ( e.g. NHIF, UHC)",
+            "sms_keyword": false,
+            "item_description": "CP512bSTGs - Completed referral for health insurance plan ( e.g. NHIF, UHC)",
+            "the_order": 19
+        }
+    },
+    {
+        "pk": 31115,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Stable",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "6s",
+            "is_void": false,
+            "item_id": "CP513STGs",
+            "item_description_short": "Provided with administrative fees support related to guardianship, civil registration or inheritance",
+            "sms_keyword": false,
+            "item_description": "CP513STGs - Provided with administrative fees support related to guardianship, civil registration or inheritance",
+            "the_order": 20
+        }
+    },
+    {
+        "pk": 31116,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Safe",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "3s",
+            "is_void": false,
+            "item_id": "CP61SAGs",
+            "item_description_short": "Conducted structured family group conferencing to prevent occurrence / reoccurrence of child abuse",
+            "sms_keyword": false,
+            "item_description": "CP61SAGs - Conducted structured family group conferencing to prevent occurrence/ reoccurrence of child abuse, exploitation or neglect",
+            "the_order": 1
+        }
+    },
+    {
+        "pk": 31117,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Safe",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "3s",
+            "is_void": false,
+            "item_id": "CP62SAGs",
+            "item_description_short": "Provided structured pss related to family conflict mitigation and family relationships",
+            "sms_keyword": false,
+            "item_description": "CP62SAGs - Provided structured psycho-social support related to family conflict mitigation and family relationships",
+            "the_order": 2
+        }
+    },
+    {
+        "pk": 31118,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Safe",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "3s",
+            "is_void": false,
+            "item_id": "CP63aSAGs",
+            "item_description_short": "Facilitated with transport to access post-violence medical care",
+            "sms_keyword": false,
+            "item_description": "CP63aSAGs - Facilitated with transport to access post-violence medical care",
+            "the_order": 3
+        }
+    },
+    {
+        "pk": 31119,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Safe",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "3s",
+            "is_void": false,
+            "item_id": "CP63bSAGs",
+            "item_description_short": "Completed referral for post-violence medical care",
+            "sms_keyword": false,
+            "item_description": "CP63bSAGs - Completed referral for post-violence medical care",
+            "the_order": 4
+        }
+    },
+    {
+        "pk": 31120,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Safe",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "3s",
+            "is_void": false,
+            "item_id": "CP6.5SAGs",
+            "item_description_short": "Linked for emergency shelter/care facility",
+            "sms_keyword": false,
+            "item_description": "CP 6.5 SAGs - Linked for emergency shelter/care facility",
+            "the_order": 5
+        }
+    },
+    {
+        "pk": 31121,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Safe",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "3s",
+            "is_void": false,
+            "item_id": "CP68SAGs",
+            "item_description_short": "Accessed structured psycho- social support related to family conflict mitigation and family",
+            "sms_keyword": false,
+            "item_description": "CP68SAGs - Accessed structured psycho- social support related to family conflict mitigation and family relationships",
+            "the_order": 6
+        }
+    },
+    {
+        "pk": 31122,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Safe",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "3s",
+            "is_void": false,
+            "item_id": "CP69aSAGs",
+            "item_description_short": "Caregiver enroled for structured, HIV-sensitive, evidence-based early childhood intervention",
+            "sms_keyword": false,
+            "item_description": "CP69aSAGs - Caregiver enroled for structured, HIV-sensitive, evidence-based early childhood intervention with a trained provider",
+            "the_order": 7
+        }
+    },
+    {
+        "pk": 31123,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Safe",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "3s",
+            "is_void": false,
+            "item_id": "CP69bSAGs",
+            "item_description_short": "Caregiver completed referral for  structured, HIV-sensitive, evidence-based early childhood intv",
+            "sms_keyword": false,
+            "item_description": "CP69bSAGs - Caregiver completed referral for  structured, HIV-sensitive, evidence-based early childhood intervention with a trained provider",
+            "the_order": 8
+        }
+    },
+    {
+        "pk": 31124,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Safe",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "3s",
+            "is_void": false,
+            "item_id": "CP610aSAGs",
+            "item_description_short": "Caregiver enrolled for evidence-based parenting intervention to prevent and reduce violence",
+            "sms_keyword": false,
+            "item_description": "CP610aSAGs - Caregiver enrolled for evidence-based parenting intervention to prevent and reduce violence and/or sexual risk of their children",
+            "the_order": 9
+        }
+    },
+    {
+        "pk": 31125,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Safe",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "3s",
+            "is_void": false,
+            "item_id": "CP610bSAGs",
+            "item_description_short": "Completed a referal for evidence-based parenting intervention to prevent and reduce violence",
+            "sms_keyword": false,
+            "item_description": "CP610bSAGs - Completed a referal for evidence-based parenting intervention to prevent and reduce violence and/or sexual risk of their children",
+            "the_order": 10
+        }
+    },
+    {
+        "pk": 31126,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Safe",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "3s",
+            "is_void": false,
+            "item_id": "CP611aSAGs",
+            "item_description_short": "Facilitated for legal assistance",
+            "sms_keyword": false,
+            "item_description": "CP611aSAGs - Facilitated for legal assistance (e.g., attorney fees, transport, etc.) related to cases of maltreatment, GBV, trafficking, exploitation",
+            "the_order": 11
+        }
+    },
+    {
+        "pk": 31127,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items \u2013 Safe",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "3s",
+            "is_void": false,
+            "item_id": "CP611bSAGs",
+            "item_description_short": "Completed referral for legal assistance",
+            "sms_keyword": false,
+            "item_description": "CP611bSAGs - Completed referral for legal assistance (e.g., attorney fees, transport, etc.) related to cases of maltreatment, GBV, trafficking, exploitation",
+            "the_order": 12
+        }
+    }
+]

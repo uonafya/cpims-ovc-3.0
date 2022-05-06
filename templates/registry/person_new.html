@@ -5,6 +5,7 @@
 
 {% load crispy_forms_tags %}
 
+
 {% block style_code %}
 <link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
 <link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
@@ -76,7 +77,9 @@
                                     <div id="provides_service" class="form-group">
                                         <label for="child_services">Provides services directly to children <span class="asteriskField">*</span></label>
                                         <br>                                        
-                                        {{ form.child_services }}
+                                        {% for choice in form.child_services %}
+                                            <label for="{{ choice.id_for_label  }}" class="radio-inline">{{ choice.tag }} {{ choice.choice_label }}</label>
+                                        {% endfor %}
                                         <span id="services_error"></span>
                                     </div>
                                 </div>
@@ -85,9 +88,11 @@
                                 <!-- begin col-4 -->
                                 <div class="col-md-4">
                                     <div id="is_ovc" class="form-group">
-                                        <label for="child_ovc">Child is OVC <span class="asteriskField">*</span></label>
+                                        <label for="child_ovc">Child is in OVC Program <span class="asteriskField">*</span></label>
                                         <br>                                        
-                                        {{ form.child_ovc }}
+                                        {% for choice in form.child_ovc %}
+                                            <label for="{{ choice.id_for_label  }}" class="radio-inline">{{ choice.tag }} {{ choice.choice_label }}</label>
+                                        {% endfor %}
                                         <span id="child_ovc_error"></span>
                                     </div>
                                 </div>
@@ -296,7 +301,9 @@
                                                         <div class="form-group" id="working_in_region_div">
                                                            <label class="control-label col-md-4 col-sm-4" for="working_in_region">Region :</label>
                                                             <div class="col-md-4 col-sm-4">
-                                                               {{ form.working_in_region }}
+                                                               {% for choice in form.working_in_region %}
+                                                                    <label for="{{ choice.id_for_label  }}" class="radio-inline">{{ choice.tag }} {{ choice.choice_label }}</label>
+                                                                {% endfor %}
                                                             </div>
                                                             <div id="type_error"></div>
                                                         </div>
@@ -448,6 +455,12 @@
                                                     <label class="control-label col-md-4 col-sm-4" for="chv_unit_id">CHV <span class="asteriskField">*</span> :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.chv_unit_id  }}
+                                                    </div>
+                                                </div>
+                                                <div id="ovc_programs_id_div" class="form-group">
+                                                    <label class="control-label col-md-4 col-sm-4" for="chv_unit_id">OVC Program Enrollment<span class="asteriskField">*</span> :</label>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        {{ form.ovc_programs  }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -1327,7 +1340,7 @@ jQuery(document).ready(function() {
                         .attr("value", ward_attribs[0])
                         .text(ward_attribs[1]));
                  });
-                //$('#working_in_subcounty').multiselect('rebuild');
+                $('#working_in_subcounty').multiselect('rebuild');
             },
             error: function(){
                 $('#messages').html("Error")
@@ -1358,7 +1371,7 @@ jQuery(document).ready(function() {
                         .attr("value", ward_attribs[0])
                         .text(ward_attribs[1]));
                  });
-                 //$('#working_in_ward').multiselect('rebuild');
+                 $('#working_in_ward').multiselect('rebuild');
             },
             error: function(){
                 $('#messages').html("Error")

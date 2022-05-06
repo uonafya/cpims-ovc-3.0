@@ -2,31 +2,22 @@ import uuid
 from django.db import models
 from django.utils import timezone
 from cpovc_registry.models import RegPerson, RegOrgUnit
-from cpovc_ovc.models import OVCSchool, OVCFacility
+from cpovc_ovc.models import OVCSchool
 from cpovc_auth.models import AppUser
 
 
-class OVCPMTCTRegistration(models.Model):
-    pmtct_id = models.UUIDField(
+class OVCDREAMSRegistration(models.Model):
+    dreams_reg_id = models.UUIDField(
         primary_key=True, default=uuid.uuid1, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     registration_date = models.DateField(default=timezone.now)
-
+    intervention = models.CharField(max_length=10)
     school = models.ForeignKey(
         OVCSchool, on_delete=models.CASCADE, null=True)
     child_cbo = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
     caregiver = models.ForeignKey(
         RegPerson, on_delete=models.CASCADE, null=True,
-        related_name='care_taker')
-    caregiver_contact = models.CharField(max_length=15)
-    facility = models.ForeignKey(
-        OVCFacility, on_delete=models.CASCADE, null=True)
-    ccc_no = models.CharField(max_length=15, null=True)
-    hiv_status = models.CharField(max_length=4, null=True)
-    art_status = models.CharField(max_length=4, null=True)
-    link_date = models.DateField(default=timezone.now, null=True)
-    chv = models.ForeignKey(RegPerson, related_name='pmtct_chv',
-                            on_delete=models.CASCADE, null=True)
+        related_name='dreams_caregiver')
     is_active = models.BooleanField(default=True)
     exit_reason = models.CharField(max_length=4, null=True)
     exit_date = models.DateField(default=timezone.now, null=True)
@@ -37,7 +28,7 @@ class OVCPMTCTRegistration(models.Model):
     sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
 
     class Meta:
-        db_table = 'ovc_pmtct_registration'
+        db_table = 'ovc_dreams_registration'
 
-    def __str__(self):
-        return '%s : %s' % (self.pmtct_id, self.person)
+    def __unicode__(self):
+        return str(self.preventive_reg_id)
