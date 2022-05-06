@@ -7402,7 +7402,7 @@ def update_referal(request):
                 date_of_service = request.POST.get('date_of_service')
                 if date_of_service:
                     date_of_service = convert_date(date_of_service)
-                ovc_care_services = OVCCareServices.objects.filter(event=event_obj)[:1]
+                ovc_care_services = OVCBiReferral.objects.filter(event=event_obj)[:1]
                 # Support/Services
                 olmis_service_provided_list = request.POST.get('olmis_service_provided_list')
                 if olmis_service_provided_list:
@@ -7420,14 +7420,15 @@ def update_referal(request):
                             olmis_service = service_data['olmis_service']
                             services = olmis_service.split(',')
                             for service in services:
-                                OVCCareServices(
-                                    service_provided=service,
-                                    service_provider=org_unit,
+                                OVCBiReferral(
+                                    refferal_date=convert_date(request.POST.get('date_of_service')),
+                                    refferal_service=service,
+                                    # service_provider=org_unit,
                                     # place_of_service = olmis_place_of_service,
-                                    domain=olmis_domain,
-                                    date_of_encounter_event=olmis_service_date,
+                                    # domain=olmis_domain,
+                                    refferal_enddate=olmis_service_date,
                                     event=event_obj,
-                                    service_grouping_id=ovc_care_services[0].service_grouping_id
+                                    referral_grouping_id=ovc_care_services[0].referral_grouping_id
                                 ).save()
 
             msg = 'Saved Successfully'
