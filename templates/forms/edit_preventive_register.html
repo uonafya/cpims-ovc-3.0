@@ -238,7 +238,7 @@
                                         {% for key, values in domain.items %}
                                                 <tr>
                                                     <td> <h6 class="td_style">#</h6> </td>
-                                                    <td> <h6 class="td_style"> {{values.0}} </h6></td>
+                                                    <td> <h6 class="td_style">{{values.0}} </h6></td>
                                                     <td> <h6 class="td_style" value="{{values.1}}"> {{values.1}} </h6> </td>
 
                                                     <td colspan="2" style="text-align: center;"> <h6 class="td_style"> {{values.2}} </h6> </td>
@@ -337,18 +337,18 @@
                                         
                                     <tr><td colspan="4"><h4 style="text-align: center;">Assessment list</h4></td></tr>
                                     {% for domain in service_type_list %}
-                                    <h1>{{domain.0}}</h1>
+                                    <!-- <h1>{{domain.0}}</h1> -->
                                         <!-- {% for values in domain.items %} -->
                                         
                                                 <tr>
                                                     <td> <h6 class="td_style">#</h6> </td>
-                                                    <!-- <td> <h6 class="td_style"> {{values}} </h6></td> -->
-                                                    <!-- <td> <h6 class="td_style"> {{values}} </h6> </td> -->
+                                                    <td> <h6 class="td_style">{{domain.0}} </h6></td> -->
+                                                     <td> <h6 class="td_style"> {{domain.0}} </h6> </td> -->
 
-                                                    <!-- <td colspan="2" style="text-align: center;"> <h6 class="td_style"> {{values}} </h6> </td> -->
+                                                    <!-- <td colspan="2" style="text-align: center;"> <h6 class="td_style"> {{values}} </h6> </td>
                                                     <td> <h6 class="dialog_paragraph"><a id="{{key}}" data-event_type={{event_type}} class="delete_saved_preventive_event_element btn btn-danger btn-xs m-r-5" href='#'>Delete</a> </h6> </td>
                                                 </tr>
-                                         <!-- {% endfor %} -->
+                                          {% endfor %} -->
                                     {% endfor %}
                                     <tr><td colspan="4"><hr style="border-color: red;"></td></tr>	  
                                     </tbody>
@@ -416,7 +416,7 @@
                                 <tr> 
                                     <th>Event Type</th>                                 
                                     <th>Details</th> 
-                                    <th>Date Recorded</th>                
+                                    <th>Date Attended   </th>                
                                     <th>Actions</th>
                                 </tr>
                             </thead>

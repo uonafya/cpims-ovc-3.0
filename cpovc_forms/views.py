@@ -10080,13 +10080,14 @@ def save_preventive_register(request):
                         
                         
                         
+                        
                         if session_date:
                             
-                            # pdb.set_trace()
                             ebi_session_type = ''
                             
                             date_of_encounter_event = ''
-                            if 'SESSION' in session_attended:
+                            # pdb.set_trace()
+                            if 'SESS' in session_attended:
                                 ebi_session_type = 'GENERAL'#'General'
                                 date_of_encounter_event = session_date
                             else:
@@ -10110,7 +10111,7 @@ def save_preventive_register(request):
 
             if args == 2:
                 import pdb
-                serveice_domain = 'HHNN'
+                serveice_domain = 'XYZ'
                 event_type_id = 'SERVICE'
                 event_counter = OVCPreventiveEvents.objects.filter(event_type_id=event_type_id, person=person,
                                                              is_void=False).count()
@@ -10142,7 +10143,7 @@ def save_preventive_register(request):
                         date_of_encounter = service.get("olmis_date_of_encounter")
                         OVCPreventiveService(
                             person_id = RegPerson.objects.get(pk=int(person)),
-                            domain =  serveice_domain,#sinovuyo or fmp or hcbf
+                            domain =  'SERVICE',#sinovuyo or fmp or hcbf
                             ebi_service_provided = "serv",
                             ebi_provider = registration_details.child_cbo,
                             ebi_service_client = service.get('olmis_client'),
@@ -10152,7 +10153,7 @@ def save_preventive_register(request):
                             date_of_encounter_event = convert_date(date_of_encounter),
                             event = ovcpreventiveevent
                         ).save()         
-            msg = 'Save Successful'
+            msg = 'Updated Successful'
             jsonResponse.append({'msg': msg})
     except Exception as e:
         msg = 'Save Error: (%s)' % (str(e))
@@ -10195,7 +10196,7 @@ def manage_preventive_register(request):
                 register.append(translate(ovccareg.domain) + ',' + translate(ovccareg.ebi_session_type) + ',' + translate(ovccareg.ebi_session) + ',' + translate(ovccareg.date_of_encounter_event.strftime('%d-%b-%Y')))
                 event_keywords.append(ovccareg.ebi_provided)
             for ovcservice in ovccareservice:
-                services.append(translate(ovcservice.domain) + '(' + translate(ovcservice.ebi_service_provided) + ')' + '(' + translate(ovcservice.ebi_service_client) + ')')
+                services.append(translate(ovcservice.domain) + ',' + translate(ovcservice.ebi_service_provided)  + ',' + translate(ovcservice.ebi_service_client))
                 event_keywords.append(ovcservice.ebi_service_reffered)
             # pdb.set_trace()
 
@@ -10347,6 +10348,7 @@ def edit_preventive_event_entry(request,id, btn_event_pk, btn_event_type):
         date_of_assessment = convert_date(date_of_assessment)
         date_today = datetime.now()
         import pdb
+        # pdb.set_trace()
         if args_value == 1:
             
             event_type_id = 'EBI'
@@ -10389,10 +10391,18 @@ def edit_preventive_event_entry(request,id, btn_event_pk, btn_event_type):
                             ebi_session_type = ebi_session_type,
                             date_of_encounter_event = convert_date(date_of_encounter_event),
                         )
-                        pdb.set_trace()
+                        # pdb.set_trace()
 
                         msg = 'Save Successful'
                         return JsonResponse(msg, content_type='application/json', safe=False)
+                        # form = PREVENTIVE_ATTENDANCE_REGISTER_FORM(initial={'person': id})
+                        # check_fields = ['sex_id']
+                        # vals = get_dict(field_name=check_fields)
+                        # init_data = RegPerson.objects.filter(pk=id)
+                        # pdb.set_trace()
+                        # return render(request,
+                        #         'forms/new_preventive_attendance_register.html',
+                        #         {'form': form, 'init_data': init_data, 'vals': vals, 'id':id})
 
                     except Exception as e:
                         print(e)
@@ -10421,6 +10431,7 @@ def edit_preventive_event_entry(request,id, btn_event_pk, btn_event_type):
             ovcpreventiveevent.save()
             
             service_provided_list = request.POST.get('olmis_assessment_provided_list')
+            # pdb.set_trace()
             if service_provided_list:
                 service_provided_list = json.loads(service_provided_list)
                 for service in service_provided_list:
@@ -10428,7 +10439,9 @@ def edit_preventive_event_entry(request,id, btn_event_pk, btn_event_type):
                     service_offered = service.get("olmis_reffered_service")
                     service_made = service.get("olmis_service_made")
                     date_of_encounter = service.get("olmis_date_of_encounter")
-                    OVCPreventiveService(
+                    pdb.set_trace()
+
+                    OVCPreventiveService.objects.filter(event=primary_key).update(
                         person_id = RegPerson.objects.get(pk=int(person)),
                         domain =  serveice_domain,#sinovuyo or fmp or hcbf
                         ebi_service_provided = "serv",
@@ -10439,7 +10452,8 @@ def edit_preventive_event_entry(request,id, btn_event_pk, btn_event_type):
                         place_of_ebi_service = RegPersonsGeo.objects.get(person_id=RegPerson.objects.get(pk=int(person)).id),
                         date_of_encounter_event = convert_date(date_of_encounter),
                         event = ovcpreventiveevent
-                    ).save()
+                    )
+                    # .save()
 
                 # pdb.set_trace()
             # 
