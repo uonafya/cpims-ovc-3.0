@@ -21,7 +21,7 @@ validBench(['CP18q', 'CP19q', 'CP20q', 'CP21q'], ['AYES','AYES', 'AYES','AYES'],
 // Stable: Goal 5: >> Benchmark 5
 validBench(['CP22q','CP23q','CP24q'], ['AYES','AYES','AYES'], 'CP5b');
 // Safe: Goal 6 >> Benchmark 6
-validBench(['CP25q','CP26q','CP27q','CP28q', 'CP29q'],['AYES','AYES','AYES,ANA','AYES','AYES'],'CP6b')
+validBench(['CP25q','CP26q','CP26q_ctl','cp58q','CP28q', 'CP29q'],['AYES','AYES','AYES,ANA','AYES','AYES', 'AYES'],'CP6b')
 // Safe: Benchmark 7:   
 validBench(['CP30q','CP31q'],['AYES','AYES'],'CP7b')
 // Safe: Goal 8  >> Benchmark 8
@@ -114,10 +114,15 @@ $('input[type=radio]').change(function (e) {
     else{CP8b = 0;}
     console.log('benchScore CP8b=> '+CP8b);
 
-    var CP9b = $('input[name=CP9b]:checked').val();
+    var CP9b = $('input[name=CP9b]:checked').val(); 
     if(CP9b === 'AYES'){CP9b = 1;}
     else{CP9b = 0;}
     console.log('benchScore CP9b=> '+CP9b);
+
+    var CP10b = $('input[name=CP9b]:checked').val(); 
+    if(CP10b === 'AYES'){CP10b = 1;}
+    else{CP10b = 0;}
+    console.log('benchScore CP9b=> '+CP10b);
 
     
     benchmarkScore =  parseFloat(CP1b) + parseFloat(CP2b) + parseFloat(CP3b) + parseFloat(CP4b) + parseFloat(CP5b) + parseFloat(CP6b) + parseFloat(CP7b) + parseFloat(CP8b) + parseFloat(CP9b) // + parseFloat(CP10b) + parseFloat(CP11b) + parseFloat(CP12b) + parseFloat(CP13b) + parseFloat(CP14b) + parseFloat(CP15b) + parseFloat(CP16b) + parseFloat(CP17b);

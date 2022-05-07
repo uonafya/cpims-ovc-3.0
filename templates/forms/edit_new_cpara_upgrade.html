@@ -31,7 +31,6 @@ print(blu.sing("'Happy'"))
 .parsley-error{
     bottom: -8px !important;
 }
-
 #table_view td {
     border: solid 1px lightsteelblue;
 }
@@ -375,11 +374,13 @@ print(blu.sing("'Happy'"))
                                                     
                                                         <tbody>
                                                             {% if child %}
+
+                                                            <!-- Child -->
                                                             <tr>
                                                                 <td>
                                                                     <a href="{% url 'view_person' id=child.id %}"><b>{{ child.first_name }} {{ child.surname }} {{ child.last_name }}</b></a> <small>(This child)</small>
                                                                 </td>
-                                                                <td id="{{ child.id }}_q3p6_Qn">
+                                                                <td id="{{ sibling.id }}_q3p6_Qn">
                                                                     <div class="radio-inline">
                                                                         
                                                                       
@@ -388,7 +389,7 @@ print(blu.sing("'Happy'"))
                                                                      </div>
                                                                
                                                                 </td>
-                                                                <td id="{{ child.id }}_q3p7_Qn">
+                                                                <td id="{{ sibling.id }}_q3p7_Qn">
                                                                     <div class="radio-inline">
                                                                         
                                                                       
@@ -396,7 +397,7 @@ print(blu.sing("'Happy'"))
 
                                                                         </div>
                                                                 </td>
-                                                                <td id="{{ child.id }}_q3p8_Qn">
+                                                                <td id="{{ sibling.id }}_q3p8_Qn">
                                                                     <div class="radio-inline">
                                                                         
                                                                        
@@ -404,7 +405,7 @@ print(blu.sing("'Happy'"))
 
                                                                         </div>
                                                                 </td>
-                                                                <td id="{{ child.id }}_q3p8_Qn">
+                                                                <td id="{{ sibling.id }}_q3p9_Qn">
                                                                     <div class="radio-inline">
                                                                         
                                                                        
@@ -412,7 +413,7 @@ print(blu.sing("'Happy'"))
 
                                                                         </div>
                                                                 </td>
-                                                                <td id="{{ child.id }}_q3p8_Qn">
+                                                                <td id="{{ sibling.id }}_q3p10_Qn">
                                                                     <div class="radio-inline">
                                                                         
                                                                        
@@ -420,7 +421,7 @@ print(blu.sing("'Happy'"))
 
                                                                         </div>
                                                                 </td>
-                                                                <td id="{{ child.id }}_q3p8_Qn">
+                                                                <td id="{{ sibling.id }}_q3p11_Qn">
                                                                     <div class="radio-inline">
                                                                         
                                                                        
@@ -428,7 +429,7 @@ print(blu.sing("'Happy'"))
 
                                                                         </div>
                                                                 </td>
-                                                                <td id="{{ child.id }}_q3p8_Qn">
+                                                                <td id="{{ sibling.id }}_q3p12_Qn">
                                                                     <div class="radio-inline">
                                                                         
                                                                        
@@ -446,51 +447,50 @@ print(blu.sing("'Happy'"))
                                                                         <td>
                                                                             <a href="{% url 'view_person' id=sibling.person.id %}">{{ sibling.person.first_name }} {{ sibling.person.surname }} {{ sibling.person.last_name }}</a>
                                                                         </td>
-                                                                        <td id="{{ sibling.person.id }}_sub_td">
+                                                                        <td id="{{ sibling.person.id }}_CP6d_1_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" id="{{sibling.person.id}}__sub_cb">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_1">
                                                                             </div>
                                                                         </td>
-                                                                        <td id="{{ sibling.person.id }}_sub_td">
+                                                                        <td id="{{ sibling.person.id }}_CP6d_2_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" id="{{sibling.person.id}}__sub_cb">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_2">
                                                                             </div>
                                                                         </td>
-                                                                        <td id="{{ sibling.person.id }}_sub_td">
+                                                                        <td id="{{ sibling.person.id }}_CP6d_3_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" id="{{sibling.person.id}}__sub_cb">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_3">
                                                                             </div>
                                                                         </td>
-                                                                        <td id="{{ sibling.person.id }}_sub_td">
+                                                                        <td id="{{ sibling.person.id }}_CP6d_4_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" id="{{sibling.person.id}}__sub_cb">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_4">
                                                                             </div>
                                                                         </td>
-                                                                        <td id="{{ sibling.person.id }}_sub_td">
+                                                                        <td id="{{ sibling.person.id }}_CP6d_5_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" id="{{sibling.person.id}}__sub_cb">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_5">
                                                                             </div>
                                                                         </td>
-                                                                        <td id="{{ sibling.person.id }}_sub_td">
+                                                                        <td id="{{ sibling.person.id }}_CP6d_6_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" id="{{sibling.person.id}}__sub_cb">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_6">
                                                                             </div>
                                                                         </td>
-                                                                        <td id="{{ sibling.person.id }}_sub_td">
+                                                                        <td id="{{ sibling.person.id }}_CP6d_7_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" id="{{sibling.person.id}}__sub_cb">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_7">
                                                                             </div>
                                                                         </td>
                                                                       
                                                                     </tr>
-                                                                
                                                                     {% else %}
                                                                     <tr>
                                                                         <td colspan="8">
@@ -822,37 +822,39 @@ print(blu.sing("'Happy'"))
                                                         
                                                             <tbody>
                                                                 {% if child.years > 10 %}
-                                                                <tr>
+                                                                <tr class="row12">
                                                                     <td>
                                                                         <a href="{% url 'view_person' id=child.id %}"><b>{{ child.first_name }} {{ child.surname }} {{ child.last_name }}</b></a> <small>(This child)</small>
                                                                     </td>
-                                                                    <td id="{{ child.id }}_q3p6_Qn">
-                                                                        <div class="radio-inline">
-                                                                            
-                                                                            <!-- <input type="radio" name="{{ child.id }}_q3p6" value="AYES">
-                                                                                Yes -->
-                                                                                {{ form.CP15q }}
-
-                                                                         </div>
-                                                                   
+                                                                    <td class="r12q1" id="{{ child.id }}_q12a_Qn" >
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio" name="{{ child.id }}_q12a"  value="AYES">
+                                                                            Yes
+                                                                        </label>
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio"  name="{{ child.id }}_q12a"  value="ANNO">
+                                                                            No
+                                                                        </label>
                                                                     </td>
-                                                                    <td id="{{ child.id }}_q3p7_Qn">
-                                                                        <div class="radio-inline">
-                                                                            
-                                                                            <!-- <input type="radio" name="{{ child.id }}_q3p6" value="AYES">
-                                                                                Yes -->
-                                                                                {{ form.CP16q }}
-
-                                                                            </div>
+                                                                    <td class="r12q2" id="{{ child.id }}_q12b_Qn">
+                                                                        <label class="radio-inline">
+                                                                        <input type="radio" name="{{ child.id }}_q12b" value="AYES">
+                                                                            Yes
+                                                                        </label>
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio"  name="{{ child.id }}_q12b" value="ANNO">
+                                                                            No
+                                                                        </label>
                                                                     </td>
-                                                                    <td id="{{ child.id }}_q3p8_Qn">
-                                                                        <div class="radio-inline">
-                                                                            
-                                                                            <!-- <input type="radio" name="{{ child.id }}_q3p6" value="AYES">
-                                                                                Yes -->
-                                                                                {{ form.CP17q }}
-
-                                                                            </div>
+                                                                    <td class="r12q3" id="{{ child.id }}_q12c_Qn">
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio" name="{{ child.id }}_q12c" value="AYES">
+                                                                                Yes
+                                                                        </label>
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio"  name="{{ child.id }}_q12c" value="ANNO">
+                                                                                No
+                                                                        </label>
                                                                     </td>
                                                                 </tr>
                                                                 {% else %}
@@ -865,34 +867,38 @@ print(blu.sing("'Happy'"))
                                                                 {% if hhmembers %}
                                                                     {% for sibling in hhmembers %}
                                                                         {% if sibling.person.years > 10 %}
-                                                                        <tr>
+                                                                        <tr class="row12">
                                                                             <td>
                                                                                 <a href="{% url 'view_person' id=sibling.person.id %}">{{ sibling.person.first_name }} {{ sibling.person.surname }} {{ sibling.person.last_name }}</a>
                                                                             </td>
-                                                                            <td id="{{ sibling.person.id }}_q3p6_Qn">
+                                                                            <td class="r12q1" id="{{ sibling.person.id }}_q12a_Qn" >
                                                                                 <label class="radio-inline">
-                                                                            
-                                                                                    <input type="radio" name="{{ child.id }}_q3p6" value="AYES">
-                                                                                        Yes
-
-                                                                                    </label>
-                                                                            </td>
-                                                                            <td id="{{ sibling.person.id }}_q3p7_Qn">
+                                                                                    <input type="radio" name="{{ sibling.person.id }}_q12a"  value="AYES">
+                                                                                    Yes
+                                                                                </label>
                                                                                 <label class="radio-inline">
-                                                                            
-                                                                                    <input type="radio" name="{{ child.id }}_q3p6" value="AYES">
-                                                                                        Yes
-                                                                                  
-        
+                                                                                    <input type="radio"  name="{{ sibling.person.id }}_q12a"  value="ANNO">
+                                                                                    No
                                                                                 </label>
                                                                             </td>
-                                                                            <td id="{{ sibling.person.id }}_q3p8_Qn">
+                                                                            <td class="r12q2" id="{{ sibling.person.id }}_q12b_Qn">
                                                                                 <label class="radio-inline">
-                                                                            
-                                                                                    <input type="radio" name="{{ child.id }}_q3p6" value="AYES">
+                                                                                <input type="radio" name={{ sibling.person.id }}_q12b value="AYES">
+                                                                                    Yes
+                                                                                </label>
+                                                                                <label class="radio-inline">
+                                                                                    <input type="radio"  name={{ sibling.person.id }}_q12b value="ANNO">
+                                                                                    No
+                                                                                </label>
+                                                                            </td>
+                                                                            <td class="r12q3" id="{{ sibling.person.id }}_q12c_Qn">
+                                                                                <label class="radio-inline">
+                                                                                    <input type="radio" name="{{ sibling.person.id }}_q12c" value="AYES">
                                                                                         Yes
-                                                                                    
-        
+                                                                                </label>
+                                                                                <label class="radio-inline">
+                                                                                    <input type="radio"  name="{{ sibling.person.id }}_q12c" value="ANNO">
+                                                                                        No
                                                                                 </label>
                                                                             </td>
                                                                         </tr>
@@ -911,24 +917,36 @@ print(blu.sing("'Happy'"))
                                                                             Hidden fields for no-OVC
                                                                         </td>
                                                                         <td id="15_Qn">
-                                                                            <td id="{{ sibling.person.id }}_q3p8_Qn">
+                                                                            <td id="{{ sibling.person.id }}_q3p9_Qn">
                                                                                 <label class="radio-inline">
                                                                             
                                                                                     <input type="radio" name="" value="AYES">
                                                                                         Yes
+                                                    
+                                                                                </label>
+                                                                                <br>
+                                                                                <label class="radio-inline">
+                                                                            
+                                                                                    <input type="radio" name="" value="ANNO">
+                                                                                        No
                                                                                     
-        
                                                                                 </label>
                                                                             </td>
                                                                         </td>
                                                                         <td id="16_Qn">
-                                                                            <td id="{{ sibling.person.id }}_q3p8_Qn">
+                                                                            <td id="{{ sibling.person.id }}_q3p10_Qn">
                                                                                 <label class="radio-inline">
                                                                             
                                                                                     <input type="radio" name="" value="AYES">
                                                                                         Yes
                                                                                     
-        
+                                                                                </label>
+                                                                                <br>
+                                                                                <label class="radio-inline">
+                                                                            
+                                                                                    <input type="radio" name="" value="ANNO">
+                                                                                        No
+                                                                                    
                                                                                 </label>
                                                                             </td>
                                                                         </td>
@@ -942,20 +960,21 @@ print(blu.sing("'Happy'"))
                                                                         </td>
                                                                     </tr>
                                                                 {% endif %}
-                                                                <tr>
-                                                                    <td class="semi-bold">
-                                                                        Tick <u>Yes</u> if <u>YES</u> for all children
-                                                                    </td>
-                                                                    <td id="CPhealth18_Qn">
+                                                                    <tr class="ro12_total">
+                                                                        <td class="semi-bold">
+                                                                            Tick <u>Yes</u> if <u>YES</u> for all children
+                                                                        </td>
+                                                                        <td id="r12_t_q1">
+                                                                            {{ form.CP23q_b_1 }}
+                                                                        </td>
+                                                                        <td id="r12_t_q2">
+                                                                            {{ form.CP23q_b_2 }}
+                                                                        </td>
+                                                                        <td id="r12_t_q3">
+                                                                            {{ form.CP23q_b_3 }}
+                                                                        </td>
                                                                         
-                                                                    </td>
-                                                                    <td id="CPhealth19_Qn">
-                                                                       
-                                                                    </td>
-                                                                    <td id="CPhealth20_Qn">
-                                                                       
-                                                                    </td>
-                                                                </tr>
+                                                                    </tr>
                                                             </tbody>
                                                         </table>
                                                 </div>
@@ -1209,24 +1228,39 @@ print(blu.sing("'Happy'"))
                                                                 <tr>
                                                                     <th>Child Name</th>
                                                                     <th>OVC CPIMS ID</th>
-                                                                        <th>6.3 Have you been exposed to violence, abuse (sexual, physical or emotional), neglect, or exploitation in the last six months?</th>
-                                                                        <!--<th>Age</th>-->
+                                                                     <th>6.3 Have you been exposed to violence, abuse (sexual, physical or emotional), neglect, or exploitation in the last six months?</th>
+                                                                 
                                                                     </tr>
                                                                 </thead>
                                                             
                                                                 <tbody>
                                                                     {% if child.years > 10 %}
-                                                                    <tr>
+                                                                    <tr class="row13">
                                                                         <td>
                                                                             <a href="{% url 'view_person' id=child.id %}"><b>{{ child.first_name }} {{ child.surname }} {{ child.last_name }}</b></a> <small>(This child)</small>
                                                                         </td>
-                                                                        <td id="{{ child.id }}_q3p6_Qn">
+                                                                        <td id="{{ child.id }}_CP27q1_Qn">
                                                                            {{ child.id }}
                                                                         </td>
-                                                                        <td id="{{ child.id }}_q3p7_Qn">
-                                                                            <div class="radio-inline">
+                                                                        <td id="{{ child.id }}_CP27q2_Qn" class="r13q1">
+                                                                            <!-- <div class="radio-inline">
                                                                                {{form.CP27q}}
-                                                                            </div>
+                                                                            </div> -->
+                                                                            <div class="radio-inline">
+                                                                                <label class="radio-inline">
+                                                                    
+                                                                                    <input type="radio" value="AYES" name="{{ child.id }}_CP27q2">
+                                                                                        Yes
+                                                    
+                                                                                </label>
+                                                                                <br>
+                                                                                <label class="radio-inline">
+                                                                            
+                                                                                    <input type="radio" value="ANNO" name="{{ child.id }}_CP27q2" >
+                                                                                        No
+                                                                                    
+                                                                                </label>
+                                                                             </div>
                                                                             
                                                                         </td>
                                                                     </tr>
@@ -1240,24 +1274,25 @@ print(blu.sing("'Happy'"))
                                                                     {% if hhmembers %}
                                                                         {% for sibling in hhmembers %}
                                                                             {% if sibling.person.years > 10 %}
-                                                                            <tr>
+                                                                            <tr class="row13">
                                                                                 <td>
                                                                                     <a href="{% url 'view_person' id=sibling.person.id %}">{{ sibling.person.first_name }} {{ sibling.person.surname }} {{ sibling.person.last_name }}</a>
                                                                                 </td>
-                                                                                <td id="{{ sibling.person.id }}_q3p6_Qn">
+                                                                                <td id="{{ sibling.person.id }}_CP27q1_Qn">
                                                                                    {{ sibling.person.id }}
                                                                                 </td>
-                                                                                <td id="{{ sibling.person.id }}_q3p7_Qn">
+                                                                                <td id="{{ sibling.person.id }}_CP27q2_Qn">
                                                                                     <div class="radio-inline">
                                                                                         <label class="radio-inline">
                                                                             
-                                                                                            <input type="radio" name="" value="AYES">
+                                                                                            <input type="radio" value="AYES" name="{{ sibling.person.id }}_CP27q2">
                                                                                                 Yes
                                                             
                                                                                         </label>
+                                                                                        <br>
                                                                                         <label class="radio-inline">
                                                                                     
-                                                                                            <input type="radio" name="" value="ANNO">
+                                                                                            <input type="radio" value="ANNO" name="{{ sibling.person.id }}_CP27q2" >
                                                                                                 No
                                                                                             
                                                                                         </label>
@@ -1273,25 +1308,40 @@ print(blu.sing("'Happy'"))
                                                                             </tr>
                                                                             {% endif %}
                                                                         {% endfor %}
+                    
                                                                         
                                                                     {% else %}
                                                                         {% comment %} <tr class="hidden">
                                                                             <td class="semi-bold">
                                                                                 Hidden fields for no-OVC
                                                                             </td>
-                                                                            <td id="CPsafe4_Qn">
+                                                                            <td>
                                                                         
                                                                             </td>
-                                                                            <td id="CPsafe5_Qn">
+                                                                            <td>
                                                                                
                                                                             </td>
                                                                         </tr> {% endcomment %}
                                                                         <tr>
-                                                                            <td colspan="6">
+                                                                            <td colspan="6">    
                                                                                 <p class="custom-alert-warning">&nbsp;No matching sibling details provided for this person.</p>
                                                                             </td>
                                                                         </tr>
                                                                     {% endif %}
+                                                                    <tr class="ro13_total">
+                                                                        <td class="semi-bold">
+                                                                            Tick <u>Yes</u> if <u>YES</u> for all children
+                                                                        </td>
+                                                                        <td class="r13_t_q1">
+                                                                           
+                                                                        </td>
+                                                                        <td class="r13_t_q2" id="cp58q_Qn" style="padding-left: 32px;">
+                                                                            <div class="radio-inline">
+                                                                                {{ form.cp58q }}
+                                                                            
+                                                                        </div>
+                                                                        </td>
+                                                                    </tr>
                                                                 </tbody>
                                                             </table>
                                                     </div>
@@ -1362,7 +1412,7 @@ print(blu.sing("'Happy'"))
                                                 </div>
                                             
     
-                                                <hr>    
+                                                <hr>
                                                 <div class="col-md-12">
                                                     <div class="form-group" id="CPsafe9_Qn">
                                                         <div class="col-md-9 text-left">
@@ -1559,10 +1609,10 @@ print(blu.sing("'Happy'"))
                                                                     <td>4</td>
                                                                     <td>{{form.p75q}}</td> 
                                                                     <td rowspan="5" class="p-15" style="line-height: 30px;">
-                                                                        Highly Vulnerable  0-4 <br>
-                                                                        Medium vulnerability 5-7 <br>
-                                                                        Low vulnerability 8 <br>
-                                                                        Ready to graduate 9
+                                                                       <span id="score_key_1"> Highly Vulnerable  0-4 </span> <br>
+                                                                       <span id="score_key_2">   Medium vulnerability 5-7 </span><br>
+                                                                       <span id="score_key_3">   Low vulnerability 8 </span><br>
+                                                                       <span id="score_key_4">   Ready to graduate 9</span>
                                                                     </td> 
                                                                 </tr>
                                                                 <tr>
@@ -1585,7 +1635,7 @@ print(blu.sing("'Happy'"))
                                                                     <td>Total Score</td>
                                                                     <td>9</td>
                                                                     <td>{{form.p79q}}</td> 
-                                                                </tr>
+                                                                 </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -1641,100 +1691,12 @@ print(blu.sing("'Happy'"))
         <!-- end panel -->
 
         <!-- Table for past CPara -->
-        <div class="row" id="past-CPara">
-            <div class="col-md-12">
-                <h5 class="text-bold">PAST CPARA</h5>
-                <div class="bcwhite br5 p-20">
-                    <table class="table table-striped table-condensed">
-                        <thead>
-                            <tr class="text-center">
-                                <th>#</th>
-                                <th>Event date</th>
-                                <!-- <th>Event type</th> -->
-                                <th>Details</th>
-                                <th>Benchmark score</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for one_past_event in past_cpara %}
-                                {% if not one_past_event %}
-                                    <div></div>
-                                {% endif %}
-                                <!-- <script>alert('{{one_past_event.ev_id}}')</script> -->
-                                <tr>
-                                    <td valign="center" style="text-align: center;vertical-align: middle;">{{forloop.counter}}</td>
-                                    <td valign="center" style="text-align: center;vertical-align: middle;">{{one_past_event.ev_date}}</td>
-                                    <!-- <td valign="center" style="text-align: center;vertical-align: middle;">{{one_past_event.ev_type}}</td> -->
-                                    <td valign="center" style="text-align: left;vertical-align: middle;" width="40%">
-                                        <!-- <small>{{one_past_event.ev_detail}}</small> -->
-                                        {% if one_past_event.bm_array %}
-                                            <small>Benchmark 1 (<b>{{one_past_event.bm_array.0}}</b>), </small>
-                                            <small>Benchmark 2 (<b>{{one_past_event.bm_array.1}}</b>), </small>
-                                            <small>Benchmark 3 (<b>{{one_past_event.bm_array.2}}</b>), </small>
-                                            <small>Benchmark 4 (<b>{{one_past_event.bm_array.3}}</b>), </small>
-                                            <small>Benchmark 5 (<b>{{one_past_event.bm_array.4}}</b>), </small>
-                                            <br/>
-                                            <small>Benchmark 6 (<b>{{one_past_event.bm_array.5}}</b>), </small>
-                                            <small>Benchmark 7 (<b>{{one_past_event.bm_array.6}}</b>), </small>
-                                            <small>Benchmark 8 (<b>{{one_past_event.bm_array.7}}</b>), </small>
-                                            <small>Benchmark 9 (<b>{{one_past_event.bm_array.8}}</b>), </small>
-                                            <br/>
-                                            <!-- <small>Benchmark 10 (<b>{{one_past_event.bm_array.9}}</b>), </small>
-                                            <small>Benchmark 11 (<b>{{one_past_event.bm_array.10}}</b>), </small>
-                                            <small>Benchmark 12 (<b>{{one_past_event.bm_array.11}}</b>), </small>
-                                            <small>Benchmark 13 (<b>{{one_past_event.bm_array.12}}</b>), </small>
-                                            <br/>
-                                            <small>Benchmark 14 (<b>{{one_past_event.bm_array.13}}</b>), </small>
-                                            <small>Benchmark 15 (<b>{{one_past_event.bm_array.14}}</b>), </small>
-                                            <small>Benchmark 16 (<b>{{one_past_event.bm_array.15}}</b>), </small>
-                                            <small>Benchmark 17 (<b>{{one_past_event.bm_array.16}}</b>), </small> -->
-                                        {% else %}
-                                            <small> No data found </small>
-                                        {% endif %}
-                                    </td>
-                                    <!-- one_past_event.ev_id -->
-                                    <td  style="text-align: center;vertical-align: middle;">{{one_past_event.ev_score}} <hr/> </td>
-                                    <td><a href="{% url 'edit_cpara_upgrade' one_past_event.ev_id %}"><button class="btn btn-primary"><i class="fa fa-pencil">&nbsp;Edit</i></button></a></td>
-                                    <td valign="center" style="text-align: center;vertical-align: middle;">
-                                            <a class="btn btn-danger" data-toggle="modal" href='#del_CPara_e'> <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
-                                            <div class="modal fade" id="del_CPara_e">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                            <h4 class="modal-title">Delete this event</h4>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            Are you sure you want to delete the <b>{{one_past_event.ev_date}}</b> event?
-                                                            <input type="hidden" name="ev_person" id="ev_person" value="{{one_past_event.ev_person}}"/>
-                                                            <input type="hidden" name="ev_key" id="ev_key" value="{{one_past_event.ev_id}}"/>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <script>
-                                                                var pid = document.getElementById("ev_person").value;
-                                                                var ev_key = document.getElementById("ev_key").value;
-                                                            </script>
-                                                            <button type="button" class="btn btn-danger" onclick="deleteCPARAentry( pid,ev_key )" id="del_CPara_{{forloop.counter}}">Yes, DELETE</button>
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">No, cancel</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>    
-                                    </td>
-                                </tr>  
-                            {% endfor %}  
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
-    <!-- end col-12 -->
+    <!-- end col-12 --> 
 </div>
 <!-- end row -->
 
-{% endblock %}
+<!-- {% endblock %} -->
 
 {% block lazy_javascript_code %}
 <script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
@@ -1751,13 +1713,9 @@ print(blu.sing("'Happy'"))
 <script>
 jQuery(document).ready(function()
 {
-    // date = new Date(edit_data_cpara.d_o_a)
-    // date = $("#hidden_div").append(
-    //     `<input value=${new Date().getDate()} type=hidden>`
-    // )
-    // $('input[name=d_o_a]').datepicker().val('2020-01-01')
 
-	// $('input[name="d_o_a"]').val(edit_data_cpara.d_o_a);
+   
+    
 	//multi selects
     $('#hhva_ha6, #hhva_ha21, #hhva_ha22, #hhva_ha28, #hhva_ha29, #hhva_ha30, #hhva_ha31').multiselect({
         selectAllValue: 'multiselect-all',
@@ -1770,7 +1728,7 @@ jQuery(document).ready(function()
     });
 
     $( function() {
-        $('input[name="d_o_a"],input[name="CP2d"], input[name="children_rsk_hiv_assess_date"]').datepicker({ format: 'yyyy-mm-dd' }).val();
+        $('input[name="d_o_a"], input[name="CP2d"], input[name="children_rsk_hiv_assess_date"]').datepicker({ format: 'yyyy-mm-dd' }).val();
     } );
 
 	$('html,body').scrollTop(0);
@@ -1780,6 +1738,7 @@ jQuery(document).ready(function()
     $('.bwizard-steps li, li.next').on("click", function(){
         $(window).scrollTop(0)
     });
+
 	
 	
 });
@@ -1827,72 +1786,21 @@ jQuery(document).ready(function()
     
     </script>
     {% if hhmembers %}
-        <script>
-            $('input[type=radio]').on('change', function () {
-                //  CP23q
 
-                $('#id_CP23q').addClass('d-flex')
-                $('#id_CP24q').addClass('d-flex')
-                $('#id_CP25q').addClass('d-flex')
+        <script>
+    //<<--------- Qn 12 ---------
 
  
-                // 3.1 - 3.6
-               /* if(
-                    $('input[name=CP8q]:checked').val() == 'AYES' &&
-                    $('input[name=CP9q]:checked').val() == 'AYES' &&
-                    $('input[name=CP10q]:checked').val() == 'AYES' &&
-                    $('input[name=CP11q]:checked').val() == 'AYES' &&
-                    $('input[name=CP12q]:checked').val() == 'AYES' &&
-                    $('input[name=CP13q]:checked').val() == 'AYES' &&
-                    $('input[name=CP14q]:checked').val() == 'AYES' &&
-                    $('input[name=CP15q]:checked').val() == 'AYES' &&
-                    $('input[name=CP16q]:checked').val() == 'AYES' &&
-                    $('input[name=CP17q]:checked').val() == 'AYES'
-                ){
-                    $('input[name=CP3b][value=AYES]').prop('checked', true);
-                    $('#id_CP3b_0').prop('checked', true);
-                    console.info( ' YESS 17q == ' + $('input[name=CP17q]:checked').val() )
-                }
-                else{
-                    console.info( 'NOO 17q == ' + $('input[name=CP17q]:checked').val() )
-                    $('input[name=CP3b][value=ANNO]').prop('checked', true);
-                }
 
-                
-                // 12.4 a-c
-                if(
-                    $('input[name=CP49q]:checked').val() == 'AYES' &&
-                    $('input[name=CP50q]:checked').val() == 'AYES' &&
-                    $('input[name=CP51q]:checked').val() == 'AYES' &&
-                    $('input[name=CP52q]:checked').val() == 'AYES' &&
-                    $('input[name=CP53q]:checked').val() == 'AYES' &&
-                    $('input[name=CP54q]:checked').val() == 'AYES'
-                ){
-                    $('input[name=CP12b][value=AYES]').prop('checked', true);
-                    $('#id_CP12b_0').prop('checked', true);
-                    console.info( ' YESS 54q == ' + $('input[name=CP54q]:checked').val() )
-                }
-                else{
-                    console.info( 'NOO 54q == ' + $('input[name=CP54q]:checked').val() )
-                    $('input[name=CP12b][value=ANNO]').prop('checked', true);
-                }*/
-
-
-            })
-        </script>
-
-       
-
-
-        <script>
-            //<<--------- Qn 12 ---------
-            var count_r12 = 0; $('tr.row12 td.r12q1 input[type=radio]').each( () => { count_r12 += 1 }); count_r12 /= 2
+    var count_r12 = 0; $('tr.row12 td.r12q1 input[type=radio]').each( () => { count_r12 += 1 }); count_r12 /= 2
             $('.row12 input[type=radio]').on('change', function () {
                 //R12Q1
                 var checkker = null;
                 $('tr.row12 td.r12q1 input[type=radio]:checked').each( (inx, ele) => {
                     var this_val = $(this).val(); if(this_val == 'AYES'){ checkker += true; }else{ checkker += false; }
+                    
                 });
+               
                 if(checkker == count_r12){ q12MainQn(true, 'a'); }else{ q12MainQn(false, 'a'); }
                 //R12Q2
                 var checkker2 = false;
@@ -1907,17 +1815,22 @@ jQuery(document).ready(function()
                 });
                 if(checkker3 == count_r12){ q12MainQn(true, 'c'); }else{ q12MainQn(false, 'c'); }
             });
+
     
             //------tick main qn
             function q12MainQn(pass, qn) {
                 if(pass){
-                    if(qn == 'a'){ $('.ro12_total td.r12_t_q1 label input[value=AYES]').prop('checked', true); }
-                    else if(qn == 'b'){ $('.ro12_total td.r12_t_q2 label input[value=AYES]').prop('checked', true); }
-                    else if(qn == 'c'){ $('.ro12_total td.r12_t_q3 label input[value=AYES]').prop('checked', true); }
+                    
+                    // if(qn == 'a'){ $('.ro12_total td.r12_t_q1 label input[value=AYES]').prop('checked', true); }
+                    if(qn == 'a'){ $('input[name=CP23q_b_1][value=AYES]').prop("checked", true);}
+                    else if(qn == 'b'){ $('input[name=CP23q_b_2][value=AYES]').prop('checked', true); }
+                    else if(qn == 'c'){ $('input[name=CP23q_b_3][value=AYES]').prop('checked', true); }
                 }else{
-                    if(qn == 'a'){ $('.ro12_total td.r12_t_q1 label input[value=ANNO]').prop('checked', true); }
-                    else if(qn == 'b'){ $('.ro12_total td.r12_t_q2 label input[value=ANNO]').prop('checked', true); }
-                    else if(qn == 'c'){ $('.ro12_total td.r12_t_q3 label input[value=ANNO]').prop('checked', true); }
+                    
+                    // if(qn == 'a'){ $('.ro12_total td.r12_t_q1 label input[value=ANNO]').prop('checked', true); }
+                    if(qn == 'a'){ $('input[name=CP23q_b_1][value=ANNO]').prop("checked", true);}
+                    else if(qn == 'b'){ $('input[name=CP23q_b_2][value=ANNO]').prop('checked', true); }
+                    else if(qn == 'c'){ $('input[name=CP23q_b_3][value=ANNO]').prop('checked', true); }
                 }
             }
             //>>--------- Qn 12 ---------
@@ -1932,29 +1845,32 @@ jQuery(document).ready(function()
                 });
                 if(checkker13_q == count_r13){ q13MainQn(true, 'a'); }else{ q13MainQn(false, 'a'); }
                 //R13Q2
-                var checkker13_q2 = false;
-                $('tr.row13 td.r13q2 input[type=radio]:checked').each( (inx, ele) => {
-                    var this_val = $(this).val(); if(this_val == 'AYES'){ checkker13_q2 += true; }else{ checkker13_q2 += false; }
-                });
-                if(checkker13_q2 == count_r13){ q13MainQn(true, 'b'); }else{ q13MainQn(false, 'b'); }
-                //R13Q3
-                var checkker13_q3 = false;
-                $('tr.row13 td.r13q3 input[type=radio]:checked').each( (inx, ele) => {
-                    var this_val = $(this).val(); if(this_val == 'AYES'){ checkker13_q3 += true; }else{ checkker13_q3 += false; }
-                });
-                if(checkker13_q3 == count_r13){ q13MainQn(true, 'c'); }else{ q13MainQn(false, 'c'); }
+                // var checkker13_q2 = false;
+                // $('tr.row13 td.r13q2 input[type=radio]:checked').each( (inx, ele) => {
+                //     var this_val = $(this).val(); if(this_val == 'AYES'){ checkker13_q2 += true; }else{ checkker13_q2 += false; }
+                // });
+                // if(checkker13_q2 == count_r13){ q13MainQn(true, 'b'); }else{ q13MainQn(false, 'b'); }
+                // //R13Q3
+                // var checkker13_q3 = false;
+                // $('tr.row13 td.r13q3 input[type=radio]:checked').each( (inx, ele) => {
+                //     var this_val = $(this).val(); if(this_val == 'AYES'){ checkker13_q3 += true; }else{ checkker13_q3 += false; }
+                // });
+                // if(checkker13_q3 == count_r13){ q13MainQn(true, 'c'); }else{ q13MainQn(false, 'c'); }
             });
     
             //------tick main qn
             function q13MainQn(pass, qn) {
                 if(pass){
-                    if(qn === 'a'){ $('.ro13_total td.r13_t_q1 label input[value=AYES]').prop('checked', true); } else 
-                    if(qn === 'b'){ $('.ro13_total td.r13_t_q2 label input[value=AYES]').prop('checked', true); } else 
-                    if(qn === 'c'){ $('.ro13_total td.r13_t_q3 label input[value=AYES]').prop('checked', true); }
-                }else{
-                    if(qn === 'a'){ $('.ro13_total td.r13_t_q1 label input[value=ANNO]').prop('checked', true); } else 
-                    if(qn === 'b'){ $('.ro13_total td.r13_t_q2 label input[value=ANNO]').prop('checked', true); } else 
-                    if(qn === 'c'){ $('.ro13_total td.r13_t_q3 label input[value=ANNO]').prop('checked', true); }
+                    if(qn == 'a'){ $('input[name=cp58q][value=AYES]').prop("checked", true);} 
+                    // else 
+                    // if(qn === 'b'){ $('.ro13_total td.r13_t_q2 label input[value=AYES]').prop('checked', true); } else 
+                    // if(qn === 'c'){ $('.ro13_total td.r13_t_q3 label input[value=AYES]').prop('checked', true); }
+                }
+                else{
+                    if(qn == 'a'){ $('input[name=cp58q][value=ANNO]').prop("checked", true);} 
+                    // else 
+                    // if(qn === 'b'){ $('.ro13_total td.r13_t_q2 label input[value=ANNO]').prop('checked', true); } else 
+                    // if(qn === 'c'){ $('.ro13_total td.r13_t_q3 label input[value=ANNO]').prop('checked', true); }
                 }
             }
             //>>--------- Qn 13 ---------
@@ -1965,7 +1881,7 @@ jQuery(document).ready(function()
             // 3.1 - 3.6
                 //$('input[name=CP13q][value=AYES], input[name=CP14q][value=AYES], input[name=CP15q][value=AYES], input[name=CP16q][value=AYES], input[name=CP17q][value=AYES]').prop('checked',true);
                 $('input[name=o10_know_status]').on('change', function () {
-                    $('input[name=CP13q][value=AYES], input[name=CP14q][value=AYES], input[name=CP15q][value=AYES], input[name=CP16q][value=AYES], input[name=CP17q][value=AYES]').prop('checked',true);
+                    $('input[name=CP23q_b_1][value=AYES], input[name=CP23q_b_2][value=AYES], input[name=CP23q_b_3][value=AYES], input[name=CP16q][value=AYES], input[name=CP17q][value=AYES]').prop('checked',true);
                     $('#id_CP3b_0').prop('checked', true);
                 })
 

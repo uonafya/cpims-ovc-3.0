@@ -1466,15 +1466,15 @@ class OVCCareIndividaulCpara(models.Model):
     is_void = models.BooleanField(default=False)
     timestamp_updated = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
-        return self.answer
+    # def __unicode__(self):
+    #     return self.answer
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.question_code = self.question.code
-        super(OVCCareIndividualCpara, self).save(force_insert, force_update, using, update_fields)
+    # def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    #     self.question_code = self.question.code
+    #     super('OVCCareIndividualCpara', self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
-        db_table = 'ovc_care_Individual_cpara'
+        db_table = 'ovc_care_individual_cpara'
 
     def __unicode__(self):
         return str(self.cpara_id)

@@ -38,7 +38,8 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,OVCSubPopulation)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, 
+    OVCHIVRiskScreening,OVCSubPopulation,OVCCareIndividaulCpara)
 
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
@@ -9792,15 +9793,28 @@ def new_dreamsform(request, id):
 
 def new_cpara_upgrade(request, id):
     if request.method == 'POST':
-
+        import pdb
         data = request.POST
         print (data)
         
-        import pdb
+        
         child = RegPerson.objects.get(id=id)
         form= CparaAssessmentUpgrade()
         care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
         house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+
+      
+        ovc_id = int(id)
+        creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
+
+        # Get house hold
+        hhold = OVCHHMembers.objects.get(is_void=False, person_id=id)
+        # Get HH members
+        hhid = hhold.house_hold_id
+        hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
+        hhmembers2 = hhmqs.exclude(person_id=id)
+        hhmembers = hhmembers2.exclude(person=care_giver)
+        date_previous=data.get('CP2d')
       
          
         questions = OVCCareQuestions.objects.filter(code__startswith='CP', is_void=False).values()
@@ -9812,8 +9826,8 @@ def new_cpara_upgrade(request, id):
                 house_hold=house_hold,
                 date_of_event=date_of_event
             )
-        
 
+        
         for question in questions: 
             date_previous=data.get('CP2d')
           
@@ -9847,6 +9861,7 @@ def new_cpara_upgrade(request, id):
                     
             except Exception as e:
                 print(f'The OVC Cpara Form didnt save:  {e}')
+               
 
         # converts the filtered objects to a list
         ovc_score = data.get('bench_array').replace('[', '').replace(']', '').split(',')
@@ -9873,25 +9888,165 @@ def new_cpara_upgrade(request, id):
             print (f"Error while saving to ovccarebenchmark: {e}" )
 
 
-        sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC'}
+        # sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC'}
 
-        try:
-            for q, v in sub_pop.items():
-                if data.get(q) == 'on':
-                    OVCSubPopulation.objects.create(
-                        person=child,
-                        criteria=v,
-                        date_of_event=convert_date(date_of_event),
-                        timestamp_created = timezone.now(),
-                        event=event
-                    )
-        except Exception as e:
-            print(f'The error is {e}')
+        # try:
+        #     for q, v in sub_pop.items():
+        #         if data.get(q) == 'on':
+        #             OVCSubPopulation.objects.create(
+        #                 person=child,
+        #                 criteria=v,
+        #                 date_of_event=convert_date(date_of_event),
+        #                 timestamp_created = timezone.now(),
+        #                 event=event
+        #             )
+        # except Exception as e:
+        #     print(f'The error is {e}')
+
+        # start of appending the results
+
+        # Save data for table data for 3.1 , 3.2 and 3.3
+        quiz_saved = OVCCareQuestions.objects.filter(code__startswith='CP', is_void=False)
+
+        # get a list of the question code from the OVC Care question table
+        saved_quiz = [i.code for i in quiz_saved]
+
+        # get a list of the question code from the POST methods
+        post_quiz = [i for i in data.keys()]
+
+        to_process = set(post_quiz)-set(saved_quiz)
+
+        # Gets the values for questions 3.1 to 3.6 individual cpara
+        # ['43_CP16q', '60_CP16q', '23_CP15q', '23_CP16q', '43_CP15q', '60_CP17q', '60_CP15q', '43_CP17q', '23_CP17q']
+        q31 = 'CP15q'
+        q32 = 'CP16q'
+        q33 = 'CP17q'
+        bench_three=[]
+        for i, element in enumerate(to_process):
+            if q31 in element:
+                bench_three.append(element)
+            elif q32 in element:
+                bench_three.append(element)
+            elif q33 in element:
+                bench_three.append(element)
+        
+        for b_item in bench_three:            
+            person_id_bench=b_item.split('_')[0]
+            quiz_code=b_item.split('_')[1]
+
+            print(f'The person id id {person_id_bench} and the quiz code is {quiz_code}')
+        
+            child4 = RegPerson.objects.get(id=int(person_id_bench))
+            
+            question1= OVCCareQuestions.objects.filter(code=quiz_code).values()
+
+            question_inst= OVCCareQuestions.objects.get(code=quiz_code)
+
+        
+            try:
+                OVCCareIndividaulCpara.objects.create(
+                    person=child4,
+                    caregiver=care_giver,
+                    question_code=quiz_code,
+                    question=question_inst,
+                    answer=data.get(b_item),
+                    household=house_hold,
+                    question_type=question1[0]['question_type'],
+                    domain=question1[0]['domain'],
+                    date_of_event=date_of_event,
+                    date_of_previous_event=date_previous,
+                    event=event
+
+                 )
+            except Exception as e:
+                error_message=f'The OVCCareIndividaulCpara failed: {e}'
+                print(error_message)
+            
+        
+
+        # Gets the values for questions in OVC sub population
+        # ['23_CP6d_2', 'CP6d_7', '23_CP6d_6', 'CP6d_1', '23_CP6d_5', '43_CP6d_4', '43_CP6d_6', '43_CP6d_2', '23_CP6d_1', 'CP6d_5', '43_CP6d_7', '43_CP6d_5', '23_CP6d_3', '23_CP6d_4', '23_CP6d_7']
+        ovc_pp = 'CP6d'
+        sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC'}
+        ovc_sub_pp=[]
+        for i, element in enumerate(to_process):
+            if ovc_pp in element:
+                ovc_sub_pp.append(element)
+
+        for ovc_sub in ovc_sub_pp:
+            if len(ovc_sub)<=6:
+                ovc_sub_id=id
+                ovc_sub_q = ovc_sub
+                
+            else:
+                ovc_sub_id=ovc_sub.split('_')[0]
+                # pdb.set_trace()
+                ovc_sub_q=ovc_sub.split('_')[1]+'_'+ovc_sub.split('_')[2]
+                
+
+            child2 = RegPerson.objects.get(id=int(ovc_sub_id))
+
+            try:
+                OVCSubPopulation.objects.create(
+                    person=child2,
+                    criteria=sub_pop[ovc_sub_q],
+                    event=event,
+                    date_of_event=date_of_event,
+                )
+            except Exception as e:
+                error_message = f'The OVC sub pop save append failed {e}'
+                print(error_message)
+
+
+        # Gets the values for questions in Question 6.3 
+        # ['60_CP27q2', '23_CP27q2', '43_CP27q2']
+        q61 = 'CP27q2'
+     
+        quiz_63=[]
+        for i, element in enumerate(to_process):
+            if q61 in element:
+                quiz_63.append(element) 
+
+        for quizs in quiz_63:
+            quizs_id=quizs.split('_')[0]
+            quizs_code='CP27q'
+
+            # child3 = RegPerson.objects.filter(id=quizs_id)
+            quest_type=OVCCareQuestions.objects.filter(code=quizs_code).values()
+
+            quest_type_1=OVCCareQuestions.objects.get(code=quizs_code)
+
+            print(f'The person id: {quizs_id } and the Quiz code is : {quizs_code}')
+
+            child3 = RegPerson.objects.get(id=int(quizs_id))
+            pdb.set_trace()
+
+             
+            try:
+                OVCCareCpara_upgrade.objects.update_or_create(
+                    person=child3,
+                    caregiver=care_giver,
+                    question=quest_type_1,
+                    question_code=quizs_code,
+                    answer=data.get(quizs),
+                    household=house_hold,
+                    question_type=quest_type[0]['question_type'],
+                    domain=quest_type[0]['domain'],
+                    event=event,
+                    date_of_event=event_date,
+                    date_of_previous_event=date_previous, 
+                )
+                    
+            except Exception as e:
+                print(f'The OVC Cpara Form append didnt save:  {e}')
+            
+
         
         url = reverse('ovc_view', kwargs={'id': id})
         return HttpResponseRedirect(url)
 
-    import pdb
+    
+    # import pdb
 
     child = RegPerson.objects.get(id=id)
     ovc_id = int(id)
@@ -10027,6 +10182,9 @@ def new_cpara_upgrade(request, id):
     msg = f'Cpara data saved succesfully'
     messages.add_message(request, messages.INFO,msg)
     return render(request,'forms/new_cpara_upgrade.html',context)
+
+
+
 
 def edit_cpara_upgrade(request, id):
     if request.method == 'POST':
