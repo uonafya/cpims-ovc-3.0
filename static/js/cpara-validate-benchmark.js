@@ -45,32 +45,32 @@ $('input[name=p76q],input[name=p75q],input[name=p77q],input[name=p78q],input[nam
 
 // disable benchmark editing 
 
-// $('input[name=CP1b]').attr('disabled', true);
-$('input[name=CP1b]').click(function(){return false;});
+// // $('input[name=CP1b]').attr('disabled', true);
+// $('input[name=CP1b]').click(function(){return false;});
 
-// $('input[name=CP2b]').attr('disabled', true);
-$('input[name=CP2b]').click(function(){return false;});
+// // $('input[name=CP2b]').attr('disabled', true);
+// $('input[name=CP2b]').click(function(){return false;});
 
-// $('input[name=CP3b]').attr('disabled', true);
-$('input[name=CP3b]').click(function(){return false;});
+// // $('input[name=CP3b]').attr('disabled', true);
+// $('input[name=CP3b]').click(function(){return false;});
 
-// $('input[name=CP4b]').attr('disabled', true);
-$('input[name=CP4b]').click(function(){return false;});
+// // $('input[name=CP4b]').attr('disabled', true);
+// $('input[name=CP4b]').click(function(){return false;});
 
-// $('input[name=CP5b]').attr('disabled', true);
-$('input[name=CP5b]').click(function(){return false;});
+// // $('input[name=CP5b]').attr('disabled', true);
+// $('input[name=CP5b]').click(function(){return false;});
 
-// $('input[name=CP6b]').attr('disabled', true);
-$('input[name=CP6b]').click(function(){return false;});
+// // $('input[name=CP6b]').attr('disabled', true);
+// $('input[name=CP6b]').click(function(){return false;});
 
-// $('input[name=CP7b]').attr('disabled', true);
-$('input[name=CP7b]').click(function(){return false;});
+// // $('input[name=CP7b]').attr('disabled', true);
+// $('input[name=CP7b]').click(function(){return false;});
 
-// $('input[name=CP8b]').attr('disabled', true);
-$('input[name=CP8b]').click(function(){return false;});
+// // $('input[name=CP8b]').attr('disabled', true);
+// $('input[name=CP8b]').click(function(){return false;});
 
-// $('input[name=CP9b]').attr('disabled', true);
-$('input[name=CP9b]').click(function(){return false;});
+// // $('input[name=CP9b]').attr('disabled', true);
+// $('input[name=CP9b]').click(function(){return false;});
 
 
 $('input[type=radio]').change(function (e) {  
@@ -115,14 +115,11 @@ $('input[type=radio]').change(function (e) {
     console.log('benchScore CP8b=> '+CP8b);
 
     var CP9b = $('input[name=CP9b]:checked').val(); 
-    if(CP9b === 'AYES'){CP9b = 1;}
-    else{CP9b = 0;}
+    if(CP9b === 'AYES'){CP9b = 0;}
+    else{CP9b = 1;}
     console.log('benchScore CP9b=> '+CP9b);
 
-    var CP10b = $('input[name=CP9b]:checked').val(); 
-    if(CP10b === 'AYES'){CP10b = 1;}
-    else{CP10b = 0;}
-    console.log('benchScore CP9b=> '+CP10b);
+
 
     
     benchmarkScore =  parseFloat(CP1b) + parseFloat(CP2b) + parseFloat(CP3b) + parseFloat(CP4b) + parseFloat(CP5b) + parseFloat(CP6b) + parseFloat(CP7b) + parseFloat(CP8b) + parseFloat(CP9b) // + parseFloat(CP10b) + parseFloat(CP11b) + parseFloat(CP12b) + parseFloat(CP13b) + parseFloat(CP14b) + parseFloat(CP15b) + parseFloat(CP16b) + parseFloat(CP17b);

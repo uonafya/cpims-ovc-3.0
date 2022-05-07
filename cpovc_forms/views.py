@@ -10287,18 +10287,20 @@ def edit_cpara_upgrade(request, id):
     answer_value={
         'False': 'ANNO',
         'True': 'AYES',
-        'No':'ANA'
+        'No': 'N/A' 
     }
 
     for one_data in cpara_data:
         one_data_q = one_data.get('question_code')
         one_data_a = one_data.get('answer')
+        import pdb  
         if one_data_q == 'CP2d':
             one_data_a
             edit_data_cpara[one_data_q]=one_data_a
         else:
-            one_data_a = answer_value[one_data_a]
-            edit_data_cpara[one_data_q]=one_data_a
+            # one_data_val = answer_value[one_data_a]            
+            edit_data_cpara[one_data_q]=answer_value[one_data_a]
+            # pdb.set_trace()
     
     # edit_data_cpara['d_o_a'] = date_event
     edit_data_cpara.update(ovc_sub_pop_data)
@@ -10312,6 +10314,10 @@ def edit_cpara_upgrade(request, id):
 
     # pdb.set_trace()
     person_id=OVCSubPopulation.objects.filter(event=id).first().person_id
+    house_id = OVCHHMembers.objects.get(person_id=person_id).house_hold_id
+    person_id = OVCHHMembers.objects.get(house_hold=house_id, member_type='TOVC').person_id
+    import pdb
+    pdb.set_trace()
     child = RegPerson.objects.filter(id=person_id)
     guardians = RegPersonsGuardians.objects.select_related().filter(
         child_person=child, is_void=False, date_delinked=None)

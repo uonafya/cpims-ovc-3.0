@@ -67,14 +67,27 @@ print(blu.sing("'Happy'"))
 
 {% endfor %}
 <!-- end page-header -->
-
-<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
-    <!-- <span class="close" data-dismiss="alert">x</span> -->
-    <i class="fa fa-info fa-2x pull-left"></i>
-    <p></p>
-    <span class="invalid-form-message" id="invalid-form-message"></span>
-</div>
-
+{% if messages %}
+    {% for message in messages %}
+    {% if 'error' in message.tags %}
+        <div id="messages" class="alert alert-danger fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-info fa-2x pull-left"></i>
+    {% else %}
+        <div id="messages" class="alert alert-success fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+    {% endif %}    
+        <p>{{ message }}</p>
+    </div>
+   {% endfor %}
+{% endif %}
+    <div id="message" class="alert alert-success fade in" style="display: none">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+  
+        <span id="response"></span>
+    </div>
 <!-- begin row -->
 <div id='case_details' class="row">
 	<!-- begin col-12 -->
@@ -1750,8 +1763,8 @@ print(blu.sing("'Happy'"))
                                     </td>
                                         <!-- <a class="btn btn-primary" href="{% url 'edit_cpara_upgrade' one_past_event.ev_id %}"><i class="fa fa-pencil"> Edit</i></a></td> -->
                                     <td valign="center" style="text-align: center;vertical-align: middle;">
-                                            <a class="btn btn-danger" data-toggle="modal" href='#del_cpara_e'> <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
-                                            <div class="modal fade" id="del_cpara_e">
+                                            <a class="btn btn-danger" data-toggle="modal" href='#del_cpara_e_{{one_past_event.ev_id}}'> <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                                            <div class="modal fade" id="del_cpara_e_{{one_past_event.ev_id}}">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -1760,15 +1773,11 @@ print(blu.sing("'Happy'"))
                                                         </div>
                                                         <div class="modal-body">
                                                             Are you sure you want to delete the <b>{{one_past_event.ev_date}}</b> event?
-                                                            <input type="hidden" name="ev_person" id="ev_person" value="{{one_past_event.ev_person}}"/>
-                                                            <input type="hidden" name="ev_key" id="ev_key" value="{{one_past_event.ev_id}}"/>
+    
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <script>
-                                                                var pid = document.getElementById("ev_person").value;
-                                                                var ev_key = document.getElementById("ev_key").value;
-                                                            </script>
-                                                            <button type="button" class="btn btn-danger" onclick="deleteCPARAentry( pid,ev_key )" id="del_CPara_{{forloop.counter}}">Yes, DELETE</button>
+           
+                                                            <button type="button" class="btn btn-danger" onclick="deleteCPARAentry( {{one_past_event.ev_person}}, '{{one_past_event.ev_id}}' )" id="del_CPara_{{forloop.counter}}">Yes, DELETE</button>
                                                             <button type="button" class="btn btn-default" data-dismiss="modal">No, cancel</button>
                                                         </div>
                                                     </div>
