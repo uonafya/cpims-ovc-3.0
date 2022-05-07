@@ -10107,7 +10107,6 @@ def manage_referal_events(request):
             ovccareservices = OVCBiReferral.objects.filter(event=ovccareevent.pk)
             for i in range(0, len(ovccareservices)):
                 if ovccareservices[i].is_void == False:
-                        print(f">>>>>>>service, {ovccareservices[i].refferal_service}")
                         services.append(translate(ovccareservices[i].refferal_service))
             import pdb
 
@@ -10142,7 +10141,7 @@ def edit_referal(request, btn_event_pk):
     event_id = uuid.UUID(btn_event_pk)
     event_instance = OVCCareEvents.objects.filter(event=event_id)
     id = event_instance[0].person_id
-    init_data = RegPerson.objects.filter(pk=id)
+    # init_data = RegPerson.objects.filter(pk=id)
     form = OVCF1AForm(initial={'person': id})
     event_obj = OVCCareEvents.objects.get(pk=btn_event_pk)
     btn_event_type = 'SERVICES'
@@ -10151,26 +10150,25 @@ def edit_referal(request, btn_event_pk):
     date_of_event_edit = str(event_obj.date_of_event)
     services_list = []
     ## get Services
-    ovccareservices = OVCBiReferral.objects.filter(event=event_obj, is_void=False)
+    ovccareservices = OVCBiReferral.objects.filter(event=event_obj).filter(is_void=False)
     olmis_domain_list = get_list('olmis_health_service_id_1', 'Please Select')
     for ovccareservice in ovccareservices:
-
-                service = {}
-                assessment_entry = []
-                event_name = [event for event in olmis_domain_list if
-                                    event[0] == ovccareservice.event]
-                print(ovccareservice.event)
-                print('')
-                print(olmis_domain_list)
-                print('')
-                print(event_name)
-                service['id'] = ovccareservice.event_id
-                service['detail'] = translate(ovccareservice.refferal_service)
-                service['date'] = (str(ovccareservice.refferal_enddate))
-                service['domain'] = 'SERVICE'
-                services_list.append(service)
+            service = {}
+            assessment_entry = []
+            event_name = [event for event in olmis_domain_list if
+                                event[0] == ovccareservice.event]
+            print(ovccareservice.event)
+            print('')
+            print(olmis_domain_list)
+            print('')
+            print(event_name)
+            service['id'] = ovccareservice.event_id
+            service['detail'] = translate(ovccareservice.refferal_service)
+            service['date'] = (str(ovccareservice.refferal_enddate))
+            service['domain'] = 'SERVICE'
+            services_list.append(service)
     return render(request,'forms/edit_referal.html',
-                  {'form': form, 'init_data': init_data,
+                  {'form': form,
                    'event_pk': btn_event_pk, 'event_type': btn_event_type,
                    'services_list': services_list, 'date_of_event_edit': date_of_event_edit, 'vals': vals})
 
@@ -10268,31 +10266,33 @@ def delete_referal(request, id, btn_event_type, btn_event_pk):
 
 @login_required(login_url='/')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def delete_previous_referal_entry(request, btn_event_type, entry_id):
+def delete_previous_referal_entry(request, refferal_service, entry_id):
     print("debug log ====================")
+    refferal_service = refferal_service.split('-')
+    refferal_service = ' '.join(refferal_service)
+    if refferal_service[-1] == ' ':
+        refferal_service = refferal_service[:-1]
 
     msg = ''
-    import pdb
+    model_object = OVCBiReferral.objects.filter(event_id=entry_id).filter(refferal_service=refferal_service)
+    model_object.update(is_void=True)
+    object_void = model_object[0].is_void
     # pdb.set_trace()
-
-    entry_id = uuid.UUID(entry_id)
-
-    if btn_event_type == 'SERVICES':
-        OVCBiReferral.objects.filter(pk=entry_id).update(is_void=True)
-        object_void = OVCBiReferral.objects.filter(pk=entry_id).all()
-        flag = ''
-        for i in range(0, len(object_void)):
-            if object_void[i].is_void == True:
-                flag = True
-            else:
-                flag = False
-        if flag == True:
-            msg = 'Deleted successfully'
-        else:
-            msg = "Error Deleting"
-
+    flag = ''
+    if object_void == True:
+        flag = True
+    else:
+        flag = False
+    if flag == True:
+        msg = 'Deleted successfully'
+    else:
+        msg = "Error Deleting"
     jsonForm1AData = []
     jsonForm1AData.append({'msg': msg})
     return JsonResponse(jsonForm1AData,
                         content_type='application/json',
                         safe=False)
+
+
+
+

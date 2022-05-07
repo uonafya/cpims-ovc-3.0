@@ -198,6 +198,6 @@ urlpatterns = [
     re_path('save_referal/(?P<id>\d+)/', views.save_referal, name='save_referal' ),
 
     # Delete previous referal event
-    re_path('refferal/delete_previous_referal_entry/(?P<btn_event_type>\w+)/(?P<entry_id>.+)/',
-            views.delete_previous_referal_entry, name='delete_previous_referal_entry')
+    re_path('refferal/delete_previous_refferal_entry/(?P<refferal_service>.+)/(?P<entry_id>.+)/',
+            views.delete_previous_referal_entry, name='delete_previous_refferal_entry')
 ]
