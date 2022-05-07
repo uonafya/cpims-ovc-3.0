@@ -572,8 +572,9 @@ function loadForm1aEvents()
                             // Append to rows to table rows
                             $("#f1a_events_data_table tbody").append('<tr id=' + tableRowId + '>' +
                                 '<td width="25%"><h6>' + event_type + '</h6></td>' +
-                                '<td width="25%"><h6>' + event_details + '</h6></td>' +
-                                '<td width="25%"><h6>' + event_date + '</h6></td>' +
+                                '<td width="25%"><h6>' + event_details.split(",")[0] + '</h6></td>' +
+                                '<td width="25%"><h6>' + event_details.split(",")[2] + '</h6></td>' +
+                                '<td width="25%"><h6>' + event_details.split(",")[3] + '</h6></td>' +
                                 '<td>' +
                                 /*' + viewItem + '' + **/
                                 '' + editItem + '' +
