@@ -10263,6 +10263,11 @@ def edit_cpara_upgrade(request, id):
 
         # cpara_id=OVCCareCpara_upgrade.objects.get(event=id,is_void=False)
     import pdb
+    person_id=OVCSubPopulation.objects.filter(event=id).first().person_id
+    house_id = OVCHHMembers.objects.get(person_id=person_id).house_hold_id
+    person_id = OVCHHMembers.objects.get(house_hold=house_id, member_type='TOVC').person_id
+
+
     cpara_data=OVCCareCpara_upgrade.objects.filter(event=id,is_void=False).values()
 
     # Get an event date of a single question for that event id
@@ -10277,10 +10282,16 @@ def edit_cpara_upgrade(request, id):
     # OVCSubPopulation.objects.filter(event=id,is_void=False).delete()
     sub_pop = {'double' :'CP6d_1','AGYW':'CP6d_2','HEI':'CP6d_3','FSW':'CP6d_4','PLHIV':'CP6d_5','CLHIV':'CP6d_6','SVAC':'CP6d_7'}
     for ovc_sub in ovc_sub_population:
-        # pdb.set_trace()
-        ovc_sub_q = ovc_sub.get('criteria')
-        ovc_sub_pop_data[sub_pop[ovc_sub_q]] = 'on'
+        
+        ovc_sub_id = ovc_sub['person_id']
+        if ovc_sub_id == person_id:
+            ovc_sub_q = ovc_sub.get('criteria')
+            ovc_sub_pop_data[sub_pop[ovc_sub_q]] = 'on'
+        else:
+            ovc_sub_q = ovc_sub.get('criteria')
+            ovc_sub_pop_data[str(ovc_sub_id)+'_'+sub_pop[ovc_sub_q]] = 'on'
 
+    # pdb.set_trace()
     
     # cpara = cpara_id.values_list()
     edit_data_cpara={}
@@ -10316,8 +10327,8 @@ def edit_cpara_upgrade(request, id):
     person_id=OVCSubPopulation.objects.filter(event=id).first().person_id
     house_id = OVCHHMembers.objects.get(person_id=person_id).house_hold_id
     person_id = OVCHHMembers.objects.get(house_hold=house_id, member_type='TOVC').person_id
-    import pdb
-    pdb.set_trace()
+    # import pdb
+    # pdb.set_trace()
     child = RegPerson.objects.filter(id=person_id)
     guardians = RegPersonsGuardians.objects.select_related().filter(
         child_person=child, is_void=False, date_delinked=None)
