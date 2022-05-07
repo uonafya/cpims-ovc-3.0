@@ -577,7 +577,7 @@ function updateForm1A(x)
             {
                 values['date_of_service'] = date_of_service;
                 $.ajax({
-                    url: '{% url 'update_referal' %}',
+                    url: '{% url 'bidirectionalreferralform' %}',
                     dataType: 'json',
                     method: 'POST',
                     data: values,

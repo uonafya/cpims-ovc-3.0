@@ -10162,11 +10162,12 @@ def edit_referal(request, btn_event_pk):
             print(olmis_domain_list)
             print('')
             print(event_name)
-            service['id'] = ovccareservice.event_id
+            service['id'] = ovccareservice.refferal_id
             service['detail'] = translate(ovccareservice.refferal_service)
             service['date'] = (str(ovccareservice.refferal_enddate))
             service['domain'] = 'SERVICE'
             services_list.append(service)
+            # pdb.set_trace()
     return render(request,'forms/edit_referal.html',
                   {'form': form,
                    'event_pk': btn_event_pk, 'event_type': btn_event_type,
@@ -10175,6 +10176,7 @@ def edit_referal(request, btn_event_pk):
 
 # Update Bidirection Referal Form
 def update_referal(request):
+    import pdb
     jsonResponse = []
     try:
         if request.method == 'POST':
@@ -10227,12 +10229,15 @@ def update_referal(request):
 
             msg = 'Saved Successfully'
             jsonResponse.append({'msg': msg})
+
     except Exception as e:
         print(e)
         msg = 'Save Error: (%s)' % (str(e))
         print(msg)
     jsonResponse.append({'msg': msg})
     return JsonResponse(jsonResponse, content_type='application/json', safe=False)
+
+
 
 
 @login_required(login_url='/')
@@ -10274,19 +10279,8 @@ def delete_previous_referal_entry(request, refferal_service, entry_id):
         refferal_service = refferal_service[:-1]
 
     msg = ''
-    model_object = OVCBiReferral.objects.filter(event_id=entry_id).filter(refferal_service=refferal_service)
+    model_object = OVCBiReferral.objects.filter(pk=entry_id).filter(refferal_service=refferal_service)
     model_object.update(is_void=True)
-    object_void = model_object[0].is_void
-    # pdb.set_trace()
-    flag = ''
-    if object_void == True:
-        flag = True
-    else:
-        flag = False
-    if flag == True:
-        msg = 'Deleted successfully'
-    else:
-        msg = "Error Deleting"
     jsonForm1AData = []
     jsonForm1AData.append({'msg': msg})
     return JsonResponse(jsonForm1AData,
