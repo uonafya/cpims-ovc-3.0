@@ -10055,7 +10055,6 @@ def new_pregnantwomen(request, id):
         return HttpResponseRedirect(url)
 
     # Get request Method
-    import pdb
     try:
         ovcreg = get_object_or_404(OVCRegistration, person_id=id, is_void=False)
         caretaker_id = ovcreg.caretaker_id if ovcreg else None
@@ -10071,88 +10070,26 @@ def new_pregnantwomen(request, id):
     check_fields = ['sex_id', 'relationship_type_id']
     vals = get_dict(field_name=check_fields)
     ovc_id = int(id)
-    # Past Data
-    past_data = PMTCTPregnantWA.objects.filter(person=id, is_void=False).values()
-    questions = PMTCTQuestions.objects.filter(code__startswith='PWA', is_void=False).values()
-    code_question = {}
-    for question in questions:
-        code_question[question['code']]=question['question']
-    data_get = {}
-    for one_past_data in past_data:
-        one_past_data_q=one_past_data['question_code']
-        one_past_data_a = one_past_data['answer']
 
-        data_get[code_question[one_past_data_q]]=one_past_data_a
+    event=PMTCTEvents.objects.filter(person_id=id).values_list('event')
+    data_test = PMTCTPregnantWA.objects.filter(event_id__in=event, is_void=False).values('event_id').distinct()
+    data_get = []
+    data_dict=[]
+    for b in range(len(data_test)):
+        data_get.append([])
+        for n in range(len(data_test)):
+            data_array = PMTCTPregnantWA.objects.filter(event_id__in=event, is_void=False, event_id=data_test[b]['event_id'])
+            for one_pwa in data_array:
+                data_get[b].append((one_pwa.question_code, one_pwa.answer))
+        data_dict.append(dict(data_get[b]))
 
-    # pdb.set_trace()
-    print(data_get)
+
     form = PREGNANT_WOMEN_ADOLESCENT()
-    # care_giver = RegPerson.objects.get(id=pmtct_registration.objects.get(person=child).caretaker_id)
     context = {
               'form': form,
               'init_data': init_data,
               'vals': vals,
               'person': id,
-              'data_get':data_get
+              'data_get':data_dict
                 }
     return render(request, 'forms/new_pregnantwomen.html', context)
-
-def edit_pregnantwomen(request, id):
-    if request.method == 'POST':
-        data = request.POST
-
-        date_of_event = timezone.now()
-
-        PMTCTEvents.objects.filter(event=id).update(
-                timestamp_updated=date_of_event,
-                event=id
-        )
-        # get questions for adolescent
-        data_saved = PMTCTPregnantWA.objects.filter(event=id)
-        for question in questions:
-            question_code_q=question.code
-            question_ansr_a=data.get(question.question)
-            if question_ansr_a is None:
-                question_ansr_a = 'No'
-            try:
-                PMTCTPregnantWA.objects.create(
-                    person=RegPerson.objects.get(pk=int(id)),
-                    caregiver=care_giver,
-                    question=question,
-                    question_code=question_code_q,
-                    answer=question_ansr_a,
-                    timestamp_created=date_of_event,
-                    event=pmtctevent,
-                )
-            except Exception as e:
-                error_message = f'PMTCT Pregnant table failed: {e}'
-                print(error_message)
-
-        msg = ' saved successful'
-        messages.add_message(request, messages.INFO, msg)
-        url = reverse('ovc_view', kwargs={'id': id})
-        return HttpResponseRedirect(url)
-
-    # Get request Method
-    import pdb
-    data_saved = PMTCTPregnantWA.objects.filter(event=id)
-    pdb.set_trace()
-    messages.add_message(request, messages.ERROR, msg)
-    return HttpResponseRedirect(reverse(forms_registry))
-    # get child data
-    init_data = RegPerson.objects.filter(pk=id)
-    check_fields = ['sex_id', 'relationship_type_id']
-    vals = get_dict(field_name=check_fields)
-    ovc_id = int(id)
-    child = RegPerson.objects.get(is_void=False, id=ovc_id)
-
-    form = PREGNANT_WOMEN_ADOLESCENT(initial={'household_id': household_id})
-    # care_giver = RegPerson.objects.get(id=pmtct_registration.objects.get(person=child).caretaker_id)
-    context = {
-              'form': form,
-              'init_data': init_data,
-              'vals': vals,
-              'person': id
-                }
-    return render(request, 'forms/new_pregnantwomen.html', context)
-
