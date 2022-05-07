@@ -10179,18 +10179,18 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
                 'care_giver_gender': care_giver_gender, 'objects': evaluation, 'vals': vals})
 
 
-def view_ovc_preventive_pre_post_program_assessment_view(request, id):
-    """
-    view of Sinovuyo Preventive Pre and Post Program Assessment Form instance
-    Args: 
-        evaluation_id, request
+# def view_ovc_preventive_pre_post_program_assessment_view(request, id):
+#     """
+#     view of Sinovuyo Preventive Pre and Post Program Assessment Form instance
+#     Args: 
+#         evaluation_id, request
     
-    Return:
-            forms/view_caregiver_progress_assessment.html, context
-    """
-    evaluation = fetch_objects(id)
-    return render(request, template_name='forms/view_caregiver_progress_assessment.html',
-                  context={'eva_quiz': evaluation})
+#     Return:
+#             forms/view_caregiver_progress_assessment.html, context
+#     """
+#     evaluation = fetch_objects(id)
+#     return render(request, template_name='forms/view_caregiver_progress_assessment.html',
+#                   context={'eva_quiz': evaluation})
 
 
 def ovc_preventive_pre_post_program_assessment_edit_view(request, id):

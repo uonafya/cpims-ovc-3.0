@@ -201,13 +201,14 @@
                                                         {{ form.bd_biological_mother }}
                                                 </td>
                                         </tr>
-
-                                        <tr id="bd_bm_live_hh_b">
+                                        <div id="bd_bm_live_hh_b">
+                                            <tr >
                                                 <td>10. If you are not the biological mother does she live in your household </td>
                                                 <td>
                                                         {{ form.bd_bm_live_hh }}
                                                 </td>
                                         </tr>
+                                        </div>
 
                                         <tr>
                                                 <td>11. Are you the biological father of the teen attending the programme?</td>
@@ -215,13 +216,15 @@
                                                         {{ form.bd_biological_father }}
                                                 </td>
                                         </tr>
-
-                                        <tr id="bd_bf_live_hh_b">
+                                        <div id="bd_bf_live_hh_b">
+                                            <tr >
                                                 <td>12. If you are not the biological father does he live in your household?</td>
                                                 <td>
                                                         {{ form.bd_bf_live_hh}}
                                                 </td>
                                         </tr>
+
+                                        </div>
 
                                         <tr>
                                                 <td>13. In the last month, did your family run out of money for food or essentials such as school fees,
@@ -722,35 +725,7 @@
 </div>
 <!-- end row -->
 
-
 <script type="text/javascript">
-
-   let show_div_0 = document.querySelector("#id_bd_biological_father_0") 
-
-   show_div_0.addEventListener("change", () => {
-    document.getElementById("bd_bf_live_hh_b").style.display="none";
-       showDiv_0()
-   })
-
-   let show_div_1 = document.querySelector("#id_bd_biological_father_1") 
-
-   show_div_1.addEventListener("change", () => {
-    document.getElementById("bd_bf_live_hh_b").style.display="none";
-       showDiv_1()
-   })
-   let show_div_2 = document.querySelector("#id_bd_biological_mother_0") 
-
-   show_div_2.addEventListener("change", () => {
-    document.getElementById("bd_bm_live_hh_b").style.display="none";
-       showDiv_2()
-   })
-
-   let show_div_3 = document.querySelector("#id_bd_biological_mother_1") 
-
-   show_div_3.addEventListener("change", () => {
-    document.getElementById("bd_bm_live_hh_b").style.display="none";
-       showDiv_3()
-   })
 
 // Delete Django Ajax Call
 function deleteEvaluation(evaluation_id) {
@@ -783,27 +758,9 @@ function deleteEvaluation(evaluation_id) {
         }
     });
 }
-
-function showDiv_0() {
-    el = document.getElementById("bd_bf_live_hh_b")
-    el.style.display="block";
-}
-function showDiv_1() {
-    el = document.getElementById("bd_bf_live_hh_b")
-    el.style.display="none";
-}
-function showDiv_2() {
-    el = document.getElementById("bd_bm_live_hh_b")
-    el.style.display="block";
-}
-function showDiv_3() {
-    el = document.getElementById("bd_bm_live_hh_b")
-    el.style.display="none";
-}
-
 </script>
-<script>
-    </script>
+
+
 
 {% endblock %}
 
@@ -817,5 +774,46 @@ function showDiv_3() {
 <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
     
+<script>
+    jQuery(document).ready(function(){
+        document.getElementById('bd_bf_live_hh').style.display = "none";
+        $('select#bd_biologocal_father').change(function () {
+            var optionSelected = $(this).find("option:selected");
+            var valueSelected  = $(this).val();
+            var yesOrNo   = optionSelected.text();
+            //console.log(optionSelected)
+            console.log(valueSelected)
+            //console.log(yesOrNo)
+            var y = document.getElementById('bd_bf_live_hh')
+            if(valueSelected == 'AYES' || valueSelected == ''){
+               y.style.display = "none"
+               y.setAttribute('value', '');
+            }else{
+                y.style.display = "block"
+                
+            }
+        });
+    });
+        jQuery(document).ready(function(){
+            document.getElementById('bd_bm_live_hh').style.display = "none";
+            $('select#bd_biologocal_mother').change(function () {
+                var optionSelected = $(this).find("option:selected");
+                var valueSelected  = $(this).val();
+                var yesOrNo   = optionSelected.text();
+                //console.log(optionSelected)
+                console.log(valueSelected)
+                var x = document.getElementById('bd_bm_live_hh')
+            if(valueSelected == 'AYES' || valueSelected == ''){
+                x.style.display = "none"
+                x.setAttribute('value', '');
+
+            }
+            else{
+                x.style.display = "block"
+            }
+        });
+    });
+
+</script>
 
 {% endblock %}

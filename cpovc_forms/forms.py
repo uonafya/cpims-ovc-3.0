@@ -8221,7 +8221,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     CHOICES_TYPE_ASSESSMENT = get_list("programme_id")
     CHOICES_READ = get_list('literacy_lvl_id', "Please select")
     CHOICES_EDUCATION = get_list("school_level_id")
-    YES_NO_CHOICES = yesno_list = get_list('yesno_id')
+    YES_NO_CHOICES = get_list('yesno_id')
     CHOICES_INCOME = get_list("employed_id", "Please select")
     CHOICES_RELATIONSHIP = get_list('relationship_caregiver_id', "Please select")
     CHOICES_BEHAVIOR = get_list("my_behaviour_id", "Please select")
@@ -8232,10 +8232,8 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     CHOICES_FEELING = get_list("agree_id", "Please select")
     CHOICES_SAD = get_list("feeling_sad_id", "Please select")
     CHOICES_FINANCE = get_list("often_id", "Please select")
-
     type_of_assessment = forms.ChoiceField(choices=CHOICES_TYPE_ASSESSMENT,
                                         widget = forms.RadioSelect())
-
     date_of_assessment = forms.DateTimeField(
         input_formats=['%d/%m/%Y'],
         widget=forms.DateTimeInput(attrs={
@@ -8247,6 +8245,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     bd_read = forms.ChoiceField(
         choices=CHOICES_READ,
         widget=forms.Select(attrs={
+
                                     'intial': 'Please select',
                                    'class': 'form-control',
                                    'id': 'bd_read',
@@ -8263,7 +8262,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     bd_non_biological_children = forms.IntegerField()
 
     bd_children_not_in_school = forms.ChoiceField(
-        choices=yesno_list,
+        choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
              # renderer=RadioCustomRenderer,
         ))
@@ -8289,10 +8288,12 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
         ))
 
     bd_biological_mother = forms.ChoiceField(
-        choices=YES_NO_CHOICES,
-        widget=forms.RadioSelect(
-
-            # renderer=RadioCustomRenderer,
+         choices=yesno_list,
+        widget=forms.Select(attrs={
+                            'initial': 'Please select',
+                           'id': 'bd_biologocal_mother',
+                           'class': 'form-control',
+        }
         ))
 
     bd_bm_live_hh = forms.ChoiceField(
@@ -8304,10 +8305,13 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
                            }))
 
     bd_biological_father = forms.ChoiceField(
-        choices=YES_NO_CHOICES,
-        widget=forms.RadioSelect(
+        choices=yesno_list,
+        widget=forms.Select(attrs={
+                            'initial': 'Please select',
+                           'id': 'bd_biologocal_father',
+                           'class': 'form-control',
 
-            # renderer=RadioCustomRenderer,
+        }
         ))
 
     bd_bf_live_hh = forms.ChoiceField(
@@ -8316,7 +8320,6 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
                             'intial': 'Please select',
                            'class': 'form-control',
                            'id': 'bd_bf_live_hh',
-                            'type': 'radio',
                            }))
 
     bd_money_basic_expenses = forms.ChoiceField(
