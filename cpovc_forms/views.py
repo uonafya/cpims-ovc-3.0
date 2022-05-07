@@ -10024,7 +10024,7 @@ def preventive_attendance_register(request, id):
                   'forms/new_preventive_attendance_register.html',
                   {'form': form, 'init_data': init_data, 'vals': vals, 'id':id})
 
-from .models import OVCPreventiveEvents, OVC_preventive_registration, OVCPreventiveEbi, OVCPreventiveService
+from .models import OVCPreventiveEvents, OVCPreventiveEbi, OVCPreventiveService
 def save_preventive_register(request):
     jsonResponse = []
     try:
@@ -10043,6 +10043,7 @@ def save_preventive_register(request):
             date_of_assessment = request.POST.get('session_date_id')
             date_of_assessment = convert_date(date_of_assessment)
             date_today = datetime.now()
+
                 
 
 
@@ -10190,11 +10191,13 @@ def manage_preventive_register(request):
            
             
             for ovccareg in ovccaregister:
-                register.append(translate(ovccareg.domain) + '(' + translate(ovccareg.ebi_session_type) + ')'+ '(' + translate(ovccareg.ebi_session) + ')')
+                # pdb.set_trace()
+                register.append(translate(ovccareg.domain) + ',' + translate(ovccareg.ebi_session_type) + ',' + translate(ovccareg.ebi_session) + ',' + translate(ovccareg.date_of_encounter_event.strftime('%d-%b-%Y')))
                 event_keywords.append(ovccareg.ebi_provided)
             for ovcservice in ovccareservice:
                 services.append(translate(ovcservice.domain) + '(' + translate(ovcservice.ebi_service_provided) + ')' + '(' + translate(ovcservice.ebi_service_client) + ')')
                 event_keywords.append(ovcservice.ebi_service_reffered)
+            # pdb.set_trace()
 
             if (services):
                 event_type = 'SERVICE'

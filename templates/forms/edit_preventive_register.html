@@ -249,6 +249,7 @@
                                     <tr><td colspan="4"><hr style="border-color: red;"></td></tr>	                                        
                                     </tbody>
                                     {{ form.preventive_assessment_provided_list }}
+                                    {{ form.assessment_provided_list }}
                                 </table>
                             </div>
 							    <!-- end col-6 -->                                
@@ -449,6 +450,16 @@
 <script>
 jQuery(document).ready(function() 
 {
+
+    $("#session_attended_days").on("change", function () {
+            // function to check if sessions has been added
+            var assessment_provided_list = $('#assessment_provided_list').val();
+            var name = $("#session_attended_days  option:selected").text();
+            if (assessment_provided_list.includes(name)){
+                alert(name+" already added!! ")
+            }
+        });
+
     $('input[name="OTHER_SERVICES_SPECIFY"]').attr({'readonly': true});
     $("#refferal_services_id").on("change", function() {
         var services_offered = $("#refferal_services_id").val()
@@ -548,6 +559,7 @@ function loadForm1aEvents()
                     // Clear <tbody>
                     console.log("------------------->>>>>>>  "+result);
                     $("#f1a_events_data_table tbody").html('');
+                    var table_result = []
 
                     $.each(result, function(i, val) {
                         var event_pk = val.event_pk
@@ -562,12 +574,12 @@ function loadForm1aEvents()
                             var btnDelete = 'btnDelete' + i;
                             var tableRowId = 'tableRowId' + i;
 
+                            table_result.push(val.event_details)
+
                             //Actions Item
                             var viewItem = '<button id=' + btnView + ' type="submit" class="btn  btn-sm btn-primary m-r-5"><i class="fa fa-binoculars"></i></button>';
                             var editItem = '<button id=' + btnEdit + ' data-event_type='+event_type+' data-event_pk='+event_pk+' data-core_service="" data-core_service_status="" type="submit" class="btn  btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i></button>';
                             var deleteItem = '<button id=' + btnDelete + ' data-event_type='+event_type+' data-event_pk='+event_pk+' type="submit" class="btn  btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i></button>';
-
-                            console.log("000000000000000 "+deleteItem);
 
                             // Append to rows to table rows
                             $("#f1a_events_data_table tbody").append('<tr id=' + tableRowId + '>' +
@@ -614,7 +626,7 @@ function loadForm1aEvents()
 
                         }
                     });
-                    
+                    $('#assessment_provided_list').val(table_result);
                 },
                 error: function(xhr, status, error){
                     $(".alert").show();
@@ -853,6 +865,7 @@ function getServices(x, domain)
 					var multiselect_dict = {};
 
 		            multiselect_data.push({label: 'Please Select', value: ''});
+                    
 
 		            $.each(result, function(i, val) 
 		            {
@@ -907,9 +920,6 @@ function AddRow(x)
         var olmis_session_attended_days = $("#session_attended_days").val();
         var olmis_session_date_id = $("#session_date_id").val();
 
-        console.log("xxxxxxxxxxxxxxxxxxxxxxxx "+olmis_intervention_prevention);
-
-
         var csrftoken = $.cookie('csrftoken');        
         var values = {  
             'csrfmiddlewaretoken': csrftoken
@@ -946,7 +956,6 @@ function AddRow(x)
                     var holmis_completed_all_sessions = "<input disabled id='holmis_completed_all_sessions' value='"+olmis_completed_all_sessions+"'>"
                     var holmis_session_attended_days = "<input disabled id='holmis_session_attended_days' value='"+olmis_session_attended_days+"'>"
                     var holmis_session_date = "<input disabled id='holmis_session_date' value='"+olmis_session_date_id+"'>"
-                    console.log("vvvvvvvvvvvvvvvvvv "+holmis_session_date);
 
                     
                     cell0.innerHTML = '<h6 class="td_style">#</h6>';  
@@ -974,7 +983,6 @@ function AddRow(x)
 
                     $('#assessment_manager_table tr').each(function(row, tr)
                     {            
-                        console.log("eeeeeeeeeeeeeeeeeeeee"+row);                
                         var holmis_intervention_prevention = $(tr).find('input[id="holmis_intervention_prevention"]').val();
                         var holmis_completed_all_sessions = $(tr).find('input[id="holmis_completed_all_sessions"]').val();
                         var holmis_session_attended_days = $(tr).find('input[id="holmis_session_attended_days"]').val();

@@ -8274,3 +8274,7 @@ class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
     preventive_assessment_provided_list = forms.CharField(widget=forms.TextInput(
         attrs={'type': 'hidden',
                'id': 'preventive_assessment_provided_list'}))
+
+    assessment_provided_list = forms.CharField(widget=forms.TextInput(
+        attrs={'type': 'hidden',
+               'id': 'assessment_provided_list'}))     
