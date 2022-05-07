@@ -345,16 +345,15 @@
 							</thead>
                             <tr>
 								 {% if heidata %}
-									{% for hei in heidata %}
+									{% for  hei in heidata %}
 										<tr>
-											{% for k, i in hei %}
+											{% for k, i in hei.items %}
 												<td>{{ i }}</td>
 											{% endfor %}
 												<td>
-													 <a href="#"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
+													<a href="#"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
 													<a href="#"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a>
 												</td>
-
 										</tr>
 									{% endfor %}
                                 {% endif %}

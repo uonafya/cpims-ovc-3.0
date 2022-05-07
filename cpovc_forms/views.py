@@ -10247,7 +10247,7 @@ def new_hei_tracker(request, id):
             for one_hei in hei_array:
                 hei[b].append((one_hei.question_code, one_hei.answer))
                 # hei[0].append(one_hei.event_id)
-        hei_dict.append(hei[b])
+        hei_dict.append(dict(hei[b]))
 
         # hei_tracker1 = PMTCTHEI.objects.filter(event_id__in=event, is_void=False)
         # data_get = []
