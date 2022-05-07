@@ -8256,6 +8256,13 @@ class CaseClosureForm(forms.Form):
     transfer_choices = get_list('exit_reason_id')
     transfer_choices_list = (transfer_choices[13], transfer_choices[14])
 
+    attrition_choices= [('', 'select attrition reason'), transfer_choices[0], transfer_choices[1], transfer_choices[2],
+                        transfer_choices[3],
+                        transfer_choices[4], transfer_choices[5], transfer_choices[6], transfer_choices[7],
+                        transfer_choices[8], transfer_choices[9],
+                        transfer_choices[10], transfer_choices[11], transfer_choices[12],
+                        transfer_choices[15]]
+
     CASE_CL001 = forms.ChoiceField(
         required=True,
         choices=REASON_SS,
@@ -8471,7 +8478,7 @@ class CaseClosureForm(forms.Form):
 
     CASE_CL027= forms.ChoiceField(
         required=False,
-        choices= get_list('exit_reason_id'),
+        choices= attrition_choices,
                                       initial='0',
 
                                       widget=forms.Select(

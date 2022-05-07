@@ -50,14 +50,27 @@
 {% endfor %}
 
 
-<!-- end page-header -->
+{% if messages %}
+    {% for message in messages %}
+    {% if 'error' in message.tags %}
+        <div id="messages" class="alert alert-danger fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-info fa-2x pull-left"></i>
+    {% else %}
+        <div id="messages" class="alert alert-success fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+    {% endif %}
+        <p>{{ message }}</p>
+    </div>
+   {% endfor %}
+{% endif %}
+    <div id="message" class="alert alert-success fade in" style="display: none">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
 
-<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
-    <span class="close" data-dismiss="alert">×</span>
-    <i class="fa fa-info fa-2x pull-left"></i>
-    <span class="invalid-form-message" id="invalid-form-message"></span>
-</div>
-
+        <span id="response"></span>
+    </div>
 <!-- begin row -->
 <div id='case_details' class="row">
 	<!-- begin col-12 -->
@@ -104,6 +117,10 @@
                                    <div id="ss_main">
                                         <td>
                                         {{form.CASE_CL001}}
+
+                                    </td>
+                                            <td id="tranfer">
+                                        {{form.CASE_CL023}}
 
                                     </td>
                                    </div>
@@ -404,7 +421,7 @@ jQuery(document).ready(function()
         $('#CASE_CL026').datepicker({ format: 'yyyy-mm-dd',  autoclose: true,
         orientation: "top",
         endDate: "today" }).val();
-            $('#cc_001').hide();
+            {#$('#cc_001').hide();#}
             $('#cc_002').hide();
             $("#cc_tab_001").hide();
             $("#cc_tab_002").hide();
@@ -470,92 +487,165 @@ jQuery(document).ready(function()
     </script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    $('input[name="CASE_CL001"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
    $('input[name="CASE_CL001').attr({'disabled':true});
+    $('input[name="CASE_CL023').attr({'disabled':true});
+
+    var trans = $("input[name='CASE_CL023']").prop('checked');
+       if (trans) {
+
+
+           $("#cc_001").show();
+           $("#cc_tab_002").show();
+           $("#cc_tab_004").show();
+           $('#tranfer').show();
+           $("#cc_002").hide();
+           $("#cc_tab_001").hide();
+           $("#cc_tab_003").hide();
+           $('input[name="CASE_CL002"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL010"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL011"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL012"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL013"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL023"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+
+
+          {#$('input[name="CASE_CL004').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});#}
+          $('input[name="CASE_CL027"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL029"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL030"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL031"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+
+
+          $('input[name="CASE_CL006"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL007"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL008"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL028"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+
+
+       }
+    var attrition = $("input[name='CASE_CL027']").prop('selected');
+       alert(attrition)
+       if (attrition) {
+           $("#cc_002").show();
+          $("#cc_tab_003").show();
+          $("#cc_tab_004").show();
+          $('#tranfer').hide();
+          $("#cc_001").hide();
+          $("#cc_tab_001").hide();
+          $("#cc_tab_002").hide();
+
+          $('input[name="CASE_CL004').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL027"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL029"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL030"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL031"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+
+          $('input[name="CASE_CL006"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL007"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL008"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL028"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+
+           $('input[name="CASE_CL002"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL010"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL011"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL012"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL013"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL023"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+
+       }
+
 
 
       var ival = $("input[name='CASE_CL001']:checked").val();
 
       if(ival == 2){
 
+
            $("#cc_001").show();
            $("#cc_tab_002").show();
            $("#cc_tab_004").show();
+           $('#tranfer').show();
            $("#cc_002").hide();
            $("#cc_tab_001").hide();
            $("#cc_tab_003").hide();
-           $('input[name="CASE_CL002').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-           $('input[name="CASE_CL010').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-           $('input[name="CASE_CL011').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-           $('input[name="CASE_CL012').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-           $('input[name="CASE_CL013').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-
-          $('input[name="CASE_CL004').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL027').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL029').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL030').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL031').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL002"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL010"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL011"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL012"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL013"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+           $('input[name="CASE_CL023"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
 
 
-          $('input[name="CASE_CL006').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL007').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL008').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL028').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          {#$('input[name="CASE_CL004').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});#}
+          $('input[name="CASE_CL027"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL029"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL030"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL031"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+
+
+          $('input[name="CASE_CL006"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL007"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL008"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL028"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
 
 
 
 
       }else if(ival == '3'){
-          $("#cc_002").show();
+           $("#cc_002").show();
           $("#cc_tab_003").show();
           $("#cc_tab_004").show();
+           $('#tranfer').hide();
           $("#cc_001").hide();
           $("#cc_tab_001").hide();
           $("#cc_tab_002").hide();
 
-          $('input[name="CASE_CL004').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL027').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL029').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL030').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL031').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          {#$('input[name="CASE_CL004').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});#}
+          $('input[name="CASE_CL027"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL029"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL030"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL031"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
 
-          $('input[name="CASE_CL006').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL007').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL008').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL028').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL006"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL007"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL008"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL028"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
 
-           $('input[name="CASE_CL002').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-           $('input[name="CASE_CL010').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-           $('input[name="CASE_CL011').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-           $('input[name="CASE_CL012').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-           $('input[name="CASE_CL013').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-
+           $('input[name="CASE_CL002"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL010"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL011"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL012"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL013"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+           $('input[name="CASE_CL023"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
 
 
       } else if(ival == '1'){
           $("#cc_tab_001").show();
           $("#cc_tab_004").show();
           $("#cc_001").hide();
+           $('#tranfer').hide();
           $("#cc_tab_003").hide();
           $("#cc_tab_002").hide();
 
-          $('input[name="CASE_CL006').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL007').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL008').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
-          $('input[name="CASE_CL028').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL006"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL007"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL008"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
+          $('input[name="CASE_CL028"]').attr({'required': true,'data-parsley-group': 'group0','data-parsley-required':true});
 
-          $('input[name="CASE_CL004').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL027').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL029').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL030').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL031').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          {#$('input[name="CASE_CL004').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});#}
+          $('input[name="CASE_CL027"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL029"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL030"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL031"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
 
 
-          $('input[name="CASE_CL002').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL010').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL011').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL012').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-          $('input[name="CASE_CL013').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
-
+          $('input[name="CASE_CL002"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL010"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL011"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL012"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL013"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
+          $('input[name="CASE_CL023"]').attr({'required': false,'data-parsley-group': 'group0','data-parsley-required':false});
 
 
       }
