@@ -1,14 +1,12 @@
 """
-cpims URL Configuration.
+CPIMS URL Configuration.
 
 Other urls are import
 Put here only urls not specific to app
 """
-import logging
-
 import cpovc_access
 import cpovc_auth
-import cpovc_dashboard
+import cpovc_dashboard.views as dash_views
 from . import views
 from django.urls import include, path, re_path
 from django.contrib import admin
@@ -29,12 +27,14 @@ from cpovc_auth.views import password_reset
 from django.views.generic import TemplateView
 from cpovc_dashboard import urls as dashboard_api_urls
 from cpovc_access.forms import StrictPasswordChangeForm
+# New changes
+from cpovc_pfs import urls as pfs_urls
+from cpovc_pfs.pmtct import urls as pmtct_urls
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Keep
-    # path('admin/', include(admin.site.urls), name='admin'),
-    # re_path(r'^$', cpovc_auth.views.log_in, name='home'),
+    path('admin/', admin.site.urls),
+    # Start CPIMS Dashboard
     path('public_dashboard/registration/', views.public_dashboard_reg, name='public_dashboard_reg'),
     path('public_dashboard/hivstat/', views.public_dashboard_hivstat, name='public_dashboard_hivstat'),
     path('public_dashboard/served/', views.public_dashboard_served, name='public_dashboard_served'),
@@ -66,12 +66,9 @@ urlpatterns = [
     re_path(r'^get_u5_served_bcert_by_period/(?P<org_level>\w+)/(?P<area_id>.*)/(?P<month_year>.*)/', views.get_u5_served_bcert_by_period, name='get_u5_served_bcert_by_period'),
     re_path(r'^get_ovc_served_stats/(?P<org_level>\w+)/(?P<area_id>.*)/(?P<funding_partner>.*)/(?P<funding_part_id>.*)/(?P<period_type>.*)/', views.get_ovc_served_stats, name='get_ovc_served_stats'),
     # endAPIs
-    # path('home/', views.home, name='home'),
     re_path(r'^$', views.home, name='home'),
-# url(r'^home/$', views.home, name='home'),
     path('accounts/request/', views.access, name='access'),
-    path('accounts/terms/<int:id>/', cpovc_access.views.terms,
-        name='terms'),
+    path('accounts/terms/<int:id>/', cpovc_access.views.terms, name='terms'),
     path('login/', cpovc_auth.views.log_in, name='login'),
     path('logout/', cpovc_auth.views.log_out, name='logout'),
     path('register/', cpovc_auth.views.register, name='register'),
@@ -84,36 +81,43 @@ urlpatterns = [
     path('ovcare/', include(ovc_urls)),
     path('settings/', include(settings_urls)),
     path('data_cleanup/', include(data_cleanup_urls)),
+    # Accounts management
     path('accounts/login/', cpovc_auth.views.log_in, name='acclogin'),
-    path('accounts/password/reset/', password_reset,
+    path(
+        'accounts/password/reset/', password_reset,
         {'template_name': 'registration/password_reset.html'},
         name='password_reset'),
     # path('accounts/password/reset/done/', password_reset_done,
     #     {'template_name': 'registration/password_reset_done.html'},
     #     name='password_reset_done'),
-    re_path(r'^accounts/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
+    re_path(
+        r'^accounts/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
         cpovc_auth.views.reset_confirm, name='password_reset_confirm'),
     path('reset/', cpovc_auth.views.reset, name='reset'),
-    path('accounts/password/change/', auth_views.PasswordChangeView.as_view(),
+    path(
+        'accounts/password/change/', auth_views.PasswordChangeView.as_view(),
         {'post_change_redirect': '/accounts/password/change/done/',
          'template_name': 'registration/password_change.html',
          'password_change_form': StrictPasswordChangeForm},
         name='password_change'),
-    path('accounts/password/change/done/', auth_views.PasswordResetDoneView.as_view(),
+    path(
+        'accounts/password/change/done/',
+        auth_views.PasswordResetDoneView.as_view(),
         {'template_name': 'registration/password_change_done.html'}),
-    re_path(r'^F57665A859FE7CFCDB6C8935196374AD\.txt$',
-        TemplateView.as_view(template_name='comodo.txt',
-                             content_type='text/plain')),
     re_path(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt',
-                                               content_type='text/plain')),
-
+                                                   content_type='text/plain')),
     path('offline_mode/', include(offline_mode_urls)),
-    #url(r'^dashboard/$', cpovc_dashboard.views.ovc_dashboard, name='ovc_dashboard'),
-    path('d/', cpovc_dashboard.views.ovc_dashboard, name='ovc_dashboard'),
-    path('d/hivstat/', cpovc_dashboard.views.ovc_dashboard_hivstat, name='hivstat_dash'),
-    path('d/services/', cpovc_dashboard.views.ovc_dashboard_services, name='services_dash'),
-    path('d/cm/', cpovc_dashboard.views.ovc_dashboard_cm, name='cm_dash'),
+    # Dashboards
+    path('d/', dash_views.ovc_dashboard, name='ovc_dashboard'),
+    path('d/hivstat/', dash_views.ovc_dashboard_hivstat, name='hivstat_dash'),
+    path(
+        'd/services/', dash_views.ovc_dashboard_services,
+        name='services_dash'),
+    path('d/cm/', dash_views.ovc_dashboard_cm, name='cm_dash'),
     path('api/v2/', include(dashboard_api_urls)),
+    # Preventive and Family Support
+    path('ovcare/pfs/', include(pfs_urls)),
+    path('ovcare/pmtct/', include(pmtct_urls)),
 ]
 
 handler400 = 'cpims.views.handler_400'

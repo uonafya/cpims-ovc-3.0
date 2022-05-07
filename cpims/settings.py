@@ -20,13 +20,17 @@ cpims_db_host = os.environ.get(
 cpims_db_pass = os.environ.get(
     'CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'Xaen!ee8'
 cpims_db_instance = os.environ.get(
-    'CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims_upgrade'
+
+    'CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims'
+
 cpims_db_port = os.environ.get(
     'CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5432'
 cpims_db_user = os.environ.get(
     'CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'cpimsdbuser'
 cpims_debug = eval(os.environ.get(
+
     'CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else True
+
 
 DEBUG = cpims_debug
 
@@ -51,8 +55,14 @@ INSTALLED_APPS = [
     'data_cleanup',
     'cpovc_offline_mode',
     'cpovc_manage',
+    'forums',
+    'adminsortable',
+    'simple_forums',
+     'cpovc_manage',
     'notifications',
     'cpovc_help',
+    'cpovc_pfs',
+
 ]
 
 
@@ -84,6 +94,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cpovc_main.context_processors.global_settings',
+
+                'simple_forums.context_processors.installed_apps',
+
             ],
         },
     },
@@ -95,11 +108,11 @@ WSGI_APPLICATION = 'cpims.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'cpims_test',
-        'USER': 'cpmis_user',
-        'PASSWORD': '123456',
-        'HOST': 'localhost',
-        'PORT': '5432', },
+        'NAME': cpims_db_instance,
+        'USER': cpims_db_user,
+        'PASSWORD': cpims_db_pass,
+        'HOST': cpims_db_host,
+        'PORT': cpims_db_port, },
     'reporting': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': cpims_db_instance,
@@ -203,7 +216,7 @@ CACHES = {
 CSRF_FAILURE_VIEW = 'cpims.views.csrf_failure'
 
 OFFLINE_MODE_CAPABILITY_ENABLED = eval(
-    os.environ.get('CAN_WORK_OFFLINE', 'False'))
+    os.environ.get('CAN_WORK_OFFLINE', 'True'))
 
 # kmhfl API
 KMHFL_USERNAME = '10004'
