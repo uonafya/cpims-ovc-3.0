@@ -1334,13 +1334,13 @@ class OVCBasicCategory(models.Model):
 class OvcCasePersons(models.Model):
     pid = models.UUIDField(
         primary_key=True, default=uuid.uuid1, editable=False)
-    # person_category = models.CharField(max_length=5, default='PERP')
+    person_category = models.CharField(max_length=5, default='PERP')
     person_relation = models.CharField(max_length=5, null=True)
     person_first_name = models.CharField(max_length=100, null=True)
     person_other_names = models.CharField(max_length=100, null=True)
     person_surname = models.CharField(max_length=100, null=True)
     person_type = models.CharField(max_length=5, default='PERP')
-    person_identifier = models.CharField(max_length=15, null=True)
+    # person_identifier = models.CharField(max_length=15, null=True)
     person_dob = models.DateField(null=True)
     person_sex = models.CharField(
         max_length=4, null=True,
@@ -1351,12 +1351,12 @@ class OvcCasePersons(models.Model):
 
     class Meta:
         db_table = 'ovc_case_other_person'
-        verbose_name = 'Case Other Person'
-        verbose_name_plural = 'Case Other Persons'
-
-    def __unicode__(self):
-        """To be returned by admin actions."""
-        return '%s %s' % (self.person_first_name, self.person_surname)
+    #     verbose_name = 'Case Other Person'
+    #     verbose_name_plural = 'Case Other Persons'
+    #
+    # def __unicode__(self):
+    #     """To be returned by admin actions."""
+    #     return '%s %s' % (self.person_first_name, self.person_surname)
 
 
 class OvcCaseInformation(models.Model):
@@ -1400,3 +1400,149 @@ class OVCCaseLocation(models.Model):
     def __unicode__(self):
         """To be returned by admin actions."""
         return '%s' % (str(self.case))
+
+#Pregnant Women/Adolesctent Monthly Tracker
+
+class OVCPregnantWomen(models.Model):
+    preg_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    date_of_contact = models.DateField(default=timezone.now, blank=True, null=True)
+    date_test_done2a = models.DateField(blank=True, null=True)
+    test_result2b=models.BooleanField(null=True)
+    date_test_done3a = models.DateField(blank=True, null=True)
+    test_result3b=models.BooleanField(null=True)
+    date_test_done4a = models.DateField(blank=True, null=True)
+    test_result4b=models.BooleanField(null=True)
+    date_test_done5a = models.DateField(blank=True, null=True)
+    test_result5b=models.BooleanField(null=True)
+    anc_date1 = models.DateField(default=timezone.now, blank=True, null=True)
+    anc_date2 = models.DateField(default=timezone.now, blank=True, null=True)
+    anc_date3 = models.DateField(default=timezone.now, blank=True, null=True)
+    anc_date4 = models.DateField(default=timezone.now, blank=True, null=True)
+    mode_of_delivery= models.BooleanField(null=True)
+    facility_code = models.CharField(max_length=10, null=True)
+    ccc_no= models.IntegerField(null=True)
+    vl_result= models.IntegerField(null=True)
+    vl_test_date=models.DateField(default=timezone.now, blank=True, null=True) ###date new 1
+    disclosure_done= models.BooleanField(null=True)
+    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+    is_void = models.BooleanField(default=False)
+    date_of_event = models.DateField(default=timezone.now, blank=True, null=True)### date
+    timestamp_created = models.DateTimeField(auto_now_add=True)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ovc_pregnant_women'
+    def __unicode__(self):
+        return str(self.tracker_id)
+
+#PMTCT EVENTS
+class PMTCTEvents(models.Model):
+    event = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    event_type_id = models.CharField(max_length=10)
+    event_counter = models.IntegerField(default=0)
+    event_score = models.IntegerField(null=True, default=0)
+    date_of_event = models.DateField(default=timezone.now)
+    created_by = models.IntegerField(null=True, default=404)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    is_void = models.BooleanField(default=False)
+    sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
+    app_user = models.ForeignKey(AppUser, default=1, on_delete=models.CASCADE)
+    person = models.ForeignKey(RegPerson, null=True, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'pmtct_events'
+
+
+class OVCPreventiveEvents(models.Model):
+   event = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+   event_type_id = models.CharField(max_length=10)
+   event_counter = models.IntegerField(default=0)
+   event_score = models.IntegerField(null=True, default=0)
+   date_of_event = models.DateField(default=timezone.now)
+   date_of_previous_event = models.DateTimeField(null=True)
+   created_by = models.IntegerField(null=True, default=404)
+   timestamp_created = models.DateTimeField(default=timezone.now)
+   is_void = models.BooleanField(default=False)
+   sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
+   app_user = models.ForeignKey(AppUser, default=1, on_delete=models.CASCADE)
+   person = models.ForeignKey(RegPerson, null=True, on_delete=models.CASCADE)
+   house_hold = models.ForeignKey(OVCHouseHold, null=True, on_delete=models.CASCADE)
+
+   class Meta:
+       db_table = 'ovc_preventive_events'
+
+# PMTCTQuestions
+class PMTCTQuestions(models.Model):
+    question_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    code = models.CharField(max_length=20)
+    question = models.CharField(max_length=55)
+    domain = models.CharField(max_length=10)
+    question_text = models.CharField(max_length=255)
+    question_type = models.CharField(max_length=20, null=False)
+    form = models.ForeignKey(OVCCareForms, on_delete=models.CASCADE)
+    is_void = models.BooleanField(default=False)
+    timestamp_created = models.DateTimeField(auto_now_add=True)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    # def __unicode__(self):
+    #     return self.code
+
+    class Meta:
+        db_table = 'pmtct_questions'
+
+
+class PMTCTPregnantWA(models.Model):
+    pmtct_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='pmtct_caregiver')
+    question_code = models.CharField(max_length=10, null=False, blank=True)
+    question = models.ForeignKey(PMTCTQuestions, on_delete=models.CASCADE)
+    answer = models.CharField(max_length=15)
+    event = models.ForeignKey(PMTCTEvents, on_delete=models.CASCADE)
+
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    is_void = models.BooleanField(default=False)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return self.answer
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.question_code = self.question.code
+        super(PMTCTPregnantWA, self).save(force_insert, force_update, using, update_fields)
+
+    class Meta:
+        db_table = 'pmtct_pregnant_Women_Adolescents'
+
+    def __unicode__(self):
+        return str(self.pmtct_id)
+
+
+class pmtct_registration(models.Model):
+    pmtct_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    school_id = models.ForeignKey(SchoolList, on_delete=models.CASCADE)
+    child_cbo = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
+    caretaker = models.ForeignKey(RegPerson, null=True, related_name='caretaker', on_delete=models.CASCADE)
+    caretaker_contact = models.CharField(max_length=15)
+    facility = models.CharField(max_length=15)
+    ccc_no = models.CharField(max_length=15)
+    chv = models.ForeignKey(RegPerson, related_name='pmtct_chv', null=True, on_delete=models.CASCADE)
+    registration_date = models.DateField(default=timezone.now, null=True)
+    is_active = models.BooleanField(default=True)
+    exit_reason = models.CharField(max_length=4, null=True)
+    exit_date = models.DateField(default=timezone.now, null=True)
+    event = models.ForeignKey(OVCPreventiveEvents, on_delete=models.CASCADE)
+    pmtct_grouping_id = models.UUIDField(default=uuid.uuid1, editable=False)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(default=timezone.now)
+    is_void = models.BooleanField(default=False)
+    sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
+
+
+    class Meta:
+        db_table = 'pmtct_registration'
+
+        def __unicode__(self):
+            return str(self.pmtct_id)
