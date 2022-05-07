@@ -421,7 +421,7 @@ jQuery(document).ready(function()
         $('#CASE_CL026').datepicker({ format: 'yyyy-mm-dd',  autoclose: true,
         orientation: "top",
         endDate: "today" }).val();
-            {#$('#cc_001').hide();#}
+            $('#cc_001').hide();
             $('#cc_002').hide();
             $("#cc_tab_001").hide();
             $("#cc_tab_002").hide();
@@ -524,8 +524,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
        }
-    var attrition = $("input[name='CASE_CL027']").prop('selected');
-       alert(attrition)
+    var attrition =$("#id_CASE_CL027").text();
+
+
        if (attrition) {
            $("#cc_002").show();
           $("#cc_tab_003").show();

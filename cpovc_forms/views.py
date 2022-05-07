@@ -10289,7 +10289,6 @@ def edit_case_closure(request, id):
             url = reverse('new_case_closure', kwargs={'id': person_id})
             return HttpResponseRedirect(url)
 
-
         gotten_data = {
             'CASE_CL001': posted_data.reason,
             'CASE_CL023': posted_data.reason,
