@@ -10195,13 +10195,13 @@ def new_case_closure(request, id):
 
 
 
-    # org_names = []
-    #
-    # i = 0
-    # for org_name in range(len(case_closure_date)):
-    #     if case_closure_date[i].rec_organization != '':
-    #         print (RegOrgUnit.objects.get(id=case_closure_date[i].rec_organization))
-    #         i += 1
+    org_names = []
+
+    i = 0
+    for org_name in range(len(case_closure_date)):
+        if case_closure_date[i].rec_organization != '':
+            print (RegOrgUnit.objects.get(id=case_closure_date[i].rec_organization))
+            i += 1
 
 
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
