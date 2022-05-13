@@ -2066,7 +2066,7 @@ def counties_from_aids(area_list, area_type='GDIS'):
         print('Error getting county list from area ids - {}'.format(str(e)))
         return []
     else:
-        return geos
+        return list(geos)
 
 
 def geos_from_aids(area_list, area_type='GWRD'):
@@ -2708,10 +2708,13 @@ def get_geo_selected(results, datas, extras, filters=False):
     """Get specific Geography based on existing ids."""
     wards = []
     all_list = get_all_geo_list(filters)
+    datas.remove('') if '' in datas else datas
+    extras.remove('') if '' in extras else extras
     results['wards'] = datas
-    area_ids = map(int, datas)
-    selected_ids = map(int, extras)
+    area_ids = list(map(int, datas))
+    selected_ids = list(map(int, extras) if extras else [])
     # compare
+    print(area_ids, selected_ids)
     for geo_list in all_list:
         parent_area_id = geo_list['parent_area_id']
         area_id = geo_list['area_id']
@@ -2725,6 +2728,7 @@ def get_geo_selected(results, datas, extras, filters=False):
             wards.append(extra_list)
     unique_wards = list(set(wards))
     results['wards'] = unique_wards
+    print('newton', results)
     return results
 
 
@@ -2908,7 +2912,7 @@ def save_geo_location(area_ids, org_unit, existing_ids=[]):
     try:
         date_linked = datetime.now().strftime("%Y-%m-%d")
         # Delink those unselected by user
-        area_ids = map(int, area_ids)
+        area_ids = list(map(int, area_ids))
         delink_list = [x for x in existing_ids if x not in area_ids]
         for i, area_id in enumerate(area_ids):
             if area_id not in delink_list:
@@ -3071,7 +3075,7 @@ def search_person_ft(request, search_string, ptype, incl_dead):
         print('Person type is: ', p_type)
         if person_type == 'TBVC':
             person_type = 'COVC'
-            other_filter = "OR designation = 'TBVC'"
+            other_filter = " OR designation = 'TBVC'"
         if p_type == 'TBVC':
             query = ("SELECT id FROM reg_person WHERE to_tsvector"
                      "(first_name || ' ' || surname || ' '"
