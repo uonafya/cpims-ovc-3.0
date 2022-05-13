@@ -18,11 +18,41 @@ TRANS = {'search': 0, 'new': 1, 'edit': 2, 'view': 3, 'delete': 4}
 
 
 def is_allowed_groups(allowed_groups, page=11):
+
+    def decorator(function):
+        @wraps(function)
+        def wrap(request, *args, **kwargs):
+            allowed = check_permisions(request, allowed_groups)
+            if allowed:
+                return function(request, *args, **kwargs)
+            else:
+                page_info = 'Permission denied'
+                return render(request, 'registry/roles_none.html',
+                              {'page': page_info})
+        return wrap
+    return decorator
+
+
+def check_permisions(request, allowed_groups):
+    """ Return permissions."""
+    try:
+        profile = request.user.id
+        print('User', profile, allowed_groups)
+        is_allowed = True
+    except Exception:
+        return False
+    else:
+        return is_allowed
+
+
+def is_allowed_groups_old(allowed_groups, page=11):
     """Method for checking roles and permissions."""
 
     def decorator(check_func):
         @wraps(check_func, assigned=check_func)
         def _wrapped_view(request, *args, **kwargs):
+
+            return True
             # If active super user lets just proceed
             url_parts = request.path_info.split('/')
             url_len = len(url_parts)
@@ -287,21 +317,15 @@ def get_orgs_child(child_units):
         # child_units = [int(org_id)]
         p_orgs_3, p_orgs_2, p_orgs_1 = [], [], []
         parent_orgs = get_unit_parent(child_units)
-        print(('c1', child_units, parent_orgs))
         if parent_orgs:
             p_orgs_1 = get_unit_parent(parent_orgs)
-            print(('c2', child_units))
             if p_orgs_1:
                 p_orgs_2 = get_unit_parent(p_orgs_1)
-                print('c3')
                 if p_orgs_2:
                     p_orgs_3 = get_unit_parent(p_orgs_2)
-                    print('c4')
         all_units = child_units + parent_orgs + p_orgs_1 + p_orgs_2 + p_orgs_3
     except Exception as e:
         print(('error with tree - %s' % (str(e))))
         return []
     else:
         return all_units
-
-

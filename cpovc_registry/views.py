@@ -48,8 +48,8 @@ from cpovc_forms.views import new_case_record_sheet
 now = timezone.now()
 
 
-# @login_required(login_url='/')
-# @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
+@login_required(login_url='/')
+@is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
 def home(request):
     """Search page for Organisation Unit / Default page."""
     try:
@@ -82,9 +82,8 @@ def home(request):
                 ids.append(result.id)
             geo_names = names_from_ids(ids)
             msg_text = 'for {}'.format(search_string) if search_string else ''
-            message = "Search {} returned {:d} {}".format(msg_text,
-                                                    len(results),
-                                                    items)
+            message = "Search {} returned {:d} {}".format(
+                msg_text, len(results), items)
             check_fields = ['org_unit_type_id', 'committee_unit_type_id',
                             'adoption_unit_type_id', 'si_unit_type_id',
                             'cci_unit_type_id', 'ngo_unit_type_id',
@@ -111,9 +110,9 @@ def home(request):
         raise e
 
 
-# @login_required
-# @is_allowed_groups(['RGM', 'RGU', 'DSU'])
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required
+@is_allowed_groups(['RGM', 'RGU', 'DSU'])
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def register_new(request):
     """Create page for New Organisation Unit."""
     try:
@@ -183,9 +182,9 @@ def register_new(request):
         raise e
 
 
-# @login_required
-# @is_allowed_groups(['RGM', 'RGU', 'DSU'])
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required
+@is_allowed_groups(['RGM', 'RGU', 'DSU'])
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def register_edit(request, org_id):
     """Edit page for Organisation Unit with id - org_id."""
     resp = ''
@@ -319,6 +318,7 @@ def register_edit(request, org_id):
                 'ward': area_list, 'close_date': date_closed,
                 'parent_org_unit': parent_unit, 'county': county_list,
                 'org_unit_category': org_cat, 'handle_ovc': handle_ovc}
+        print(data)
         data_dict = merge_two_dicts(external, data)
         form = FormRegistryNew(request.user, data_dict)
         # Get contact details
@@ -344,8 +344,8 @@ def register_edit(request, org_id):
                       {'form': form})
 
 
-# @login_required
-# @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
+@login_required
+@is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
 def register_details(request, org_id):
     """
     Some default page for the home page / Dashboard.
@@ -423,9 +423,9 @@ def register_details(request, org_id):
                       {'form': form})
 
 
-# @login_required
-# @is_allowed_groups(['RGM', 'RGU', 'DSU'])
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required
+@is_allowed_groups(['RGM', 'RGU', 'DSU'])
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_person(request):
     """
     For creating all types of persons page.
@@ -544,14 +544,6 @@ def new_person(request):
                     child_cbo_id=cbo_id, child_chv_id=chv_id,
                     exit_date=None, created_at=now)
                 ovc.save()
-                '''
-                ovc, created = OVCRegistration.objects.get_or_create(
-                    person_id=reg_person_pk,
-                    defaults={"registration_date": reg_date, "has_bcert": has_bcert,
-                              "is_disabled": False, "is_void": False,
-                              "child_cbo_id": cbo_id, "child_chv_id": chv_id,
-                              "exit_date": None, "created_at": now })
-                '''
             # Capture RegPersonTypes Model
             if person_types:
                 save_person_type(person_types, reg_person_pk)
@@ -686,7 +678,8 @@ def new_person(request):
                 unique_id.save(
                     update_fields=["person_type", "person_id", "system_id"])
 
-            operation_msg = 'Person ({}) save success.'.format(first_name.upper())
+            operation_msg = 'Person ({}) save success.'.format(
+                first_name.upper())
             messages.add_message(request, messages.INFO, operation_msg)
             if child_ovc == 'AYES':
                 ovc_url = reverse(ovc_register, kwargs={'id': reg_person_pk})
@@ -716,8 +709,8 @@ def new_person(request):
                       {'form': form}, )
 
 
-# @login_required
-# @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
+@login_required
+@is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
 def persons_search(request):
     """For persons search results page - put on data grid."""
     result = None
@@ -739,12 +732,6 @@ def persons_search(request):
                 include_dead = True if person_deceased == 'True' else False
                 type_of_person = [person_type] if person_type else []
 
-                """
-                resultsets = get_persons_list(
-                    user=request.user, tokens=search_string,
-                    wfc_type=wfc_type, search_location=search_location,
-                    search_wfc_by_org_unit=search_wfc_by_org_unit)
-                """
                 if search_criteria == 'PSNM':
                     results = search_person_ft(request, search_string,
                                                person_type, include_dead)
@@ -812,8 +799,8 @@ def persons_search(request):
         raise e
 
 
-# @login_required
-# @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
+@login_required
+@is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
 def view_person(request, id):
     """Page for viewing person details in full."""
     try:
@@ -825,12 +812,9 @@ def view_person(request, id):
         vals = get_dict(field_name=check_fields)
         person = RegPerson.objects.get(pk=id)
         m_ovcs = OVCRegistration.objects.filter(caretaker_id=person.id)
-        # print('lllllllllllllaaaayyyyyyyy', m_ovcs[0])
-
         my_ovcs = []
         for one_ovc in m_ovcs:
             my_ovcs.append(RegPerson.objects.filter(id=one_ovc.person_id))
-        # print('lllllllllllllaaaazzzzzzz', my_ovcs[0])
 
         person_types = RegPersonsTypes.objects.filter(
             person=person, is_void=False, date_ended=None)
@@ -931,7 +915,8 @@ def view_person(request, id):
         # Workforce ID
         person.workforce_id = workforce_id
         return render(request, 'registry/view_person.html',
-                      {'person_details': person, 'vals': vals, 'my_ovcs': my_ovcs,
+                      {'person_details': person, 'vals': vals,
+                       'my_ovcs': my_ovcs,
                        'appuser': person_appuser, 'guardians': guardians,
                        'siblings': siblings, 'osiblings': osiblings,
                        'oguardians': oguardians, 'hhs': hhs})
@@ -942,9 +927,9 @@ def view_person(request, id):
         return HttpResponseRedirect(reverse(persons_search))
 
 
-# @login_required
-# @is_allowed_groups(['RGM', 'RGU', 'DSU'])
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required
+@is_allowed_groups(['RGM', 'RGU', 'DSU'])
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_person(request, id):
     """
     For editing persons details.
@@ -1158,7 +1143,8 @@ def edit_person(request, id):
                         op.is_void = True
                         op.date_delinked = now
                         op.save()
-                msg = 'Update of Person ({}) was successful.'.format(first_name)
+                msg = 'Update of Person ({}) was successful.'.format(
+                    first_name)
                 # For households
                 attached_cg = extract_post_params(request, naming='cc_')
                 attached_sb = extract_post_params(request, naming='sb_')
@@ -1182,7 +1168,8 @@ def edit_person(request, id):
                 if date_of_death:
                     date_of_death = convert_date(date_of_death)
                     set_person_dead(date_of_death, id)
-                msg = 'Update of ({}) to dead was successful.'.format(first_name)
+                msg = 'Update of ({}) to dead was successful.'.format(
+                    first_name)
             elif edit_type == 3:
                 delete_person(id)
                 if ovc:
@@ -1341,8 +1328,9 @@ def edit_person(request, id):
             elif working_in_county:
                 work_region = '1'
             else:
-                working_in_county = counties_from_aids(working_in_subcounty)
-                print('CNT', working_in_county, working_in_subcounty)
+                wic = counties_from_aids(working_in_subcounty)
+                working_in_county = list(map(str, list(set(wic))))
+                # print('CNT', working_in_county, working_in_subcounty)
                 work_region = '2'
             # Living in county
             list_subcounties = []
@@ -1371,6 +1359,7 @@ def edit_person(request, id):
                 'orgs_selected': person_org_names,
                 'child_services': child_service,
                 'working_in_region': work_region}
+            print(initial_vals)
             if ovc:
                 initial_vals['cbo_unit_id'] = ovc.child_cbo_id
                 initial_vals['chv_unit_id'] = ovc.child_chv_id
@@ -1414,9 +1403,9 @@ def edit_person(request, id):
         return HttpResponseRedirect(reverse(persons_search))
 
 
-# @login_required
-# @is_allowed_groups(['RGM', 'RGU'])
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required
+@is_allowed_groups(['RGM', 'RGU'])
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_user(request, id):
     """
     Page for creating users after registering a person.
@@ -1459,7 +1448,8 @@ def new_user(request, id):
             # validate username if__exists
             username_exists = AppUser.objects.filter(username__iexact=username)
             if username_exists:
-                msg = 'Username ({}) is taken. Pick another one.'.format(username)
+                msg = 'Username ({}) is taken. Pick another one.'.format(
+                    username)
                 messages.add_message(request, messages.INFO, msg)
                 form = NewUser(user, data=request.POST)
                 return render(request, 'registry/new_user.html',
@@ -1487,21 +1477,23 @@ def new_user(request, id):
         return HttpResponseRedirect(reverse(persons_search))
 
 
-# @login_required
+@login_required
 def registry_look(request):
     """For JSON lookup stuff on registry pages."""
     try:
         msg, selects = 'Registry look up successful', ''
         results = {'message': msg}
         if request.method == 'POST':
+            print(request.POST)
             county = request.POST.getlist('county[]')
             sub_county = request.POST.getlist('sub_county[]')
-            ward = request.POST.getlist('ward[]')
+            ward = request.POST.getlist('ward')
             action = int(request.POST.get('action'))
             filters = request.POST.get('filter')
+            print(county, sub_county, ward, action, filters)
             datas = sub_county if action == 1 else county
             extras = ward if action == 1 else sub_county
-            print(action, datas, extras)
+            # print(action, datas, extras)
             if action == 4:
                 extras = request.POST.getlist('ward')
                 datas = request.POST.getlist('sub_county')
@@ -1517,8 +1509,9 @@ def registry_look(request):
                 if national == 0:
                     filters = False
             filter_id = request.user if filters and not su else False
+            print('lookup', results, datas, extras, filter_id)
             results = get_geo_selected(results, datas, extras, filter_id)
-            res_extras = map(str, extras)
+            res_extras = list(map(str, extras))
             if res_extras:
                 selects = ','.join(res_extras)
             results['selects'] = selects
@@ -1529,7 +1522,7 @@ def registry_look(request):
         raise e
 
 
-# @login_required
+@login_required
 def person_actions(request):
     """
     Json response on persons update stuff.
@@ -1630,9 +1623,12 @@ def person_actions(request):
                         relationship = attached_cg[ncg]['ctype']
                         child_headed = True if is_adult == 'No' else False
                         if edit_type == 3:
-                            # Add methods to update household in the case that the child has no household.
-                            update_household(index_child=person_id, member=cpims_id)
-                            add_household_members(index_child=person_id, member=cpims_id)
+                            # Add methods to update household in the case
+                            # that the child has no household.
+                            update_household(
+                                index_child=person_id, member=cpims_id)
+                            add_household_members(
+                                index_child=person_id, member=cpims_id)
                             g_count = RegPersonsGuardians.objects.filter(
                                 guardian_person_id=cpims_id,
                                 child_person_id=person_id, is_void=False,
