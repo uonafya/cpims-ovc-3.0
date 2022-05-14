@@ -20,7 +20,7 @@
 		</ul>
 	</li>
 
-	<li class="has-sub {{ request.path|get_class:'forms' }}">
+	<li class="has-sub {{ request.path|get_class:'forms' }} {{ request.path|get_class:'ovcare' }}">
 		<a href="#">
 		    <b class="caret pull-right"></b>
 		    <i class="fa fa-file-o"></i>
@@ -33,7 +33,9 @@
 			<li class="online_mode"><a href="{% url 'background_details' %}">School and Bursary</a></li>
 			<li class="online_mode"><a href="{% url 'forms_registry' %}">Follow-ups</a></li>
 			<li class="online_mode"><a href="{% url 'documents_manager' %}">Documents Manager</a></li>
-			<li class="online_mode"><a href="{% url 'ovc_home' %}">OVC Care</a></li>
+			<li class="online_mode"><a href="{% url 'ovc_home' %}">OVC Care (Comp)</a></li>
+			<li class="online_mode"><a href="{% url 'pfs_home' %}">Preventive and Family Support</a></li>
+			<li class="online_mode"><a href="{% url 'pmtct_home' %}">PMTCT</a></li>
 			<li><a href="#ovc_home" class="btn_ovc_home_offline">OVC Care Offline</a></li>
 		</ul>
 

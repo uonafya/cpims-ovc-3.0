@@ -1,35 +1,31 @@
 # CPIMS OVC Upgrade
 
-Code base for CPIMS OVC business process upgrade from python 2.7 / Django 1.8 to Python 3.10 / Django 4.0.2
+Code base for Child Protection Management Information System (CPIMS) OVC business process and technology stack upgrade from python 2.7 and Django 1.8.5
 
-# install python 3.10 https://www.python.org/getit/
+## Technology stack
+Python - 3.10\
+Django - 4.0.4\
+Postgresql - 14
+
+
+## Functionality
+### Existing
+Register Org Unit, Workforce, CHV, Caregiver(s), OVC\
+Enroll OVC to Comprehensive care\
+Offer Services and monitoring / assessments\
+Exit OVC from the program
+
+### New
+Enroll, follow up and exit Preventive care - Sinovuyo, FMP and Family Support\
+PMTCT functionality\
+Revised tools implementation (Version March 2022)
+
 ## Installation
-// clone the repository to your local machine
-git clone https://github.com/uonafya/cpims-ovc-3.0
 
-# install virtualenv windows
-pip install virtualenv
+git clone https://github.com/uonafya/cpims-ovc-3.0\
+Edit cpims/settings.py with your credentials\
 
-# create virtualenv
-virtualenv venv
-
-# activate virtualenv
-venv\Scripts\activate
-
-# install requirements
-pip install -r requirements.txt
-
-# Install postgres https://www.postgresql.org/
-# open psql(shell)
-create database cpims;
-create user username with password 'userpassword';
-grant all privileges on database cpims to username;
-
-# Edit cpims/settings.py with credentials created above
-
-py manage.py makemigrations
-py manage.pt migrate
-py manage.py check
-
-# runserver 
-py manage.py runserver
+python manage.py makemigrations\
+python manage.pt migrate\
+python manage.py check\
+python manage.py runserver
