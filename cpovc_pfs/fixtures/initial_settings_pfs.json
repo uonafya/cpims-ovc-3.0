@@ -1,0 +1,50 @@
+[
+    {
+        "pk": 39800,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PFSSIN",
+            "item_description_short": "SINOVUYO",
+            "field_name": "pfs_intervention_id",
+            "item_description": "SINOVUYO",
+            "item_category": "Prevention Programs"
+        }
+    },
+    {
+        "pk": 39801,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PFSFMP",
+            "item_description_short": "Family Matters Program",
+            "field_name": "pfs_intervention_id",
+            "item_description": "FMP",
+            "item_category": "Prevention Programs"
+        }
+    },
+    {
+        "pk": 39802,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PFSFSP",
+            "item_description_short": "Family Support",
+            "field_name": "pfs_intervention_id",
+            "item_description": "Family Support",
+            "item_category": "Prevention Programs"
+        }
+    }
+]

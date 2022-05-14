@@ -1,5 +1,5 @@
 Django==4.0.4
-sentry-sdk==1.5.10
+sentry-sdk==1.5.11
 django-crispy-forms==1.14.0
 django-import-export==2.8.0
 djangorestframework==3.13.1
@@ -13,7 +13,7 @@ six==1.16.0
 packaging==21.3
 jsonfield==3.1.0
 django-model-utils==4.2.0
-reportlab==3.6.7
+reportlab==3.6.9
 numpy==1.22.3
 python-dateutil==2.8.2
 jellyfish==0.9.0
