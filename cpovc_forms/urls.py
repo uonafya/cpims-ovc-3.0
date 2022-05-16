@@ -177,14 +177,12 @@ urlpatterns = [
     # Dreams SerivceUptake Form
     re_path('dreamsform/new/(?P<id>\d+)/', views.new_dreamsform, name='new_dreamsform'),
 
-<<<<<<< HEAD
    # Sinovuyo Preventive Pre and Post Program Assessment Form
     re_path('ovc-preventive-progress-assessment/new/(?P<id>\d+)/', views.ovc_preventive_pre_post_program_assessment_view, name='progress-assessment'),
     re_path('ovc-preventive-progress-assessment/edit/(?P<id>[\w-]+)/$', views.ovc_preventive_pre_post_program_assessment_edit_view, name='progress-assessment-edit'),
     re_path('ovc-preventive-progress-assessment/delete/', views.ovc_preventive_pre_post_program_assessment_delete_view, name='progress-assessment_delete'),
-    # re_path('ovc-preventive-progress-assessment/view/(?P<id>[\w-]+)/$', views.view_ovc_preventive_pre_post_program_assessment_view, name='progress-assessment_view')
-]
-=======
+    # re_path('ovc-preventive-progress-assessment/view/(?P<id>[\w-]+)/$', views.view_ovc_preventive_pre_post_program_assessment_view, name='progress-assessment_view'),
+
     #edit hivriskscreening tool
     path('hivriskscreeningtool/edit/(?P<id>\W+)/', views.edit_hivriskscreeningtool, name='hivriskscreeningtool'),
 
@@ -192,4 +190,3 @@ urlpatterns = [
     path('delete_hivriskscreening/(?P<id>)/', views.delete_hivriskscreening, name='delete_hivriskscreening'),
 
 ]
->>>>>>> main
