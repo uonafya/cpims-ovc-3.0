@@ -25,9 +25,9 @@
             "item_sub_category": "",
             "is_void": false,
             "item_id": "PFSFMP",
-            "item_description_short": "Family Matters Program",
+            "item_description_short": "FMP",
             "field_name": "pfs_intervention_id",
-            "item_description": "FMP",
+            "item_description": "Family Matters Program(FMP)",
             "item_category": "Prevention Programs"
         }
     },
@@ -40,11 +40,107 @@
             "sms_keyword": false,
             "item_sub_category": "",
             "is_void": false,
-            "item_id": "PFSFSP",
-            "item_description_short": "Family Support",
+            "item_id": "PFHCBF",
+            "item_description_short": "HCBF",
             "field_name": "pfs_intervention_id",
-            "item_description": "Family Support",
+            "item_description": "Healthy Choices for Better Future(HCBF)",
             "item_category": "Prevention Programs"
         }
-    }
+    },
+    {
+        "pk": 39803,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PFCBIM",
+            "item_description_short": "CBIM",
+            "field_name": "pfs_intervention_id",
+            "item_description": "Coaching Boys Into Men(CBIM)",
+            "item_category": "Prevention Programs"
+        }
+    },
+    {
+        "pk": 39804,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PFSFSP",
+            "item_description_short": "Other Family Support",
+            "field_name": "pfs_intervention_id",
+            "item_description": "Other Family Support",
+            "item_category": "Prevention Programs"
+        }
+    },
+    {
+        "pk": 39805,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "POVC",
+            "item_description_short": "OVC",
+            "field_name": "ovc_program_id",
+            "item_description": "OVC",
+            "item_category": "OVC Programs"
+        }
+    },
+    {
+        "pk": 39806,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PPRE",
+            "item_description_short": "Preventive",
+            "field_name": "ovc_program_id",
+            "item_description": "Preventive",
+            "item_category": "OVC Programs"
+        }
+    },
+    {
+        "pk": 39807,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PDRE",
+            "item_description_short": "DREAMS",
+            "field_name": "ovc_program_id",
+            "item_description": "DREAMS",
+            "item_category": "OVC Programs"
+        }
+    },
+    {
+        "pk": 39808,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "POTH",
+            "item_description_short": "FS / Other",
+            "field_name": "ovc_program_id",
+            "item_description": "FS / Other",
+            "item_category": "OVC Programs"
+        }
+    } 
 ]

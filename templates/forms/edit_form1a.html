@@ -459,19 +459,19 @@
                                                 </b></h6>
                                             </td>
                                         </tr>
-                                        <tr><td colspan="4"><h4 style="text-align: center;">Service list</h4></td></tr>
+                                        <tr><th colspan="5"><h4>Service list</h4></th></tr>
                                         {% for service in services_list %}
                                             <tr class="doNotParse">
-                                                <td> <h6 class="td_style">#</h6> </td>
-                                                <td> <h6 class="td_style"> {{service.domain}} </h6></td>
-                                                <td> <h6 class="td_style"> {{service.detail}} </h6></td>
+                                                <td>{{ forloop.counter }} </td>
+                                                <td>{{service.domain}} </td>
+                                                <td>{{service.detail}} </td>
                                                 <!--<td> <h6 class="td_style"> {{values.1}} </h6> </td>-->
 
-                                                <td style="text-align: center;"> <h6 class="td_style"> {{service.date}} </h6> </td>
-                                                <td> <h6 class="dialog_paragraph"><a id="{{service.id}}" data-event_type={{event_type}} class="delete_savedF1_element btn btn-danger btn-xs m-r-5" href='#'>Delete</a> </h6> </td>
+                                                <td> {{service.date}} </td>
+                                                <td> <a id="{{service.id}}" data-event_type={{event_type}} class="delete_savedF1_element btn btn-danger btn-xs m-r-5" href='#'>Delete</a> </td>
                                             </tr>
                                         {% endfor %}
-                                        <tr><td colspan="4"><hr style="border-color: red;"></td></tr>
+                                        <tr style="border-bottom: 1px solid red;"><td colspan="5"><h4>New Services</h4></td></tr>
                                     </tbody>
                                     {{ form.olmis_service_provided_list }}
                                 </table>
@@ -1180,7 +1180,7 @@ function AddRow(x)
                 cell1.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_domain") + holmis_domain + '</h6>';
                 cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_service") + holmis_service + '</h6>';
                 cell3.innerHTML = '<h6 class="td_style">' + olmis_service_date + '</h6>';
-                cell4.innerHTML  = '<h6 class="dialog_paragraph">' + holmis_service_status + "<a id=" + btnRemoveSvcId + " class='btn btn-sm btn-link m-r-5 href='#'>Remove</a>" + '</h6>';
+                cell4.innerHTML  = '<h6 class="dialog_paragraph">' + holmis_service_status + "<a id=" + btnRemoveSvcId + " class='btn btn-danger btn-xs m-r-5' href='#'>Remove</a>" + '</h6>';
 
                 // AddClick Event To Remove Button
                 $("#" + btnRemoveSvcId + "").click(function(e)

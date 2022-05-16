@@ -20,7 +20,7 @@ class OVCPreventiveGroup(models.Model):
     class Meta:
         db_table = 'ovc_preventive_group'
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s %s' % str(self.group_id, self.group_name)
 
 
@@ -50,5 +50,5 @@ class OVCPreventiveRegistration(models.Model):
     class Meta:
         db_table = 'ovc_preventive_registration'
 
-    def __unicode__(self):
-        return str(self.preventive_reg_id)
+    def __str__(self):
+        return '%s : %s' % (self.preventive_reg_id, self.person)

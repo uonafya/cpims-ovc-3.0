@@ -31,6 +31,8 @@ from cpovc_forms.forms import (
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
     HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessmentUpgrade,gradMonitoringToolform)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessmentUpgrade,gradMonitoringToolform CaseTransferForm)
+
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -41,9 +43,10 @@ from .models import (
     OVCAdverseEventsFollowUp, OVCAdverseEventsOtherFollowUp,
     OVCCaseEventClosure, OVCCaseGeo, OVCMedicalSubconditions, OVCBursary,
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
-    OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara,
-    OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,OVCBenchmarkMonitoring)
+    OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions, OVCCareForms,
+    OVCExplanations, OVCCareF1B, OVCCareBenchmarkScore, OVCMonitoring,
+    OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,OVCBenchmarkMonitoring,
+    OVCCareTransfer)
 
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
@@ -67,6 +70,8 @@ from cpovc_registry.functions import get_list_types, extract_post_params
 from cpovc_ovc.functions import get_ovcdetails
 from .functions import create_fields, create_form_fields, save_form1b, save_bursary
 from .documents import create_mcert
+
+from cpovc_ovc.views import ovc_view
 
 
 def validate_serialnumber(user_id, subcounty, serial_number):
@@ -7443,33 +7448,32 @@ def delete_form1b(request, id, btn_event_pk):
     msg = ''
     try:
         event_id = uuid.UUID(btn_event_pk)
-        d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created
+        d_event = OVCCareEvents.objects.filter(
+            pk=event_id).first().timestamp_created
         delta = get_days_difference(d_event)
         if delta < 90:
             event = OVCCareEvents.objects.filter(pk=event_id)
+            msg = "Deleted successfully"
             if event:
-
-                # delete assessment
-                assesm = OVCCareAssessment.objects.filter(event=event)
+                # Soft delete assessment
+                assesm = OVCCareAssessment.objects.filter(event_id=event_id)
                 if assesm:
-                    assesm.delete()
-                    msg = "Deleted successfully"
-
-                # delete services
-                servi = OVCCareServices.objects.filter(event=event)
+                    # assesm.delete()
+                    assesm.update(is_void=True)
+                # Soft delete services
+                servi = OVCCareServices.objects.filter(event_id=event_id)
                 if servi:
-                    servi.delete()
-                    msg = "Deleted successfully"
-
-                # delete f1b
-                f1bin = OVCCareF1B.objects.filter(event=event)
+                    # servi.delete()
+                    servi.update(is_void=True)
+                # Soft delete f1b
+                f1bin = OVCCareF1B.objects.filter(event_id=event_id)
                 if f1bin:
-                    f1bin.delete()
-                    msg = "Deleted successfully"
-
-                # delete event
-                event.delete()
-                msg = "Deleted successfully"
+                    # f1bin.delete()
+                    f1bin.update(is_void=True)
+                # Soft delete event
+                # event.delete()
+                event.update(is_void=True)
+                msg = "Event details successfully"
         else:
             msg = "Can't delete after 90 days"
     except Exception as e:
@@ -10006,6 +10010,7 @@ def new_dreamsform(request, id):
                   {'form': form, 'init_data': init_data,
                    'vals': vals})
 
+
 def new_cpara_upgrade(request, id):
     if request.method == 'POST':
         data = request.POST
@@ -10377,4 +10382,103 @@ def edit_grad_monitor(request, id):
                     }
         
     return render(request, 'forms/edit_grad_monitor_tool.html', context)
+
+
+def get_org(request, name):
+    org_unit_detail = get_list_of_org_units(name)
+    return render(
+        request,
+        template_name='forms/case_transfer.html',
+        context={
+            'org_unit_detail': org_unit_detail
+        }
+    )
+
+
+def case_transfer(request, id):
+    try:
+        import pdb
+        init_data = RegPerson.objects.filter(pk=id)
+        child = RegPerson.objects.get(id=id)
+        care_giver = RegPerson.objects.get(
+            id=OVCRegistration.objects.get(person=child).caretaker_id)
+        house_hold = OVCHouseHold.objects.get(
+            id=OVCHHMembers.objects.get(person=child).house_hold_id)
+
+        siblings = RegPersonsSiblings.objects.select_related().filter(
+            child_person=id, is_void=False, date_delinked=None)
+        hhold = OVCHHMembers.objects.get(
+            is_void=False, person_id=child.id)
+        # Get HH members
+        hhid = hhold.house_hold_id
+        hhmembers = OVCHHMembers.objects.filter(
+            is_void=False, house_hold_id=hhid)
+        if request.method == 'POST':
+            print(request.POST)
+            event_id = 'FCSI'
+            person_id = int(id)
+            date_of_transfer = request.POST.get("TRANSFER_DATE")
+            hhmembers_check = request.POST.getlist('member_id_check')
+            hhmembers = request.POST.getlist('member_id')
+
+            event_counter = OVCCareEvents.objects.filter(
+                event_type_id=event_id, person=id, is_void=False).count()
+
+            ovccareevent = OVCCareEvents(
+                event_type_id=event_id,
+                event_counter=event_counter,
+                event_score=0,
+                date_of_event=date_of_transfer,
+                created_by=request.user.id,
+                person_id=person_id,
+                date_of_previous_event='2022-01-01',
+                house_hold=house_hold
+            )
+
+            ovccareevent.save()
+            event_id = ovccareevent.pk
+
+            organization = RegOrgUnit.objects.order_by('org_unit_name')[0]
+            org_unit_id = organization.id
+
+            for hhmember in hhmembers:
+                print("hhmember", hhmember)
+                index = hhmembers_check.index(hhmember)
+                reason = str(request.POST.getlist("REASON")[index]),
+                date_follow_up = str(request.POST.getlist("FOLLOW_UP_DATE")[index])
+                print(index, id, event_id, house_hold,date_of_transfer,
+                      reason, date_follow_up, 'tttt')
+
+                OVCCareTransfer(
+                    person_id=person_id,
+                    event_id=event_id,
+                    household=house_hold,
+                    rec_organization_id=org_unit_id,
+                    date_of_event=date_of_transfer,
+                    reason=reason,
+                    date_follow_up=date_follow_up,
+                    date_of_transfer=date_of_transfer
+                ).save()
+            return redirect(reverse(ovc_view, kwargs={'id': person_id}))
+        else:
+            caseTransferForm = CaseTransferForm()            
+            return render(
+                request,
+                template_name=
+                    'forms/case_transfer.html',
+                context={
+                    'case_transfer_form' : caseTransferForm,
+                    'init_data': init_data,
+                    'siblings':siblings,
+                    'care_giver': care_giver, 
+                    'child':child,
+                    'house_hold': house_hold,
+                    'hhid':hhid,
+                    'hhmembers':hhmembers,
+                    }
+            )
+    except Exception as e:
+        raise e
+    else:
+        pass
 

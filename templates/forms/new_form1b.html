@@ -88,7 +88,7 @@
                     <span class="close" data-dismiss="alert">&times;</span>
                 </div>
             <div class="panel-body">
-            <div style="overflow-x: auto; min-height: 300px;">     
+            <div>     
             	<form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true"
                 name="form-wizard-f1b" id="new_form1b">
                 	{% csrf_token %} {{ form.caretaker_id }}
@@ -111,16 +111,21 @@
 							<!-- <li>
 							    Psychosocial Support
 							    <small>Caregiver psychosocial support service</small>
-							</li> -->
+							</li>
 							<li>
                                 Schooled
 							    <small>(Education)</small>
 							    <small>Caregiver Education status</small>
 							</li>
+                            </li> -->
                             <li>
                                 Stable
                                 <small>(Economic Strengthening)</small>
                                 <small>Caregiver household economic strengthning status</small>
+                            </li>
+                            <li>
+                                Critical Event
+                                <small>Caregiver critical event</small>
                             </li>							
                         </ol>
                         <input type="hidden" id="person_id" value="{{ovc.child_chv.id}}">
@@ -183,7 +188,7 @@
                                                 <h5 class="m-t-0 m-b-5">{{ itm.name }}</h5>
                                             </td>
                                             <td>
-                                                <input type="checkbox" value="{{ itm.id }}" name="f1b[]" />
+                                                <div class="checkbox"><input type="checkbox" value="{{ itm.id }}" name="f1b[]" /></div>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -318,6 +323,7 @@
 						<!-- end wizard step-4 --> 
 
 						<!-- begin wizard step-5 -->
+                        <!--
 						<div class="wizard-step-3">
 							<fieldset>
                             <legend class="pull-left width-full">
@@ -369,7 +375,7 @@
                                 </div>
                                 </div>
                             </fieldset>
-						</div> 
+						</div>-->
 						<!-- end wizard step-5 --> 
 
                         <!-- begin wizard step-6 -->
@@ -425,10 +431,26 @@
                                 </div>
                             </fieldset>
                         </div> 
-                        <!-- end wizard step-6 -->                          
-					</div>
+                        <!-- end wizard step-6 -->
+
+                        <!-- begin wizard step-5 -->
+                        <div class="wizard-step-5">
+                            <div class="panel-body"> 
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2" for="critical_events">Critical Event(s) :</label>
+                                    <div class="col-md-8 col-sm-8">
+                                        {{ form.caregiver_critical_event }}
+                                        <h6><span id="sel_caregiver_critical_event"></span></h6>
+                                    </div>
+                                    <a href="#" data-toggle="tooltip" title="Describe critical events"><i class="fa fa-info-circle fa-sm"></i></a>
+                                </div>                              
+                            </div>
+                        </div> 
+                        <!-- end wizard step-5 -->                          
+                    </div>                        
+
                     <div class="row">
-                    <label class="control-label col-md-4 col-sm-4" for="csi_qs">Date of Service(s)/Monitoring : <span class="asteriskField">* </span></label>
+                    <label class="control-label col-md-4 col-sm-4" for="csi_qs">Date of Service(s) / Event : <span class="asteriskField">* </span></label>
                     <div class="col-md-4 col-sm-4">
                         {{ form.olmis_service_date }}
                     </div>
@@ -494,17 +516,15 @@
                             <tr>
                                 <th>#</th>
                                 <th>Event date</th>
-                                <th>Event type</th>
-                                <th>Details</th>
+                                <th>Services</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for eventt in ev_data %}
                                 <tr>
-                                    <td rowspan="2" valign="center" style="text-align: center;vertical-align: middle;">{{ forloop.counter }}</td>
-                                    <td rowspan="2" valign="center" style="text-align: center;vertical-align: middle;"><b>{{ eventt.ev_date }}</b></td>
-                                    <td valign="center" style="text-align: center;vertical-align: middle;">Services</td>
+                                    <td rowspan="1" valign="center" style="text-align: center;vertical-align: middle;">{{ forloop.counter }}</td>
+                                    <td rowspan="1" valign="center" style="text-align: center;vertical-align: middle;"><b>{{ eventt.ev_date }}</b></td>
                                     <td width="40%">
                                         
                                         {% if eventt.services %}
@@ -518,9 +538,9 @@
                                         {% endif %}
 
                                     </td>
-                                    <td rowspan="2" valign="center" style="text-align: center;vertical-align: middle;">
-                                        <a class="btn btn-danger" data-toggle="modal" href='#del_f1b_e'> <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
-                                        <div class="modal fade" id="del_f1b_e">
+                                    <td rowspan="1" valign="center" style="text-align: center;vertical-align: middle;">
+                                        <a class="btn btn-danger" data-toggle="modal" href='#del_f1b_e_{{eventt.event_key}}'> <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                                        <div class="modal fade" id="del_f1b_e_{{eventt.event_key}}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -529,15 +549,9 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         Are you sure you want to delete the <b>{{eventt.ev_date}}</b> event?
-                                                        <input type="hidden" name="ev_person" id="ev_person" value="{{eventt.ev_person}}"/>
-                                                        <input type="hidden" name="ev_key" id="ev_key" value="{{eventt.event_key}}"/>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <script>
-                                                            var pid = document.getElementById("ev_person").value;
-                                                            var ev_key = document.getElementById("ev_key").value;
-                                                        </script>
-                                                        <button type="button" class="btn btn-danger" onclick="deleteForm1bEntry( pid,ev_key )" id="del_f1b_{{forloop.counter}}">Yes, DELETE</button>
+                                                        <button type="button" class="btn btn-danger" onclick="deleteForm1bEntry( '{{eventt.ev_person}}','{{eventt.event_key}}' )" id="del_f1b_{{forloop.counter}}">Yes, DELETE</button>
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">No, cancel</button>
                                                     </div>
                                                 </div>
@@ -546,21 +560,7 @@
                                         
                                     </td>
                                 </tr>
-                                <tr style="border-bottom: 8px solid #ccc;">
-                                    <td valign="center" style="text-align: center;vertical-align: middle;">Assessments</td>
-                                    <td width="40%">
-                                        {% if eventt.assessments %}
-                                            <!-- <ul> -->
-                                                {% for 1asem in eventt.assessments %}
-                                                    {{ 1asem.data }}, &nbsp;
-                                                {% endfor %}
-                                            <!-- </ul> -->
-                                        {% else %}
-                                            <div class="alert alert-warning">No assessments found</div>
-                                        {% endif %}
 
-                                    </td>
-                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -589,6 +589,17 @@
     FormWizardValidation.init();
 
     $('#olmis_service_date').attr('data-parsley-required', 'true');
+
+    //multi selects
+    $('#caregiver_critical_event').multiselect({
+        selectAllValue: 'multiselect-all',
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true,
+        numberDisplayed: 1,
+        maxHeight: 300,
+        buttonWidth: '100%',
+        buttonClass: 'btn btn-white'
+    });
 
     $("#new_form1b").submit(function(e){
             e.preventDefault();

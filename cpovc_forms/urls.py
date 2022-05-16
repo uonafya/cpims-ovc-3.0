@@ -119,7 +119,7 @@ urlpatterns = [
     re_path('csi/delete/(?P<id>\w+)/', views.delete_csi, name='delete_csi'),
 
     # OVC Care - Form1A
-    re_path('form1a/new/(?P<id>\d+)/', views.form1a_events, name='form1a_events'),
+    path('form1a/new/<int:id>/', views.form1a_events, name='form1a_events'),
     path('form1a/save/', views.save_form1a, name='save_form1a'),
     path('form1a/update/', views.update_form1a, name='update_form1a'),
     re_path('form1a/edit/(?P<id>\d+)/(?P<btn_event_type>\w+)/(?P<btn_event_pk>.+)/', views.edit_form1a,
@@ -154,26 +154,42 @@ urlpatterns = [
     re_path('cpara/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_cpara, name='delete_cpara'),
 
     # OVC Care - Case Plan Template
-    re_path('caseplan/new/(?P<id>\d+)/', views.case_plan_template, name='new_caseplan'),
-    re_path('caseplan/update/(?P<ovcid>\d+)/(?P<event_id>.+)/', views.update_caseplan, name='update_caseplan'),
-    re_path('caseplan-monitoring/new/(?P<id>\d+)/', views.new_case_plan_monitoring, name='new_caseplan_monitoring'),
+    path(
+        'caseplan/new/<int:id>/', views.case_plan_template, name='new_caseplan'),
+    path('caseplan/update/<int:ovcid>/<uuid:event_id>/', views.update_caseplan, name='update_caseplan'),
+    path('caseplan-monitoring/new/<int:id>/', views.new_case_plan_monitoring, name='new_caseplan_monitoring'),
 
-    # wellbeing Adult and Child
-    re_path(r'^wellbeing/new/(?P<id>\d+)/$', views.new_wellbeing, name='new_wellbeing'),
+    # Wellbeing Adult and Child
+    path('wellbeing/new/<int:id>/', views.new_wellbeing, name='new_wellbeing'),
 
-    # wellbeing Adolescent
-    re_path(r'^wellbeingadolescent/new/(?P<id>\d+)/$', views.new_wellbeingadolescent, name='new_wellbeingadolescent'),
-    # hiv_status
+    # Wellbeing Adolescent
+    path(
+        'wellbeingadolescent/new/<int:id>/', views.new_wellbeingadolescent,
+        name='new_wellbeingadolescent'),
+
+    # HIV Status
     path('HIVstatus/', views.hiv_status, name='hiv_status'),
 
     # HIV Risk Assessment Form
-    re_path('hivscreeningtool/new/(?P<id>\d+)/', views.new_hivscreeningtool, name='new_hivscreeningtool'),
+    path(
+        'hivscreeningtool/new/<int:id>/', views.new_hivscreeningtool,
+        name='new_hivscreeningtool'),
 
     # HIV Risk Management Form
-    re_path('hivmanagementform/new/(?P<id>\d+)/', views.new_hivmanagementform, name='new_hivmanagementform'),
+    path(
+        'hivmanagementform/new/<int:id>/', views.new_hivmanagementform,
+        name='new_hivmanagementform'),
 
-    # Dreams SerivceUptake Form
-    re_path('dreamsform/new/(?P<id>\d+)/', views.new_dreamsform, name='new_dreamsform'),
+    # Dreams ServiceUptake Form
+    path(
+        'dreamsform/new/<int:id>/', views.new_dreamsform,
+        name='new_dreamsform'),
+
+    # New Forms - CPIMS OVC Upgrade
+    path(
+        'case-transfer/new/<int:id>/', views.case_transfer,
+        name='new_case_transfer'),
+    path('fetch/all/organizations/', views.get_org, name='fetch_org_units')
 
        # New Cpara upgrade Form
     re_path('cpara_upgrade/new/(?P<id>\d+)/', views.new_cpara_upgrade, name='new_cpara_upgrade'),

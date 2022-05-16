@@ -100,15 +100,14 @@ period_list = get_list('period_id', 'Please Select Unit')
 parental_status_list = get_list('parental_status_id', 'Please Select')
 caseoutcome_list = get_list('closure_outcome_id', 'Please Select')
 
-#----------------------------------OLMIS-------------------------------------~
+# ------------------------------OLMIS-------------------------------------~
 csi_grade_list = get_list('csi_grade_id', 'Please Select')
 olmis_domain_list = get_list('olmis_domain_id', 'Please Select')
 olmis_assessment_domain_list = get_list(
     'olmis_assessment_domain_id', 'Please Select')
 olmis_service_provider_list = get_list(
     'olmis_service_provider_id', 'Please Select')
-olmis_critical_events_list = get_list(
-    'olmis_critical_event_id', 'Please Select')
+olmis_critical_events_list = get_list('olmis_critical_event_id')
 olmis_ha5_list = get_list('olmis_ha5_id', 'Please Select')
 olmis_ha6_list = get_list('olmis_ha6_id', False)
 olmis_ha7_list = get_list('olmis_ha7_id', 'Please Select')
@@ -137,7 +136,7 @@ olmis_ha30_list = get_list('olmis_ha30_id', 'Please Select')
 olmis_ha31_list = get_list('olmis_ha31_id', 'Please Select')
 
 
-#wellbeing
+#Wellbeing
 YESNO_CHOICES_REFUSE = (('AYES', 'Yes'), ('ANNO', 'No'), ('AREFUSE', 'Refuse'))
 
 MARITAL_STATUS =(('Monogamous Marriage','Monogamous Marriage'),('Polygamous Marriage', 'Polygamous Marriage'), ('Single', 'Single'),
@@ -154,6 +153,8 @@ FAVORITE_COLORS_CHOICES = (
         ('Bring food', 'Bring food'),
         ('Other', 'Other')
     )
+
+# Case plan Template
 CPT_DOMAIN_CHOICES = (('DEDU', 'Schooled'), ('DHES', 'Stable'), ('DPRO', 'Safe'), ('DHNU', 'Healthy'))
 CPT_GOALS_CHOICES = (
     ('CPTG1he', 'All members of enrolled household know their HIV status'),
@@ -428,6 +429,11 @@ CPT_RESULTS = (
     ('IP', 'In Progress'),
     ('NA', 'Not Achieved')
 )
+
+# New changes May 2022
+caregiver_critical_events_list = get_list('caregiver_critical_event_id')
+
+# Case Plan Template Dynamic Choices not hard coded
 
 
 class OVCSchoolForm(forms.Form):
@@ -2765,8 +2771,16 @@ class OVCF1AForm(forms.Form):
                #'data-parsley-required': "true",
                #'data-parsley-group': 'group3'
                }))
+
     caretaker_id = forms.CharField(widget=forms.HiddenInput(
         attrs={'id': 'caretaker_id'}))
+
+    caregiver_critical_event = forms.ChoiceField(
+        choices=caregiver_critical_events_list,
+        required=False,
+        widget=forms.SelectMultiple(
+            attrs={'class': 'form-control',
+                   'id': 'caregiver_critical_event'}))
 
 
 class OVCHHVAForm(forms.Form):
@@ -8147,6 +8161,7 @@ class DREAMS_FORM(forms.Form):
                #'data-parsley-required': "true",
                #'data-parsley-group': 'group0',
                'rows': '3'}))
+
 class CparaAssessmentUpgrade(forms.Form):
     # Details
     cp1d = forms.ChoiceField(
@@ -8596,3 +8611,79 @@ class gradMonitoringToolform(forms.Form):
             attrs={'data-parsley-required': 'true',
                     'data-parsley-errors-container': "#signed_csac_error"
             }))
+
+
+class CaseTransferForm(forms.Form): 
+    
+    # TRANSFER_RSN CHOICES
+    CHOICES = (
+        ('', 'Select One'),
+        ('Child ages out of the program prior to achieving their case plan', 'Child ages out of the program prior to achieving their case plan'),
+        ('Child and or family plans to relocate prior to achieving their case plan', 'Child and or family plans to relocate prior to achieving their case plan'),
+        ('Program relocates or closes before recommended interventions have been completed', 'Program relocates or closes before recommended interventions have been completed'),
+        ('Interventions outlining case plan have been achieved', 'Interventions outlining case plan have been achieved'),
+        ('Service required not available', 'Service required not available')
+        )
+    # Case Transfer Form
+    TRANSFER_DATE = forms.DateField(
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': ('Transfer Date'),
+                'class': 'form-control event_date',
+                'id': 'transfer_date',
+                'data-parsley-required': "false",
+                'data-parsley-group': 'group0'
+               # type': 'hidden'
+               }),required = True)
+    
+    REASON = forms.ChoiceField(
+        choices=CHOICES, widget=forms.Select(
+            attrs={
+                'id': 'transfer_reason',
+                'class':'form-control', 
+                'data-parsley-required': "false",
+                'data-parsley-group': 'group0'
+                }),
+        required = False
+    )
+    
+    FOLLOW_UP_DATE =forms.DateField(
+        widget=forms.TextInput(
+        attrs={'placeholder': _('Follow up Date'),
+               'class': 'form-control event_date',
+               'id': 'follow_up_date',
+               'data-parsley-required': "false",
+               'data-parsley-group': 'group0'
+               # type': 'hidden'
+               },
+        ),
+        required = False
+    )
+    COMMENT = forms.CharField(widget=forms.Textarea(
+        attrs={'placeholder': _('Comment'),
+               'class': 'form-control',
+               'id': 'comment',
+               'data-parsley-required': "false",
+               'data-parsley-group': 'group0',
+               'rows': '3'
+               }
+        ),
+        required = False
+    )
+    CHECKBOX = forms.BooleanField(
+        widget=forms.widgets.CheckboxInput(
+        attrs={'class': 'checkbox-inline',
+               'data-parsley-required': "false",
+               'data-parsley-group': 'group0'
+               }
+        ),required = False
+    ),
+    CPIMSID = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control',
+               'id': 'cpims_id',
+               'type': 'hidden',
+               'data-parsley-required': "False"
+               }
+        )
+    )
+

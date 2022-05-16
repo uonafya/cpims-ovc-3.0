@@ -7,6 +7,7 @@ eligibility_list = get_list('eligibility_criteria_id', '')
 exit_list = get_list('exit_reason_id', 'Please Select one')
 admission_list = get_list('school_type_id', 'Please Select one')
 art_status_list = get_list('art_status_id', 'Please Select Status')
+hiv_status_list = get_list('hiv_status_id', 'Please Select HIV Status')
 
 
 class OVCPMTCTRegistrationForm(forms.Form):
@@ -134,3 +135,18 @@ class OVCPMTCTRegistrationForm(forms.Form):
             attrs={'class': 'form-control',
                    'readonly': 'readonly',
                    'id': 'facility_id'}))
+
+    hiv_status = forms.ChoiceField(
+        choices=hiv_status_list,
+        required=True,
+        widget=forms.Select(
+            attrs={'class': 'form-control',
+                   'data-parsley-required': "true",
+                   'id': 'hiv_status'}))
+
+    caregiver_contact = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'class': 'form-control',
+                   'placeholder': '07XXXXXXXX',
+                   'id': 'caregiver_contact'}))
