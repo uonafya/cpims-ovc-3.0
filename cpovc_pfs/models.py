@@ -224,7 +224,7 @@ class OVCPrevSinovuyoCaregiverEvaluation(models.Model):
             return '%s %s' % str(self.evaluation_id)
 
 
-class OVCPrevSinovyoTeenEvaluation(models.Model):
+class OVCPrevSinovuyoTeenEvaluation(models.Model):
     evaluation_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     person = models.ForeignKey(RegPerson)
     ref_caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='preval_caregiver')

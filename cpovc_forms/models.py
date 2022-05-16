@@ -1138,15 +1138,15 @@ class OVCHIVRiskScreening(models.Model):
     sharing_needs = models.BooleanField(null=true)
     hiv_test_required = models.BooleanField(null=True)
     parent_consent_testing = models.BooleanField(null=True)
-    parent_consent_date = models.DateTimeField(default=timezone.now, null=True)  ###date new 1
+    parent_consent_date = models.DateField(default=timezone.now, null=True)  ###date new 1
     referral_made = models.BooleanField(null=True)
-    referral_made_date = models.DateTimeField(default=timezone.now, null=True)  ####
+    referral_made_date = models.DateField(default=timezone.now, null=True)  ####
     referral_completed = models.BooleanField(null=True)
-    referral_completed_date = models.DateTimeField(default=timezone.now, null=True)  ### date new 2
+    referral_completed_date = models.DateField(default=timezone.now, null=True)  ### date new 2
     not_completed = models.CharField(max_length=50)
     test_result = models.CharField(max_length=20, null=True)
     art_referral = models.BooleanField(null=True)
-    art_referral_date = models.DateTimeField(default=timezone.now, null=True)  #### date
+    art_referral_date = models.DateField(default=timezone.now, null=True)  #### date
     art_referral_completed = models.BooleanField(null=True)
     art_referral_completed_date = models.DateTimeField(default=timezone.now, null=True)  #### date
     facility_code = models.CharField(max_length=10, null=True)
