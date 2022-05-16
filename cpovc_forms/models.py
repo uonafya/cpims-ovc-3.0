@@ -1135,7 +1135,7 @@ class OVCHIVRiskScreening(models.Model):
     adol_sexual_abuse = models.BooleanField(null=True)
     sex = models.BooleanField(null=True)
     sti = models.BooleanField(null=True)
-    sharing_needs = models.BooleanField(null=true)
+    sharing_needles = models.BooleanField(null=true)
     hiv_test_required = models.BooleanField(null=True)
     parent_consent_testing = models.BooleanField(null=True)
     parent_consent_date = models.DateTimeField(default=timezone.now, null=True)  ###date new 1
