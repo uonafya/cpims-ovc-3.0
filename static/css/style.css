@@ -6524,5 +6524,33 @@ td:focus{
 }
 /*DanChanges*/
 
+/* CPARA Upgrade */
+.alert-primary{
+    background-color: #CCE5FF;
+}
 
+.mt-15 {
+    margin-top: 15px;
+}
 
+.bg-sub-header {
+    background-color: #00ACAC;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.overallScore  td{
+    border: solid;
+    padding: 5px;
+}
+.overallScore  th{
+    border: solid;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bolder;
+    text-align: center;
+}
+.overallScore {
+    border: solid;
+}
