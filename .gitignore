@@ -1,8 +1,7 @@
 .idea/
 .history/
-.vscode/
+.vscod
 __pycache__/
-__pycache__
 .github/
-configs
+configs/
 *.pyc

@@ -6415,6 +6415,15 @@ class HIV_SCREENING_FORM(forms.Form):
         # 'data-parsley-errors-container': "#errorfield"
     }))
 
+    HIV_RS_12 = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+
     HIV_RS_07 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
@@ -6423,6 +6432,15 @@ class HIV_SCREENING_FORM(forms.Form):
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
     }))
+
+    HIV_RS_13 = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
 
     HIV_RS_08 = forms.ChoiceField(
         choices = YESNO_CHOICES,
@@ -6451,6 +6469,15 @@ class HIV_SCREENING_FORM(forms.Form):
         # 'data-parsley-errors-container': "#errorfield"
     }))
 
+    HIV_RS_20 = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+
     HIV_RS_11 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
@@ -6470,6 +6497,7 @@ class HIV_SCREENING_FORM(forms.Form):
     }))
 
     HIV_RS_15 = forms.DateField(
+        required=False,
         widget = forms.widgets.DateInput(
         format="%m/%d/%Y",
         attrs = {'placeholder': _('Report Date'),
@@ -6492,6 +6520,7 @@ class HIV_SCREENING_FORM(forms.Form):
     }))
 
     HIV_RS_17 = forms.DateField(
+        required=False,
         widget = forms.widgets.DateInput(
         format="%m/%d/%Y",
         attrs = {'placeholder': _('Report Date'),
@@ -6514,6 +6543,7 @@ class HIV_SCREENING_FORM(forms.Form):
     }))
 
     HIV_RS_18A = forms.CharField(
+        required=False,
         widget = forms.Textarea(
         attrs = {'placeholder': _('Response'),
                'class': 'form-control',
@@ -6532,13 +6562,15 @@ class HIV_SCREENING_FORM(forms.Form):
     }))
 
     HIV_RS_19 = forms.DateField(
+        required=False,
         widget = forms.widgets.DateInput(
         format="%m/%d/%Y",
         attrs = {'placeholder': _('Report Date'),
                'class': 'form-control',
                'name': 'HIV_RS_19',
                'id': 'HIV_RS_19',
-               'autocomplete': "off"
+               'autocomplete': "off",
+
             # ,
             #    'data-parsley-required': "true",
             #    'data-parsley-group': 'group0'
@@ -6554,6 +6586,7 @@ class HIV_SCREENING_FORM(forms.Form):
     }))
 
     HIV_RS_22 = forms.DateField(
+        required=False,
         widget = forms.widgets.DateInput(
         format="%m/%d/%Y",
         attrs = {'placeholder': _('Report Date'),
@@ -6576,6 +6609,7 @@ class HIV_SCREENING_FORM(forms.Form):
     }))
 
     HIV_RS_24 = forms.DateField(
+        required=False,
         widget = forms.widgets.DateInput(
         format="%m/%d/%Y",
         attrs = {'placeholder': _('Report Date'),
