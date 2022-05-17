@@ -880,6 +880,35 @@ class OVCCareBenchmarkScore(models.Model):
         return str(self.benchmark_score_id)
 
 
+class OVCCareCpara_v1(models.Model):
+    cpara_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver_v1')
+    question_code = models.CharField(max_length=10, null=False, blank=True)
+    question = models.ForeignKey('OVCCareQuestions', on_delete=models.CASCADE)
+    answer = models.CharField(max_length=15)
+    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
+    question_type = models.CharField(max_length=50)
+    domain = models.CharField(max_length=50)
+    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+    date_of_event = models.DateField()
+    date_of_previous_event = models.DateField(null=True, blank=True)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    is_void = models.BooleanField(default=False)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return self.answer
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.question_code = self.question.code
+        super(OVCCareCpara_v1, self).save(force_insert, force_update, using, update_fields)
+
+    class Meta:
+        db_table = 'ovc_care_cpara_v1'
+
+    def __unicode__(self):
+        return str(self.cpara_id)
 
 class OVCCareWellbeing(models.Model):
     well_being_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -1399,7 +1428,7 @@ class OVCCareQuestions(models.Model):
         db_table = 'ovc_care_questions'
 
 
-class OVCCareCpara_upgrade(models.Model):
+class OVCCareCpara(models.Model):
     cpara_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='ovc_cpara_caregiver')
@@ -1421,10 +1450,10 @@ class OVCCareCpara_upgrade(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.question_code = self.question.code
-        super(OVCCareCpara_upgrade, self).save(force_insert, force_update, using, update_fields)
+        super(OVCCareCpara, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
-        db_table = 'ovc_care_cpara_upgrade'
+        db_table = 'ovc_care_cpara'
 
     def __unicode__(self):
         return str(self.cpara_id)

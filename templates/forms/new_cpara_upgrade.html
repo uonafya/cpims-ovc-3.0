@@ -1759,9 +1759,9 @@ print(blu.sing("'Happy'"))
                                     <!-- one_past_event.ev_id -->
                                     <td  style="text-align: center;vertical-align: middle;">{{one_past_event.ev_score}} <hr/> </td>
                                     <td valign="center" style="text-align: center;vertical-align: middle;">
-                                        <a class="btn btn-primary" data-toggle="modal" href="{% url 'edit_cpara_upgrade' one_past_event.ev_id %}"> <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                        <a class="btn btn-primary" data-toggle="modal" href="{% url 'edit_cpara' one_past_event.ev_id %}"> <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
                                     </td>
-                                        <!-- <a class="btn btn-primary" href="{% url 'edit_cpara_upgrade' one_past_event.ev_id %}"><i class="fa fa-pencil"> Edit</i></a></td> -->
+                                        <!-- <a class="btn btn-primary" href="{% url 'edit_cpara' one_past_event.ev_id %}"><i class="fa fa-pencil"> Edit</i></a></td> -->
                                     <td valign="center" style="text-align: center;vertical-align: middle;">
                                             <a class="btn btn-danger" data-toggle="modal" href='#del_cpara_e_{{one_past_event.ev_id}}'> <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
                                             <div class="modal fade" id="del_cpara_e_{{one_past_event.ev_id}}">
@@ -1868,7 +1868,7 @@ jQuery(document).ready(function()
                     }else{
                         $('#messages').addClass('alert-success').removeClass('alert-danger').css({'display': 'block'});
                         $('#messages p').html(result[0].msg);
-                        var url = "{% url 'new_cpara_upgrade' id=1234%}".replace(/1234/, personId.toString());
+                        var url = "{% url 'new_cpara' id=1234%}".replace(/1234/, personId.toString());
                         console.log({url})
                         window.open(url,"_self");
                     }

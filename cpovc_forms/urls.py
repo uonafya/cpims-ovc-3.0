@@ -175,8 +175,8 @@ urlpatterns = [
     re_path('dreamsform/new/(?P<id>\d+)/', views.new_dreamsform, name='new_dreamsform'),
 
        # New Cpara upgrade Form
-    re_path('cpara_upgrade/new/(?P<id>\d+)/', views.new_cpara_upgrade, name='new_cpara_upgrade'),
+    re_path('cpara/new/(?P<id>\d+)/', views.new_cpara, name='new_cpara'),
         # Update Cpara Upgrade Form
-    path('edit_cpara_upgrade/new/<uuid:id>/', views.edit_cpara_upgrade, name='edit_cpara_upgrade'),
+    path('edit_cpara/new/<uuid:id>/', views.edit_cpara, name='edit_cpara'),
 
 ]

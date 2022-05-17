@@ -1,1 +1,3 @@
 *.pyc
+migrations
+cpims/settings.py
