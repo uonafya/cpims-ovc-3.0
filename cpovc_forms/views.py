@@ -10247,6 +10247,8 @@ def new_cpara(request, id):
 
         
         url = reverse('ovc_view', kwargs={'id': id})
+        msg = f'Cpara data saved succesfully'
+        messages.add_message(request, messages.INFO,msg)  
         return HttpResponseRedirect(url)
 
     
@@ -10383,8 +10385,6 @@ def new_cpara(request, id):
                 
                 }
     
-    msg = f'Cpara data saved succesfully'
-    messages.add_message(request, messages.INFO,msg)
     return render(request,'forms/new_cpara_upgrade.html',context)
 
 
@@ -10407,22 +10407,23 @@ def edit_cpara(request, id):
         try:
             for question in cpara_saved:
                 answer=data.get(question.question_code)
-                print(type(answer))
-                if answer is None:
-                    answer = 'No'
-                elif answer == 'AYES':
-                    answer=True
-                elif answer=='ANNO':
-                    answer=False
-                else:
-                    answer='No' 
+
+                answer_value = {
+                    'AYES':'True',
+                    'ANNO':'False',
+                    None:'No'
+                }
+
+                answer = answer_value[answer]
+                print(f'{question.question_code}  <><>  {answer}')
                 OVCCareCpara.objects.filter(event=id).update(
                     question=question,
                     answer=answer,
                     date_of_event=convert_date(date_of_event, fmt='%Y-%m-%d'),
                     timestamp_updated=update_time,
                     event=id
-            )
+                )
+                
         except Exception as e:
             print(f'The table OVC Cpara didnt update: {e} ')
 
@@ -10443,7 +10444,7 @@ def edit_cpara(request, id):
                 timestamp_updated=update_time
             )
         except Exception as e:
-            print (f"Error while updating to ovccarebenchmark: {e}" )
+            msg1 = f"Error while updating to ovccarebenchmark: {e}" 
 
 
         sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC'}
@@ -10452,18 +10453,19 @@ def edit_cpara(request, id):
         try:
             for q, v in sub_pop.items():
                 if data.get(q) == 'on':
-                    OVCSubPopulation.objects.filter(event=id).update_or_create(
+                    OVCSubPopulation.objects.filter(event=id).update(
                         criteria=v,
                         date_of_event=convert_date(date_of_event, fmt='%Y-%m-%d'),
                         timestamp_updated = update_time
                     )
         except Exception as e:
-            print(f'Error while updating to OVC sub population {e}')
+            print(e)
+            msg = f'Error while updating to OVC sub population. Send this error to Support'
 
         person_id = OVCCareEvents.objects.filter(event=id)[0].person_id
 
         url = reverse('ovc_view', kwargs={'id':person_id})
-        # pdb.set_trace()
+        # messages.add_message(request, messages.ERROR, msg)
         return HttpResponseRedirect(url)
 
         # cpara_id=OVCCareCpara.objects.get(event=id,is_void=False)
@@ -10503,7 +10505,8 @@ def edit_cpara(request, id):
     answer_value={
         'False': 'ANNO',
         'True': 'AYES',
-        'No': 'N/A' 
+        'No': 'N/A',
+        # 'AYES':'AYES'
     }
 
     for one_data in cpara_data:
@@ -10522,13 +10525,8 @@ def edit_cpara(request, id):
     edit_data_cpara.update(ovc_sub_pop_data)
     edit_data_cpara['d_o_a']=d_o_a
     edit_data_cpara['CP2d']=CP2d
-    # print(edit_data_cpara)
-    # pdb.set_trace()
-    answer_data = {
-        'YES': True 
-    }
 
-    # pdb.set_trace()
+    
     person_id=OVCSubPopulation.objects.filter(event=id).first().person_id
     house_id = OVCHHMembers.objects.get(person_id=person_id).house_hold_id
     person_id = OVCHHMembers.objects.get(house_hold=house_id, member_type='TOVC').person_id
@@ -10596,7 +10594,7 @@ def edit_cpara(request, id):
         subcounty = SetupGeography.objects.get(area_id=ward.parent_area_id)
         county = SetupGeography.objects.get(area_id=subcounty.parent_area_id)
 
-    print(edit_data_cpara)
+    print(f'Edit data: {edit_data_cpara}')
     form = CparaAssessment(data=edit_data_cpara)
     ovc_id = int(person_id)
     child = RegPerson.objects.get(is_void=False, id=ovc_id)
