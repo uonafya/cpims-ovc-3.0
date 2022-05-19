@@ -18,15 +18,19 @@ ALLOWED_HOSTS = ['*']
 cpims_db_host = os.environ.get(
     'CPIMS_HOST') if os.environ.get('CPIMS_HOST') else '127.0.0.1'
 cpims_db_pass = os.environ.get(
-    'CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'root'
+    'CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'Xaen!ee8'
 cpims_db_instance = os.environ.get(
-    'CPIMS_DB') if os.environ.get('CPIMS_DB') else 'db_cpims'
+
+    'CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims'
+
 cpims_db_port = os.environ.get(
     'CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5432'
 cpims_db_user = os.environ.get(
-    'CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'root'
+    'CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'cpimsdbuser'
 cpims_debug = eval(os.environ.get(
+
     'CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else True
+
 
 DEBUG = cpims_debug
 
@@ -51,8 +55,14 @@ INSTALLED_APPS = [
     'data_cleanup',
     'cpovc_offline_mode',
     'cpovc_manage',
+    'forums',
+    'adminsortable',
+    'simple_forums',
+     'cpovc_manage',
     'notifications',
     'cpovc_help',
+    'cpovc_pfs',
+
 ]
 
 
@@ -84,6 +94,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cpovc_main.context_processors.global_settings',
+                'simple_forums.context_processors.installed_apps',
+
             ],
         },
     },
@@ -203,7 +215,7 @@ CACHES = {
 CSRF_FAILURE_VIEW = 'cpims.views.csrf_failure'
 
 OFFLINE_MODE_CAPABILITY_ENABLED = eval(
-    os.environ.get('CAN_WORK_OFFLINE', 'False'))
+    os.environ.get('CAN_WORK_OFFLINE', 'True'))
 
 # kmhfl API
 KMHFL_USERNAME = '10004'

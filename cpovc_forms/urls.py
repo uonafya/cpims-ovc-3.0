@@ -1,6 +1,8 @@
 from django.urls import path, include, re_path
 from . import views
 
+# app_name = 'forms'
+
 # This should contain paths related to registry ONLY
 urlpatterns = [
     # Forms Registry
@@ -168,8 +170,9 @@ urlpatterns = [
     # HIV Risk Assessment Form
     re_path('hivscreeningtool/new/(?P<id>\d+)/', views.new_hivscreeningtool, name='new_hivscreeningtool'),
 
+
     # HIV Risk Management Form
-    re_path('hivmanagementform/new/(?P<id>\d+)/', views.new_hivmanagementform, name='new_hivmanagementform'),
+    path('hivmanagementform/new/<int:id>/', views.new_hivmanagementform, name='new_hivmanagementform'),
 
     # Dreams SerivceUptake Form
     re_path('dreamsform/new/(?P<id>\d+)/', views.new_dreamsform, name='new_dreamsform'),
@@ -177,5 +180,11 @@ urlpatterns = [
    # Sinovuyo Care-giver Preventive Pre and Post Program Assessment Form
     re_path('ovc-preventive-progress-assessment/new/(?P<id>\d+)/', views.ovc_preventive_pre_post_program_assessment_view, name='progress-assessment'),
     re_path('ovc-preventive-progress-assessment/edit/(?P<id>[\w-]+)/$', views.ovc_preventive_pre_post_program_assessment_edit_view, name='progress-assessment-edit'),
-    re_path('ovc-preventive-progress-assessment/delete/', views.ovc_preventive_pre_post_program_assessment_delete_view, name='progress-assessment_delete')
+    re_path('ovc-preventive-progress-assessment/delete/', views.ovc_preventive_pre_post_program_assessment_delete_view, name='progress-assessment_delete'),
+
+    #edit hivriskscreening tool
+    path('hivriskscreeningtool/edit/(?P<id>\W+)/', views.edit_hivriskscreeningtool, name='hivriskscreeningtool'),
+
+    #Delete hivscreening tool
+    path('delete_hivriskscreening/(?P<id>)/', views.delete_hivriskscreening, name='delete_hivriskscreening'),
 ]
