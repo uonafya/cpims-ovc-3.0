@@ -7,7 +7,10 @@ from import_export.admin import ImportExportModelAdmin
 
 from .models import (
     OVCAggregate, OVCFacility, OVCSchool, OVCCluster,
-    OVCClusterCBO, OVCRegistration)
+    OVCClusterCBO, OVCRegistration, OVCEligibility)
+
+from django.contrib.admin.helpers import ActionForm
+from django import forms
 
 
 def dump_to_csv(modeladmin, request, qs):
@@ -20,7 +23,7 @@ def dump_to_csv(modeladmin, request, qs):
     file_id = 'CPIMS_%s_%d' % (model.__name__, int(time.time()))
     file_name = 'attachment; filename=%s.csv' % (file_id)
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = file_name
+    response['Content-Disposition'] = file_name,
     writer = csv.writer(response, csv.excel)
 
     headers = []
@@ -39,21 +42,53 @@ def dump_to_csv(modeladmin, request, qs):
             row.append(val)
         writer.writerow(row)
     return response
+
+
 dump_to_csv.short_description = u"Dump to CSV"
+
+
+def bulk_transfer(modeladmin, request, queryset):
+    transfer_to = request.POST['transfer_to']
+    cbo_id = int(transfer_to)
+    queryset.update(child_cbo_id=cbo_id)
+
+
+bulk_transfer.short_description = 'Bulk Transfer to selected CBO'
+
+
+class OVCEligibilityAdmin(admin.ModelAdmin):
+    """Aggregate data admin."""
+
+    search_fields = ['person', ]
+    list_display = ['id', 'person', 'criteria', 'is_void']
+
+    list_filter = ['criteria', 'is_void']
+
+
+admin.site.register(OVCEligibility, OVCEligibilityAdmin)
+
+
+class UpdateActionForm(ActionForm):
+    transfer_to = forms.IntegerField()
 
 
 class OVCRegistrationAdmin(admin.ModelAdmin):
     """Aggregate data admin."""
 
-    search_fields = ['person',]
-    list_display = ['id', 'person', 'child_cbo', 'child_chv',
+    search_fields = ['person', 'person_id']
+    list_display = ['person_id', 'person', 'child_cbo', 'child_chv',
                     'caretaker', 'registration_date', 'hiv_status',
                     'is_active', 'is_void']
     readonly_fields = ['id', 'person', 'caretaker', 'child_chv']
     list_filter = ['is_active', 'is_void', 'hiv_status']
 
+    action_form = UpdateActionForm
+
+    actions = [bulk_transfer]
+
 
 admin.site.register(OVCRegistration, OVCRegistrationAdmin)
+
 
 class OVCAggregateAdmin(admin.ModelAdmin):
     """Aggregate data admin."""

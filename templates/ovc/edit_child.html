@@ -40,7 +40,7 @@
             </div>
             <!-- start panel body -->
             <div class="panel-body">
-                <form action="." method="post" name="ovcreg_form" id="ovcreg_form">
+                <form action="." method="post" name="ovcreg_form" id="ovcreg_form"  data-parsley-validate="true">
                 {% csrf_token %}
                 <input type="hidden" name="ovc_id" id="ovc_id" value="{{ child.id }}">
 
@@ -255,14 +255,16 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-1">
-                      <a href="#modal-facility" data-toggle="modal"><button type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Facility</button></a>
-                    </div>
-                    <div class="col-md-2 hidden" id="viralloadbtncontainer">
-                      <a href="#modal-viralload" data-toggle="modal"><button type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Viral Load details </button></a>
-                    </div>
-                    <div class="col-md-2">
-                            <a href="#modal-hiv" data-toggle="modal"><button type="button" class="btn btn-primary"><i class="fa fa-plus"></i> HIV </button></a>
+                    <div class="col-md-12">
+                        <span>
+                          <a href="#modal-facility" data-toggle="modal"><button type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Facility</button></a>
+                        </span>
+                        <span class="hidden" id="viralloadbtncontainer">
+                          <a href="#modal-viralload" data-toggle="modal"><button type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Viral Load details </button></a>
+                        </span>
+                        <span>
+                                <a href="#modal-hiv" data-toggle="modal"><button type="button" class="btn btn-primary"><i class="fa fa-plus"></i> HIV Status and Testing</button></a>
+                        </span>
                     </div>
                 </div>
             </fieldset>
@@ -478,10 +480,10 @@
                     <div class="row">
                         <label class=""></label>
                         <div class="col-md-8 col-md-offset-4">
-                            <button type="submit" class="btn btn-primary" value="submit" id="s1">Update</button>
-                            <button type="button" class="btn btn-danger" value="exit-ovc" id="ovcexit">Exit OVC</button>
+                            <button type="submit" class="btn btn-primary" value="submit" id="s1"> <i class="fa fa-save"></i> Update</button>
+                            <button type="button" class="btn btn-danger" value="exit-ovc" id="ovcexit"> <i class="fa fa-pencil"></i> Exit OVC</button>
                             <a href="{% url 'ovc_home' %}">
-                            <button type="button" class="nobtnui f-1_3x">Cancel</button>
+                            <button type="button" class="btn btn-default"> Cancel </button>
                             </a>
                         </div>
                 </div>
@@ -523,7 +525,7 @@
               <h4 class="modal-title">HIV Status</h4>
             </div>
             <div class="modal-body">
-        <form id="hivstatus">
+        <form id="hivstatus" class="form-horizontal">
             <div class="row">
                 {% csrf_token %}
                 <div  class="col-md-6">
@@ -535,48 +537,51 @@
                     <label> HIV Status</label>
                         {{form.hiv_statuss}}
                 </div>
+            </div>
+            <br>
+            <div class="row">
                 <div class="col-md-12">
                 <button type="button" class="btn btn-primary m-r-5" name='btn-hiv' id='btn_hiv'>submit</button>
                 </div>
-                </div>
-           </form>
             </div>
-            <div>
-                    {% if hiv_data %}
-                    <table class="table table-striped table-bordered">
-                            <tr>
-                                <th>#</th>
-                              <th>HIV STATUS</th>
-                              <th>DATE OF TESTING</th> 
-                              
-                            </tr>
-                            {% for data in hiv_data %}
-                            {% if data.hiv_status = "HSTP" %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>Positive</td>
-                                <td>{{data.date_of_event}}</td>
-                            </tr>
-                            {% elif data.hiv_status = "HSTN" %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>Negative</td>
-                                <td>{{data.date_of_event}}</td>
-                            </tr>
-                            {% elif data.hiv_status = "HSKN" %}
-                            <tr>
-                                    <td>{{ forloop.counter }}</td>
-                                <td>Not Known</td>
-                                <td>{{data.date_of_event}}</td>
-                            </tr>
-                            {% endif %}
-                           
-                            {% endfor %}
-                         </table>
+           </form>
+           <hr>
 
-                    {% else %}
-                    <p>No data available</p>
-                    {% endif %}
+                {% if hiv_data %}
+                <table class="table table-striped table-bordered">
+                        <tr>
+                            <th>#</th>
+                          <th>HIV STATUS</th>
+                          <th>DATE OF TESTING</th> 
+                          
+                        </tr>
+                        {% for data in hiv_data %}
+                        {% if data.hiv_status == "HSTP" %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>Positive</td>
+                            <td>{{data.date_of_event}}</td>
+                        </tr>
+                        {% elif data.hiv_status == "HSTN" %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>Negative</td>
+                            <td>{{data.date_of_event}}</td>
+                        </tr>
+                        {% elif data.hiv_status == "HSKN" %}
+                        <tr>
+                                <td>{{ forloop.counter }}</td>
+                            <td>Not Known</td>
+                            <td>{{data.date_of_event}}</td>
+                        </tr>
+                        {% endif %}
+                       
+                        {% endfor %}
+                     </table>
+
+                {% else %}
+                <p>No previous HIV data available</p>
+                {% endif %}
 
             </div>
             <div class="modal-footer">
@@ -597,7 +602,9 @@
                 </div>
                 <div class="modal-body">
                     <div id="vmessage"></div>
-                    <h5 class="text-bold"><u>New Viral load details.</u></h5>
+                    <div class="m-b-0">
+                      <h4 class="block">New Viral load details</h4>
+                    </div>
                     <div class="row">
                     <!-- begin col-2 -->
                     <div class="col-md-3">
@@ -635,7 +642,9 @@
                     <!-- end col-2 -->
                 </div>
                 <hr/>
-                    <h5 class="text-bold"><u>History.</u></h5>
+                    <div class="m-b-0">
+                      <h4 class="block">History</h4>
+                    </div>
                     <table class="table table-hover table-striped">
                         <thead>
                             <tr>
@@ -649,7 +658,7 @@
 
                                     <td>{% if vload.viral_load > 1000%}<label class="label label-danger">No</label> 
                                          {% else %} <label class="label label-success">Yes</label>{% endif %}</td>
-                                    <td>{% if vload.status = 1%}<label class="label label-danger">Viral test required</label> 
+                                    <td>{% if vload.status == 1 %}<label class="label label-danger">Viral test required</label> 
                                             {% else %} <label class="label label-success">Viral test valid</label>{% endif %}</td>
                                      
                                 </tr>

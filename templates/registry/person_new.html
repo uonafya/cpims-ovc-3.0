@@ -5,6 +5,7 @@
 
 {% load crispy_forms_tags %}
 
+
 {% block style_code %}
 <link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
 <link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
@@ -76,7 +77,9 @@
                                     <div id="provides_service" class="form-group">
                                         <label for="child_services">Provides services directly to children <span class="asteriskField">*</span></label>
                                         <br>                                        
-                                        {{ form.child_services }}
+                                        {% for choice in form.child_services %}
+                                            <label for="{{ choice.id_for_label  }}" class="radio-inline">{{ choice.tag }} {{ choice.choice_label }}</label>
+                                        {% endfor %}
                                         <span id="services_error"></span>
                                     </div>
                                 </div>
@@ -85,9 +88,11 @@
                                 <!-- begin col-4 -->
                                 <div class="col-md-4">
                                     <div id="is_ovc" class="form-group">
-                                        <label for="child_ovc">Child is OVC <span class="asteriskField">*</span></label>
+                                        <label for="child_ovc">Child is in OVC Program <span class="asteriskField">*</span></label>
                                         <br>                                        
-                                        {{ form.child_ovc }}
+                                        {% for choice in form.child_ovc %}
+                                            <label for="{{ choice.id_for_label  }}" class="radio-inline">{{ choice.tag }} {{ choice.choice_label }}</label>
+                                        {% endfor %}
                                         <span id="child_ovc_error"></span>
                                     </div>
                                 </div>
@@ -296,7 +301,9 @@
                                                         <div class="form-group" id="working_in_region_div">
                                                            <label class="control-label col-md-4 col-sm-4" for="working_in_region">Region :</label>
                                                             <div class="col-md-4 col-sm-4">
-                                                               {{ form.working_in_region }}
+                                                               {% for choice in form.working_in_region %}
+                                                                    <label for="{{ choice.id_for_label  }}" class="radio-inline">{{ choice.tag }} {{ choice.choice_label }}</label>
+                                                                {% endfor %}
                                                             </div>
                                                             <div id="type_error"></div>
                                                         </div>
@@ -450,6 +457,12 @@
                                                         {{ form.chv_unit_id  }}
                                                     </div>
                                                 </div>
+                                                <div id="ovc_programs_id_div" class="form-group">
+                                                    <label class="control-label col-md-4 col-sm-4" for="chv_unit_id">OVC Program Enrollment<span class="asteriskField">*</span> :</label>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        {{ form.ovc_programs  }}
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="row"  id="parent_org_add">
                                                 <span class="form-group"></span>
@@ -546,7 +559,7 @@
                             <div class="panel-body">
                                 <div class="row">
                                 <div id="log_cg"></div>
-                                    <div id="caregiver_id_adult" class="form-group">
+                                    <div class="form-group">
                                         <label class="control-label col-md-4 col-sm-4" for="caregiver_id">CPIMS registered child:</label>
                                         <div class="col-md-6 col-sm-6">
                                             {{ form.is_cpims_sibling }}
@@ -639,11 +652,16 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h4 class="modal-title">Attach a caregiver</h4>
+                        
+                        
                     </div>
                     <div class="modal-body">
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="row">
+                                    <div class="alert alert-info p-5 m-t-5">
+                                        Please pick a CPIMS-registered person as the caregiver
+                                    </div>
                                     <div id="log"></div>
                                     <div id="caregiver_cpims" class="form-group">
                                         <label class="control-label col-md-4 col-sm-4" for="caregiver_id">CPIMS registered caregiver:</label>
@@ -653,9 +671,27 @@
                                     </div>
                                     <div id="caregiver_search_div" class="form-group">
                                         <label class="control-label col-md-4 col-sm-4" for="caregiver_id">Search Caregiver:</label>
-                                        <div class="col-md-8 col-sm-8">
+                                        <div class="col-md-7 col-sm-7">
                                             {{ form.caregiver_id }}
                                             <div id="my-caregiver"></div>
+                                        </div>
+                                        <div class="col-md-1 col-sm-1">
+                                             <div class="loader-sp hidden" id="_loader">
+                                                <div class="loader loader--style3" title="2">
+                                                    <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                        width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                                                        <path fill="#27a9e3" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+                                                        <animateTransform attributeType="xml"
+                                                        attributeName="transform"
+                                                        type="rotate"
+                                                        from="0 25 25"
+                                                        to="360 25 25"
+                                                        dur="0.6s"
+                                                        repeatCount="indefinite"/>
+                                                        </path>
+                                                    </svg>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div id="caregiver_id_adult" class="form-group">
@@ -1193,15 +1229,17 @@ jQuery(document).ready(function() {
 
     $( "#caregiver_id" ).autocomplete({
         source: function( request, response ) {
-        $.ajax({
-          url: "{% url 'registry' %}",
-          dataType: "json",
-          data: {q: request.term, id: 0},
-          success: function( data ) {
-            response( data );
-          }
-        });
-      },
+            $('#_loader').removeClass('hidden')
+            $.ajax({
+                url: "{% url 'registry' %}",
+                dataType: "json",
+                data: {q: request.term, id: 0},
+                success: function( data ) {
+                    $('#_loader').addClass('hidden')
+                    response( data );
+                }
+            });
+        },
       minLength: 4,
       select: function( event, ui ) {
         $('#log').empty();
@@ -1302,7 +1340,7 @@ jQuery(document).ready(function() {
                         .attr("value", ward_attribs[0])
                         .text(ward_attribs[1]));
                  });
-                //$('#working_in_subcounty').multiselect('rebuild');
+                $('#working_in_subcounty').multiselect('rebuild');
             },
             error: function(){
                 $('#messages').html("Error")
@@ -1333,7 +1371,7 @@ jQuery(document).ready(function() {
                         .attr("value", ward_attribs[0])
                         .text(ward_attribs[1]));
                  });
-                 //$('#working_in_ward').multiselect('rebuild');
+                 $('#working_in_ward').multiselect('rebuild');
             },
             error: function(){
                 $('#messages').html("Error")
@@ -1661,8 +1699,19 @@ function handle_child(){
 
     var child_ovc = $('#child_ovc').val();
     if (child_ovc == 'AYES'){
-        $('#other_names').attr('data-parsley-required', 'true');   
+        $('#other_names').attr('data-parsley-required', 'true');
+        $('#chv_id_div').show();
+        $('#chv_unit_id').attr('data-parsley-required', 'true');
+    }else{
+        $('#chv_id_div').hide();
+        $('#chv_unit_id').attr('data-parsley-required', 'false');
     }
+    {% if request.session.reg_ovc %}
+    $("#cbo_chv_add").show();
+    $('#add_org_info').html('');
+    $('#chv_id_div').show();    
+    $('#chv_unit_id').attr('data-parsley-required', 'true');
+    {% endif %}
 }
 
 function handle_caregiver(person_text){
@@ -1786,12 +1835,13 @@ function handle_volunteer(person_text){
     $('#religion_id_div').hide();
     $('#nation_id_div').hide();
     $('#des_phone_number').attr('data-parsley-required', 'true');
-    {% if request.session.reg_ovc %}
-    $("#cbo_chv_add").show();
+    // Disable CHV and CBO
+    $("#cbo_chv_add").hide();
+    $('#cbo_unit_id').attr('data-parsley-required', 'false');
     $('#add_org_info').html('');
     $('#chv_id_div').hide();    
     $('#chv_unit_id').attr('data-parsley-required', 'false');
-    {% endif %}
+    //
 }
 
 function handle_government(person_text){
@@ -2114,5 +2164,26 @@ function check_region(region_id){
         //$('#sub_county').multiselect('rebuild');
     }
 }
+
+
+/************* disable caregiver registration on this page *************/
+
+//auto-check [CPIMS_registered_caregiver] & disable it
+$('#id_is_cpims_caregiver').attr('checked', true).attr('disabled', true)
+
+//disable fields
+$('#id_caregiver_firstname').attr('disabled', true)
+$('#id_caregiver_surname').attr('disabled', true)
+$('#id_caregiver_othernames').attr('disabled', true)
+$('#id_caregiver_othernames').attr('disabled', true)
+$('#caregiver_dob').attr('disabled', true)
+$('#caregiver_gender_id').attr('disabled', true)
+//$('#relationship_type_id').attr('disabled', true)
+
+//hide [is_adult] check
+$('#caregiver_id_adult').addClass('hidden')
+
+/************* disable caregiver registration on this page *************/
+
 </script>
 {% endblock lazy_javascript_code %}

@@ -1,0 +1,258 @@
+[
+    {
+        "pk": 31075,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - OVC",
+            "user_configurable": false,
+            "field_name": "olmis_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CEOCE1",
+            "item_description_short": "OCE1 - Child pregnant",
+            "sms_keyword": false,
+            "item_description": "OCE1 - Child pregnant",
+            "the_order": 1
+        }
+    },
+    {
+        "pk": 31076,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - OVC",
+            "user_configurable": false,
+            "field_name": "olmis_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CEOCE2",
+            "item_description_short": "OCE2 - Child not adhering to ARVs",
+            "sms_keyword": false,
+            "item_description": "OCE2 - Child not adhering to ARVs",
+            "the_order": 2
+        }
+    },
+    {
+        "pk": 31077,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - OVC",
+            "user_configurable": false,
+            "field_name": "olmis_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CEOCE3",
+            "item_description_short": "OCE3 - Child malnourished",
+            "sms_keyword": false,
+            "item_description": "OCE3 - Child malnourished",
+            "the_order": 3
+        }
+    },
+    {
+        "pk": 31078,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - OVC",
+            "user_configurable": false,
+            "field_name": "olmis_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CEOCE4",
+            "item_description_short": "OCE4 - Child HIV status changed",
+            "sms_keyword": false,
+            "item_description": "OCE4 - Child HIV status changed",
+            "the_order": 4
+        }
+    },
+    {
+        "pk": 31079,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - OVC",
+            "user_configurable": false,
+            "field_name": "olmis_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CEOCE5",
+            "item_description_short": "OCE5 - Child acquired opportunistic infection",
+            "sms_keyword": false,
+            "item_description": "OCE5 - Child acquired opportunistic infection",
+            "the_order": 5
+        }
+    },
+    {
+        "pk": 31080,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - OVC",
+            "user_configurable": false,
+            "field_name": "olmis_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CEOCE6",
+            "item_description_short": "OCE6 - Child missed HIV clinic appointment",
+            "sms_keyword": false,
+            "item_description": "OCE6 - Child missed HIV clinic appointment",
+            "the_order": 6
+        }
+    },
+    {
+        "pk": 31081,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - OVC",
+            "user_configurable": false,
+            "field_name": "olmis_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CEOCE7",
+            "item_description_short": "OCE7 - Child-headed household",
+            "sms_keyword": false,
+            "item_description": "OCE7 - Child-headed household",
+            "the_order": 7
+        }
+    },
+    {
+        "pk": 31082,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - OVC",
+            "user_configurable": false,
+            "field_name": "olmis_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CEOCE8",
+            "item_description_short": "OCE8 - Child Abused",
+            "sms_keyword": false,
+            "item_description": "OCE8 - Child Abused",
+            "the_order": 8
+        }
+    },
+    {
+        "pk": 31083,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - OVC",
+            "user_configurable": false,
+            "field_name": "olmis_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CEOCE9",
+            "item_description_short": "OCE9 - Child dropped out of school",
+            "sms_keyword": false,
+            "item_description": "OCE9 - Child dropped out of school",
+            "the_order": 9
+        }
+    },
+    {
+        "pk": 31084,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - OVC",
+            "user_configurable": false,
+            "field_name": "olmis_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CEOCE10",
+            "item_description_short": "OCE10 - Change of Caregiver",
+            "sms_keyword": false,
+            "item_description": "OCE10 - Change of Caregiver",
+            "the_order": 10
+        }
+    },
+    {
+        "pk": 31085,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - OVC",
+            "user_configurable": false,
+            "field_name": "olmis_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CEOCE11",
+            "item_description_short": "OCE11 - Relocation",
+            "sms_keyword": false,
+            "item_description": "OCE11 - Relocation",
+            "the_order": 11
+        }
+    },
+    {
+        "pk": 31086,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - OVC",
+            "user_configurable": false,
+            "field_name": "olmis_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CEOCE12",
+            "item_description_short": "OCE12 - Death",
+            "sms_keyword": false,
+            "item_description": "OCE12 - Death",
+            "the_order": 12
+        }
+    },
+    {
+        "pk": 31087,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - OVC",
+            "user_configurable": false,
+            "field_name": "olmis_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CEOCE13",
+            "item_description_short": "OCE13 - Others specify",
+            "sms_keyword": false,
+            "item_description": "OCE13 - Others specify",
+            "the_order": 13
+        }
+    },
+    {
+        "pk": 31088,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - Caregiver",
+            "user_configurable": false,
+            "field_name": "caregiver_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CECCE1",
+            "item_description_short": "CCE1 - Caregiver experienced abuse",
+            "sms_keyword": false,
+            "item_description": "CCE1 - Caregiver experienced abuse",
+            "the_order": 1
+        }
+    },
+    {
+        "pk": 31089,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - Caregiver",
+            "user_configurable": false,
+            "field_name": "caregiver_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CECCE2",
+            "item_description_short": "CCE2 - Caregiver died",
+            "sms_keyword": false,
+            "item_description": "CCE2 - Caregiver died",
+            "the_order": 2
+        }
+    },
+    {
+        "pk": 31090,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Critical event - Caregiver",
+            "user_configurable": false,
+            "field_name": "caregiver_critical_event_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CECCE3",
+            "item_description_short": "CCE3 - HH Relocation",
+            "sms_keyword": false,
+            "item_description": "CCE3 - HH Relocation",
+            "the_order": 3
+        }
+    }
+]

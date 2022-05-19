@@ -1,3 +1,5 @@
+from distutils.log import error
+import re
 from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse, resolve
 from django.shortcuts import render, get_object_or_404, redirect
@@ -13,18 +15,25 @@ import random
 import ast
 import uuid
 import time
+from psycopg2 import DatabaseError
 from reportlab.pdfgen import canvas
 # from itertools import chain #
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from shutil import copyfile
+
+from datetime import datetime
+
+from requests import request
 from cpovc_forms.forms import (
     OVCSearchForm, ResidentialSearchForm, ResidentialFollowupForm,
     ResidentialForm, OVC_FT3hForm, SearchForm, OVCCareSearchForm,
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, OVCHEITrackerForm)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessmentUpgrade,gradMonitoringToolform,OVCHEITrackerForm)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessmentUpgrade,gradMonitoringToolform CaseTransferForm)
+
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -35,10 +44,11 @@ from .models import (
     OVCAdverseEventsFollowUp, OVCAdverseEventsOtherFollowUp,
     OVCCaseEventClosure, OVCCaseGeo, OVCMedicalSubconditions, OVCBursary,
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
-    OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
-    OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
-    OVCHEITracker, OVCPreventiveEvents, pmtct_registration, PMTCTQuestions, PMTCTHEI, PMTCTEvents)
+    OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions, OVCCareForms,
+    OVCExplanations, OVCCareF1B, OVCCareBenchmarkScore, OVCMonitoring,
+    OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,OVCBenchmarkMonitoring,
+    OVCCareTransfer, OVCHEITracker, OVCPreventiveEvents, pmtct_registration, PMTCTQuestions, PMTCTHEI, PMTCTEvents)
+
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -61,6 +71,8 @@ from cpovc_registry.functions import get_list_types, extract_post_params
 from cpovc_ovc.functions import get_ovcdetails
 from .functions import create_fields, create_form_fields, save_form1b, save_bursary
 from .documents import create_mcert
+
+from cpovc_ovc.views import ovc_view
 
 
 def validate_serialnumber(user_id, subcounty, serial_number):
@@ -7437,33 +7449,32 @@ def delete_form1b(request, id, btn_event_pk):
     msg = ''
     try:
         event_id = uuid.UUID(btn_event_pk)
-        d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created
+        d_event = OVCCareEvents.objects.filter(
+            pk=event_id).first().timestamp_created
         delta = get_days_difference(d_event)
         if delta < 90:
             event = OVCCareEvents.objects.filter(pk=event_id)
+            msg = "Deleted successfully"
             if event:
-
-                # delete assessment
-                assesm = OVCCareAssessment.objects.filter(event=event)
+                # Soft delete assessment
+                assesm = OVCCareAssessment.objects.filter(event_id=event_id)
                 if assesm:
-                    assesm.delete()
-                    msg = "Deleted successfully"
-
-                # delete services
-                servi = OVCCareServices.objects.filter(event=event)
+                    # assesm.delete()
+                    assesm.update(is_void=True)
+                # Soft delete services
+                servi = OVCCareServices.objects.filter(event_id=event_id)
                 if servi:
-                    servi.delete()
-                    msg = "Deleted successfully"
-
-                # delete f1b
-                f1bin = OVCCareF1B.objects.filter(event=event)
+                    # servi.delete()
+                    servi.update(is_void=True)
+                # Soft delete f1b
+                f1bin = OVCCareF1B.objects.filter(event_id=event_id)
                 if f1bin:
-                    f1bin.delete()
-                    msg = "Deleted successfully"
-
-                # delete event
-                event.delete()
-                msg = "Deleted successfully"
+                    # f1bin.delete()
+                    f1bin.update(is_void=True)
+                # Soft delete event
+                # event.delete()
+                event.update(is_void=True)
+                msg = "Event details successfully"
         else:
             msg = "Can't delete after 90 days"
     except Exception as e:
@@ -8668,7 +8679,7 @@ def new_cpara(request, id):
         )
         questions = OVCCareQuestions.objects.filter(code__startswith='cp')
         exceptions = ['cp2d', 'cp2q', 'cp74q', 'cp34q', 'cp18q']
-        for question in questions:
+        for question in questions:  
             save_cpara_form_by_domain(
                 id=id,
                 question=question,
@@ -9994,7 +10005,7 @@ def new_dreamsform(request, id):
         form = DREAMS_FORM(initial={'person': id})
     except:
         pass
-
+    
     return render(request,
                   'forms/new_dreamsform.html',
                   {'form': form, 'init_data': init_data,
@@ -10006,147 +10017,6 @@ def new_hei_tracker(request, id):
     contact_date1 = contact_date2 = contact_date3 = contact_date4 = contact_date5 = '1900-01-01'
     try:
         import pdb
-
-        # if request.method == 'POST':
-        #     event_type_id = 'FHSA'
-        #     # household_id = request.POST.get('household_id')
-        #     # hei_he1_dob = request.POST.get('hei_he1_dob')
-        #     # if hei_he1_dob:
-        #     date_of_hei_event = timezone.now()
-        #     person = RegPerson.objects.get(pk=int(id))
-        #
-        #     """ Save HEI CSIEvent """
-        #     event_counter = OVCCareEvents.objects.filter(
-        #         event_type_id=event_type_id, person=id, is_void=False).count()
-        #     ovccareevent = OVCCareEvents(
-        #         event_type_id=event_type_id,
-        #         event_counter=event_counter,
-        #         event_score=0,
-        #         date_of_event=date_of_hei_event,
-        #         created_by=request.user.id,
-        #         person=RegPerson.objects.get(pk=int(id)),
-        #         # house_hold=OVCHouseHold.objects.get(pk=household_id)
-        #     )
-        #     ovccareevent.save()
-        #
-        #     # Caregiver details
-        #     hei2 = request.POST.get('PMTCT_HEI5q')
-        #     hei3 = request.POST.get('PMTCT_HEI6q')
-        #     hei4 = request.POST.get('PMTCT_HEI7q')
-        #     if hei4:
-        #         facility_res = OVCFacility.objects.get(id=hei4).facility_code
-        #     else:
-        #         facility_res = None
-        #     hei5 = request.POST.get('PMTCT_HEI8q')
-        #     hei6 = request.POST.get('PMTCT_HEI9q')
-        #     hei7 = request.POST.get('PMTCT_HEI10q')
-        #     if hei7 == '':
-        #         hei7 = '1990-01-01'
-        #     contact = request.POST.get('PMTCT_HEI42q')
-        #     # pdb.set_trace()
-        #
-        #     if contact == 'AtFirstContact':
-        #         contact_date1 = request.POST.get('PMTCT_HEI42q')
-        #         hei8 = request.POST.get('PMTCT_HEI13q')
-        #         hei9 = request.POST.get('PMTCT_HEI14q')
-        #         hei10 = request.POST.get('PMTCT_HEI15q')
-        #         hei11 = request.POST.get('PMTCT_HEI16q')
-        #         hei12 = request.POST.get('PMTCT_HEI17q')
-        #
-        #     if contact == 'At6wks':
-        #         contact_date2 = request.POST.get('PMTCT_HEI42q')
-        #         hei13 = request.POST.get('PMTCT_HEI13q')
-        #         hei14 = request.POST.get('PMTCT_HEI14q')
-        #         hei15 = request.POST.get('PMTCT_HEI15q')
-        #         hei16 = request.POST.get('PMTCT_HEI16q')
-        #         hei17 = request.POST.get('PMTCT_HEI22q')
-        #         hei18 = request.POST.get('PMTCT_HEI17q')
-        #
-        #     if contact == 'At6mths':
-        #         contact_date3 = request.POST.get('PMTCT_HEI42q')
-        #         hei19 = request.POST.get('PMTCT_HEI13q')
-        #         hei20 = request.POST.get('PMTCT_HEI14q')
-        #         hei21 = request.POST.get('PMTCT_HEI15q')
-        #         hei22 = request.POST.get('PMTCT_HEI16q')
-        #         hei23 = request.POST.get('PMTCT_HEI22q')
-        #         hei24 = request.POST.get('PMTCT_HEI17q')
-        #
-        #     if contact == 'At12mths':
-        #         contact_date4 = request.POST.get('PMTCT_HEI42q')
-        #         hei25 = request.POST.get('PMTCT_HEI13q')
-        #         hei26 = request.POST.get('PMTCT_HEI14q')
-        #         hei27 = request.POST.get('PMTCT_HEI15q')
-        #         hei28 = request.POST.get('PMTCT_HEI16q')
-        #         hei29 = request.POST.get('PMTCT_HEI22q')
-        #         hei30 = request.POST.get('PMTCT_HEI17q')
-        #
-        #     if contact == 'At18mths':
-        #         contact_date5 = request.POST.get('PMTCT_HEI42q')
-        #         hei31 = request.POST.get('PMTCT_HEI13q')
-        #         hei32 = request.POST.get('PMTCT_HEI14q')
-        #         hei33 = request.POST.get('PMTCT_HEI15q')
-        #         hei34 = request.POST.get('PMTCT_HEI16q')
-        #         hei35 = request.POST.get('PMTCT_HEI22q')
-        #         hei36 = request.POST.get('PMTCT_HEI17q')
-        #
-        #     # Others
-        #     hei37 = request.POST.get('PMTCT_HEI47q')
-        #     hei38 = request.POST.get('PMTCT_HEI48q')
-        #
-        #     # ************************************************************
-        #
-        #     query = OVCHEITracker(
-        #         person=person,
-        #         hivstatus=hei2,
-        #         hivpositive=hei3,
-        #         facility=facility_res,
-        #         ccc=hei5,
-        #         vl=hei6,
-        #         vldate=hei7,
-        #         f1date= contact_date1,
-        #         f1hivtest=hei8,
-        #         f1testresults=hei9,
-        #         f1vlresults=hei10,
-        #         f1prophylaxis=hei11,
-        #         f1mode=hei12,
-        #         f2date=contact_date2,
-        #         f2hivtest=hei13,
-        #         f2testresults=hei14,
-        #         f2vlresults=hei15,
-        #         f2prophylaxis=hei16,
-        #         f2immunization=hei17,
-        #         f2mode=hei18,
-        #         f3date=contact_date3,
-        #         f3hivtest=hei19,
-        #         f3testresults=hei20,
-        #         f3vlresults=hei21,
-        #         f3prophylaxis=hei22,
-        #         f3immunization=hei23,
-        #         f3mode=hei24,
-        #         f4date=contact_date4,
-        #         f4hivtest=hei25,
-        #         f4testresults=hei26,
-        #         f4vlresults=hei27,
-        #         f4prophylaxis=hei28,
-        #         f4immunization=hei29,
-        #         f4mode=hei30,
-        #         f5date=contact_date5,
-        #         f5hivtest=hei31,
-        #         f5testresults=hei32,
-        #         f5vlresults=hei33,
-        #         f5prophylaxis=hei34,
-        #         f5immunization=hei35,
-        #         f5mode=hei36,
-        #         reason=hei37,
-        #         comments=hei38,
-        #         event=ovccareevent,
-        #     ).save()
-        #     # pdb.set_trace()
-        #
-        #     msg = 'HEI tracker saved successfully'
-        #     messages.add_message(request, messages.INFO, msg)
-        #     url = reverse('ovc_view', kwargs={'id': id})
-        #     return HttpResponseRedirect(url)
 
         if request.method == 'POST':
             comments = ['WB_AD_GEN_4_2']
@@ -10472,3 +10342,474 @@ def delete_heitracker(request, id):
     new_eval = PMTCTHEI.objects.get(hei_id=id)
     PMTCTHEI.objects.filter(event_id=id).update(is_void=True)
     return redirect('new_hei_tracker', id=new_eval.person_id)
+def new_cpara_upgrade(request, id):
+    if request.method == 'POST':
+        data = request.POST
+        print(data)
+    child = RegPerson.objects.get(id=id)
+    form= CparaAssessmentUpgrade()
+    
+    siblings = RegPersonsSiblings.objects.select_related().filter(
+        child_person=id, is_void=False, date_delinked=None)
+    osiblings = RegPersonsSiblings.objects.select_related().filter(
+        sibling_person=id, is_void=False, date_delinked=None)
+    oguardians = RegPersonsGuardians.objects.select_related().filter(
+        guardian_person=id, is_void=False, date_delinked=None)
+    ovc_id = int(id)
+    creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
+    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+
+    house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+
+    # Get house hold
+    hhold = OVCHHMembers.objects.get(is_void=False, person_id=id)
+    # Get HH members
+    hhid = hhold.house_hold_id
+    hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
+    hhmembers2 = hhmqs.exclude(person_id=id)
+    hhmembers = hhmembers2.exclude(person=care_giver)
+
+    # Get child geo
+    child_geos = RegPersonsGeo.objects.select_related().filter(
+        person=child, is_void=False, date_delinked=None)
+    all_geos_county, all_geos_wards, all_geos = [], [], []
+    for person_geo in child_geos:
+        geo_name = str(person_geo.area.area_id)
+        geo_type = person_geo.area.area_type_id
+        if geo_type == 'GPRV':
+            all_geos_county.append(geo_name)
+        elif geo_type == 'GDIS':
+            all_geos.append(geo_name)
+        else:
+            all_geos_wards.append(geo_name)
+    if all_geos:
+        geos = ', '.join(all_geos)
+    else:
+        geos = None
+    if all_geos_wards:
+        geo_wards = ', '.join(all_geos_wards)
+    else:
+        geo_wards = None
+    if all_geos_county:
+        geo_county = ', '.join(all_geos_county)
+    # geo_wards = geo_wards
+
+    # geo_wards = geo_wards
+    if geo_wards is None:
+        ward = None
+        subcounty = None
+        county = None
+    else:
+        ward_id = int(geo_wards)
+        ward = SetupGeography.objects.get(area_id=ward_id)
+        subcounty = SetupGeography.objects.get(area_id=ward.parent_area_id)
+        county = SetupGeography.objects.get(area_id=subcounty.parent_area_id)
+
+    # PAST CPARA
+    past_cpara = []
+    cpara_events = OVCCareEvents.objects.filter(event_type_id='cpr', person_id=child.id)
+    if cpara_events:
+        for one_cpara_event in cpara_events:
+            event_detail = ""
+            total_benchmark_score = 0
+            # cpara_data = OVCCareCpara.objects.filter(event=one_cpara_event)
+            cpara_data = OVCCareBenchmarkScore.objects.filter(event_id=one_cpara_event.event)
+            bm_array = []
+            if cpara_data:
+                for one_cpara_bench in cpara_data:
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_1 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_2 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_3 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_4 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_5 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_6 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_7 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_8 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_9 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_10 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_11 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_12 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_13 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_14 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_15 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_16 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.bench_mark_17 == 1 else "No")
+                    
+                    benchmark_1 = "Benchmark 1: (Yes)" if one_cpara_bench.bench_mark_1 == 1 else "Benchmark 1: (No)"
+                    benchmark_2 = "Benchmark 2: (Yes)" if one_cpara_bench.bench_mark_2 == 1 else "Benchmark 2: (No)"
+                    benchmark_3 = "Benchmark 3: (Yes)" if one_cpara_bench.bench_mark_3 == 1 else "Benchmark 3: (No)"
+                    benchmark_4 = "Benchmark 4: (Yes)" if one_cpara_bench.bench_mark_4 == 1 else "Benchmark 4: (No)"
+                    benchmark_5 = "Benchmark 5: (Yes)" if one_cpara_bench.bench_mark_5 == 1 else "Benchmark 5: (No)"
+                    benchmark_6 = "Benchmark 6: (Yes)" if one_cpara_bench.bench_mark_6 == 1 else "Benchmark 6: (No)"
+                    benchmark_7 = "Benchmark 7: (Yes)" if one_cpara_bench.bench_mark_7 == 1 else "Benchmark 7: (No)"
+                    benchmark_8 = "Benchmark 8: (Yes)" if one_cpara_bench.bench_mark_8 == 1 else "Benchmark 8: (No)"
+                    benchmark_9 = "Benchmark 9: (Yes)" if one_cpara_bench.bench_mark_9 == 1 else "Benchmark 9: (No)"
+                    benchmark_10 = "Benchmark 10: (Yes)" if one_cpara_bench.bench_mark_10 == 1 else "Benchmark 10: (No)"
+                    benchmark_11 = "Benchmark 11: (Yes)" if one_cpara_bench.bench_mark_11 == 1 else "Benchmark 11: (No)"
+                    benchmark_12 = "Benchmark 12: (Yes)" if one_cpara_bench.bench_mark_12 == 1 else "Benchmark 12: (No)"
+                    benchmark_13 = "Benchmark 13: (Yes)" if one_cpara_bench.bench_mark_13 == 1 else "Benchmark 13: (No)"
+                    benchmark_14 = "Benchmark 14: (Yes)" if one_cpara_bench.bench_mark_14 == 1 else "Benchmark 14: (No)"
+                    benchmark_15 = "Benchmark 15: (Yes)" if one_cpara_bench.bench_mark_15 == 1 else "Benchmark 15: (No)"
+                    benchmark_16 = "Benchmark 16: (Yes)" if one_cpara_bench.bench_mark_16 == 1 else "Benchmark 16: (No)"
+                    benchmark_17 = "Benchmark 17: (Yes)" if one_cpara_bench.bench_mark_17 == 1 else "Benchmark 17: (No)"
+
+                    str_1 = benchmark_1 + ", " + benchmark_2 + ", " + benchmark_3 + ", " + benchmark_4 + ", " + benchmark_5 + ", "
+                    str_2 = benchmark_6 + ", " + benchmark_7 + ", " + benchmark_8 + ", " + benchmark_9 + ", "
+                    str_3 = benchmark_10 + ", " + benchmark_11 + ", " + benchmark_12 + ", " + benchmark_13 + ", "
+                    str_4 = benchmark_14 + ", " + benchmark_15 + ", " + benchmark_16 + ", " + benchmark_17
+
+                    total_benchmark_score = int(one_cpara_bench.bench_mark_1) + int(one_cpara_bench.bench_mark_2) + int(
+                        one_cpara_bench.bench_mark_3) + int(one_cpara_bench.bench_mark_4) + int(
+                        one_cpara_bench.bench_mark_5) + int(one_cpara_bench.bench_mark_6) + int(
+                        one_cpara_bench.bench_mark_7) + int(one_cpara_bench.bench_mark_8) + int(
+                        one_cpara_bench.bench_mark_9) + int(one_cpara_bench.bench_mark_10) + int(
+                        one_cpara_bench.bench_mark_11) + int(one_cpara_bench.bench_mark_12) + int(
+                        one_cpara_bench.bench_mark_13) + int(one_cpara_bench.bench_mark_14) + int(
+                        one_cpara_bench.bench_mark_15) + int(one_cpara_bench.bench_mark_16) + int(
+                        one_cpara_bench.bench_mark_17)
+                    full_str = str_1 + str_2 + str_3 + str_4
+                    # qn_string = str(one_cpara_bench.question_code) + " (" + str(one_cpara_bench.answer) + "), "
+                    event_detail = event_detail + full_str
+            else:
+                event_detail = "No answered questions found"
+                total_benchmark_score = 0
+                bm_array = []
+            past_cpara.append({
+                'ev_date': one_cpara_event.date_of_event,
+                'ev_person': child.id,
+                'ev_type': 'CPARA',
+                'ev_id': str(one_cpara_event.pk),
+                'ev_detail': str(event_detail),
+                'ev_score': total_benchmark_score,
+                'bm_array': bm_array
+            })
+
+            
+    context = {'form':form,
+                'person': id,
+                'siblings': siblings,
+                'hhmembers': hhmembers,
+                'osiblings': osiblings,
+                'oguardians': oguardians,
+                'child': child,
+                'creg': creg,
+                'caregiver': care_giver,
+                'household': house_hold,
+                'ward': ward,
+                'subcounty': subcounty,
+                'county': county,
+                'care_giver': care_giver,
+                'past_cpara': past_cpara
+                
+                }
+
+    return render(request,'forms/new_cpara_upgrade.html',context)
+
+def grad_monitor_tool(request, id):
+    if request.method == 'POST':
+        data = request.POST
+        # print(data)
+
+        child = RegPerson.objects.get(id=id)       
+        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+        caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
+        caregiver = RegPerson.objects.get(id=caregiver_id)
+ 
+        event_date = convert_date(data.get('gm1d'))
+        event_type_id = 'obm'
+        time_saved = timezone.now()
+
+        event_counter = OVCCareEvents.objects.filter(
+            event_type_id=event_type_id, person=id, is_void=False).count()
+
+        # SAVE EVENT
+        try:
+            ovccareevent = OVCCareEvents.objects.create(
+                event_type_id=event_type_id,
+                event_counter=event_counter,
+                event_score=0,
+                created_by=request.user.id,
+                person=RegPerson.objects.get(pk=int(id)),
+                house_hold=house_hold
+            )
+        except Exception as e:
+            error_message = f'Events didn\'t save : {e}'
+            print(error_message)
+       
+        answer_value = {
+            'AYES': True,
+            'ANNO': False
+        }
+        try:
+            OVCBenchmarkMonitoring.objects.create(
+                household=house_hold,
+                # person=child,
+                caregiver=caregiver,
+                form_type=data.get('form1_type'),
+                benchmark1=answer_value[data.get('cm2q')],
+                benchmark2=answer_value[data.get('cm3q')],
+                benchmark3=answer_value[data.get('cm4q')],
+                benchmark4=answer_value[data.get('cm5q')],
+                benchmark5=answer_value[data.get('cm6q')],
+                benchmark6=answer_value[data.get('cm7q')],
+                benchmark7=answer_value[data.get('cm8q')],
+                benchmark8=answer_value[data.get('cm9q')],
+                benchmark9=answer_value[data.get('cm10q')],
+                succesful_exit_checked =answer_value[data.get('cm13q')],
+                case_closure_checked=answer_value[data.get('cm14q')],
+                event_date=event_date,
+                event=ovccareevent,
+                timestamp_created=time_saved
+            )
+
+        except Exception as e:
+            error_message = 'error saving graduation monitoring tool - %s' % (str(e))
+            messages.add_message(request, messages.INFO, error_message)
+
+        msg = 'Graduation Monitoring saved successful'
+        messages.add_message(request, messages.INFO, msg)
+        url = reverse('ovc_view', kwargs={'id': id})
+        return HttpResponseRedirect(url)        
+
+    else:
+        ovc_id = int(id)
+        child = RegPerson.objects.get(is_void=False, id=ovc_id)        
+        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+        creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
+        caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
+        caregiver = RegPerson.objects.get(id=caregiver_id)
+
+        # Show previous cpara monitoring events
+        event = OVCCareEvents.objects.filter(person_id=ovc_id).values_list('event')
+        
+        try:
+            benchmark_data = OVCBenchmarkMonitoring.objects.filter(is_void=False)   #filter(event=event).order_by('event_date'))
+        except Exception as e:
+            print(e)
+        
+        form = gradMonitoringToolform()
+             
+        context = {
+            'form': form, 
+            'care_giver': care_giver,
+            'creg':creg,
+            'child':child,
+            'ovc_id':ovc_id,
+            'caregiver':caregiver,
+            'benchmark_data': benchmark_data
+            }
+        
+        return render(request, 'forms/new_grad_monitor_tool.html',context)
+
+def delete_benchmark(request, id):
+    ovc_bench = OVCBenchmarkMonitoring.objects.filter(obm_id=id)
+
+    # Gets the instance
+    household1 =OVCBenchmarkMonitoring.objects.get(obm_id=id)
+    re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).person.id
+    
+    ovc_bench.update(is_void=True)
+    url = reverse('ovc_view', kwargs={'id':re_person})
+    msg=f"Event id: {id} deleted successfully"
+    messages.add_message(request, messages.WARNING, msg)
+    return HttpResponseRedirect(url)    
+
+    
+def edit_grad_monitor(request, id):
+    
+    if request.method=='POST':
+        data=request.POST
+        answer_value = {
+            'AYES': True,
+            'ANNO': False
+        }
+
+        event_date = convert_date(data.get('gm1d'))
+        time_updated = timezone.now()
+        household1 =OVCBenchmarkMonitoring.objects.get(obm_id=id)
+        re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).person.id
+        
+        try:
+            OVCBenchmarkMonitoring.objects.filter(obm_id=id).update(
+                    benchmark1=answer_value[data.get('cm2q')],
+                    benchmark2=answer_value[data.get('cm3q')],
+                    benchmark3=answer_value[data.get('cm4q')],
+                    benchmark4=answer_value[data.get('cm5q')],
+                    benchmark5=answer_value[data.get('cm6q')],
+                    benchmark6=answer_value[data.get('cm7q')],
+                    benchmark7=answer_value[data.get('cm8q')],
+                    benchmark8=answer_value[data.get('cm9q')],
+                    benchmark9=answer_value[data.get('cm10q')],
+                    succesful_exit_checked =answer_value[data.get('cm13q')],
+                    case_closure_checked=answer_value[data.get('cm14q')],
+                    event_date=event_date,
+                    timestamp_updated = time_updated,
+                    
+                )         
+           
+            
+        except Exception as e:
+            print(f'{e}')
+
+        msg = 'Graduation Monitoring edit saved successful'
+        messages.add_message(request, messages.INFO, msg)
+        url = reverse('ovc_view', kwargs={'id':re_person})
+        return HttpResponseRedirect(url)
+    
+    # Get Method to pick the values of edit form
+    try:
+        data_db = OVCBenchmarkMonitoring.objects.filter(obm_id=id).values()
+        def map_yes_no(value):
+            if value==True:
+                return 'AYES'
+            else:
+                return 'ANNO'
+
+        edit_data= {
+            'gm1d': data_db[0]['event_date'].strftime("%Y-%m-%d"),
+            'cm2q': map_yes_no(data_db[0]['benchmark1']),
+            'cm3q': map_yes_no(data_db[0]['benchmark2']),
+            'cm4q': map_yes_no(data_db[0]['benchmark3']),
+            'cm5q': map_yes_no(data_db[0]['benchmark4']),
+            'cm6q': map_yes_no(data_db[0]['benchmark5']),
+            'cm7q': map_yes_no(data_db[0]['benchmark6']),
+            'cm8q': map_yes_no(data_db[0]['benchmark7']),
+            'cm9q': map_yes_no(data_db[0]['benchmark8']),
+            'cm10q': map_yes_no(data_db[0]['benchmark9']),
+            'cm13q': map_yes_no(data_db[0]['succesful_exit_checked']),
+            'cm14q': map_yes_no(data_db[0]['case_closure_checked'])
+            
+
+        }
+        
+        
+    except Exception as e:
+        print(f'The error is: {e}')
+
+    form = gradMonitoringToolform(data=edit_data)
+
+    household1 =OVCBenchmarkMonitoring.objects.get(obm_id=id)
+    re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).person.id
+    
+    ovc_id = int(re_person)
+    child = RegPerson.objects.get(is_void=False, id=ovc_id)
+    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+    creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
+    caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
+    caregiver = RegPerson.objects.get(id=caregiver_id)
+    form_type = OVCBenchmarkMonitoring.objects.filter(obm_id=id,is_void=False).values_list()[0][3]
+    
+    if form_type == 'bm':
+        form_type = 'Benchmark Monitoring'
+    else:
+        form_type = 'Households Reaching Case Plan Achievement'
+    
+    context = {'form':form,
+            'status': 200,
+            'care_giver': care_giver,
+            'creg':creg,
+            'caregiver':caregiver,
+            'form_type':form_type
+                    }
+        
+    return render(request, 'forms/edit_grad_monitor_tool.html', context)
+
+
+def get_org(request, name):
+    org_unit_detail = get_list_of_org_units(name)
+    return render(
+        request,
+        template_name='forms/case_transfer.html',
+        context={
+            'org_unit_detail': org_unit_detail
+        }
+    )
+
+
+def case_transfer(request, id):
+    try:
+        import pdb
+        init_data = RegPerson.objects.filter(pk=id)
+        child = RegPerson.objects.get(id=id)
+        care_giver = RegPerson.objects.get(
+            id=OVCRegistration.objects.get(person=child).caretaker_id)
+        house_hold = OVCHouseHold.objects.get(
+            id=OVCHHMembers.objects.get(person=child).house_hold_id)
+
+        siblings = RegPersonsSiblings.objects.select_related().filter(
+            child_person=id, is_void=False, date_delinked=None)
+        hhold = OVCHHMembers.objects.get(
+            is_void=False, person_id=child.id)
+        # Get HH members
+        hhid = hhold.house_hold_id
+        hhmembers = OVCHHMembers.objects.filter(
+            is_void=False, house_hold_id=hhid)
+        if request.method == 'POST':
+            print(request.POST)
+            event_id = 'FCSI'
+            person_id = int(id)
+            date_of_transfer = request.POST.get("TRANSFER_DATE")
+            hhmembers_check = request.POST.getlist('member_id_check')
+            hhmembers = request.POST.getlist('member_id')
+
+            event_counter = OVCCareEvents.objects.filter(
+                event_type_id=event_id, person=id, is_void=False).count()
+
+            ovccareevent = OVCCareEvents(
+                event_type_id=event_id,
+                event_counter=event_counter,
+                event_score=0,
+                date_of_event=date_of_transfer,
+                created_by=request.user.id,
+                person_id=person_id,
+                date_of_previous_event='2022-01-01',
+                house_hold=house_hold
+            )
+
+            ovccareevent.save()
+            event_id = ovccareevent.pk
+
+            organization = RegOrgUnit.objects.order_by('org_unit_name')[0]
+            org_unit_id = organization.id
+
+            for hhmember in hhmembers:
+                print("hhmember", hhmember)
+                index = hhmembers_check.index(hhmember)
+                reason = str(request.POST.getlist("REASON")[index]),
+                date_follow_up = str(request.POST.getlist("FOLLOW_UP_DATE")[index])
+                print(index, id, event_id, house_hold,date_of_transfer,
+                      reason, date_follow_up, 'tttt')
+
+                OVCCareTransfer(
+                    person_id=person_id,
+                    event_id=event_id,
+                    household=house_hold,
+                    rec_organization_id=org_unit_id,
+                    date_of_event=date_of_transfer,
+                    reason=reason,
+                    date_follow_up=date_follow_up,
+                    date_of_transfer=date_of_transfer
+                ).save()
+            return redirect(reverse(ovc_view, kwargs={'id': person_id}))
+        else:
+            caseTransferForm = CaseTransferForm()            
+            return render(
+                request,
+                template_name=
+                    'forms/case_transfer.html',
+                context={
+                    'case_transfer_form' : caseTransferForm,
+                    'init_data': init_data,
+                    'siblings':siblings,
+                    'care_giver': care_giver, 
+                    'child':child,
+                    'house_hold': house_hold,
+                    'hhid':hhid,
+                    'hhmembers':hhmembers,
+                    }
+            )
+    except Exception as e:
+        raise e
+    else:
+        pass
+
