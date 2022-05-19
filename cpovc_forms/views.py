@@ -10003,7 +10003,7 @@ def new_dreamsform(request, id):
                   {'form': form, 'init_data': init_data,
                    'vals': vals})
 
-# Sinovuyo Preventive Pre and Post Program Assessment Form
+# Sinovuyo Care-giver Preventive Pre and Post Program Assessment Form
 def fetch_objects(id):
     """
     Map model obejcts to form
@@ -10045,10 +10045,10 @@ def fetch_objects(id):
         'rc_involve_decisions': object.rc_involve_decisions,
         'rc_discipline': object.rc_discipline,
         'cb_child_obedient': object.cb_child_obedient,
-        'cb_figths_children': object.cb_figths_children,
+        'cb_fights_children': object.cb_fights_children,
         'dc_physical_discipline': object.dc_physical_discipline,
         'dc_often_discipline': object.dc_often_discipline,
-        'dc_upstet_child': object.dc_upstet_child,
+        'dc_upset_child': object.dc_upset_child,
         'sp_caring_energy': object.sp_caring_energy,
         'sp_source_stress': object.sp_source_stress,
         'sp_physical_punish': object.sp_physical_punish,
@@ -10061,10 +10061,10 @@ def fetch_objects(id):
     form = OVCPreventivePrePostProgramAssessmentForm(data=data)
     return form
 
-# Sinovuyo Preventive Pre and Post Program Assessment Form
+# Sinovuyo Care-giver Preventive Pre and Post Program Assessment Form
 def ovc_preventive_pre_post_program_assessment_view(request, id):
     """
-    new Sinovuyo Preventive Pre and Post Program Assessment Form input view
+    new Sinovuyo Care-giver Preventive Pre and Post Program Assessment Form input view
     Args: 
             request, id
     Return:
@@ -10098,7 +10098,7 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
             person=id,
             is_void=False,
         ).count()
-        # OVC Preventive event 
+        # OVC Preventive event counter
         ovc_preventive_event = OVCPreventiveEvents(
             event_type_id=event_type_id,
             event_counter=event_counter,
@@ -10147,10 +10147,10 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
                 rc_tells_bothering=request.POST.get('rc_tells_bothering'),
                 rc_involve_decisions=request.POST.get('rc_involve_decisions'),
                 cb_child_obedient=request.POST.get('cb_child_obedient'),
-                cb_figths_children=request.POST.get('cb_figths_children'),
+                cb_fights_children=request.POST.get('cb_fights_children'),
                 dc_often_discipline=request.POST.get('dc_often_discipline'),
                 dc_physical_discipline=request.POST.get('dc_physical_discipline'),
-                dc_upstet_child=request.POST.get('dc_upstet_child'),
+                dc_upset_child=request.POST.get('dc_upset_child'),
                 sp_caring_energy=request.POST.get('sp_caring_energy'),
                 sp_source_stress=request.POST.get('sp_source_stress'),
                 sp_physical_punish=request.POST.get('sp_physical_punish'),
@@ -10170,7 +10170,7 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
     event = OVCPreventiveEvents.objects.filter(person_id=care_giver.id).values_list('event')
     queryset = OVCPrevSinovyoCaregiverEvaluation.objects.filter(event_id__in=event).order_by('date_of_assessment')
     evaluation = []
-    # validate void/deleted existing form instances
+    # validate void/deleted existing model instances
     for i in range(0, len(queryset)):
         if queryset[i].is_void == False:
             evaluation.append(queryset[i])
@@ -10179,23 +10179,9 @@ def ovc_preventive_pre_post_program_assessment_view(request, id):
                 'care_giver_gender': care_giver_gender, 'objects': evaluation, 'vals': vals})
 
 
-# def view_ovc_preventive_pre_post_program_assessment_view(request, id):
-#     """
-#     view of Sinovuyo Preventive Pre and Post Program Assessment Form instance
-#     Args: 
-#         evaluation_id, request
-    
-#     Return:
-#             forms/view_caregiver_progress_assessment.html, context
-#     """
-#     evaluation = fetch_objects(id)
-#     return render(request, template_name='forms/view_caregiver_progress_assessment.html',
-#                   context={'eva_quiz': evaluation})
-
-
 def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
     """
-    Sinovuyo Preventive Pre and Post Program Assessment edit instance form instance
+    Sinovuyo Care-giver Preventive Pre and Post Program Assessment edit instance form instance
     Args: 
         evaluation_id, request
     
@@ -10236,10 +10222,10 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
             rc_tells_bothering=request.POST.get('rc_tells_bothering'),
             rc_involve_decisions=request.POST.get('rc_involve_decisions'),
             cb_child_obedient=request.POST.get('cb_child_obedient'),
-            cb_figths_children=request.POST.get('cb_figths_children'),
+            cb_fights_children=request.POST.get('cb_fights_children'),
             dc_often_discipline=request.POST.get('dc_often_discipline'),
             dc_physical_discipline=request.POST.get('dc_physical_discipline'),
-            dc_upstet_child=request.POST.get('dc_upstet_child'),
+            dc_upset_child=request.POST.get('dc_upset_child'),
             sp_caring_energy=request.POST.get('sp_caring_energy'),
             sp_source_stress=request.POST.get('sp_source_stress'),
             sp_physical_punish=request.POST.get('sp_physical_punish'),
@@ -10258,12 +10244,12 @@ def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
 
 def ovc_preventive_pre_post_program_assessment_delete_view(request):
     """
-    Sinovuyo Preventive Pre and Post Program Assessment delete Form instance
+    Sinovuyo Care-giver Preventive Pre and Post Program Assessment delete Form instance
     Args: 
          request
     
     Return:
-            data
+            data(Jason Format)
     """
     id = request.GET.get('evaluation_id', None)
     object = OVCPrevSinovyoCaregiverEvaluation.objects.get(evaluation_id=id)

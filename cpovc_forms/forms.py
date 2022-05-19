@@ -8213,10 +8213,10 @@ class NewGraduationMonitoringForm(forms.Form):
             ))
 
 
-# Sinovuyo Preventive Pre and Post Program Assessment Form
+# Sinovuyo care-giver Preventive Pre and Post Program Assessment Form
 class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     """
-    Sinovuyo Preventive Pre and Post Program Assessment Form
+    Sinovuyo Care-giver Preventive Pre and Post Program Assessment Form
     """
     CHOICES_TYPE_ASSESSMENT = get_list("programme_id")
     CHOICES_READ = get_list('literacy_lvl_id', "Please select")
@@ -8232,6 +8232,7 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     CHOICES_FEELING = get_list("agree_id", "Please select")
     CHOICES_SAD = get_list("feeling_sad_id", "Please select")
     CHOICES_FINANCE = get_list("often_id", "Please select")
+
     type_of_assessment = forms.ChoiceField(choices=CHOICES_TYPE_ASSESSMENT,
                                         widget = forms.RadioSelect())
     date_of_assessment = forms.DateTimeField(
@@ -8394,7 +8395,6 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
         ))
 
     # SECTION 2: MY RELATIONSHIP WITH MY CHILD
-
     rc_discuss_child_needs = forms.ChoiceField(
         choices=CHOICES_RELATIONSHIP,
         widget=forms.Select(attrs={
@@ -8428,7 +8428,6 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
                                    }))
 
     # SECTION 3: MY CHILD’S BEHAVIOUR
-
     cb_child_obedient = forms.ChoiceField(
         choices=CHOICES_BEHAVIOR,
         widget=forms.Select(attrs={
@@ -8446,7 +8445,6 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     }))
 
     # SECTION 4: DISCIPLINING MY CHILD
-
     dc_often_discipline = forms.ChoiceField(
         choices=CHOICES_DISCIPLINE,
         widget=forms.Select(attrs={
@@ -8462,12 +8460,12 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
                             'id': 'dc_physical_discipline',
     }))
 
-    dc_upstet_child = forms.ChoiceField(
+    dc_upset_child = forms.ChoiceField(
         choices=CHOICES_DISCIPLINE,
         widget=forms.Select(attrs={
                             'intial': 'Please select',
                             'class': 'form-control',
-                            'id': 'dc_upstet_child',
+                            'id': 'dc_upset_child',
     }))
 
     # SECTION 5: DEALING WITH STRESSFUL LIVES AS PARENTS
@@ -8495,7 +8493,6 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
     }))
 
     # SECTION 6: FEELING SAD
-
     fs_depressed = forms.ChoiceField(
         choices=CHOICES_SAD,
         widget=forms.Select(attrs={
@@ -8537,6 +8534,5 @@ class OVCPreventivePrePostProgramAssessmentForm (forms.Form):
                             'class': 'form-control',
                             'id': 'fi_worried_money',
     }))
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
