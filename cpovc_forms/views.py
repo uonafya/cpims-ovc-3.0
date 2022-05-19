@@ -8692,23 +8692,23 @@ def new_cpara_v1(request, id):
         # Saving Benchmarks
         OVCCareBenchmarkScore.objects.create(
             household=house_hold,
-            bench_mark_1=bench_score[0],
-            bench_mark_2=bench_score[1],
-            bench_mark_3=bench_score[2],
-            bench_mark_4=bench_score[3],
-            bench_mark_5=bench_score[4],
-            bench_mark_6=bench_score[5],
-            bench_mark_7=bench_score[6],
-            bench_mark_8=bench_score[7],
-            bench_mark_9=bench_score[8],
-            bench_mark_10=bench_score[9],
-            bench_mark_11=bench_score[10],
-            bench_mark_12=bench_score[11],
-            bench_mark_13=bench_score[12],
-            bench_mark_14=bench_score[13],
-            bench_mark_15=bench_score[14],
-            bench_mark_16=bench_score[15],
-            bench_mark_17=bench_score[16],
+            benchmark_1=bench_score[0],
+            benchmark_2=bench_score[1],
+            benchmark_3=bench_score[2],
+            benchmark_4=bench_score[3],
+            benchmark_5=bench_score[4],
+            benchmark_6=bench_score[5],
+            benchmark_7=bench_score[6],
+            benchmark_8=bench_score[7],
+            benchmark_9=bench_score[8],
+            benchmark_10=bench_score[9],
+            benchmark_11=bench_score[10],
+            benchmark_12=bench_score[11],
+            benchmark_13=bench_score[12],
+            benchmark_14=bench_score[13],
+            benchmark_15=bench_score[14],
+            benchmark_16=bench_score[15],
+            benchmark_17=bench_score[16],
             event=event,
             care_giver=RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id),
         )
@@ -8792,55 +8792,55 @@ def new_cpara_v1(request, id):
             bm_array = []
             if cpara_data:
                 for one_cpara_bench in cpara_data:
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_1 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_2 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_3 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_4 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_5 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_6 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_7 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_8 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_9 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_10 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_11 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_12 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_13 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_14 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_15 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_16 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_17 == 1 else "No")
-                    benchmark_1 = "Benchmark 1: (Yes)" if one_cpara_bench.bench_mark_1 == 1 else "Benchmark 1: (No)"
-                    benchmark_2 = "Benchmark 2: (Yes)" if one_cpara_bench.bench_mark_2 == 1 else "Benchmark 2: (No)"
-                    benchmark_3 = "Benchmark 3: (Yes)" if one_cpara_bench.bench_mark_3 == 1 else "Benchmark 3: (No)"
-                    benchmark_4 = "Benchmark 4: (Yes)" if one_cpara_bench.bench_mark_4 == 1 else "Benchmark 4: (No)"
-                    benchmark_5 = "Benchmark 5: (Yes)" if one_cpara_bench.bench_mark_5 == 1 else "Benchmark 5: (No)"
-                    benchmark_6 = "Benchmark 6: (Yes)" if one_cpara_bench.bench_mark_6 == 1 else "Benchmark 6: (No)"
-                    benchmark_7 = "Benchmark 7: (Yes)" if one_cpara_bench.bench_mark_7 == 1 else "Benchmark 7: (No)"
-                    benchmark_8 = "Benchmark 8: (Yes)" if one_cpara_bench.bench_mark_8 == 1 else "Benchmark 8: (No)"
-                    benchmark_9 = "Benchmark 9: (Yes)" if one_cpara_bench.bench_mark_9 == 1 else "Benchmark 9: (No)"
-                    benchmark_10 = "Benchmark 10: (Yes)" if one_cpara_bench.bench_mark_10 == 1 else "Benchmark 10: (No)"
-                    benchmark_11 = "Benchmark 11: (Yes)" if one_cpara_bench.bench_mark_11 == 1 else "Benchmark 11: (No)"
-                    benchmark_12 = "Benchmark 12: (Yes)" if one_cpara_bench.bench_mark_12 == 1 else "Benchmark 12: (No)"
-                    benchmark_13 = "Benchmark 13: (Yes)" if one_cpara_bench.bench_mark_13 == 1 else "Benchmark 13: (No)"
-                    benchmark_14 = "Benchmark 14: (Yes)" if one_cpara_bench.bench_mark_14 == 1 else "Benchmark 14: (No)"
-                    benchmark_15 = "Benchmark 15: (Yes)" if one_cpara_bench.bench_mark_15 == 1 else "Benchmark 15: (No)"
-                    benchmark_16 = "Benchmark 16: (Yes)" if one_cpara_bench.bench_mark_16 == 1 else "Benchmark 16: (No)"
-                    benchmark_17 = "Benchmark 17: (Yes)" if one_cpara_bench.bench_mark_17 == 1 else "Benchmark 17: (No)"
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_1 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_2 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_3 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_4 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_5 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_6 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_7 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_8 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_9 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_10 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_11 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_12 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_13 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_14 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_15 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_16 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_17 == 1 else "No")
+                    benchmark_1 = "Benchmark 1: (Yes)" if one_cpara_bench.benchmark_1 == 1 else "Benchmark 1: (No)"
+                    benchmark_2 = "Benchmark 2: (Yes)" if one_cpara_bench.benchmark_2 == 1 else "Benchmark 2: (No)"
+                    benchmark_3 = "Benchmark 3: (Yes)" if one_cpara_bench.benchmark_3 == 1 else "Benchmark 3: (No)"
+                    benchmark_4 = "Benchmark 4: (Yes)" if one_cpara_bench.benchmark_4 == 1 else "Benchmark 4: (No)"
+                    benchmark_5 = "Benchmark 5: (Yes)" if one_cpara_bench.benchmark_5 == 1 else "Benchmark 5: (No)"
+                    benchmark_6 = "Benchmark 6: (Yes)" if one_cpara_bench.benchmark_6 == 1 else "Benchmark 6: (No)"
+                    benchmark_7 = "Benchmark 7: (Yes)" if one_cpara_bench.benchmark_7 == 1 else "Benchmark 7: (No)"
+                    benchmark_8 = "Benchmark 8: (Yes)" if one_cpara_bench.benchmark_8 == 1 else "Benchmark 8: (No)"
+                    benchmark_9 = "Benchmark 9: (Yes)" if one_cpara_bench.benchmark_9 == 1 else "Benchmark 9: (No)"
+                    benchmark_10 = "Benchmark 10: (Yes)" if one_cpara_bench.benchmark_10 == 1 else "Benchmark 10: (No)"
+                    benchmark_11 = "Benchmark 11: (Yes)" if one_cpara_bench.benchmark_11 == 1 else "Benchmark 11: (No)"
+                    benchmark_12 = "Benchmark 12: (Yes)" if one_cpara_bench.benchmark_12 == 1 else "Benchmark 12: (No)"
+                    benchmark_13 = "Benchmark 13: (Yes)" if one_cpara_bench.benchmark_13 == 1 else "Benchmark 13: (No)"
+                    benchmark_14 = "Benchmark 14: (Yes)" if one_cpara_bench.benchmark_14 == 1 else "Benchmark 14: (No)"
+                    benchmark_15 = "Benchmark 15: (Yes)" if one_cpara_bench.benchmark_15 == 1 else "Benchmark 15: (No)"
+                    benchmark_16 = "Benchmark 16: (Yes)" if one_cpara_bench.benchmark_16 == 1 else "Benchmark 16: (No)"
+                    benchmark_17 = "Benchmark 17: (Yes)" if one_cpara_bench.benchmark_17 == 1 else "Benchmark 17: (No)"
 
                     str_1 = benchmark_1 + ", " + benchmark_2 + ", " + benchmark_3 + ", " + benchmark_4 + ", " + benchmark_5 + ", "
                     str_2 = benchmark_6 + ", " + benchmark_7 + ", " + benchmark_8 + ", " + benchmark_9 + ", "
                     str_3 = benchmark_10 + ", " + benchmark_11 + ", " + benchmark_12 + ", " + benchmark_13 + ", "
                     str_4 = benchmark_14 + ", " + benchmark_15 + ", " + benchmark_16 + ", " + benchmark_17
 
-                    total_benchmark_score = int(one_cpara_bench.bench_mark_1) + int(one_cpara_bench.bench_mark_2) + int(
-                        one_cpara_bench.bench_mark_3) + int(one_cpara_bench.bench_mark_4) + int(
-                        one_cpara_bench.bench_mark_5) + int(one_cpara_bench.bench_mark_6) + int(
-                        one_cpara_bench.bench_mark_7) + int(one_cpara_bench.bench_mark_8) + int(
-                        one_cpara_bench.bench_mark_9) + int(one_cpara_bench.bench_mark_10) + int(
-                        one_cpara_bench.bench_mark_11) + int(one_cpara_bench.bench_mark_12) + int(
-                        one_cpara_bench.bench_mark_13) + int(one_cpara_bench.bench_mark_14) + int(
-                        one_cpara_bench.bench_mark_15) + int(one_cpara_bench.bench_mark_16) + int(
-                        one_cpara_bench.bench_mark_17)
+                    total_benchmark_score = int(one_cpara_bench.benchmark_1) + int(one_cpara_bench.benchmark_2) + int(
+                        one_cpara_bench.benchmark_3) + int(one_cpara_bench.benchmark_4) + int(
+                        one_cpara_bench.benchmark_5) + int(one_cpara_bench.benchmark_6) + int(
+                        one_cpara_bench.benchmark_7) + int(one_cpara_bench.benchmark_8) + int(
+                        one_cpara_bench.benchmark_9) + int(one_cpara_bench.benchmark_10) + int(
+                        one_cpara_bench.benchmark_11) + int(one_cpara_bench.benchmark_12) + int(
+                        one_cpara_bench.benchmark_13) + int(one_cpara_bench.benchmark_14) + int(
+                        one_cpara_bench.benchmark_15) + int(one_cpara_bench.benchmark_16) + int(
+                        one_cpara_bench.benchmark_17)
                     full_str = str_1 + str_2 + str_3 + str_4
                     # qn_string = str(one_cpara_bench.question_code) + " (" + str(one_cpara_bench.answer) + "), "
                     event_detail = event_detail + full_str
@@ -8859,7 +8859,7 @@ def new_cpara_v1(request, id):
             })
 
     return render(request,
-                  'forms/new_cpara.html',
+                  'forms/new_cpara_v1.html',
                   {
                       'form': form,
                       'person': id,
@@ -10385,7 +10385,7 @@ def new_cpara(request, id):
                 
                 }
     
-    return render(request,'forms/new_cpara_upgrade.html',context)
+    return render(request,'forms/new_cpara.html',context)
 
 
 
@@ -10620,7 +10620,7 @@ def edit_cpara(request, id):
                 
                 }
 
-    return render(request,'forms/edit_new_cpara_upgrade.html',context)
+    return render(request,'forms/edit_new_cpara.html',context)
 
 # Delete Cpara functionality
 

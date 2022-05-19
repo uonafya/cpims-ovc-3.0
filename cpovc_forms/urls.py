@@ -148,9 +148,9 @@ urlpatterns = [
     re_path('bursary/new/(?P<id>\d+)/', views.new_bursary, name='new_bursary'),
     re_path(r'^bursary/edit/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.edit_bursary, name='edit_bursary'),
     re_path(r'^bursary/form/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.form_bursary, name='form_bursary'),
-    # OVC Care - CPARA Form
-   
-    re_path('cpara/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_cpara, name='delete_cpara'),
+    # OVC Care - CPARA Form v1
+    re_path('cpara_v1/new/(?P<id>\d+)/', views.new_cpara_v1, name='new_cpara_v1'),
+    re_path('cpara_v1/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_cpara_v1, name='delete_cpara_v1'),
 
     # OVC Care - Case Plan Template
     re_path('caseplan/new/(?P<id>\d+)/', views.case_plan_template, name='new_caseplan'),
@@ -174,9 +174,11 @@ urlpatterns = [
     # Dreams SerivceUptake Form
     re_path('dreamsform/new/(?P<id>\d+)/', views.new_dreamsform, name='new_dreamsform'),
 
-       # New Cpara upgrade Form
+    # cpara view
     re_path('cpara/new/(?P<id>\d+)/', views.new_cpara, name='new_cpara'),
-        # Update Cpara Upgrade Form
+    # cpara edit
     path('edit_cpara/new/<uuid:id>/', views.edit_cpara, name='edit_cpara'),
+    # cpara delete
+    re_path('cpara/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_cpara, name='delete_cpara'),
 
 ]
