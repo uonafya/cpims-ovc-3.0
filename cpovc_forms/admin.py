@@ -15,4 +15,3 @@ class FormAdmin(admin.ModelAdmin):
     # ]
 
 
-# admin.site.register(OVCCareForms, FormAdmin)

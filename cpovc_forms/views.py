@@ -10184,7 +10184,6 @@ def new_cpara(request, id):
                 
             else:
                 ovc_sub_id=ovc_sub.split('_')[0]
-                # pdb.set_trace()
                 ovc_sub_q=ovc_sub.split('_')[1]+'_'+ovc_sub.split('_')[2]
                 
 
@@ -10251,8 +10250,6 @@ def new_cpara(request, id):
         messages.add_message(request, messages.INFO,msg)  
         return HttpResponseRedirect(url)
 
-    
-    # import pdb
 
     child = RegPerson.objects.get(id=id)
     ovc_id = int(id)
@@ -10383,14 +10380,12 @@ def new_cpara(request, id):
                 'care_giver': care_giver,
                 'past_cpara': past_cpara
                 
-                }
-    
+                }    
     return render(request,'forms/new_cpara.html',context)
 
 
 
 # Update cpara edit functionality
-
 def edit_cpara(request, id):
     if request.method == 'POST':
         import pdb
@@ -10483,7 +10478,6 @@ def edit_cpara(request, id):
     # date_event = cpara_data.get('date_of_event')
    
     # pull OVC sub population get
-
     ovc_sub_pop_data = {}    
     ovc_sub_population = OVCSubPopulation.objects.filter(event=id,is_void=False).values()
     # OVCSubPopulation.objects.filter(event=id,is_void=False).delete()
@@ -10498,7 +10492,6 @@ def edit_cpara(request, id):
             ovc_sub_q = ovc_sub.get('criteria')
             ovc_sub_pop_data[str(ovc_sub_id)+'_'+sub_pop[ovc_sub_q]] = 'on'
 
-    # pdb.set_trace()
     
     # cpara = cpara_id.values_list()
     edit_data_cpara={}
@@ -10519,7 +10512,6 @@ def edit_cpara(request, id):
         else:
             # one_data_val = answer_value[one_data_a]            
             edit_data_cpara[one_data_q]=answer_value[one_data_a]
-            # pdb.set_trace()
     
     # edit_data_cpara['d_o_a'] = date_event
     edit_data_cpara.update(ovc_sub_pop_data)
@@ -10530,8 +10522,7 @@ def edit_cpara(request, id):
     person_id=OVCSubPopulation.objects.filter(event=id).first().person_id
     house_id = OVCHHMembers.objects.get(person_id=person_id).house_hold_id
     person_id = OVCHHMembers.objects.get(house_hold=house_id, member_type='TOVC').person_id
-    # import pdb
-    # pdb.set_trace()
+
     child = RegPerson.objects.filter(id=person_id)
     guardians = RegPersonsGuardians.objects.select_related().filter(
         child_person=child, is_void=False, date_delinked=None)
@@ -10546,9 +10537,6 @@ def edit_cpara(request, id):
     ovc_id = int(person_id)
     creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
 
-    # care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-        
-    # house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
     
     # Get house hold
     hhold = OVCHHMembers.objects.get(is_void=False, person_id=person_id)
@@ -10557,7 +10545,6 @@ def edit_cpara(request, id):
     hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
     hhmembers2 = hhmqs.exclude(person_id=person_id)
     
-    # pdb.set_trace()
     # Get child geo
     child_geos = RegPersonsGeo.objects.select_related().filter(
         person=person_id, is_void=False, date_delinked=None)
@@ -10623,11 +10610,10 @@ def edit_cpara(request, id):
     return render(request,'forms/edit_new_cpara.html',context)
 
 # Delete Cpara functionality
-
 def delete_cpara(request, id, btn_event_pk):
     jsonCPARAData = []
     msg = ''
-    
+
     try:
         event_id = uuid.UUID(btn_event_pk)
         d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created

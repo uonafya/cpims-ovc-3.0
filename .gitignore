@@ -1,3 +1,5 @@
 *.pyc
 migrations
 cpims/settings.py
+.pyc
+__pycache__

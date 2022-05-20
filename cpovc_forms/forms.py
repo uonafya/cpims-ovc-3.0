@@ -8399,27 +8399,6 @@ class CparaAssessment(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'false'}))
-
-
-    # cp13q = forms.ChoiceField(required=False,
-    #     choices=YESNO_CHOICES,
-    #     widget=forms.RadioSelect(
-    #         # renderer=RadioCustomRenderer,
-    #         attrs={'data-parsley-required': 'false'}))
-
-    # cp14q = forms.ChoiceField(required=False,
-    #     choices=YESNO_CHOICES,
-    #     widget=forms.RadioSelect(
-    #         # renderer=RadioCustomRenderer,
-    #         attrs={'data-parsley-required': 'false'}))
-
-    # cp15q = forms.ChoiceField(required=False,
-    #     choices=YESNO_CHOICES,
-    #     widget=forms.RadioSelect(
-    #         # renderer=RadioCustomRenderer,
-    #         attrs={'data-parsley-required': 'false'}))
-
-
     
     CP27q = forms.ChoiceField(
         choices=YESNO_CHOICES,
@@ -8475,10 +8454,7 @@ class CparaAssessment(forms.Form):
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
-   
-    
-    
+            attrs={'data-parsley-required': 'true'}))  
     
     # Benchmarks
     CP1b = forms.ChoiceField(

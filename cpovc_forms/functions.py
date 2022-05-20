@@ -6,7 +6,7 @@ from cpovc_main.functions import get_general_list, convert_date
 from cpovc_forms.models import (
     FormsAuditTrail, OVCCareF1B, OVCCareEvents, OVCEducationFollowUp, OVCCareCasePlan)
 from cpovc_ovc.functions import get_house_hold
-from .models import OVCGokBursary
+from .models import OVCGokBursary, OVCCareCpara
 from cpovc_ovc.models import OVCFacility
 
 
@@ -265,12 +265,11 @@ def save_bursary(request, person_id):
 
 
 def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event, date_event, exceptions=[]):
-    import pdb
     answer_value = {
         'AYES': 'Yes',
         'ANNO': 'No',
         'ANA': 'Na'
-    }
+                     }
     if question.code.lower() == 'cp2d':
         if answer == '':
             answer = NullBooleanField

@@ -17,7 +17,7 @@ from cpovc_access.models import AccessLog
 from cpovc_access.models import AccessAttempt
 from cpovc_access.signals import user_locked_out
 import cpovc_access
-from django.utils import six
+# from django.utils import six
 
 PRIVATE_IPS_PREFIX = ('10.', '172.', '192.', '127.')
 

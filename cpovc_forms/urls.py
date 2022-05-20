@@ -180,5 +180,4 @@ urlpatterns = [
     path('edit_cpara/new/<uuid:id>/', views.edit_cpara, name='edit_cpara'),
     # cpara delete
     re_path('cpara/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_cpara, name='delete_cpara'),
-
 ]
