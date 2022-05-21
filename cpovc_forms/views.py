@@ -21,32 +21,16 @@ from reportlab.pdfgen import canvas
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from shutil import copyfile
-
-<<<<<<< HEAD
 from datetime import datetime
-
-=======
->>>>>>> origin/cpara_upgrade_1
 from requests import request
 from cpovc_forms.forms import (
     OVCSearchForm, ResidentialSearchForm, ResidentialFollowupForm,
     ResidentialForm, OVC_FT3hForm, SearchForm, OVCCareSearchForm,
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
-<<<<<<< HEAD
-    GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-<<<<<<< HEAD
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, BenchmarkMonitoringForm,
+    GOKBursaryForm, CparaAssessment,CparaAssessment_v1, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessmentUpgrade,gradMonitoringToolform,OVCHEITrackerForm,CaseTransferForm, BenchmarkMonitoringForm,
     CaseClosureForm)
-=======
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessmentUpgrade,gradMonitoringToolform,OVCHEITrackerForm)
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessmentUpgrade,gradMonitoringToolform CaseTransferForm)
-
-=======
-    GOKBursaryForm,CparaAssessment_v1, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessment)
->>>>>>> origin/cpara_upgrade_1
->>>>>>> upgrade
 
 from .models import (
     OVCCareCpara, OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -57,23 +41,11 @@ from .models import (
     OVCAdverseEventsFollowUp, OVCAdverseEventsOtherFollowUp,
     OVCCaseEventClosure, OVCCaseGeo, OVCMedicalSubconditions, OVCBursary,
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
-<<<<<<< HEAD
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions, OVCCareForms,
     OVCExplanations, OVCCareF1B, OVCCareBenchmarkScore, OVCMonitoring,
-    OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,OVCBenchmarkMonitoring,
-    OVCCareTransfer, OVCHEITracker, OVCPreventiveEvents, pmtct_registration, PMTCTQuestions, PMTCTHEI, PMTCTEvents)
-=======
-    OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareQuestions,
-    OVCCareForms, OVCExplanations, OVCCareF1B,
-<<<<<<< HEAD
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
-    OVCCareCaseExit )
-=======
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, 
-    OVCHIVRiskScreening,OVCSubPopulation,OVCCareIndividaulCpara)
->>>>>>> origin/cpara_upgrade_1
+    OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, ,OVCSubPopulation, OVCCareIndividaulCpara, OVCBenchmarkMonitoring,
+    OVCCareTransfer, OVCHEITracker, OVCPreventiveEvents, pmtct_registration, PMTCTQuestions, PMTCTHEI, PMTCTEvents, OVCCareCaseExit)
 
->>>>>>> upgrade
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -7515,7 +7487,7 @@ def delete_form1b(request, id, btn_event_pk):
 @login_required(login_url='/')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_previous_event_entry(request, btn_event_type, entry_id):
-    print("debug log ====================")
+    print("debug log ==========delete previous entry==========")
     jsonForm1AData = []
     try:
         entry_id = uuid.UUID(entry_id)
@@ -10971,10 +10943,7 @@ def new_cpara(request, id):
     hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
     hhmembers2 = hhmqs.exclude(person_id=id)
     hhmembers = hhmembers2.exclude(person=care_giver)
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/cpara_upgrade_1
     # Get child geo
     child_geos = RegPersonsGeo.objects.select_related().filter(
         person=child, is_void=False, date_delinked=None)
@@ -10999,8 +10968,7 @@ def new_cpara(request, id):
     if all_geos_county:
         geo_county = ', '.join(all_geos_county)
     # geo_wards = geo_wards
-<<<<<<< HEAD
-=======
+
     if geo_wards is None:
         ward = None
         subcounty = None
@@ -11281,7 +11249,6 @@ def edit_cpara(request, id):
     if all_geos_county:
         geo_county = ', '.join(all_geos_county)
     # geo_wards = geo_wards
->>>>>>> origin/cpara_upgrade_1
 
     # geo_wards = geo_wards
     if geo_wards is None:
@@ -11294,7 +11261,7 @@ def edit_cpara(request, id):
         subcounty = SetupGeography.objects.get(area_id=ward.parent_area_id)
         county = SetupGeography.objects.get(area_id=subcounty.parent_area_id)
 
-<<<<<<< HEAD
+
     # PAST CPARA
     past_cpara = []
     cpara_events = OVCCareEvents.objects.filter(event_type_id='cpr', person_id=child.id)
@@ -11375,7 +11342,7 @@ def edit_cpara(request, id):
             })
 
             
-=======
+
     print(f'Edit data: {edit_data_cpara}')
     form = CparaAssessment(data=edit_data_cpara)
     ovc_id = int(person_id)
@@ -11384,8 +11351,6 @@ def edit_cpara(request, id):
     hhmembers = hhmembers2.exclude(person=care_giver)   
 
 
-               
->>>>>>> origin/cpara_upgrade_1
     context = {'form':form,
                 'person': id,
                 'siblings': siblings,
@@ -11395,17 +11360,63 @@ def edit_cpara(request, id):
                 'child': child,
                 'creg': creg,
                 'caregiver': care_giver,
-<<<<<<< HEAD
-                'household': house_hold,
+                # 'household': house_hold,
                 'ward': ward,
                 'subcounty': subcounty,
                 'county': county,
-                'care_giver': care_giver,
-                'past_cpara': past_cpara
+                'care_giver': care_giver
                 
                 }
 
-    return render(request,'forms/new_cpara_upgrade.html',context)
+    return render(request,'forms/edit_new_cpara.html',context)
+
+# Delete Cpara functionality
+def delete_cpara(request, id, btn_event_pk):
+    jsonCPARAData = []
+    msg = ''
+
+    try:
+        event_id = uuid.UUID(btn_event_pk)
+        d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created
+        # pdb.set_trace()
+        delta = get_days_difference(d_event)
+        if delta < 90:
+            # Event Instance
+            del_event = OVCCareEvents.objects.get(pk=event_id)
+            # Event object
+            event_to_del = OVCCareEvents.objects.filter(pk=event_id)
+            # print ("event: {}".format(type(del_event)))
+         
+            # import pdb
+            if del_event:
+                # delete cpara
+                ovcpara = OVCCareCpara.objects.filter(event=del_event)
+                ovc_bench = OVCCareBenchmarkScore.objects.filter(event=del_event)
+                ovc_sub = OVCSubPopulation.objects.filter(event=del_event)
+                # pdb.set_trace()
+                if ovcpara:                    
+                    ovcpara.update(is_void=True)
+                    msg = "OVC Cpara Deleted successfully"
+              
+                event_to_del.update(is_void=True)  
+                msg = "OVC Event Deleted successfully"
+
+                ovc_bench.update(is_void=True)
+                msg = "Benchmark Score deleted successfuly"
+
+                ovc_sub.update(is_void=True)
+                msg = "OVC sub population deleted successfuly"
+
+        else:
+            msg = "Can't delete after 90 days"
+    except Exception as e:
+        msg = 'An error occured : %s' % str(e)
+        print(str(e))
+    jsonCPARAData.append({'msg': msg})
+    return JsonResponse(jsonCPARAData,
+                        content_type='application/json',
+                        safe=False)
+
 
 def grad_monitor_tool(request, id):
     if request.method == 'POST':
@@ -11715,62 +11726,3 @@ def case_transfer(request, id):
     else:
         pass
 
-=======
-                # 'household': house_hold,
-                'ward': ward,
-                'subcounty': subcounty,
-                'county': county,
-                'care_giver': care_giver
-                
-                }
-
-    return render(request,'forms/edit_new_cpara.html',context)
-
-# Delete Cpara functionality
-def delete_cpara(request, id, btn_event_pk):
-    jsonCPARAData = []
-    msg = ''
-
-    try:
-        event_id = uuid.UUID(btn_event_pk)
-        d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created
-        # pdb.set_trace()
-        delta = get_days_difference(d_event)
-        if delta < 90:
-            # Event Instance
-            del_event = OVCCareEvents.objects.get(pk=event_id)
-            # Event object
-            event_to_del = OVCCareEvents.objects.filter(pk=event_id)
-            # print ("event: {}".format(type(del_event)))
-         
-            # import pdb
-            if del_event:
-                # delete cpara
-                ovcpara = OVCCareCpara.objects.filter(event=del_event)
-                ovc_bench = OVCCareBenchmarkScore.objects.filter(event=del_event)
-                ovc_sub = OVCSubPopulation.objects.filter(event=del_event)
-                # pdb.set_trace()
-                if ovcpara:                    
-                    ovcpara.update(is_void=True)
-                    msg = "OVC Cpara Deleted successfully"
-              
-                event_to_del.update(is_void=True)  
-                msg = "OVC Event Deleted successfully"
-
-                ovc_bench.update(is_void=True)
-                msg = "Benchmark Score deleted successfuly"
-
-                ovc_sub.update(is_void=True)
-                msg = "OVC sub population deleted successfuly"
-
-        else:
-            msg = "Can't delete after 90 days"
-    except Exception as e:
-        msg = 'An error occured : %s' % str(e)
-        print(str(e))
-    jsonCPARAData.append({'msg': msg})
-    return JsonResponse(jsonCPARAData,
-                        content_type='application/json',
-                        safe=False)
->>>>>>> origin/cpara_upgrade_1
->>>>>>> upgrade
