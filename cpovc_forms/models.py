@@ -863,14 +863,18 @@ class OVCGokBursary(models.Model):
 
 
 '''
-Classes below were added due to ovc case management
+Classes below were added due to ovc case managementOVCCareForms
 '''
 
-
 class OVCCareForms(models.Model):
+<<<<<<< HEAD
     form_id = models.UUIDField(
         primary_key=True, default=uuid.uuid1, editable=False)
     name = models.CharField(max_length=50)
+=======
+    form_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    name = models.CharField(max_length=100)
+>>>>>>> origin/cpara_upgrade_1
     description = models.CharField(max_length=255)
     is_void = models.BooleanField(default=False)
     timestamp_created = models.DateTimeField(default=timezone.now)
@@ -884,6 +888,7 @@ class OVCCareForms(models.Model):
 
 
 class OVCCareBenchmarkScore(models.Model):
+<<<<<<< HEAD
 
     bench_mark_score_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
@@ -905,27 +910,59 @@ class OVCCareBenchmarkScore(models.Model):
     bench_mark_15 = models.IntegerField(default=0)
     bench_mark_16 = models.IntegerField(default=0)
     bench_mark_17 = models.IntegerField(default=0)
+=======
+   
+    bench_mark_score_id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE, null=True)
+    benchmark_1 = models.IntegerField(default=0)
+    benchmark_2 = models.IntegerField(default=0)
+    benchmark_3 = models.IntegerField(default=0)
+    benchmark_4 = models.IntegerField(default=0)
+    benchmark_5 = models.IntegerField(default=0)
+    benchmark_6 = models.IntegerField(default=0)
+    benchmark_7 = models.IntegerField(default=0)
+    benchmark_8 = models.IntegerField(default=0)
+    benchmark_9 = models.IntegerField(default=0)
+    benchmark_10 = models.IntegerField(default=0)
+    benchmark_11 = models.IntegerField(default=0)
+    benchmark_12 = models.IntegerField(default=0)
+    benchmark_13 = models.IntegerField(default=0)
+    benchmark_14 = models.IntegerField(default=0)
+    benchmark_15 = models.IntegerField(default=0)
+    benchmark_16 = models.IntegerField(default=0)
+    benchmark_17 = models.IntegerField(default=0)
+>>>>>>> origin/cpara_upgrade_1
     score = models.IntegerField(default=0)
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
-    care_giver = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    care_giver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, null=True)
     is_void = models.BooleanField(default=False)
     date_of_event = models.DateField(default=timezone.now)
     timestamp_created = models.DateTimeField(default=timezone.now)
     timestamp_updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return str(self.bench_mark_score_id)
+        return str(self.benchmark_score_id)
 
     class Meta:
         db_table = 'ovc_care_benchmark_score'
 
+<<<<<<< HEAD
+=======
+    def __unicode__(self):
+        return str(self.benchmark_score_id)
+
+>>>>>>> origin/cpara_upgrade_1
 
 class OVCCareCpara(models.Model):
     cpara_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+<<<<<<< HEAD
     caregiver = models.ForeignKey(
         RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver')
+=======
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver_v1')
+>>>>>>> origin/cpara_upgrade_1
     question_code = models.CharField(max_length=10, null=False, blank=True)
     question = models.ForeignKey('OVCCareQuestions', on_delete=models.CASCADE)
     answer = models.CharField(max_length=15)
@@ -951,7 +988,6 @@ class OVCCareCpara(models.Model):
 
     def __unicode__(self):
         return str(self.cpara_id)
-
 
 class OVCCareWellbeing(models.Model):
     well_being_id = models.UUIDField(
@@ -1124,6 +1160,34 @@ class OVCMonitoring(models.Model):
     def __unicode__(self):
         return str(self.id)
 
+class OVCMonitoring11(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
+    hiv_status_knowledge = models.CharField(max_length=5)
+    viral_suppression = models.CharField(max_length=5)
+    hiv_prevention = models.CharField(max_length=5)
+    undernourished = models.CharField(max_length=5)
+    access_money = models.CharField(max_length=5)
+    violence = models.CharField(max_length=5)
+    caregiver = models.CharField(max_length=5)
+    school_attendance = models.CharField(max_length=5)
+    school_progression = models.CharField(max_length=5)
+    cp_achievement = models.CharField(max_length=5)
+    case_closure = models.CharField(max_length=5)
+    case_closure_checked =  models.CharField(max_length=5)
+    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+    quarter = models.CharField(max_length=10, null=True, blank=True)
+    is_void = models.BooleanField(default=False)
+    event_date = models.DateField()
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ovc_monitoring11'
+
+    def __unicode__(self):
+        return str(self.id)
+
 
 
 class OVCHivStatus(models.Model):
@@ -1143,6 +1207,7 @@ class OVCHivStatus(models.Model):
         return str(self.hiv_status_id)
 
 
+<<<<<<< HEAD
 
 class OVCCareQuestions(models.Model):
     question_id = models.UUIDField(
@@ -1165,6 +1230,8 @@ class OVCCareQuestions(models.Model):
 
 
 
+=======
+>>>>>>> origin/cpara_upgrade_1
 class OVCHIVRiskScreening(models.Model):
     risk_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
@@ -1461,6 +1528,7 @@ class OVCCaseLocation(models.Model):
         """To be returned by admin actions."""
         return '%s' % (str(self.case))
 
+<<<<<<< HEAD
 
 class OVCHEITracker(models.Model):
     hei_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
@@ -1566,6 +1634,14 @@ class OVCCareQuestions(models.Model):
     question = models.CharField(max_length=55)
     domain = models.CharField(max_length=100)
     question_text = models.CharField(max_length=255)
+=======
+class OVCCareQuestions(models.Model):
+    question_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    code = models.CharField(max_length=5, null=True)
+    question = models.CharField(max_length=55, null=True)
+    domain = models.CharField(max_length=10, null=True)
+    question_text = models.CharField(max_length=255, null=True)
+>>>>>>> origin/cpara_upgrade_1
     question_type = models.CharField(max_length=20, null=False)
     form = models.ForeignKey(OVCCareForms, on_delete=models.CASCADE)
     is_void = models.BooleanField(default=False)
@@ -1578,6 +1654,7 @@ class OVCCareQuestions(models.Model):
     class Meta:
         db_table = 'ovc_care_questions'
 
+<<<<<<< HEAD
     
 class PMTCTHEI(models.Model):
     pmtct_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -1609,6 +1686,34 @@ class OVCCareCpara_upgrade(models.Model):
     caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver_upgrade')
     question_code = models.CharField(max_length=200, null=False, blank=True)
     question = models.ForeignKey('OVCCareQuestions', on_delete=models.CASCADE)
+=======
+
+# OVC sub population
+
+class OVCSubPopulation(models.Model):
+    sub_population_id = models.UUIDField(
+    primary_key=True, default=uuid.uuid4, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    criteria = models.CharField(max_length=10)
+    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+    date_of_event = models.DateField()
+    is_void = models.BooleanField(default=False)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+
+    class Meta:
+            db_table = 'ovc_sub_population'
+
+    def __unicode__(self):
+        return str(self.sub_population_id)
+class OVCCareIndividaulCpara(models.Model):
+    cpara_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_person')
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='cpara_caregiver')
+    question_code = models.CharField(max_length=10, null=False, blank=True)
+    question = models.ForeignKey(OVCCareQuestions, on_delete=models.CASCADE)
+>>>>>>> origin/cpara_upgrade_1
     answer = models.CharField(max_length=15)
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
     question_type = models.CharField(max_length=50)
@@ -1620,6 +1725,7 @@ class OVCCareCpara_upgrade(models.Model):
     is_void = models.BooleanField(default=False)
     timestamp_updated = models.DateTimeField(auto_now=True)
 
+<<<<<<< HEAD
     def __unicode__(self):
         return self.answer
 
@@ -1744,3 +1850,11 @@ class OVCCareTransfer(models.Model):
         """To be returned by admin actions."""
         return '%s' % (str(self.person))
 
+=======
+
+    class Meta:
+        db_table = 'ovc_care_individual_cpara'
+
+    def __unicode__(self):
+        return str(self.cpara_id)
+>>>>>>> origin/cpara_upgrade_1

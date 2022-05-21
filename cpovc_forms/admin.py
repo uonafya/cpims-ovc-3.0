@@ -16,6 +16,7 @@ class FormAdmin(admin.ModelAdmin):
     ]
 
 
+<<<<<<< HEAD
 admin.site.register(OVCCareForms, FormAdmin)
 
 
@@ -26,3 +27,5 @@ class OVCCareTransferAdmin(admin.ModelAdmin):
 
 
 admin.site.register(OVCCareTransfer, OVCCareTransferAdmin)
+=======
+>>>>>>> origin/cpara_upgrade_1

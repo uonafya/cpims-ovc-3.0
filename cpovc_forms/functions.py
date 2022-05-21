@@ -1,13 +1,21 @@
+<<<<<<< HEAD
 from django.db import connection
+=======
+from django.forms import NullBooleanField
+>>>>>>> origin/cpara_upgrade_1
 from cpovc_registry.functions import (
     get_client_ip, get_meta_data)
 
 from cpovc_main.functions import get_general_list, convert_date
 from cpovc_forms.models import (
+<<<<<<< HEAD
     FormsAuditTrail, OVCCareF1B, OVCCareEvents,
     OVCEducationFollowUp, OVCCareCpara, OVCCareCasePlan)
+=======
+    FormsAuditTrail, OVCCareF1B, OVCCareEvents, OVCEducationFollowUp, OVCCareCasePlan)
+>>>>>>> origin/cpara_upgrade_1
 from cpovc_ovc.functions import get_house_hold
-from .models import OVCGokBursary
+from .models import OVCGokBursary, OVCCareCpara
 from cpovc_ovc.models import OVCFacility
 
 
@@ -270,11 +278,11 @@ def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event
     answer_value = {
         'AYES': 'Yes',
         'ANNO': 'No',
-        'No': 'No'
-    }
+        'ANA': 'Na'
+                     }
     if question.code.lower() == 'cp2d':
         if answer == '':
-            answer = None
+            answer = NullBooleanField
         if answer is not None:
             answer = convert_date(answer)
             answer = answer.date().strftime(format='%Y-%m-%d')
@@ -282,8 +290,11 @@ def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event
             answer = '1900-01-01'
     if answer is None:
         answer = 'No'
-    if question.code.lower() not in exceptions:
+    if question.code not in exceptions:
+        # pdb.set_trace()
+
         answer = answer_value[answer]
+        pdb.set_trace()
     try:
         OVCCareCpara.objects.create(
             person_id=id,
@@ -296,6 +307,7 @@ def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event
             event=event,
             date_of_event=date_event
         )
+        # pdb.set_trace()
     except Exception as e:
         print('%s :error saving cpara - %s' % (question.code, str(e)))
         return False
