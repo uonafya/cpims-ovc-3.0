@@ -202,4 +202,9 @@ urlpatterns = [
 #     path('delete_bench/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_benchmark, name='delete_benchmark')
     path('delete_bench/<uuid:id>/', views.delete_benchmark, name='delete_benchmark')
 
+    # HEI Tracker
+    path('new_hei_tracker/new/<int:id>/', views.new_hei_tracker, name='new_hei_tracker'),
+    path('edit_heitracker/edit/(?P<id>\W+)/', views.edit_heitracker, name='edit_heitracker'),
+    path('delete_heitracker/(?P<id>)/', views.delete_heitracker, name='delete_heitracker'),
+
 ]

@@ -135,6 +135,9 @@ olmis_ha29_list = get_list('olmis_ha29_id', 'Please Select')
 olmis_ha30_list = get_list('olmis_ha30_id', 'Please Select')
 olmis_ha31_list = get_list('olmis_ha31_id', 'Please Select')
 
+# hei_tracker
+yes_no = get_list('yesno_id', 'Please Select')
+
 
 #Wellbeing
 YESNO_CHOICES_REFUSE = (('AYES', 'Yes'), ('ANNO', 'No'), ('AREFUSE', 'Refuse'))
@@ -8161,6 +8164,524 @@ class DREAMS_FORM(forms.Form):
                #'data-parsley-required': "true",
                #'data-parsley-group': 'group0',
                'rows': '3'}))
+
+class OVCHEITrackerForm(forms.Form):
+
+    HIV_STATUS = (('', 'Select Status'), ('Positive', 'Positive'), ('Negative', 'Negative'), ('Unknown', 'Unknown'))
+    Test_Results = (('', 'Select Status'), ('Positive', 'Positive'), ('Negative', 'Negative'),)
+    Feeding_Mode = (('', 'Select Feeding mode'), ('Exclusive', 'Exclusive'),
+                    ('BreastFeeding', 'BreastFeeding'),
+                    ('Replacementfeeding', 'Replacement feeding'),
+                    ('Mixedfeeding', 'Mixed feeding'),)
+    ON_Track = (('', 'Select'), ('OnTrack', 'On Track'), ('NotOnTrack', 'Not On Track'),)
+    # yes_no = (('', 'Select'), ('Yes', 'Yes'), ('No', 'No'),)
+    Follow_Up = forms.ChoiceField(
+        choices=(
+            ('AtFirstContact', 'At first contact'),
+            ('At6wks', 'At 6 weeks'),
+            ('At6mths', 'At 6 months'),
+            ('At12mths', 'At 12 months'),
+            ('At18mths', 'At 18 months')
+        ),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                #  'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+    Attrition_reasons = (('', 'Select Attrition reason'), ('Died', 'Died'), ('Relocation', 'Relocation'), ('leftAtWill', 'Left at will'))
+
+    # care giver biodata
+    PMTCT_HEI5q = forms.ChoiceField(
+        choices=HIV_STATUS,
+        widget=forms.Select(
+        attrs={
+            'class': 'form-control',
+            'id': 'PMTCT_HEI5q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI6q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+        attrs={
+            'class': 'form-control',
+            'id': 'PMTCT_HEI6q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI7q = forms.CharField(
+
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter facility'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI7q',
+            'readonly': 'true',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI8q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter CCC number'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI8q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI9q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter latest Vl results'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI9q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI10q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Date of VL test'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI10q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI42q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Date of follow up'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI42q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI42q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('Date of follow up'),
+                'class': 'form-control',
+                'id': 'PMTCT_HEI42q',
+                # 'data-parsley-type': "date",
+                # 'data-parsley-required': "true",
+                # 'data-parsley-group': 'group0'
+            })
+    )
+    PMTCT_HEI43q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('Date of follow up'),
+                'class': 'form-control',
+                'id': 'PMTCT_HEI43q',
+                # 'data-parsley-type': "digits",
+                # 'data-parsley-required': "true",
+                # 'data-parsley-group': 'group0'
+            })
+    )
+    PMTCT_HEI44q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('Date of follow up'),
+                'class': 'form-control',
+                'id': 'PMTCT_HEI44q',
+                # 'data-parsley-type': "digits",
+                # 'data-parsley-required': "true",
+                # 'data-parsley-group': 'group0'
+            })
+    )
+    PMTCT_HEI45q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('Date of follow up'),
+                'class': 'form-control',
+                'id': 'PMTCT_HEI45q',
+                # 'data-parsley-type': "digits",
+                # 'data-parsley-required': "true",
+                # 'data-parsley-group': 'group0'
+            })
+    )
+    PMTCT_HEI46q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('Date of follow up'),
+                'class': 'form-control',
+                'id': 'PMTCT_HEI46q',
+                # 'data-parsley-type': "digits",
+                # 'data-parsley-required': "true",
+                # 'data-parsley-group': 'group0'
+            })
+    )
+    PMTCT_HEI10q = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Date of HEI tracking'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI10q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+
+    # HEI Follow up first contact
+    PMTCT_HEI13q = forms.ChoiceField(
+        required=False,
+         choices=yes_no,
+        widget=forms.Select(
+        attrs={
+            'class': 'form-control',
+            'id': 'PMTCT_HEI13q',
+            'data-parsley-required': "false",
+        })
+    )
+
+    PMTCT_HEI14q = forms.ChoiceField(
+        required=False,
+        choices=Test_Results,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI14q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI15q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter vl results'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI15q',
+            # 'data-parsley-type': "digits",
+            'data-parsley-required': "false",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI16q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI16q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI17q = forms.ChoiceField(
+        required=False,
+        choices=Feeding_Mode,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI17q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    # HEI Follow up at 6mnths
+    PMTCT_HEI24q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI24q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    PMTCT_HEI25q = forms.ChoiceField(
+        required=False,
+        choices=Test_Results,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI25q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI26q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter vl results'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI26q',
+            # 'data-parsley-type': "digits",
+            'data-parsley-required': "false",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI27q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI27q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI28q = forms.ChoiceField(
+        required=False,
+        choices=ON_Track,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI28q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI29q = forms.ChoiceField(
+        required=False,
+        choices=Feeding_Mode,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI29q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    # HEI Follow up at 6wks
+    PMTCT_HEI18q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'placeholder': _('Female'),
+                'class': 'form-control',
+                'id': 'PMTCT_HEI8q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    PMTCT_HEI19q = forms.ChoiceField(
+        required=False,
+        choices=Test_Results,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI19q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI20q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter vl results'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI20q',
+            # 'data-parsley-type': "digits",
+            'data-parsley-required': "false",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI21q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI21q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI22q = forms.ChoiceField(
+        required=False,
+        choices=ON_Track,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI22q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI23q = forms.ChoiceField(
+        required=False,
+        choices=Feeding_Mode,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI23q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    # HEI Follow up at 12mnths
+    PMTCT_HEI30q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI30q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    PMTCT_HEI31q = forms.ChoiceField(
+        required=False,
+        choices=Test_Results,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI31q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI32q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter vl results'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI32q',
+            # 'data-parsley-type': "digits",
+            'data-parsley-required': "false",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI33q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI33q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI34q = forms.ChoiceField(
+        required=False,
+        choices=ON_Track,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI34q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI35q = forms.ChoiceField(
+        required=False,
+        choices=Feeding_Mode,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI35q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    # HEI Follow up at 18mnths
+    PMTCT_HEI36q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI36q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI37q = forms.ChoiceField(
+        required=False,
+        choices=Test_Results,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI37q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI38q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter vl results'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI38q',
+            # 'data-parsley-type': "digits",
+            'data-parsley-required': "false",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI39q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI39q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI40q = forms.ChoiceField(
+        required=False,
+        choices=ON_Track,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI40q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI41q = forms.ChoiceField(
+        required=False,
+        choices=Feeding_Mode,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI41q',
+                'data-parsley-required': "false",
+            })
+    )
+
+   # Others
+    PMTCT_HEI47q = forms.ChoiceField(
+        required=False,
+        choices=Attrition_reasons,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI47q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI48q = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+        attrs={'placeholder': _('Comments'),
+               'class': 'form-control',
+               'id': 'PMTCT_HEI48q',
+               'data-parsley-required': "false",
+               'rows': '2'}))
 
 class CparaAssessmentUpgrade(forms.Form):
     # Details
