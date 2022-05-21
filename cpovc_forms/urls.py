@@ -159,14 +159,7 @@ urlpatterns = [
     path('caseplan/update/<int:ovcid>/<uuid:event_id>/', views.update_caseplan, name='update_caseplan'),
     path('caseplan-monitoring/new/<int:id>/', views.new_case_plan_monitoring, name='new_caseplan_monitoring'),
 
-<<<<<<< HEAD
-    # wellbeing Adult and Child
-    re_path(r'wellbeing/new/(?P<id>\d+)/$', views.new_wellbeing, name='new_wellbeing'),
 
-    # wellbeing Adolescent
-    re_path(r'wellbeingadolescent/new/(?P<id>\d+)/$', views.new_wellbeingadolescent, name='new_wellbeingadolescent'),
-    # hiv_status
-=======
     # Wellbeing Adult and Child
     path('wellbeing/new/<int:id>/', views.new_wellbeing, name='new_wellbeing'),
 
@@ -176,7 +169,7 @@ urlpatterns = [
         name='new_wellbeingadolescent'),
 
     # HIV Status
->>>>>>> upgrade
+
     path('HIVstatus/', views.hiv_status, name='hiv_status'),
 
     # HIV Risk Assessment Form
@@ -194,7 +187,7 @@ urlpatterns = [
         'dreamsform/new/<int:id>/', views.new_dreamsform,
         name='new_dreamsform'),
 
-<<<<<<< HEAD
+
     # Benchmarks Monitoring Form
     path('benchmarkmonitoring/new/<int:id>/', views.new_benchmarkmonitoring, name='benchmarkmonitoring'),
     #Case Closure Form
@@ -202,7 +195,7 @@ urlpatterns = [
     path('editcaseclosure/edit/<uuid:id>/', views.edit_case_closure, name='edit_case_closure'),
     path('deletecaseclosure/edit/<uuid:id>/', views.delete_case_closure, name='delete_case_closure'),
 
-=======
+
     # New Forms - CPIMS OVC Upgrade
     path(
         'case-transfer/new/<int:id>/', views.case_transfer,
@@ -231,5 +224,4 @@ urlpatterns = [
     path('edit_cpara/new/<uuid:id>/', views.edit_cpara, name='edit_cpara'),
     # cpara delete
     re_path('cpara/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_cpara, name='delete_cpara'),
->>>>>>> upgrade
-]
+
