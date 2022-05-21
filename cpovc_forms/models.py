@@ -384,7 +384,6 @@ class OVCCaseEventCourt(models.Model):
 class OVCCaseEventSummon(models.Model):
     summon_id = models.UUIDField(
         primary_key=True, default=uuid.uuid1, editable=False)
-
     honoured = models.BooleanField(default=False)
     honoured_date = models.DateField(null=True)
     summon_date = models.DateField(null=True)
@@ -477,7 +476,6 @@ class OVCEducationFollowUp(models.Model):
     admission_to_school_date = models.DateField(
         default=timezone.now, null=True)
     education_comments = models.CharField(max_length=1000, null=True)
-
     # -- New ---
     school_id = models.ForeignKey(SchoolList, on_delete=models.CASCADE, null=True)
     not_in_school_reason = models.CharField(max_length=4, null=True)
@@ -582,16 +580,14 @@ class OVCFamilyCare(models.Model):
     adoption_subcounty = models.ForeignKey(
         'cpovc_main.SetupGeography', on_delete=models.CASCADE, related_name='adoption_subcounty_fk', null=True)
     adoption_country = models.CharField(max_length=20, null=True)
-    residential_institution_name = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE,
-                                                     related_name='residential_institution_name_fk', null=True)
+    residential_institution_name = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE, related_name='residential_institution_name_fk', null=True)
     fostered_from = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE, related_name='fostered_from_fk', null=True)
     date_of_adoption = models.DateField(default=timezone.now, null=True)
     court_name = models.CharField(max_length=100, null=True)
     court_file_number = models.CharField(max_length=20, null=True)
     # adoption_startdate = models.CharField(max_length=20)
     parental_status = models.CharField(max_length=4, null=True)
-    children_office = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE, related_name='children_office_fk',
-                                        null=True)
+    children_office = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE, related_name='children_office_fk', null=True)
     contact_person = models.CharField(max_length=20, null=True)
     adopting_mother_firstname = models.CharField(max_length=20, null=True)
     adopting_mother_othernames = models.CharField(max_length=20, null=True)
@@ -780,10 +776,8 @@ class OVCGokBursary(models.Model):
     fees_balance = models.IntegerField()
     school_secondary = models.CharField(max_length=150)
     school_principal = models.CharField(max_length=150)
-    school_county = models.ForeignKey(
-        'cpovc_main.SetupGeography', on_delete=models.CASCADE, related_name='school_county')
-    school_constituency = models.ForeignKey(
-        'cpovc_main.SetupGeography', on_delete=models.CASCADE, related_name='school_constituency')
+    school_county = models.ForeignKey('cpovc_main.SetupGeography', on_delete=models.CASCADE, related_name='school_county')
+    school_constituency = models.ForeignKey('cpovc_main.SetupGeography', on_delete=models.CASCADE, related_name='school_constituency')
     school_sub_county = models.CharField(max_length=100, null=True)
     school_location = models.CharField(max_length=100, null=True)
     school_sub_location = models.CharField(max_length=100, null=True)
@@ -951,8 +945,8 @@ class OVCCareCasePlan(models.Model):
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
     need = models.CharField(max_length=255)
     priority = models.CharField(max_length=255)
-    # cp_service = models.ForeignKey('cpovc_main.SetupList', on_delete=models.CASCADE)
-    cp_service = models.CharField(max_length=10)
+    cp_service = models.ForeignKey('cpovc_main.SetupList', on_delete=models.CASCADE)
+    #cp_service = models.CharField(max_length=10)
     responsible = models.CharField(max_length=50)
     completion_date = models.DateField(default=timezone.now)
     actual_completion_date = models.DateField(default=timezone.now)
@@ -1136,7 +1130,7 @@ class OVCHIVRiskScreening(models.Model):
     adol_sexual_abuse = models.BooleanField(null=True)
     sex = models.BooleanField(null=True)
     sti = models.BooleanField(null=True)
-    sharing_needs = models.BooleanField(null=true)
+    sharing_needles = models.BooleanField(null=true)
     hiv_test_required = models.BooleanField(null=True)
     parent_consent_testing = models.BooleanField(null=True)
     parent_consent_date = models.DateField(default=timezone.now, null=True)  ###date new 1
