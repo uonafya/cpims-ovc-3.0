@@ -821,8 +821,17 @@ var handleMobileSidebar = function() {
 };
 
 var handleDatepicker = function() {
+<<<<<<< HEAD
     $('#date_of_assessment,#date_of_service,#olmis_service_date,#CASE_CL026, #date_of_cevent,#date_of_priority,#date_of_csi, #date_of_hhva,#date_of_certificate_expiry, #disbursement_date, #date_of_adoption, #summon_date, #summon_date_next, #date_of_summon, #honoured_date,#CASE_CL026, #next_hearing_date, #next_mention_date, #adverse_event_date, #admmission_to_school_date, #discharge_date, #expected_return_date, #actual_return_date, #placementfollowup_date, #court_order_issue_date,#child_dob, #date_of_referral_event, #date_of_case_closure, #date_case_opened, #departure_date, #admission_date,#date_of_court_event, #date_of_encounter_event, #date_of_placement_event,#date_of_birth, #date_of_death, #datepicker, #editdate, #date_of_event, #sibling_dob, #audit_date, #caregiver_dob').datepicker({
         dateFormat: 'yy-mm-dd', format: 'dd-M-yyyy',
+=======
+<<<<<<< HEAD
+    $('#monitoring_date,#date_of_assessment,#date_of_service,#olmis_service_date,#date_of_cevent,#date_of_priority,#date_of_csi, #date_of_hhva,#date_of_certificate_expiry, #disbursement_date, #date_of_adoption, #summon_date, #summon_date_next, #date_of_summon, #honoured_date, #next_hearing_date, #next_mention_date, #adverse_event_date, #admmission_to_school_date, #discharge_date, #expected_return_date, #actual_return_date, #placementfollowup_date, #court_order_issue_date,#child_dob, #date_of_referral_event, #date_of_case_closure, #date_case_opened, #departure_date, #admission_date,#date_of_court_event, #date_of_encounter_event, #date_of_placement_event,#date_of_birth, #date_of_death, #datepicker, #editdate, #date_of_event, #sibling_dob, #audit_date, #caregiver_dob').datepicker({
+=======
+    $('#date_of_assessment,#date_of_service,#olmis_service_date,#date_of_cevent,#date_of_priority,#date_of_csi, #date_of_hhva,#date_of_certificate_expiry, #disbursement_date, #date_of_adoption, #summon_date, #summon_date_next, #date_of_summon, #honoured_date, #next_hearing_date, #next_mention_date, #adverse_event_date, #admmission_to_school_date, #discharge_date, #expected_return_date, #actual_return_date, #placementfollowup_date, #court_order_issue_date,#child_dob, #date_of_referral_event, #date_of_case_closure, #date_case_opened, #departure_date, #admission_date,#date_of_court_event, #date_of_encounter_event, #date_of_placement_event,#date_of_birth, #date_of_death, #datepicker, #editdate, #date_of_event, #sibling_dob, #audit_date, #caregiver_dob').datepicker({
+>>>>>>> origin/cpara_upgrade_1
+        dateFormat: 'yyyy-mm-dd', format: 'yyyy-mm-dd',
+>>>>>>> upgrade
         endDate: '+0d', enddate: '+0d', autoclose: true
     });
 };

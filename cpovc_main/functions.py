@@ -282,14 +282,14 @@ def get_general_list(field_names=[], item_category=False):
 
 
 def get_list(field_name=[], default_txt=False, category=False):
-    my_list = ()
+    """Method to load list from DB or Cache"""
     try:
         cat_id = '1' if category else '0'
         cache_key = 'set_up_list_%s_%s' % (field_name, cat_id)
         cache_list = cache.get(cache_key)
         if cache_list:
             v_list = cache_list
-            # print 'FROM Cache %s' % (cache_key)
+            print('FROM Cache %s' % (cache_key))
         else:
             v_list = get_general_list([field_name], category)
             cache.set(cache_key, v_list, 300)
@@ -298,13 +298,14 @@ def get_list(field_name=[], default_txt=False, category=False):
         if default_txt:
             initial_list = ('', default_txt)
             final_list = [initial_list] + list(my_list)
-            return final_list
+        else:
+            final_list = list(my_list)
     except Exception as e:
         error = 'Error getting list - %s' % (str(e))
         print(error)
-        return my_list
+        return []
     else:
-        return my_list
+        return final_list
 
 
 def get_org_units_list(default_txt=False, org_types=[]):

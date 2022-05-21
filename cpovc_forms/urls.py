@@ -1,6 +1,7 @@
 from django.urls import path, include, re_path
 from . import views
 
+# app_name='cpims_forms'
 # This should contain paths related to registry ONLY
 urlpatterns = [
     # Forms Registry
@@ -118,7 +119,7 @@ urlpatterns = [
     re_path('csi/delete/(?P<id>\w+)/', views.delete_csi, name='delete_csi'),
 
     # OVC Care - Form1A
-    re_path('form1a/new/(?P<id>\d+)/', views.form1a_events, name='form1a_events'),
+    path('form1a/new/<int:id>/', views.form1a_events, name='form1a_events'),
     path('form1a/save/', views.save_form1a, name='save_form1a'),
     path('form1a/update/', views.update_form1a, name='update_form1a'),
     re_path('form1a/edit/(?P<id>\d+)/(?P<btn_event_type>\w+)/(?P<btn_event_pk>.+)/', views.edit_form1a,
@@ -148,32 +149,52 @@ urlpatterns = [
     re_path('bursary/new/(?P<id>\d+)/', views.new_bursary, name='new_bursary'),
     re_path(r'^bursary/edit/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.edit_bursary, name='edit_bursary'),
     re_path(r'^bursary/form/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.form_bursary, name='form_bursary'),
-    # OVC Care - CPARA Form
-    re_path('cpara/new/(?P<id>\d+)/', views.new_cpara, name='new_cpara'),
-    re_path('cpara/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_cpara, name='delete_cpara'),
+    # OVC Care - CPARA Form v1
+    re_path('cpara_v1/new/(?P<id>\d+)/', views.new_cpara_v1, name='new_cpara_v1'),
+    re_path('cpara_v1/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_cpara_v1, name='delete_cpara_v1'),
 
     # OVC Care - Case Plan Template
-    re_path('caseplan/new/(?P<id>\d+)/', views.case_plan_template, name='new_caseplan'),
-    re_path('caseplan/update/(?P<ovcid>\d+)/(?P<event_id>.+)/', views.update_caseplan, name='update_caseplan'),
-    re_path('caseplan-monitoring/new/(?P<id>\d+)/', views.new_case_plan_monitoring, name='new_caseplan_monitoring'),
+    path(
+        'caseplan/new/<int:id>/', views.case_plan_template, name='new_caseplan'),
+    path('caseplan/update/<int:ovcid>/<uuid:event_id>/', views.update_caseplan, name='update_caseplan'),
+    path('caseplan-monitoring/new/<int:id>/', views.new_case_plan_monitoring, name='new_caseplan_monitoring'),
 
+<<<<<<< HEAD
     # wellbeing Adult and Child
     re_path(r'wellbeing/new/(?P<id>\d+)/$', views.new_wellbeing, name='new_wellbeing'),
 
     # wellbeing Adolescent
     re_path(r'wellbeingadolescent/new/(?P<id>\d+)/$', views.new_wellbeingadolescent, name='new_wellbeingadolescent'),
     # hiv_status
+=======
+    # Wellbeing Adult and Child
+    path('wellbeing/new/<int:id>/', views.new_wellbeing, name='new_wellbeing'),
+
+    # Wellbeing Adolescent
+    path(
+        'wellbeingadolescent/new/<int:id>/', views.new_wellbeingadolescent,
+        name='new_wellbeingadolescent'),
+
+    # HIV Status
+>>>>>>> upgrade
     path('HIVstatus/', views.hiv_status, name='hiv_status'),
 
     # HIV Risk Assessment Form
-    re_path('hivscreeningtool/new/(?P<id>\d+)/', views.new_hivscreeningtool, name='new_hivscreeningtool'),
+    path(
+        'hivscreeningtool/new/<int:id>/', views.new_hivscreeningtool,
+        name='new_hivscreeningtool'),
 
     # HIV Risk Management Form
-    re_path('hivmanagementform/new/(?P<id>\d+)/', views.new_hivmanagementform, name='new_hivmanagementform'),
+    path(
+        'hivmanagementform/new/<int:id>/', views.new_hivmanagementform,
+        name='new_hivmanagementform'),
 
-    # Dreams SerivceUptake Form
-    re_path('dreamsform/new/(?P<id>\d+)/', views.new_dreamsform, name='new_dreamsform'),
+    # Dreams ServiceUptake Form
+    path(
+        'dreamsform/new/<int:id>/', views.new_dreamsform,
+        name='new_dreamsform'),
 
+<<<<<<< HEAD
     # Benchmarks Monitoring Form
     path('benchmarkmonitoring/new/<int:id>/', views.new_benchmarkmonitoring, name='benchmarkmonitoring'),
     #Case Closure Form
@@ -181,4 +202,34 @@ urlpatterns = [
     path('editcaseclosure/edit/<uuid:id>/', views.edit_case_closure, name='edit_case_closure'),
     path('deletecaseclosure/edit/<uuid:id>/', views.delete_case_closure, name='delete_case_closure'),
 
+=======
+    # New Forms - CPIMS OVC Upgrade
+    path(
+        'case-transfer/new/<int:id>/', views.case_transfer,
+        name='new_case_transfer'),
+    path('fetch/all/organizations/', views.get_org, name='fetch_org_units')
+
+       # New Cpara upgrade Form
+    re_path('cpara_upgrade/new/(?P<id>\d+)/', views.new_cpara_upgrade, name='new_cpara_upgrade'),
+
+       # New Graduation Monitoring Tool
+    path('grad_monitor/new/<int:id>/', views.grad_monitor_tool, name='grad_monitor_tool'),
+
+    path('edit_grad_monitor/new/<uuid:id>/', views.edit_grad_monitor, name='edit_grad_monitor'),
+    
+#     path('delete_bench/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_benchmark, name='delete_benchmark')
+    path('delete_bench/<uuid:id>/', views.delete_benchmark, name='delete_benchmark')
+
+    # HEI Tracker
+    path('new_hei_tracker/new/<int:id>/', views.new_hei_tracker, name='new_hei_tracker'),
+    path('edit_heitracker/edit/(?P<id>\W+)/', views.edit_heitracker, name='edit_heitracker'),
+    path('delete_heitracker/(?P<id>)/', views.delete_heitracker, name='delete_heitracker'),
+
+    # cpara view
+    re_path('cpara/new/(?P<id>\d+)/', views.new_cpara, name='new_cpara'),
+    # cpara edit
+    path('edit_cpara/new/<uuid:id>/', views.edit_cpara, name='edit_cpara'),
+    # cpara delete
+    re_path('cpara/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_cpara, name='delete_cpara'),
+>>>>>>> upgrade
 ]

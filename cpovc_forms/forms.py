@@ -8,10 +8,12 @@ from cpovc_registry.functions import get_geo_list, get_all_geo_list
 from cpovc_registry.models import RegOrgUnit
 from cpovc_forms.functions import  get_organization_list
 from cpovc_main.models import SchoolList
-from cpovc_ovc.models import OVCFacility
+from .functions import  get_facility_list
+
 # New lists
 WB_AD_GEN_5_ChoiceList=WB_AD_SAF_32_6_CHOICELIST=WB_AD_SAF_32_2_CHOICELIST=WB_AD_SAF_28_CHOICELIST=WB_AD_SAF_27_1_CHOICELIST=WB_AD_SAF_26_CHOICELIST=WB_AD_HEL_24_1_CHOICELIST=WB_AD_HEL_21_1_CHOICELIST=WB_AD_SCH_7_CHOICELIST=WB_AD_SCH_12_2_CHOICELIST=WB_AD_HEL_20_4_CHOICELIST=WB_AD_SCH_13_2_CHOICELIST = (('TBD1', 'TBD1'), ('TBD2', 'TBD2'),('TBD3', 'TBD3'))
 YESNO_CHOICES = (('AYES', 'Yes'), ('ANNO', 'No'))
+YESNOANA_CHOICES = (('AYES', 'Yes'), ('ANNO', 'No'), ('ANA', 'N/A'))
 CPARA_MONITORING_CASE_CHOICES = (('1', 'First'), ('2', 'Second'), ('3', 'Third'))
 bursary_school_type_list = (('STPR', 'Private'), ('STPU', 'Public'))
 bursary_school_category_list = (('SCNA', 'National'), ('SCCT', 'County'), ('SCSC', 'Sub-County'))
@@ -88,7 +90,7 @@ placementfollowup_type_list = get_list(
 alternative_family_care_type_list = get_list(
     'alternative_family_care_type_id', 'Please Select')
 type_of_adoption_list = get_list('adoption_id', 'Please Select')
-bursary_type_list = get_list('bursary_type_id', 'Select Bursary Type')
+bursary_type_list = get_list('bursary_type_id', 'Select Bursary Type')  
 school_type_list = get_list('school_category_id', 'Please Select')
 term_list = get_list('school_term_id', 'Select Term Awarded')
 schoolout_reason_list = get_list('out_of_school_id', 'Please Select')
@@ -100,15 +102,15 @@ period_list = get_list('period_id', 'Please Select Unit')
 parental_status_list = get_list('parental_status_id', 'Please Select')
 caseoutcome_list = get_list('closure_outcome_id', 'Please Select')
 
-#----------------------------------OLMIS-------------------------------------~
+# ------------------------------OLMIS-------------------------------------~
 csi_grade_list = get_list('csi_grade_id', 'Please Select')
 olmis_domain_list = get_list('olmis_domain_id', 'Please Select')
 olmis_assessment_domain_list = get_list(
     'olmis_assessment_domain_id', 'Please Select')
+print (olmis_assessment_domain_list)
 olmis_service_provider_list = get_list(
     'olmis_service_provider_id', 'Please Select')
-olmis_critical_events_list = get_list(
-    'olmis_critical_event_id', 'Please Select')
+olmis_critical_events_list = get_list('olmis_critical_event_id')
 olmis_ha5_list = get_list('olmis_ha5_id', 'Please Select')
 olmis_ha6_list = get_list('olmis_ha6_id', False)
 olmis_ha7_list = get_list('olmis_ha7_id', 'Please Select')
@@ -142,8 +144,16 @@ CASE_CLOSURE_REASON =(   ('YES', 'Yes'),
     ('Other', 'Other (please specify)'))
 # '  $("input[name='CASE_CL001']").on('load', () => {'
 
+<<<<<<< HEAD
 REASON_SS = (('1', 'Case Plan Achievement/Graduation'),('2', ' Transfer'),('3', 'Attrition'))
     #wellbeing
+=======
+# hei_tracker
+yes_no = get_list('yesno_id', 'Please Select')
+
+
+#Wellbeing
+>>>>>>> upgrade
 YESNO_CHOICES_REFUSE = (('AYES', 'Yes'), ('ANNO', 'No'), ('AREFUSE', 'Refuse'))
 
 MARITAL_STATUS =(('Monogamous Marriage','Monogamous Marriage'),('Polygamous Marriage', 'Polygamous Marriage'), ('Single', 'Single'),
@@ -160,6 +170,8 @@ FAVORITE_COLORS_CHOICES = (
         ('Bring food', 'Bring food'),
         ('Other', 'Other')
     )
+
+# Case plan Template
 CPT_DOMAIN_CHOICES = (('DEDU', 'Schooled'), ('DHES', 'Stable'), ('DPRO', 'Safe'), ('DHNU', 'Healthy'))
 CPT_GOALS_CHOICES = (
     ('CPTG1he', 'All members of enrolled household know their HIV status'),
@@ -434,6 +446,11 @@ CPT_RESULTS = (
     ('IP', 'In Progress'),
     ('NA', 'Not Achieved')
 )
+
+# New changes May 2022
+caregiver_critical_events_list = get_list('caregiver_critical_event_id')
+
+# Case Plan Template Dynamic Choices not hard coded
 
 
 class OVCSchoolForm(forms.Form):
@@ -2771,8 +2788,16 @@ class OVCF1AForm(forms.Form):
                #'data-parsley-required': "true",
                #'data-parsley-group': 'group3'
                }))
+
     caretaker_id = forms.CharField(widget=forms.HiddenInput(
         attrs={'id': 'caretaker_id'}))
+
+    caregiver_critical_event = forms.ChoiceField(
+        choices=caregiver_critical_events_list,
+        required=False,
+        widget=forms.SelectMultiple(
+            attrs={'class': 'form-control',
+                   'id': 'caregiver_critical_event'}))
 
 
 class OVCHHVAForm(forms.Form):
@@ -3622,7 +3647,7 @@ class GOKBursaryForm(forms.Form):
     )
 
 
-class CparaAssessment(forms.Form):
+class CparaAssessment_v1(forms.Form):
     cp1d = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
@@ -4145,7 +4170,6 @@ class CparaAssessment(forms.Form):
             'min': '0',
             'max': '17'
         }))
-
 
 class CparaMonitoring(forms.Form):
     cm1d = forms.DateField(widget=forms.TextInput(
@@ -6346,7 +6370,7 @@ class WellbeingAdolescentForm(forms.Form):
 
 # HIV Screening Form
 class HIV_SCREENING_FORM(forms.Form):
-    org_units_list = [('', 'Please Select')] + list(OVCFacility.objects.filter().values_list('id', 'facility_name'))
+    org_units_list = get_facility_list()
     HIV_RA_1A = forms.DateField(
         widget = forms.widgets.DateInput(
         format="%m/%d/%Y",
@@ -8112,7 +8136,7 @@ class DREAMS_FORM(forms.Form):
         attrs={
         #  'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
-    }))
+    }))       
 
     DREAMS_018 = forms.CharField(widget=forms.TextInput(
         attrs={'placeholder': _(''),
@@ -8154,6 +8178,7 @@ class DREAMS_FORM(forms.Form):
                #'data-parsley-group': 'group0',
                'rows': '3'}))
 
+<<<<<<< HEAD
 
 class BenchmarkMonitoringForm(forms.Form):
     BENCHMARKMONITORING_001 = forms.ChoiceField(
@@ -8549,3 +8574,1372 @@ class CaseClosureForm(forms.Form):
 
 
 
+=======
+<<<<<<< HEAD
+class OVCHEITrackerForm(forms.Form):
+
+    HIV_STATUS = (('', 'Select Status'), ('Positive', 'Positive'), ('Negative', 'Negative'), ('Unknown', 'Unknown'))
+    Test_Results = (('', 'Select Status'), ('Positive', 'Positive'), ('Negative', 'Negative'),)
+    Feeding_Mode = (('', 'Select Feeding mode'), ('Exclusive', 'Exclusive'),
+                    ('BreastFeeding', 'BreastFeeding'),
+                    ('Replacementfeeding', 'Replacement feeding'),
+                    ('Mixedfeeding', 'Mixed feeding'),)
+    ON_Track = (('', 'Select'), ('OnTrack', 'On Track'), ('NotOnTrack', 'Not On Track'),)
+    # yes_no = (('', 'Select'), ('Yes', 'Yes'), ('No', 'No'),)
+    Follow_Up = forms.ChoiceField(
+        choices=(
+            ('AtFirstContact', 'At first contact'),
+            ('At6wks', 'At 6 weeks'),
+            ('At6mths', 'At 6 months'),
+            ('At12mths', 'At 12 months'),
+            ('At18mths', 'At 18 months')
+        ),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                #  'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+    Attrition_reasons = (('', 'Select Attrition reason'), ('Died', 'Died'), ('Relocation', 'Relocation'), ('leftAtWill', 'Left at will'))
+
+    # care giver biodata
+    PMTCT_HEI5q = forms.ChoiceField(
+        choices=HIV_STATUS,
+        widget=forms.Select(
+        attrs={
+            'class': 'form-control',
+            'id': 'PMTCT_HEI5q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI6q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+        attrs={
+            'class': 'form-control',
+            'id': 'PMTCT_HEI6q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI7q = forms.CharField(
+
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter facility'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI7q',
+            'readonly': 'true',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI8q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter CCC number'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI8q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI9q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter latest Vl results'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI9q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI10q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Date of VL test'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI10q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI42q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Date of follow up'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI42q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI42q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('Date of follow up'),
+                'class': 'form-control',
+                'id': 'PMTCT_HEI42q',
+                # 'data-parsley-type': "date",
+                # 'data-parsley-required': "true",
+                # 'data-parsley-group': 'group0'
+            })
+    )
+    PMTCT_HEI43q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('Date of follow up'),
+                'class': 'form-control',
+                'id': 'PMTCT_HEI43q',
+                # 'data-parsley-type': "digits",
+                # 'data-parsley-required': "true",
+                # 'data-parsley-group': 'group0'
+            })
+    )
+    PMTCT_HEI44q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('Date of follow up'),
+                'class': 'form-control',
+                'id': 'PMTCT_HEI44q',
+                # 'data-parsley-type': "digits",
+                # 'data-parsley-required': "true",
+                # 'data-parsley-group': 'group0'
+            })
+    )
+    PMTCT_HEI45q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('Date of follow up'),
+                'class': 'form-control',
+                'id': 'PMTCT_HEI45q',
+                # 'data-parsley-type': "digits",
+                # 'data-parsley-required': "true",
+                # 'data-parsley-group': 'group0'
+            })
+    )
+    PMTCT_HEI46q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('Date of follow up'),
+                'class': 'form-control',
+                'id': 'PMTCT_HEI46q',
+                # 'data-parsley-type': "digits",
+                # 'data-parsley-required': "true",
+                # 'data-parsley-group': 'group0'
+            })
+    )
+    PMTCT_HEI10q = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Date of HEI tracking'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI10q',
+            # 'data-parsley-type': "digits",
+            # 'data-parsley-required': "true",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+
+    # HEI Follow up first contact
+    PMTCT_HEI13q = forms.ChoiceField(
+        required=False,
+         choices=yes_no,
+        widget=forms.Select(
+        attrs={
+            'class': 'form-control',
+            'id': 'PMTCT_HEI13q',
+            'data-parsley-required': "false",
+        })
+    )
+
+    PMTCT_HEI14q = forms.ChoiceField(
+        required=False,
+        choices=Test_Results,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI14q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI15q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter vl results'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI15q',
+            # 'data-parsley-type': "digits",
+            'data-parsley-required': "false",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI16q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI16q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI17q = forms.ChoiceField(
+        required=False,
+        choices=Feeding_Mode,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI17q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    # HEI Follow up at 6mnths
+    PMTCT_HEI24q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI24q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    PMTCT_HEI25q = forms.ChoiceField(
+        required=False,
+        choices=Test_Results,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI25q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI26q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter vl results'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI26q',
+            # 'data-parsley-type': "digits",
+            'data-parsley-required': "false",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI27q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI27q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI28q = forms.ChoiceField(
+        required=False,
+        choices=ON_Track,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI28q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI29q = forms.ChoiceField(
+        required=False,
+        choices=Feeding_Mode,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI29q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    # HEI Follow up at 6wks
+    PMTCT_HEI18q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'placeholder': _('Female'),
+                'class': 'form-control',
+                'id': 'PMTCT_HEI8q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    PMTCT_HEI19q = forms.ChoiceField(
+        required=False,
+        choices=Test_Results,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI19q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI20q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter vl results'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI20q',
+            # 'data-parsley-type': "digits",
+            'data-parsley-required': "false",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI21q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI21q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI22q = forms.ChoiceField(
+        required=False,
+        choices=ON_Track,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI22q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI23q = forms.ChoiceField(
+        required=False,
+        choices=Feeding_Mode,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI23q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    # HEI Follow up at 12mnths
+    PMTCT_HEI30q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI30q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    PMTCT_HEI31q = forms.ChoiceField(
+        required=False,
+        choices=Test_Results,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI31q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI32q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter vl results'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI32q',
+            # 'data-parsley-type': "digits",
+            'data-parsley-required': "false",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI33q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI33q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI34q = forms.ChoiceField(
+        required=False,
+        choices=ON_Track,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI34q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI35q = forms.ChoiceField(
+        required=False,
+        choices=Feeding_Mode,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI35q',
+                'data-parsley-required': "false",
+            })
+    )
+
+    # HEI Follow up at 18mnths
+    PMTCT_HEI36q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI36q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI37q = forms.ChoiceField(
+        required=False,
+        choices=Test_Results,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI37q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI38q = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+        attrs={
+            'placeholder': _('Enter vl results'),
+            'class': 'form-control',
+            'id': 'PMTCT_HEI38q',
+            # 'data-parsley-type': "digits",
+            'data-parsley-required': "false",
+            # 'data-parsley-group': 'group0'
+        })
+    )
+    PMTCT_HEI39q = forms.ChoiceField(
+        required=False,
+        choices=yes_no,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI39q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI40q = forms.ChoiceField(
+        required=False,
+        choices=ON_Track,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI40q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI41q = forms.ChoiceField(
+        required=False,
+        choices=Feeding_Mode,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI41q',
+                'data-parsley-required': "false",
+            })
+    )
+
+   # Others
+    PMTCT_HEI47q = forms.ChoiceField(
+        required=False,
+        choices=Attrition_reasons,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'id': 'PMTCT_HEI47q',
+                'data-parsley-required': "false",
+            })
+    )
+    PMTCT_HEI48q = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+        attrs={'placeholder': _('Comments'),
+               'class': 'form-control',
+               'id': 'PMTCT_HEI48q',
+               'data-parsley-required': "false",
+               'rows': '2'}))
+
+class CparaAssessmentUpgrade(forms.Form):
+    # Details
+    cp1d = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+                        attrs={
+                # 'data-parsley-required': 'true',
+                # 'data-parsley-group': 'group1',
+                'required': 'required'
+            }))
+    cp2d = forms.DateField(widget=forms.TextInput(
+        attrs={'class': 'form-control',
+               'id': 'disbursement_date',
+=======
+               
+class CparaAssessment(forms.Form):
+    # Details
+    
+
+    d_o_a = forms.DateField(widget=forms.TextInput(
+        attrs={'class': 'form-control',
+               'id': 'assessment_date',
+>>>>>>> origin/cpara_upgrade_1
+            #    'data-parsley-required': "true",
+            #    'data-parsley-group': 'group1'
+            #    'type': 'hidden'
+               }))
+<<<<<<< HEAD
+    cp3d = forms.ChoiceField(
+=======
+    CP1d = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cp4d = forms.ChoiceField(
+=======
+            
+    CP2d = forms.DateField(widget=forms.TextInput(
+        attrs={'class': 'form-control',
+               'id': 'previous_case_date',
+               'data-parsley-required': "true",
+            #    'data-parsley-group': 'group1'
+            #    'type': 'hidden'
+               }))
+    
+    CP3d = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cp5d = forms.ChoiceField(
+=======
+    CP4d = forms.ChoiceField(  
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cp6d = forms.ChoiceField(
+=======
+
+    # Sub population
+    CP5d = forms.ChoiceField(  
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+
+    CP6d = forms.BooleanField(required=False,
+            widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    CP6d_1 = forms.BooleanField(required=False,
+            widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    CP6d_2 = forms.BooleanField(required=False,
+            widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    CP6d_3 = forms.BooleanField(required=False,
+            widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    CP6d_4 = forms.BooleanField(required=False,
+            widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    CP6d_5 = forms.BooleanField(required=False,
+            widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    CP6d_6 = forms.BooleanField(required=False,
+            widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    CP6d_7 = forms.BooleanField(required=False,
+            widget=forms.CheckboxInput(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    CP1q = forms.ChoiceField(  
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    CP2q = forms.ChoiceField(  
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    CP3q = forms.ChoiceField(  
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    CP4q = forms.ChoiceField(  
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    CP5q = forms.ChoiceField(  
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    CP6q = forms.ChoiceField(  
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    
+<<<<<<< HEAD
+    # Domain Health
+    cphealth1 = forms.ChoiceField(
+=======
+
+    
+    # Domain Health
+    CP7q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth2 = forms.ChoiceField(
+=======
+    CP8q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth3 = forms.ChoiceField(
+=======
+    CP9q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth4 = forms.ChoiceField(
+=======
+    CP10q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth5 = forms.ChoiceField(
+=======
+    CP11q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth6 = forms.ChoiceField(
+=======
+    CP12q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth7 = forms.ChoiceField(
+=======
+
+    CP13q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth8 = forms.ChoiceField(
+=======
+
+    CP14q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth9 = forms.ChoiceField(
+=======
+    CP15q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth10 = forms.ChoiceField(
+=======
+    CP16q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth11 = forms.ChoiceField(
+=======
+    CP17q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth12 = forms.ChoiceField(
+=======
+    CP18q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth13 = forms.ChoiceField(
+=======
+    CP19q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth14 = forms.ChoiceField(
+=======
+    CP20q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth15 = forms.ChoiceField(
+=======
+    CP21q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth16 = forms.ChoiceField(
+=======
+    CP22q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth17 = forms.ChoiceField(
+=======
+    CP23q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth18 = forms.ChoiceField(
+=======
+            
+    CP23q_b_1 = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth19 = forms.ChoiceField(
+=======
+    CP23q_b_2 = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth20 = forms.ChoiceField(
+=======
+    CP23q_b_3 = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth21 = forms.ChoiceField(
+=======
+ 
+ 
+    CP24q= forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth22 = forms.ChoiceField(
+=======
+    CP25q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth23 = forms.ChoiceField(
+=======
+    CP26q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cphealth24 = forms.ChoiceField(
+=======
+    CP26q_ctl = forms.ChoiceField(required=False,
+        choices=(('AYES', "YES"), ('ANNO', "NO"), ('ANA', "N/A")),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+
+
+    cp57q = forms.ChoiceField(required=False,
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    cp58q = forms.ChoiceField(required=False,
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    cp59q = forms.ChoiceField(required=False,
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    
+    CP27q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    CP28q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    CP29q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    CP30q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+
+    # Domain Stable
+<<<<<<< HEAD
+    cpstable1 = forms.ChoiceField(
+=======
+    CP31q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cpstable2 = forms.ChoiceField(
+=======
+    CP32q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cpstable3 = forms.ChoiceField(
+=======
+            
+    CP33q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+
+    # Domain Safe
+<<<<<<< HEAD
+    cpsafe1 = forms.ChoiceField(
+=======
+    CP34q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cpsafe2 = forms.ChoiceField(
+=======
+    CP35q = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cpsafe3 = forms.ChoiceField(
+        choices=(("AYES","Yes"),("ANO","No"),("ANA","N/A")),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cpsafe4 = forms.ChoiceField(
+=======
+    CP36q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))  
+    
+    # Benchmarks
+    CP1b = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cpsafe5 = forms.ChoiceField(
+=======
+    CP2b = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cpsafe6 = forms.ChoiceField(
+=======
+    CP3b = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cpsafe7 = forms.ChoiceField(
+=======
+    CP4b = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cpsafe8 = forms.ChoiceField(
+=======
+    CP5b = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cpsafe9 = forms.ChoiceField(
+=======
+    CP6b = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cpsafe10 = forms.ChoiceField(
+=======
+    CP7b = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+
+    # Domain School
+    cpschool1 = forms.ChoiceField(
+=======
+    CP8b = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+<<<<<<< HEAD
+    cpschool2 = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cpschool3 = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cpschool4 = forms.ChoiceField(
+=======
+    CP9b = forms.ChoiceField(
+>>>>>>> origin/cpara_upgrade_1
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    
+<<<<<<< HEAD
+    # Benchmarks
+    cp1b = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp2b = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp3b = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp4b = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp5b = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp6b = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp7b = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp8b = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+    cp9b = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+=======
+>>>>>>> origin/cpara_upgrade_1
+
+    
+    children_rsk_hiv_assess_date = forms.DateField(widget=forms.TextInput(
+        attrs={'class': 'form-control',
+               'id': 'children_rsk_hiv_assess_date',
+            #    'data-parsley-required': "true",
+            #    'data-parsley-group': 'group1'
+               # type': 'hidden'
+               }))
+    
+    # Scores
+<<<<<<< HEAD
+    cp74q = forms.CharField(widget=forms.NumberInput(
+=======
+    CP74q = forms.CharField(widget=forms.NumberInput(
+>>>>>>> origin/cpara_upgrade_1
+        attrs={
+            'placeholder': _('score'),
+            'class': 'form-control',
+            'min': '0',
+            'max': '9'
+        }))
+    # Table
+    p75q = forms.CharField(widget=forms.NumberInput(
+        attrs={
+            'placeholder': _('score'),
+            'class': 'form-control',
+            'min': '0',
+            'max': '4'
+        }))
+    p76q = forms.CharField(widget=forms.NumberInput(
+        attrs={
+            'placeholder': _('score'),
+            'class': 'form-control',
+            'min': '0',
+            'max': '1'
+        }))
+    p77q = forms.CharField(widget=forms.NumberInput(
+        attrs={
+            'placeholder': _('score'),
+            'class': 'form-control',
+            'min': '0',
+            'max': '3'
+        }))
+    p78q = forms.CharField(widget=forms.NumberInput(
+        attrs={
+            'placeholder': _('score'),
+            'class': 'form-control',
+            'min': '0',
+            'max': '1'
+        }))
+    p79q = forms.CharField(widget=forms.NumberInput(
+        attrs={
+            'placeholder': _('score'),
+            'class': 'form-control',
+            'min': '0',
+            'max': '9'
+        }))
+<<<<<<< HEAD
+
+class gradMonitoringToolform(forms.Form):
+
+    form1_type = forms.ChoiceField(
+        choices=(
+            ('bm','Benchmark Monitoring'),('hhrcpa','Households Reaching Case Plan Achievement')),
+            widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}
+        )
+    )
+    gm1d = forms.DateField(widget=forms.TextInput(
+        attrs={'class': 'form-control',
+               'id': 'monitoring_date',
+               'data-parsley-required': "true",
+               'data-parsley-group': 'group1'
+               }),
+               input_formats='dd-mm-yyyy')
+    cm2q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}))
+    cm3q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}))
+    cm4q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}))
+    cm5q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}))
+    cm6q =forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}))
+    cm7q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}))
+    cm8q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}))
+    cm9q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}))
+    cm10q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}))
+    cm11q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}))
+    cm12q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}))
+    cm13q = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true',
+                   'data-parsley-errors-container': "#signed_csac_error"}))
+    cm14q = forms.ChoiceField(
+        choices = YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            attrs={'data-parsley-required': 'true',
+                    'data-parsley-errors-container': "#signed_csac_error"
+            }))
+
+
+class CaseTransferForm(forms.Form): 
+    
+    # TRANSFER_RSN CHOICES
+    CHOICES = (
+        ('', 'Select One'),
+        ('Child ages out of the program prior to achieving their case plan', 'Child ages out of the program prior to achieving their case plan'),
+        ('Child and or family plans to relocate prior to achieving their case plan', 'Child and or family plans to relocate prior to achieving their case plan'),
+        ('Program relocates or closes before recommended interventions have been completed', 'Program relocates or closes before recommended interventions have been completed'),
+        ('Interventions outlining case plan have been achieved', 'Interventions outlining case plan have been achieved'),
+        ('Service required not available', 'Service required not available')
+        )
+    # Case Transfer Form
+    TRANSFER_DATE = forms.DateField(
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': ('Transfer Date'),
+                'class': 'form-control event_date',
+                'id': 'transfer_date',
+                'data-parsley-required': "false",
+                'data-parsley-group': 'group0'
+               # type': 'hidden'
+               }),required = True)
+    
+    REASON = forms.ChoiceField(
+        choices=CHOICES, widget=forms.Select(
+            attrs={
+                'id': 'transfer_reason',
+                'class':'form-control', 
+                'data-parsley-required': "false",
+                'data-parsley-group': 'group0'
+                }),
+        required = False
+    )
+    
+    FOLLOW_UP_DATE =forms.DateField(
+        widget=forms.TextInput(
+        attrs={'placeholder': _('Follow up Date'),
+               'class': 'form-control event_date',
+               'id': 'follow_up_date',
+               'data-parsley-required': "false",
+               'data-parsley-group': 'group0'
+               # type': 'hidden'
+               },
+        ),
+        required = False
+    )
+    COMMENT = forms.CharField(widget=forms.Textarea(
+        attrs={'placeholder': _('Comment'),
+               'class': 'form-control',
+               'id': 'comment',
+               'data-parsley-required': "false",
+               'data-parsley-group': 'group0',
+               'rows': '3'
+               }
+        ),
+        required = False
+    )
+    CHECKBOX = forms.BooleanField(
+        widget=forms.widgets.CheckboxInput(
+        attrs={'class': 'checkbox-inline',
+               'data-parsley-required': "false",
+               'data-parsley-group': 'group0'
+               }
+        ),required = False
+    ),
+    CPIMSID = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control',
+               'id': 'cpims_id',
+               'type': 'hidden',
+               'data-parsley-required': "False"
+               }
+        )
+    )
+
+=======
+    CP_b_total = forms.CharField(widget=forms.NumberInput(
+        attrs={
+            'placeholder': _('score'),
+            'class': 'form-control',
+            'min': '0',
+            'max': '9'
+        }))
+>>>>>>> origin/cpara_upgrade_1
+>>>>>>> upgrade
