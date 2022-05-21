@@ -211,9 +211,7 @@ class RegistrationForm(forms.Form):
 
     child_ovc = forms.ChoiceField(
         choices=YESNO_CHOICES,
-
         required=False,
-
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'id': 'child_ovc',
@@ -343,16 +341,12 @@ class RegistrationForm(forms.Form):
                    'class': 'form-control',
                    'id': 'staff_id'}))
 
-
     workforce = forms.IntegerField(
-
         required=False,
         widget=forms.TextInput(
             attrs={'placeholder': _('Workforce ID'),
                    'class': 'form-control',
-
                    'id': 'workforce'}))
-
 
     beneficiary_id = forms.IntegerField(
         required=False,
@@ -493,7 +487,6 @@ class RegistrationForm(forms.Form):
             attrs={'rows': '3', 'class': 'form-control'}))
 
     audit_workforce = forms.IntegerField(
-
         required=False,
 
         widget=forms.TextInput(

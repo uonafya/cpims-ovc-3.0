@@ -94,7 +94,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cpovc_main.context_processors.global_settings',
-
                 'simple_forums.context_processors.installed_apps',
 
             ],

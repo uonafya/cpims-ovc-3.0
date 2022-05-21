@@ -21,8 +21,6 @@ coverage==6.3.2
 python-memcached==1.59
 XlsxWriter==3.0.3
 pandas==1.4.2
-
 reportlab==3.6.9
-
 requests==2.27.1
 schedule==1.1.0

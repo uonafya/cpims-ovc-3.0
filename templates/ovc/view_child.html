@@ -415,6 +415,42 @@ Caregiver details | {{care_giver}}
                         <a href="{% url 'hh_manage' hhid=hhold.house_hold.id %}">
                         <button type="button" class="btn btn-primary"> <i class="fa fa-users"></i> Manage HH </button>
                         </a>
+                  
+                            <a href="{% url 'new_cpara' id=creg.person_id %}">
+                        <button type="button" class="btn btn-primary"> <i class="fa fa-users"></i> CPARA</button>
+                        </a>
+                            <a href="{% url 'new_caseplan' id=creg.person_id %}">
+                        <button type="button" class="btn btn-primary"> <i class="fa fa-folder-open"></i> Case Plan Template</button>
+                        </a>
+                        <hr/>
+                            <a href="{% url 'new_caseplan_monitoring' id=creg.person_id %}">
+                        <button type="button" class="btn btn-primary"> <i class="fa fa-check-circle"></i>Monitoring HHRCPA </button>
+                        </a>
+
+			            <a href="{% url 'new_wellbeing' id=creg.person_id%}">
+                        <button type="button" class="btn btn-primary"> <i class="fa fa-users"></i> Wellbeing </button>
+                        </a>
+
+                        <a href="{% url 'new_wellbeingadolescent' id=creg.person_id%}">
+                        <button type="button" class="btn btn-primary"> <i class="fa fa-users"></i> Wellbeing Adolescent</button>
+                        </a>
+                        <a href="{% url 'new_hivscreeningtool' id=creg.person_id%}">
+                            <button type="button" class="btn btn-primary"> <i class="fa fa-paperclip"></i> HIV Risk Screening </button>
+                        </a>
+                        <a href="{% url 'new_hivmanagementform' id=creg.person_id%}">
+                            <button type="button" class="btn btn-primary" {% if child_hiv_status != 'HSTP' %}disabled{% endif %}> <i class="fa fa-list-alt"></i> HIV Management Form</button>
+                        </a>
+
+                        <a href="{% url 'new_dreamsform' id=creg.person_id%}">
+                                <button type="button" class="btn btn-primary"> <i class="fa .fa-th-list"></i> DREAMS Service Uptake Form</button>
+                        </a>
+
+                            {% comment %} Sinovuyo Preventive Pre and Post Program Assessment Form button {% endcomment %}
+                            <hr/>
+                            <a href="{% url 'progress-assessment' id=creg.person_id%}">
+                                <button type="button" class="btn btn-primary"> <i class="fa .fa-th-list"></i> OVC Care Giver Preventive Pre and Post Program Assessment Form </button>
+                        </a>
+
                         {% endif %}
                 </div>
             <!-- end panel body -->

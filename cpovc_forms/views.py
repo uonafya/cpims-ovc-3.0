@@ -2,11 +2,13 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse, resolve
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.utils import timezone
 from django.core import serializers
 from django.conf import settings
 from django.db.models import Q
+
 import json
 import random
 import ast
@@ -23,7 +25,8 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, NewGraduationMonitoringForm,
+    OVCPreventivePrePostProgramAssessmentForm )
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -36,7 +39,8 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening)
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
+    OVCPrevSinovyoCaregiverEvaluation, OVCPreventiveEvents)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -59,6 +63,7 @@ from cpovc_registry.functions import get_list_types, extract_post_params
 from cpovc_ovc.functions import get_ovcdetails
 from .functions import create_fields, create_form_fields, save_form1b, save_bursary
 from .documents import create_mcert
+from urllib.parse import quote
 
 
 def validate_serialnumber(user_id, subcounty, serial_number):
@@ -10145,4 +10150,274 @@ def new_dreamsform(request, id):
                   {'form': form, 'init_data': init_data,
                    'vals': vals})
 
+# Sinovuyo Care-giver Preventive Pre and Post Program Assessment Form
+def fetch_objects(id):
+    """
+    Map model obejcts to form
+    Args: id
+    Return: form 
+    """
+    object = OVCPrevSinovyoCaregiverEvaluation.objects.get(evaluation_id=id)
+    data = {
+        'person_id': object.person_id,
+        'ref_caregiver_id': object.ref_caregiver_id,
+        'type_of_assessment': object.type_of_assessment,
+        'date_of_assessment': object.date_of_assessment,
+        'bd_age': object.bd_age,
+        'bd_sex': object.bd_sex,
+        'bd_read': object.bd_read,
+        'bd_education_level': object.bd_education_level,
+        'bd_biological_children': object.bd_biological_children,
+        'bd_non_biological_children': object.bd_non_biological_children,
+        'bd_children_not_in_school': object.bd_children_not_in_school,
+        'bd_source_income': object.bd_source_income,
+        'bd_adults_contribute_hh_income': object.bd_adults_contribute_hh_income,
+        'bd_children_contribute_hh_income': object.bd_children_contribute_hh_income,
+        'bd_biological_mother': object.bd_biological_mother,
+        'bd_bm_live_hh': object.bd_bm_live_hh,
+        'bd_biological_father': object.bd_biological_father,
+        'bd_bf_live_hh': object.bd_bf_live_hh,
+        'bd_money_basic_expenses': object.bd_money_basic_expenses,
+        'bd_violence': object.bd_violence,
+        'bd_adult_unwell': object.bd_adult_unwell,
+        'bd_child_unwell': object.bd_child_unwell,
+        'bd_miss_school': object.bd_miss_school,
+        'bd_hiv_status': object.bd_hiv_status,
+        'bd_children_hiv_status': object.bd_children_hiv_status,
+        'bd_hiv_prevention': object.bd_hiv_prevention,
+        'bd_two_meals': object.bd_two_meals,
+        'bd_missing_meal': object.bd_missing_meal,
+        'rc_discuss_child_needs': object.rc_discuss_child_needs,
+        'rc_tells_bothering': object.rc_tells_bothering,
+        'rc_involve_decisions': object.rc_involve_decisions,
+        'rc_discipline': object.rc_discipline,
+        'cb_child_obedient': object.cb_child_obedient,
+        'cb_fights_children': object.cb_fights_children,
+        'dc_physical_discipline': object.dc_physical_discipline,
+        'dc_often_discipline': object.dc_often_discipline,
+        'dc_upset_child': object.dc_upset_child,
+        'sp_caring_energy': object.sp_caring_energy,
+        'sp_source_stress': object.sp_source_stress,
+        'sp_physical_punish': object.sp_physical_punish,
+        'fs_depressed': object.fs_depressed,
+        'fs_hopeful': object.fs_hopeful,
+        'fs_effort': object.fs_effort,
+        'fi_money_important_items': object.fi_money_important_items,
+        'fi_worried_money': object.fi_worried_money,
+    }
+    form = OVCPreventivePrePostProgramAssessmentForm(data=data)
+    return form
+
+# Sinovuyo Care-giver Preventive Pre and Post Program Assessment Form
+def ovc_preventive_pre_post_program_assessment_view(request, id):
+    """
+    new Sinovuyo Care-giver Preventive Pre and Post Program Assessment Form input view
+    Args: 
+            request, id
+    Return:
+            render template  forms/caregiver_progress_assessment.html, context
+    """
+    user_id = request.user.id
+    username = request.user.get_username()
+    child = RegPerson.objects.get(id=id)
+    person_id = child.id
+    house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+    care_giver_id = care_giver.id
+    if care_giver.id == id:
+        care_giver_id = id
+    care_giver_gender = care_giver.sex_id
+    if care_giver_gender == 'SMAL':
+        care_giver_gender = 'Male'
+    else:
+        care_giver_gender = 'Female'
+    check_fields = ['yesno_id', 'school_level_id', 'under_care_id',
+                    'employed_id', 'agree_id', 'mother_mortality_id',
+                    'father_mortality_id', 'literacy_lvl_id', 'my_behaviour_id',
+                    'programme_id', 'relationship_caregiver_id', 'often_id', 'feeling_sad_id',
+                    'dsp_times_id', 'under_care_id',]
+    vals = get_dict(field_name=check_fields)
+    if request.method == 'POST':
+        form = OVCPreventivePrePostProgramAssessmentForm(request.POST)
+        event_type_id = 'CARGV_A'
+        event_counter = OVCCareEvents.objects.filter(
+            event_type_id=event_type_id,
+            person=id,
+            is_void=False,
+        ).count()
+        # OVC Preventive event counter
+        ovc_preventive_event = OVCPreventiveEvents(
+            event_type_id=event_type_id,
+            event_counter=event_counter,
+            event_score=0,
+            date_of_event=timezone.now(),
+            date_of_previous_event=timezone.now(),
+            created_by=user_id,
+            app_user=AppUser.objects.get(username=username),
+            person=RegPerson.objects.get(pk=care_giver.id),
+            house_hold=house_hold
+                )
+        if form.is_valid():
+            ovc_preventive_event.save()
+            OVCPrevSinovyoCaregiverEvaluation(
+                event_id=ovc_preventive_event.event,
+                person_id=person_id,
+                ref_caregiver_id=care_giver_id,
+                date_of_assessment=request.POST.get('date_of_assessment'),
+                type_of_assessment=request.POST.get('type_of_assessment'),
+                bd_age=care_giver.age,
+                bd_sex=care_giver.sex_id,
+                bd_read=request.POST.get('bd_read'),
+                bd_education_level=request.POST.get('bd_education_level'),
+                bd_biological_children=request.POST.get('bd_biological_children'),
+                bd_non_biological_children=request.POST.get('bd_non_biological_children'),
+                bd_children_not_in_school=request.POST.get('bd_children_not_in_school'),
+                bd_source_income=request.POST.get('bd_source_income'),
+                bd_adults_contribute_hh_income=request.POST.get('bd_adults_contribute_hh_income'),
+                bd_children_contribute_hh_income=request.POST.get('bd_children_contribute_hh_income'),
+                bd_biological_mother=request.POST.get('bd_biological_mother'),
+                bd_bm_live_hh=request.POST.get('bd_bm_live_hh'),
+                bd_biological_father=request.POST.get('bd_biological_father'),
+                bd_bf_live_hh=request.POST.get('bd_bf_live_hh'),
+                bd_money_basic_expenses=request.POST.get('bd_money_basic_expenses'),
+                bd_violence=request.POST.get('bd_violence'),
+                bd_adult_unwell=request.POST.get('bd_adult_unwell'),
+                bd_child_unwell=request.POST.get('bd_child_unwell'),
+                bd_miss_school=request.POST.get('bd_miss_school'),
+                bd_hiv_status=request.POST.get('bd_hiv_status'),
+                bd_children_hiv_status=request.POST.get('bd_children_hiv_status'),
+                bd_hiv_prevention=request.POST.get('bd_hiv_prevention'),
+                bd_two_meals=request.POST.get('bd_two_meals'),
+                bd_missing_meal=request.POST.get('bd_missing_meal'),
+                rc_discuss_child_needs=request.POST.get('rc_discuss_child_needs'),
+                rc_discipline=request.POST.get('rc_discipline'),
+                rc_tells_bothering=request.POST.get('rc_tells_bothering'),
+                rc_involve_decisions=request.POST.get('rc_involve_decisions'),
+                cb_child_obedient=request.POST.get('cb_child_obedient'),
+                cb_fights_children=request.POST.get('cb_fights_children'),
+                dc_often_discipline=request.POST.get('dc_often_discipline'),
+                dc_physical_discipline=request.POST.get('dc_physical_discipline'),
+                dc_upset_child=request.POST.get('dc_upset_child'),
+                sp_caring_energy=request.POST.get('sp_caring_energy'),
+                sp_source_stress=request.POST.get('sp_source_stress'),
+                sp_physical_punish=request.POST.get('sp_physical_punish'),
+                fs_depressed=request.POST.get('fs_depressed'),
+                fs_effort=request.POST.get('fs_effort'),
+                fs_hopeful=request.POST.get('fs_hopeful'),
+                fi_money_important_items=request.POST.get('fi_money_important_items'),
+                fi_worried_money=request.POST.get('fi_worried_money'),
+            ).save()
+            messages.success(request, 'Sinovuyo Care Giver Preventive Pre and Post Program Assessment Form saved succesfully!')
+        else:
+            messages.error(request, form.errors)
+            print(form.errors)
+        return HttpResponseRedirect('progress-assessment')
+    else:
+        form = OVCPreventivePrePostProgramAssessmentForm() 
+    event = OVCPreventiveEvents.objects.filter(person_id=care_giver.id).values_list('event')
+    queryset = OVCPrevSinovyoCaregiverEvaluation.objects.filter(event_id__in=event).order_by('date_of_assessment')
+    evaluation = []
+    # validate void/deleted existing model instances
+    for i in range(0, len(queryset)):
+        if queryset[i].is_void == False:
+            evaluation.append(queryset[i])
+    return render(request=request, template_name='forms/caregiver_progress_assessment.html',
+                context={'form': form, 'child': child, 'care_giver': care_giver,
+                'care_giver_gender': care_giver_gender, 'objects': evaluation, 'vals': vals})
+
+
+def ovc_preventive_pre_post_program_assessment_edit_view(request, id):
+    """
+    Sinovuyo Care-giver Preventive Pre and Post Program Assessment edit instance form instance
+    Args: 
+        evaluation_id, request
+    
+    Return:
+            forms/caregiver_progress_assessment.html, context
+    
+    """
+    form = fetch_objects(id)
+    object = OVCPrevSinovyoCaregiverEvaluation.objects.get(evaluation_id=id)
+    person_id = object.person_id
+    if request.method == 'POST':
+        form = OVCPreventivePrePostProgramAssessmentForm(request.POST)
+        OVCPrevSinovyoCaregiverEvaluation.objects.filter(evaluation_id=id).update(
+            bd_read=request.POST.get('bd_read'),
+            bd_education_level=request.POST.get('bd_education_level'),
+            bd_biological_children=request.POST.get('bd_biological_children'),
+            bd_non_biological_children=request.POST.get('bd_non_biological_children'),
+            bd_children_not_in_school=request.POST.get('bd_children_not_in_school'),
+            bd_source_income=request.POST.get('bd_source_income'),
+            bd_adults_contribute_hh_income=request.POST.get('bd_adults_contribute_hh_income'),
+            bd_children_contribute_hh_income=request.POST.get('bd_children_contribute_hh_income'),
+            bd_biological_mother=request.POST.get('bd_biological_mother'),
+            bd_bm_live_hh=request.POST.get('bd_bm_live_hh'),
+            bd_biological_father=request.POST.get('bd_biological_father'),
+            bd_bf_live_hh=request.POST.get('bd_bf_live_hh'),
+            bd_money_basic_expenses=request.POST.get('bd_money_basic_expenses'),
+            bd_violence=request.POST.get('bd_violence'),
+            bd_adult_unwell=request.POST.get('bd_adult_unwell'),
+            bd_child_unwell=request.POST.get('bd_child_unwell'),
+            bd_miss_school=request.POST.get('bd_miss_school'),
+            bd_hiv_status=request.POST.get('bd_hiv_status'),
+            bd_children_hiv_status=request.POST.get('bd_children_hiv_status'),
+            bd_hiv_prevention=request.POST.get('bd_hiv_prevention'),
+            bd_two_meals=request.POST.get('bd_two_meals'),
+            bd_missing_meal=request.POST.get('bd_missing_meal'),
+            rc_discuss_child_needs=request.POST.get('rc_discuss_child_needs'),
+            rc_discipline=request.POST.get('rc_discipline'),
+            rc_tells_bothering=request.POST.get('rc_tells_bothering'),
+            rc_involve_decisions=request.POST.get('rc_involve_decisions'),
+            cb_child_obedient=request.POST.get('cb_child_obedient'),
+            cb_fights_children=request.POST.get('cb_fights_children'),
+            dc_often_discipline=request.POST.get('dc_often_discipline'),
+            dc_physical_discipline=request.POST.get('dc_physical_discipline'),
+            dc_upset_child=request.POST.get('dc_upset_child'),
+            sp_caring_energy=request.POST.get('sp_caring_energy'),
+            sp_source_stress=request.POST.get('sp_source_stress'),
+            sp_physical_punish=request.POST.get('sp_physical_punish'),
+            fs_depressed=request.POST.get('fs_depressed'),
+            fs_effort=request.POST.get('fs_effort'),
+            fs_hopeful=request.POST.get('fs_hopeful'),
+            fi_money_important_items=request.POST.get('fi_money_important_items'),
+            fi_worried_money=request.POST.get('fi_worried_money'))
+        messages.success(request, 'Sinovuyo Care Giver Preventive Pre and Post Program Assessment Form updated succesfully!')
+        url = reverse('ovc_view', kwargs={'id':person_id})
+        return HttpResponseRedirect(url)    
+    edit = True
+    context={'form': form, 'edit_form': edit, 'status': 200}   
+    return render(request, 'forms/caregiver_progress_assessment.html',context)
+                                            
+
+def ovc_preventive_pre_post_program_assessment_delete_view(request):
+    """
+    Sinovuyo Care-giver Preventive Pre and Post Program Assessment delete Form instance
+    Args: 
+         request
+    
+    Return:
+            data(Jason Format)
+    """
+    id = request.GET.get('evaluation_id', None)
+    object = OVCPrevSinovyoCaregiverEvaluation.objects.get(evaluation_id=id)
+    date = object.date_of_assessment
+    delta = relativedelta(days=-60)
+    due_del_date = date - delta
+    today_date = timezone.now()
+
+    if today_date <= due_del_date:
+        OVCPrevSinovyoCaregiverEvaluation.objects.filter(evaluation_id=id).update(is_void=True)
+        object_void = OVCPrevSinovyoCaregiverEvaluation.objects.get(evaluation_id=id)
+        deleted = object_void.is_void
+        if deleted == True:
+            data = {
+                'deleted': True ,
+                'msg_info': 'Deleted successfully'
+            }
+            return JsonResponse(data)
+    data = {
+        'deleted': False ,
+        'msg_info': 'Cannot be deleted as from date {}'.format(due_del_date)
+    }
+    return JsonResponse(data)
 

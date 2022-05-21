@@ -1,2 +1,8 @@
-__pycache__
+.idea/
+.history/
+.vscode
+__pycache__/
+*/__pycache__/
+.github/
+configs/
 *.pyc
