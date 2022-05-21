@@ -35,6 +35,10 @@ from cpovc_forms.forms import (
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
 <<<<<<< HEAD
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
+<<<<<<< HEAD
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, BenchmarkMonitoringForm,
+    CaseClosureForm)
+=======
     HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessmentUpgrade,gradMonitoringToolform,OVCHEITrackerForm)
     HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessmentUpgrade,gradMonitoringToolform CaseTransferForm)
 
@@ -42,6 +46,7 @@ from cpovc_forms.forms import (
     GOKBursaryForm,CparaAssessment_v1, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
     HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessment)
 >>>>>>> origin/cpara_upgrade_1
+>>>>>>> upgrade
 
 from .models import (
     OVCCareCpara, OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -60,21 +65,25 @@ from .models import (
 =======
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareQuestions,
     OVCCareForms, OVCExplanations, OVCCareF1B,
+<<<<<<< HEAD
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
+    OVCCareCaseExit )
+=======
     OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, 
     OVCHIVRiskScreening,OVCSubPopulation,OVCCareIndividaulCpara)
 >>>>>>> origin/cpara_upgrade_1
 
+>>>>>>> upgrade
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
-    get_persons_list, get_list_of_persons, get_list, form_id_generator,
+    get_persons_list, get_list_of_persons, get_list, form_id_generator,get_org_units_list,
     case_event_id_generator, convert_date, new_guid_32,
     beneficiary_id_generator, translate_geo, translate, translate_case,
     translate_reverse, translate_reverse_org, translate_school, get_days_difference)
 from cpovc_forms.functions import (save_audit_trail, save_cpara_form_by_domain, get_past_cpt)
 from cpovc_main.country import (COUNTRIES)
-from cpovc_registry.models import (
-    RegOrgUnit, RegOrgUnitContact, RegOrgUnitGeography, RegPerson, RegPersonsOrgUnits, AppUser, RegPersonsSiblings,
+from cpovc_registry.models import (RegOrgUnit, RegOrgUnitContact, RegOrgUnitGeography, RegPerson, RegPersonsOrgUnits, AppUser, RegPersonsSiblings,
     RegPersonsTypes, RegPersonsGuardians, RegPersonsGeo, RegPersonsExternalIds)
 from cpovc_main.models import (SetupList, SetupGeography, SchoolList, FacilityList)
 from cpovc_auth.models import CPOVCUserRoleGeoOrg
@@ -83,7 +92,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from cpovc_registry.functions import get_list_types, extract_post_params
-from cpovc_ovc.functions import get_ovcdetails
+from cpovc_ovc.functions import get_ovcdetails,search_master
 from .functions import create_fields, create_form_fields, save_form1b, save_bursary
 from .documents import create_mcert
 
@@ -919,8 +928,10 @@ def documents_manager(request):
     return render(request, 'forms/documents_manager.html', {'status': 200, 'form': form})
 
 
-# def new_case_record_sheet(request, id):
-#    return HttpResponseRedirect(reverse(ovc_search))
+def new_case_record_sheet(request, id):
+    return HttpResponseRedirect(reverse(ovc_search))
+
+
 # @login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 # @is_allowed_groups(['RGM', 'RGU', 'DSU', 'STD'])
@@ -8871,6 +8882,8 @@ def new_cpara_v1(request, id):
             else:
                 event_detail = "No answered questions found"
                 total_benchmark_score = 0
+                # cpara_data = OVCCareCpara.objects.filter(event=one_cpara_event)
+                cpara_data = OVCCareBenchmarkScore.objects.filter(event_id=one_cpara_event.event)
                 bm_array = []
             past_cpara.append({
                 'ev_date': one_cpara_event.date_of_event,
@@ -10019,6 +10032,133 @@ def new_dreamsform(request, id):
 
 <<<<<<< HEAD
 
+from .helpers.events import save_event
+
+
+def new_benchmarkmonitoring(request, id):
+    """
+        Function that processes the new benchmark monitoring
+        form
+        Args:
+            params(int): id
+                        :request
+        Returns:
+            new_benchmarkmonitoring.html
+    """
+    child = RegPerson.objects.get(id=id)
+    if request.method == 'POST':
+
+        # get submitted data
+        benchmark1 = request.POST.get("BENCHMARKMONITORING_001")
+        benchmark2 = request.POST.get("BENCHMARKMONITORING_002")
+        benchmark3 = request.POST.get("BENCHMARKMONITORING_003")
+        benchmark4 = request.POST.get("BENCHMARKMONITORING_004")
+        benchmark5 = request.POST.get("BENCHMARKMONITORING_005")
+        benchmark6 = request.POST.get("BENCHMARKMONITORING_006")
+        benchmark7 = request.POST.get("BENCHMARKMONITORING_007")
+        benchmark8 = request.POST.get("BENCHMARKMONITORING_008")
+        benchmark9 = request.POST.get("BENCHMARKMONITORING_009")
+        date_of_event = request.POST.get("monitoring_date")
+        event_name = 'MONITORING'
+
+        # save events
+
+        try:
+            event_id = save_event(request, id, event_name, date_of_event, )
+
+        except exception as e:
+            print("an error occured ", e)
+
+        benchmark = OVCBenchmarkMonitoring(
+            person_id=id,
+            benchmark_1=benchmark1,
+            benchmark_2=benchmark2,
+            benchmark_3=benchmark3,
+            benchmark_4=benchmark4,
+            benchmark_5=benchmark5,
+            benchmark_6=benchmark6,
+            benchmark_7=benchmark7,
+            benchmark_8=benchmark8,
+            benchmark_9=benchmark9,
+            event=event_id
+        )
+        benchmark.save()
+
+
+
+    else:
+        # caregiver name
+        # caregiver ID
+
+        form = BenchmarkMonitoringForm()
+
+        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+
+        context = {
+            'form': form,
+            'care_giver': care_giver
+
+        }
+
+        return render(request, 'forms/new_benchmarkmonitoring.html', context)
+
+
+def new_case_closure(request, id):
+    try:
+
+        if request.method == 'POST':
+            data = request.POST
+            print(data)
+
+
+
+            closure_reason = request.POST.get("CASE_CL001")
+            if closure_reason=='1':
+                reason=request.POST.get("CASE_CL001")
+            elif closure_reason=='2':
+                reason = request.POST.get("CASE_CL023")
+            else:
+                reason =" "
+
+
+
+
+            attrition_reason1 = request.POST.get("CASE_CL027")
+
+            transfer_completed = request.POST.get("CASE_CL010")
+            followup_time = request.POST.get("CASE_CL011")
+            informed = request.POST.get("CASE_CL012")
+            copy_sent = request.POST.get("CASE_CL013")
+            file_stored1 = request.POST.get("CASE_CL014")
+            attrition_reason2 = request.POST.get("CASE_CL030")
+            manager_report = request.POST.get("CASE_CL029")
+            head_hh_linked= request.POST.get("CASE_CL028")
+            exit_reason = request.POST.get("CASE_CL031")
+            date = request.POST.get("CASE_CL026")
+            files_completed = request.POST.get("CASE_CL006")
+            phone_number = request.POST.get("CASE_CL007")
+            informed_graduation = request.POST.get("CASE_CL008")
+            receiving_org = request.POST.get("CASE_CL002")
+
+
+            if receiving_org:
+                org_res = RegOrgUnit.objects.get(id=receiving_org).id
+
+            else:
+                org_res = ''
+
+
+            person = RegPerson.objects.get(pk=int(id))
+            care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=person).caretaker_id)
+
+            organization = RegOrgUnit.objects.get(id=OVCRegistration.objects.get(person=person).child_cbo_id)
+            event_type_id = 'WBGA'
+            date_of_closure = timezone.now()
+
+            """ Save evaluation-event """
+=======
+<<<<<<< HEAD
+
 def new_hei_tracker(request, id):
     hei8 = hei9 = hei10 = hei11 = hei12 = hei13 = hei14 = hei15 = hei16 = hei17 = hei18 = hei19 = hei20 = hei21 = hei22 = hei23 = hei24 = hei25 = hei26 = hei27 = hei28 = hei29 = hei30 = hei31 = hei32 = hei33 = hei34 = hei35 = hei36 = ''
     contact_date1 = contact_date2 = contact_date3 = contact_date4 = contact_date5 = '1900-01-01'
@@ -10037,10 +10177,50 @@ def new_hei_tracker(request, id):
             date_of_wellbeing_event = timezone.now()
 
             """ Save Wellbeing-event """
+>>>>>>> upgrade
             # get event counter
             event_counter = OVCCareEvents.objects.filter(
                 event_type_id=event_type_id, person=id, is_void=False).count()
             # save event
+<<<<<<< HEAD
+            ovccareevent = OVCCareEvents(
+                event_type_id=event_type_id,
+                event_counter=event_counter,
+                event_score=0,
+                date_of_event=date_of_closure,
+                created_by=request.user.id,
+                person=RegPerson.objects.get(pk=int(id)),
+
+
+            )
+            ovccareevent.save()
+            # Saving OVC Case Closure
+            OVCCareCaseExit.objects.filter(case_clouse_id=id).create(
+                person=person,
+                caregiver=care_giver,
+                rec_organization =org_res,
+                organization=organization,
+                reason=reason,
+                attrition_reason=attrition_reason1,
+                transfer_form_completed=transfer_completed,
+                follow_up_frequency=followup_time,
+                sp_informed_tarnsfer=informed,
+                family_folder_sent=copy_sent,
+                files_stored=file_stored1,
+                attrition_documented=attrition_reason2,
+                manager_report=manager_report,
+                head_hh_linked=head_hh_linked,
+                exit_reason_stored=exit_reason,
+                date_of_closure=date,
+                case_files_completed=files_completed,
+                cw_phone_household=phone_number,
+                sp_informed_graduation=informed_graduation,
+                event=ovccareevent)
+
+
+
+            msg = 'form case closure saved successful'
+=======
             pmtctevent = PMTCTEvents(
                 event_type_id=event_type_id,
                 event_counter=event_counter,
@@ -10071,6 +10251,7 @@ def new_hei_tracker(request, id):
                 ).save()
 
             msg = 'hei  saved successful'
+>>>>>>> upgrade
             messages.add_message(request, messages.INFO, msg)
             url = reverse('ovc_view', kwargs={'id': id})
             return HttpResponseRedirect(url)
@@ -10078,6 +10259,160 @@ def new_hei_tracker(request, id):
             # # return HttpResponseRedirect(reverse(forms_registry))
             # return HttpResponseRedirect(url)
     except Exception as e:
+<<<<<<< HEAD
+        msg = 'form Case closure save error : (%s)' % (str(e))
+        messages.add_message(request, messages.ERROR, msg)
+        print('Error saving form evaluation : %s' % str(e))
+        return HttpResponseRedirect(reverse(forms_home))
+
+    init_data = RegPerson.objects.filter(pk=id)
+    check_fields = ['sex_id', 'relationship_type_id','yesno_id','exit_reason_id','REASON_SS']
+    vals = get_dict(field_name=check_fields)
+    ovc_id = int(id)
+    print(f'This is ovc {ovc_id} Thisid {id}')
+    child = RegPerson.objects.get(is_void=False, id=ovc_id)
+
+    form = CaseClosureForm()
+    event = OVCCareEvents.objects.filter(person_id=id).values_list('event')
+
+    case_closure_date= OVCCareCaseExit.objects.filter(event_id__in=event,is_void=False).order_by('date_of_closure')
+
+
+
+    org_names = []
+
+    i = 0
+    for org_name in range(len(case_closure_date)):
+        if case_closure_date[i].rec_organization != '':
+            print (RegOrgUnit.objects.get(id=case_closure_date[i].rec_organization))
+            i += 1
+
+
+    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+
+
+    return render(request,
+                  'forms/new_case_closure.html',
+                  {'form': form,
+                   'init_data': init_data,
+                   'care_giver': care_giver,
+                   'case_closure': case_closure_date,
+
+                   'id': id,
+                   'vals': vals})
+
+
+
+
+def delete_case_closure(request, id):
+
+    delete_caseclosure = OVCCareCaseExit.objects.filter(case_clouse_id=id)
+    person_id = OVCCareCaseExit.objects.get(case_clouse_id=id).person_id
+    delete_caseclosure.update(is_void=True)
+    url = reverse('new_case_closure', kwargs={'id': person_id})
+    msg = "Data deleted successfully"
+    messages.add_message(request,messages.INFO, msg)
+
+    return HttpResponseRedirect(url)
+
+def edit_case_closure(request, id):
+    """Some default page for Server Errors."""
+
+
+
+    try:
+
+        posted_data = OVCCareCaseExit.objects.get(case_clouse_id=id, is_void=False)
+        person_id = OVCCareCaseExit.objects.get(case_clouse_id=id).person_id
+        if request.method == 'POST':
+            #closure_reason = request.POST.get("CASE_CL001")
+            attrition_reason1 = request.POST.get("CASE_CL027")
+
+            transfer_completed = request.POST.get("CASE_CL010")
+            followup_time = request.POST.get("CASE_CL011")
+            informed = request.POST.get("CASE_CL012")
+            copy_sent = request.POST.get("CASE_CL013")
+            file_stored1 = request.POST.get("CASE_CL014")
+            attrition_reason2 = request.POST.get("CASE_CL030")
+            manager_report = request.POST.get("CASE_CL029")
+            head_hh_linked = request.POST.get("CASE_CL028")
+            exit_reason = request.POST.get("CASE_CL031")
+            date = request.POST.get("CASE_CL026")
+            files_completed = request.POST.get("CASE_CL006")
+            phone_number = request.POST.get("CASE_CL007")
+            informed_graduation = request.POST.get("CASE_CL008")
+            receiving_org = request.POST.get("CASE_CL002")
+            if receiving_org:
+                org_res = RegOrgUnit.objects.get(id=receiving_org).id
+            else:
+                org_res = ''
+
+            OVCCareCaseExit.objects.filter(case_clouse_id=id).update(
+                rec_organization=org_res,
+                # reason=closure_reason,
+                attrition_reason=attrition_reason1,
+                transfer_form_completed=transfer_completed,
+                follow_up_frequency=followup_time,
+                sp_informed_tarnsfer=informed,
+                family_folder_sent=copy_sent,
+                files_stored=file_stored1,
+                attrition_documented=attrition_reason2,
+                manager_report=manager_report,
+                head_hh_linked=head_hh_linked,
+                exit_reason_stored=exit_reason,
+                date_of_closure=date,
+                case_files_completed=files_completed,
+                cw_phone_household=phone_number,
+                sp_informed_graduation=informed_graduation,
+                )
+
+
+
+            msg = 'form case closure edited successful'
+            messages.add_message(request, messages.INFO, msg)
+            url = reverse('new_case_closure', kwargs={'id': person_id})
+            return HttpResponseRedirect(url)
+
+        gotten_data = {
+            'CASE_CL001': posted_data.reason,
+            'CASE_CL023': posted_data.reason,
+            'CASE_CL002': posted_data.rec_organization,
+            'CASE_CL027': posted_data.attrition_reason,
+
+            'CASE_CL010': posted_data.transfer_form_completed,
+            'CASE_CL011': posted_data.follow_up_frequency,
+            'CASE_CL012': posted_data.sp_informed_tarnsfer,
+            'CASE_CL013': posted_data.family_folder_sent,
+            'CASE_CL014': posted_data.files_stored,
+            'CASE_CL030': posted_data.attrition_documented,
+            'CASE_CL029': posted_data.manager_report,
+            'CASE_CL028': posted_data.head_hh_linked,
+            'CASE_CL031': posted_data.exit_reason_stored,
+            'CASE_CL026': posted_data.date_of_closure,
+            'CASE_CL006': posted_data.case_files_completed,
+            'CASE_CL007': posted_data.cw_phone_household,
+            'CASE_CL008': posted_data.sp_informed_graduation,
+
+        }
+
+        form = CaseClosureForm(data=gotten_data)
+        return render(request, 'forms/edit_case_closure.html',
+                        {'form': form, 'status': 200})
+
+
+
+    except Exception as e:
+        print("error with OVC case closure Editing - %s" % (str(e)))
+        # raise e
+        msg = "Error occured during OVC case closure edit"
+        messages.add_message(request, messages.ERROR, msg)
+        url = reverse('new_case_closure', kwargs={'id': person_id})
+        return HttpResponseRedirect(url)
+
+
+
+
+=======
         msg = 'HEI tracker save error: (%s)' % (str(e))
         messages.add_message(request, messages.ERROR, msg)
         print('Error saving HEI tracker : %s' % str(e))
@@ -11438,3 +11773,4 @@ def delete_cpara(request, id, btn_event_pk):
                         content_type='application/json',
                         safe=False)
 >>>>>>> origin/cpara_upgrade_1
+>>>>>>> upgrade

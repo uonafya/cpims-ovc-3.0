@@ -15,7 +15,12 @@ from cpovc_forms.models import (
     FormsAuditTrail, OVCCareF1B, OVCCareEvents, OVCEducationFollowUp, OVCCareCasePlan)
 >>>>>>> origin/cpara_upgrade_1
 from cpovc_ovc.functions import get_house_hold
+<<<<<<< HEAD
+from cpovc_registry.models import RegOrgUnit
+from .models import OVCGokBursary
+=======
 from .models import OVCGokBursary, OVCCareCpara
+>>>>>>> upgrade
 from cpovc_ovc.models import OVCFacility
 
 
@@ -404,17 +409,39 @@ def get_past_cpt(ovc_id):
         return caseplan_events
 
 
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> upgrade
 def get_facility_list():
     """Method to get list of facilities."""
     try:
         initial_list = [('', 'Please Select')]
+<<<<<<< HEAD
+        flist = OVCFacility.objects.filter().values_list('id', 'org_unit_name')
+=======
         flist = OVCFacility.objects.filter().values_list('id', 'facility_name')
+>>>>>>> upgrade
         facility_list = initial_list + list(flist)
     except Exception as e:
         print('Error - %s' % e)
         return []
     else:
         return facility_list
+<<<<<<< HEAD
+def get_organization_list():
+    """Method to get list of facilities."""
+    try:
+        initial_list = [('', 'Please Select')]
+        flist = RegOrgUnit.objects.filter().values_list('id', 'org_unit_name')
+        org_unit_name = initial_list + list(flist)
+    except Exception as e:
+        print('Error - %s' % e)
+        return []
+    else:
+        return org_unit_name
+=======
 
 
 def get_person_ids(request, name):
@@ -776,3 +803,4 @@ def save_case_other_geos(case_id, person_id, params={}):
         return None, None
     else:
         return geo, created
+>>>>>>> upgrade

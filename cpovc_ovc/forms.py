@@ -49,7 +49,7 @@ class OVCSearchForm(forms.Form):
     search_criteria = forms.ChoiceField(
         choices=search_criteria_list,
         initial='0',
-        required=True,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': "true",
@@ -201,7 +201,12 @@ class OVCRegistrationForm(forms.Form):
 
     immunization = forms.ChoiceField(
         choices=immunization_list,
+<<<<<<< HEAD
+        initial='0',
+        required=False,
+=======
         required=True,
+>>>>>>> upgrade
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': "true",
@@ -209,7 +214,12 @@ class OVCRegistrationForm(forms.Form):
 
     eligibility = forms.MultipleChoiceField(
         choices=eligibility_list,
+<<<<<<< HEAD
+        initial='0',
+        required=False,
+=======
         required=True,
+>>>>>>> upgrade
         widget=forms.SelectMultiple(
             attrs={'class': 'form-control',
                    'data-parsley-required': "true",
@@ -217,6 +227,10 @@ class OVCRegistrationForm(forms.Form):
 
     exit_reason = forms.ChoiceField(
         choices=exit_list,
+<<<<<<< HEAD
+        initial='0',
+=======
+>>>>>>> upgrade
         required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
@@ -224,6 +238,10 @@ class OVCRegistrationForm(forms.Form):
 
     ovc_exit_reason = forms.ChoiceField(
         choices=exit_list,
+<<<<<<< HEAD
+        initial='0',
+=======
+>>>>>>> upgrade
         required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
@@ -231,7 +249,12 @@ class OVCRegistrationForm(forms.Form):
 
     hiv_status = forms.ChoiceField(
         choices=hiv_status_list,
+<<<<<<< HEAD
+        initial='0',
+        required=False,
+=======
         required=True,
+>>>>>>> upgrade
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': "true",
@@ -240,7 +263,7 @@ class OVCRegistrationForm(forms.Form):
     school_level = forms.ChoiceField(
         choices=school_level_list,
         initial='0',
-        required=True,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': "true",
@@ -263,6 +286,10 @@ class OVCRegistrationForm(forms.Form):
 
     art_status = forms.ChoiceField(
         choices=art_status_list,
+<<<<<<< HEAD
+        initial='0',
+=======
+>>>>>>> upgrade
         required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
@@ -297,6 +324,10 @@ class OVCRegistrationForm(forms.Form):
 
     admission_type = forms.ChoiceField(
         choices=admission_list,
+<<<<<<< HEAD
+        initial='0',
+=======
+>>>>>>> upgrade
         required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
@@ -304,6 +335,10 @@ class OVCRegistrationForm(forms.Form):
 
     school_class = forms.ChoiceField(
         choices=(),
+<<<<<<< HEAD
+        initial='0',
+=======
+>>>>>>> upgrade
         required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
@@ -329,7 +364,12 @@ class OVCRegistrationForm(forms.Form):
 
     hiv_statuss = forms.ChoiceField(
         choices=hiv_status_list,
+<<<<<<< HEAD
+        initial='0',
+        required=False,
+=======
         required=True,
+>>>>>>> upgrade
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': "true",

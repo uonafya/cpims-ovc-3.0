@@ -184,6 +184,47 @@ def search_ovc(request):
 
 
 def search_master(request):
+<<<<<<< HEAD
+	"""Method to query existing customers."""
+	try:
+		results = []
+		query_id = int(request.GET.get('id'))
+		query = request.GET.get('q')
+		school_level = request.GET.get('level')
+		# Filters for external ids
+		if query_id == 1:
+			agents = OVCFacility.objects.filter(facility_name__icontains=query, is_void=False)
+			for agent in agents:
+				name = agent.facility_name
+				agent_id = agent.id
+				val = {'id': agent_id, 'label': name,
+					   'value': name}
+				results.append(val)
+		elif query_id == 2:
+			agents = OVCSchool.objects.filter(
+				school_name__icontains=query,
+				school_level=school_level, is_void=False)
+			for agent in agents:
+				name = agent.school_name
+				agent_id = agent.id
+				val = {'id': agent_id, 'label': name,
+					   'value': name}
+				results.append(val)
+		elif query_id == 3:
+			agents =RegOrgUnit.objects.filter(
+				org_unit_name__icontains=query, is_void=False)
+			for agent in agents:
+				name = agent.org_unit_name
+				agent_id = agent.id
+				val = {'id': agent_id, 'label': name,
+					   'value': name}
+				results.append(val)
+	except Exception as e:
+		print('error searching master list - %s' % (str(e)))
+		return []
+	else:
+		return results
+=======
     """Method to query existing customers."""
     try:
         results = []
@@ -238,6 +279,7 @@ def search_master(request):
         return []
     else:
         return results
+>>>>>>> upgrade
 
 
 def get_hh_members(ovc_id):

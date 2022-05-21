@@ -24,6 +24,7 @@ class StrictAuthenticationForm(forms.Form):
 
     username = forms.CharField(max_length=254, widget=forms.TextInput(
         attrs={'placeholder': _('Username'),
+
                'class': 'form-control input-lg',
                'data-parsley-required': "true",
                'data-parsley-error-message': "Please enter your username.",

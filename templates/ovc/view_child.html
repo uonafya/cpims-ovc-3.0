@@ -299,7 +299,7 @@ Caregiver details | {{care_giver}}
                
                 <div class="row" id="form_actions">
                         <hr/>
-                    <center>
+                    <div style="text-align: center;">
                        <a href="{% url 'ovc_home' %}" ><type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-arrow-left"></i> &nbsp;<b>Back to search</b>&nbsp; </button></a> 
 
                         {% if allow_edit %}
@@ -361,6 +361,13 @@ Caregiver details | {{care_giver}}
                         <a href="{% url 'new_dreamsform' id=creg.person_id%}">
                                 <button type="button" class="btn btn-primary"> <i class="fa .fa-th-list"></i> DREAMS Service Uptake Form</button>
                         </a>
+                        <a href="{% url 'benchmarkmonitoring' id=creg.person_id%}">
+                            <button type="button" class="btn btn-primary"> <i class="fa .fa-th-list"></i> Benchmarks Monitoring Form</button>
+                    </a>
+                             </a>
+                        <a href="{% url 'new_case_closure' id=creg.person_id%}">
+                            <button type="button" class="btn btn-primary"> <i class="fa .fa-th-list"></i> Case Closure Form</button>
+                    </a>
 
                         <a href="{% url 'new_hei_tracker' id=creg.person_id%}">
                                 <button type="button" class="btn btn-primary"> <i class="fa .fa-th-list"></i> HEI Tracker</button>
@@ -374,7 +381,7 @@ Caregiver details | {{care_giver}}
 
                         {% endif %}
                     <p></p>
-                    </center>
+                    </div>
                 </div>
             <!-- end panel body -->
         </div>
