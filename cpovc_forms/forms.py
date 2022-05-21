@@ -137,23 +137,8 @@ olmis_ha28_list = get_list('olmis_ha28_id', 'Please Select')
 olmis_ha29_list = get_list('olmis_ha29_id', 'Please Select')
 olmis_ha30_list = get_list('olmis_ha30_id', 'Please Select')
 olmis_ha31_list = get_list('olmis_ha31_id', 'Please Select')
-#caseplan
-CASE_CLOSURE_REASON =(   ('YES', 'Yes'),
-    ('NO', 'No'),
-    ('Refuse', 'I refuse to answer'),
-    ('Other', 'Other (please specify)'))
-# '  $("input[name='CASE_CL001']").on('load', () => {'
-
-<<<<<<< HEAD
-REASON_SS = (('1', 'Case Plan Achievement/Graduation'),('2', ' Transfer'),('3', 'Attrition'))
-    #wellbeing
-=======
-# hei_tracker
-yes_no = get_list('yesno_id', 'Please Select')
-
 
 #Wellbeing
->>>>>>> upgrade
 YESNO_CHOICES_REFUSE = (('AYES', 'Yes'), ('ANNO', 'No'), ('AREFUSE', 'Refuse'))
 
 MARITAL_STATUS =(('Monogamous Marriage','Monogamous Marriage'),('Polygamous Marriage', 'Polygamous Marriage'), ('Single', 'Single'),
@@ -9149,18 +9134,14 @@ class CparaAssessment(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cp5d = forms.ChoiceField(
-=======
+
     CP4d = forms.ChoiceField(  
->>>>>>> origin/cpara_upgrade_1
+
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cp6d = forms.ChoiceField(
-=======
+
 
     # Sub population
     CP5d = forms.ChoiceField(  
@@ -9227,231 +9208,161 @@ class CparaAssessment(forms.Form):
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     CP6q = forms.ChoiceField(  
->>>>>>> origin/cpara_upgrade_1
+
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     
-<<<<<<< HEAD
-    # Domain Health
-    cphealth1 = forms.ChoiceField(
-=======
-
     
     # Domain Health
     CP7q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth2 = forms.ChoiceField(
-=======
+
     CP8q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
+
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth3 = forms.ChoiceField(
-=======
+
     CP9q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth4 = forms.ChoiceField(
-=======
+
     CP10q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth5 = forms.ChoiceField(
-=======
+
     CP11q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth6 = forms.ChoiceField(
-=======
+
     CP12q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth7 = forms.ChoiceField(
-=======
+
 
     CP13q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth8 = forms.ChoiceField(
-=======
 
     CP14q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth9 = forms.ChoiceField(
-=======
+
     CP15q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth10 = forms.ChoiceField(
-=======
+
     CP16q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth11 = forms.ChoiceField(
-=======
+
     CP17q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth12 = forms.ChoiceField(
-=======
+
     CP18q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth13 = forms.ChoiceField(
-=======
+
     CP19q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
+
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth14 = forms.ChoiceField(
-=======
+
     CP20q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
+
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth15 = forms.ChoiceField(
-=======
+
     CP21q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
+
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth16 = forms.ChoiceField(
-=======
+
     CP22q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
+
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth17 = forms.ChoiceField(
-=======
+
     CP23q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth18 = forms.ChoiceField(
-=======
+
             
     CP23q_b_1 = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth19 = forms.ChoiceField(
-=======
+
     CP23q_b_2 = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth20 = forms.ChoiceField(
-=======
+
     CP23q_b_3 = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth21 = forms.ChoiceField(
-=======
  
  
     CP24q= forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth22 = forms.ChoiceField(
-=======
+
     CP25q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
+
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth23 = forms.ChoiceField(
-=======
+
     CP26q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cphealth24 = forms.ChoiceField(
-=======
+
     CP26q_ctl = forms.ChoiceField(required=False,
         choices=(('AYES', "YES"), ('ANNO', "NO"), ('ANA', "N/A")),
         widget=forms.RadioSelect(
@@ -9459,22 +9370,7 @@ class CparaAssessment(forms.Form):
             attrs={'data-parsley-required': 'false'}))
 
 
-    cp57q = forms.ChoiceField(required=False,
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'false'}))
-    cp58q = forms.ChoiceField(required=False,
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'false'}))
-    cp59q = forms.ChoiceField(required=False,
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'false'}))
-    
+        
     CP27q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
@@ -9491,69 +9387,50 @@ class CparaAssessment(forms.Form):
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     CP30q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
 
     # Domain Stable
-<<<<<<< HEAD
-    cpstable1 = forms.ChoiceField(
-=======
+
     CP31q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cpstable2 = forms.ChoiceField(
-=======
+
     CP32q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cpstable3 = forms.ChoiceField(
-=======
             
     CP33q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
 
     # Domain Safe
-<<<<<<< HEAD
-    cpsafe1 = forms.ChoiceField(
-=======
+
     CP34q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cpsafe2 = forms.ChoiceField(
-=======
+
     CP35q = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cpsafe3 = forms.ChoiceField(
+
         choices=(("AYES","Yes"),("ANO","No"),("ANA","N/A")),
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-    cpsafe4 = forms.ChoiceField(
-=======
+
     CP36q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
@@ -9562,161 +9439,69 @@ class CparaAssessment(forms.Form):
     
     # Benchmarks
     CP1b = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cpsafe5 = forms.ChoiceField(
-=======
+
     CP2b = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cpsafe6 = forms.ChoiceField(
-=======
+
     CP3b = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cpsafe7 = forms.ChoiceField(
-=======
+
     CP4b = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cpsafe8 = forms.ChoiceField(
-=======
+
     CP5b = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cpsafe9 = forms.ChoiceField(
-=======
+
     CP6b = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cpsafe10 = forms.ChoiceField(
-=======
+
     CP7b = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
 
     # Domain School
-    cpschool1 = forms.ChoiceField(
-=======
+ 
     CP8b = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
+
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cpschool2 = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
-    cpschool3 = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
-    cpschool4 = forms.ChoiceField(
-=======
+
     CP9b = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     
-<<<<<<< HEAD
-    # Benchmarks
-    cp1b = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
-    cp2b = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
-    cp3b = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
-    cp4b = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
-    cp5b = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
-    cp6b = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
-    cp7b = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
-    cp8b = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
-    cp9b = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
-=======
->>>>>>> origin/cpara_upgrade_1
+
 
     
-    children_rsk_hiv_assess_date = forms.DateField(widget=forms.TextInput(
-        attrs={'class': 'form-control',
-               'id': 'children_rsk_hiv_assess_date',
-            #    'data-parsley-required': "true",
-            #    'data-parsley-group': 'group1'
-               # type': 'hidden'
-               }))
-    
+  
     # Scores
-<<<<<<< HEAD
     cp74q = forms.CharField(widget=forms.NumberInput(
-=======
-    CP74q = forms.CharField(widget=forms.NumberInput(
->>>>>>> origin/cpara_upgrade_1
+
         attrs={
             'placeholder': _('score'),
             'class': 'form-control',
@@ -9933,13 +9718,4 @@ class CaseTransferForm(forms.Form):
         )
     )
 
-=======
-    CP_b_total = forms.CharField(widget=forms.NumberInput(
-        attrs={
-            'placeholder': _('score'),
-            'class': 'form-control',
-            'min': '0',
-            'max': '9'
-        }))
->>>>>>> origin/cpara_upgrade_1
->>>>>>> upgrade
+
