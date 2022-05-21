@@ -28,8 +28,10 @@ from cpovc_forms.forms import (
     ResidentialForm, OVC_FT3hForm, SearchForm, OVCCareSearchForm,
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
-    GOKBursaryForm, CparaAssessment,CparaAssessment_v1, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,CparaAssessmentUpgrade,gradMonitoringToolform,OVCHEITrackerForm,CaseTransferForm, BenchmarkMonitoringForm,
+    GOKBursaryForm, CparaAssessment,CparaAssessment_v1, CparaMonitoring,
+    CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,
+    CparaAssessmentUpgrade,gradMonitoringToolform,OVCHEITrackerForm,CaseTransferForm, BenchmarkMonitoringForm,
     CaseClosureForm)
 
 from .models import (
@@ -43,7 +45,7 @@ from .models import (
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions, OVCCareForms,
     OVCExplanations, OVCCareF1B, OVCCareBenchmarkScore, OVCMonitoring,
-    OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, ,OVCSubPopulation, OVCCareIndividaulCpara, OVCBenchmarkMonitoring,
+    OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, OVCSubPopulation, OVCCareIndividaulCpara, OVCBenchmarkMonitoring,
     OVCCareTransfer, OVCHEITracker, OVCPreventiveEvents, pmtct_registration, PMTCTQuestions, PMTCTHEI, PMTCTEvents, OVCCareCaseExit)
 
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
@@ -69,6 +71,7 @@ from .functions import create_fields, create_form_fields, save_form1b, save_burs
 from .documents import create_mcert
 
 from cpovc_ovc.views import ovc_view
+from .helpers.events import save_event
 
 
 def validate_serialnumber(user_id, subcounty, serial_number):
@@ -9674,7 +9677,6 @@ def hiv_status(request):
             response = redirect('ovc_edit')
             return response
 
-
     except Exception as e:
         msg = 'hiv status save error : (%s)' % (str(e))
         messages.add_message(request, messages.ERROR, msg)
@@ -9846,8 +9848,6 @@ def new_hivscreeningtool(request, id):
         url = reverse('ovc_view', kwargs={'id': id})
         return HttpResponseRedirect(url)
 
-
-
     else:
         form = HIV_SCREENING_FORM()
         event = OVCCareEvents.objects.filter(person_id=id).values_list('event')
@@ -10002,9 +10002,6 @@ def new_dreamsform(request, id):
                   {'form': form, 'init_data': init_data,
                    'vals': vals})
 
-<<<<<<< HEAD
-
-from .helpers.events import save_event
 
 
 def new_benchmarkmonitoring(request, id):
@@ -10081,9 +10078,6 @@ def new_case_closure(request, id):
         if request.method == 'POST':
             data = request.POST
             print(data)
-
-
-
             closure_reason = request.POST.get("CASE_CL001")
             if closure_reason=='1':
                 reason=request.POST.get("CASE_CL001")
@@ -10091,9 +10085,6 @@ def new_case_closure(request, id):
                 reason = request.POST.get("CASE_CL023")
             else:
                 reason =" "
-
-
-
 
             attrition_reason1 = request.POST.get("CASE_CL027")
 
@@ -10128,8 +10119,9 @@ def new_case_closure(request, id):
             date_of_closure = timezone.now()
 
             """ Save evaluation-event """
-=======
-<<<<<<< HEAD
+    except Exception as e:
+        raise e
+
 
 def new_hei_tracker(request, id):
     hei8 = hei9 = hei10 = hei11 = hei12 = hei13 = hei14 = hei15 = hei16 = hei17 = hei18 = hei19 = hei20 = hei21 = hei22 = hei23 = hei24 = hei25 = hei26 = hei27 = hei28 = hei29 = hei30 = hei31 = hei32 = hei33 = hei34 = hei35 = hei36 = ''
@@ -10149,12 +10141,10 @@ def new_hei_tracker(request, id):
             date_of_wellbeing_event = timezone.now()
 
             """ Save Wellbeing-event """
->>>>>>> upgrade
             # get event counter
             event_counter = OVCCareEvents.objects.filter(
                 event_type_id=event_type_id, person=id, is_void=False).count()
             # save event
-<<<<<<< HEAD
             ovccareevent = OVCCareEvents(
                 event_type_id=event_type_id,
                 event_counter=event_counter,
@@ -10192,7 +10182,6 @@ def new_hei_tracker(request, id):
 
 
             msg = 'form case closure saved successful'
-=======
             pmtctevent = PMTCTEvents(
                 event_type_id=event_type_id,
                 event_counter=event_counter,
@@ -10223,7 +10212,6 @@ def new_hei_tracker(request, id):
                 ).save()
 
             msg = 'hei  saved successful'
->>>>>>> upgrade
             messages.add_message(request, messages.INFO, msg)
             url = reverse('ovc_view', kwargs={'id': id})
             return HttpResponseRedirect(url)
@@ -10231,7 +10219,6 @@ def new_hei_tracker(request, id):
             # # return HttpResponseRedirect(reverse(forms_registry))
             # return HttpResponseRedirect(url)
     except Exception as e:
-<<<<<<< HEAD
         msg = 'form Case closure save error : (%s)' % (str(e))
         messages.add_message(request, messages.ERROR, msg)
         print('Error saving form evaluation : %s' % str(e))
@@ -10381,10 +10368,6 @@ def edit_case_closure(request, id):
         url = reverse('new_case_closure', kwargs={'id': person_id})
         return HttpResponseRedirect(url)
 
-
-
-
-=======
         msg = 'HEI tracker save error: (%s)' % (str(e))
         messages.add_message(request, messages.ERROR, msg)
         print('Error saving HEI tracker : %s' % str(e))
@@ -10445,7 +10428,6 @@ def edit_case_closure(request, id):
         #         for one_hei in hei_array:
         #             hei.append((one_hei.event_id, one_hei.question_code, one_hei.answer))
 
-    pdb.set_trace()
     form = OVCHEITrackerForm(initial={'household_id': household_id})
     return render(request,
                   'forms/new_hei_tracker.html',
@@ -10669,7 +10651,6 @@ def new_cpara_upgrade(request, id):
         sibling_person=id, is_void=False, date_delinked=None)
     oguardians = RegPersonsGuardians.objects.select_related().filter(
         guardian_person=id, is_void=False, date_delinked=None)
-=======
 # New Cpara action functionality
 
 def new_cpara(request, id):
@@ -10929,7 +10910,6 @@ def new_cpara(request, id):
 
 
     child = RegPerson.objects.get(id=id)
->>>>>>> origin/cpara_upgrade_1
     ovc_id = int(id)
     creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)

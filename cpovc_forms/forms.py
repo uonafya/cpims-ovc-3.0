@@ -434,6 +434,7 @@ CPT_RESULTS = (
 
 # New changes May 2022
 caregiver_critical_events_list = get_list('caregiver_critical_event_id')
+yes_no = get_list('yesno_id', 'Please Select')
 
 # Case Plan Template Dynamic Choices not hard coded
 
@@ -8163,7 +8164,6 @@ class DREAMS_FORM(forms.Form):
                #'data-parsley-group': 'group0',
                'rows': '3'}))
 
-<<<<<<< HEAD
 
 class BenchmarkMonitoringForm(forms.Form):
     BENCHMARKMONITORING_001 = forms.ChoiceField(
@@ -8258,20 +8258,23 @@ class BenchmarkMonitoringForm(forms.Form):
 
 
 
-
 class CaseClosureForm(forms.Form):
     get_org_units_list=get_organization_list()
     YES_NO_CHOICES=get_list('yesno_id')
-    YES_NO_CHOICES = get_list('yesno_id')
+    REASON_SS = ()
     transfer_choices = get_list('exit_reason_id')
-    transfer_choices_list = (transfer_choices[13], transfer_choices[14])
+    transfer_choices_list = ()
+    # (transfer_choices[13], transfer_choices[14])
 
+    '''
     attrition_choices= [('', 'select attrition reason'), transfer_choices[0], transfer_choices[1], transfer_choices[2],
                         transfer_choices[3],
                         transfer_choices[4], transfer_choices[5], transfer_choices[6], transfer_choices[7],
                         transfer_choices[8], transfer_choices[9],
                         transfer_choices[10], transfer_choices[11], transfer_choices[12],
                         transfer_choices[15]]
+    '''
+    attrition_choices= [('', 'select attrition reason')]
 
     CASE_CL001 = forms.ChoiceField(
         required=True,
@@ -8556,11 +8559,6 @@ class CaseClosureForm(forms.Form):
     )
 
 
-
-
-
-=======
-<<<<<<< HEAD
 class OVCHEITrackerForm(forms.Form):
 
     HIV_STATUS = (('', 'Select Status'), ('Positive', 'Positive'), ('Negative', 'Negative'), ('Unknown', 'Unknown'))
@@ -9080,45 +9078,21 @@ class OVCHEITrackerForm(forms.Form):
                'rows': '2'}))
 
 class CparaAssessmentUpgrade(forms.Form):
-    # Details
-    cp1d = forms.ChoiceField(
-        choices=YESNO_CHOICES,
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-                        attrs={
-                # 'data-parsley-required': 'true',
-                # 'data-parsley-group': 'group1',
-                'required': 'required'
-            }))
-    cp2d = forms.DateField(widget=forms.TextInput(
-        attrs={'class': 'form-control',
-               'id': 'disbursement_date',
-=======
-               
-class CparaAssessment(forms.Form):
-    # Details
-    
+    # Details           
 
     d_o_a = forms.DateField(widget=forms.TextInput(
         attrs={'class': 'form-control',
                'id': 'assessment_date',
->>>>>>> origin/cpara_upgrade_1
             #    'data-parsley-required': "true",
             #    'data-parsley-group': 'group1'
             #    'type': 'hidden'
                }))
-<<<<<<< HEAD
-    cp3d = forms.ChoiceField(
-=======
+
     CP1d = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
-<<<<<<< HEAD
-    cp4d = forms.ChoiceField(
-=======
             
     CP2d = forms.DateField(widget=forms.TextInput(
         attrs={'class': 'form-control',
@@ -9129,7 +9103,6 @@ class CparaAssessment(forms.Form):
                }))
     
     CP3d = forms.ChoiceField(
->>>>>>> origin/cpara_upgrade_1
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
@@ -9426,11 +9399,6 @@ class CparaAssessment(forms.Form):
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
 
-        choices=(("AYES","Yes"),("ANO","No"),("ANA","N/A")),
-        widget=forms.RadioSelect(
-            # renderer=RadioCustomRenderer,
-            attrs={'data-parsley-required': 'true'}))
-
     CP36q = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
@@ -9544,7 +9512,7 @@ class CparaAssessment(forms.Form):
             'min': '0',
             'max': '9'
         }))
-<<<<<<< HEAD
+
 
 class gradMonitoringToolform(forms.Form):
 
