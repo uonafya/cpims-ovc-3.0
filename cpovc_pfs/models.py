@@ -34,10 +34,11 @@ class OVCPreventiveRegistration(models.Model):
         OVCPreventiveGroup, on_delete=models.CASCADE, null=True)
     school = models.ForeignKey(
         OVCSchool, on_delete=models.CASCADE, null=True)
-    child_cbo = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
+    child_cbo = models.ForeignKey(
+        RegOrgUnit, on_delete=models.CASCADE, related_name='prev_cbo')
     caregiver = models.ForeignKey(
         RegPerson, on_delete=models.CASCADE, null=True,
-        related_name='caregiver')
+        related_name='prev_caregiver')
     is_active = models.BooleanField(default=True)
     exit_reason = models.CharField(max_length=4, null=True)
     exit_date = models.DateField(default=timezone.now, null=True)

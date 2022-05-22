@@ -10,36 +10,51 @@ urlpatterns = [
     path('followups/', views.forms_registry, name='forms_registry'),
     # Documents Manager
     path('documents_manager/', views.documents_manager, name='documents_manager'),
-    path('documents_manager_search/', views.documents_manager_search, name='documents_manager_search'),
+    path('documents_manager_search/', views.documents_manager_search,
+         name='documents_manager_search'),
 
     # Case Record Sheet paths
     path('crs/', views.case_record_sheet, name='case_record_sheet'),
-    re_path('crs/new/(?P<id>\d+)/', views.new_case_record_sheet, name='new_case_record_sheet'),
-    re_path('crs/view/(?P<id>\w+)/', views.view_case_record_sheet, name='view_case_record_sheet'),
-    re_path('crs/edit/(?P<id>\w+)/', views.edit_case_record_sheet, name='edit_case_record_sheet'),
-    re_path('crs/delete/(?P<id>\w+)/', views.delete_case_record_sheet, name='delete_case_record_sheet'),
+    re_path('crs/new/(?P<id>\d+)/', views.new_case_record_sheet,
+            name='new_case_record_sheet'),
+    re_path('crs/view/(?P<id>\w+)/', views.view_case_record_sheet,
+            name='view_case_record_sheet'),
+    re_path('crs/edit/(?P<id>\w+)/', views.edit_case_record_sheet,
+            name='edit_case_record_sheet'),
+    re_path('crs/delete/(?P<id>\w+)/', views.delete_case_record_sheet,
+            name='delete_case_record_sheet'),
 
     # Alternative Family Care paths
     path('afc/', views.alternative_family_care, name='alternative_family_care'),
-    re_path('afc/new/(?P<id>\d+)/', views.new_alternative_family_care, name='new_alternative_family_care'),
+    re_path('afc/new/(?P<id>\d+)/', views.new_alternative_family_care,
+            name='new_alternative_family_care'),
     # path('afc/edit/(?P<id>\w+)/', views.edit_alternative_family_care, name='edit_alternative_family_care'),
-    re_path(r'^afc/edit/(?P<id>\w+)/$', views.edit_alternative_family_care, name='edit_alternative_family_care'),
-    re_path('afc/view/(?P<id>\w+)/', views.view_alternative_family_care, name='view_alternative_family_care'),
+    re_path(r'^afc/edit/(?P<id>\w+)/$', views.edit_alternative_family_care,
+            name='edit_alternative_family_care'),
+    re_path('afc/view/(?P<id>\w+)/', views.view_alternative_family_care,
+            name='view_alternative_family_care'),
 
     # Residential Placement
     path('placement/save/', views.save_placement, name='save_placement'),
-    re_path('placement/view/(?P<id>\w+)/', views.view_placement, name='view_placement'),
-    re_path('placement/edit/(?P<id>\w+)/', views.edit_placement, name='edit_placement'),
+    re_path('placement/view/(?P<id>\w+)/',
+            views.view_placement, name='view_placement'),
+    re_path('placement/edit/(?P<id>\w+)/',
+            views.edit_placement, name='edit_placement'),
     path('placement/delete/', views.delete_placement, name='delete_placement'),
     path('placement/', views.residential_placement, name='residential_placement'),
     re_path('placement/(?P<id>\d+)/', views.placement, name='placement'),
 
     # Residential Placement FollowUp
-    re_path('placement_followup/(?P<id>\d+)/', views.placement_followup, name='placement_followup'),
-    path('save_placementfollowup/', views.save_placementfollowup, name='save_placementfollowup'),
-    path('view_placementfollowup/', views.view_placementfollowup, name='view_placementfollowup'),
-    path('edit_placementfollowup/', views.edit_placementfollowup, name='edit_placementfollowup'),
-    path('delete_placementfollowup/', views.delete_placementfollowup, name='delete_placementfollowup'),
+    re_path('placement_followup/(?P<id>\d+)/',
+            views.placement_followup, name='placement_followup'),
+    path('save_placementfollowup/', views.save_placementfollowup,
+         name='save_placementfollowup'),
+    path('view_placementfollowup/', views.view_placementfollowup,
+         name='view_placementfollowup'),
+    path('edit_placementfollowup/', views.edit_placementfollowup,
+         name='edit_placementfollowup'),
+    path('delete_placementfollowup/', views.delete_placementfollowup,
+         name='delete_placementfollowup'),
 
     # Case Events (Encounters/Court Sessions/Referrals/Case
     # Closure/Summons)
@@ -70,27 +85,43 @@ urlpatterns = [
 
     # Management paths
     path('manage_refferal/', views.manage_refferal, name='manage_refferal'),
-    path('manage_refferal001/', views.manage_refferal001, name='manage_refferal001'),
-    path('manage_refferal002/', views.manage_refferal002, name='manage_refferal002'),
-    path('manage_refferal003/', views.manage_refferal003, name='manage_refferal003'),
-    path('manage_casecategory001/', views.manage_casecategory001, name='manage_casecategory001'),
-    path('manage_casecategory002/', views.manage_casecategory002, name='manage_casecategory002'),
-    path('manage_casecategory003/', views.manage_casecategory003, name='manage_casecategory003'),
-    path('manage_casecategory004/', views.manage_casecategory004, name='manage_casecategory004'),
-    path('manage_encounters001/', views.manage_encounters001, name='manage_encounters001'),
-    path('manage_encounters004/', views.manage_encounters004, name='manage_encounters004'),
-    path('manage_case_events/', views.manage_case_events, name='manage_case_events'),
-    path('manage_placementfollowup/', views.manage_placementfollowup, name='manage_placementfollowup'),
+    path('manage_refferal001/', views.manage_refferal001,
+         name='manage_refferal001'),
+    path('manage_refferal002/', views.manage_refferal002,
+         name='manage_refferal002'),
+    path('manage_refferal003/', views.manage_refferal003,
+         name='manage_refferal003'),
+    path('manage_casecategory001/', views.manage_casecategory001,
+         name='manage_casecategory001'),
+    path('manage_casecategory002/', views.manage_casecategory002,
+         name='manage_casecategory002'),
+    path('manage_casecategory003/', views.manage_casecategory003,
+         name='manage_casecategory003'),
+    path('manage_casecategory004/', views.manage_casecategory004,
+         name='manage_casecategory004'),
+    path('manage_encounters001/', views.manage_encounters001,
+         name='manage_encounters001'),
+    path('manage_encounters004/', views.manage_encounters004,
+         name='manage_encounters004'),
+    path('manage_case_events/', views.manage_case_events,
+         name='manage_case_events'),
+    path('manage_placementfollowup/', views.manage_placementfollowup,
+         name='manage_placementfollowup'),
     path('manage_schools/', views.manage_schools, name='manage_schools'),
     path('manage_countries/', views.manage_countries, name='manage_countries'),
-    path('manage_casehistory/', views.manage_casehistory, name='manage_casehistory'),
-    path('manage_service_category/', views.manage_service_category, name='manage_service_category'),
+    path('manage_casehistory/', views.manage_casehistory,
+         name='manage_casehistory'),
+    path('manage_service_category/', views.manage_service_category,
+         name='manage_service_category'),
     path('manage_form_type/', views.manage_form_type, name='manage_form_type'),
     # ---------------------------------------------------------------
-    path('userorgunits_lookup/', views.userorgunits_lookup, name='userorgunits_lookup'),
-    path('usersubcounty_lookup/', views.usersubcounty_lookup, name='usersubcounty_lookup'),
+    path('userorgunits_lookup/', views.userorgunits_lookup,
+         name='userorgunits_lookup'),
+    path('usersubcounty_lookup/', views.usersubcounty_lookup,
+         name='usersubcounty_lookup'),
     path('userward_lookup/', views.userward_lookup, name='userward_lookup'),
-    path('generate_serialnumber/', views.generate_serialnumber, name='generate_serialnumber'),
+    path('generate_serialnumber/', views.generate_serialnumber,
+         name='generate_serialnumber'),
     path('getJsonObject001/', views.getJsonObject001, name='getJsonObject001'),
 
     # Search paths
@@ -98,10 +129,14 @@ urlpatterns = [
 
     # School & Bursary paths
     path('education/', views.background_details, name='background_details'),
-    re_path('education/new/(?P<id>\d+)/', views.new_education_info, name='new_education_info'),
-    re_path('education/edit/(?P<id>\w+)/', views.edit_education_info, name='edit_education_info'),
-    re_path('education/view/(?P<id>\w+)/', views.view_education_info, name='view_education_info'),
-    re_path('education/delete/(?P<id>\w+)/', views.delete_education_info, name='delete_education_info'),
+    re_path('education/new/(?P<id>\d+)/',
+            views.new_education_info, name='new_education_info'),
+    re_path('education/edit/(?P<id>\w+)/',
+            views.edit_education_info, name='edit_education_info'),
+    re_path('education/view/(?P<id>\w+)/',
+            views.view_education_info, name='view_education_info'),
+    re_path('education/delete/(?P<id>\w+)/',
+            views.delete_education_info, name='delete_education_info'),
     # -----------------------------------------------------------------
     path('school/', views.new_school, name='new_school'),
     # ------------------------------------------------------------------
@@ -109,7 +144,8 @@ urlpatterns = [
     path('bursary/edit/', views.edit_bursary_info, name='edit_bursary_info'),
     path('bursary/view/', views.view_bursary_info, name='view_bursary_info'),
     path('bursary/delete/', views.delete_bursary_info, name='delete_bursary_info'),
-    re_path('bursary/followup/(?P<id>\d+)/', views.bursary_followup, name='bursary_followup'),
+    re_path('bursary/followup/(?P<id>\d+)/',
+            views.bursary_followup, name='bursary_followup'),
     path('bursary/manage/', views.manage_bursary, name='manage_bursary'),
     # OVC Care - CSI
     path('csi/', views.csi, name='csi'),
@@ -129,13 +165,16 @@ urlpatterns = [
             name='delete_form1a'),
     re_path('form1a/delete_previous_event_entry/(?P<btn_event_type>\w+)/(?P<entry_id>.+)/',
             views.delete_previous_event_entry, name='delete_previous_event_entry'),
-    path('form1a/manage/', views.manage_form1a_events, name='manage_form1a_events'),
+    path('form1a/manage/', views.manage_form1a_events,
+         name='manage_form1a_events'),
     # end OVC Care - Form1A
 
     # OVC Care - Form1B
     re_path('form1b/new/(?P<id>\d+)/', views.new_form1b, name='new_form1b'),
-    re_path('form1b/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_form1b, name='delete_form1b'),
-    path('form1b/manage/', views.manage_form1b_events, name='manage_form1b_events'),
+    re_path('form1b/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/',
+            views.delete_form1b, name='delete_form1b'),
+    path('form1b/manage/', views.manage_form1b_events,
+         name='manage_form1b_events'),
     # OVC Care - Form1B
 
     # OVC Care - HHVA
@@ -144,20 +183,28 @@ urlpatterns = [
     re_path('hhva/view/(?P<id>\w+)/', views.view_hhva, name='view_hhva'),
     re_path('hhva/delete/(?P<id>\w+)/', views.delete_hhva, name='delete_hhva'),
     # Presidential Bursary
-    re_path('bursary/list/(?P<id>\d+)/', views.list_bursary, name='list_bursary'),
-    re_path(r'^bursary/view/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.view_bursary, name='view_bursary'),
+    re_path('bursary/list/(?P<id>\d+)/',
+            views.list_bursary, name='list_bursary'),
+    re_path(
+        r'^bursary/view/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.view_bursary, name='view_bursary'),
     re_path('bursary/new/(?P<id>\d+)/', views.new_bursary, name='new_bursary'),
-    re_path(r'^bursary/edit/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.edit_bursary, name='edit_bursary'),
-    re_path(r'^bursary/form/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.form_bursary, name='form_bursary'),
+    re_path(
+        r'^bursary/edit/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.edit_bursary, name='edit_bursary'),
+    re_path(
+        r'^bursary/form/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.form_bursary, name='form_bursary'),
     # OVC Care - CPARA Form v1
-    re_path('cpara_v1/new/(?P<id>\d+)/', views.new_cpara_v1, name='new_cpara_v1'),
-    re_path('cpara_v1/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_cpara_v1, name='delete_cpara_v1'),
+    re_path('cpara_v1/new/(?P<id>\d+)/',
+            views.new_cpara_v1, name='new_cpara_v1'),
+    re_path('cpara_v1/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/',
+            views.delete_cpara_v1, name='delete_cpara_v1'),
 
     # OVC Care - Case Plan Template
     path(
         'caseplan/new/<int:id>/', views.case_plan_template, name='new_caseplan'),
-    path('caseplan/update/<int:ovcid>/<uuid:event_id>/', views.update_caseplan, name='update_caseplan'),
-    path('caseplan-monitoring/new/<int:id>/', views.new_case_plan_monitoring, name='new_caseplan_monitoring'),
+    path('caseplan/update/<int:ovcid>/<uuid:event_id>/',
+         views.update_caseplan, name='update_caseplan'),
+    path('caseplan-monitoring/new/<int:id>/',
+         views.new_case_plan_monitoring, name='new_caseplan_monitoring'),
 
 
     # Wellbeing Adult and Child
@@ -189,39 +236,50 @@ urlpatterns = [
 
 
     # Benchmarks Monitoring Form
-    path('benchmarkmonitoring/new/<int:id>/', views.new_benchmarkmonitoring, name='benchmarkmonitoring'),
-    #Case Closure Form
-    path('caseclosure/new/<int:id>/', views.new_case_closure, name='new_case_closure'),
-    path('editcaseclosure/edit/<uuid:id>/', views.edit_case_closure, name='edit_case_closure'),
-    path('deletecaseclosure/edit/<uuid:id>/', views.delete_case_closure, name='delete_case_closure'),
+    path('benchmarkmonitoring/new/<int:id>/',
+         views.new_benchmarkmonitoring, name='benchmarkmonitoring'),
+    # Case Closure Form
+    path('caseclosure/new/<int:id>/',
+         views.new_case_closure, name='new_case_closure'),
+    path('editcaseclosure/edit/<uuid:id>/',
+         views.edit_case_closure, name='edit_case_closure'),
+    path('deletecaseclosure/edit/<uuid:id>/',
+         views.delete_case_closure, name='delete_case_closure'),
 
 
     # New Forms - CPIMS OVC Upgrade
     path(
         'case-transfer/new/<int:id>/', views.case_transfer,
         name='new_case_transfer'),
-    path('fetch/all/organizations/', views.get_org, name='fetch_org_units')
+    path('fetch/all/organizations/', views.get_org, name='fetch_org_units'),
 
-       # New Cpara upgrade Form
-    re_path('cpara_upgrade/new/(?P<id>\d+)/', views.new_cpara_upgrade, name='new_cpara_upgrade'),
+    # New Cpara upgrade Form
+    re_path('cpara_upgrade/new/(?P<id>\d+)/',
+            views.new_cpara_upgrade, name='new_cpara_upgrade'),
 
-       # New Graduation Monitoring Tool
-    path('grad_monitor/new/<int:id>/', views.grad_monitor_tool, name='grad_monitor_tool'),
+    # New Graduation Monitoring Tool
+    path('grad_monitor/new/<int:id>/',
+         views.grad_monitor_tool, name='grad_monitor_tool'),
 
-    path('edit_grad_monitor/new/<uuid:id>/', views.edit_grad_monitor, name='edit_grad_monitor'),
-    
-#     path('delete_bench/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_benchmark, name='delete_benchmark')
-    path('delete_bench/<uuid:id>/', views.delete_benchmark, name='delete_benchmark')
+    path('edit_grad_monitor/new/<uuid:id>/',
+         views.edit_grad_monitor, name='edit_grad_monitor'),
+
+    #     path('delete_bench/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_benchmark, name='delete_benchmark')
+    path('delete_bench/<uuid:id>/', views.delete_benchmark, name='delete_benchmark'),
 
     # HEI Tracker
-    path('new_hei_tracker/new/<int:id>/', views.new_hei_tracker, name='new_hei_tracker'),
-    path('edit_heitracker/edit/(?P<id>\W+)/', views.edit_heitracker, name='edit_heitracker'),
-    path('delete_heitracker/(?P<id>)/', views.delete_heitracker, name='delete_heitracker'),
+    path('new_hei_tracker/new/<int:id>/',
+         views.new_hei_tracker, name='new_hei_tracker'),
+    path('edit_heitracker/edit/<uuid:id>/',
+         views.edit_heitracker, name='edit_heitracker'),
+    path('delete_heitracker/<uuid:id>/',
+         views.delete_heitracker, name='delete_heitracker'),
 
     # cpara view
-    re_path('cpara/new/(?P<id>\d+)/', views.new_cpara, name='new_cpara'),
+    re_path('cpara/new/<int:id>/', views.new_cpara, name='new_cpara'),
     # cpara edit
     path('edit_cpara/new/<uuid:id>/', views.edit_cpara, name='edit_cpara'),
     # cpara delete
-    re_path('cpara/delete/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_cpara, name='delete_cpara'),
-
+    re_path('cpara/delete/<int:id>/<uuid:btn_event_pk>/',
+            views.delete_cpara, name='delete_cpara'),
+]

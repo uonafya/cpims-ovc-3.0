@@ -29,7 +29,7 @@ from cpovc_dashboard import urls as dashboard_api_urls
 from cpovc_access.forms import StrictPasswordChangeForm
 # New changes
 from cpovc_pfs import urls as pfs_urls
-from cpovc_pfs.pmtct import urls as pmtct_urls
+from cpovc_pmtct import urls as pmtct_urls
 
 
 urlpatterns = [

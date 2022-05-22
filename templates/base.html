@@ -12,6 +12,7 @@
 	<meta content="" name="description" />
 	<meta content="" name="author" />
 	<link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+
 	<!-- ================== BEGIN BASE CSS STYLE ================== -->
 	<link href="{% static 'plugins/jquery-ui/themes/base/minified/jquery-ui.min.css' %}" rel="stylesheet" />
 	<link href="{% static 'plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
@@ -20,12 +21,10 @@
 	<link href="{% static 'css/style-responsive.min.css' %}" rel="stylesheet" />
 	<link href="{% static 'css/theme/default.css' %}" rel="stylesheet" id="theme" />
 	<link href="{% static 'plugins/jquery-countdown/css/style.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet" />
+
+	<link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet" />
     <link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
     <link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
-    <link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
-	
 	{% block style_code %}{% endblock %}
 	{% block extra_styling %}
     {% endblock extra_styling %}
@@ -33,17 +32,12 @@
 	<link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
 	<!-- ================== BEGIN BASE JS ================== -->
 	<script src="{% static 'plugins/pace/pace.min.js' %}"></script>
-	<!-- htmx added -->
-	<script src="https://unpkg.com/htmx.org@1.7.0"></script>
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-149126746-1"></script>
 	{% block javascript_code %}{% endblock %}
 	<!-- ================== END BASE JS ================== -->
 </head>
 <body>
 
 	<!-- begin #page-loader -->
-	<script src="https://unpkg.com/htmx.org@1.7.0"></script>
 	<div id="page-loader" class="fade in"><span class="spinner"></span></div>
 	<!-- end #page-loader -->
 	
@@ -176,8 +170,7 @@
 			{% endif %}
 		</div>
 		<!-- end #content -->
-		<div id="footer" class="footer"> {{ status }} &nbsp; &copy; {% now "Y" %}. All Rights Reserved. Version: 
-        2.0.0
+		<div id="footer" class="footer"> {{ status }} &nbsp; &copy; {% now "Y" %}. All Rights Reserved. Version: 3.0.0
         <span class="promo"><img src="{% static 'img/logo_private.png' %}" height="60"></span>
 		</div>
         <div class="modal fade" id="modal-session">
@@ -281,7 +274,6 @@
 	//   $('select#chv_unit_id').multiselect({'multiple': false});
 	//   $('select#cbo_unit_id').multiselect({'multiple': false});
     </script>
-	<script src="https://unpkg.com/htmx.org@1.7.0"></script>
     <script src="{% static 'js/base64.js' %}"></script>
     <script src="{% static 'js/offline_mode/service.js' %}"></script>
     <script src="{% static 'js/offline_mode/templates_events.js' %}"></script>

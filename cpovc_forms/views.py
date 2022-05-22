@@ -46,7 +46,9 @@ from .models import (
     OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions, OVCCareForms,
     OVCExplanations, OVCCareF1B, OVCCareBenchmarkScore, OVCMonitoring,
     OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening, OVCSubPopulation, OVCCareIndividaulCpara, OVCBenchmarkMonitoring,
-    OVCCareTransfer, OVCHEITracker, OVCPreventiveEvents, pmtct_registration, PMTCTQuestions, PMTCTHEI, PMTCTEvents, OVCCareCaseExit)
+    OVCCareTransfer, OVCHEITracker, OVCPreventiveEvents, PMTCTQuestions, PMTCTHEI, PMTCTEvents, OVCCareCaseExit)
+
+from cpovc_pmtct.models import OVCPMTCTRegistration
 
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (

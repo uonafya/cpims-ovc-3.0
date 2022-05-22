@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 from django.utils import timezone
 from cpovc_registry.models import RegPerson, RegOrgUnit
-from cpovc_ovc.models import OVCSchool, OVCFacility
+from cpovc_ovc.models import OVCSchool
 from cpovc_auth.models import AppUser
 
 
@@ -14,10 +14,11 @@ class OVCPMTCTRegistration(models.Model):
 
     school = models.ForeignKey(
         OVCSchool, on_delete=models.CASCADE, null=True)
-    child_cbo = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
+    child_cbo = models.ForeignKey(
+        RegOrgUnit, on_delete=models.CASCADE, related_name='pmtct_cbo')
     caregiver = models.ForeignKey(
         RegPerson, on_delete=models.CASCADE, null=True,
-        related_name='care_taker')
+        related_name='pmtct_caregiver')
     caregiver_contact = models.CharField(max_length=15)
     hiv_status = models.CharField(max_length=4, null=True)
     chv = models.ForeignKey(RegPerson, related_name='pmtct_chv',

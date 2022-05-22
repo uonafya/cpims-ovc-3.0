@@ -1,5 +1,6 @@
 from cpovc_forms.models import (
-    OVCHouseHold, OVCCareEvents, RegPerson, OVCHHMembers)
+    OVCHouseHold, OVCCareEvents, RegPerson)
+from cpovc_ovc.models import OVCHHMembers
 
 
 def save_event(request, person_id, event_name, date_of_event):
