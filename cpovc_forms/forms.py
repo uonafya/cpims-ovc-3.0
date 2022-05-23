@@ -107,7 +107,7 @@ csi_grade_list = get_list('csi_grade_id', 'Please Select')
 olmis_domain_list = get_list('olmis_domain_id', 'Please Select')
 olmis_assessment_domain_list = get_list(
     'olmis_assessment_domain_id', 'Please Select')
-print (olmis_assessment_domain_list)
+# print (olmis_assessment_domain_list)
 olmis_service_provider_list = get_list(
     'olmis_service_provider_id', 'Please Select')
 olmis_critical_events_list = get_list('olmis_critical_event_id')

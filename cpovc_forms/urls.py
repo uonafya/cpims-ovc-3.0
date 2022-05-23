@@ -192,6 +192,7 @@ urlpatterns = [
         r'^bursary/edit/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.edit_bursary, name='edit_bursary'),
     re_path(
         r'^bursary/form/(?P<id>[0-9A-Za-z_\-{32}\\Z]+)/', views.form_bursary, name='form_bursary'),
+
     # OVC Care - CPARA Form v1
     re_path('cpara_v1/new/(?P<id>\d+)/',
             views.new_cpara_v1, name='new_cpara_v1'),
@@ -200,7 +201,8 @@ urlpatterns = [
 
     # OVC Care - Case Plan Template
     path(
-        'caseplan/new/<int:id>/', views.case_plan_template, name='new_caseplan'),
+        'caseplan/new/<int:id>/', views.case_plan_template,
+        name='new_caseplan'),
     path('caseplan/update/<int:ovcid>/<uuid:event_id>/',
          views.update_caseplan, name='update_caseplan'),
     path('caseplan-monitoring/new/<int:id>/',
@@ -253,10 +255,6 @@ urlpatterns = [
         name='new_case_transfer'),
     path('fetch/all/organizations/', views.get_org, name='fetch_org_units'),
 
-    # New Cpara upgrade Form
-    re_path('cpara_upgrade/new/(?P<id>\d+)/',
-            views.new_cpara_upgrade, name='new_cpara_upgrade'),
-
     # New Graduation Monitoring Tool
     path('grad_monitor/new/<int:id>/',
          views.grad_monitor_tool, name='grad_monitor_tool'),
@@ -264,8 +262,8 @@ urlpatterns = [
     path('edit_grad_monitor/new/<uuid:id>/',
          views.edit_grad_monitor, name='edit_grad_monitor'),
 
-    #     path('delete_bench/(?P<id>\d+)/(?P<btn_event_pk>.+)/', views.delete_benchmark, name='delete_benchmark')
-    path('delete_bench/<uuid:id>/', views.delete_benchmark, name='delete_benchmark'),
+    path('delete_bench/<uuid:id>/',
+         views.delete_benchmark, name='delete_benchmark'),
 
     # HEI Tracker
     path('new_hei_tracker/new/<int:id>/',
@@ -276,10 +274,10 @@ urlpatterns = [
          views.delete_heitracker, name='delete_heitracker'),
 
     # cpara view
-    re_path('cpara/new/<int:id>/', views.new_cpara, name='new_cpara'),
+    path('cpara/new/<int:id>/', views.new_cpara, name='new_cpara'),
     # cpara edit
-    path('edit_cpara/new/<uuid:id>/', views.edit_cpara, name='edit_cpara'),
+    path('cpara/edit/<uuid:id>/', views.edit_cpara, name='edit_cpara'),
     # cpara delete
-    re_path('cpara/delete/<int:id>/<uuid:btn_event_pk>/',
-            views.delete_cpara, name='delete_cpara'),
+    path('cpara/delete/<int:id>/<uuid:btn_event_pk>/',
+         views.delete_cpara, name='delete_cpara'),
 ]
