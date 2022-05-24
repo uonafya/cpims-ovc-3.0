@@ -80,7 +80,7 @@ Caregiver details | {{care_giver}}
                 <td>
                     <a href="{% url 'new_form1b' id=creg.person_id %}">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">N</span>
+                    <span class="badge pull-right">{{ services.f1b }}</span>
                     <div class="m-t-4">Form 1B</div></a>
                 </td>
             </tr>
@@ -146,7 +146,7 @@ Caregiver details | {{care_giver}}
             </tr>
             <tr>
                 <td>
-                    <a href="{% url 'new_case_transfer' id=creg.person_id%}">
+                    <a href="#">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
                     <span class="badge pull-right">N</span>
                     <div class="m-t-4">Case Closure</div></a>
@@ -154,7 +154,7 @@ Caregiver details | {{care_giver}}
             </tr>
             <tr>
                 <td>
-                    <a href="{% url 'new_case_transfer' id=creg.person_id%}">
+                    <a href="#">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
                     <span class="badge pull-right">N</span>
                     <div class="m-t-4">Referral Form</div></a>
@@ -162,26 +162,10 @@ Caregiver details | {{care_giver}}
             </tr>
             <tr>
                 <td>
-                    <a href="{% url 'new_case_transfer' id=creg.person_id%}">
+                    <a href="#">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
                     <span class="badge pull-right">N</span>
                     <div class="m-t-4">Graduation Monitoring</div></a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{% url 'new_case_transfer' id=creg.person_id%}">
-                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">N</span>
-                    <div class="m-t-4">HIV Risk Screening</div></a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{% url 'new_case_transfer' id=creg.person_id%}">
-                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">N</span>
-                    <div class="m-t-4">CPARA</div></a>
                 </td>
             </tr>
         </table>
@@ -189,6 +173,14 @@ Caregiver details | {{care_giver}}
         <div class="m-b-10 text-inverse f-s-12"><b>Decommissioned Forms</b></div>
 
         <table class="text-inverse m-b-20 width-full">
+            <tr>
+                <td>
+                    <a href="{% url 'new_cpara_v1' id=creg.person_id %}">
+                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
+                    <span class="badge pull-right">{{ services.cpr }}</span>
+                    <div class="m-t-4">CPARA V1</div></a>
+                </td>
+            </tr>
              <tr>
                 <td>
                     <a href="{% url 'new_csi' id=creg.person_id %}">

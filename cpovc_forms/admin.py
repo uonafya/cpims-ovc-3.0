@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (
-    OVCCareQuestions, OVCCareForms, OVCCareTransfer, OVCCareQuestions)
+    OVCCareQuestions, OVCCareForms, OVCCareTransfer, OVCProgramRegistration)
 
 
 # Register your models here.
@@ -36,3 +36,12 @@ class OVCCareQuestionsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(OVCCareQuestions, OVCCareQuestionsAdmin)
+
+
+class OVCProgramRegistrationAdmin(admin.ModelAdmin):
+    list_display = ('program', 'person', 'child_cbo', 'child_chv')
+
+    search_fields = ('person', 'child_cbo', )
+
+
+admin.site.register(OVCProgramRegistration, OVCProgramRegistrationAdmin)

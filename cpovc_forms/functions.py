@@ -1,19 +1,23 @@
+from datetime import datetime, timedelta
 from django.db import connection
 from django.forms import NullBooleanField
+from django.core.cache import cache
 from cpovc_registry.functions import (
     get_client_ip, get_meta_data)
 
 from cpovc_main.functions import get_general_list, convert_date
 from cpovc_forms.models import (
-    FormsAuditTrail, OVCCareF1B, OVCCareEvents,
-    OVCEducationFollowUp, OVCCareCpara, OVCCareCasePlan,
-    FormsAuditTrail, OVCCareF1B, OVCCareEvents,
-    OVCEducationFollowUp, OVCCareCasePlan)
+    FormsAuditTrail, OVCCareCpara, OVCCareCasePlan,
+    OVCCareEvents, OVCEducationFollowUp)
 from cpovc_ovc.functions import get_house_hold
 from cpovc_registry.models import RegOrgUnit
-from .models import OVCGokBursary
-from .models import OVCGokBursary, OVCCareCpara
+
+from .models import (
+    OVCGokBursary, OVCCareEAV, OvcCaseInformation, OVCPlacement,
+    OVCCaseLocation, OVCCareF1B, OVCProgramRegistration)
 from cpovc_ovc.models import OVCFacility
+
+from cpovc_main.models import ListAnswers
 
 
 def save_audit_trail(request, params, audit_type):
@@ -108,22 +112,35 @@ def save_form1b(request, person_id, edit=0):
             f1b_date = request.POST.get('olmis_service_date')
             caretaker_id = request.POST.get('caretaker_id')
             f1bs = request.POST.getlist('f1b[]')
-            print('save', f1b_date, f1bs)
+            # print('save', f1b_date, f1bs)
             hh = get_house_hold(caretaker_id)
             hhid = hh.id if hh else None
             event_date = convert_date(f1b_date)
+            event_type_id = 'FM1B'
             newev = OVCCareEvents(
-                event_type_id='FM1B', created_by=user_id,
+                event_type_id=event_type_id, created_by=user_id,
                 person_id=caretaker_id, house_hold_id=hhid,
                 date_of_event=event_date)
             newev.save()
+            event_id = newev.pk
             # Attach services
             for f1bitm in f1bs:
                 f1b = str(f1bitm)
+                # Domain ids change - prefix 2 to suffix 3rd and 4th last
                 did = f1b[-4:][:2] if f1b.startswith('CP') else f1b[:2]
                 domain = domains[did]
-                OVCCareF1B(event_id=newev.pk, domain=domain,
+                OVCCareF1B(event_id=event_id, domain=domain,
                            entity=f1b).save()
+            # Save Crtical Event if exists CEVT
+            cevents = request.POST.getlist('caregiver_critical_event')
+            if cevents:
+                for c_event in cevents:
+                    OVCCareEAV(
+                        entity='CEVT',
+                        attribute=event_type_id,
+                        value=c_event,
+                        event_id=event_id
+                    ).save()
 
     except Exception as e:
         print('error saving form 1B - %s' % (str(e)))
@@ -132,151 +149,12 @@ def save_form1b(request, person_id, edit=0):
         return True
 
 
-def save_bursary(request, person_id):
-    """Method to save bursary details."""
-    try:
-        adm_school = request.POST.get('in_school')
-        school_id = request.POST.get('school_id')
-        county_id = request.POST.get('child_county')
-        constituency_id = request.POST.get('child_constituency')
-        sub_county = request.POST.get('child_sub_county')
-        location = request.POST.get('child_location')
-        sub_location = request.POST.get('child_sub_location')
-        village = request.POST.get('child_village')
-        nearest_school = request.POST.get('nearest_school')
-        nearest_worship = request.POST.get('nearest_worship')
-        val_in_school = request.POST.get('in_school')
-        in_school = True if val_in_school == 'AYES' else False
-        school_class = request.POST.get('school_class')
-        primary_school = request.POST.get('pri_school_name')
-        school_marks = request.POST.get('kcpe_marks')
-        father_names = request.POST.get('father_name')
-        val_father_alive = request.POST.get('father_alive')
-        father_alive = True if val_father_alive == 'AYES' else False
-        father_telephone = request.POST.get('father_contact')
-        mother_names = request.POST.get('mother_name')
-        val_mother_alive = request.POST.get('mother_alive')
-        mother_alive = True if val_mother_alive == 'AYES' else False
-        mother_telephone = request.POST.get('mother_contact')
-        guardian_names = request.POST.get('guardian_name')
-        guardian_telephone = request.POST.get('guardian_contact')
-        #
-        guardian_relation = request.POST.get('guardian_relation')
-        val_same_household = request.POST.get('living_with')
-        same_household = True if val_same_household == 'AYES' else False
-        val_father_chronic_ill = request.POST.get('father_ill')
-        father_chronic_ill = True if val_father_chronic_ill == 'AYES' else False
-        father_chronic_illness = request.POST.get('father_illness')
-        val_father_disabled = request.POST.get('father_disabled')
-        father_disabled = True if val_father_disabled == 'AYES' else False
-        father_disability = request.POST.get('father_disability')
-        val_father_pension = request.POST.get('father_pension')
-        father_pension = True if val_father_pension == 'AYES' else False
-        father_occupation = request.POST.get('father_occupation')
-        val_mother_chronic_ill = request.POST.get('mother_ill')
-        mother_chronic_ill = True if val_mother_chronic_ill == 'AYES' else False
-        mother_chronic_illness = request.POST.get('mother_illness')
-        val_mother_disabled = request.POST.get('mother_disabled')
-        mother_disabled = True if val_mother_disabled == 'AYES' else False
-        mother_disability = request.POST.get('mother_disability')
-        val_mother_pension = request.POST.get('mother_pension')
-        mother_pension = True if val_mother_pension == 'AYES' else False
-        mother_occupation = request.POST.get('mother_occupation')
-
-        fees_amount = request.POST.get('fees_amount')
-        fees_balance = request.POST.get('balance_amount')
-        school_secondary = request.POST.get('school_name')
-        school_county_id = request.POST.get('school_county')
-        school_constituency_id = request.POST.get('school_constituency')
-        school_sub_county = request.POST.get('school_sub_county')
-        school_location = request.POST.get('school_location')
-        school_sub_location = request.POST.get('school_sub_location')
-        school_village = request.POST.get('school_village')
-        school_email = request.POST.get('school_email')
-        school_telephone = request.POST.get('school_telephone')
-        school_type = request.POST.get('school_type')
-        school_category = request.POST.get('school_category')
-        school_enrolled = request.POST.get('school_enrolled')
-
-        school_bank_id = request.POST.get('bank')
-        school_bank_branch = request.POST.get('bank_branch')
-        school_bank_account = request.POST.get('bank_account')
-        school_recommend_by = request.POST.get('recommend_principal')
-        school_recommend_date = convert_date(request.POST.get('recommend_principal_date'))
-
-        chief_recommend_by = request.POST.get('recommend_chief')
-        chief_recommend_date = convert_date(request.POST.get('recommend_chief_date'))
-        chief_telephone = request.POST.get('chief_telephone')
-        csac_approved = request.POST.get('approved_csac')
-        approved_amount = request.POST.get('approved_amount')
-        scco_name = request.POST.get('scco_name')
-        val_scco_signed = request.POST.get('signed_scco')
-        scco_signed = True if val_scco_signed == 'AYES' else False
-        scco_sign_date = convert_date(request.POST.get('date_signed_scco'))
-        csac_chair_name = request.POST.get('csac_chair_name')
-        val_csac_signed = request.POST.get('signed_csac')
-        csac_signed = True if val_csac_signed == 'AYES' else False
-        csac_sign_date = convert_date(request.POST.get('date_signed_csac'))
-        application_date = convert_date(request.POST.get('application_date'))
-        app_user_id = request.user.id
-
-        obj, created = OVCEducationFollowUp.objects.get_or_create(
-            school_id=school_id, person_id=person_id,
-            defaults={'admitted_to_school': adm_school},
-        )
-        # Save all details from the Bursary form
-        gok_bursary = OVCGokBursary(
-            person_id=person_id, county_id=county_id,
-            constituency_id=constituency_id,
-            sub_county=sub_county, location=location,
-            sub_location=sub_location, village=village,
-            nearest_school=nearest_school,
-            nearest_worship=nearest_worship, in_school=in_school,
-            school_class=school_class, primary_school=primary_school,
-            school_marks=school_marks, father_names=father_names,
-            father_alive=father_alive, father_telephone=father_telephone,
-            mother_names=mother_names, mother_alive=mother_alive,
-            mother_telephone=mother_telephone, guardian_names=guardian_names,
-            guardian_telephone=guardian_telephone,
-            guardian_relation=guardian_relation, same_household=same_household,
-            father_chronic_ill=father_chronic_ill,
-            father_chronic_illness=father_chronic_illness,
-            father_disabled=father_disabled, father_disability=father_disability,
-            father_pension=father_pension, father_occupation=father_occupation,
-            mother_chronic_ill=mother_chronic_ill,
-            mother_chronic_illness=mother_chronic_illness,
-            mother_disabled=mother_disabled, mother_disability=mother_disability,
-            mother_pension=mother_pension, mother_occupation=mother_occupation,
-            fees_amount=fees_amount, fees_balance=fees_balance,
-            school_secondary=school_secondary, school_county_id=school_county_id,
-            school_constituency_id=school_constituency_id,
-            school_sub_county=school_sub_county, school_location=school_location,
-            school_sub_location=school_sub_location,
-            school_village=school_village, school_telephone=school_telephone,
-            school_email=school_email, school_type=school_type,
-            school_category=school_category, school_enrolled=school_enrolled,
-            school_bank_id=school_bank_id, school_bank_branch=school_bank_branch,
-            school_bank_account=school_bank_account, school_recommend_by=school_recommend_by,
-            school_recommend_date=school_recommend_date, chief_recommend_by=chief_recommend_by,
-            chief_recommend_date=chief_recommend_date, chief_telephone=chief_telephone,
-            csac_approved=csac_approved, approved_amount=approved_amount,
-            ssco_name=scco_name, scco_signed=scco_signed,
-            scco_sign_date=scco_sign_date, csac_chair_name=csac_chair_name,
-            csac_signed=csac_signed, csac_sign_date=csac_sign_date,
-            app_user_id=app_user_id, application_date=application_date)
-        gok_bursary.save()
-    except Exception as e:
-        print('Error saving bursary - %s' % (str(e)))
-    else:
-        return True
-
-
-def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event, date_event, exceptions=[]):
-    answer_value = {
-        'AYES': 'Yes',
-        'ANNO': 'No',
-        'ANA': 'Na'
-                     }
+def save_cpara_form_by_domain(
+        id, question, answer, house_hold, caregiver,
+        event, date_event, exceptions=[]):
+    answer_value = {'AYES': 'Yes',
+                    'ANNO': 'No',
+                    'ANA': 'Na'}
     if question.code.lower() == 'cp2d':
         if answer == '':
             answer = NullBooleanField
@@ -291,7 +169,6 @@ def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event
         # pdb.set_trace()
 
         answer = answer_value[answer]
-        pdb.set_trace()
     try:
         OVCCareCpara.objects.create(
             person_id=id,
@@ -313,7 +190,8 @@ def save_cpara_form_by_domain(id, question, answer, house_hold, caregiver, event
 # PAST CPT
 def get_past_cpt(ovc_id):
     # past cpt
-    all_cpt_events = OVCCareEvents.objects.filter(event_type_id='CPAR', person_id=ovc_id)
+    all_cpt_events = OVCCareEvents.objects.filter(
+        event_type_id='CPAR', person_id=ovc_id)
 
     caseplan_events = []
     try:
@@ -326,6 +204,7 @@ def get_past_cpt(ovc_id):
             all_cpt = OVCCareCasePlan.objects.filter(event=one_caseplan_event)
             if all_cpt:
                 for one_cpt in all_cpt:
+                    comp_date = one_cpt.completion_date.strftime('%d-%b-%Y')
                     if one_cpt.domain == 'DHNU':
                         one_event_healthy.append({
                             'ev_domain': one_cpt.domain,
@@ -335,7 +214,7 @@ def get_past_cpt(ovc_id):
                             'ev_services': one_cpt.cp_service,
                             'ev_results': one_cpt.results,
                             'ev_reasons': one_cpt.reasons,
-                            'ev_completion_date': one_cpt.completion_date.strftime('%d-%b-%Y'),
+                            'ev_completion_date': comp_date,
                             'ev_responsible': one_cpt.responsible,
                             'ev_person': ovc_id
                         })
@@ -348,7 +227,7 @@ def get_past_cpt(ovc_id):
                             'ev_services': one_cpt.cp_service,
                             'ev_results': one_cpt.results,
                             'ev_reasons': one_cpt.reasons,
-                            'ev_completion_date': one_cpt.completion_date.strftime('%d-%b-%Y'),
+                            'ev_completion_date': comp_date,
                             'ev_responsible': one_cpt.responsible,
                             'ev_person': ovc_id
                         })
@@ -361,7 +240,7 @@ def get_past_cpt(ovc_id):
                             'ev_services': one_cpt.cp_service,
                             'ev_results': one_cpt.results,
                             'ev_reasons': one_cpt.reasons,
-                            'ev_completion_date': one_cpt.completion_date.strftime('%d-%b-%Y'),
+                            'ev_completion_date': comp_date,
                             'ev_responsible': one_cpt.responsible,
                             'ev_person': ovc_id
                         })
@@ -374,15 +253,16 @@ def get_past_cpt(ovc_id):
                             'ev_services': one_cpt.cp_service,
                             'ev_results': one_cpt.results,
                             'ev_reasons': one_cpt.reasons,
-                            'ev_completion_date': one_cpt.completion_date.strftime('%d-%b-%Y'),
+                            'ev_completion_date': comp_date,
                             'ev_responsible': one_cpt.responsible,
                             'ev_person': ovc_id
                         })
+            ev_date = one_caseplan_event.date_of_event.strftime('%d-%b-%Y')
             caseplan_events.append({
                 'error': False,
                 'event_ovc': ovc_id,
                 'event_id': one_caseplan_event.pk,
-                'event_date': one_caseplan_event.date_of_event.strftime('%d-%b-%Y'),
+                'event_date': ev_date,
                 'event_stable': one_event_stable,
                 'event_safe': one_event_safe,
                 'event_healthy': one_event_healthy,
@@ -786,3 +666,75 @@ def save_case_other_geos(case_id, person_id, params={}):
         return None, None
     else:
         return geo, created
+
+
+def save_critical_event(request, person_id, event_type_id, cevents):
+    """Method to save critical event."""
+    try:
+        date_of_cevent = request.POST.get('olmis_service_date')
+        if date_of_cevent:
+            date_of_cevent = convert_date(date_of_cevent)
+
+        # Save Critical Event
+        event_counter = OVCCareEvents.objects.filter(
+            event_type_id=event_type_id,
+            person_id=person_id,
+            is_void=False).count()
+
+        ovccareevent = OVCCareEvents(
+            event_type_id=event_type_id,
+            event_counter=event_counter,
+            event_score=0,
+            date_of_event=date_of_cevent,
+            created_by=request.user.id,
+            person_id=person_id
+        )
+        ovccareevent.save()
+        event_id = ovccareevent.pk
+
+        # Critical Events [CEVT]
+        for event in cevents:
+            OVCCareEAV(
+                entity='CEVT',
+                attribute=event_type_id,
+                value=event,
+                event_id=event_id
+            ).save()
+    except Exception as e:
+        print('Error saving CG critical event - %s' % (e))
+        pass
+    else:
+        pass
+
+
+def save_ovc_program(request, person_id, ovc_prog):
+    """Method to save ovc_programs to avoid registry
+       creating new entries to different tables."""
+    try:
+        print('Enroll to OVC program')
+        user_id = request.user.id
+        reg_date = request.POST.get('registration_date', '1900-01-01')
+        cbo_id = request.POST.get('cbo_unit_id')
+        chv_id = request.POST.get('chv_unit_id')
+        prog, created = OVCProgramRegistration.objects.update_or_create(
+            person_id=person_id, program=ovc_prog,
+            defaults={'child_cbo_id': cbo_id, 'child_chv_id': chv_id,
+                      'created_by_id': user_id,
+                      'registration_date': reg_date, 'is_void': False})
+    except Exception as e:
+        print('Error saving program - %s' % (str(e)))
+        return None
+    else:
+        return prog
+
+
+def get_ovc_program(request, person_id, ovc_prog):
+    """Method to Program enrollments."""
+    try:
+        program = OVCProgramRegistration.objects.get(
+            person_id=person_id, program=ovc_prog)
+    except Exception as e:
+        print('Child not initiated in a program - %s' % e)
+        return None
+    else:
+        return program

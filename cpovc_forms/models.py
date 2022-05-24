@@ -1682,7 +1682,7 @@ class OVCCareIndividaulCpara(models.Model):
         def __unicode__(self):
             return str(self.cpara_id)    
 
-
+'''
         
 class OVCPreventiveEvents(models.Model):
     event = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
@@ -1702,7 +1702,7 @@ class OVCPreventiveEvents(models.Model):
     class Meta:
         db_table = 'ovc_preventive_events'
 
-'''
+
 class pmtct_registration(models.Model):
     pmtct_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
@@ -1945,4 +1945,25 @@ class OVCCareTransfer(models.Model):
         return '%s' % (str(self.person))
 
 
+class OVCProgramRegistration(models.Model):
+    prog_id = models.UUIDField(
+        primary_key=True, default=uuid.uuid1, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    registration_date = models.DateField(default=timezone.now)
+    child_cbo = models.ForeignKey(
+        RegOrgUnit, on_delete=models.CASCADE, related_name='prog_cbo')
+    child_chv = models.ForeignKey(
+        RegPerson, related_name='prog_chv', on_delete=models.CASCADE,
+        null=True)
+    program = models.CharField(max_length=7)
+    is_active = models.BooleanField(default=True)
+    created_by = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(default=timezone.now)
+    is_void = models.BooleanField(default=False)
 
+    class Meta:
+        db_table = 'ovc_program_registration'
+
+    def __str__(self):
+        return '%s : %s' % (self.prog_id, self.person)

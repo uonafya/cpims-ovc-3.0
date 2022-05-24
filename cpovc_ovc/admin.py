@@ -1,50 +1,15 @@
 """Admin backend for editing this aggregate data."""
-import csv
-import time
 from django.contrib import admin
-from django.http import HttpResponse
 from import_export.admin import ImportExportModelAdmin
 
 from .models import (
     OVCAggregate, OVCFacility, OVCSchool, OVCCluster,
-    OVCClusterCBO, OVCRegistration, OVCEligibility)
+    OVCClusterCBO, OVCRegistration, OVCEligibility,
+    OVCHHMembers, OVCHouseHold)
 
 from django.contrib.admin.helpers import ActionForm
 from django import forms
-
-
-def dump_to_csv(modeladmin, request, qs):
-    """
-    These takes in a Django queryset and spits out a CSV file.
-
-    Generic method for any queryset
-    """
-    model = qs.model
-    file_id = 'CPIMS_%s_%d' % (model.__name__, int(time.time()))
-    file_name = 'attachment; filename=%s.csv' % (file_id)
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = file_name,
-    writer = csv.writer(response, csv.excel)
-
-    headers = []
-    for field in model._meta.fields:
-        headers.append(field.name)
-    writer.writerow(headers)
-
-    for obj in qs:
-        row = []
-        for field in headers:
-            val = getattr(obj, field)
-            if callable(val):
-                val = val()
-            if type(val) == unicode:
-                val = val.encode("utf-8")
-            row.append(val)
-        writer.writerow(row)
-    return response
-
-
-dump_to_csv.short_description = u"Dump to CSV"
+from cpovc_main.utils import dump_to_csv
 
 
 def bulk_transfer(modeladmin, request, queryset):
@@ -161,3 +126,25 @@ class OVCClusterCBOAdmin(admin.ModelAdmin):
 
 
 admin.site.register(OVCClusterCBO, OVCClusterCBOAdmin)
+admin.site.disable_action('delete_selected')
+
+
+class OVCHHMembersInline(admin.StackedInline):
+    model = OVCHHMembers
+    readonly_fields = ['person']
+
+
+class OVCHouseHoldAdmin(admin.ModelAdmin):
+    """Aggregate data admin."""
+
+    search_fields = ['head_person']
+    list_display = ['head_person_id', 'head_person', 'head_identifier']
+
+    readonly_fields = ['head_person']
+
+    list_filter = ['is_void', 'created_at']
+    inlines = (OVCHHMembersInline, )
+    actions = [dump_to_csv]
+
+
+admin.site.register(OVCHouseHold, OVCHouseHoldAdmin)

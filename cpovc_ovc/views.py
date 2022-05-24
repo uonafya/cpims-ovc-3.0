@@ -420,9 +420,10 @@ def ovc_view(request, id):
             is_void=False, child_person_id=child.id)
         # Get services
         servs = {'FSAM': 'f1a', 'FCSI': 'fcsi', 'FHSA': 'fhva',
-                 'cpr': 'cpr', 'wba': 'wba', 'CPAR': 'CPAR', 'WBG': 'WBG'}
+                 'cpr': 'cpr', 'wba': 'wba', 'CPAR': 'CPAR', 'WBG': 'WBG',
+                 'FM1B': 'f1b'}
         services = {'f1a': 0, 'fcsi': 0, 'fhva': 0, 'cpr': 0,
-                    'wba': 0, 'CPAR': 0, 'WBG': 0}
+                    'wba': 0, 'CPAR': 0, 'WBG': 0, 'f1b': 0}
         sqs = OVCCareEvents.objects.filter(
             Q(person_id=child.id) | Q(house_hold_id=hhid))
         sqs = sqs.filter(is_void=False).values(

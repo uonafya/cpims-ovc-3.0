@@ -78,7 +78,7 @@ urlpatterns = [
     path('reports/', include(reports_urls)),
     path('gis/', include(gis_urls)),
     # path('api/', include(api_urls)),
-    path('ovcare/', include(ovc_urls)),
+    path('ovc-care/', include(ovc_urls)),
     path('settings/', include(settings_urls)),
     path('data_cleanup/', include(data_cleanup_urls)),
     # Accounts management
@@ -116,8 +116,8 @@ urlpatterns = [
     path('d/cm/', dash_views.ovc_dashboard_cm, name='cm_dash'),
     path('api/v2/', include(dashboard_api_urls)),
     # Preventive and Family Support
-    path('ovcare/pfs/', include(pfs_urls)),
-    path('ovcare/pmtct/', include(pmtct_urls)),
+    path('ovc-care/pfs/', include(pfs_urls)),
+    path('ovc-care/pmtct/', include(pmtct_urls)),
 ]
 
 handler400 = 'cpims.views.handler_400'

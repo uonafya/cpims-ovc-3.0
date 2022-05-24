@@ -45,6 +45,8 @@ from cpovc_ovc.functions import get_ovcdetails
 from cpovc_ovc.views import ovc_register
 from cpovc_forms.views import new_case_record_sheet
 
+from cpovc_forms.functions import save_ovc_program, get_ovc_program
+
 now = timezone.now()
 
 
@@ -538,12 +540,15 @@ def new_person(request):
                 cbo_id = request.POST.get('cbo_unit_id')
                 chv_id = request.POST.get('chv_unit_id')
                 has_bcert = True if birth_reg_id else False
-                ovc = OVCRegistration(
-                    person_id=reg_person_pk, registration_date=reg_date,
-                    has_bcert=has_bcert, is_disabled=False, is_void=False,
-                    child_cbo_id=cbo_id, child_chv_id=chv_id,
-                    exit_date=None, created_at=now)
-                ovc.save()
+                ovc_prog = request.POST.get('ovc_programs')
+                if ovc_prog == 'POVC':
+                    ovc = OVCRegistration(
+                        person_id=reg_person_pk, registration_date=reg_date,
+                        has_bcert=has_bcert, is_disabled=False, is_void=False,
+                        child_cbo_id=cbo_id, child_chv_id=chv_id,
+                        exit_date=None, created_at=now)
+                    ovc.save()
+                save_ovc_program(request, reg_person_pk, ovc_prog)
             # Capture RegPersonTypes Model
             if person_types:
                 save_person_type(person_types, reg_person_pk)
@@ -566,8 +571,9 @@ def new_person(request):
                         is_void=False).save()
             # For OVC programming Caregiver and Volunteer add cbo_id
             reg_ovc = request.session.get('reg_ovc', False)
-            ovc_cbos = ['TBGR', 'TWVL']
+            ovc_cbos = ['TBGR', 'TWVL', 'TBVC']
             ovc_type = str(person_type)
+            print('person_types', ovc_type)
             if reg_ovc and ovc_type in ovc_cbos:
                 cbo_id = request.POST.get('cbo_unit_id')
                 person_id = int(reg_person_pk)
@@ -682,7 +688,12 @@ def new_person(request):
                 first_name.upper())
             messages.add_message(request, messages.INFO, operation_msg)
             if child_ovc == 'AYES':
-                ovc_url = reverse(ovc_register, kwargs={'id': reg_person_pk})
+                if ovc_prog == 'POVC':
+                    ovc_url = reverse(
+                        ovc_register, kwargs={'id': reg_person_pk})
+                else:
+                    ovc_url = reverse(
+                        'new_pfs', kwargs={'id': reg_person_pk})
                 return HttpResponseRedirect(ovc_url)
             elif 'TBVC' in person_types and child_ovc != 'AYES':
                 csr_url = reverse(new_case_record_sheet,
@@ -1020,13 +1031,17 @@ def edit_person(request, id):
                         cbo_id = request.POST.get('cbo_unit_id')
                         chv_id = request.POST.get('chv_unit_id')
                         has_bcert = True if birth_reg_id else False
-                        ovc = OVCRegistration(
-                            person_id=eperson_id, registration_date=reg_date,
-                            has_bcert=has_bcert, is_disabled=False,
-                            is_void=False, child_cbo_id=cbo_id,
-                            child_chv_id=chv_id,
-                            exit_date=None, created_at=now)
-                        ovc.save()
+                        ovc_prog = request.POST.get('ovc_programs')
+                        if ovc_prog == 'POVC':
+                            ovc = OVCRegistration(
+                                person_id=eperson_id,
+                                registration_date=reg_date,
+                                has_bcert=has_bcert, is_disabled=False,
+                                is_void=False, child_cbo_id=cbo_id,
+                                child_chv_id=chv_id, exit_date=None,
+                                created_at=now)
+                            ovc.save()
+                        save_ovc_program(request, eperson_id, ovc_prog)
                 # Update Persons Geography
                 person_geos_all = RegPersonsGeo.objects.filter(
                     person_id=eperson_id, is_void=False,
@@ -1126,6 +1141,7 @@ def edit_person(request, id):
                 ovc_type = str(person_type)
                 print('ptypes', ovc_type)
                 if reg_ovc and ovc_type in ovc_cbos:
+                    print('ovc cbos')
                     cbo_id = request.POST.get('cbo_unit_id')
                     org, created = RegPersonsOrgUnits.objects.update_or_create(
                         person_id=eperson_id, org_unit_id=cbo_id,
@@ -1156,6 +1172,7 @@ def edit_person(request, id):
                     members.append(asb)
                 # Check if household exits
                 index_child, hh_members = get_household(eperson_id)
+                print('hh', index_child, hh_members)
                 if not index_child:
                     index_id = get_index_child(eperson_id)
                     if index_id:
@@ -1363,6 +1380,13 @@ def edit_person(request, id):
             if ovc:
                 initial_vals['cbo_unit_id'] = ovc.child_cbo_id
                 initial_vals['chv_unit_id'] = ovc.child_chv_id
+                initial_vals['ovc_programs'] = 'POVC'
+            else:
+                ovc_prog = get_ovc_program(request, id, 'PPRE')
+                if ovc_prog:
+                    initial_vals['cbo_unit_id'] = ovc_prog.child_cbo_id
+                    initial_vals['chv_unit_id'] = ovc_prog.child_chv_id
+                    initial_vals['ovc_programs'] = 'PPRE'
             # For caregivers and volunteers for OVC Programming
             reg_ovc = request.session.get('reg_ovc', False)
             ovc_cbos = ['TBGR', 'TWVL']

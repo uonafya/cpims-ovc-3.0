@@ -481,7 +481,8 @@
                 </a>
             </div>
             {% endif %}
-            <div class="badge pull-right m-4">Revised: October 6th 2016</div>
+            <a href="{% url 'ovc_view' id=form.person.value %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: May 2022</div>
         </div>
         <!-- end panel -->
         <div class="panel">
@@ -489,42 +490,22 @@
                     <h4 class="title"><b>Past Form 1B</b></h4>
                 </div>
                 <div class="panel-body">
-                    <table id="data-table" class="table table-striped table-bordered hidden">
-                        <thead>
-                            <tr>
-                                <th width="5%">ID</th>
-                                <th>Caregiver Names</th>
-                                <th>Date</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for f1b in f1bs %}
-                            <tr id="cluster_tr_{{ cluster.id }}">
-                                <td>{{ forloop.counter }}</td>
-                                <td class="f1b_p_id" id="{{ f1b.person.id }}">{{ f1b.person.first_name }} {{ f1b.person.surname }}</td>
-                                <td>{{ f1b.date_of_event }}
-                                </td>
-                                <td></td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-
                     <table id="past_f1b" class="table table-condensed table-bordered">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Event date</th>
-                                <th>Services</th>
+                                <th>Event type</th>
+                                <th>Details</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for eventt in ev_data %}
                                 <tr>
-                                    <td rowspan="1" valign="center" style="text-align: center;vertical-align: middle;">{{ forloop.counter }}</td>
-                                    <td rowspan="1" valign="center" style="text-align: center;vertical-align: middle;"><b>{{ eventt.ev_date }}</b></td>
+                                    <td rowspan="3" valign="center" style="text-align: center;vertical-align: middle;">{{ forloop.counter }}</td>
+                                    <td rowspan="3" valign="center" style="text-align: center;vertical-align: middle;"><b>{{ eventt.ev_date }}</b></td>
+                                    <td valign="center" style="text-align: center;vertical-align: middle;">Services</td>
                                     <td width="40%">
                                         
                                         {% if eventt.services %}
@@ -538,7 +519,7 @@
                                         {% endif %}
 
                                     </td>
-                                    <td rowspan="1" valign="center" style="text-align: center;vertical-align: middle;">
+                                    <td rowspan="3" valign="center" style="text-align: center;vertical-align: middle;">
                                         <a class="btn btn-danger" data-toggle="modal" href='#del_f1b_e_{{eventt.event_key}}'> <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
                                         <div class="modal fade" id="del_f1b_e_{{eventt.event_key}}">
                                             <div class="modal-dialog">
@@ -551,7 +532,7 @@
                                                         Are you sure you want to delete the <b>{{eventt.ev_date}}</b> event?
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-danger" onclick="deleteForm1bEntry( '{{eventt.ev_person}}','{{eventt.event_key}}' )" id="del_f1b_{{forloop.counter}}">Yes, DELETE</button>
+                                                        <button type="button" class="btn btn-danger" onclick="deleteForm1bEntry( {{eventt.ev_person}},'{{eventt.event_key}}' )" id="del_f1b_{{forloop.counter}}">Yes, DELETE</button>
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">No, cancel</button>
                                                     </div>
                                                 </div>
@@ -560,7 +541,36 @@
                                         
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td valign="center" style="text-align: center;vertical-align: middle;">Assessments</td>
+                                    <td width="40%">
+                                        {% if eventt.assessments %}
+                                            <!-- <ul> -->
+                                                {% for 1asem in eventt.assessments %}
+                                                    {{ 1asem.data }}, &nbsp;
+                                                {% endfor %}
+                                            <!-- </ul> -->
+                                        {% else %}
+                                            <div class="alert alert-warning">No assessments found</div>
+                                        {% endif %}
 
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 8px solid #ccc;">
+                                    <td valign="center" style="text-align: center;vertical-align: middle;">Critical Events</td>
+                                    <td width="40%">
+                                        {% if eventt.critical_events %}
+                                            <!-- <ul> -->
+                                                {% for 1asem in eventt.critical_events %}
+                                                    {{ 1asem.data }}, &nbsp;
+                                                {% endfor %}
+                                            <!-- </ul> -->
+                                        {% else %}
+                                            <div class="alert alert-warning">No critical events found</div>
+                                        {% endif %}
+
+                                    </td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>

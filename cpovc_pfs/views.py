@@ -1,23 +1,35 @@
+import json
+import uuid
+from datetime import datetime
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
 
 from cpovc_forms.forms import OVCSearchForm
-from cpovc_forms.functions import get_person_ids
+from cpovc_forms.functions import get_person_ids, get_ovc_program
 from cpovc_forms.models import OVCCaseRecord
 from cpovc_registry.models import (
-    RegPerson, RegPersonsGuardians, RegPersonsSiblings,
+    RegPerson, RegPersonsGeo, RegPersonsGuardians, RegPersonsSiblings,
     RegPersonsExternalIds)
+from cpovc_auth.models import AppUser
 
-from cpovc_main.functions import convert_date, get_dict
+from cpovc_main.functions import (
+    convert_date, get_dict, translate, get_days_difference, get_list)
 from cpovc_ovc.functions import get_school
 from cpovc_ovc.models import OVCRegistration
-from cpovc_pfs.functions import save_school
+from cpovc_pfs.functions import save_school, save_household
 
 from .forms import OVCPreventiveRegistrationForm
-from .models import OVCPreventiveRegistration
+from .models import (
+    OVCPreventiveRegistration, OVCPreventiveEvents,
+    OVCPreventiveEbi, OVCPreventiveService)
+
+from cpovc_ovc.models import OVCHouseHold, OVCHHMembers
+
+from .forms import PREVENTIVE_ATTENDANCE_REGISTER_FORM
 
 
 @login_required
@@ -103,11 +115,13 @@ def new_pfs(request, id):
             else:
                 gkey = '%s_%s' % (extid.person_id, extid.identifier_type_id)
                 gparams[gkey] = extid.identifier
+        # Get CBOs from program initiation table
+        ovc = get_ovc_program(request, person_id, 'PPRE')
         if request.method == 'POST':
             form = OVCPreventiveRegistrationForm(guids=pids, data=request.POST)
             user_id = request.user.id
             intervention = request.POST.get('intervention')
-            cbo_id = 1
+            cbo_id = request.POST.get('cbo_id')
             # request.POST.get('cbo_id')
             school_level = request.POST.get('school_level')
             school_id = request.POST.get('school_id')
@@ -115,10 +129,13 @@ def new_pfs(request, id):
                 school_id = None
             registration_date = request.POST.get('registration_date')
             reg_date = convert_date(registration_date)
+            # Pick the First one >> Users will pick later
+            caregiver_id = guardians.first().guardian_person_id
             obj, created = OVCPreventiveRegistration.objects.update_or_create(
                 person_id=person_id, is_void=False,
                 defaults={'intervention': intervention, 'child_cbo_id': cbo_id,
                           'school_id': school_id, 'created_by_id': user_id,
+                          'caregiver_id': caregiver_id,
                           'registration_date': reg_date},
             )
             action = "Created" if created else "edited"
@@ -126,17 +143,14 @@ def new_pfs(request, id):
             messages.info(request, msg)
             url = reverse('view_pfs', kwargs={'id': id})
             return HttpResponseRedirect(url)
-        else:
-            cbo_id = 1
-            cbo_uid = 1
-            initial['cbo_uid'] = cbo_uid
-            initial['cbo_id'] = cbo_id
-            initial['cbo_uid_check'] = cbo_uid
-            if 'ISOV' in params:
-                initial['bcert_no'] = params['ISOV']
-                initial['has_bcert'] = 'on'
-            form = OVCPreventiveRegistrationForm(
-                guids=pids, initial=initial)
+        # Not a POST
+        cbo_id = ovc.child_cbo_id if ovc else 1
+        initial['cbo_id'] = cbo_id
+        if 'ISOV' in params:
+            initial['bcert_no'] = params['ISOV']
+            initial['has_bcert'] = 'on'
+        form = OVCPreventiveRegistrationForm(
+            guids=pids, initial=initial)
         # Class levels
         levels = {}
         levels["SLNS"] = []
@@ -152,7 +166,8 @@ def new_pfs(request, id):
         levels["SLTV"] = ["TVC1,Year 1", "TVC2,Year 2", "TVC3,Year 3",
                           "TVC4,Year 4", "TVC5,Year 5"]
         return render(request, 'pfs/new_registration.html',
-                      {'form': form, 'child': child, 'levels': levels})
+                      {'form': form, 'child': child, 'levels': levels,
+                       'ovc': ovc})
     except Exception as e:
         print('fps error - %s' % (str(e)))
         raise e
@@ -206,6 +221,10 @@ def edit_pfs(request, id):
                           'school_id': school_id, 'created_by_id': user_id,
                           'registration_date': reg_date},
             )
+            # Handle households
+            cg_id = obj.caregiver_id
+            if cg_id:
+                save_household(request, cg_id, person_id)
             action = "Created" if created else "edited"
             msg = "Child registration %s Successfully" % action
             messages.info(request, msg)
@@ -214,7 +233,7 @@ def edit_pfs(request, id):
         # Default Get method
         ovc = OVCPreventiveRegistration.objects.get(
             is_void=False, person_id=person_id)
-        cbo_id = 1
+        cbo_id = ovc.child_cbo_id
         reg_date = ovc.registration_date.strftime('%d-%b-%Y')
         initial['registration_date'] = reg_date
         # Get School information
@@ -289,3 +308,475 @@ def view_pfs(request, id):
     else:
         pass
 
+
+def preventive_attendance_register(request, id):
+    if request.method == 'POST':
+        pass
+    else:
+        form = PREVENTIVE_ATTENDANCE_REGISTER_FORM(initial={'person': id})
+        check_fields = ['sex_id']
+        vals = get_dict(field_name=check_fields)
+        init_data = RegPerson.objects.filter(pk=id)
+        return render(request,
+                      'pfs/new_preventive_attendance_register.html',
+                      {'form': form, 'init_data': init_data,
+                       'vals': vals, 'id': id})
+
+
+def save_preventive_register(request):
+    jsonResponse = []
+    try:
+        if request.method == 'POST':
+
+            args = int(request.POST.get('args'))
+            person = request.POST.get('person')
+
+            registration_details = OVCPreventiveRegistration.objects.get(
+                person_id=int(person))
+
+            child = RegPerson.objects.get(id=person)
+            username = request.user.get_username()
+
+            print(request.POST)
+
+            date_of_assessment = request.POST.get('session_date_id')
+            date_of_assessment = convert_date(date_of_assessment) if date_of_assessment else None
+            date_today = datetime.now()
+
+            if args == 1:
+                event_type_id = 'EBI'
+                event_counter = OVCPreventiveEvents.objects.filter(
+                    event_type_id=event_type_id, person=person,
+                    is_void=False).count()
+
+                # preventive_assessment_provided_list
+                olmis_assessment_provided_list = request.POST.get(
+                    'olmis_assessment_provided_list')
+                # pdb.set_trace()
+                preventive_grouping_id = 'GROUP ID'
+                if olmis_assessment_provided_list:
+                    olmis_assessment_data = json.loads(
+                        olmis_assessment_provided_list)
+                    ovcpreventiveevent = OVCPreventiveEvents(
+                        event_type_id=event_type_id,
+                        event_counter=event_counter,
+                        event_score=0,
+                        date_of_event=date_today,
+                        # date_of_previous_event = '2022-01-04',
+                        created_by=request.user.id,
+                        app_user=AppUser.objects.get(username=username),
+                        person=RegPerson.objects.get(pk=int(person)),
+                        house_hold=OVCHouseHold.objects.get(
+                            id=OVCHHMembers.objects.get(
+                                person=child).house_hold_id)
+                    )
+                    ovcpreventiveevent.save()
+
+                    for assessment_data in olmis_assessment_data:
+                        olmis_intervention_prevention = assessment_data['olmis_intervention_prevention']
+                        completed_all_session = assessment_data['holmis_completed_all_sessions']
+                        session_attended = assessment_data['olmis_session_attended_days']
+                        session_date = assessment_data['olmis_session_date']
+
+                        if session_date:
+
+                            ebi_session_type = ''
+
+                            date_of_encounter_event = ''
+                            # pdb.set_trace()
+                            if 'SESS' in session_attended:
+                                ebi_session_type = 'GENERAL'  # 'General'
+                                date_of_encounter_event = session_date
+                            else:
+                                ebi_session_type = 'MAKE UP'  # "make up"
+                                date_of_encounter_event = session_date
+                            print('EBI', ebi_session_type, date_of_encounter_event)
+                            try:
+                                prov_cbo = registration_details.child_cbo
+                                person_id = int(person)
+                                ebi_place = RegPersonsGeo.objects.filter(
+                                    person_id=person_id, is_void=False).first()
+                                OVCPreventiveEbi(
+                                    person_id=person_id,
+                                    domain=olmis_intervention_prevention,
+                                    ebi_provided="",
+                                    ebi_provider=prov_cbo,
+                                    ebi_session=session_attended,
+                                    ebi_session_type=ebi_session_type,
+                                    place_of_ebi=ebi_place,
+                                    date_of_encounter_event=convert_date(
+                                        date_of_encounter_event),
+                                    event=ovcpreventiveevent,
+                                ).save()
+
+                            except Exception as e:
+                                print(e)
+
+            if args == 2:
+                # service_domain = 'XYZ'
+                event_type_id = 'SERVICE'
+                event_counter = OVCPreventiveEvents.objects.filter(
+                    event_type_id=event_type_id, person=person,
+                    is_void=False).count()
+
+                olmis_assessment_provided_list = request.POST.get(
+                    'olmis_assessment_provided_list')
+
+                ovcpreventiveevent = OVCPreventiveEvents(
+                    event_type_id=event_type_id,
+                    event_counter=event_counter,
+                    event_score=0,
+                    date_of_event=date_today,
+                    created_by=request.user.id,
+                    app_user=AppUser.objects.get(username=username),
+                    person=RegPerson.objects.get(pk=int(person)),
+                    house_hold=OVCHouseHold.objects.get(
+                        id=OVCHHMembers.objects.get(
+                            person=child).house_hold_id)
+                )
+                ovcpreventiveevent.save()
+
+                service_provided_list = request.POST.get(
+                    'olmis_assessment_provided_list')
+                if service_provided_list:
+                    service_provided_list = json.loads(service_provided_list)
+                    # pdb.set_trace()
+                    for service in service_provided_list:
+                        boolean_service_offered = service.get(
+                            "olmis_reffered_for_service")
+                        service_offered = service.get("olmis_reffered_service")
+                        service_made = service.get("olmis_service_made")
+                        date_of_encounter = service.get(
+                            "olmis_date_of_encounter")
+                        person_id = int(person)
+                        ebi_place = RegPersonsGeo.objects.filter(
+                            person_id=person_id, is_void=False).first()
+                        OVCPreventiveService(
+                            person_id=person_id,
+                            domain='SERVICE',  # sinovuyo or fmp or hcbf
+                            ebi_service_provided="serv",
+                            ebi_provider=registration_details.child_cbo,
+                            ebi_service_client=service.get('olmis_client'),
+                            ebi_service_reffered=service_offered,
+                            ebi_service_completed=service_made,
+                            place_of_ebi_service=ebi_place,
+                            date_of_encounter_event=convert_date(
+                                date_of_encounter),
+                            event=ovcpreventiveevent
+                        ).save()
+            msg = 'Updated Successful'
+            jsonResponse.append({'msg': msg})
+    except Exception as e:
+        msg = 'Save Error: (%s)' % (str(e))
+    jsonResponse.append({'msg': msg})
+    return JsonResponse(
+        jsonResponse, content_type='application/json', safe=False)
+
+
+def manage_preventive_register(request):
+    msg = ''
+    preventiveEventsData = []
+
+    try:
+
+        person = request.POST.get('person')
+        # pdb.set_trace()
+        ovcpreventiveevents = OVCPreventiveEvents.objects.filter(
+            person=person).order_by('-date_of_event')
+
+        for event in ovcpreventiveevents:
+            event_type = None
+            event_details = None
+            services = []
+            event_keywords = []
+            event_keyword_group = []
+            register = []
+            event_date = event.date_of_event
+
+            # get Assessment
+            ovccaregister = OVCPreventiveEbi.objects.filter(event=event.pk)
+            ovccareservice = OVCPreventiveService.objects.filter(
+                event=event.pk)
+
+            for ovccareg in ovccaregister:
+                # pdb.set_trace()
+                register.append(translate(ovccareg.domain) + ',' + translate(ovccareg.ebi_session_type) + ',' + translate(
+                    ovccareg.ebi_session) + ',' + translate(ovccareg.date_of_encounter_event.strftime('%d-%b-%Y')))
+                event_keywords.append(ovccareg.ebi_provided)
+            for ovcservice in ovccareservice:
+                services.append(translate(ovcservice.domain) + ',' + translate(
+                    ovcservice.ebi_service_provided) + ',' + translate(ovcservice.ebi_service_client))
+                event_keywords.append(ovcservice.ebi_service_reffered)
+            # pdb.set_trace()
+
+            if (services):
+                event_type = 'SERVICE'
+                event_details = ', '.join(services)
+            elif (register):
+                event_type = 'EBI'
+                event_details = ', '.join(register)
+                event_keyword_group = ', '.join(event_keywords)
+
+            preventiveEventsData.append({
+                'event_pk': str(event.pk),
+                'event_type': event_type,
+                'event_details': event_details,
+                'event_keyword_group': event_keyword_group,
+                'event_date': event_date.strftime('%d-%b-%Y')
+            })
+
+        return JsonResponse(preventiveEventsData,
+                            content_type='application/json',
+                            safe=False)
+    except Exception as e:
+        msg = 'An error occured : %s' % str(e)
+        print(str(e))
+        preventiveEventsData.append({'msg': msg})
+    return JsonResponse(preventiveEventsData,
+                        content_type='application/json',
+                        safe=False)
+
+
+def delete_preventive_event_entry(request, id, btn_event_pk, btn_event_type):
+    jsonForm1AData = []
+    try:
+        entry_id = uuid.UUID(btn_event_pk)
+        if btn_event_type == 'EBI':
+            OVCPreventiveEbi.objects.filter(event_id=entry_id).delete()
+
+        elif btn_event_type == 'SERVICE':
+            OVCPreventiveService.objects.filter(event_id=entry_id).delete()
+        msg = 'Deleted successfully'
+    except Exception as e:
+        msg = 'An error occured : %s' % str(e)
+        print(str(e))
+    jsonForm1AData.append({'msg': msg})
+    return JsonResponse(jsonForm1AData,
+                        content_type='application/json',
+                        safe=False)
+
+
+def edit_preventive_event_entry(request, id, btn_event_pk, btn_event_type):
+    import pdb
+    if request.method == 'GET':
+        init_data = RegPerson.objects.filter(pk=id)
+        check_fields = ['sex_id']
+        vals = get_dict(field_name=check_fields)
+        form = PREVENTIVE_ATTENDANCE_REGISTER_FORM(initial={'person': id})
+        # OVCF1AForm(initial={'person': id})
+        event_obj = OVCPreventiveEvents.objects.get(pk=btn_event_pk)
+        event_id = uuid.UUID(btn_event_pk)
+
+        d_event = OVCPreventiveEvents.objects.filter(pk=event_id)[
+            0].timestamp_created
+        delta = get_days_difference(d_event)
+        print(delta)
+        if delta < 90:
+            if btn_event_type == 'EBI':
+                ovc_care_assessments = OVCPreventiveEbi.objects.filter(
+                    event=event_id)
+
+                service_type_list = []
+                olmis_assessment_domain_list = get_list(
+                    'attendance_reg_domains', 'Please Select')
+                date_of_event_edit = event_obj.date_of_event
+                for ovc_care_assessment in ovc_care_assessments:
+                    domain_entry = {}
+                    assessment_entry = []
+
+                    domain_full_name = ''
+                    for domain in olmis_assessment_domain_list:
+                        if domain[0] == ovc_care_assessment.domain:
+                            domain_full_name = domain
+
+                    assessment_entry.append(domain_full_name[0])
+                    assessment_entry.append(
+                        translate(ovc_care_assessment.ebi_session))
+                    assessment_entry.append(
+                        translate(ovc_care_assessment.date_of_encounter_event))
+                    assessment_entry.append(translate(ovc_care_assessment.pk))
+                    domain_entry[ovc_care_assessment.pk] = assessment_entry
+                    service_type_list.append(domain_entry)
+
+                    form = PREVENTIVE_ATTENDANCE_REGISTER_FORM(
+                        initial={'person': id})
+                    date_of_event_edit = str(date_of_event_edit)
+
+                return render(request,
+                              'pfs/edit_preventive_register.html',
+                              {'form': form, 'init_data': init_data,
+                               'vals': vals, 'event_pk': btn_event_pk,
+                               'event_type': btn_event_type,
+                               'service_type_list': service_type_list,
+                               'date_of_event_edit': date_of_event_edit})
+
+            elif btn_event_type == 'SERVICE':
+                preventive_reg_services = OVCPreventiveService.objects.filter(
+                    event=event_obj)
+                service_type_list = []
+                olmis_assessment_domain_list = get_list(
+                    'attendance_reg_domains', 'Please Select')
+                date_of_event_edit = event_obj.date_of_event
+                for services in preventive_reg_services:
+
+                    domain_entry = {}
+                    service_entry = []
+
+                    domain_full_name = ''
+
+                    service_entry.append(services.ebi_service_client)
+                    service_entry.append(services.ebi_service_reffered)
+                    service_entry.append(services.date_of_encounter_event)
+                    service_entry.append(services.event_id)
+                    service_entry.append(services.pk)
+                    service_entry.append(services.ebi_service_provided)
+
+                    # date_of_encounter_event
+                    # domain_entry[ovc_care_assessment.pk] = assessment_entry
+                service_type_list.append(service_entry)
+
+                form = PREVENTIVE_ATTENDANCE_REGISTER_FORM(
+                    initial={'person': id})
+                date_of_event_edit = str(date_of_event_edit)
+                # pdb.set_trace()
+
+                return render(request,
+                              'pfs/edit_preventive_register.html',
+                              {'form': form, 'init_data': init_data,
+                               'vals': vals, 'event_pk': btn_event_pk,
+                               'event_type': btn_event_type,
+                               'service_type_list': service_type_list,
+                               'date_of_event_edit': date_of_event_edit})
+
+        else:
+            err_msgg = "Can't alter after 90 days"
+            return render(request,
+                          'pfs/edit_preventive_register.html',
+                          {'form': form, 'init_data': init_data,
+                           'vals': vals, 'event_pk': btn_event_pk,
+                           'event_type': btn_event_type,
+                           'err_msgg': err_msgg})
+
+    if request.method == 'POST':
+        args_value = int(request.POST.get('args'))
+        person = request.POST.get('person')
+        primary_key = uuid.UUID(request.POST.get("btn_event_pk"))
+
+        registration_details = OVCRegistration.objects.get(
+            person_id=int(person))
+
+        child = RegPerson.objects.get(id=person)
+        username = request.user.get_username()
+
+        date_of_assessment = request.POST.get('session_date_id')
+        date_of_assessment = convert_date(date_of_assessment)
+        date_today = datetime.now()
+        if args_value == 1:
+
+            event_type_id = 'EBI'
+            event_counter = OVCPreventiveEvents.objects.filter(
+                event_type_id=event_type_id, person=person,
+                is_void=False).count()
+            # preventive_assessment_provided_list
+            olmis_assessment_provided_list = request.POST.get(
+                'olmis_assessment_provided_list')
+
+            preventive_grouping_id = 'GROUP ID'
+            if olmis_assessment_provided_list:
+                olmis_assessment_data = json.loads(
+                    olmis_assessment_provided_list)
+                service_grouping_id = new_guid_32()
+
+                olmis_intervention_prevention = olmis_assessment_data.get(
+                    "olmis_intervention_prevention")
+                completed_all_session = olmis_assessment_data.get(
+                    'holmis_completed_all_sessions')
+                session_attended = olmis_assessment_data.get(
+                    'olmis_session_attended_days')
+                session_date = olmis_assessment_data.get('olmis_session_date')
+
+                if session_date:
+                    ebi_session_type = ''
+
+                    date_of_encounter_event = ''
+                    # pdb.set_trace()
+                    if 'SESS' in session_attended:
+                        ebi_session_type = 'GENERAL'  # 'General'
+                        date_of_encounter_event = session_date
+                    else:
+                        ebi_session_type = 'MAKE UP'  # "make up"
+                        date_of_encounter_event = session_date
+                    try:
+                        #
+
+                        OVCPreventiveEbi.objects.filter(
+                            event=primary_key).update(
+                                domain=olmis_intervention_prevention,
+                                ebi_provided="",
+                                ebi_session=session_attended,
+                                ebi_session_type=ebi_session_type,
+                                date_of_encounter_event=convert_date(
+                                    date_of_encounter_event),
+                        )
+
+                        msg = {'message': 'Save Successful'}
+                        return JsonResponse(
+                            msg, content_type='application/json', safe=False)
+
+                    except Exception as e:
+                        print(e)
+
+        if args_value == 2:
+            serveice_domain = 'HHNN'
+            event_type_id = 'SERVICE'
+            event_counter = OVCPreventiveEvents.objects.filter(
+                event_type_id=event_type_id, person=person,
+                is_void=False).count()
+
+            olmis_assessment_provided_list = request.POST.get(
+                'olmis_assessment_provided_list')
+
+            ovcpreventiveevent = OVCPreventiveEvents(
+                event_type_id=event_type_id,
+                event_counter=event_counter,
+                event_score=0,
+                date_of_event=date_today,
+                created_by=request.user.id,
+                app_user=AppUser.objects.get(username=username),
+                person=RegPerson.objects.get(pk=int(person)),
+                house_hold=OVCHouseHold.objects.get(
+                    id=OVCHHMembers.objects.get(person=child).house_hold_id)
+            )
+            ovcpreventiveevent.save()
+
+            service_provided_list = request.POST.get(
+                'olmis_assessment_provided_list')
+            # pdb.set_trace()
+            if service_provided_list:
+                service_provided_list = json.loads(service_provided_list)
+                for service in service_provided_list:
+                    boolean_service_offered = service.get(
+                        "olmis_reffered_for_service")
+                    service_offered = service.get("olmis_reffered_service")
+                    service_made = service.get("olmis_service_made")
+                    date_of_encounter = service.get("olmis_date_of_encounter")
+                    pdb.set_trace()
+
+                    OVCPreventiveService.objects.filter(
+                        event=primary_key).update(
+                            person_id=RegPerson.objects.get(pk=int(person)),
+                            domain=serveice_domain,  # sinovuyo or fmp or hcbf
+                            ebi_service_provided="serv",
+                            ebi_provider=registration_details.child_cbo,
+                            ebi_service_client=service.get('olmis_client'),
+                            ebi_service_reffered=service_offered,
+                            ebi_service_completed=service_made,
+                            place_of_ebi_service=RegPersonsGeo.objects.get(
+                                person_id=RegPerson.objects.get(
+                                    pk=int(person)).id),
+                            date_of_encounter_event=convert_date(
+                                date_of_encounter),
+                            event=ovcpreventiveevent
+                    )
+        msg = {'msg': 'Save Successful'}
+        return JsonResponse(msg, content_type='application/json', safe=False)

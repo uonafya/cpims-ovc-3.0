@@ -135,8 +135,8 @@ class OVCHouseHold(models.Model):
         """Override table details."""
 
         db_table = 'ovc_household'
-        verbose_name = 'OVC Registration'
-        verbose_name_plural = 'OVC Registration'
+        verbose_name = 'OVC Household'
+        verbose_name_plural = 'OVC Households'
 
     def __str__(self):
         """To be returned by admin actions."""
@@ -164,8 +164,8 @@ class OVCHHMembers(models.Model):
         """Override table details."""
 
         db_table = 'ovc_household_members'
-        verbose_name = 'OVC Registration'
-        verbose_name_plural = 'OVC Registration'
+        verbose_name = 'OVC HH Member'
+        verbose_name_plural = 'OVC HH Members'
 
     def __str__(self):
         """To be returned by admin actions."""
