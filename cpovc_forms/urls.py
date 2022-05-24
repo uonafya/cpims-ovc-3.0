@@ -278,6 +278,16 @@ urlpatterns = [
     # cpara edit
     path('cpara/edit/<uuid:id>/', views.edit_cpara, name='edit_cpara'),
     # cpara delete
+    re_path('cpara/delete/<int:id>/<uuid:btn_event_pk>/',
+            views.delete_cpara, name='delete_cpara'),
+    path('preventiveattendanceregister/new/<int:id>/', views.preventive_attendance_register, name='preventiveattendanceregister'),
+    path('preventiveattendanceregister/save/', views.save_preventive_register, name='save_preventive_register'),
+    path('preventiveattendanceregister/manage/', views.manage_preventive_register, name='manage_preventive_register'),
+    re_path('preventiveattendanceregister/delete/(?P<id>\d+)/(?P<btn_event_type>\w+)/(?P<btn_event_pk>.+)/', views.delete_preventive_event_entry,
+            name='delete_preventive_event_entry'),
+    re_path('preventiveattendanceregister/edit/(?P<id>\d+)/(?P<btn_event_type>\w+)/(?P<btn_event_pk>.+)/', views.edit_preventive_event_entry,
+            name='edit_preventive_event_entry'),
+
     path('cpara/delete/<int:id>/<uuid:btn_event_pk>/',
          views.delete_cpara, name='delete_cpara'),
 ]
