@@ -1,0 +1,690 @@
+[
+    {
+        "pk": 31280,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS1",
+            "item_description": "SESSION 1",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31281,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS2",
+            "item_description": "SESSION 2",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31282,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS3",
+            "item_description": "SESSION 3",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31283,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS4",
+            "item_description": "SESSION 4",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31284,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS5",
+            "item_description": "SESSION 5",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31285,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 6,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS6",
+            "item_description": "SESSION 6",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31286,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 7,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS7",
+            "item_description": "SESSION 7",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31287,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 8,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS8",
+            "item_description": "SESSION 8",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31288,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 9,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS9",
+            "item_description": "SESSION 9",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31289,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 10,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS10",
+            "item_description": "SESSION 10",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31290,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 11,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS11",
+            "item_description": "SESSION 11",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31291,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 12,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS12",
+            "item_description": "SESSION 12",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31292,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 13,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS13",
+            "item_description": "SESSION 13",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31293,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 14,
+            "field_name": "session_id",
+            "item_category": "Attendance Register",
+            "item_id": "SESS14",
+            "item_description": "SESSION 14",
+            "item_description_short": "Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31294,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS1",
+            "item_description": "MAKE UP SESSION 1",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31295,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS2",
+            "item_description": "MAKE UP SESSION 2",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31296,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS3",
+            "item_description": "MAKE UP SESSION 3",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31297,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS4",
+            "item_description": "MAKE UP SESSION 4",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31298,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS5",
+            "item_description": "MAKE UP SESSION 5",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31299,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 6,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS6",
+            "item_description": "MAKE UP SESSION 6",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31300,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 7,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS7",
+            "item_description": "MAKE UP SESSION 7",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31301,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 8,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS8",
+            "item_description": "MAKE UP SESSION 8",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31302,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 9,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS9",
+            "item_description": "MAKE UP SESSION 9",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31303,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 10,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS10",
+            "item_description": "MAKE UP SESSION 10",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31304,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 11,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS11",
+            "item_description": "MAKE UP SESSION 11",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31305,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 12,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS12",
+            "item_description": "MAKE UP SESSION 12",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31306,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 13,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS13",
+            "item_description": "MAKE UP SESSION 13",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31307,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 14,
+            "field_name": "makeup_session_id",
+            "item_category": "Attendance Register",
+            "item_id": "MKPS14",
+            "item_description": "MAKE UP SESSION 14",
+            "item_description_short": "Makeup Session Attended",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31308,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "attendance_reg_domains",
+            "item_category": "Attendance Register",
+            "item_id": "SINOV",
+            "item_description": "SINOVUYO",
+            "item_description_short": "SINOVUYO",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31309,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "attendance_reg_domains",
+            "item_category": "Attendance Register",
+            "item_id": "CBIM",
+            "item_description": "CBIM",
+            "item_description_short": "CBIM",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31310,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "attendance_reg_domains",
+            "item_category": "Attendance Register",
+            "item_id": "FAMMAT",
+            "item_description": "Family Matters",
+            "item_description_short": "Family Matters",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31311,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "attendance_reg_domains",
+            "item_category": "Attendance Register",
+            "item_id": "SMMC",
+            "item_description": "SMMC",
+            "item_description_short": "SMMC",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31312,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "field_name": "attendance_reg_domains",
+            "item_category": "Attendance Register",
+            "item_id": "DOOTH",
+            "item_description": "Others",
+            "item_description_short": "Others",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31313,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "attendance_reg_services",
+            "item_category": "Attendance Register",
+            "item_id": "VMMC",
+            "item_description": "VMMC",
+            "item_description_short": "VMMC",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31314,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "attendance_reg_services",
+            "item_category": "Attendance Register",
+            "item_id": "SRPVRC",
+            "item_description": "PV/RC",
+            "item_description_short": "PV/RC",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31315,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "attendance_reg_services",
+            "item_category": "Attendance Register",
+            "item_id": "SRPSS",
+            "item_description": "PSS",
+            "item_description_short": "PSS",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31316,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "attendance_reg_services",
+            "item_category": "Attendance Register",
+            "item_id": "SRHTS",
+            "item_description": "HTS",
+            "item_description_short": "HTS",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31317,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "field_name": "attendance_reg_services",
+            "item_category": "Attendance Register",
+            "item_id": "LEGAID",
+            "item_description": "LEGALAID",
+            "item_description_short": "LEGALAID",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31318,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 6,
+            "field_name": "attendance_reg_services",
+            "item_category": "Attendance Register",
+            "item_id": "DREAMS",
+            "item_description": "DREAMS",
+            "item_description_short": "DREAMS",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31319,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 7,
+            "field_name": "attendance_reg_services",
+            "item_category": "Attendance Register",
+            "item_id": "OVCOMP",
+            "item_description": "OVC COMPREHENSIVE",
+            "item_description_short": "OVC COMPREHENSIVE",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31320,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 8,
+            "field_name": "attendance_reg_services",
+            "item_category": "Attendance Register",
+            "item_id": "SROTH",
+            "item_description": "Others",
+            "item_description_short": "Others",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31321,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "attendance_reg_client",
+            "item_category": "Attendance Register",
+            "item_id": "CLOVC",
+            "item_description": "OVC",
+            "item_description_short": "OVC",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31322,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "attendance_reg_client",
+            "item_category": "Attendance Register",
+            "item_id": "CLCGV",
+            "item_description": "Caregiver",
+            "item_description_short": "Caregiver",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    }
+]
