@@ -1504,7 +1504,7 @@ class PMTCTHEI(models.Model):
     def __unicode__(self):
         return str(self.pmtct_id)
 
-
+'''
 class OVCPreventiveEvents(models.Model):
     event = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     event_type_id = models.CharField(max_length=10)
@@ -1523,7 +1523,7 @@ class OVCPreventiveEvents(models.Model):
     class Meta:
         db_table = 'ovc_preventive_events'
 
-'''
+
 class pmtct_registration(models.Model):
     pmtct_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)

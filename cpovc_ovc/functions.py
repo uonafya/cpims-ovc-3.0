@@ -1,21 +1,15 @@
 """OVC common methods."""
-import requests
-import json
-import schedule
-import time
 from datetime import datetime
 from django.utils import timezone
-from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.shortcuts import get_list_or_404
 from django.db.models import Q
 from django.db import connection
-from django.db import IntegrityError, transaction
 from .models import (
     OVCRegistration, OVCHouseHold, OVCHHMembers, OVCHealth, OVCEligibility,
     OVCFacility, OVCSchool, OVCEducation, OVCExit, OVCViralload)
 from cpovc_registry.models import (
-    RegPerson, RegOrgUnit, RegPersonsTypes, OVCCheckin)
+    RegPerson, RegOrgUnit, RegPersonsTypes, OVCCheckin, RegPersonsExternalIds)
 from cpovc_main.functions import convert_date
 from cpovc_registry.functions import (
     extract_post_params, save_person_extids, get_attached_ous,
@@ -380,7 +374,7 @@ def ovc_registration(request, ovc_id, edit=0):
                               'school_class': school_class,
                               'admission_type': school_adm,
                               'is_void': False},)
-        cgs = extract_post_params(request, naming='cg_')
+        # cgs = extract_post_params(request, naming='cg_')
         hhrs = extract_post_params(request, naming='hhr_')
         # Alive status, HIV status and Death cause for Guardian
         ast = extract_post_params(request, naming='astatus_')
@@ -537,7 +531,8 @@ def get_house_hold(person_id):
 
 
 def get_first_household(person_id):
-    """A fix for duplication-Method to get household list and return just one """
+    """A fix for duplication-Method to get household
+       list and return just one """
     try:
         hh_details = get_list_or_404(
             OVCHouseHold, head_person_id=person_id)
@@ -554,7 +549,7 @@ def get_hh_membership(person_id):
     try:
         member = get_object_or_404(OVCHHMembers, person_id=person_id)
 
-    except Exception as e:
+    except Exception:
         return None
 
     else:
@@ -683,3 +678,66 @@ def method_once(method):
             setattr(self, attrname, method(self, *args, **kwargs))
             return getattr(self, attrname)
     return decorated
+
+
+def save_health(request, person_id):
+    """Method to save health details."""
+    try:
+        facility_id = request.POST.get('facility_id')
+        art_status = request.POST.get('art_status')
+        link_date = request.POST.get('link_date')
+        date_linked = convert_date(link_date)
+        ccc_no = request.POST.get('ccc_number')
+        health, created = OVCHealth.objects.update_or_create(
+            person_id=person_id,
+            defaults={'facility_id': facility_id, 'art_status': art_status,
+                      'date_linked': date_linked, 'ccc_number': ccc_no,
+                      'is_void': False},)
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+def save_hh_info(request, person_id):
+    """Method to save HH additional info."""
+    try:
+        dob = request.POST.get('date_of_birth')
+        date_of_birth = convert_date(dob)
+        phone_number = request.POST.get('mobile_number')[-9:]
+        person = RegPerson.objects.get(id=person_id)
+        person.date_of_birth = date_of_birth
+        person.des_phone_number = phone_number
+        person.save()
+        # Other additional information
+        national_id = request.POST.get('id_number')
+        education_level = request.POST.get('education_level')
+        id_types = {}
+        id_types['INTL'] = national_id
+        id_types['IHLE'] = education_level
+        save_person_extids(id_types, person_id)
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+def get_extra_info(person_id):
+    """Method to get extra info."""
+    try:
+        person = PersonObj()
+        extras = RegPersonsExternalIds.objects.filter(
+            person_id=person_id, is_void=False)
+        person.education_level = 'N/A'
+        for extid in extras:
+            id_type = extid.identifier_type_id
+            id_detail = extid.identifier
+            setattr(person, id_type, id_detail)
+    except Exception:
+        return {}
+    else:
+        return person
+
+
+class PersonObj(object):
+    pass

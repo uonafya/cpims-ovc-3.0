@@ -2760,18 +2760,18 @@ def get_geo_list(geo_lists, geo_filter, add_select=False, user_filter=[]):
     try:
 
         if geo_lists:
-            for i, geo_list in enumerate(geo_lists):
+            for i, geo_list in enumerate(list(geo_lists)):
                 area_id = geo_list['area_id']
                 area_name = geo_list['area_name']
                 area_type = geo_list['area_type_id']
                 if geo_filter == area_type:
                     if user_filter:
-                        if area_id in user_filter:
+                        if area_id in list(user_filter):
                             area_detail[area_id] = area_name
                     else:
                         area_detail[area_id] = area_name
-                        result = area_detail.items()
-
+            # Got migraine because someone changed this indent
+            result = area_detail.items()
     except Exception as e:
         print('Error - %s' % e)
         return ()
