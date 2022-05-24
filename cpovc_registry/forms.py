@@ -171,6 +171,8 @@ class RegistrationForm(forms.Form):
 
     REGION_CHOICES = ((0, 'National'), (1, 'County'), (2, 'Sub County'))
 
+    ovc_program_list = get_list('ovc_program_id', 'Please Select one')
+
     working_in_region = forms.ChoiceField(
         choices=REGION_CHOICES,
         required=False,
@@ -343,16 +345,13 @@ class RegistrationForm(forms.Form):
                    'class': 'form-control',
                    'id': 'staff_id'}))
 
-
     workforce = forms.IntegerField(
-
         required=False,
         widget=forms.TextInput(
             attrs={'placeholder': _('Workforce ID'),
                    'class': 'form-control',
 
                    'id': 'workforce'}))
-
 
     beneficiary_id = forms.IntegerField(
         required=False,
@@ -587,6 +586,14 @@ class RegistrationForm(forms.Form):
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'country_id'}))
+
+    ovc_programs = forms.ChoiceField(
+        choices=ovc_program_list,
+        required=False,
+        widget=forms.Select(
+            attrs={'class': 'form-control',
+                   'data-parsley-required': "true",
+                   'id': 'ovc_programs'}))
 
     class Meta:
         """Override model class."""

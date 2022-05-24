@@ -10640,34 +10640,18 @@ def delete_heitracker(request, id):
     new_eval = PMTCTHEI.objects.get(hei_id=id)
     PMTCTHEI.objects.filter(event_id=id).update(is_void=True)
     return redirect('new_hei_tracker', id=new_eval.person_id)
-def new_cpara_upgrade(request, id):
-    if request.method == 'POST':
-        data = request.POST
-        print(data)
-    child = RegPerson.objects.get(id=id)
-    form= CparaAssessmentUpgrade()
-    
-    siblings = RegPersonsSiblings.objects.select_related().filter(
-        child_person=id, is_void=False, date_delinked=None)
-    osiblings = RegPersonsSiblings.objects.select_related().filter(
-        sibling_person=id, is_void=False, date_delinked=None)
-    oguardians = RegPersonsGuardians.objects.select_related().filter(
-        guardian_person=id, is_void=False, date_delinked=None)
-# New Cpara action functionality
 
+
+# New Cpara action functionality
 def new_cpara(request, id):
     if request.method == 'POST':
-        import pdb
         data = request.POST
-        print (data)
-        
-        
         child = RegPerson.objects.get(id=id)
-        form= CparaAssessment()
-        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-
-      
+        form = CparaAssessment()
+        care_giver = RegPerson.objects.get(
+            id=OVCRegistration.objects.get(person=child).caretaker_id)
+        house_hold = OVCHouseHold.objects.get(
+            id=OVCHHMembers.objects.get(person=child).house_hold_id)
         ovc_id = int(id)
         creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
 
@@ -10675,13 +10659,14 @@ def new_cpara(request, id):
         hhold = OVCHHMembers.objects.get(is_void=False, person_id=id)
         # Get HH members
         hhid = hhold.house_hold_id
-        hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
+        hhmqs = OVCHHMembers.objects.filter(
+            is_void=False, house_hold_id=hhid).order_by("-hh_head")
         hhmembers2 = hhmqs.exclude(person_id=id)
         hhmembers = hhmembers2.exclude(person=care_giver)
-        date_previous=data.get('CP2d')
-      
-         
-        questions = OVCCareQuestions.objects.filter(code__startswith='CP', is_void=False).values()
+        date_previous = data.get('CP2d')
+
+        questions = OVCCareQuestions.objects.filter(
+            code__startswith='CP', is_void=False).values()
         date_of_event = data.get('d_o_a')
         event = OVCCareEvents.objects.create(
                 event_type_id='cpr',
@@ -10691,10 +10676,8 @@ def new_cpara(request, id):
                 date_of_event=date_of_event
             )
 
-        
         for question in questions: 
             date_previous=data.get('CP2d')
-          
             answer = data.get(question['code'])
             
             if answer is None:
@@ -10882,7 +10865,7 @@ def new_cpara(request, id):
             print(f'The person id: {quizs_id } and the Quiz code is : {quizs_code}')
 
             child3 = RegPerson.objects.get(id=int(quizs_id))
-            pdb.set_trace()
+            # pdb.set_trace()
 
              
             try:
@@ -11122,11 +11105,11 @@ def edit_cpara(request, id):
         person_id = OVCCareEvents.objects.filter(event=id)[0].person_id
 
         url = reverse('ovc_view', kwargs={'id':person_id})
-        # messages.add_message(request, messages.ERROR, msg)
+        msg = 'CPARA edited successfully'
+        messages.add_message(request, messages.INFO, msg)
         return HttpResponseRedirect(url)
 
         # cpara_id=OVCCareCpara.objects.get(event=id,is_void=False)
-    import pdb
     person_id=OVCSubPopulation.objects.filter(event=id).first().person_id
     house_id = OVCHHMembers.objects.get(person_id=person_id).house_hold_id
     person_id = OVCHHMembers.objects.get(house_hold=house_id, member_type='TOVC').person_id
@@ -11135,6 +11118,8 @@ def edit_cpara(request, id):
     cpara_data=OVCCareCpara.objects.filter(event=id,is_void=False).values()
 
     # Get an event date of a single question for that event id
+    evts = OVCCareCpara.objects.filter(event_id=id) #.first()
+    print('envts', id, evts)
     d_o_a=OVCCareCpara.objects.get(event=id, question_code='CP10q').date_of_event
     CP2d=OVCCareCpara.objects.get(event=id, question_code='CP10q').date_of_previous_event
     # date_event = cpara_data.get('date_of_event')
@@ -11166,8 +11151,7 @@ def edit_cpara(request, id):
 
     for one_data in cpara_data:
         one_data_q = one_data.get('question_code')
-        one_data_a = one_data.get('answer')
-        import pdb  
+        one_data_a = one_data.get('answer') 
         if one_data_q == 'CP2d':
             one_data_a
             edit_data_cpara[one_data_q]=one_data_a
@@ -11185,7 +11169,7 @@ def edit_cpara(request, id):
     house_id = OVCHHMembers.objects.get(person_id=person_id).house_hold_id
     person_id = OVCHHMembers.objects.get(house_hold=house_id, member_type='TOVC').person_id
 
-    child = RegPerson.objects.filter(id=person_id)
+    child = RegPerson.objects.get(id=person_id)
     guardians = RegPersonsGuardians.objects.select_related().filter(
         child_person=child, is_void=False, date_delinked=None)
     siblings = RegPersonsSiblings.objects.select_related().filter(
@@ -11256,56 +11240,56 @@ def edit_cpara(request, id):
             bm_array = []
             if cpara_data:
                 for one_cpara_bench in cpara_data:
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_1 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_2 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_3 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_4 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_5 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_6 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_7 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_8 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_9 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_10 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_11 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_12 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_13 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_14 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_15 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_16 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.bench_mark_17 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_1 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_2 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_3 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_4 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_5 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_6 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_7 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_8 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_9 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_10 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_11 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_12 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_13 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_14 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_15 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_16 == 1 else "No")
+                    bm_array.append("Yes" if one_cpara_bench.benchmark_17 == 1 else "No")
                     
-                    benchmark_1 = "Benchmark 1: (Yes)" if one_cpara_bench.bench_mark_1 == 1 else "Benchmark 1: (No)"
-                    benchmark_2 = "Benchmark 2: (Yes)" if one_cpara_bench.bench_mark_2 == 1 else "Benchmark 2: (No)"
-                    benchmark_3 = "Benchmark 3: (Yes)" if one_cpara_bench.bench_mark_3 == 1 else "Benchmark 3: (No)"
-                    benchmark_4 = "Benchmark 4: (Yes)" if one_cpara_bench.bench_mark_4 == 1 else "Benchmark 4: (No)"
-                    benchmark_5 = "Benchmark 5: (Yes)" if one_cpara_bench.bench_mark_5 == 1 else "Benchmark 5: (No)"
-                    benchmark_6 = "Benchmark 6: (Yes)" if one_cpara_bench.bench_mark_6 == 1 else "Benchmark 6: (No)"
-                    benchmark_7 = "Benchmark 7: (Yes)" if one_cpara_bench.bench_mark_7 == 1 else "Benchmark 7: (No)"
-                    benchmark_8 = "Benchmark 8: (Yes)" if one_cpara_bench.bench_mark_8 == 1 else "Benchmark 8: (No)"
-                    benchmark_9 = "Benchmark 9: (Yes)" if one_cpara_bench.bench_mark_9 == 1 else "Benchmark 9: (No)"
-                    benchmark_10 = "Benchmark 10: (Yes)" if one_cpara_bench.bench_mark_10 == 1 else "Benchmark 10: (No)"
-                    benchmark_11 = "Benchmark 11: (Yes)" if one_cpara_bench.bench_mark_11 == 1 else "Benchmark 11: (No)"
-                    benchmark_12 = "Benchmark 12: (Yes)" if one_cpara_bench.bench_mark_12 == 1 else "Benchmark 12: (No)"
-                    benchmark_13 = "Benchmark 13: (Yes)" if one_cpara_bench.bench_mark_13 == 1 else "Benchmark 13: (No)"
-                    benchmark_14 = "Benchmark 14: (Yes)" if one_cpara_bench.bench_mark_14 == 1 else "Benchmark 14: (No)"
-                    benchmark_15 = "Benchmark 15: (Yes)" if one_cpara_bench.bench_mark_15 == 1 else "Benchmark 15: (No)"
-                    benchmark_16 = "Benchmark 16: (Yes)" if one_cpara_bench.bench_mark_16 == 1 else "Benchmark 16: (No)"
-                    benchmark_17 = "Benchmark 17: (Yes)" if one_cpara_bench.bench_mark_17 == 1 else "Benchmark 17: (No)"
+                    benchmark_1 = "Benchmark 1: (Yes)" if one_cpara_bench.benchmark_1 == 1 else "Benchmark 1: (No)"
+                    benchmark_2 = "Benchmark 2: (Yes)" if one_cpara_bench.benchmark_2 == 1 else "Benchmark 2: (No)"
+                    benchmark_3 = "Benchmark 3: (Yes)" if one_cpara_bench.benchmark_3 == 1 else "Benchmark 3: (No)"
+                    benchmark_4 = "Benchmark 4: (Yes)" if one_cpara_bench.benchmark_4 == 1 else "Benchmark 4: (No)"
+                    benchmark_5 = "Benchmark 5: (Yes)" if one_cpara_bench.benchmark_5 == 1 else "Benchmark 5: (No)"
+                    benchmark_6 = "Benchmark 6: (Yes)" if one_cpara_bench.benchmark_6 == 1 else "Benchmark 6: (No)"
+                    benchmark_7 = "Benchmark 7: (Yes)" if one_cpara_bench.benchmark_7 == 1 else "Benchmark 7: (No)"
+                    benchmark_8 = "Benchmark 8: (Yes)" if one_cpara_bench.benchmark_8 == 1 else "Benchmark 8: (No)"
+                    benchmark_9 = "Benchmark 9: (Yes)" if one_cpara_bench.benchmark_9 == 1 else "Benchmark 9: (No)"
+                    benchmark_10 = "Benchmark 10: (Yes)" if one_cpara_bench.benchmark_10 == 1 else "Benchmark 10: (No)"
+                    benchmark_11 = "Benchmark 11: (Yes)" if one_cpara_bench.benchmark_11 == 1 else "Benchmark 11: (No)"
+                    benchmark_12 = "Benchmark 12: (Yes)" if one_cpara_bench.benchmark_12 == 1 else "Benchmark 12: (No)"
+                    benchmark_13 = "Benchmark 13: (Yes)" if one_cpara_bench.benchmark_13 == 1 else "Benchmark 13: (No)"
+                    benchmark_14 = "Benchmark 14: (Yes)" if one_cpara_bench.benchmark_14 == 1 else "Benchmark 14: (No)"
+                    benchmark_15 = "Benchmark 15: (Yes)" if one_cpara_bench.benchmark_15 == 1 else "Benchmark 15: (No)"
+                    benchmark_16 = "Benchmark 16: (Yes)" if one_cpara_bench.benchmark_16 == 1 else "Benchmark 16: (No)"
+                    benchmark_17 = "Benchmark 17: (Yes)" if one_cpara_bench.benchmark_17 == 1 else "Benchmark 17: (No)"
 
                     str_1 = benchmark_1 + ", " + benchmark_2 + ", " + benchmark_3 + ", " + benchmark_4 + ", " + benchmark_5 + ", "
                     str_2 = benchmark_6 + ", " + benchmark_7 + ", " + benchmark_8 + ", " + benchmark_9 + ", "
                     str_3 = benchmark_10 + ", " + benchmark_11 + ", " + benchmark_12 + ", " + benchmark_13 + ", "
                     str_4 = benchmark_14 + ", " + benchmark_15 + ", " + benchmark_16 + ", " + benchmark_17
 
-                    total_benchmark_score = int(one_cpara_bench.bench_mark_1) + int(one_cpara_bench.bench_mark_2) + int(
-                        one_cpara_bench.bench_mark_3) + int(one_cpara_bench.bench_mark_4) + int(
-                        one_cpara_bench.bench_mark_5) + int(one_cpara_bench.bench_mark_6) + int(
-                        one_cpara_bench.bench_mark_7) + int(one_cpara_bench.bench_mark_8) + int(
-                        one_cpara_bench.bench_mark_9) + int(one_cpara_bench.bench_mark_10) + int(
-                        one_cpara_bench.bench_mark_11) + int(one_cpara_bench.bench_mark_12) + int(
-                        one_cpara_bench.bench_mark_13) + int(one_cpara_bench.bench_mark_14) + int(
-                        one_cpara_bench.bench_mark_15) + int(one_cpara_bench.bench_mark_16) + int(
-                        one_cpara_bench.bench_mark_17)
+                    total_benchmark_score = int(one_cpara_bench.benchmark_1) + int(one_cpara_bench.benchmark_2) + int(
+                        one_cpara_bench.benchmark_3) + int(one_cpara_bench.benchmark_4) + int(
+                        one_cpara_bench.benchmark_5) + int(one_cpara_bench.benchmark_6) + int(
+                        one_cpara_bench.benchmark_7) + int(one_cpara_bench.benchmark_8) + int(
+                        one_cpara_bench.benchmark_9) + int(one_cpara_bench.benchmark_10) + int(
+                        one_cpara_bench.benchmark_11) + int(one_cpara_bench.benchmark_12) + int(
+                        one_cpara_bench.benchmark_13) + int(one_cpara_bench.benchmark_14) + int(
+                        one_cpara_bench.benchmark_15) + int(one_cpara_bench.benchmark_16) + int(
+                        one_cpara_bench.benchmark_17)
                     full_str = str_1 + str_2 + str_3 + str_4
                     # qn_string = str(one_cpara_bench.question_code) + " (" + str(one_cpara_bench.answer) + "), "
                     event_detail = event_detail + full_str
@@ -11358,7 +11342,8 @@ def delete_cpara(request, id, btn_event_pk):
     msg = ''
 
     try:
-        event_id = uuid.UUID(btn_event_pk)
+        # event_id = uuid.UUID(btn_event_pk)
+        event_id = btn_event_pk
         d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created
         # pdb.set_trace()
         delta = get_days_difference(d_event)

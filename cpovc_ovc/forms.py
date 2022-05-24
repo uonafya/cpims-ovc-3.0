@@ -36,6 +36,7 @@ initial_enrolment_choices = (
     ('', 'Select Criteria'), ('1', 'Yes'), ('2', 'No'))
 
 # -------------additions
+education_level_list = get_list('education_level_id', 'Please Select')
 
 
 class OVCSearchForm(forms.Form):
@@ -336,3 +337,49 @@ class OVCRegistrationForm(forms.Form):
             attrs={'class': 'form-control',
                    'data-parsley-required': "true",
                    'id': 'hiv_statuss'}))
+
+
+class OVCExtraInfoForm(forms.Form):
+    """OVC Extra Information form."""
+
+    date_of_birth = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'class': 'form-control',
+                   'id': 'date_of_birth',
+                   'data-parsley-required': 'true'}
+        )
+    )
+
+    id_number = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'placeholder': 'ID Number',
+                   'class': 'form-control',
+                   'id': 'id_number',
+                   'data-parsley-required': 'true'}
+        )
+    )
+
+    mobile_number = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'placeholder': '07x or 01x',
+                   'class': 'form-control',
+                   'id': 'mobile_number',
+                   'data-parsley-required': 'true'}
+        )
+    )
+
+    education_level = forms.ChoiceField(
+        choices=education_level_list,
+        widget=forms.Select(
+            attrs={'class': 'form-control',
+                   'id': 'form_type'}
+        )
+    )
+
+    member_type = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(
+            attrs={'class': 'form-control',
+                   'id': 'member_type'}
+        )
+    )

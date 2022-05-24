@@ -1702,15 +1702,21 @@ function handle_child(){
         $('#other_names').attr('data-parsley-required', 'true');
         $('#chv_id_div').show();
         $('#chv_unit_id').attr('data-parsley-required', 'true');
+        $('#ovc_programs_id_div').show();
+        $('#ovc_programs').attr('data-parsley-required', 'true');
     }else{
         $('#chv_id_div').hide();
         $('#chv_unit_id').attr('data-parsley-required', 'false');
+        $('#ovc_programs_id_div').hide();
+        $('#ovc_programs').attr('data-parsley-required', 'false');
     }
     {% if request.session.reg_ovc %}
     $("#cbo_chv_add").show();
     $('#add_org_info').html('');
     $('#chv_id_div').show();    
     $('#chv_unit_id').attr('data-parsley-required', 'true');
+    $('#ovc_programs_id_div').show();
+    $('#ovc_programs').attr('data-parsley-required', 'true');
     {% endif %}
 }
 
@@ -1763,6 +1769,8 @@ function handle_caregiver(person_text){
     $('#audit_detail_div').show();
     $('#audit_workforce_id').attr('data-parsley-required', 'true');
     $('#audit_date').attr('data-parsley-required', 'true');
+    $('#ovc_programs_id_div').hide();
+    $('#ovc_programs').attr('data-parsley-required', 'false');
 
     {% if request.session.reg_ovc %}
     $("#cbo_chv_add").show();
@@ -1842,6 +1850,8 @@ function handle_volunteer(person_text){
     $('#chv_id_div').hide();    
     $('#chv_unit_id').attr('data-parsley-required', 'false');
     //
+    $('#ovc_programs_id_div').hide();
+    $('#ovc_programs').attr('data-parsley-required', 'false');
 }
 
 function handle_government(person_text){
@@ -1900,6 +1910,8 @@ function handle_government(person_text){
     $('#religion_id_div').hide();
     $('#nation_id_div').hide();
     $('#des_phone_number').attr('data-parsley-required', 'true');
+    $('#ovc_programs_id_div').hide();
+    $('#ovc_programs').attr('data-parsley-required', 'false');
 }
 
 function handle_ngo_private(person_text){
@@ -1958,6 +1970,8 @@ function handle_ngo_private(person_text){
     $('#religion_id_div').hide();
     $('#nation_id_div').hide();
     $('#des_phone_number').attr('data-parsley-required', 'true');
+    $('#ovc_programs_id_div').hide();
+    $('#ovc_programs').attr('data-parsley-required', 'false');
 }
 
 {% for key, values in titles.items %}
@@ -1977,6 +1991,8 @@ function handle_ovc(person_type){
             $("#cbo_chv_div").show();
             $("#cbo_chv_ndiv").hide();
             $('#ou_ovc').html('CBO / CHV details');
+            $('#ovc_programs_id_div').show();
+            $('#ovc_programs').attr('data-parsley-required', 'true');
         {% else %}
             $("#cbo_chv_add").hide();
             $('#add_org_info').html(' - Not required');

@@ -1656,7 +1656,8 @@ print(blu.sing("'Happy'"))
                     </div>
 				</form>
             </div>
-            <div class="badge pull-right m-4">Revised: Oct 6th 2016</div>
+            <a href="{% url 'ovc_view' id=person %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: May 2022</div>
         </div>
         <!-- end panel -->
 
@@ -1798,7 +1799,7 @@ jQuery(document).ready(function()
 <script>
         function deleteCPARAentry(personId,btn_event_pk){
             $('#del_cpara_e').modal('hide');
-            var CParaUrlToDelete= "{% url 'delete_cpara' id=1234 btn_event_pk=3456 %}".replace(/1234/, personId.toString()).replace(/3456/, btn_event_pk.toString());
+            var CParaUrlToDelete= "{% url 'delete_cpara' id=1234 btn_event_pk='00000000-0000-0000-0000-000000000000' %}".replace(/1234/, personId.toString()).replace(/00000000-0000-0000-0000-000000000000/, btn_event_pk.toString());
             // Debug
             console.log({CParaUrlToDelete})
 
