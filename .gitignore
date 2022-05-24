@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-__pycache__
-*.pyc
-=======
 *.pyc
 migrations
 cpims/settings.py
 .pyc
 __pycache__
->>>>>>> origin/cpara_upgrade_1
