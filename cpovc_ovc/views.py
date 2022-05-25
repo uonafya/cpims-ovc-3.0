@@ -552,7 +552,8 @@ def hh_edit(request, hhid, id):
             art_status = health.art_status
             facility_id = health.facility_id
             facility_name = health.facility.facility_name
-            link_date = health.date_linked.strftime('%d-%b-%Y')
+            l_date = health.date_linked
+            link_date = l_date.strftime('%d-%b-%Y') if l_date else ''
         # Initial values
         initial['member_type'] = member_type
         initial['ccc_number'] = ccc_no
@@ -570,9 +571,10 @@ def hh_edit(request, hhid, id):
             params[extid.identifier_type_id] = extid.identifier
         e_initial = {}
         dob = person.date_of_birth
+        date_of_birth = dob.strftime('%d-%b-%Y') if dob else ''
         id_num = params['INTL'] if 'INTL' in params else ''
         ed_lvl = params['IHLE'] if 'IHLE' in params else ''
-        e_initial['date_of_birth'] = dob.strftime('%d-%b-%Y')
+        e_initial['date_of_birth'] = date_of_birth
         e_initial['mobile_number'] = person.des_phone_number
         e_initial['id_number'] = id_num
         e_initial['education_level'] = ed_lvl

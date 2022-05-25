@@ -130,7 +130,10 @@ def new_pfs(request, id):
             registration_date = request.POST.get('registration_date')
             reg_date = convert_date(registration_date)
             # Pick the First one >> Users will pick later
-            caregiver_id = guardians.first().guardian_person_id
+            if guardians:
+                caregiver_id = guardians.first().guardian_person_id
+            else:
+                caregiver_id = None
             obj, created = OVCPreventiveRegistration.objects.update_or_create(
                 person_id=person_id, is_void=False,
                 defaults={'intervention': intervention, 'child_cbo_id': cbo_id,

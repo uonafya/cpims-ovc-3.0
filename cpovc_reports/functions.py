@@ -1,4 +1,5 @@
 """Reports functions."""
+import os
 import re
 import csv
 import uuid
@@ -31,7 +32,7 @@ import numpy as np
 from openpyxl.styles import colors, PatternFill
 
 from cpovc_main.functions import (
-    get_general_list, get_dict, get_mapped, convert_date, get_description_for_item_id)
+    get_general_list, get_dict, get_mapped, convert_date)
 from cpovc_main.models import SetupGeography
 
 from cpovc_ovc.models import (
@@ -47,7 +48,8 @@ from cpovc_forms.models import (
     OVCCaseCategory, OVCCaseGeo, OVCCaseEventServices,
     OVCPlacement, OVCAdverseEventsOtherFollowUp,
     OVCDischargeFollowUp, OVCCaseRecord, OVCAdverseEventsFollowUp)
-# from cpovc_auth.models import AppUser
+
+from cpovc_auth.models import AppUser
 
 from django.conf import settings
 from django.db.models import Count
@@ -1935,11 +1937,11 @@ def get_performance(request):
                 case_count=Count('created_by')).order_by('-case_count')
         for case in pcases:
             acases[case['created_by']] = case['case_count']
-        for pd in ads:
-            if pd in acases:
-                cases[pd] = acases[pd]
+        for ad in ads:
+            if ad in acases:
+                cases[ad] = acases[pd]
             else:
-                cases[pd] = 0
+                cases[ad] = 0
 
     except Exception as e:
         print('error with dashboard - %s' % (str(e)))
@@ -2448,13 +2450,11 @@ def get_services_data(servs, params):
         return datas
 
 
-
 def get_viral_load_rpt_stats(params):
     """Get viral load data."""
     try:
-
         results = []
-        start = time.clock()
+        # start = time.clock()
 
         cbo = params['org_unit']
         cbo_id = int(cbo) if cbo else 0
@@ -2469,7 +2469,7 @@ def get_viral_load_rpt_stats(params):
             # cbos = cbo_id.split(',')
         with connection.cursor() as cursor:
             try:
-                query = ''' SELECT ovc_reg.person_id ,CONCAT (reg_person.surname,' ',reg_person.first_name, ' ', reg_person.other_names)  AS "Full name",vl.viral_load as vload 
+                query = '''SELECT ovc_reg.person_id ,CONCAT (reg_person.surname,' ',reg_person.first_name, ' ', reg_person.other_names)  AS "Full name",vl.viral_load as vload 
                         FROM ovc_registration ovc_reg inner join reg_person reg_person on reg_person.id=ovc_reg.person_id inner join 
                         ovc_viral_load vl on vl.person_id = ovc_reg.person_id where ovc_reg.art_status = 'ARAR'                             
                         '''
@@ -2490,9 +2490,12 @@ def get_viral_load_rpt_stats(params):
                         elif (int(ovc_person[2]) > 1000):
                             suppression = "Not Suppressed"
                     except Exception as e:
+                        print(str(e))
                         pass
-                    results.append({'CPIMS ID': ovc_person[0], 'NAME': ovc_person[1], 'VIRAL LOAD': ovc_person[2],
-                                    'SUPPRESSION': suppression})
+                    results.append(
+                        {'CPIMS ID': ovc_person[0], 'NAME': ovc_person[1],
+                         'VIRAL LOAD': ovc_person[2],
+                         'SUPPRESSION': suppression})
 
             except Exception as e:
                 print('error viral load stats - %s' % (str(e)))
@@ -2503,9 +2506,6 @@ def get_viral_load_rpt_stats(params):
         raise e
     else:
         return results
-
-
-
 
 
 def get_pivot_ovc(request, params={}):
@@ -2559,16 +2559,6 @@ def get_pivot_ovc(request, params={}):
             datas = get_services_data(services, params)
         else:
             datas, titles = get_sql_data(request, params)
-
-        #  translating domain to full description
-        # if report_id == 6:
-        #     for one_datas in datas:
-        #         try:
-        #             name = get_description_for_item_id(one_datas['DOMAIN'])
-        #             print name
-        #             one_datas['DOMAIN'] = str(name[0])
-        #         except Exception, exe:
-        #             print 'Error translating domain to full description - %s' % (str(exe))
 
     except Exception as e:
         print('Error getting OVC pivot data - %s' % (str(e)))
