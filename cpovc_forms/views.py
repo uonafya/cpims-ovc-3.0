@@ -31,7 +31,7 @@ from cpovc_forms.forms import (
     CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm,
     HIV_SCREENING_FORM, HIV_MANAGEMENT_ARV_THERAPY_FORM,
     HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM,
-    CparaAssessmentUpgrade, gradMonitoringToolform, OVCHEITrackerForm,
+    gradMonitoringToolform, OVCHEITrackerForm,
     CaseTransferForm, BenchmarkMonitoringForm, CaseClosureForm)
 
 from .models import (

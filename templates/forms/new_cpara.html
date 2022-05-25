@@ -606,6 +606,8 @@ print(blu.sing("'Happy'"))
                                                 </div>
                                             </div>
                                             <hr/>
+                                         </div>
+                                         <div class="row mt-15">
                                             <div class="col-md-12">
                                                 <div class="form-group note note-default" id="CP1b_Qn">
                                                     <div class="col-md-9">
@@ -616,9 +618,8 @@ print(blu.sing("'Happy'"))
                                                     </div>
                                                 </div>
                                             </div>
-                                            <hr>
                                         </div>
-                                        
+                                            <hr>                                     
                                         
                                         <div class="row mt-15">
                                             <div class="col-md-12">
@@ -770,11 +771,23 @@ print(blu.sing("'Happy'"))
                                                         </h4>
                                                         <i>Benchmark3: All adolescents 10-17 years of age in the household have key knowledge about preventing HIV infection
                                                             Adolescents aged 10-17 can describe at least two HIV infection risks in their local community, can provide at least one example of how they can protect themselves against HIV risk, and can correctly describe the location of at least one place where HIV prevention support is available.</i>
-                                                        <br><small><b>Note:</b>  For HHs with no adolescent girls and boys, skip questions below and select “N/A” for “Achievement of this benchmark.”<br>
-                                                                CHV: Please refer to your job aid about discussing sensitive issues. ( Only score yes if the adolescent mentions two )</small>
+                                                        <br><small><b>Note:</b>  For HHs with no adolescent girls and boys, skip questions below and select “N/A” for “Achievement of this benchmark.”</small>
                                                     </div>
                                                 </div>
-                                            </div>                             
+                                            </div>
+                                            
+                                            <hr/>
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Does the household have adolescent girls and boys ? 
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP31Skip}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
 
                                             <div class="col-md-12 containsTable">
                                                 <div class="form-group">
@@ -950,6 +963,8 @@ print(blu.sing("'Happy'"))
                                                 </div>
                                             </div>
                                             <hr>
+                                        </div>
+                                        <div class="row mt-15">
                                             <div class="col-md-12">
                                                 <div class="form-group note note-default" id="CP3b_Qn">
                                                     <div class="col-md-9">
@@ -978,6 +993,17 @@ print(blu.sing("'Happy'"))
                                                 </div>
                                             </div>   
                                             <hr>
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Is there child < 5 years in the household ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP41Skip}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth21_Qn">
                                                     <div class="col-md-9">
@@ -1020,6 +1046,8 @@ print(blu.sing("'Happy'"))
                                                 </div>
                                             </div>
                                             <hr>
+                                        </div>    
+                                        <div class="row mt-15">
                                             <div class="col-md-12">
                                                 <div class="col-md-12">
                                                     <div class="form-group note note-default" id="CP4b_Qn">
@@ -1134,8 +1162,7 @@ print(blu.sing("'Happy'"))
                                                             <h4 class="">
                                                                 Safe: Goal 6: Reduce Risk of Physical, Emotional and Psychological Injury Due to Exposure to Violence
                                                             </h4>
-                                                            <i>Benchmark 6: No children, adolescents, and caregivers in the household report experiences of violence (including physical violence, emotional violence, sexual violence, gender-based violence, and neglect) in the last six months. If there is no reported form of violence in the HH, skip all the questions and score N/A <br>
-                                                               <b> CHV: Refer to job aid about discussing sensitive topics for this section, if needed.</b></i>
+                                                            <i>Benchmark 6: No children, adolescents, and caregivers in the household report experiences of violence (including physical violence, emotional violence, sexual violence, gender-based violence, and neglect) in the last six months. If there is no reported form of violence in the HH, skip all the questions and score N/A</i>
                                                         </div>
                                                     </div>
                                                 </div> 
@@ -1149,6 +1176,16 @@ print(blu.sing("'Happy'"))
                                                     <div class="form-group">
                                                         <div class="col-md-12">
                                                             <p class="p-15 bg-sub-header">Question for caregiver:</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 bg-sub-skip">
+                                                    <div class="form-group">
+                                                        <div class="col-md-9 text-left">
+                                                            <label class="control-label formlabel"> Are there children, adolescents, and caregivers in the household with experiences of violence (including physical violence, emotional violence, sexual violence, gender-based violence, and neglect) in the last six months ?
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP6Skip}}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1179,14 +1216,13 @@ print(blu.sing("'Happy'"))
                                             </div>
     
                                             <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="form-group" id="CPsafe3_Qn">
+                                                <div class="col-md-12 bg-sub-skip">
+                                                    <div class="form-group">
                                                         <div class="col-md-9 text-left">
-                                                            <label class="control-label formlabel"> Question to the adolescent 12 years and above. If there is no adolescent in the household, please indicate N/A 
-                                                                <span class="asteriskField">* </label>
+                                                            <label class="control-label formlabel"> Is there adolescents 12 years and above ?
                                                         </div>
                                                         <div class="col-md-3 text-left">
-                                                            {{form.CP26q_ctl}}
+                                                            {{form.CP63Skip}}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1305,9 +1341,9 @@ print(blu.sing("'Happy'"))
                                                                         <td class="r13_t_q1">
                                                                            
                                                                         </td>
-                                                                        <td class="r13_t_q2" id="cp58q_Qn" style="padding-left: 32px;">
+                                                                        <td class="r13_t_q2" id="58q_Qn" style="padding-left: 32px;">
                                                                             <div class="radio-inline">
-                                                                                {{ form.cp58q }}
+                                                                                {{ form.CP58q }}
                                                                             
                                                                         </div>
                                                                         </td>
@@ -1463,8 +1499,8 @@ print(blu.sing("'Happy'"))
                                                     <div class="form-group">
                                                         <div class=" col-md-12 p-15 bg-info">
                                                             <h4 >
-                                                                Schooled:  Goal 8: Increase School Attendance and Promotion <br></h4>
-                                                                <i><strong>Benchmark 9: All school-aged children (4-17) and adolescents aged 18-20 enrolled in secondary school in the household regularly attended school and progressed during the last year.</strong></i>
+                                                                Schooled:  Goal 8: Increase School Attendance and Progression <br></h4>
+                                                                <i><strong>Benchmark 9: All school-aged children (4-17) and adolescents aged 18-20 enrolled in school in the household regularly attended school and progressed during the last year.</strong></i>
                                                         </div>
                                                     </div>
                                                 </div> 
@@ -1502,7 +1538,17 @@ print(blu.sing("'Happy'"))
                                                         </p>
                                                     </div>
                                                 </div>
-
+                                                <hr>
+                                                <div class="col-md-12 bg-sub-skip">
+                                                    <div class="form-group">
+                                                        <div class="col-md-9">
+                                                            <p class="p-15">Is there a child between 4-5 years in the household and is there an ECDE center in the area ?</p>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP93Skip}}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <hr>
                                                 <div class="col-md-12">
                                                     <div class="form-group" id="CPschool3_Qn">
@@ -1514,7 +1560,6 @@ print(blu.sing("'Happy'"))
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <hr>
                                                 <div class="col-md-12">
                                                     <div class="form-group" id="CPschool4_Qn">
@@ -1528,6 +1573,8 @@ print(blu.sing("'Happy'"))
                                                 </div>
 
                                                 <hr>
+                                            </div>
+                                            <div class="tow mt-15">
                                                 <div class="col-md-12">
                                                     <div class="col-md-12">
                                                         <div class="form-group note note-default" id="CP9b_Qn">
@@ -1911,13 +1958,13 @@ jQuery(document).ready(function()
             //------tick main qn
             function q13MainQn(pass, qn) {
                 if(pass){
-                    if(qn == 'a'){ $('input[name=cp58q][value=AYES]').prop("checked", true);} 
+                    if(qn == 'a'){ $('input[name=CP58q][value=AYES]').prop("checked", true);} 
                     // else 
                     // if(qn === 'b'){ $('.ro13_total td.r13_t_q2 label input[value=AYES]').prop('checked', true); } else 
                     // if(qn === 'c'){ $('.ro13_total td.r13_t_q3 label input[value=AYES]').prop('checked', true); }
                 }
                 else{
-                    if(qn == 'a'){ $('input[name=cp58q][value=ANNO]').prop("checked", true);} 
+                    if(qn == 'a'){ $('input[name=CP58q][value=ANNO]').prop("checked", true);} 
                     // else 
                     // if(qn === 'b'){ $('.ro13_total td.r13_t_q2 label input[value=ANNO]').prop('checked', true); } else 
                     // if(qn === 'c'){ $('.ro13_total td.r13_t_q3 label input[value=ANNO]').prop('checked', true); }

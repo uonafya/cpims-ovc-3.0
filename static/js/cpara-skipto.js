@@ -1,3 +1,15 @@
+// cpara 
+triggerSkip('CP31Skip','ANA','CP41Skip','2')
+triggerSkip('CP6Skip','ANA','CP63Skip','4');
+triggerSkip('CP63Skip','ANA','CP30q','4');
+triggerSkip('CP93Skip','ANA','CP9b','5');
+triggerSkip('CP41Skip','ANA','CP4b','2');
+
+
+
+
+// Cpara v1
+
 // QuestionSkipLogic
 //format is:   triggerSkip(inputToCheck,rightValue,questionToGoTo,tabContainingDestinationQn);
     // Q1 -> Q2
