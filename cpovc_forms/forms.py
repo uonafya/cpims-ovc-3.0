@@ -12,6 +12,7 @@ from .functions import get_facility_list
 # New lists
 WB_AD_GEN_5_ChoiceList=WB_AD_SAF_32_6_CHOICELIST=WB_AD_SAF_32_2_CHOICELIST=WB_AD_SAF_28_CHOICELIST=WB_AD_SAF_27_1_CHOICELIST=WB_AD_SAF_26_CHOICELIST=WB_AD_HEL_24_1_CHOICELIST=WB_AD_HEL_21_1_CHOICELIST=WB_AD_SCH_7_CHOICELIST=WB_AD_SCH_12_2_CHOICELIST=WB_AD_HEL_20_4_CHOICELIST=WB_AD_SCH_13_2_CHOICELIST = (('TBD1', 'TBD1'), ('TBD2', 'TBD2'),('TBD3', 'TBD3'))
 YESNO_CHOICES = (('AYES', 'Yes'), ('ANNO', 'No'))
+YESNA_CHOICES = (('AYES', 'Yes'), ('ANA', 'No'))
 YESNOANA_CHOICES = (('AYES', 'Yes'), ('ANNO', 'No'), ('ANA', 'N/A'))
 CPARA_MONITORING_CASE_CHOICES = (('1', 'First'), ('2', 'Second'), ('3', 'Third'))
 bursary_school_type_list = (('STPR', 'Private'), ('STPU', 'Public'))
@@ -9072,7 +9073,7 @@ class CparaAssessment(forms.Form):
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     CP26q_ctl = forms.ChoiceField(required=False,
-        choices=(('AYES', "YES"), ('ANNO', "NO"), ('ANA', "N/A")),
+        choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'false'}))
@@ -9083,7 +9084,7 @@ class CparaAssessment(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'false'}))
-    cp58q = forms.ChoiceField(required=False,
+    CP58q = forms.ChoiceField(required=False,
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
@@ -9258,6 +9259,33 @@ class CparaAssessment(forms.Form):
             'min': '0',
             'max': '9'
         }))
+    
+    # Skip to questions
+    CP93Skip = forms.ChoiceField(
+        choices=YESNA_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    CP63Skip = forms.ChoiceField(
+        choices=YESNA_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    CP6Skip = forms.ChoiceField(
+        choices=YESNA_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    CP31Skip = forms.ChoiceField(
+        choices=YESNA_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
+    CP41Skip = forms.ChoiceField(
+        choices=YESNA_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
 
 
 class CparaAssessmentUpgrade(forms.Form):
