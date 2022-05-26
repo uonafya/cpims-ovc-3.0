@@ -2589,7 +2589,7 @@ def write_xls(response, data, titles=None):
 def write_xlsm(csv_file, file_name, report_id=1):
     """Method to write excel."""
     try:
-        print(MEDIA_ROOT)
+        print('MROOT', MEDIA_ROOT)
         csv_file_name = '%s/%s.csv' % (MEDIA_ROOT, csv_file)
         excel_file = '%s/%s.xlsx' % (MEDIA_ROOT, file_name)
         s_name = RPTS[report_id] if report_id in RPTS else 1
@@ -2599,13 +2599,12 @@ def write_xlsm(csv_file, file_name, report_id=1):
             data = pandas.read_csv(csv_file_name)
             data.to_excel(writer, sheet_name='Sheet1', index=False)
             workbook = writer.book
-            xlsm_file = '%s/%s.xlsm' % (MEDIA_ROOT, file_name)
+            xlsm_file = '%s/xlsx/%s' % (MEDIA_ROOT, file_name)
             workbook.add_worksheet('Sheet2')
             workbook.add_worksheet('Sheet3')
             workbook.filename = xlsm_file
             workbook.add_vba_project(vba_file)
             writer.save()
-            writer.close()
             print('Macros written - %s' % (xlsm_file))
         else:
             file_name = ""
@@ -2837,7 +2836,7 @@ def csvxls_data(request, f):
     try:
         data = []
         csv_file = '%s/tmp-%s.csv' % (MEDIA_ROOT, f)
-        with open(csv_file, 'rb') as csvfile:
+        with open(csv_file, 'rt') as csvfile:
             rows = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in rows:
                 data.append(row)
