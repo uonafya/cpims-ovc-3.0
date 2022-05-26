@@ -99,3 +99,15 @@ def save_household(request, caregiver_id, ovc_id, hh_members=[]):
         raise e
     else:
         pass
+
+
+def get_house_hold(request, person_id):
+    """Method to get a house hold."""
+    try:
+        member = OVCHHMembers.objects.get(person_id=person_id, is_void=False)
+        hh = OVCHouseHold.objects.get(id=member.house_hold_id)
+    except Exception as e:
+        print('Error getting HH based on a member - %s' % (str(e)))
+        return None
+    else:
+        return hh

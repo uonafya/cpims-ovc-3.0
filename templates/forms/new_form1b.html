@@ -56,16 +56,28 @@
 {% endif %}</b>
 <span class="label label-primary">Active</span>
 </small></h1>
-
-
 <!-- end page-header -->
-
-<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
-    <!-- <span class="close" data-dismiss="alert">×</span> -->
-    <i class="fa fa-info pull-left"></i>
-    <p></p>
-    <span class="invalid-form-message" id="invalid-form-message"></span>
-</div>
+{% if messages %}
+    {% for message in messages %}
+    {% if 'error' in message.tags %}
+        <div id="messages" class="alert alert-danger fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-info fa-2x pull-left"></i>
+    {% else %}
+        <div id="messages" class="alert alert-success fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+    {% endif %}    
+        <p>{{ message }}</p>
+    </div>
+   {% endfor %}
+{% endif %}
+    <div id="message" class="alert alert-success fade in" style="display: none">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+        <p></p>
+        <span id="response"></span>
+    </div>
 
 <!-- begin row -->
 <div id='case_details' class="row">
@@ -652,7 +664,7 @@
                 }else{
                     $('#messages').addClass('alert-success').removeClass('alert-danger').css({'display': 'block'});
                     $('#messages p').html(result[0].msg);
-                    var url = "{% url 'new_form1b' id=1234%}".replace(/1234/, personId.toString());
+                    var url = "{% url 'new_form1b' id=1234%}?deleted=1".replace(/1234/, personId.toString());
                     window.open(url,"_self");
                 }
                 console.log("delered");
@@ -661,7 +673,7 @@
                 alert('not deleted ==> status: '+ JSON.stringify(status) + ' & error: '+JSON.stringify(error));
                 $('#messages').css({'display': 'block'}).removeClass('alert-success').addClass('alert-danger');
                 $('#messages p').html(result[0].msg);
-                console.log("errorr delering");
+                console.log("error deleting");
             }
         });
     }

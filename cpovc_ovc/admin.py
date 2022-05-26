@@ -119,7 +119,7 @@ admin.site.register(OVCCluster, OVCClusterAdmin)
 class OVCClusterCBOAdmin(admin.ModelAdmin):
     """Aggregate data admin."""
 
-    search_fields = ['cluster', 'cbo']
+    search_fields = ['cluster', 'cbo__org_unit_name']
     list_display = ['id', 'cluster', 'cbo', 'added_at']
     # readonly_fields = ['id']
     list_filter = ['is_void']
@@ -137,7 +137,8 @@ class OVCHHMembersInline(admin.StackedInline):
 class OVCHouseHoldAdmin(admin.ModelAdmin):
     """Aggregate data admin."""
 
-    search_fields = ['head_person']
+    search_fields = ['head_person__id', 'head_person__first_name',
+                     'head_person__surname']
     list_display = ['head_person_id', 'head_person', 'head_identifier']
 
     readonly_fields = ['head_person']

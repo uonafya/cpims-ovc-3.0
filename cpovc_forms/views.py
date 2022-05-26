@@ -6934,8 +6934,12 @@ def new_form1b(request, id):
         save_form1b(request, id)
         msg = 'Form 1B saved successfully'
         messages.add_message(request, messages.INFO, msg)
-        url = reverse('ovc_view', kwargs={'id': id})
+        url = reverse('new_form1b', kwargs={'id': id})
         return HttpResponseRedirect(url)
+    deleted = request.GET.get('deleted', 0)
+    if deleted:
+        msg = 'Form 1B deleted successfully'
+        messages.add_message(request, messages.SUCCESS, msg)
     init_data = get_ovcdetails(id)
     ovc = get_ovcdetails(id)
     cid = ovc.caretaker_id

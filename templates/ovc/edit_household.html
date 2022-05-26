@@ -137,25 +137,27 @@
                         <fieldset>
                             <legend class="pull-left width-full">Additional details for Caregivers and CHV</legend>
                             <!-- begin row -->
-                            {% if pobj.member_type == 'CGPM' or pobj.member_type == 'CCHV' %}
+                            {% if pobj.member_type == 'TBVC' %}
+
+                            <p>ONLY available for Caregivers / Guardians / CHV edit</p>
+                            
+                            {% else %}                            
                             <div class="form-group" id="school_class_div">
-                                <label class="col-md-3 control-label">Date of Birth</label>
+                                <label class="col-md-3 control-label">Date of Birth <span class="asteriskField">*</span></label>
                                 <div class="col-md-9">{{ extra_form.date_of_birth }}</div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 control-label">ID Number</label>
+                                <label class="col-md-3 control-label">ID Number <span class="asteriskField">*</span></label>
                                 <div class="col-md-9">{{ extra_form.id_number }}</div>
                             </div>
                             <div class="form-group" id="admission_type_div">
-                                <label class="col-md-3 control-label">Mobile No.</label>
+                                <label class="col-md-3 control-label">Mobile No. <span class="asteriskField">*</span></label>
                                 <div class="col-md-9">{{ extra_form.mobile_number }}</div>
                             </div>
                             <div class="form-group" id="admission_type_div">
-                                <label class="col-md-3 control-label">Level of Education.</label>
+                                <label class="col-md-3 control-label">Level of Education<span class="asteriskField">*</span></label>
                                 <div class="col-md-9">{{ extra_form.education_level }}</div>
                             </div>
-                            {% else %}
-                            <p>ONLY available for Caregivers / Guardians / CHV edit</p>
                             {% endif %}
                         </fieldset>
                     </div>
@@ -163,35 +165,32 @@
                         <fieldset>
                             <legend class="pull-left width-full">Facility linkage details</legend>
                             <!-- begin row -->
-                            {% if form.hiv_status.value == 'HSTP' %}
+
                             <div class="form-group">
-                                <label class="col-md-3 control-label">HIV Status</label>
+                                <label class="col-md-3 control-label">HIV Status <span class="asteriskField">*</span></label>
                                 <div class="col-md-9">{{ form.hiv_status }}</div>
                             </div>
                             <div class="form-group" id="facility_div">
-                                <label class="col-md-3 control-label">Facility Name</label>
+                                <label class="col-md-3 control-label">Facility Name <span class="asteriskField">*</span></label>
                                 <div class="col-md-9">{{ form.facility }}</div>
                             </div>
                             <div class="form-group" id="facility_id_div">
-                                <label class="col-md-3 control-label">Facility ID</label>
+                                <label class="col-md-3 control-label">Facility ID <span class="asteriskField">*</span></label>
                                 <div class="col-md-4">{{ form.facility_id }}</div>
                             </div>
                             <div class="form-group" id="ccc_no_div">
-                                <label class="col-md-3 control-label">CCC / HEI Number</label>
+                                <label class="col-md-3 control-label">CCC / HEI Number <span class="asteriskField">*</span></label>
                                 <div class="col-md-9">{{ form.ccc_number }}</div>
                             </div>
 
                             <div class="form-group" id="art_div">
-                                <label class="col-md-3 control-label">ART Status</label>
+                                <label class="col-md-3 control-label">ART Status <span class="asteriskField">*</span></label>
                                 <div class="col-md-9">{{ form.art_status }}</div>
                             </div>
                             <div class="form-group" id="link_date_div">
-                                <label class="col-md-3 control-label">Date of Linkage</label>
+                                <label class="col-md-3 control-label">Date of Linkage <span class="asteriskField">*</span></label>
                                 <div class="col-md-9">{{ form.link_date }}</div>
                             </div>
-                            {% else %}
-                            <p>ONLY available for HIV +Ve HH members</p>
-                            {% endif %}
 
                         </fieldset>
                     </div>
@@ -229,7 +228,9 @@
 {% block lazy_javascript_code %}
 <script>
 $(document).ready(function() {
+    {% if form.hiv_status.value == 'HSTP' and not request.user.is_superuser %}
     $("#hiv_status").attr("disabled", true);
+    {% endif %}
     $('#registration_date, #link_date').datepicker({
         dateFormat: 'yy-mm-dd', format: 'dd-M-yyyy',
         endDate: '+0d', enddate: '+0d', autoclose: true
@@ -258,6 +259,40 @@ $(document).ready(function() {
         $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
       }
     });
+
+    // Handle HIV status
+    var hstatus = $('#hiv_status').val();
+    handle_hstatus(hstatus);
+
+    $('#hiv_status').change(function(){
+        handle_hstatus(this.value);
+    });
+
+    function handle_hstatus(hstatus){
+        if (hstatus == 'HSTP') {
+            $('#facility_div').show();
+            $('#facility_id_div').show();
+            $('#art_div').show();
+            $('#link_date_div').show();
+            $('#ccc_no_div').show();
+            $('#facility').attr("data-parsley-required", "true");
+            $('#facility_id').attr("data-parsley-required", "true");
+            $('#art_status').attr("data-parsley-required", "true");
+            $('#link_date').attr("data-parsley-required", "true");
+            $('#ccc_number').attr("data-parsley-required", "true");
+        }else{
+            $('#facility_div').hide();
+            $('#facility_id_div').hide();
+            $('#art_div').hide();
+            $('#link_date_div').hide();
+            $('#ccc_no_div').hide();
+            $('#facility').attr("data-parsley-required", "false");
+            $('#facility_id').attr("data-parsley-required", "false");
+            $('#art_status').attr("data-parsley-required", "false");
+            $('#link_date').attr("data-parsley-required", "false");
+            $('#ccc_number').attr("data-parsley-required", "false");
+        } 
+    }
 });
 </script>
 {% endblock %}

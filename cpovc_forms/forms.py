@@ -194,7 +194,6 @@ CPT_PERSON_RESPONSIBLE = (
 )
 CPT_RESULTS = (
     ('AC', 'Achieved'),
-    ('IP', 'In Progress'),
     ('NA', 'Not Achieved')
 )
 
