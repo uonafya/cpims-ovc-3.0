@@ -222,14 +222,17 @@ markBenchmark('CP23q_b_3', false)
 // markBenchmark('CP58q', false)
 
 // Benchmark 1
-validBench(['CP1q', 'CP2q', 'CP3q', 'CP4q', 'CP5q'], ['AYES','AYES','AYES','AYES','AYES'], 'CP1b');
+validBench(['CP1q', 'CP2q', 'CP3q', 'CP4q', 'CP5q'], ['AYES','AYES,ANA','AYES','AYES','AYES'], 'CP1b');
 // Benchmark 2
-validBench(['CP6q','CP7q','CP8q','CP9q','CP10q','CP11q','CP12q','CP13q','CP14q'], ['AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES','AYES'], 'CP2b');
+validBench(['CP6q','CP7q','CP8q','CP9q','CP10q','CP11q','CP12q','CP13q','CP14q'], ['AYES','AYES,ANA','AYES','AYES','AYES,ANA','AYES','AYES','AYES,ANA','AYES'], 'CP2b');
 
 // Healthy Goal 3 >> Benchmark 3
 validBench(['CP23q_b_1','CP23q_b_2','CP23q_b_3'],['AYES','AYES','AYES'],'CP3b')
 // Healthy Goal 4 >> Benchmark 4
-validBench(['CP18q', 'CP19q', 'CP20q', 'CP21q'], ['AYES','AYES', 'AYES','AYES'], 'CP4b');
+$('input[name=CP41Skip').change(function (e){
+if ($('input[name=CP41Skip]:checked').val()==='ANA'){markBenchmark('CP4b',null);}
+else{validBench(['CP18q', 'CP19q', 'CP20q', 'CP21q'], ['AYES','AYES,ANA', 'AYES','AYES'], 'CP4b')};
+})
 // Stable: Goal 5: >> Benchmark 5
 validBench(['CP22q','CP23q','CP24q'], ['AYES','AYES','AYES'], 'CP5b');
 // Safe: Goal 6 >> Benchmark 6
@@ -327,8 +330,8 @@ $('input[type=radio]').change(function (e) {
     console.log('benchScore CP8b=> '+CP8b);
 
     var CP9b = $('input[name=CP9b]:checked').val(); 
-    if(CP9b === 'AYES'){CP9b = 1; console.log("YEEEESSSSS");}
-    else{CP9b = 0;console.log('NOOOOOOO')}
+    if(CP9b === 'AYES'){CP9b = 1;}
+    else{CP9b = 0;}
     console.log('benchScore CP9b=> '+CP9b);
 
     var CP90b = $('input[name=CP90b]:checked').val(); 
@@ -518,13 +521,20 @@ function validBench(arrayOfInputsToCheck, arrayOfExpectedValues, idOfBenchmarkQn
 function markBenchmark(benchmarkId, passOrFail) {
     console.log('marking benchmark' +benchmarkId)
     if(passOrFail){
+        console.log('marked bench as passed')
         // $('input[name="'+benchmarkId+'"][value="AYES"]').attr('checked', true);
         $('input[name='+benchmarkId+']').removeAttr('disabled');
         $('input[name='+benchmarkId+'][value=AYES]').prop("checked", true);
         $('input[name='+benchmarkId+']').attr('disabled', true);
-    }else{
+    }else if (passOrFail===false){
+        console.log('marked bench as failed')
         $('input[name='+benchmarkId+']').removeAttr('disabled');
         $('input[name='+benchmarkId+'][value=ANNO]').prop("checked", true);
+        $('input[name='+benchmarkId+']').attr('disabled', true);
+    }else{
+        console.log('marked bench as null')
+        $('input[name='+benchmarkId+']').removeAttr('disabled');
+        $('input[name='+benchmarkId+'][value=ANA]').prop("checked", true);
         $('input[name='+benchmarkId+']').attr('disabled', true);
     }
 }
