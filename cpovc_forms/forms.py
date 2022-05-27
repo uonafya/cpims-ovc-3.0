@@ -10118,7 +10118,8 @@ class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
         attrs = {'placeholder': _('Select Date'),
                'class': 'form-control',
                'name': 'prevention_register',
-               'id': 'intervention_prevention_register'}
+               'id': 'intervention_prevention_register',
+               'data-parsley-required': "true",}
         ))
 
     SESSION_ATTENDED_DAYS = forms.CharField(widget=forms.Select(
@@ -10126,14 +10127,16 @@ class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
         attrs = {'placeholder': _('Select Date'),
                'class': 'form-control',
                'name': 'SESSION_ATTENDED_DAYS',
-               'id': 'session_attended_days'}))
+               'id': 'session_attended_days',
+               'data-parsley-required': "true",}))
 
     REFFERAL_SERVICES = forms.CharField(widget=forms.Select(
         choices=OVC_REFFERAL_SERVICES,
         attrs = {'placeholder': _('Select Date'),
                'class': 'form-control',
                'name': 'REFFERAL_SERVICES',
-               'id': 'refferal_services_id'}))
+               'id': 'refferal_services_id',
+               'data-parsley-required': "true",}))
 
     REFERAL_MADE = forms.ChoiceField(
         choices = ((1, 'Y'), ('0', 'N')),
@@ -10142,13 +10145,16 @@ class PREVENTIVE_ATTENDANCE_REGISTER_FORM(forms.Form):
             #    'class': 'form-control',
                'name': 'REFERAL_MADE',
                'id': 'refferal_made_id',
+               'data-parsley-required': "true",
     }))
     ATTENDANCE_CLIENT = forms.CharField(widget=forms.Select(
         choices=ATTENDANCE_CLIENT,
         attrs = {'placeholder': _('Select Date'),
                'class': 'form-control',
                'name': 'ATTENDANCE_CLIENT',
-               'id': 'client_name'}
+               'id': 'client_name',
+               'data-parsley-required': "true",
+               }
         ))
 
     OTHER_SERVICES_SPECIFY = forms.CharField(widget=forms.TextInput(
