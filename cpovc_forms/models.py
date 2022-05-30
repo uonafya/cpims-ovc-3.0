@@ -1674,7 +1674,7 @@ class OVCCareIndividaulCpara(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.question_code = self.question.code
-        super(OVCCareCpara_upgrade, self).save(force_insert, force_update, using, update_fields)
+        super(OVCCareCpara, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
         db_table = 'ovc_care_individual_cpara'

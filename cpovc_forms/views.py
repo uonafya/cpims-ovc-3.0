@@ -8761,7 +8761,7 @@ def new_cpara_v1(request, id):
         answer_value = {
             'AYES': 1,
             'ANNO': 0,
-            0: 0
+            0:0
         }
 
         print(('benchmark_score = ', data.get('bench_array')))
@@ -10727,6 +10727,8 @@ def new_cpara(request, id):
                 answer=True
             elif answer=='ANNO':
                 answer=False
+            elif answer=='ANA':
+                answer='Na'
             else:
                 answer='No'    
 
@@ -11092,6 +11094,7 @@ def edit_cpara(request, id):
                 answer_value = {
                     'AYES':'True',
                     'ANNO':'False',
+                    'ANNA':'Na',
                     None:'No'
                 }
 
@@ -11186,8 +11189,8 @@ def edit_cpara(request, id):
     answer_value={
         'False': 'ANNO',
         'True': 'AYES',
-        'No': 'N/A',
-        # 'AYES':'AYES'
+        'Na': 'ANA',
+        'No':'',
     }
 
     for one_data in cpara_data:
