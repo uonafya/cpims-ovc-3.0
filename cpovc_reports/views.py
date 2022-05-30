@@ -27,11 +27,11 @@ from .functions import (
     get_sub_county_info, get_raw_data, create_year_list, get_totals,
     get_case_data, org_unit_tree, get_performance, get_performance_detail,
     get_pivot_data, get_pivot_ovc, get_variables, get_sql_data, write_xls,
-    csvxls_data, write_xlsm, get_cluster, edit_cluster, create_pepfar, get_viral_load_rpt_stats,
-    get_dashboard_summary)
+    csvxls_data, write_xlsm, get_cluster, edit_cluster, create_pepfar,
+    get_viral_load_rpt_stats, get_dashboard_summary)
 
 from cpovc_registry.models import RegOrgUnit
-from cpovc_registry.functions import get_contacts, merge_two_dicts, get_ovc_hiv_status
+from cpovc_registry.functions import get_contacts, merge_two_dicts
 
 from cpovc_auth.models import AppUser
 
@@ -48,7 +48,6 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .parameters import ORPTS, RPTS
 
-from django.db import connection
 from cpovc_forms.models import OVCGokBursary
 
 MEDIA_ROOT = settings.MEDIA_ROOT
@@ -228,10 +227,12 @@ def write_csv(data, file_name, params):
     """Method to write csv given data."""
     try:
         csv_file = '%s/%s.csv' % (MEDIA_ROOT, file_name)
-        columns = data[0]
-        del data[0]
-        df = pd.DataFrame(data, columns=columns)
-        df.to_csv(csv_file, index=False)
+        # columns = data[0]
+        # del data[0] delete row zero when using pandas
+        with open(csv_file, 'w') as csvfile:
+            csvwriter = csv.writer(csvfile, delimiter=',', quotechar='"',
+                                   quoting=csv.QUOTE_MINIMAL)
+            csvwriter.writerows(data)
         # Save excel to flat file
         report_id = params['report_id'] if 'report_id' in params else 1
         s_name = RPTS[report_id] if report_id in RPTS else 1
@@ -246,11 +247,12 @@ def write_csv(data, file_name, params):
             uid = report_details[-1]
             fname = '%s-%s' % (uid, s_name)
             excel_file = '%s.xlsx' % (fname)
-            writer = pd.ExcelWriter(excel_file, engine='xlsxwriter')
+            excel_file_path = '%s/%s' % (MEDIA_ROOT, excel_file)
+            writer = pd.ExcelWriter(excel_file_path, engine='xlsxwriter')
             data = pd.read_csv(csv_file)
             data.to_excel(writer, sheet_name='Sheet1', index=False)
             workbook = writer.book
-            excel_file_path = '%s/%s.xlsx' % (MEDIA_ROOT, fname)
+            excel_file_path = '%s/xlsx/%s.xlsx' % (MEDIA_ROOT, fname)
             workbook.add_worksheet('Sheet2')
             workbook.add_worksheet('Sheet3')
             if os.path.isfile(vba_file):
@@ -326,7 +328,7 @@ def get_viral_load_report(request):
             vals = []
             for n, i in enumerate(titles):
                 val = res[i]
-                if type(val) is str:
+                if isinstance(val, str):
                     val = val.encode('ascii', 'ignore').decode('ascii')
                 vals.append(val)
             data.append(vals)
@@ -912,7 +914,8 @@ def reports_ovc_datim_mer23_pivot(request):
     """Method to do pivot reports."""
     try:
         form = CaseLoad(request.user)
-        return render(request, 'reports/pivot_datim_mer23.html', {'form': form})
+        return render(
+            request, 'reports/pivot_datim_mer23.html', {'form': form})
     except Exception as e:
         raise e
     else:
@@ -924,7 +927,8 @@ def reports_ovc_datim_mer24_pivot(request):
     """Method to do pivot reports."""
     try:
         form = CaseLoad(request.user)
-        return render(request, 'reports/pivot_datim_mer24.html', {'form': form})
+        return render(
+            request, 'reports/pivot_datim_mer24.html', {'form': form})
     except Exception as e:
         raise e
     else:
@@ -936,7 +940,8 @@ def reports_ovc_datim_mer25_pivot(request):
     """Method to do pivot reports."""
     try:
         form = CaseLoad(request.user)
-        return render(request, 'reports/pivot_datim_mer25.html', {'form': form})
+        return render(
+            request, 'reports/pivot_datim_mer25.html', {'form': form})
     except Exception as e:
         raise e
     else:
