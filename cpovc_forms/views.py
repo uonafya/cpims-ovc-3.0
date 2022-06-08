@@ -11519,7 +11519,7 @@ def grad_monitor_tool(request, id):
         event = OVCCareEvents.objects.filter(person_id=ovc_id).values_list('event')
         
         try:
-            benchmark_data = OVCBenchmarkMonitoring.objects.filter(is_void=False)   #filter(event=event).order_by('event_date'))
+            benchmark_data = OVCBenchmarkMonitoring.objects.filter(is_void=False, person_id=child)   #filter(event=event).order_by('event_date'))
         except Exception as e:
             print(e)
         
