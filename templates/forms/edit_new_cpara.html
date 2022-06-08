@@ -67,14 +67,27 @@ print(blu.sing("'Happy'"))
 
 {% endfor %}
 <!-- end page-header -->
-
-<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
-    <!-- <span class="close" data-dismiss="alert">x</span> -->
-    <i class="fa fa-info fa-2x pull-left"></i>
-    <p></p>
-    <span class="invalid-form-message" id="invalid-form-message"></span>
-</div>
-
+{% if messages %}
+    {% for message in messages %}
+    {% if 'error' in message.tags %}
+        <div id="messages" class="alert alert-danger fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-info fa-2x pull-left"></i>
+    {% else %}
+        <div id="messages" class="alert alert-success fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+    {% endif %}    
+        <p>{{ message }}</p>
+    </div>
+   {% endfor %}
+{% endif %}
+    <div id="message" class="alert alert-success fade in" style="display: none">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+  
+        <span id="response"></span>
+    </div>
 <!-- begin row -->
 <div id='case_details' class="row">
 	<!-- begin col-12 -->
@@ -341,6 +354,7 @@ print(blu.sing("'Happy'"))
                                                             <th>Children of People Living with HIV/AIDS (PLHIV)?</th>
                                                             <th>Children living with HIV/AIDS (CLHIV)?</th>
                                                             <th>sexual violence against children (SVAC)?</th>
+                                                            <th>Household affected by HIV ?</th>
 
                                                         </tr>
                                                         </thead>
@@ -410,6 +424,14 @@ print(blu.sing("'Happy'"))
 
                                                                         </div>
                                                                 </td>
+                                                                <td id="{{ sibling.id }}_q3p12_Qn">
+                                                                    <div class="radio-inline">
+                                                                        
+                                                                       
+                                                                            {{ form.CP6d_8 }}
+
+                                                                        </div>
+                                                                </td>
                                                             </tr>
                                                             
                                                             {% endif %}
@@ -423,7 +445,7 @@ print(blu.sing("'Happy'"))
                                                                         <td id="{{ sibling.person.id }}_CP6d_1_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_1" >
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_1">
                                                                             </div>
                                                                         </td>
                                                                         <td id="{{ sibling.person.id }}_CP6d_2_Qn">
@@ -460,6 +482,12 @@ print(blu.sing("'Happy'"))
                                                                             <div class="radio-inline">
                                                                         
                                                                               <input type="checkbox" name="{{sibling.person.id}}_CP6d_7">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td id="{{ sibling.person.id }}_CP6d_8_Qn">
+                                                                            <div class="radio-inline">
+                                                                        
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_8">
                                                                             </div>
                                                                         </td>
                                                                       
@@ -522,7 +550,7 @@ print(blu.sing("'Happy'"))
                                                     </div>
                                                 </div>
                                             </div>
-   
+                  
                                             <hr/>
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth1_Qn">
@@ -593,6 +621,8 @@ print(blu.sing("'Happy'"))
                                                 </div>
                                             </div>
                                             <hr/>
+                                         </div>
+                                         <div class="row mt-15">
                                             <div class="col-md-12">
                                                 <div class="form-group note note-default" id="CP1b_Qn">
                                                     <div class="col-md-9">
@@ -603,9 +633,8 @@ print(blu.sing("'Happy'"))
                                                     </div>
                                                 </div>
                                             </div>
-                                            <hr>
                                         </div>
-                                        
+                                            <hr>                                     
                                         
                                         <div class="row mt-15">
                                             <div class="col-md-12">
@@ -622,13 +651,38 @@ print(blu.sing("'Happy'"))
                                                 </div>
                                             </div>                                         
                                         </div>
+
                                         <div class="row mt-15">
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Is there anyone who is HIV positive in the Household ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP2bSkip}}
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <div class="col-md-12">
                                                         <p class="p-15 bg-sub-header">Children 0-12</p>
                                                     </div>
                                                 </div>
+                                            </div> 
+                                            
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Is there a child who is HIV positive ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP21Skip}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth6_Qn">
                                                     <div class="col-md-9">
                                                         <label class="control-label formlabel">2.1 Have all HIV positive children on treatment with documented viral load results been suppressed in the past 12 months? <span class="asteriskField">*</label>
@@ -637,9 +691,11 @@ print(blu.sing("'Happy'"))
                                                         {{ form.CP6q }}
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth7_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">2.2 If there are no documented viral load results; Have all the children living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment) <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">2.2 For those with no documented viral load results; Have all the children living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment) <span class="asteriskField">*</label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP7q }}
@@ -665,6 +721,7 @@ print(blu.sing("'Happy'"))
                                                     </div>
                                                 </div>
                                             </div>
+                                            
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth9_Qn">
                                                     <div class="col-md-9">
@@ -678,7 +735,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth10_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">2.5 If there are no documented viral load results; Have all the children and adolescents (12years and above) living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment) <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">2.5 For those with no documented viral load results; Have all the children and adolescents (12years and above) living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment) <span class="asteriskField">*</label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP10q }}
@@ -694,11 +751,23 @@ print(blu.sing("'Happy'"))
                                                         {{ form.CP11q }}
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>                                        
+                                        <!-- </div>
+                                        <div class="col-md-12"> -->
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <div class="col-md-12">
                                                         <p class="p-15 bg-sub-header">Caregiver</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Is the caregiver HIV positive ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP27Skip}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -717,7 +786,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth13_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">2.8  If there are no documented viral load results; Have the caregiver living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment)<span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">2.8  For those no documented viral load results; Have the caregiver living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment)<span class="asteriskField">*</label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP13q }}
@@ -736,6 +805,7 @@ print(blu.sing("'Happy'"))
                                                 </div>
                                             </div>
                                             <hr/>
+                                        </div>  
                                             <div class="col-md-12">
                                                 <div class="form-group note note-default" id="CP2b_Qn">
                                                     <div class="col-md-9">
@@ -746,7 +816,7 @@ print(blu.sing("'Happy'"))
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        
 
                                         <div class="row mt-15">
                                             <div class="col-md-12">                                                
@@ -757,11 +827,12 @@ print(blu.sing("'Happy'"))
                                                         </h4>
                                                         <i>Benchmark3: All adolescents 10-17 years of age in the household have key knowledge about preventing HIV infection
                                                             Adolescents aged 10-17 can describe at least two HIV infection risks in their local community, can provide at least one example of how they can protect themselves against HIV risk, and can correctly describe the location of at least one place where HIV prevention support is available.</i>
-                                                        <br><small><b>Note:</b>  For HHs with no adolescent girls and boys, skip questions below and select “N/A” for “Achievement of this benchmark.”<br></small>
+                                                        <br><small><b>Note:</b>  For HHs with no adolescent girls and boys, skip questions below and select “N/A” for “Achievement of this benchmark.”</small>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <hr/>                            
+                                            
+                                            <hr/>
                                             <div class="col-md-12 bg-sub-skip">
                                                 <div class="form-group">
                                                     <div class="col-md-9 text-left">
@@ -796,31 +867,31 @@ print(blu.sing("'Happy'"))
                                                                     </td>
                                                                     <td class="r12q1" id="{{ child.id }}_q12a_Qn" >
                                                                         <label class="radio-inline">
-                                                                            <input type="radio" name="{{ child.id }}_q12a"  value="AYES">
+                                                                            <input type="radio" name="{{ child.id }}_CP15q"  value="AYES">
                                                                             Yes
                                                                         </label>
                                                                         <label class="radio-inline">
-                                                                            <input type="radio"  name="{{ child.id }}_q12a"  value="ANNO">
+                                                                            <input type="radio"  name="{{ child.id }}_CP15q"  value="ANNO">
                                                                             No
                                                                         </label>
                                                                     </td>
                                                                     <td class="r12q2" id="{{ child.id }}_q12b_Qn">
                                                                         <label class="radio-inline">
-                                                                        <input type="radio" name="{{ child.id }}_q12b" value="AYES">
+                                                                        <input type="radio" name="{{ child.id }}_CP16q" value="AYES">
                                                                             Yes
                                                                         </label>
                                                                         <label class="radio-inline">
-                                                                            <input type="radio"  name="{{ child.id }}_q12b" value="ANNO">
+                                                                            <input type="radio"  name="{{ child.id }}_CP16q" value="ANNO">
                                                                             No
                                                                         </label>
                                                                     </td>
                                                                     <td class="r12q3" id="{{ child.id }}_q12c_Qn">
                                                                         <label class="radio-inline">
-                                                                            <input type="radio" name="{{ child.id }}_q12c" value="AYES">
+                                                                            <input type="radio" name="{{ child.id }}_CP17q" value="AYES">
                                                                                 Yes
                                                                         </label>
                                                                         <label class="radio-inline">
-                                                                            <input type="radio"  name="{{ child.id }}_q12c" value="ANNO">
+                                                                            <input type="radio"  name="{{ child.id }}_CP17q" value="ANNO">
                                                                                 No
                                                                         </label>
                                                                     </td>
@@ -834,53 +905,49 @@ print(blu.sing("'Happy'"))
                                                                 {% endif %}
                                                                 {% if hhmembers %}
                                                                     {% for sibling in hhmembers %}
-                                                                        {% if sibling.person.years > 10 %}
+                                                                        {% if sibling.person.years >= 10 and sibling.person.years <= 20 %}
                                                                         <tr class="row12">
                                                                             <td>
                                                                                 <a href="{% url 'view_person' id=sibling.person.id %}">{{ sibling.person.first_name }} {{ sibling.person.surname }} {{ sibling.person.last_name }}</a>
                                                                             </td>
                                                                             <td class="r12q1" id="{{ sibling.person.id }}_q12a_Qn" >
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio" name="{{ sibling.person.id }}_q12a"  value="AYES">
+                                                                                    <input type="radio" name="{{ sibling.person.id }}_CP15q"  value="AYES">
                                                                                     Yes
                                                                                 </label>
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio"  name="{{ sibling.person.id }}_q12a"  value="ANNO">
+                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP15q"  value="ANNO">
                                                                                     No
                                                                                 </label>
                                                                             </td>
                                                                             <td class="r12q2" id="{{ sibling.person.id }}_q12b_Qn">
                                                                                 <label class="radio-inline">
-                                                                                <input type="radio" name={{ sibling.person.id }}_q12b value="AYES">
+                                                                                <input type="radio" name="{{ sibling.person.id }}_CP16q" value="AYES">
                                                                                     Yes
                                                                                 </label>
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio"  name={{ sibling.person.id }}_q12b value="ANNO">
+                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP16q" value="ANNO">
                                                                                     No
                                                                                 </label>
                                                                             </td>
                                                                             <td class="r12q3" id="{{ sibling.person.id }}_q12c_Qn">
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio" name="{{ sibling.person.id }}_q12c" value="AYES">
+                                                                                    <input type="radio" name="{{ sibling.person.id }}_CP17q" value="AYES">
                                                                                         Yes
                                                                                 </label>
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio"  name="{{ sibling.person.id }}_q12c" value="ANNO">
+                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP17q" value="ANNO">
                                                                                         No
                                                                                 </label>
                                                                             </td>
                                                                         </tr>
-                                                                        {% else %}
-                                                                        <tr>
-                                                                            <td colspan="6">
-                                                                                <p class="custom-alert-warning">&nbsp;No siblings over 10 years found.</p>
-                                                                            </td>
-                                                                        </tr>
+                                                                       
                                                                         {% endif %}
                                                                     {% endfor %}
                                                                     
                                                                 {% else %}
-                                                                    {% comment %} <tr class="hidden">
+                                                                    {% comment %} 
+                                                                    <tr class="hidden">
                                                                         <td class="semi-bold">
                                                                             Hidden fields for no-OVC
                                                                         </td>
@@ -948,7 +1015,7 @@ print(blu.sing("'Happy'"))
                                                 </div>
                                             </div>
                                             <hr>
-                                        </div>        
+                                        </div>
                                         <div class="row mt-15">
                                             <div class="col-md-12">
                                                 <div class="form-group note note-default" id="CP3b_Qn">
@@ -988,6 +1055,7 @@ print(blu.sing("'Happy'"))
                                                     </div>
                                                 </div>
                                             </div>
+                                            <hr/>
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth21_Qn">
                                                     <div class="col-md-9">
@@ -1019,6 +1087,18 @@ print(blu.sing("'Happy'"))
                                                     </div>
                                                 </div>
                                             </div>
+                                            <hr/>
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Is there child < 2 years in the household ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP44Skip}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth24_Qn">
                                                     <div class="col-md-9">
@@ -1030,7 +1110,7 @@ print(blu.sing("'Happy'"))
                                                 </div>
                                             </div>
                                             <hr>
-                                        </div>
+                                        </div>    
                                         <div class="row mt-15">
                                             <div class="col-md-12">
                                                 <div class="col-md-12">
@@ -1043,9 +1123,7 @@ print(blu.sing("'Happy'"))
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <hr>
-                                      
+                                            </div>                                     
                                         </div>
                                         
                                      
@@ -1097,7 +1175,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPstable2_Qn">
                                                     <div class="col-md-9 text-left">
-                                                        <label class="control-label formlabel">5.2 Were you able to pay all medical costs in the past 6 months for all children in your household under the age of 18 without PEPFAR support? Medical costs include medicine and transport to medical appointments<span class="asteriskField">* </label>
+                                                        <label class="control-label formlabel">5.2 Was anyone sick in the past six months, were you able to pay all medical costs in the past 6 months for all children in your household under the age of 18 without PEPFAR support? Medical costs include medicine and transport to medical appointments<span class="asteriskField">* </label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP23q}}
@@ -1166,7 +1244,7 @@ print(blu.sing("'Happy'"))
                                                 <div class="col-md-12 bg-sub-skip">
                                                     <div class="form-group">
                                                         <div class="col-md-9 text-left">
-                                                            <label class="control-label formlabel"> Are there children, adolescents, and caregivers in the household with experiences of violence (including physical violence, emotional violence, sexual violence, gender-based violence, and neglect) in the last six months ?
+                                                            <label class="control-label formlabel"> Are there children, adolescents, and caregivers in the household who have experienced violence (including physical violence, emotional violence, sexual violence, gender-based violence, and neglect) in the last six months ?
                                                         </div>
                                                         <div class="col-md-3 text-left">
                                                             {{form.CP6Skip}}
@@ -1197,14 +1275,13 @@ print(blu.sing("'Happy'"))
                                                     </div>
                                                 </div>
                                                 <hr>
-                                            </div>
+                                            <!-- </div> -->
     
-                                            <div class="row">
+                                            <!-- <div class="row"> -->
                                                 <div class="col-md-12 bg-sub-skip">
-                                                    <div class="form-group" id="CPsafe3_Qn">
+                                                    <div class="form-group">
                                                         <div class="col-md-9 text-left">
                                                             <label class="control-label formlabel"> Is there adolescents 12 years and above ?
-                                                                <span class="asteriskField">* </label>
                                                         </div>
                                                         <div class="col-md-3 text-left">
                                                             {{form.CP63Skip}}
@@ -1225,7 +1302,7 @@ print(blu.sing("'Happy'"))
                                                                 </thead>
                                                             
                                                                 <tbody>
-                                                                    {% if child.years > 10 %}
+                                                                    {% if child.years >= 12 %}
                                                                     <tr class="row13">
                                                                         <td>
                                                                             <a href="{% url 'view_person' id=child.id %}"><b>{{ child.first_name }} {{ child.surname }} {{ child.last_name }}</b></a> <small>(This child)</small>
@@ -1326,9 +1403,9 @@ print(blu.sing("'Happy'"))
                                                                         <td class="r13_t_q1">
                                                                            
                                                                         </td>
-                                                                        <td class="r13_t_q2" id="cp58q_Qn" style="padding-left: 32px;">
+                                                                        <td class="r13_t_q2" id="58q_Qn" style="padding-left: 32px;">
                                                                             <div class="radio-inline">
-                                                                                {{ form.cp58q }}
+                                                                                {{ form.CP58q }}
                                                                             
                                                                         </div>
                                                                         </td>
@@ -1337,9 +1414,9 @@ print(blu.sing("'Happy'"))
                                                             </table>
                                                     </div>
                                                 </div>                                            
-                                            </div>
+                                            <!-- </div> -->
     
-                                            <div class="row mt-15">
+                                            <!-- <div class="row mt-15"> -->
                                                 <div class="col-md-12">
                                                     <div class="form-group">
                                                        <blockquote> <h4>If yes to any of the three questions above, answer the questions below</h4></blockquote>
@@ -1366,6 +1443,7 @@ print(blu.sing("'Happy'"))
                                                             </div>
                                                     </div>
                                                 </div>
+                                              </div>  
                                                 <div class="col-md-12">
                                                     <div class="form-group note note-default" id="CP6b_Qn">
                                                         <div class="col-md-9">
@@ -1376,7 +1454,7 @@ print(blu.sing("'Happy'"))
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            
 
                                             <div class="row mt-15">
                                                     <div class="col-md-12">                                                
@@ -1484,13 +1562,23 @@ print(blu.sing("'Happy'"))
                                                     <div class="form-group">
                                                         <div class=" col-md-12 p-15 bg-info">
                                                             <h4 >
-                                                                Schooled:  Goal 8: Increase School Attendance and Promotion <br></h4>
-                                                                <i><strong>Benchmark 9: All school-aged children (4-17) and adolescents aged 18-20 enrolled in secondary school in the household regularly attended school and progressed during the last year.</strong></i>
+                                                                Schooled:  Goal 8: Increase School Attendance and Progression <br></h4>
+                                                                <i><strong>Benchmark 9: All school-aged children (4-17) and adolescents aged 18-20 enrolled in school in the household regularly attended school and progressed during the last year.</strong></i>
                                                         </div>
                                                     </div>
                                                 </div> 
                                             </div>
                                             <div class="row">
+                                                <div class="col-md-12 bg-sub-skip">
+                                                    <div class="form-group">
+                                                        <div class="col-md-9">
+                                                            <p class="p-15">Are there school going childre in this Household ?</p>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP91Skip}}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <hr>
                                                 <div class="col-md-12">
                                                     <div class="form-group" id="CPschool1_Qn">
@@ -1534,6 +1622,7 @@ print(blu.sing("'Happy'"))
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <hr>
                                                 <div class="col-md-12">
                                                     <div class="form-group" id="CPschool3_Qn">
                                                         <div class="col-md-9 text-left">
@@ -1544,7 +1633,6 @@ print(blu.sing("'Happy'"))
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <hr>
                                                 <div class="col-md-12">
                                                     <div class="form-group" id="CPschool4_Qn">
@@ -1559,7 +1647,7 @@ print(blu.sing("'Happy'"))
 
                                                 <hr>
                                             </div>
-                                            <div class="row mt-15">
+                                            <div class="tow mt-15">
                                                 <div class="col-md-12">
                                                     <div class="col-md-12">
                                                         <div class="form-group note note-default" id="CP9b_Qn">
@@ -1688,13 +1776,13 @@ print(blu.sing("'Happy'"))
                     </div>
 				</form>
             </div>
-            <div class="badge pull-right m-4">Revised: Oct 6th 2016</div>
+            <a href="" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: May 2022</div>
         </div>
         <!-- end panel -->
 
-        <!-- Table for past CPara -->
     </div>
-    <!-- end col-12 --> 
+    <!-- end col-12 -->
 </div>
 <!-- end row -->
 
@@ -1730,7 +1818,7 @@ jQuery(document).ready(function()
     });
 
     $( function() {
-        $('input[name="d_o_a"], input[name="CP2d"], input[name="children_rsk_hiv_assess_date"]').datepicker({ format: 'yyyy-mm-dd' }).val();
+        $('input[name="d_o_a"], input[name="CP2d"]').datepicker({ format: 'dd-M-yyyy', endDate: 'today' }).val();
     } );
 
 	$('html,body').scrollTop(0);
@@ -1748,7 +1836,7 @@ jQuery(document).ready(function()
 </script>
 
 
-<script>
+<!-- <script>
         function deleteCPARAentry(personId,btn_event_pk){
             $('#del_cpara_e').modal('hide');
             var CParaUrlToDelete= "{% url 'delete_cpara' id=1234 btn_event_pk='00000000-0000-0000-0000-000000000000' %}".replace(/1234/, personId.toString()).replace(/00000000-0000-0000-0000-000000000000/, btn_event_pk.toString());
@@ -1786,15 +1874,16 @@ jQuery(document).ready(function()
         }
     
     
-    </script>
-    {% if hhmembers %}
+    </script> -->
+    {% if hhmembers %}     
+        
+    
+        <!-- cpara -->
 
         <script>
-    //<<--------- Qn 12 ---------
-
- 
-
-    var count_r12 = 0; $('tr.row12 td.r12q1 input[type=radio]').each( () => { count_r12 += 1 }); count_r12 /= 2
+            
+            
+            var count_r12 = 0; $('tr.row12 td.r12q1 input[type=radio]').each( () => { count_r12 += 1 }); count_r12 /= 2
             $('.row12 input[type=radio]').on('change', function () {
                 //R12Q1
                 var checkker = null;
@@ -1835,70 +1924,182 @@ jQuery(document).ready(function()
                     else if(qn == 'c'){ $('input[name=CP23q_b_3][value=ANNO]').prop('checked', true); }
                 }
             }
-            //>>--------- Qn 12 ---------
 
-            //<<--------- Qn 13 ---------
-            var count_r13 = 0; $('tr.row13 td.r13q1 input[type=radio]').each( () => { count_r13 += 1 }); count_r13 /= 2
-            $('.row13 input[type=radio]').on('change', function () {
-                //R13Q1
-                var checkker13_q = null;
-                $('tr.row13 td.r13q1 input[type=radio]:checked').each( (inx, ele) => {
-                    var this_val = $(this).val(); if(this_val == 'AYES'){ checkker13_q += true; }else{ checkker13_q += false; }
-                });
-                if(checkker13_q == count_r13){ q13MainQn(true, 'a'); }else{ q13MainQn(false, 'a'); }
-                //R13Q2
-                // var checkker13_q2 = false;
-                // $('tr.row13 td.r13q2 input[type=radio]:checked').each( (inx, ele) => {
-                //     var this_val = $(this).val(); if(this_val == 'AYES'){ checkker13_q2 += true; }else{ checkker13_q2 += false; }
-                // });
-                // if(checkker13_q2 == count_r13){ q13MainQn(true, 'b'); }else{ q13MainQn(false, 'b'); }
-                // //R13Q3
-                // var checkker13_q3 = false;
-                // $('tr.row13 td.r13q3 input[type=radio]:checked').each( (inx, ele) => {
-                //     var this_val = $(this).val(); if(this_val == 'AYES'){ checkker13_q3 += true; }else{ checkker13_q3 += false; }
-                // });
-                // if(checkker13_q3 == count_r13){ q13MainQn(true, 'c'); }else{ q13MainQn(false, 'c'); }
-            });
-    
-            //------tick main qn
-            function q13MainQn(pass, qn) {
-                if(pass){
-                    if(qn == 'a'){ $('input[name=cp58q][value=AYES]').prop("checked", true);} 
-                    // else 
-                    // if(qn === 'b'){ $('.ro13_total td.r13_t_q2 label input[value=AYES]').prop('checked', true); } else 
-                    // if(qn === 'c'){ $('.ro13_total td.r13_t_q3 label input[value=AYES]').prop('checked', true); }
-                }
-                else{
-                    if(qn == 'a'){ $('input[name=cp58q][value=ANNO]').prop("checked", true);} 
-                    // else 
-                    // if(qn === 'b'){ $('.ro13_total td.r13_t_q2 label input[value=ANNO]').prop('checked', true); } else 
-                    // if(qn === 'c'){ $('.ro13_total td.r13_t_q3 label input[value=ANNO]').prop('checked', true); }
-                }
-            }
-            //>>--------- Qn 13 ---------
       </script>
 
-    {% else %}
-        <script>
+    <!-- cpara v1 -->
+
+    <script>
+        $('input[type=radio]').on('change', function () {
             // 3.1 - 3.6
-                //$('input[name=CP13q][value=AYES], input[name=CP14q][value=AYES], input[name=CP15q][value=AYES], input[name=CP16q][value=AYES], input[name=CP17q][value=AYES]').prop('checked',true);
-                $('input[name=o10_know_status]').on('change', function () {
-                    $('input[name=CP23q_b_1][value=AYES], input[name=CP23q_b_2][value=AYES], input[name=CP23q_b_3][value=AYES], input[name=CP16q][value=AYES], input[name=CP17q][value=AYES]').prop('checked',true);
-                    $('#id_CP3b_0').prop('checked', true);
-                })
-
-            // 12.4 a-c
-                //$('input[name=CP52q][value=AYES], input[name=CP53q][value=AYES], input[name=CP54q][value=AYES]').prop('checked',true)
-                $('input[name=o5y_cd_hse]').on('change', function () {
-                    $('input[name=CP52q][value=AYES], input[name=CP53q][value=AYES], input[name=CP54q][value=AYES]').prop('checked',true);
-                    $('#id_CP12b_0').prop('checked', true);
-                })
-                
-
-
+            if(
+                $('input[name=cp8q]:checked').val() == 'AYES' &&
+                $('input[name=cp9q]:checked').val() == 'AYES' &&
+                $('input[name=cp10q]:checked').val() == 'AYES' &&
+                $('input[name=cp11q]:checked').val() == 'AYES' &&
+                $('input[name=cp12q]:checked').val() == 'AYES' &&
+                $('input[name=cp13q]:checked').val() == 'AYES' &&
+                $('input[name=cp14q]:checked').val() == 'AYES' &&
+                $('input[name=cp15q]:checked').val() == 'AYES' &&
+                $('input[name=cp16q]:checked').val() == 'AYES' &&
+                $('input[name=cp17q]:checked').val() == 'AYES'
+            ){
+                $('input[name=cp3b][value=AYES]').prop('checked', true);
+                $('#id_cp3b_0').prop('checked', true);
+                console.info( ' YESS 17q == ' + $('input[name=cp17q]:checked').val() )
+            }
+            else{
+                console.info( 'NOO 17q == ' + $('input[name=cp17q]:checked').val() )
+                $('input[name=cp3b][value=ANNO]').prop('checked', true);
+            }
 
             
-        </script>
+            // 12.4 a-c
+            if(
+                $('input[name=cp49q]:checked').val() == 'AYES' &&
+                $('input[name=cp50q]:checked').val() == 'AYES' &&
+                $('input[name=cp51q]:checked').val() == 'AYES' &&
+                $('input[name=cp52q]:checked').val() == 'AYES' &&
+                $('input[name=cp53q]:checked').val() == 'AYES' &&
+                $('input[name=cp54q]:checked').val() == 'AYES'
+            ){
+                $('input[name=cp12b][value=AYES]').prop('checked', true);
+                $('#id_cp12b_0').prop('checked', true);
+                console.info( ' YESS 54q == ' + $('input[name=cp54q]:checked').val() )
+            }
+            else{
+                console.info( 'NOO 54q == ' + $('input[name=cp54q]:checked').val() )
+                $('input[name=cp12b][value=ANNO]').prop('checked', true);
+            }
+
+
+        })
+    </script>
+
+
+    <script>
+        //<<--------- Qn 12 ---------
+        var count_r12 = 0; $('tr.row12 td.r12q1 input[type=radio]').each( () => { count_r12 += 1 }); count_r12 /= 2
+        $('.row12 input[type=radio]').on('change', function () {
+            //R12Q1
+            var checkker = null;
+            $('tr.row12 td.r12q1 input[type=radio]:checked').each( (inx, ele) => {
+                var this_val = $(this).val(); if(ele.value === 'AYES'){ checkker += true; }else{ checkker -= true; }
+                console.log(checkker)
+                
+                // console.log(this_val)
+                console.log(ele)
+            });
+            if(checkker == 3){ q12MainQn_v1(true, 'a'); }else{ q12MainQn_v1(false, 'a'); }
+            //R12Q2
+            var checkker2 = false;
+            $('tr.row12 td.r12q2 input[type=radio]:checked').each( (inx, ele) => {
+                var this_val = $(this).val(); if(ele.value == 'AYES'){ checkker2 += true; }else{ checkker2 -= true; }
+            });
+            if(checkker2 == count_r12){ q12MainQn_v1(true, 'b'); }else{ q12MainQn_v1(false, 'b'); }
+            //R12Q3
+            var checkker3 = false;
+            $('tr.row12 td.r12q3 input[type=radio]:checked').each( (inx, ele) => {
+                var this_val = $(this).val(); if(ele.value == 'AYES'){ checkker3 += true; }else{ checkker3 -= true; }
+            });
+            if(checkker3 == count_r12){ q12MainQn_v1(true, 'c'); }else{ q12MainQn_v1(false, 'c'); }
+        });
+
+        //------tick main qn
+        function q12MainQn_v1(pass, qn) {
+            if(pass){
+                if(qn == 'a'){ $('tr.ro12_total td.r12q1 label input[value=AYES]').prop('checked', true); }
+                else if(qn == 'b'){ $('.ro12_total td.r12q2 label input[value=AYES]').prop('checked', true); }
+                else if(qn == 'c'){ $('.ro12_total td.r12q3 label input[value=AYES]').prop('checked', true); }
+            }else{
+                if(qn == 'a'){ $('tr    .ro12_total td.r12q1 label input[value=ANNO]').prop('checked', true); }
+                else if(qn == 'b'){ $('.ro12_total td.r12q2 label input[value=ANNO]').prop('checked', true); }
+                else if(qn == 'c'){ $('.ro12_total td.r12q3 label input[value=ANNO]').prop('checked', true); }
+            }
+        }
+        //>>--------- Qn 12 ---------
+
+        //<<--------- Qn 13 ---------
+        var count_r13 = 0; $('tr.row13 td.r13q1 input[type=radio]').each( () => { count_r13 += 1 }); count_r13 /= 2
+        $('.row13 input[type=radio]').on('change', function () {
+            //R13Q1
+            var checkker13_q = null;
+            $('tr.row13 td.r13q1 input[type=radio]:checked').each( (inx, ele) => {
+                var this_val = $(this).val(); if(this_val == 'AYES'){ checkker13_q += true; }else{ checkker13_q += false; }
+            });
+            if(checkker13_q == count_r13){ q13MainQn_v1(true, 'a'); }else{ q13MainQn_v1(false, 'a'); }
+            //R13Q2
+            var checkker13_q2 = false;
+            $('tr.row13 td.r13q2 input[type=radio]:checked').each( (inx, ele) => {
+                var this_val = $(this).val(); if(this_val == 'AYES'){ checkker13_q2 += true; }else{ checkker13_q2 += false; }
+            });
+            if(checkker13_q2 == count_r13){ q13MainQn_v1(true, 'b'); }else{ q13MainQn_v1(false, 'b'); }
+            //R13Q3
+            var checkker13_q3 = false;
+            $('tr.row13 td.r13q3 input[type=radio]:checked').each( (inx, ele) => {
+                var this_val = $(this).val(); if(this_val == 'AYES'){ checkker13_q3 += true; }else{ checkker13_q3 += false; }
+            });
+            if(checkker13_q3 == count_r13){ q13MainQn_v1(true, 'c'); }else{ q13MainQn_v1(false, 'c'); }
+        });
+
+        //------tick main qn
+        function q13MainQn_v1(pass, qn) {
+            if(pass){
+                if(qn === 'a'){ $('.ro13_total td.r13_t_q1 label input[value=AYES]').prop('checked', true); } else 
+                if(qn === 'b'){ $('.ro13_total td.r13_t_q2 label input[value=AYES]').prop('checked', true); } else 
+                if(qn === 'c'){ $('.ro13_total td.r13_t_q3 label input[value=AYES]').prop('checked', true); }
+            }else{
+                if(qn === 'a'){ $('.ro13_total td.r13_t_q1 label input[value=ANNO]').prop('checked', true); } else 
+                if(qn === 'b'){ $('.ro13_total td.r13_t_q2 label input[value=ANNO]').prop('checked', true); } else 
+                if(qn === 'c'){ $('.ro13_total td.r13_t_q3 label input[value=ANNO]').prop('checked', true); }
+            }
+        }
+        //>>--------- Qn 13 ---------
+    </script>
+
+    {% else %}
+    <script>
+        // cpara
+        
+        $('input[type=radio]').on('change', function () {
+
+            if($('input[name={{child.id}}_CP15q]:checked').val() == 'AYES'){
+                $('input[name=CP23q_b_1][value=AYES]').prop("checked", true);}
+            else{
+                $('input[name=CP23q_b_1][value=ANNO]').prop("checked", true);}
+       
+            if($('input[name={{child.id}}_CP16q]:checked').val() == 'AYES'){
+                $('input[name=CP23q_b_2][value=AYES]').prop("checked", true);}
+            else{
+                $('input[name=CP23q_b_2][value=ANNO]').prop("checked", true);}
+        
+        
+            if($('input[name={{child.id}}_CP17q]:checked').val() == 'AYES'){
+                $('input[name=CP23q_b_3][value=AYES]').prop("checked", true);}
+            else{
+                $('input[name=CP23q_b_3][value=ANNO]').prop("checked", true);}
+        })
+
+        // cpara_v1
+        // 3.1 - 3.6
+            //$('input[name=cp13q][value=AYES], input[name=cp14q][value=AYES], input[name=cp15q][value=AYES], input[name=cp16q][value=AYES], input[name=cp17q][value=AYES]').prop('checked',true);
+            $('input[name=o10_know_status]').on('change', function () {
+                $('input[name=cp13q][value=AYES], input[name=cp14q][value=AYES], input[name=cp15q][value=AYES], input[name=cp16q][value=AYES], input[name=cp17q][value=AYES]').prop('checked',true);
+                $('#id_cp3b_0').prop('checked', true);
+            })
+
+        // 12.4 a-c
+            //$('input[name=cp52q][value=AYES], input[name=cp53q][value=AYES], input[name=cp54q][value=AYES]').prop('checked',true)
+            $('input[name=o5y_cd_hse]').on('change', function () {
+                $('input[name=cp52q][value=AYES], input[name=cp53q][value=AYES], input[name=cp54q][value=AYES]').prop('checked',true);
+                $('#id_cp12b_0').prop('checked', true);
+            })
+            
+
+
+
+        
+    </script>
     {% endif %}
     
         
