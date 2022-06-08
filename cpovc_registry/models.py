@@ -159,13 +159,13 @@ class RegPerson(models.Model):
         if self.date_of_birth:
             dob = self.date_of_birth
             date_check = (today.month, today.day) < (dob.month, dob.day)
-            yrs = today.year - dob.year - date_check
-            age = '{:d} years'.format(yrs)
-            if yrs == 0:
-                days = (today - dob).days
-                mon = days / 30
-                age = '{:d} days'.format(
-                    days if mon < 1 else '{:d} months'.format(mon))
+            yrs = int(today.year - dob.year - date_check)
+            age = '{} years'.format(yrs)
+            if yrs < 1:
+                days = int((today - dob).days)
+                mon = int(days / 30)
+                rem_days = days - int(mon * 30)
+                age = '{} months {} days'.format(mon, rem_days)
         return age
 
     age = property(_calculate_age)
