@@ -861,7 +861,7 @@ class OVCCareCpara(models.Model):
     question_type = models.CharField(max_length=50)
     domain = models.CharField(max_length=50)
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
-    date_of_event = models.DateField(default=timezone.now)
+    date_of_event = models.DateField(default="")
     date_of_previous_event = models.DateField(null=True, blank=True)
     timestamp_created = models.DateTimeField(default=timezone.now)
     is_void = models.BooleanField(default=False)

@@ -2,7 +2,7 @@
 triggerSkip('CP31Skip','ANA','CP41Skip','2')
 
 triggerSkip('CP2bSkip','ANA','CP2b','2')
-triggerSkip('CP21Skip','ANA','CP27q','2')
+
 triggerSkip('CP27Skip','ANA','CP2b','2')
 
 triggerSkip('CP6Skip','ANA','CP6b','4');
@@ -14,6 +14,24 @@ triggerSkip('CP91Skip','ANA','CP9b','5');
 
 triggerSkip('CP41Skip','ANA','CP4b','2');
 triggerSkip('CP44Skip','ANA','CP4b','2');
+
+// Hard coded
+
+$('input[name=CP21Skip]').change(function(){
+    // console.log('Hello')
+    let this_value = $('input[name=CP21Skip]:checked').val()
+    
+    if(this_value==='AYES'){
+        // alert($('input[name=CP6q],input[name=CP7q],input[name=CP8q],input[name=CP9q],input[name=CP10q],input[name=CP11q]'))
+        $('input[name=CP6q],input[name=CP7q],input[name=CP8q],input[name=CP9q],input[name=CP10q],input[name=CP11q]').removeAttr('disabled')
+        $('input[name=CP6q],input[name=CP7q],input[name=CP8q],input[name=CP9q],input[name=CP10q],input[name=CP11q]').prop('checked', false);
+
+    }else{
+        $('input[name=CP6q][value=AYES],input[name=CP7q][value=AYES],input[name=CP8q][value=AYES],input[name=CP9q][value=AYES],input[name=CP10q][value=AYES],input[name=CP11q][value=AYES]').prop('checked', true);
+        $('input[name=CP6q],input[name=CP7q],input[name=CP8q],input[name=CP9q],input[name=CP10q],input[name=CP11q]').attr('disabled', true)
+    }
+})
+// triggerSkip('CP21Skip','ANA','CP27q','2')
 
 
 

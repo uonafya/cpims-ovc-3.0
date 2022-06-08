@@ -10685,6 +10685,7 @@ def delete_heitracker(request, id):
 
 # New Cpara action functionality
 def new_cpara(request, id):
+    import pdb
     if request.method == 'POST':
         data = request.POST
         child = RegPerson.objects.get(id=id)
@@ -10710,19 +10711,20 @@ def new_cpara(request, id):
             code__startswith='CP', is_void=False).values()
 
         date_of_event = data.get('d_o_a')
-        event_date = convert_date(data.get('d_o_a'),'%Y-%b-%d')
+        event_date = convert_date(data.get('d_o_a'),'%d-%b-%Y')
 
         event = OVCCareEvents.objects.create(
                 event_type_id='cpr',
                 created_by=request.user.id,
                 person=child,
                 house_hold=house_hold,
-                date_of_event=date_of_event
+                date_of_event=event_date
             )
 
         for question in questions: 
-            date_previous=data.get('CP2d')
+            date_previous=convert_date(data.get('CP2d'),'%d-%b-%Y')
             answer = data.get(question['code'])
+            print(f'date_previous{date_previous} date of event {date_of_event}')
             
             if answer is None:
                 answer = 'No'
@@ -10751,9 +10753,9 @@ def new_cpara(request, id):
                 )
                     
             except Exception as e:
-                print(f'The OVC Cpara Form didnt save:  {e}')
+                print(f'The OVC Cpara Form didnt save: {e}')
                 msg1 = f'The OVC Cpara Form didnt save:  {e}'
-                messages.add_message(request, messages.INFO,msg1)
+                messages.add_message(request, messages.ERROR,msg1)
                
 
         # converts the filtered objects to a list
@@ -10847,7 +10849,7 @@ def new_cpara(request, id):
                     household=house_hold,
                     question_type=question1[0]['question_type'],
                     domain=question1[0]['domain'],
-                    date_of_event=date_of_event,
+                    date_of_event=event_date,
                     date_of_previous_event=date_previous,
                     event=event
 
@@ -10884,7 +10886,7 @@ def new_cpara(request, id):
                     person=child2,
                     criteria=sub_pop[ovc_sub_q],
                     event=event,
-                    date_of_event=date_of_event,
+                    date_of_event=event_date,
                 )
             except Exception as e:
                 error_message = f'The OVC sub pop save append failed {e}'
@@ -10926,7 +10928,7 @@ def new_cpara(request, id):
                     question_type=quest_type[0]['question_type'],
                     domain=quest_type[0]['domain'],
                     event=event,
-                    date_of_event=event_date,
+                    date_of_event=date_of_event,
                     date_of_previous_event=date_previous, 
                 )
                     
@@ -10940,7 +10942,7 @@ def new_cpara(request, id):
         messages.add_message(request, messages.INFO,msg)  
         return HttpResponseRedirect(url)
 
-
+        pdb.set_trace()
     child = RegPerson.objects.get(id=id)
     ovc_id = int(id)
     creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
@@ -11099,7 +11101,7 @@ def edit_cpara(request, id):
                 answer_value = {
                     'AYES':'True',
                     'ANNO':'False',
-                    'ANNA':'Na',
+                    'ANA':'Na',
                     None:'No'
                 }
 
@@ -11108,7 +11110,7 @@ def edit_cpara(request, id):
                 OVCCareCpara.objects.filter(event=id).update(
                     question=question,
                     answer=answer,
-                    date_of_event=convert_date(date_of_event, fmt='%Y-%m-%d'),
+                    date_of_event=date_of_event,
                     timestamp_updated=update_time,
                     event=id
                 )
@@ -11179,7 +11181,7 @@ def edit_cpara(request, id):
     ovc_sub_pop_data = {}    
     ovc_sub_population = OVCSubPopulation.objects.filter(event=id,is_void=False).values()
     # OVCSubPopulation.objects.filter(event=id,is_void=False).delete()
-    sub_pop = {'double' :'CP6d_1','AGYW':'CP6d_2','HEI':'CP6d_3','FSW':'CP6d_4','PLHIV':'CP6d_5','CLHIV':'CP6d_6','SVAC':'CP6d_7'}
+    sub_pop = {'double' :'CP6d_1','AGYW':'CP6d_2','HEI':'CP6d_3','FSW':'CP6d_4','PLHIV':'CP6d_5','CLHIV':'CP6d_6','SVAC':'CP6d_7','AHIV':'CP6d_8'}
     for ovc_sub in ovc_sub_population:
         
         ovc_sub_id = ovc_sub['person_id']
@@ -11363,13 +11365,13 @@ def edit_cpara(request, id):
             
 
     print(f'Edit data: {edit_data_cpara}')
-    form = CparaAssessment(data=edit_data_cpara)
+    # form = CparaAssessment(data=edit_data_cpara)
     ovc_id = int(person_id)
     child = RegPerson.objects.get(is_void=False, id=ovc_id)
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
     hhmembers = hhmembers2.exclude(person=care_giver)   
 
-
+    form = CparaAssessment(data=edit_data_cpara)
     context = {'form':form,
                 'person': id,
                 'siblings': siblings,
@@ -11388,6 +11390,7 @@ def edit_cpara(request, id):
                 }
 
     return render(request,'forms/edit_new_cpara.html',context)
+    
 
 # Delete Cpara functionality
 def delete_cpara(request, id, btn_event_pk):
@@ -11549,7 +11552,7 @@ def delete_benchmark(request, id):
 
     
 def edit_grad_monitor(request, id):
-    
+    import pdb
     if request.method=='POST':
         data=request.POST
         answer_value = {
@@ -11618,10 +11621,10 @@ def edit_grad_monitor(request, id):
     #     print(f'The error is: {e}')
 
     form = gradMonitoringToolform(data=edit_data)
-
+    pdb.set_trace()
     household1 =OVCBenchmarkMonitoring.objects.get(obm_id=id)
-    re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).person.id
-    
+    re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).first().person.id
+    print(f'>>>>>>>>{re_person}')
     ovc_id = int(re_person)
     child = RegPerson.objects.get(is_void=False, id=ovc_id)
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
