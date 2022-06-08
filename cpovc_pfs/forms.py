@@ -80,11 +80,9 @@ class OVCPreventiveRegistrationForm(forms.Form):
 
     school_level = forms.ChoiceField(
         choices=school_level_list,
-        initial='0',
-        required=True,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
-                   'data-parsley-required': "true",
                    'id': 'school_level'}))
 
     school_name = forms.CharField(

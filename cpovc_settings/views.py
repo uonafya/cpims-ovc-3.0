@@ -3,10 +3,9 @@ import csv
 import time
 import pandas as pd
 from datetime import datetime
-from django.db import connection
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.urls import reverse, resolve
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import SettingsForm
@@ -20,7 +19,7 @@ MEDIA_ROOT = settings.MEDIA_ROOT
 
 
 # Create your views here.
-# @login_required
+@login_required
 def settings_home(request):
     """Method to do pivot reports."""
     try:
@@ -31,7 +30,7 @@ def settings_home(request):
         pass
 
 
-# @login_required
+@login_required
 def settings_reports(request):
     """Method to do pivot reports."""
     # mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime
@@ -57,11 +56,12 @@ def settings_reports(request):
         pass
 
 
-# @login_required
+@login_required
 def archived_reports(request, file_name):
     """Method to do pivot reports."""
     try:
         directory = '%s/xlsx/' % (MEDIA_ROOT)
+        print('DIR', directory)
         file_path = os.path.join(directory, file_name)
         if os.path.exists(file_path):
             with open(file_path, 'rb') as fh:
@@ -70,13 +70,15 @@ def archived_reports(request, file_name):
                 response['Content-Disposition'] = 'inline; filename=' + \
                     os.path.basename(file_path)
                 return response
+        else:
+            print('File does not exist - %s' % file_path)
     except Exception as e:
         raise e
     else:
         pass
 
 
-# @login_required
+@login_required
 def remove_reports(request, file_name):
     """Method to do pivot reports."""
     try:
@@ -95,7 +97,7 @@ def remove_reports(request, file_name):
         pass
 
 
-# @login_required
+@login_required
 def settings_facilities(request):
     """Method to do pivot reports."""
     # mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime
@@ -104,20 +106,21 @@ def settings_facilities(request):
             search_param = str(request.POST.get('facility'))
             if search_param.isdigit():
                 facilities = OVCFacility.objects.filter(
-                facility_code=search_param)
+                    facility_code=search_param)
             else:
                 facilities = OVCFacility.objects.filter(
                     facility_name__icontains=search_param)
         else:
             facilities = OVCFacility.objects.all().order_by('-id')[:1000]
-        return render(request, 'settings/facilities.html', {'facilities': facilities})
+        return render(
+            request, 'settings/facilities.html', {'facilities': facilities})
     except Exception as e:
         raise e
     else:
         pass
 
 
-# @login_required
+@login_required
 def settings_schools(request):
     """Method to do pivot reports."""
     # mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime
@@ -127,7 +130,7 @@ def settings_schools(request):
             schools = OVCSchool.objects.filter(
                 school_name__icontains=search_param)
         else:
-             schools = OVCSchool.objects.all().order_by('-id')[:1000]
+            schools = OVCSchool.objects.all().order_by('-id')[:1000]
         return render(request, 'settings/schools.html', {'schools': schools})
     except Exception as e:
         raise e
@@ -171,7 +174,7 @@ def qstorows(desc, rows):
             vals = []
             for n, i in enumerate(columns):
                 val = res[i]
-                if type(val) is str:
+                if isinstance(val, str):
                     val = val.encode('ascii', 'ignore').decode('ascii')
                 vals.append(val)
             data.append(vals)
@@ -182,7 +185,7 @@ def qstorows(desc, rows):
         return data
 
 
-# @login_required
+@login_required
 def settings_rawdata(request):
     """Method to do pivot reports."""
     # mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime
@@ -218,11 +221,12 @@ def settings_rawdata(request):
             org_unit = request.POST.get('org_unit')
             cluster = request.POST.get('cluster')
             if not org_unit and not cluster:
-                 msg = "You must provide either Org Unit or Cluster"
-                 messages.error(request, msg)
-                 return render(request, 'settings/data.html',
-                      {'reports': reports, 'form': form, 'results': results,
-                       'file_name': file_name})
+                msg = "You must provide either Org Unit or Cluster"
+                messages.error(request, msg)
+                return render(
+                    request, 'settings/data.html',
+                    {'reports': reports, 'form': form, 'results': results,
+                     'file_name': file_name})
             rid = int(raw_data) if raw_data else 1
             query_name = dqs[rid]
             sql = QUERIES[query_name].replace(';', '')
@@ -266,4 +270,3 @@ def change_notes(request):
         raise e
     else:
         pass
-

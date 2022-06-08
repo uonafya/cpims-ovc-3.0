@@ -107,7 +107,6 @@
 
 {% endif %}
 
-<!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#delete-form1a-entry">Open Modal</button>-->
 
 <!--Confirm form1a delete Modal -->
 
@@ -178,29 +177,28 @@
                         <div class="wizard-step-1">
                             <fieldset>
                                 <div id="error_assessment"></div>
-                                <div style="overflow-x: auto; min-height: 350px;">
+                                <div style="overflow-x: auto; min-height: 100px;">
                                     <!-- begin col-6 -->
                                     <table id="assessment_manager_table" class="table"
                                         style="overflow-y: auto !important;">
                                         <thead>
                                             <tr id="id_inputHeaders1">
                                                 <td width="5%"></td>
-                                                <th width="10%">
+                                                <th width="15%">
                                                     <h6><b>Domain <span class="asteriskField">*</h6></b>
                                                 </th>
-                                                <th width="10%">
+                                                <th width="20%">
                                                     <h6><b>
                                                             <center>Attendance <span class="asteriskField">*</center>
                                                     </h6></b>
                                                 </th>
-                                                <th width="15%">
+                                                <th width="20%">
                                                     <h6><b>Date Attended<span class="asteriskField">*</b></h6>
                                                 </th>
-                                                <!-- <th width="15%"><h6><b>make up Date<span class="asteriskField">*</b></h6></th> -->
-                                                <th width="15%">
+                                                <th width="20%">
                                                     <h6><b>Completed All Session<span class="asteriskField">*</b></h6>
                                                 </th>
-                                                <th width="5%">
+                                                <th width="20%">
                                                     <h6><b>Actions</b></h6>
                                                 </th>
                                             </tr>
@@ -208,7 +206,7 @@
                                         <tbody>
                                             <tr id="id_inputElements1">
                                                 <td></td>
-                                                <td width="10%">
+                                                <td>
                                                     {{ form.INTERVENTION }}
                                                     <div id="olmis_assessment_domain_errormsg" style="display:none;">
                                                         <small>
@@ -238,12 +236,6 @@
                                                         </small><span>
                                                     </div>
                                                 </td>
-                                                <!-- <td width="15%">
-                                                {{ form.MAKEUP_SESSION_DATE }}
-                                                <div id="olmis_assessment_coreservice_errormsg" style="display:none;">
-                                                    <small><p class="dialog_paragraph">This value is required</p></span></small><span>
-                                                </div>
-                                            </td> -->
                                                 <td width="15%">
                                                     {{ form.COMPLETED_ALL_SESSIONS }}
                                                     <h6><span id="sel_olmis_assessment_coreservice_status"></span></h6>
@@ -276,25 +268,14 @@
                                 <!-- end col-6 -->
                             </fieldset>
 
-                            <!-- <div class="panel-body panel-form">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-4 col-sm-4">Date Assessment Recorded<span class="asteriskField">*</label>
-                                        <div class="col-md-2 col-sm-2">
-                                            {{ form.date_of_assessment }}
-                                            <div id="date_errormsg0" style="display:none;">
-                                                <small><p class="dialog_paragraph">This value is required</p></small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
 
                             <div class="panel-body panel-form">
                                 <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4"></label>
+                                    <label class="control-label col-md-5 col-sm-5"></label>
                                     <div class="col-md-6 col-sm-6">
                                         <button id="mysubmit-f1a-0" class="btn btn-primary" type="button"
-                                            onClick="savePreventiveAttRegister(1)">Submit Assessment</button>
-                                        <a href="{% url 'ovc_view' id=form.person.value %}"
+                                            onClick="savePreventiveAttRegister(1)">Submit Attendance</button>
+                                        <a href="{% url 'view_pfs' id=form.person.value %}"
                                             onClick="resetPreventiveAttRegister(1)" class="btn btn-white">Cancel</a>
                                     </div>
                                 </div>
@@ -306,29 +287,28 @@
                         <div class="wizard-step-4">
                             <div class="panel-body">
                                 <div id="error_service"></div>
-                                <div style="overflow-x: auto; min-height: 350px;">
+                                <div style="overflow-x: auto; min-height: 100px;">
                                     <table id="services_manager_table" class="table"
                                         style="overflow-y: auto !important;">
                                         <thead>
                                             <tr id="id_inputHeaders">
-                                                <td width="2%"></td>
+                                                <td width="5%"></td>
                                                 <th width="15%">
                                                     <h6><b>Service Offered?<span class="asteriskField">*</b></h6>
                                                 </th>
                                                 <th width="15%">
                                                     <h6><b>Client<span class="asteriskField">*</b></h6>
                                                 </th>
-                                                <th width="10%">
-                                                    <h6><b>Refferred/Completed<span class="asteriskField">*</b></h6>
+                                                <th width="15%">
+                                                    <h6><b>Referred/Completed<span class="asteriskField">*</b></h6>
                                                 </th>
-                                                <th width="10%">
+                                                <th width="15%">
                                                     <h6><b>Other Reasons Specified<span class="asteriskField">*</b></h6>
                                                 </th>
-                                                <!-- <th width="15%"><h6><b>Referal Made (R) <span class="asteriskField">*</b></h6></th> -->
-                                                <th width="20%">
-                                                    <h6><b>Referal Completed(C)</b></h6>
+                                                <th width="15%">
+                                                    <h6><b>Referral Completed(C)</b></h6>
                                                 </th>
-                                                <th width="20%">
+                                                <th width="15%">
                                                     <h6><b>Date of service</b></h6>
                                                 </th>
                                                 <th width="5%">
@@ -411,26 +391,11 @@
 
                             <div class="panel-body panel-form">
                                 <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4">Date Services Recorded<span
-                                            class="asteriskField">*</label>
-                                    <div class="col-md-2 col-sm-2">
-                                        <!-- {{ form.date_of_service }} -->
-                                        <div id="date_errormsg3" style="display:none;">
-                                            <small>
-                                                <p class="dialog_paragraph">This value is required</p>
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="panel-body panel-form">
-                                <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4"></label>
+                                    <label class="control-label col-md-5 col-sm-5"></label>
                                     <div class="col-md-6 col-sm-6">
                                         <button id="mysubmit-f1a-3" class="btn btn-primary" type="button"
                                             onClick="savePreventiveAttRegister(2)">Submit Service(s)</button>
-                                        <a href="{% url 'ovc_view' id=form.person.value %}"
+                                        <a href="{% url 'view_pfs' id=form.person.value %}"
                                             onClick="resetPreventiveAttRegister(4)" class="btn btn-white">Cancel</a>
                                     </div>
                                 </div>
@@ -440,7 +405,7 @@
                     </div>
                 </form>
             </div>
-            <a href="{% url 'ovc_view' id=form.person.value %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <a href="{% url 'view_pfs' id=form.person.value %}" class="badge badge-primary m-4"> Back to OVC</a>
             <div class="badge pull-right m-4">Revised: May 2022</div>
         </div>
         <!-- end panel -->
@@ -607,11 +572,11 @@
 
                         // Append to rows to table rows
                         $("#f1a_events_data_table tbody").append('<tr id=' + tableRowId + '>' +
-                            '<td width="25%"><h6>' + event_type + '</h6></td>' +
+                            '<td width="20%"><h6>' + event_type + '</h6></td>' +
                             '<td width="25%"><h6>' + event_details.split(",")[0] + '</h6></td>' +
                             '<td width="25%"><h6>' + event_details.split(",")[2] + '</h6></td>' +
-                            '<td width="25%"><h6>' + event_details.split(",")[3] + '</h6></td>' +
-                            '<td>' +
+                            '<td width="20%"><h6>' + event_date + '</h6></td>' +
+                            '<td width="10%">' +
                             /*' + viewItem + '' + **/
                             '' + editItem + '' +
                             '' + deleteItem + '' +
@@ -939,10 +904,10 @@
                     var cell4 = row.insertCell(4);
                     var cell5 = row.insertCell(5);
 
-                    var holmis_intervention_prevention = "<input disabled id='holmis_intervention_prevention'  value='" + olmis_intervention_prevention + "'>"
-                    var holmis_completed_all_sessions = "<input disabled id='holmis_completed_all_sessions' value='" + olmis_completed_all_sessions + "'>"
-                    var holmis_session_attended_days = "<input disabled id='holmis_session_attended_days' value='" + olmis_session_attended_days + "'>"
-                    var holmis_session_date = "<input disabled id='holmis_session_date' value='" + olmis_session_date_id + "'>"
+                    var holmis_intervention_prevention = "<input class='form-control' disabled id='holmis_intervention_prevention'  value='" + olmis_intervention_prevention + "'>"
+                    var holmis_completed_all_sessions = "<input class='form-control' disabled id='holmis_completed_all_sessions' value='" + olmis_completed_all_sessions + "'>"
+                    var holmis_session_attended_days = "<input class='form-control' disabled id='holmis_session_attended_days' value='" + olmis_session_attended_days + "'>"
+                    var holmis_session_date = "<input class='form-control' disabled id='holmis_session_date' value='" + olmis_session_date_id + "'>"
 
 
                     cell0.innerHTML = '<h6 class="td_style">#</h6>';
@@ -950,7 +915,7 @@
                     cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_session_attended_days") + holmis_session_attended_days + '</h6>';
                     cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_session_date") + holmis_session_date + '</h6>';
                     cell4.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_completed_all_sessions") + holmis_completed_all_sessions + '</h6>';
-                    cell5.innerHTML = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
+                    cell5.innerHTML = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-sm btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
 
 
                     // AddClick Event To Remove Button
@@ -1010,6 +975,7 @@
             var olmis_refferal_completed = $('input[name="OVC_REFFERAL_COMPLETED"]:checked').val();
             var olmis_date_of_encounter = $("#date_of_service_encounter").val();
             // $("#refferal_made_id").val();
+            var olmis_service_made = '';
             var csrftoken = $.cookie('csrftoken');
             var values = {
                 'csrfmiddlewaretoken': csrftoken
@@ -1038,14 +1004,14 @@
                     var cell4 = row.insertCell(4);
                     var cell5 = row.insertCell(5);
                     var cell6 = row.insertCell(6);
-                    // var cell7 = row.insertCell(7);
+                    var cell7 = row.insertCell(7);
 
-                    var holmis_reffered_for_service = "<input disabled id='holmis_reffered_for_service' value='" + olmis_reffered_for_service + "'>"
-                    var holmis_reffered_service = "<input disabled id='holmis_reffered_service' value='" + olmis_reffered_service + "'>"
-                    var holmis_refferal_completed = "<input disabled id='holmis_refferal_completed'  value='" + olmis_refferal_completed + "'>"
-                    // var holmis_service_made= "<input disabled id='holmis_service_made' value='"+olmis_service_made+"'>"
-                    var holmis_date_of_encounter = "<input disabled id='holmis_date_of_encounter' value='" + olmis_date_of_encounter + "'>"
-                    var holmis_client = "<input disabled id='holmis_client' value='" + olmis_client + "'>"
+                    var holmis_reffered_for_service = "<input class='form-control' disabled id='holmis_reffered_for_service' value='" + olmis_reffered_for_service + "'>"
+                    var holmis_reffered_service = "<input class='form-control' disabled id='holmis_reffered_service' value='" + olmis_reffered_service + "'>"
+                    var holmis_refferal_completed = "<input class='form-control' disabled id='holmis_refferal_completed'  value='" + olmis_refferal_completed + "'>"
+                    var holmis_service_made= "<input class='form-control' disabled id='holmis_service_made' value='"+olmis_service_made+"'>"
+                    var holmis_date_of_encounter = "<input class='form-control' disabled id='holmis_date_of_encounter' value='" + olmis_date_of_encounter + "'>"
+                    var holmis_client = "<input class='form-control' disabled id='holmis_client' value='" + olmis_client + "'>"
                     // olmis_client
 
 
@@ -1054,9 +1020,9 @@
                     cell2.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_client") + holmis_client + '</h6>';
                     cell3.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_reffered_service") + holmis_reffered_service + '</h6>';
                     cell4.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_refferal_completed") + holmis_refferal_completed + '</h6>';
-                    // cell5.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_service_made") + holmis_service_made + '</h6>';
-                    cell5.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_date_of_encounter") + holmis_date_of_encounter + '</h6>';
-                    cell6.innerHTML = '<h6 class="dialog_paragraph">' + '1' + "<a id=" + btnRemoveSvcId + " class='btn btn-xs btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
+                    cell5.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_service_made") + holmis_service_made + '</h6>';
+                    cell6.innerHTML = '<h6 class="td_style">' + displayVals(2, "olmis_date_of_encounter") + holmis_date_of_encounter + '</h6>';
+                    cell7.innerHTML = '<h6 class="dialog_paragraph">' + "<a id=" + btnRemoveSvcId + " class='btn btn-sm btn-danger m-r-5' href='#'>Remove</a>" + '</h6>';
 
                     // AddClick Event To Remove Button
                     $("#" + btnRemoveSvcId + "").click(function (e) {

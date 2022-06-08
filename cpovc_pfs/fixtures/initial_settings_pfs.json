@@ -142,5 +142,69 @@
             "item_description": "FS / Other",
             "item_category": "OVC Programs"
         }
-    } 
+    },
+    {
+        "pk": 39809,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 14,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "ECHEI",
+            "item_description_short": "HIV Exposed Infant",
+            "field_name": "eligibility_criteria_id",
+            "item_description": "HIV Exposed Infant",
+            "item_category": "Eligibility Criteria"
+        }
+    },
+    {
+        "pk": 39810,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 14,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "ECPPA",
+            "item_description_short": "HIV+ Pregnant Adolescent",
+            "field_name": "eligibility_criteria_id",
+            "item_description": "HIV+ Pregnant Adolescent",
+            "item_category": "Eligibility Criteria"
+        }
+    },
+    {
+        "pk": 39811,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 14,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "ECNPA",
+            "item_description_short": "HIV- Pregnant Adolescent",
+            "field_name": "eligibility_criteria_id",
+            "item_description": "HIV- Pregnant Adolescent",
+            "item_category": "Eligibility Criteria"
+        }
+    },
+    {
+        "pk": 39812,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 14,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "ECBFA",
+            "item_description_short": "HIV- Breast-Feeding Adolescent",
+            "field_name": "eligibility_criteria_id",
+            "item_description": "HIV- Breast-Feeding Adolescent",
+            "item_category": "Eligibility Criteria"
+        }
+    }
 ]

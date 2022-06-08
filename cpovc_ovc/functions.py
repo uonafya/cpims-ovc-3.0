@@ -9,11 +9,12 @@ from .models import (
     OVCRegistration, OVCHouseHold, OVCHHMembers, OVCHealth, OVCEligibility,
     OVCFacility, OVCSchool, OVCEducation, OVCExit, OVCViralload)
 from cpovc_registry.models import (
-    RegPerson, RegOrgUnit, RegPersonsTypes, OVCCheckin, RegPersonsExternalIds)
+    RegPerson, RegOrgUnit, RegPersonsTypes, OVCCheckin,
+    RegPersonsExternalIds, RegPersonsOrgUnits)
 from cpovc_main.functions import convert_date
 from cpovc_registry.functions import (
     extract_post_params, save_person_extids, get_attached_ous,
-    get_orgs_child)
+    get_orgs_child, get_specific_orgs)
 from cpovc_main.models import SetupList
 
 
@@ -737,6 +738,27 @@ def get_extra_info(person_id):
         return {}
     else:
         return person
+
+
+def limit_person_ids_orgs(request, pids):
+    """Method to limit searched ID to org units and CBOs."""
+    try:
+        ous = []
+        user_person_id = request.user.reg_person_id
+        if not request.user.is_superuser:
+            org_units = get_specific_orgs(user_person_id)
+            for org_unit in org_units:
+                ou_id, ou_name = org_unit
+                if ou_id:
+                    ous.append(ou_id)
+            pids = RegPersonsOrgUnits.objects.filter(
+                person_id__in=pids, is_void=False,
+                org_unit_id__in=ous).values_list('person_id')
+    except Exception as e:
+        print('Person filter error - %s' % (str(e)))
+        return []
+    else:
+        return pids
 
 
 class PersonObj(object):

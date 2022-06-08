@@ -11,7 +11,8 @@ from cpovc_registry.models import (
     RegPerson, RegPersonsGuardians, RegPersonsSiblings,
     RegPersonsExternalIds)
 from cpovc_main.functions import convert_date, get_dict
-from cpovc_ovc.functions import get_school, get_health
+from cpovc_ovc.functions import (
+    get_school, get_health, limit_person_ids_orgs)
 from cpovc_pfs.functions import save_school
 
 from .forms import OVCPMTCTRegistrationForm
@@ -28,6 +29,8 @@ def pmtct_home(request):
         afc_ids, case_ids = {}, {}
         search_string = request.GET.get('search_name')
         pids = get_person_ids(request, search_string)
+        # Limit this search to my org units
+        pids = limit_person_ids_orgs(request, pids)
         cases = RegPerson.objects.filter(is_void=False, id__in=pids)
         # Get case record sheet details
         crss = OVCCaseRecord.objects.filter(is_void=False, person_id__in=pids)
