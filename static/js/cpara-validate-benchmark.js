@@ -222,7 +222,7 @@ markBenchmark('CP23q_b_3', false)
 // markBenchmark('CP58q', false)
 
 // Benchmark 1
-validBench(['CP1q', 'CP2q', 'CP3q', 'CP4q', 'CP5q'], ['AYES','AYES,ANA','AYES','AYES','AYES'], 'CP1b');
+validBench(['CP1q', 'CP2q', 'CP3q', 'CP4q', 'CP5q'], ['AYES','AYES,ANA','AYES,ANA','AYES','AYES,ANA'], 'CP1b');
 // Benchmark 2
 validBench(['CP6q','CP7q','CP8q','CP9q','CP10q','CP11q','CP12q','CP13q','CP14q'], ['AYES','AYES,ANA','AYES','AYES','AYES,ANA','AYES','AYES','AYES,ANA','AYES'], 'CP2b');
 
@@ -234,7 +234,7 @@ if ($('input[name=CP41Skip]:checked').val()==='ANA'){markBenchmark('CP4b',null);
 else{validBench(['CP18q', 'CP19q', 'CP20q', 'CP21q'], ['AYES','AYES,ANA', 'AYES','AYES'], 'CP4b')};
 })
 // Stable: Goal 5: >> Benchmark 5
-validBench(['CP22q','CP23q','CP24q'], ['AYES','AYES','AYES'], 'CP5b');
+validBench(['CP22q','CP23q','CP24q'], ['AYES,ANA','AYES,ANA','AYES'], 'CP5b');
 // Safe: Goal 6 >> Benchmark 6
 validBench(['CP28q', 'CP29q'],['AYES','AYES'],'CP6b')
 // Safe: Benchmark 7:   

@@ -310,4 +310,7 @@ jQuery(document).ready(function()
 	FormWizardValidation.init();
 });
 </script>
+<script>
+    $('input[name="gm1d"]').datepicker({format:'yyyy-mm-dd',endDate: 'today'}).val();
+</script>
 {% endblock lazy_javascript_code %}

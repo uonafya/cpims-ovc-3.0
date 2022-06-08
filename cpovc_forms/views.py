@@ -10704,7 +10704,10 @@ def new_cpara(request, id):
 
         questions = OVCCareQuestions.objects.filter(
             code__startswith='CP', is_void=False).values()
+
         date_of_event = data.get('d_o_a')
+        event_date = convert_date(data.get('d_o_a'),'%Y-%b-%d')
+
         event = OVCCareEvents.objects.create(
                 event_type_id='cpr',
                 created_by=request.user.id,
@@ -10727,8 +10730,6 @@ def new_cpara(request, id):
                 answer='Na'
             else:
                 answer='No'    
-
-            event_date = convert_date(data.get('d_o_a'),'%Y-%m-%d')
             
             try:
                 OVCCareCpara.objects.create(
@@ -10747,6 +10748,8 @@ def new_cpara(request, id):
                     
             except Exception as e:
                 print(f'The OVC Cpara Form didnt save:  {e}')
+                msg1 = f'The OVC Cpara Form didnt save:  {e}'
+                messages.add_message(request, messages.INFO,msg1)
                
 
         # converts the filtered objects to a list
@@ -10772,6 +10775,7 @@ def new_cpara(request, id):
             )
         except Exception as e:
             print (f"Error while saving to ovccarebenchmark: {e}" )
+            messages.add_message(request, messages.INFO,"f'Error while saving to ovccarebenchmark: {e}'")
 
 
         # sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC'}
@@ -10853,7 +10857,7 @@ def new_cpara(request, id):
         # Gets the values for questions in OVC sub population
         # ['23_CP6d_2', 'CP6d_7', '23_CP6d_6', 'CP6d_1', '23_CP6d_5', '43_CP6d_4', '43_CP6d_6', '43_CP6d_2', '23_CP6d_1', 'CP6d_5', '43_CP6d_7', '43_CP6d_5', '23_CP6d_3', '23_CP6d_4', '23_CP6d_7']
         ovc_pp = 'CP6d'
-        sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC'}
+        sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC','CP6d_8':'AHIV'}
         ovc_sub_pp=[]
         for i, element in enumerate(to_process):
             if ovc_pp in element:
@@ -10908,7 +10912,7 @@ def new_cpara(request, id):
 
              
             try:
-                OVCCareCpara.objects.update_or_create(
+                OVCCareCpara.objects.create(
                     person=child3,
                     caregiver=care_giver,
                     question=quest_type_1,
@@ -11071,8 +11075,9 @@ def new_cpara(request, id):
 
 # Update cpara edit functionality
 def edit_cpara(request, id):
+    import pdb
     if request.method == 'POST':
-        import pdb
+        
         data = request.POST
         
         update_time=timezone.now()
@@ -11127,7 +11132,7 @@ def edit_cpara(request, id):
             msg1 = f"Error while updating to ovccarebenchmark: {e}" 
 
 
-        sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC'}
+        sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC','CP6d_8':'AHIV'}
      
         # Update OVC Sub Popuplation Table
         try:
@@ -11150,11 +11155,13 @@ def edit_cpara(request, id):
         return HttpResponseRedirect(url)
 
         # cpara_id=OVCCareCpara.objects.get(event=id,is_void=False)
-    person_id=OVCSubPopulation.objects.filter(event=id).first().person_id
-    house_id = OVCHHMembers.objects.get(person_id=person_id).house_hold_id
-    person_id = OVCHHMembers.objects.get(house_hold=house_id, member_type='TOVC').person_id
+    # person_id=OVCSubPopulation.objects.filter(event=id).first().person_id
+    # house_id = OVCHHMembers.objects.get(person_id=person_id).house_hold_id
+    # person_id = OVCHHMembers.objects.get(house_hold=house_id, member_type='TOVC').person_id
+    # pdb.set_trace()
+    person_id = OVCCareCpara.objects.filter(event=id).first().person_id
 
-
+    
     cpara_data=OVCCareCpara.objects.filter(event=id,is_void=False).values()
 
     # Get an event date of a single question for that event id
@@ -11187,6 +11194,7 @@ def edit_cpara(request, id):
         'True': 'AYES',
         'Na': 'ANA',
         'No':'',
+        'AYES':'AYES'
     }
 
     for one_data in cpara_data:
@@ -11205,9 +11213,10 @@ def edit_cpara(request, id):
     edit_data_cpara['CP2d']=CP2d
 
     
-    person_id=OVCSubPopulation.objects.filter(event=id).first().person_id
-    house_id = OVCHHMembers.objects.get(person_id=person_id).house_hold_id
-    person_id = OVCHHMembers.objects.get(house_hold=house_id, member_type='TOVC').person_id
+    # person_id=OVCSubPopulation.objects.filter(event=id).first().person_id
+    # house_id = OVCHHMembers.objects.get(person_id=person_id).house_hold_id
+    # person_id = OVCHHMembers.objects.get(house_hold=house_id, member_type='TOVC').person_id
+    person_id = OVCCareCpara.objects.filter(event=id).first().person_id
 
     child = RegPerson.objects.get(id=person_id)
     guardians = RegPersonsGuardians.objects.select_related().filter(
@@ -11526,7 +11535,7 @@ def delete_benchmark(request, id):
 
     # Gets the instance
     household1 =OVCBenchmarkMonitoring.objects.get(obm_id=id)
-    re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).person.id
+    re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).first().person.id
     
     ovc_bench.update(is_void=True)
     url = reverse('ovc_view', kwargs={'id':re_person})
@@ -11547,7 +11556,7 @@ def edit_grad_monitor(request, id):
         event_date = convert_date(data.get('gm1d'))
         time_updated = timezone.now()
         household1 =OVCBenchmarkMonitoring.objects.get(obm_id=id)
-        re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).person.id
+        re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).first().person.id
         
         try:
             OVCBenchmarkMonitoring.objects.filter(obm_id=id).update(
@@ -11577,34 +11586,32 @@ def edit_grad_monitor(request, id):
         return HttpResponseRedirect(url)
     
     # Get Method to pick the values of edit form
-    try:
-        data_db = OVCBenchmarkMonitoring.objects.filter(obm_id=id).values()
-        def map_yes_no(value):
-            if value==True:
-                return 'AYES'
-            else:
-                return 'ANNO'
+    # try:
+    data_db = OVCBenchmarkMonitoring.objects.filter(obm_id=id).values()
+    def map_yes_no(value):
+        if value==True:
+            return 'AYES'
+        else:
+            return 'ANNO'
 
-        edit_data= {
-            'gm1d': data_db[0]['event_date'].strftime("%Y-%m-%d"),
-            'cm2q': map_yes_no(data_db[0]['benchmark1']),
-            'cm3q': map_yes_no(data_db[0]['benchmark2']),
-            'cm4q': map_yes_no(data_db[0]['benchmark3']),
-            'cm5q': map_yes_no(data_db[0]['benchmark4']),
-            'cm6q': map_yes_no(data_db[0]['benchmark5']),
-            'cm7q': map_yes_no(data_db[0]['benchmark6']),
-            'cm8q': map_yes_no(data_db[0]['benchmark7']),
-            'cm9q': map_yes_no(data_db[0]['benchmark8']),
-            'cm10q': map_yes_no(data_db[0]['benchmark9']),
-            'cm13q': map_yes_no(data_db[0]['succesful_exit_checked']),
-            'cm14q': map_yes_no(data_db[0]['case_closure_checked'])
-            
-
+    edit_data= {
+        'gm1d': data_db[0]['event_date'].strftime("%Y-%m-%d"),
+        'cm2q': map_yes_no(data_db[0]['benchmark1']),
+        'cm3q': map_yes_no(data_db[0]['benchmark2']),
+        'cm4q': map_yes_no(data_db[0]['benchmark3']),
+        'cm5q': map_yes_no(data_db[0]['benchmark4']),
+        'cm6q': map_yes_no(data_db[0]['benchmark5']),
+        'cm7q': map_yes_no(data_db[0]['benchmark6']),
+        'cm8q': map_yes_no(data_db[0]['benchmark7']),
+        'cm9q': map_yes_no(data_db[0]['benchmark8']),
+        'cm10q': map_yes_no(data_db[0]['benchmark9']),
+        'cm13q': map_yes_no(data_db[0]['succesful_exit_checked']),
+        'cm14q': map_yes_no(data_db[0]['case_closure_checked'])
         }
         
         
-    except Exception as e:
-        print(f'The error is: {e}')
+    # except Exception as e:
+    #     print(f'The error is: {e}')
 
     form = gradMonitoringToolform(data=edit_data)
 

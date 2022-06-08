@@ -1,8 +1,17 @@
 // cpara 
 triggerSkip('CP31Skip','ANA','CP41Skip','2')
-triggerSkip('CP6Skip','ANA','CP63Skip','4');
-triggerSkip('CP63Skip','ANA','CP30q','4');
+
+triggerSkip('CP2bSkip','ANA','CP2b','2')
+triggerSkip('CP21Skip','ANA','CP27q','2')
+triggerSkip('CP27Skip','ANA','CP2b','2')
+
+triggerSkip('CP6Skip','ANA','CP6b','4');
+triggerSkip('CP63Skip','ANA','CP28q','4');
+
+
 triggerSkip('CP93Skip','ANA','CP9b','5');
+triggerSkip('CP91Skip','ANA','CP9b','5');
+
 triggerSkip('CP41Skip','ANA','CP4b','2');
 triggerSkip('CP44Skip','ANA','CP4b','2');
 
