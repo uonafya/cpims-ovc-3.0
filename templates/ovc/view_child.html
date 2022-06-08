@@ -124,6 +124,7 @@ Caregiver details | {{care_giver}}
                     <div class="m-t-4">HIV Management</div></a>
                 </td>
             </tr>
+            <!--
             <tr>
                 <td>
                     <a href="{% url 'new_dreamsform' id=creg.person_id%}">
@@ -132,6 +133,7 @@ Caregiver details | {{care_giver}}
                     <div class="m-t-4"><strike>DREAMS Service Uptake</strike></div></a>
                 </td>
             </tr>
+            -->
         </table>
         <div class="m-b-10 text-inverse f-s-12"><b>New Forms</b></div>
 
@@ -162,7 +164,7 @@ Caregiver details | {{care_giver}}
             </tr>
             <tr>
                 <td>
-                    <a href="#">
+                    <a href="{% url 'grad_monitor_tool' id=creg.person_id %}">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
                     <span class="badge pull-right">N</span>
                     <div class="m-t-4">Graduation Monitoring</div></a>

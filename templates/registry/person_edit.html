@@ -1992,6 +1992,9 @@ function handle_caregiver(person_text){
     $('#audit_workforce_id').attr('data-parsley-required', 'true');
     $('#audit_date').attr('data-parsley-required', 'true');
 
+    $('#ovc_programs_id_div').hide();
+    $('#ovc_programs').attr('data-parsley-required', 'false');
+
     $('#tribe_id_div').hide();
     $('#religion_id_div').hide();
     $('#nation_id_div').hide();
@@ -2047,6 +2050,9 @@ function handle_volunteer(person_text){
     $('#audit_detail_div').hide();
     $('#audit_workforce_id').attr('data-parsley-required', 'false');
     $('#audit_date').attr('data-parsley-required', 'false');
+
+    $('#ovc_programs_id_div').hide();
+    $('#ovc_programs').attr('data-parsley-required', 'false');
 
     $('#tribe_id_div').hide();
     $('#religion_id_div').hide();
@@ -2109,6 +2115,9 @@ function handle_government(person_text){
     $('#tribe_id_div').hide();
     $('#religion_id_div').hide();
     $('#nation_id_div').hide();
+
+    $('#ovc_programs_id_div').hide();
+    $('#ovc_programs').attr('data-parsley-required', 'false');
 }
 
 function handle_ngo_private(person_text){
@@ -2160,6 +2169,9 @@ function handle_ngo_private(person_text){
     $('#tribe_id_div').hide();
     $('#religion_id_div').hide();
     $('#nation_id_div').hide();
+
+    $('#ovc_programs_id_div').hide();
+    $('#ovc_programs').attr('data-parsley-required', 'false');
 }
 
 {% for key, values in titles.items %}

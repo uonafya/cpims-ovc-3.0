@@ -304,13 +304,14 @@
 <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
 
+<script type="text/javascript">
 jQuery(document).ready(function() 
 {
 	$('html,body').scrollTop(0);
 	FormWizardValidation.init();
+
+
+    $('#monitoring_date').datepicker({ format: 'yyyy-mm-dd' }).val();
 });
-</script>
-<script>
-    $('input[name="gm1d"]').datepicker({format:'yyyy-mm-dd',endDate: 'today'}).val();
 </script>
 {% endblock lazy_javascript_code %}
