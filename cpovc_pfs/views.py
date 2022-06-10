@@ -14,21 +14,20 @@ from cpovc_forms.models import OVCCaseRecord
 from cpovc_registry.models import (
     RegPerson, RegPersonsGeo, RegPersonsGuardians, RegPersonsSiblings,
     RegPersonsExternalIds)
-from cpovc_auth.models import AppUser
 
 from cpovc_main.functions import (
     convert_date, get_dict, translate, get_days_difference, get_list)
 from cpovc_ovc.functions import get_school, limit_person_ids_orgs
 from cpovc_ovc.models import OVCRegistration
-from cpovc_pfs.functions import save_school, save_household, get_house_hold
+from cpovc_pfs.functions import (
+    save_school, save_household, get_house_hold, save_ebi, save_event)
 from .forms import OVCPreventiveRegistrationForm
 from .models import (
     OVCPreventiveRegistration, OVCPreventiveEvents,
     OVCPreventiveEbi, OVCPreventiveService)
 
-from cpovc_ovc.models import OVCHouseHold, OVCHHMembers
-
 from .forms import PREVENTIVE_ATTENDANCE_REGISTER_FORM
+from .settings import PROGS
 
 
 @login_required
@@ -63,7 +62,7 @@ def pfs_home(request):
             setattr(case, 'case_date', cdt)
             setattr(case, 'case_level', clv)
             setattr(case, 'case_id', crs_id)
-        return render(request, 'pfs/home.html',
+        return render(request, 'preventive/home.html',
                       {'status': 200, 'cases': cases, 'form': form})
     except Exception as e:
         print('fps error - %s' % (str(e)))
@@ -169,7 +168,7 @@ def new_pfs(request, id):
                           "YER4,Year 4", "YER5,Year 5", "YER6,Year 6"]
         levels["SLTV"] = ["TVC1,Year 1", "TVC2,Year 2", "TVC3,Year 3",
                           "TVC4,Year 4", "TVC5,Year 5"]
-        return render(request, 'pfs/new_registration.html',
+        return render(request, 'preventive/new_registration.html',
                       {'form': form, 'child': child, 'levels': levels,
                        'ovc': ovc, 'guardians': guardians,
                        'siblings': siblings})
@@ -276,7 +275,7 @@ def edit_pfs(request, id):
         levels["SLTV"] = ["TVC1,Year 1", "TVC2,Year 2", "TVC3,Year 3",
                           "TVC4,Year 4", "TVC5,Year 5"]
         allow_edit = True
-        return render(request, 'pfs/new_registration.html',
+        return render(request, 'preventive/new_registration.html',
                       {'form': form, 'child': child, 'levels': levels,
                        'allow_edit': allow_edit, 'sch_class': sch_class,
                        'school': school, 'ovc': ovc})
@@ -301,7 +300,7 @@ def view_pfs(request, id):
         school = get_school(ovc_id)
         if school:
             school_level = school.school_level
-        return render(request, 'pfs/view_registration.html',
+        return render(request, 'preventive/view_registration.html',
                       {'creg': creg, 'child': child, 'vals': vals,
                        'school': school, 'school_level': school_level})
     except Exception as e:
@@ -323,7 +322,7 @@ def preventive_attendance_register(request, id):
         vals = get_dict(field_name=check_fields)
         init_data = RegPerson.objects.filter(pk=id)
         return render(request,
-                      'pfs/new_preventive_attendance_register.html',
+                      'preventive/new_preventive_attendance_register.html',
                       {'form': form, 'init_data': init_data,
                        'vals': vals, 'id': id})
 
@@ -397,7 +396,8 @@ def save_preventive_register(request):
                             else:
                                 ebi_session_type = 'MAKE UP'  # "make up"
                                 date_of_encounter_event = session_date
-                            print('EBI', ebi_session_type, date_of_encounter_event)
+                            print('EBI', ebi_session_type,
+                                  date_of_encounter_event)
                             try:
                                 prov_cbo = registration_details.child_cbo
                                 ebi_place = RegPersonsGeo.objects.filter(
@@ -605,7 +605,7 @@ def edit_preventive_event_entry(request, id, btn_event_pk, btn_event_type):
                     date_of_event_edit = str(date_of_event_edit)
 
                 return render(request,
-                              'pfs/edit_preventive_register.html',
+                              'preventive/edit_preventive_register.html',
                               {'form': form, 'init_data': init_data,
                                'vals': vals, 'event_pk': btn_event_pk,
                                'event_type': btn_event_type,
@@ -643,7 +643,7 @@ def edit_preventive_event_entry(request, id, btn_event_pk, btn_event_type):
                 # pdb.set_trace()
 
                 return render(request,
-                              'pfs/edit_preventive_register.html',
+                              'preventive/edit_preventive_register.html',
                               {'form': form, 'init_data': init_data,
                                'vals': vals, 'event_pk': btn_event_pk,
                                'event_type': btn_event_type,
@@ -653,7 +653,7 @@ def edit_preventive_event_entry(request, id, btn_event_pk, btn_event_type):
         else:
             err_msgg = "Can't alter after 90 days"
             return render(request,
-                          'pfs/edit_preventive_register.html',
+                          'preventive/edit_preventive_register.html',
                           {'form': form, 'init_data': init_data,
                            'vals': vals, 'event_pk': btn_event_pk,
                            'event_type': btn_event_type,
@@ -781,3 +781,59 @@ def edit_preventive_event_entry(request, id, btn_event_pk, btn_event_type):
                     )
         msg = [{'msg': 'Save Successful'}]
         return JsonResponse(msg, content_type='application/json', safe=False)
+
+
+@login_required
+def new_register_v2(request, id):
+    """Some default page for the home page for preventive and FS."""
+    try:
+        person_id = int(id)
+        child = RegPerson.objects.get(is_void=False, id=person_id)
+        creg = OVCPreventiveRegistration.objects.get(
+            is_void=False, person_id=person_id)
+        form = OVCSearchForm(data=request.GET)
+        domain = creg.intervention
+        cbo_id = creg.child_cbo_id
+        # Create Event
+        old_event_id = request.POST.get('event_id')
+        if old_event_id:
+            event_id = uuid.UUID(old_event_id)
+        else:
+            event = save_event(request, 'EBI', person_id)
+            event_id = event.pk
+        if request.method == 'POST':
+            session_ids = request.POST.getlist("session_id")
+            make_up_ids = request.POST.getlist("make_up_id")
+            dates = request.POST.getlist("date_attended")
+            for sess_id in session_ids:
+                sess_idx = int(sess_id) - 1
+                sess_date = dates[sess_idx]
+                session_id = 'SESS%s' % (sess_id)
+                save_ebi(
+                    request, person_id, cbo_id, event_id, 'GENERAL',
+                    domain, session_id, sess_date)
+            for sess_id in make_up_ids:
+                sess_idx = int(sess_id) - 1
+                sess_date = dates[sess_idx]
+                session_id = 'MKPS%s' % (sess_id)
+                save_ebi(
+                    request, person_id, cbo_id, event_id, 'MAKE UP',
+                    domain, session_id, sess_date)
+            msg = "Register updated Successfully"
+            messages.info(request, msg)
+            url = reverse('new_register', kwargs={'id': id})
+            return HttpResponseRedirect(url)
+        sessions, make_ups = [], []
+        prog = PROGS[domain] if domain in PROGS else PROGS['DEFAULT']
+        total_sessions = prog['sessions'] + 1
+        for i in range(1, total_sessions):
+            sessions.append({'id': i})
+        for i in range(1, 5):
+            make_ups.append({'id': i})
+        return render(request, 'preventive/new_register.html',
+                      {'status': 200, 'creg': creg, 'form': form,
+                       'ovc': child, 'sessions': sessions,
+                       'make_ups': make_ups})
+    except Exception as e:
+        print('fps error - %s' % (str(e)))
+        raise e
