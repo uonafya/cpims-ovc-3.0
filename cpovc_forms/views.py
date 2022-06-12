@@ -18,7 +18,7 @@ import time
 from psycopg2 import DatabaseError
 from reportlab.pdfgen import canvas
 # from itertools import chain #
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from shutil import copyfile
 from datetime import datetime
@@ -10711,7 +10711,7 @@ def new_cpara(request, id):
             code__startswith='CP', is_void=False).values()
 
         date_of_event = data.get('d_o_a')
-        event_date = convert_date(data.get('d_o_a'),'%d-%b-%Y')
+        event_date = data.get('d_o_a')
 
         event = OVCCareEvents.objects.create(
                 event_type_id='cpr',
@@ -10722,7 +10722,8 @@ def new_cpara(request, id):
             )
 
         for question in questions: 
-            date_previous=convert_date(data.get('CP2d'),'%d-%b-%Y')
+            d_previous=data.get('CP2d')
+            date_previous = d_previous if d_previous else None
             answer = data.get(question['code'])
             print(f'date_previous{date_previous} date of event {date_of_event}')
             
@@ -11508,19 +11509,21 @@ def grad_monitor_tool(request, id):
         return HttpResponseRedirect(url)        
 
     else:
+        import pdb
         ovc_id = int(id)
         child = RegPerson.objects.get(is_void=False, id=ovc_id)        
         care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
         creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
         caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
         caregiver = RegPerson.objects.get(id=caregiver_id)
-
+        # pdb.set_trace()
         # Show previous cpara monitoring events
         event = OVCCareEvents.objects.filter(person_id=ovc_id).values_list('event')
         
         try:
-            benchmark_data = OVCBenchmarkMonitoring.objects.filter(is_void=False, person_id=child)   #filter(event=event).order_by('event_date'))
+            benchmark_data = OVCBenchmarkMonitoring.objects.filter(is_void=False, caregiver_id=care_giver)   #filter(event=event).order_by('event_date'))
         except Exception as e:
+            # benchmark_data = {}
             print(e)
         
         form = gradMonitoringToolform()

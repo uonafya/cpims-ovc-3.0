@@ -674,7 +674,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12 bg-sub-skip">
                                                 <div class="form-group">
                                                     <div class="col-md-9 text-left">
-                                                        <label class="control-label formlabel"> Is there a child who is HIV positive ?
+                                                        <label class="control-label formlabel"> Is there a child 0 - 12 years who is HIV positive ?
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP21Skip}}
@@ -718,6 +718,16 @@ print(blu.sing("'Happy'"))
                                                 <div class="form-group">
                                                     <div class="col-md-12">
                                                         <p class="p-15 bg-sub-header">Adolescents and children above 12 years</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Is there an adolescents or a child above 12 years who is HIV positive ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP24Skip}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -1898,7 +1908,7 @@ jQuery(document).ready(function()
     });
 
     $( function() {
-        $('input[name="d_o_a"], input[name="CP2d"]').datepicker({ format: 'dd-M-yyyy', endDate: 'today' }).val();
+        $('input[name="d_o_a"], input[name="CP2d"]').datepicker({ format: 'yyyy-mm-dd', endDate: 'today' }).val();
     } );
 
 	$('html,body').scrollTop(0);
