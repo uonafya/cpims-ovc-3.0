@@ -9312,6 +9312,11 @@ class CparaAssessment(forms.Form):
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'false'}))
+    CP24Skip = forms.ChoiceField(required=False,
+        choices=YESNA_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'false'}))
     CP27Skip = forms.ChoiceField(required=False,
         choices=YESNA_CHOICES,
         widget=forms.RadioSelect(
