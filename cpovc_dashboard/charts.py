@@ -112,7 +112,7 @@ def bar_chart(request, params, data):
                 <script>
                 $(document).ready(function() {
                     var colors = ["#377eb8", "#984ea3", "#7cb5ec", "#e41a1c", "#434348", "#E80C7A", "#E80C7A"];
-                    Highcharts.chart('container-services', {
+                    Highcharts.chart('container-{cont}', {
                         chart: {
                             type: 'bar'
                         },
@@ -165,9 +165,9 @@ def bar_chart(request, params, data):
                         },
                         dataLabels: {
                             enabled: true,
-                            formatter: function() {
+                            format: function() {
                                 var pcnt = (this.y / this.series.data.map(p => p.y).reduce((a, b) => a + b, 0)) * 100;
-                                return Highcharts.numberFormat(pcnt,0) + '%';
+                                return Highcharts.numberFormat(pcnt, 0, '', ',') + '%';
                             }
                         },
                         colors: colors,
@@ -183,6 +183,8 @@ def bar_chart(request, params, data):
             </script>'''
         result = str(html).replace('{mdata}', data['mdata'])
         result = result.replace('{fdata}', data['fdata'])
+        result = result.replace('{cont}', params['cont'])
+        result = result.replace('{title}', params['title'])
         result = result.replace('{categories}', categories)
     except Exception as e:
         print('error with kpi data - %s' % (str(e)))
@@ -235,7 +237,7 @@ def column_chart(request, params, data):
                                 dataLabels: {
                                     enabled: true,
                                     formatter: function() {
-                                        return Highcharts.numberFormat(this.y, 0, '', ',') + ' ' + Highcharts.numberFormat(this.percentage) + '%';
+                                        return Highcharts.numberFormat(this.y, 0, '', ',') + '<br/>' + Highcharts.numberFormat(this.percentage, 0, '', ',') + '%';
                                     }
                                 }
                             }

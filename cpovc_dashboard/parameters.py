@@ -418,7 +418,7 @@ CHART['1E']['categories'] = ['HIV Status +Ve', 'HIV Status -Ve',
 # - Eligibility criterias
 CHART['1F'] = {}
 CHART['1F']['ctitle'] = 'Active OVC Eligibility criteria as at enrolment'
-CHART['1F']['ctype'] = 'column'
+CHART['1F']['ctype'] = 'bar'
 CHART['1F']['qparam'] = 'eligibility'
 CHART['1F']['dfilter'] = 'registration_date'
 CHART['1F']['categories'] = []
