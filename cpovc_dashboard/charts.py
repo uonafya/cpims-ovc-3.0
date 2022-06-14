@@ -6,7 +6,7 @@ def combo_chart(request, params, data):
         html = '''
                 <script>
                 $(document).ready(function() {
-                    var colors = ["#7cb5ec", "#e41a1c", "#434348", "#E80C7A", "#E80C7A"];
+                    var colors = ["#377eb8", "#984ea3", "#7cb5ec", "#e41a1c", "#434348", "#E80C7A", "#E80C7A"];
                     Highcharts.chart('container-{cont}', {
                         chart: {
                             zoomType: 'xy'
@@ -111,6 +111,7 @@ def bar_chart(request, params, data):
         html = '''
                 <script>
                 $(document).ready(function() {
+                    var colors = ["#377eb8", "#984ea3", "#7cb5ec", "#e41a1c", "#434348", "#E80C7A", "#E80C7A"];
                     Highcharts.chart('container-services', {
                         chart: {
                             type: 'bar'
@@ -162,6 +163,14 @@ def bar_chart(request, params, data):
                         credits: {
                             enabled: false
                         },
+                        dataLabels: {
+                            enabled: true,
+                            formatter: function() {
+                                var pcnt = (this.y / this.series.data.map(p => p.y).reduce((a, b) => a + b, 0)) * 100;
+                                return Highcharts.numberFormat(pcnt,0) + '%';
+                            }
+                        },
+                        colors: colors,
                         series: [{
                             name: 'Male',
                             data: [{mdata}]
@@ -189,6 +198,7 @@ def column_chart(request, params, data):
         html = '''
                 <script>
                 $(document).ready(function() {
+                    var colors = ["#377eb8", "#984ea3", "#7cb5ec", "#e41a1c", "#434348", "#E80C7A", "#E80C7A"];
                     Highcharts.chart('container-{cont}', {
                         chart: {
                             type: 'column'
@@ -223,13 +233,17 @@ def column_chart(request, params, data):
                             column: {
                                 stacking: 'normal',
                                 dataLabels: {
-                                    enabled: true
+                                    enabled: true,
+                                    formatter: function() {
+                                        return Highcharts.numberFormat(this.y, 0, '', ',') + ' ' + Highcharts.numberFormat(this.percentage) + '%';
+                                    }
                                 }
                             }
                         },
                         credits: {
                             enabled: false
                         },
+                        colors: colors,
                         series: [{
                             name: 'Male',
                             data: [{mdata}]
@@ -259,6 +273,7 @@ def column_pie_chart(request, params, data):
         html = '''
                 <script>
                 $(document).ready(function() {
+                    var colors = ["#377eb8", "#984ea3", "#7cb5ec", "#e41a1c", "#434348", "#E80C7A", "#E80C7A"];
                     Highcharts.chart('container-{cont}', {
                         chart: {
                             type: 'column'
@@ -300,6 +315,7 @@ def column_pie_chart(request, params, data):
                         credits: {
                             enabled: false
                         },
+                        colors: colors,
                         series: [{
                             name: 'Male',
                             type: 'column',
