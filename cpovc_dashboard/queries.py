@@ -71,14 +71,14 @@ QUERIES['1F'] = '''
 SELECT count(cpims_ovc_id) as dcount,
 gender as sex_id, eligibility
 from vw_cpims_registration {ocbos} {oareas} {odate}
-group by gender, eligibility
+group by gender, eligibility order by dcount desc
 '''
 
 QUERIES['1G'] = '''
 SELECT count(cpims_ovc_id) as dcount,
 gender as sex_id, exit_reason
 from vw_cpims_registration where exit_status = 'EXITED' {cbos} {areas} {fdate}
-group by gender, exit_reason order by by dcount desc
+group by gender, exit_reason order by dcount desc
 '''
 
 QUERIES['1H'] = '''
