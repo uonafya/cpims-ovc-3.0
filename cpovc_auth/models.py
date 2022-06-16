@@ -184,5 +184,6 @@ def update_change(sender, instance, **kwargs):
     else:
         if obj.password != instance.password:
             print("Password changed so update date.")
+            obj.update(password_changed_timestamp=timezone.now())
         else:
             print("Password NOT changed so NO update.")

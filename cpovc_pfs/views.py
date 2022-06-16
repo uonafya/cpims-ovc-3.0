@@ -87,11 +87,11 @@ def new_pfs(request, id):
         except Exception:
             comp = None
         if comp:
-            msg = "%s - Does not qualify to Preventive Program" % (fname)
-            msg += " (Comp Active)"
+            msg = "%s - Proceed to Preventive Program" % (fname)
+            msg += " (Comprehensive Active)"
             messages.error(request, msg)
-            url = reverse('pfs_home')
-            return HttpResponseRedirect(url)
+            # url = reverse('pfs_home')
+            # return HttpResponseRedirect(url)
         # Get siblings
         siblings = RegPersonsSiblings.objects.filter(
             is_void=False, child_person_id=child.id)
@@ -155,6 +155,8 @@ def new_pfs(request, id):
         form = OVCPreventiveRegistrationForm(
             guids=pids, initial=initial)
         # Class levels
+        check_fields = ['relationship_type_id']
+        vals = get_dict(field_name=check_fields)
         levels = {}
         levels["SLNS"] = []
         levels["SLEC"] = ["BABY,Baby Class", "MIDC,Middle Class",
@@ -171,7 +173,8 @@ def new_pfs(request, id):
         return render(request, 'preventive/new_registration.html',
                       {'form': form, 'child': child, 'levels': levels,
                        'ovc': ovc, 'guardians': guardians,
-                       'siblings': siblings})
+                       'siblings': siblings, 'extids': extids,
+                       'vals': vals, 'extids': gparams})
     except Exception as e:
         print('fps error - %s' % (str(e)))
         raise e

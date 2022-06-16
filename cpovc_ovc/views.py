@@ -498,6 +498,7 @@ def hh_manage(request, hhid):
 
 
 @login_required(login_url='/')
+@is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
 def hh_edit(request, hhid, id):
     """Some default page for Server Errors."""
     try:
@@ -586,7 +587,7 @@ def hh_edit(request, hhid, id):
                        'vals': vals, 'form': form, 'person': person,
                        'member': member, 'health': health,
                        'hhid': hhid, 'pobj': pobj, 'ovc': ovc,
-                       'extra_form': extra_form})
+                       'extra_form': extra_form, 'ovc_id': ovc_id})
     except Exception as e:
         print("error getting hh members - %s" % (str(e)))
         raise e

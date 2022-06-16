@@ -181,64 +181,7 @@
                     </div>
                 </div>
                 </fieldset>
-                <p></p>
-
-                <fieldset>
-                <legend class="pull-left width-full">Siblings details</legend>
-                <!-- begin row -->
-                <div class="row">
-                    <div class="col-md-12">
-                    {% if siblings %}
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>First Name</th>
-                                <th>Surname</th>
-                                <th>Age</th>
-                                <th>Relation</th>
-                                <th>Alive</th>
-                                <th>HIV Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                       {% for sibling in siblings %}
-                       {% with y=sibling.sibling_person.id|stringformat:"s" %}
-                        <tr>
-                            <td>{{ sibling.sibling_person.id }}<input type="hidden" name="hh_member" value="{{ sibling.sibling_person.id }}"></td>
-                            <td>{{ sibling.sibling_person.first_name }}</td>
-                            <td>{{ sibling.sibling_person.surname }}</td>
-                            <td>{{ sibling.sibling_person.years }}</td>
-                            <td>
-                            {% if sibling.sibling_person.sex_id == 'SFEM' %}
-                                Sister
-                            {% else %}
-                                Brother
-                            {% endif %}
-                            </td>
-                            <td>
-                            {% if sibling.sibling_person.date_of_death %}
-                                No
-                            {% else %}
-                                Yes
-                            {% endif %}  
-                            </td>
-                            <td>
-                            {% with n="sgstatus_"|add:y %}
-                               {{ form|get_form:n }}
-                            {% endwith %}
-                            </td>
-                        </tr>
-                        {% endwith %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                    {% else %}
-                        <p>No siblings available</p>
-                    {% endif %}
-                    </div>
-                </div>
-                </fieldset>
+                <p><hr></p>
             </div>
                 
                 <div class="row" id="form_actions">

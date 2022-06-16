@@ -51,12 +51,16 @@ def log_in(request):
     try:
         authentication_form = StrictAuthenticationForm
         if request.method == 'POST':
-            # form = LoginForm(data=request.POST)
-            form = authentication_form(request, data=request.POST)
+            print('log in step 1')
+            form = LoginForm(data=request.POST)
+            # form = authentication_form(request, data=request.POST)
             if form.is_valid():
                 username = form.data['username'].strip()
                 password = form.data['password'].strip()
-                user = authenticate(username=username, password=password)
+                print('start log in')
+                user = authenticate(
+                    request, username=username, password=password)
+                print('end log in', user)
                 if user is not None:
                     if user.is_active:
                         login(request, user)
@@ -117,7 +121,10 @@ def log_in(request):
                     msg = "Incorrect username and / or password."
                     messages.add_message(request, messages.ERROR, msg)
                     return render(request, 'login.html', {'form': form})
+            else:
+                print('form errors', form.errors)
         else:
+            print('form not valid')
             form = LoginForm()
             logout(request)
         return render(request, 'login.html', {'form': form, 'status': 200})
@@ -172,7 +179,7 @@ def register(request):
 
 
 @login_required
-# @is_allowed_groups(['ACM', 'DSU'])
+@is_allowed_groups(['ACM', 'DSU'])
 def roles_home(request):
     """Default page for Roles home."""
     try:
@@ -181,8 +188,8 @@ def roles_home(request):
         raise e
 
 
-# @login_required
-# @is_allowed_groups(['ACM', 'DSU'])
+@login_required
+@is_allowed_groups(['ACM', 'DSU'])
 def roles_edit(request, user_id):
     """Create / Edit page for the roles."""
     try:
@@ -196,7 +203,8 @@ def roles_edit(request, user_id):
         group_ids = []
         # All groups by details as per CPIMS
         cpims_groups = get_groups()
-        groups_cpims = dict(list(zip(list(cpims_groups.values()), list(cpims_groups.keys()))))
+        groups_cpims = dict(list(zip(list(
+            cpims_groups.values()), list(cpims_groups.keys()))))
         # Current geo orgs
         user = AppUser.objects.get(pk=user_id)
         # Test groups
@@ -453,7 +461,6 @@ def password_reset(
         token_generator=default_token_generator,
         post_reset_redirect=None,
         from_email=None,
-        current_app=None,
         extra_context=None,
         html_email_template_name=None):
     """Method to reset password."""
@@ -485,8 +492,7 @@ def password_reset(
     }
     if extra_context is not None:
         context.update(extra_context)
-    return TemplateResponse(request, template_name, context,
-                            current_app=current_app)
+    return TemplateResponse(request, template_name, context)
 
 
 @csrf_exempt
@@ -501,4 +507,3 @@ def user_ping(request):
     else:
         response['status'] = status
         return JsonResponse(response, content_type='application/json')
-
