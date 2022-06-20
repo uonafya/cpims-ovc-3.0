@@ -67,18 +67,32 @@ from vw_cpims_registration where exit_status='ACTIVE' {cbos} {areas} {fdate}
 group by gender, ovchivstatus
 '''
 
-QUERIES['1F'] = '''
+QUERIES['1F-0'] = '''
 SELECT count(cpims_ovc_id) as dcount,
 gender as sex_id, eligibility
 from vw_cpims_registration {ocbos} {oareas} {odate}
 group by gender, eligibility order by dcount desc
 '''
 
-QUERIES['1G'] = '''
+QUERIES['1F'] = '''
+SELECT count(cpims_ovc_id) as dcount,
+'SMAL' as sex_id, eligibility
+from vw_cpims_registration {ocbos} {oareas} {odate}
+group by eligibility order by dcount desc
+'''
+
+QUERIES['1G-0'] = '''
 SELECT count(cpims_ovc_id) as dcount,
 gender as sex_id, exit_reason
 from vw_cpims_registration where exit_status = 'EXITED' {cbos} {areas} {fdate}
 group by gender, exit_reason order by dcount desc
+'''
+
+QUERIES['1G'] = '''
+SELECT count(cpims_ovc_id) as dcount,
+'SMAL' as sex_id, exit_reason
+from vw_cpims_registration where exit_status = 'EXITED' {cbos} {areas} {fdate}
+group by exit_reason order by dcount desc
 '''
 
 QUERIES['1H'] = '''

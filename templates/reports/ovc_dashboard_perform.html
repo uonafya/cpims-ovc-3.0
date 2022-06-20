@@ -224,7 +224,7 @@
             <!-- begin breadcrumb -->
             <ol class="breadcrumb pull-right">
                 <li><a href="javascript:;">Home</a></li>
-                <li><a href="javascript:;">HIVSTAT & VL Cascade</a></li>
+                <li><a href="javascript:;">Performance</a></li>
                 <li class="active" id=ipt></li>
                 <li class="active" id=lpt></li>
             </ol>
@@ -239,7 +239,7 @@
                 <div class="col-md-6">            
                     <div class="panel panel-inverse">
                         <div class="panel-body">
-                            <div id="container-2A"></div>
+                            <div id="container-5A"></div>
                         </div>
                     </div>
                 </div>
@@ -248,30 +248,7 @@
                 <div class="col-md-6">            
                     <div class="panel panel-inverse">
                         <div class="panel-body">
-                            <div id="container-2B"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end col-6 -->
-            </div>
-            <!-- end row -->
-
-            <!-- begin row -->
-            <div class="row">
-                <!-- begin col-6 -->
-                <div class="col-md-6">            
-                    <div class="panel panel-inverse">
-                        <div class="panel-body">
-                            <div id="container-2C"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end col-6 -->
-                <!-- begin col-6 -->
-                <div class="col-md-6">            
-                    <div class="panel panel-inverse">
-                        <div class="panel-body">
-                            <div id="container-2D"></div>
+                            <div id="container-5B"></div>
                         </div>
                     </div>
                 </div>
@@ -285,7 +262,7 @@
                 <div class="col-md-12">            
                     <div class="panel panel-inverse">
                         <div class="panel-body">
-                            <p><b>NOTE: </b>HIVSTAT and VL cascade data has period limitations. <b>Timestamp: </b> {% now "jS F Y H:i" %}</p>
+                            <p><b>NOTE: </b> Case Management data has period limitations. <b>Timestamp: </b> {% now "jS F Y H:i" %}</p>
                         </div>
                     </div>
                 </div>
@@ -343,7 +320,7 @@
                 </div>
             </div>
         </div>
-        <!-- #modal-dialog -->
+        <!-- #modal-dialog -->  
         
         
         <!-- begin scroll to top btn -->
@@ -381,9 +358,10 @@
               window.print();
             }
         $(document).ready(function() {
-           App.init();App.init();
+           App.init();
+
            // Dynamically load Charts
-           var chartlists = ['2A', '2B', '2C', '2D'];
+           var chartlists = ['5A', '5B'];
 
            var colors = ["#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9",
                          "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"];
@@ -556,7 +534,7 @@
                   });
            }
 
-        });   
+        });
 
     </script>
 </body>

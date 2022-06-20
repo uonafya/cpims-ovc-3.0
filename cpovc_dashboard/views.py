@@ -58,6 +58,19 @@ def ovc_dashboard_cm(request):
 
 
 @login_required
+def ovc_dashboard_perform(request):
+    """Method to do pivot reports."""
+    try:
+        form = CaseLoad()
+        return render(
+            request, 'reports/ovc_dashboard_perform.html', {'form': form})
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+@login_required
 def get_constituency(request, area_id):
     """Method to do pivot reports."""
     try:

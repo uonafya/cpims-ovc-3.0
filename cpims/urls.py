@@ -20,8 +20,6 @@ from cpovc_ovc import urls as ovc_urls
 from cpovc_settings import urls as settings_urls
 from data_cleanup import urls as data_cleanup_urls
 from cpovc_offline_mode import urls as offline_mode_urls
-# from django.contrib.auth.views import (
-#     password_reset_done, password_change, password_change_done)
 from django.contrib.auth import views as auth_views
 from cpovc_auth.views import password_reset
 from django.views.generic import TemplateView
@@ -69,8 +67,6 @@ urlpatterns = [
     re_path(r'^$', views.home, name='home'),
     path('accounts/request/', views.access, name='access'),
     path('accounts/terms/<int:id>/', cpovc_access.views.terms, name='terms'),
-    path('login/', cpovc_auth.views.log_in, name='login'),
-    path('logout/', cpovc_auth.views.log_out, name='logout'),
     path('register/', cpovc_auth.views.register, name='register'),
     path('auth/', include(auth_urls)),
     path('registry/', include(registry_urls)),
@@ -82,14 +78,12 @@ urlpatterns = [
     path('settings/', include(settings_urls)),
     path('data_cleanup/', include(data_cleanup_urls)),
     # Accounts management
+    path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/login/', cpovc_auth.views.log_in, name='acclogin'),
     path(
         'accounts/password/reset/', password_reset,
         {'template_name': 'registration/password_reset.html'},
         name='password_reset'),
-    # path('accounts/password/reset/done/', password_reset_done,
-    #     {'template_name': 'registration/password_reset_done.html'},
-    #     name='password_reset_done'),
     re_path(
         r'^accounts/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
         cpovc_auth.views.reset_confirm, name='password_reset_confirm'),
@@ -104,6 +98,9 @@ urlpatterns = [
         'accounts/password/change/done/',
         auth_views.PasswordResetDoneView.as_view(),
         {'template_name': 'registration/password_change_done.html'}),
+    # Override
+    path('login/', cpovc_auth.views.log_in, name='login'),
+    path('logout/', cpovc_auth.views.log_out, name='logout'),
     re_path(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt',
                                                    content_type='text/plain')),
     path('offline_mode/', include(offline_mode_urls)),
@@ -114,6 +111,9 @@ urlpatterns = [
         'd/services/', dash_views.ovc_dashboard_services,
         name='services_dash'),
     path('d/cm/', dash_views.ovc_dashboard_cm, name='cm_dash'),
+    path(
+        'd/performance/', dash_views.ovc_dashboard_perform,
+        name='perform_dash'),
     path('api/v2/', include(dashboard_api_urls)),
     # Preventive and Family Support
     path('ovc-care/pfs/', include(pfs_urls)),

@@ -425,7 +425,7 @@ CHART['1F']['categories'] = []
 # - Exit reasons
 CHART['1G'] = {}
 CHART['1G']['ctitle'] = 'Exit reasons since 2018'
-CHART['1G']['ctype'] = 'column'
+CHART['1G']['ctype'] = 'bar'
 CHART['1G']['qparam'] = 'exit_reason'
 CHART['1G']['dfilter'] = 'registration_date'
 CHART['1G']['categories'] = []
@@ -475,7 +475,7 @@ CHART['3A']['categories'] = ['Active', 'Served', 'Served Two Quarters',
                              'OVC_HIVSTAT', 'Exit without Graduation']
 # - Services by domain
 CHART['3B'] = {}
-CHART['3B']['ctitle'] = 'Services received by domain'
+CHART['3B']['ctitle'] = 'Services provided by domain'
 CHART['3B']['ctype'] = 'column'
 CHART['3B']['qparam'] = 'services'
 CHART['3B']['categories'] = ['Healthy', 'Safe', 'Schooled', 'Stable']

@@ -83,10 +83,16 @@ def combo_chart(request, params, data):
                         }, {
                             name: 'Cascade',
                             type: 'spline',
+                            lineWidth: 0,
                             yAxis: 1,
                             data: [{fdata}],
                             tooltip: {
                                 valueSuffix: ' %'
+                            },
+                            states: {
+                                hover: {
+                                    lineWidthPlus: 0
+                                }
                             }
                         }]
                     });
@@ -145,7 +151,88 @@ def bar_chart(request, params, data):
                             bar: {
                                 dataLabels: {
                                     enabled: true
-                                }
+                                },
+                                pointWidth: 15
+                            }
+                        },
+                        legend: {
+                            enabled: false
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        dataLabels: {
+                            enabled: true,
+                            format: function() {
+                                var pcnt = (this.y / this.series.data.map(p => p.y).reduce((a, b) => a + b, 0)) * 100;
+                                return Highcharts.numberFormat(pcnt, 0, '', ',') + '%';
+                            }
+                        },
+                        colors: colors,
+                        series: [{
+                            name: 'Male',
+                            data: [{mdata}]
+                        }]
+                    });
+                 });
+            </script>'''
+        result = str(html).replace('{mdata}', data['mdata'])
+        result = result.replace('{fdata}', data['fdata'])
+        result = result.replace('{cont}', params['cont'])
+        result = result.replace('{title}', params['title'])
+        result = result.replace('{categories}', categories)
+    except Exception as e:
+        print('error with kpi data - %s' % (str(e)))
+        raise e
+    else:
+        return result
+
+
+def bar_chart_stacked(request, params, data):
+    """Method to get bar chart."""
+    try:
+        categories = str(data['items'])
+        html = '''
+                <script>
+                $(document).ready(function() {
+                    var colors = ["#377eb8", "#984ea3", "#7cb5ec", "#e41a1c", "#434348", "#E80C7A", "#E80C7A"];
+                    Highcharts.chart('container-{cont}', {
+                        chart: {
+                            type: 'bar'
+                        },
+                        title: {
+                            text: '{title}'
+                        },
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: {
+                            categories: {categories},
+                            title: {
+                                text: null
+                            }
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: '# of Beneficiaries / HH',
+                                align: 'high'
+                            },
+                            labels: {
+                                overflow: 'justify'
+                            }
+                        },
+                        tooltip: {
+                            valueSuffix: ' millions'
+                        },
+                        plotOptions: {
+                            bar: {
+                                dataLabels: {
+                                    enabled: true
+                                },
+                                pointWidth: 20,
+                                pointPadding: 0,
+                                groupPadding: 0.01
                             }
                         },
                         legend: {
