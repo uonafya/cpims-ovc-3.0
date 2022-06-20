@@ -23,7 +23,7 @@ from cpovc_forms.forms import (
     OVC_CaseEventForm, DocumentsManager, OVCSchoolForm, OVCBursaryForm,
     BackgroundDetailsForm, OVC_FTFCForm, OVCCsiForm, OVCF1AForm, OVCHHVAForm, Wellbeing,
     GOKBursaryForm, CparaAssessment, CparaMonitoring, CasePlanTemplate, WellbeingAdolescentForm, HIV_SCREENING_FORM,
-    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM)
+    HIV_MANAGEMENT_ARV_THERAPY_FORM, HIV_MANAGEMENT_VISITATION_FORM, DREAMS_FORM, PREGNANT_WOMEN_ADOLESCENT)
 
 from .models import (
     OVCEconomicStatus, OVCFamilyStatus, OVCReferral, OVCHobbies, OVCFriends,
@@ -34,9 +34,9 @@ from .models import (
     OVCAdverseEventsFollowUp, OVCAdverseEventsOtherFollowUp,
     OVCCaseEventClosure, OVCCaseGeo, OVCMedicalSubconditions, OVCBursary,
     OVCFamilyCare, OVCCaseEventSummon, OVCCareEvents, OVCCarePriority,
-    OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions,
-    OVCCareForms, OVCExplanations, OVCCareF1B,
-    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening)
+    OVCCareServices, OVCCareEAV, OVCCareAssessment, OVCGokBursary, OVCCareWellbeing, OVCCareCpara, OVCCareQuestions, OVCExplanations, OVCCareF1B,
+    OVCCareBenchmarkScore, OVCMonitoring, OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement, OVCHIVRiskScreening,
+    OVCPregnantWomen, PMTCTEvents, OVCPreventiveEvents,PMTCTPregnantWA, pmtct_registration, PMTCTQuestions)
 from cpovc_ovc.models import OVCRegistration, OVCHHMembers, OVCHealth, OVCHouseHold, OVCFacility
 from cpovc_main.functions import (
     get_list_of_org_units, get_dict, get_vgeo_list, get_vorg_list,
@@ -10146,3 +10146,230 @@ def new_dreamsform(request, id):
                    'vals': vals})
 
 
+
+def new_pregnantwomen(request, id):
+    if request.method == 'POST':
+        data = request.POST
+        import pdb
+        person = RegPerson.objects.get(pk=int(id))
+        appuser = request.user.id
+        event_type_id = 'WBGA'
+        date_of_event = timezone.now()
+
+        """ Save Wellbeing-event """
+
+        # get event counter
+        event_counter = PMTCTEvents.objects.filter(
+            event_type_id=event_type_id, person=id, is_void=False).count()
+        # save event
+        # try:
+        pmtctevent = PMTCTEvents.objects.create(
+            event_type_id=event_type_id,
+            event_counter=event_counter,
+            event_score=0,
+            date_of_event=date_of_event,
+            created_by=appuser,
+            person=person,
+            # house_hold=house_holds
+        )
+            # except Exception as e:
+            #     error_message = f'Pmtct Events failed: {e}'
+
+        # get questions for adolescent
+        questions = PMTCTQuestions.objects.filter(code__startswith='PWA', is_void=False)
+        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=person).caretaker_id)
+        for question in questions:
+            question_code_q=question.code
+            question_ansr_a=data.get(question.question)
+            if question_ansr_a is None:
+                question_ansr_a = 'No'
+            try:
+                PMTCTPregnantWA.objects.create(
+                    person=RegPerson.objects.get(pk=int(id)),
+                    caregiver=care_giver,
+                    question=question,
+                    question_code=question_code_q,
+                    answer=question_ansr_a,
+                    timestamp_created=date_of_event,
+                    event=pmtctevent,
+                )
+            except Exception as e:
+                error_message = f'PMTCT Pregnant table failed: {e}'
+                print(error_message)
+
+        msg = ' saved successful'
+        messages.add_message(request, messages.INFO, msg)
+        url = reverse('ovc_view', kwargs={'id': id})
+        return HttpResponseRedirect(url)
+
+    # Get request Method
+    try:
+        ovcreg = get_object_or_404(OVCRegistration, person_id=id, is_void=False)
+        caretaker_id = ovcreg.caretaker_id if ovcreg else None
+        ovchh = get_object_or_404(OVCHouseHold, head_person=caretaker_id, is_void=False)
+        household_id = ovchh.id if ovchh else None
+    except Exception as e:
+        print(str(e))
+        msg = 'Error getting household identifier: (%s)' % (str(e))
+        messages.add_message(request, messages.ERROR, msg)
+        return HttpResponseRedirect(reverse(forms_registry))
+    # get child data
+    init_data = RegPerson.objects.filter(pk=id)
+    check_fields = ['sex_id', 'relationship_type_id']
+    vals = get_dict(field_name=check_fields)
+    ovc_id = int(id)
+    import pdb
+
+    event=PMTCTEvents.objects.filter(person_id=id).values_list('event')
+    data_test = PMTCTPregnantWA.objects.filter(event_id__in=event, is_void=False).values('event_id').distinct()
+    data_get = []
+    data_dict=[]
+    for b in range(len(data_test)):
+        data_get.append([])
+        for n in range(len(data_test)):
+            data_array = PMTCTPregnantWA.objects.filter(event_id__in=event, is_void=False, event_id=data_test[b]['event_id'])
+            for one_pwa in data_array:
+                data_get[b].append((one_pwa.question_code, one_pwa.answer))
+        data_dict.append(dict(data_get[b]))
+        # pdb.set_trace()
+    #
+    # all_events = PMTCTEvents.objects.filter(person_id=id, is_void=False, event_type_id='WBGA')
+    # all_pmt = PMTCTPregnantWA.objects.filter(person_id=id)
+    #
+    # counter = 0
+    # all_events_len = len(all_events) - 1
+    # data_get = []
+    # event_get = []
+    #
+    # while counter < all_events_len:
+    #
+    #     # print(f'{counter} >>>>{all_events[counter]}')
+    #     count = 0
+    #     for one_all_pmt in all_events:
+    #         if one_all_pmt.event.pk == all_events[counter].event:
+    #             event_get.append(one_all_pmt)
+    #             # event_get[count] = one_all_pmt
+    #             count += 1
+    #             print(count)
+    #
+    #     # data_get[counter] = event_get
+    #     print(counter)
+    #     data_get.append(event_get)
+    #     counter += 1
+    #     print(data_get)
+    # pdb.set_trace()
+
+    form = PREGNANT_WOMEN_ADOLESCENT()
+    context = {
+              'form': form,
+              'init_data': init_data,
+              'vals': vals,
+              'person': id,
+            # 'data_get':data_get
+              'data_get':data_dict,
+                # 'event_id':event
+                }
+    return render(request, 'forms/new_pregnantwomen.html', context)
+
+def edit_pregnantwomen(request, id):
+
+    if request.method == 'POST':
+        import pdb
+        data = request.POST
+
+        update_time = timezone.now()
+        ovc_event = PMTCTEvents.objects.filter(event=id)
+        pmtct_saved = PMTCTPregnantWA.objects.filter(event=id)
+
+
+        # Update pmtct Table
+        try:
+            for question in pmtct_saved:
+                answer = data.get(question.question_code)
+                if answer is None:
+                    answer = 'No'
+                elif answer == 'AYES':
+                    answer = True
+                elif answer == 'ANNO':
+                    answer = False
+                else:
+                    answer = 'No'
+                PMTCTPregnantWA.objects.filter(event_id=id).update(
+                    question=question,
+                    answer=answer,
+                    # date_of_event=convert_date(date_of_event, fmt='%Y-%m-%d'),
+                    timestamp_updated=update_time,
+                    event=id
+                )
+                form = PREGNANT_WOMEN_ADOLESCENT()
+                return render(request, 'forms/edit_pregnantwomen.html',
+                              {
+                                  'form': form,
+                                  # 'init_data': init_data,
+                                  # 'vals': vals,
+                                  # 'resultsets': resultsets,
+                                  # 'resultsets2': resultsets2
+                              })
+        except Exception as e:
+            print(f'The table pmtct didnt update: {e} ')
+
+def delete_pregnantwomen(request, id, btn_event_pk):
+    import uuid
+    new_tracker = PMTCTPregnantWA.objects.filter(event_id__in=uuid.UUID("id").hex)
+    new_tracker1 = PMTCTPregnantWA.objects.filter(event_id=uuid.UUID(btn_event_pk).hex)
+    new_tracker.update(is_void=True)
+    return redirect('new_pregnantwomen', id=new_tracker1.person_id)
+# def delete_pregnantwomen(request, id, btn_event_pk):
+#     jsonCPARAData = []
+#     msg = ''
+#     try:
+#         event_id = uuid.UUID(btn_event_pk)
+#         d_event = PMTCTEvents.objects.filter(pk=event_id)[0].timestamp_created
+#         delta = get_days_difference(d_event)
+#         if delta < 90:
+#             event = PMTCTEvents.objects.filter(pk=event_id)
+#             if event:
+#                 # delete cpara
+#                 ovcpara = PMTCTPregnantWA.objects.filter(event=event)
+#                 if ovcpara:
+#                     ovcpara.delete()
+#                     msg = "Deleted successfully"
+#                 # delete event
+#                 event.delete()
+#                 msg = "Deleted successfully"
+#         else:
+#             msg = "Can't delete after 90 days"
+#     except Exception as e:
+#         msg = 'An error occured : %s' % str(e)
+#         print(str(e))
+#     jsonCPARAData.append({'msg': msg})
+#     return JsonResponse(jsonCPARAData,
+#                         content_type='application/json',
+#                         safe=False)
+# def delete_cpara(request, id, btn_event_pk):
+#     jsonPMTCTData = []
+#     msg = ''
+#     try:
+#         event_id = uuid.UUID(btn_event_pk)
+#         d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created
+#         delta = get_days_difference(d_event)
+#         if delta < 90:
+#             event = OVCCareEvents.objects.filter(pk=event_id)
+#             if event:
+#                 # delete cpara
+#                 pmtct = PMTCTPregnantWA.objects.filter(event=event)
+#                 if pmtct:
+#                     pmtct.delete()
+#                     msg = "Deleted successfully"
+#                 # delete event
+#                 event.delete()
+#                 msg = "Deleted successfully"
+#         else:
+#             msg = "Can't delete after 90 days"
+#     except Exception as e:
+#         msg = 'An error occured : %s' % str(e)
+#         print(str(e))
+#     jsonPMTCTData.append({'msg': msg})
+#     return JsonResponse(jsonCPARAData,
+#                         content_type='application/json',
+#                         safe=False)

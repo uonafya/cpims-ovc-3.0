@@ -177,10 +177,14 @@ urlpatterns = [
     # Dreams SerivceUptake Form
     re_path('dreamsform/new/(?P<id>\d+)/', views.new_dreamsform, name='new_dreamsform'),
 
-    #edit hivriskscreening tool
-    path('hivriskscreeningtool/edit/(?P<id>\W+)/', views.edit_hivriskscreeningtool, name='hivriskscreeningtool'),
+    #Pregnant Women Adolescent
+    path('pregnantwomen/new/(?P<id>\d+)/', views.new_pregnantwomen, name='new_pregnantwomen'),
 
-    #Delete hivscreening tool
-    path('delete_hivriskscreening/(?P<id>)/', views.delete_hivriskscreening, name='delete_hivriskscreening'),
+    #Edit Pregant women/adolescent form
+    path('pregnantwomen/edit/(?P<id>\W+)/', views.edit_pregnantwomen, name='pregnantwomen'),
+
+    # Delete pregnantWomen
+    path('delete_pregnantwomen/(?P<id>)/', views.delete_pregnantwomen, name='delete_pregnantwomen'),
+
 
 ]
