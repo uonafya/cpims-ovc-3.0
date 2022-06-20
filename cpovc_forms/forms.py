@@ -6477,10 +6477,11 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
         # 'data-parsley-errors-container': "#errorfield"
     }))
 
-    HIV_MGMT_2_H_2 = forms.CharField(widget=forms.TextInput(
+    HIV_MGMT_2_H_2 = forms.CharField(required=False,
+    widget=forms.TextInput(
         attrs={'placeholder': _('Others'),
                'class': 'form-control' ,
-          #     'data-parsley-required': "false"
+              'data-parsley-required': "false"
                # ,
                #    'data-parsley-required': "false"
         }))
@@ -6631,7 +6632,8 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
         # 'data-parsley-errors-container': "#errorfield"
     }))
 
-    HIV_MGMT_2_P = forms.CharField(widget=forms.Textarea(
+    HIV_MGMT_2_P = forms.CharField(required=False,
+    widget=forms.Textarea(
         attrs={'placeholder': _('Services'),
                'class': 'form-control',
                'rows': '2',

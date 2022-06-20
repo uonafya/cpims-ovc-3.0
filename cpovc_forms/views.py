@@ -11545,7 +11545,7 @@ def delete_benchmark(request, id):
 
     # Gets the instance
     household1 =OVCBenchmarkMonitoring.objects.get(obm_id=id)
-    re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).first().person.id
+    re_person = OVCHHMembers.objects.filter(house_hold=household1.household, hh_head=False).first().person.id
     
     ovc_bench.update(is_void=True)
     url = reverse('ovc_view', kwargs={'id':re_person})
@@ -11626,8 +11626,8 @@ def edit_grad_monitor(request, id):
     form = gradMonitoringToolform(data=edit_data)
     pdb.set_trace()
     household1 =OVCBenchmarkMonitoring.objects.get(obm_id=id)
-    re_person = OVCHHMembers.objects.get(house_hold=household1.household, hh_head=False).first().person.id
-    print(f'>>>>>>>>{re_person}')
+    re_person = OVCHHMembers.objects.filter(house_hold=household1.household, hh_head=False).first().person.id
+    
     ovc_id = int(re_person)
     child = RegPerson.objects.get(is_void=False, id=ovc_id)
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)

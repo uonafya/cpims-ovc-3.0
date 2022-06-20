@@ -544,8 +544,9 @@ function validDate(dateFieldName, radioToCheck, rightValue, wrongValue) {
     $('input[name='+radioToCheck+']').change(function(){
         var valu = $(this).val();
         if(valu === rightValue){
-            $('input[name='+dateFieldName+']').datepicker().val('');
+            $('input[name='+dateFieldName+']').datepicker('destroy');
             $('input[name='+dateFieldName+']').attr('readonly', true);
+            $('input[name='+dateFieldName+']').attr('disabled', true);
             $('input[name='+dateFieldName+']').removeAttr('required');
             $('input[name='+dateFieldName+']').attr('data-parsley-required', false);
             // $('input[name='+dateFieldName+']').removeClass('parsley-error');
@@ -556,6 +557,7 @@ function validDate(dateFieldName, radioToCheck, rightValue, wrongValue) {
             $('input[name='+dateFieldName+']').attr('data-parsley-required', true);
             $('input[name='+dateFieldName+']').val('');
             $('input[name='+dateFieldName+']').removeAttr('disabled');
+            $('input[name='+dateFieldName+']').datepicker().val('');
         }
     });
 }
