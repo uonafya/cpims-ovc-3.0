@@ -747,11 +747,28 @@
             var value = $(this).val();
             if(value=='ANNO') {
                 $('input[name=HIV_RS_18B]').attr("disabled",true);
+                $('input[name=HIV_RS_18B]').attr("required",false);
+                $('input[name=HIV_RS_21]').attr("disabled",true);
+                $('input[name=HIV_RS_21]').attr("required",false);
+                $('input[name=HIV_RS_22]').attr("disabled",true);
+                $('input[name=HIV_RS_22]').attr("required",false);
+                $('input[name=HIV_RS_23]').attr("disabled",true);
+                $('input[name=HIV_RS_23]').attr("required",false);
+                $('input[name=HIV_RS_24]').attr("disabled",true);
+                $('input[name=HIV_RS_24]').attr("required",false);
                 HIV_RS_18B=true;
             }
             else {
                 $('input[name=HIV_RS_18B]').attr("disabled",false);
-                {#$("#HIV_RS_18B").prop('required', false);#}
+                $('input[name=HIV_RS_18B]').attr("required",true);
+                $('input[name=HIV_RS_21]').attr("disabled",false);
+                $('input[name=HIV_RS_21]').attr("required",true);
+                $('input[name=HIV_RS_22]').attr("disabled",false);
+                $('input[name=HIV_RS_22]').attr("required",true);
+                $('input[name=HIV_RS_23]').attr("disabled",false);
+                $('input[name=HIV_RS_23]').attr("required",true);
+                $('input[name=HIV_RS_24]').attr("disabled",false);
+                $('input[name=HIV_RS_24]').attr("required",true);
                 HIV_RS_18B=true;
             }
         });
