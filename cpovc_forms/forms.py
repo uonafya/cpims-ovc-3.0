@@ -6296,6 +6296,7 @@ class HIV_SCREENING_FORM(forms.Form):
     }))
 
     HIV_RS_18A = forms.CharField(
+        required=False,
         widget = forms.Textarea(
         attrs = {'placeholder': _('Response'),
                'class': 'form-control',
