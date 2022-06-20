@@ -9687,6 +9687,8 @@ def new_hivscreeningtool(request, id):
     hiv_screen = None
     hiv_facility = None
     if request.method == 'POST':
+        # import pdb
+        # pdb.set_trace()
         try:
 
             form = HIV_SCREENING_FORM(request.POST, initial={'person': id})
@@ -9772,10 +9774,13 @@ def new_hivscreeningtool(request, id):
                     'HIV_RS_04',
                     'HIV_RS_05',
                     'HIV_RS_06',
+                    'HIV_RS_12',
                     'HIV_RS_07',
+                    'HIV_RS_13',
                     'HIV_RS_08',
                     'HIV_RS_09',
                     'HIV_RS_10',
+                    'HIV_RS_20',
                     'HIV_RS_11',
                     'HIV_RS_14',
                     'HIV_RS_16',
@@ -9811,10 +9816,13 @@ def new_hivscreeningtool(request, id):
                     parent_PLWH=data_to_save.get('HIV_RS_04'),
                     child_sick_malnourished=data_to_save.get('HIV_RS_05'),
                     child_sexual_abuse=data_to_save.get('HIV_RS_06'),
+                    traditional_procedure=data_to_save.get('HIV_RS_12'),
                     adol_sick=data_to_save.get('HIV_RS_07'),
+                    adol_had_tb=data_to_save.get('HIV_RS_13'),
                     adol_sexual_abuse=data_to_save.get('HIV_RS_08'),
                     sex=data_to_save.get('HIV_RS_09'),
                     sti=data_to_save.get('HIV_RS_10'),
+                    sharing_needs=data_to_save.get('HIV_RS_20'),
                     hiv_test_required=data_to_save.get('HIV_RS_11'),
                     parent_consent_testing=data_to_save.get('HIV_RS_14'),
                     parent_consent_date=parent_consentdate,
@@ -9847,18 +9855,157 @@ def new_hivscreeningtool(request, id):
     else:
         form = HIV_SCREENING_FORM()
         event = OVCCareEvents.objects.filter(person_id=id).values_list('event')
+        import pdb
         hiv_screen = OVCHIVRiskScreening.objects.filter(event_id__in=event).order_by('date_of_event')
+        # pdb.set_trace()
         facility_hivrisk = OVCHIVRiskScreening.objects.filter(event_id__in=event).values_list('facility_code').order_by(
             'date_of_event')
         facilitiy_ids = [i[0] for i in facility_hivrisk]
         hiv_facility = OVCFacility.objects.filter(id__in=facilitiy_ids)
 
-    return render(request, 'forms/new_hivscreeningtool.html',
-                  {'form': form, 'init_data': init_data, 'vals': vals, 'hiv_screen': hiv_screen,
-                   'hiv_facility': hiv_facility})
+        return render(request, 'forms/new_hivscreeningtool.html',
+                      {'form': form, 'init_data': init_data, 'vals': vals, 'hiv_screen': hiv_screen,
+                       'hiv_facility': hiv_facility})
 
 
-# New HIV Manangement Form
+
+def edit_hivriskscreeningtool(request, id):
+    try:
+        hdata = OVCHIVRiskScreening.objects.get(risk_id=id)
+        if request.method == 'POST':
+            boolean_fields = [
+                'HIV_RS_01',
+                'HIV_RS_02',
+                'HIV_RS_03',
+                'HIV_RS_03A',
+                'HIV_RS_04',
+                'HIV_RS_05',
+                'HIV_RS_06',
+                'HIV_RS_12',
+                'HIV_RS_07',
+                'HIV_RS_13',
+                'HIV_RS_08',
+                'HIV_RS_09',
+                'HIV_RS_10',
+                'HIV_RS_20',
+                'HIV_RS_11',
+                'HIV_RS_14',
+                'HIV_RS_16',
+                'HIV_RS_18',
+                'HIV_RS_21',
+                'HIV_RS_23',
+
+            ]
+
+            data_to_save = {}
+
+            for key, value in request.POST.items():
+                if key in boolean_fields:
+                    data_to_save.update({
+                        key: True if value == "AYES" else False
+                    })
+                else:
+                    data_to_save.update({key: value})
+
+            q1 = data_to_save.get("HIV_RA_1A")
+            q2 = data_to_save.get("HIV_RS_01")
+            q3 = data_to_save.get("HIV_RS_02")
+            q4 = data_to_save.get("HIV_RS_03")
+            q5 = data_to_save.get("HIV_RS_03A")
+            q6 = data_to_save.get("HIV_RS_04")
+            q7 = data_to_save.get("HIV_RS_05")
+            q8 = data_to_save.get("HIV_RS_06")
+            q9 = data_to_save.get("HIV_RS_12")
+            q10 = data_to_save.get("HIV_RS_07")
+            q11 = data_to_save.get("HIV_RS_13")
+            q12a = data_to_save.get("HIV_RS_08")
+            q12b = data_to_save.get("HIV_RS_09")
+            q13 = data_to_save.get("HIV_RS_10")
+            q14 = data_to_save.get("HIV_RS_20")
+            q15 = data_to_save.get("HIV_RS_11")
+            q16 = data_to_save.get("HIV_RS_14")
+            q17 = data_to_save.get("HIV_RS_16")
+            q18 = data_to_save.get("HIV_RS_18")
+            q19 = data_to_save.get("HIV_RS_18A")
+            q20 = data_to_save.get("HIV_RS_18B")
+            q21 = data_to_save.get("HIV_RS_21")
+            q22 = data_to_save.get("HIV_RS_23")
+
+            OVCHIVRiskScreening.objects.filter(risk_id=id).update(
+                date_of_event=q1,
+                caregiver_know_status=q2,
+                caregiver_knowledge_yes=q3,
+                test_done_when=q4,
+                test_donewhen_result=q5,
+                parent_PLWH=q6,
+                child_sick_malnourished=q7,
+                child_sexual_abuse=q8,
+                traditional_procedure=q9,
+                adol_sick=q10,
+                adol_had_tb=q11,
+                adol_sexual_abuse=q12a,
+                sex=q12b,
+                sti=q13,
+                sharing_needs=q14,
+                hiv_test_required=q15,
+                parent_consent_testing=q16,
+                referral_made=q17,
+                referral_completed=q18,
+                not_completed=q19,
+                test_result=q20,
+                art_referral=q21,
+                art_referral_completed=q22)
+
+
+        screen_data = {
+            'HIV_RA_1A': hdata.date_of_event,
+            'HIV_RS_01': 'AYES' if hdata.caregiver_know_status else 'ANNO',
+            'HIV_RS_02': 'AYES' if hdata.caregiver_knowledge_yes else 'ANNO',
+            'HIV_RS_03': 'AYES' if hdata.test_done_when else 'ANNO',
+            'HIV_RS_03A': 'AYES' if hdata.test_donewhen_result else 'ANNO',
+            'HIV_RS_04': 'AYES' if hdata.parent_PLWH else 'ANNO',
+            'HIV_RS_05': 'AYES' if hdata.child_sick_malnourished else 'ANNO',
+            'HIV_RS_06': 'AYES' if hdata.child_sexual_abuse else 'ANNO',
+            'HIV_RS_12': 'AYES' if hdata.traditional_procedure else 'ANNO',
+            'HIV_RS_07': 'AYES' if hdata.adol_sick else 'ANNO',
+            'HIV_RS_13': 'AYES' if hdata.adol_had_tb else 'ANNO',
+            'HIV_RS_08': 'AYES' if hdata.adol_sexual_abuse else 'ANNO',
+            'HIV_RS_09': 'AYES' if hdata.sex else 'ANNO',
+            'HIV_RS_10': 'AYES' if hdata.sti else 'ANNO',
+            'HIV_RS_20': 'AYES' if hdata.sharing_needs else 'ANNO',
+            'HIV_RS_11': 'AYES' if hdata.hiv_test_required else 'ANNO',
+            'HIV_RS_14': 'AYES' if hdata.parent_consent_testing else 'ANNO',
+            # 'HIV_RS_15': hdata.parent_consent_date
+            'HIV_RS_16': 'AYES' if hdata.referral_made else 'ANNO',
+            # 'HIV_RS_17': hdata.caregiver_know_status
+            'HIV_RS_18': 'AYES' if hdata.referral_completed else 'ANNO',
+            # 'HIV_RS_19': hdata.caregiver_know_status
+            'HIV_RS_18A': hdata.not_completed,
+            'HIV_RS_18B': hdata.test_result,
+            'HIV_RS_21': 'AYES' if hdata.art_referral else 'ANNO',
+            'HIV_RS_23': 'AYES' if hdata.art_referral_completed else 'ANNO'
+
+        }
+        form = HIV_SCREENING_FORM(data=screen_data)
+        return render(request, 'forms/edit_hivriskscreeningtool.html', {'form': form, 'status': 200})
+
+        # Save all details from the Bursary form
+        # pdb.set_trace()
+
+
+    except Exception as e:
+        msg = 'error'
+        messages.add_message(request, messages.INFO, msg)
+        url = reverse('new_hivscreeningtool', kwargs={'id': 60})
+        return HttpResponseRedirect(url)
+
+
+def delete_hivriskscreening(request, id):
+    new_eval = OVCHIVRiskScreening.objects.get(risk_id=id)
+    new_eval.delete()
+    return render(request, 'forms/new_hivscreeningtool.html')
+  
+  # New HIV Manangement Form
 # @login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_hivmanagementform(request, id):
@@ -9997,6 +10144,7 @@ def new_dreamsform(request, id):
                   'forms/new_dreamsform.html',
                   {'form': form, 'init_data': init_data,
                    'vals': vals})
+
 
 
 def new_pregnantwomen(request, id):

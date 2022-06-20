@@ -68,14 +68,14 @@
                     <!-- end profile-left -->
 
                     <!-- begin profile-right -->
+                    <!-- begin profile-right -->
                     <div class="profile-right">
                         <!-- begin profile-info -->
                         <div class="profile-info">
-                            <div class="col-md-8">
-                                <!-- begin table -->
-                                <div class="table-responsive">
-                                    <table class="table table-profile">
-                                        <thead>
+                            <!-- begin table -->
+                            <div class="table-responsive">
+                                <table class="table table-profile">
+                                    <thead>
                                             <tr>
                                                 <th width="25%"></th>
                                                 <th>
@@ -217,7 +217,17 @@
                                     </table>
                                 </div>
                                 <!-- end table -->
-                            </div>
+                        </div>
+                        <!-- end profile-info -->
+                    </div>
+                    <!-- end profile-right -->
+                </div>
+                <!-- end profile-section -->
+                <!-- begin profile-section -->
+                <div class="profile-section">
+                    <!-- begin row -->
+                    <div class="row">
+                        <!-- begin col-4 -->
                             <div class="col-md-4">
                                 <h4 class="title">Account details <small>
                                 {% if appuser %} 6 {% else %} 0 {% endif %}
@@ -268,21 +278,12 @@
                                 </div>
                                 <!-- end scrollbar -->
                             </div>
-                        </div>
-                        <!-- end profile-info -->
-                    </div>
-                    <!-- end profile-right -->
-                </div>
-                <!-- end profile-section -->
-                <!-- begin profile-section -->
-                <div class="profile-section">
-                    <!-- begin row -->
-                    <div class="row">
+
                         {% if person_details.person_types == 'TBGR' %}
                             <!-- begin col-4 -->
                             <div class="col-md-4">
                                 <h4 class="title">OVCs of this caregiver</h4>
-                                <div class="bg-silver" style="max-height: 300px; overflow-y: auto;">
+                                <div data-scrollbar="true" data-height="280px" class="bg-silver">
                                     {% if my_ovcs %}
                                         <table class="table table-condensed">
                                             <thead>
@@ -322,7 +323,7 @@
                                 </div>
                             </div>
                             <!-- end col-4 -->
-                        {% endif %}
+                        {% else %}
                         <!-- begin col-4 -->
                         <div class="col-md-4">
                             <h4 class="title">Other details <small>{{ person_details.pextids.count }} provided</small></h4>
@@ -355,6 +356,7 @@
                             <!-- end scrollbar -->
                         </div>
                         <!-- end col-4 -->
+                        {% endif %}
                         <!-- begin col-4 -->
                         <div class="col-md-4">
                             {% if person_details.person_type_name == 'Caregiver' %}
