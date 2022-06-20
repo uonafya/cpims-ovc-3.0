@@ -1,11 +1,14 @@
 from django.utils import timezone
 
-from cpovc_registry.models import RegPersonsOrgUnits
+from cpovc_registry.models import RegPersonsOrgUnits, RegPersonsGeo
 from cpovc_ovc.models import (
     OVCEducation, OVCHealth, OVCHHMembers, OVCHouseHold)
 
 from cpovc_main.functions import convert_date
+
 from cpovc_ovc.functions import get_first_household
+
+from .models import OVCPreventiveEbi, OVCPreventiveEvents
 
 
 def save_school(request, person_id, school_level='SLNS'):
@@ -111,3 +114,49 @@ def get_house_hold(request, person_id):
         return None
     else:
         return hh
+
+
+def save_event(request, event_type, person_id):
+    """Method to save event details."""
+    try:
+        user_id = request.user.id
+        date_today = timezone.now()
+        hh = get_house_hold(request, person_id)
+        hh_id = hh.id if hh else None
+        event = OVCPreventiveEvents(
+            event_type_id='EBI',
+            event_counter=1,
+            event_score=0,
+            date_of_event=date_today,
+            created_by=user_id,
+            app_user_id=user_id,
+            person_id=person_id,
+            house_hold_id=hh_id
+        )
+        event.save()
+    except Exception as e:
+        raise e
+    else:
+        return event
+
+
+def save_ebi(
+        request, person_id, cbo_id, event_id, session_type, domain,
+        session_id, session_date):
+    """Method to save ebi."""
+    try:
+        sess_date = convert_date(session_date)
+        ebi_place = RegPersonsGeo.objects.filter(
+            person_id=person_id, is_void=False).first()
+        ebi_place_id = ebi_place.pk
+        ebi, created = OVCPreventiveEbi.objects.update_or_create(
+            person_id=person_id, domain=domain, ebi_session=session_id,
+            defaults={'event_id': event_id, 'ebi_session_type': session_type,
+                      'date_of_encounter_event': sess_date,
+                      'ebi_provider_id': cbo_id,
+                      'place_of_ebi_id': ebi_place_id,
+                      'is_void': False})
+    except Exception as e:
+        raise e
+    else:
+        pass

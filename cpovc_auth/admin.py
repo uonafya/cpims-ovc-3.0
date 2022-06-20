@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from .models import AppUser
+from .models import AppUser, CPOVCUserRoleGeoOrg, CPOVCRole
 from cpovc_registry.models import RegPerson
 from cpovc_main.admin import dump_to_csv
 
@@ -14,7 +14,7 @@ class PersonInline(admin.StackedInline):
     max_num = 1
     can_delete = False
     fk_name = 'id'
-    # exclude = ('password', )
+    exclude = ('password', )
 
 
 class UserChangeForm(forms.ModelForm):
@@ -108,4 +108,23 @@ class MyUserAdmin(UserAdmin):
 
 
 admin.site.register(AppUser, MyUserAdmin)
+
+
+class CPOVCUserRoleGeoOrgAdmin(admin.ModelAdmin):
+    """Class to handle user changes."""
+
+    list_display = ('user', 'group', 'org_unit')
+
+
+admin.site.register(CPOVCUserRoleGeoOrg, CPOVCUserRoleGeoOrgAdmin)
+
+
+class CPOVCRoleAdmin(admin.ModelAdmin):
+    """Class to handle user changes."""
+
+    list_display = ('id', 'group_id', 'group_name', 'group_description')
+    list_filter = ['restricted_to_org_unit', 'restricted_to_geo']
+
+
+admin.site.register(CPOVCRole, CPOVCRoleAdmin)
 

@@ -10,7 +10,7 @@ group by gender, agerange
 QUERIES['1B'] = '''
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 gender as sex_id,
-CASE exit_status WHEN 'ACTIVE' THEN 'Active'
+CASE exit_status WHEN 'ACTIVE' THEN 'Current Caseload'
 ELSE 'Exited' END AS active_status
 from vw_cpims_registration {ocbos} {oareas} {odate}
 group by gender, active_status
@@ -71,14 +71,14 @@ QUERIES['1F'] = '''
 SELECT count(cpims_ovc_id) as dcount,
 gender as sex_id, eligibility
 from vw_cpims_registration {ocbos} {oareas} {odate}
-group by gender, eligibility
+group by gender, eligibility order by dcount desc
 '''
 
 QUERIES['1G'] = '''
 SELECT count(cpims_ovc_id) as dcount,
 gender as sex_id, exit_reason
 from vw_cpims_registration where exit_status = 'EXITED' {cbos} {areas} {fdate}
-group by gender, exit_reason
+group by gender, exit_reason order by dcount desc
 '''
 
 QUERIES['1H'] = '''
@@ -116,7 +116,7 @@ from vw_cpims_viral_load {ocbos}
 group by gender
 UNION
 Select count(distinct(v.cpims_ovc_id)) as dcount,
-v.gender as sex_id, 'Current VL' as hivstat
+v.gender as sex_id, 'Valid VL' as hivstat
 from vw_cpims_viral_load v
 inner join (
 select cpims_ovc_id, max(date_of_event) as most_current_vl_date
@@ -327,11 +327,6 @@ Select count(distinct(cpims_ovc_id)) as dcount,
 gender, 'Current Case Plan' as services
 from vw_cpims_case_plan where (current_date - date_of_event) <= 400 {cbos}
 group by gender
-UNION
-Select count(distinct(cpims_ovc_id)) as dcount,
-gender, 'Current CPARA' as services
-from vw_cpims_cpara where (current_date - date_of_event) <= 400 {cbos}
-group by gender
 '''
 
 QUERIES['4B'] = '''
@@ -339,5 +334,12 @@ Select count(distinct(cpims_ovc_id)) as dcount,
 gender as sex_id, graduationpath as services
 from vw_cpims_benchmark_achieved
 where (current_date - date_of_event) <= 400 {cbos}
-group by gender, graduationpath;
+group by gender, graduationpath
+'''
+
+QUERIES['4C'] = '''
+Select count(distinct(cpims_ovc_id)) as dcount,
+gender as sex_id, 'Current CPARA' as services
+from vw_cpims_cpara where (current_date - date_of_event) <= 400 {cbos}
+group by gender
 '''

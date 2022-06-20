@@ -20,4 +20,6 @@ urlpatterns = [
             name='delete_preventive_event_entry'),
     re_path('preventiveattendanceregister/edit/(?P<id>\d+)/(?P<btn_event_type>\w+)/(?P<btn_event_pk>.+)/', views.edit_preventive_event_entry,
             name='edit_preventive_event_entry'),
+    # Version 2 Thinking
+    path('register/new/<int:id>/', views.new_register_v2, name='new_register'),
 ]

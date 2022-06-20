@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page_title %} OVC Care - Preventive Attendace register {% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block style_code %}
+
+{% endblock %}
+
+{% block primary %}
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+	<li><a href="#">Home</a></li>
+	<li class="active">Attendance Register</li>
+</ol>
+<!-- end breadcrumb -->
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-child"></i> SINOVUYO Attendance Register <small>Home</small></h1>
+
+<!-- end page-header -->
+{% if messages %}
+    {% for message in messages %}
+    {% if 'error' in message.tags %}
+        <div id="messages" class="alert alert-danger fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-info fa-2x pull-left"></i>
+    {% else %}
+        <div id="messages" class="alert alert-success fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+    {% endif %}    
+        <p>{{ message }}</p>
+    </div>
+   {% endfor %}
+{% endif %}
+<div id="message" class="alert alert-success fade in" style="display: none">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+
+    <span id="response"></span>
+</div>
+
+<!-- begin row -->
+<div class="row">
+  <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin panel -->
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>                      
+                <h4 class="panel-title">{{ ovc.first_name }} {{ ovc.surname }} | {{ ovc.sex_id }} | {{ ovc.age }}</h4>
+            </div>
+            <!-- start panel body -->
+            <div class="panel-body">
+                <form class="form-horizontal" action="." method="POST" data-parsley-validate="true"   name="form-prev-reg" id="new_prev_reg">
+                {% csrf_token %}
+                <div class="row" >
+                <div class="control-label col-md-6 col-sm-6 bg-silver">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th width="10%"></th>
+                            <th width="25%">Session No.</th>
+                            <th width="45%">Date Attended</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sess in sessions %}
+                        <tr id="ar_{{ sess.id }}">
+                            <td>
+                                <input type="checkbox" class="check_session" name="session_id" value="{{ sess.id }}" />
+                                <input name="session_id_check" value="SESSION{{ sess.id }}" type ="hidden">
+                            </td>
+                            <td>S {{ sess.id }}</td>
+                            <td><input class="form-control date_field" type="text" name="date_attended"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+                <div class="control-label col-md-6 col-sm-6">
+                    <table class="table">
+                    <thead>
+                        <tr>
+                            <th width="10%"></th>
+                            <th width="25%">Make Up.</th>
+                            <th width="45%">Date Attended</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sess in make_ups %}
+                        <tr id="mk_{{ sess.id }}">
+                            <td>
+                                <input type="checkbox" class="check_make_up" name="make_up_id" value="{{ sess.id }}" />
+                                <input name="make_up_id_check" value="MAKE_UP{{ sess.id }}" type ="hidden">
+                            </td>
+                            <td>S {{ sess.id }}</td>
+                            <td><input class="form-control date_field" type="text" name="date_attended"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            <div class="form-group">
+                    <label class="col-md-6 control-label">Completed All Sessions: </label>
+                    <div class="col-md-6">
+                        <label class="radio-inline">
+                            <input type="radio" class="ar_check" name="{{ sess.id }}_session_completed" id="{{ sess.id }}" value="AYES" />Yes</label>
+                        <label class="radio-inline">
+                            <input type="radio" class="ar_check" name="{{ sess.id }}_session_completed" id="{{ sess.id }}" value="ANNO" />No</label>
+                    </div>
+                </div>
+                <hr>
+                <div class="panel-body panel-form">
+                    <div class="form-group">
+                        <label class="control-label col-md-5 col-sm-5"></label>
+                        <div class="col-md-6 col-sm-6">
+                            <button id="mysubmit-prev-register" class="btn btn-primary" type="submit">Submit Register</button>
+                            <a href="{% url 'view_pfs' id=ovc.id %}" class="btn btn-white">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <!-- end panel body -->
+        </div>
+        <!-- end panel -->  
+    </div>
+    <!-- end col-12 -->
+</div>
+<!-- end row -->
+{% endblock %}
+
+{% block lazy_javascript_code %}
+
+<script>
+jQuery(document).ready(function () {
+
+    $('.date_field').datepicker({ endDate: '0y', format: 'dd-M-yyyy' });
+
+    $('.check_session, .check_make_up').change(function() {        
+        if($(this).is(":checked")){
+            //var sib_id = $(this).val();
+            $(this).closest('tr').find(':input').attr('data-parsley-required', true);
+        }else{
+            $(this).closest('tr').find(':input').attr('data-parsley-required', false);
+        }
+    });
+
+    $('.ar_check').click(function () {
+        var val = $(this).val();
+        var atid = $(this).attr('id');
+        // alert("Test " + val + " " + atid);
+     });
+ });
+</script>
+{% endblock %}
