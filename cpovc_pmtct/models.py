@@ -60,7 +60,7 @@ class PMTCTEvents(models.Model):
         on_delete=models.CASCADE)
 
     class Meta:
-        db_table = 'pmtct_events'
+        db_table = 'pmtct_events_pm'
 
 
 class OVCPregnantWomen(models.Model):
@@ -120,7 +120,7 @@ class PMTCTQuestions(models.Model):
         return self.code
 
     class Meta:
-        db_table = 'pmtct_questions'
+        db_table = 'pmtct_questions_pmtct'
 
 
 class PMTCTPregnantWA(models.Model):
@@ -155,7 +155,7 @@ class PMTCTPregnantWA(models.Model):
 class OVCHEITracker(models.Model):
     hei_id = models.UUIDField(
         primary_key=True, default=uuid.uuid1, editable=False)
-    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name="person_ovcheitracker")
     hivstatus = models.CharField(max_length=20)
     hivpositive = models.CharField(max_length=20, blank=True, null=True)
     facility = models.CharField(max_length=20, blank=True, null=True)
@@ -212,15 +212,15 @@ class OVCHEITracker(models.Model):
     sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
 
     class Meta:
-        db_table = 'ovc_hei_tracker'
+        db_table = 'ovc_hei_tracker_pmtct'
 
 
 class PMTCTHEI(models.Model):
     pmtct_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name="person_pmtcthei")
     caregiver = models.ForeignKey(
-        RegPerson, on_delete=models.CASCADE, related_name='pmtct_hei')
+        RegPerson, on_delete=models.CASCADE, related_name='caregiver_pmtct_hei')
     question_code = models.CharField(max_length=10, null=False, blank=True)
     question = models.ForeignKey(PMTCTQuestions, on_delete=models.CASCADE, )
     answer = models.CharField(max_length=100)
@@ -241,7 +241,7 @@ class PMTCTHEI(models.Model):
                                    force_update, using, update_fields)
 
     class Meta:
-        db_table = 'pmtct_hei'
+        db_table = 'pmtct_hei_pmtct'
 
     def __str__(self):
         return str(self.pmtct_id)

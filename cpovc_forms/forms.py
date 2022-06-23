@@ -6453,7 +6453,8 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
         }))
 
     HIV_MGMT_2_G = forms.ChoiceField(
-        choices = (('TreatmentPreparation', 'Treatment Preparation'),
+        choices = (
+        ('TreatmentPreparation', 'Treatment Preparation'),
         ('BoosterAdherence', 'Booster Adherence'),
         ('EnhancedAdherence', 'Enhanced Adherence')),
         widget = forms.RadioSelect(
@@ -6536,11 +6537,19 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
         }))
 
     HIV_MGMT_2_J = forms.ChoiceField(
-        choices = (('DirectObservedTherapy', 'Direct Observed Therapy'),
+        choices = (
+        ('DirectObservedTherapy', 'Direct Observed Therapy'),
         ('CaseConferencingDone ', 'Case Conferencing done'),
         ('CasePlanReviewed', 'Case Plan Reviewed'),
         ('DiscussedMulti-disciplinaryTeam ', 'Discussed Multi-disciplinary Team'),
-        ('SpecialSupportGroup', 'Special Support Group')
+        ('SpecialSupportGroup', 'Special Support Group'),
+        ('Transporttoclinic', 'Transport to clinic'),
+        ('HHvisit', 'HH visit'),
+        ('Disclosure', 'Disclosure'),
+        ('EscortforClinicappointments', 'Escort for Clinic appointments'),
+        ('provisionofpillboxes', 'provision of pill boxes'),
+        ('Provisionofalarmwatchesclocks', 'Provision of alarm watches/clocks'),
+        ('Other', 'Other')
         ),
         widget = forms.RadioSelect(
         # renderer=RadioCustomRenderer,
@@ -6585,8 +6594,8 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
 
     HIV_MGMT_2_M = forms.MultipleChoiceField(
         choices = (
-        ('TherapeuticFeeding', 'Therapeutic Feeding'),
-        ('InfantFeedingCounselling', 'Infant Feeding Counselling'),
+        ('TherapeuticFeeding', 'Therapeutic Feeding if <2yrs'),
+        ('InfantFeedingCounselling', 'Infant Feeding Counselling if <2yrs'),
         ('FoodSupport', 'Food Support'),
         ('ExclusiveBreastfeeding', 'Exclusive Breastfeeding'),
         ('ExclusiveReplacementFeeding', 'ExclusiveReplacementFeeding'),
@@ -6669,6 +6678,27 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
                # ,
                #    'data-parsley-required': "false"
     }))
+    HIV_MGMT_2_T = forms.ChoiceField(
+        choices = (YESNO_CHOICES
+        ),
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        # 'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+    HIV_MGMT_2_U = forms.ChoiceField(
+        choices = (
+            ('stable','Stable'),
+            ('notstable','Not Stable'),
+            ('notenrolled','Not enrolled')
+        ),
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        # 'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
 
 
 
@@ -6743,6 +6773,14 @@ class HIV_MANAGEMENT_ARV_THERAPY_FORM(forms.Form):
         attrs={
         # 'data-parsley-errors-container': "#errorfield"
     }))
+    HIV_MGMT_1_H = forms.CharField(widget=forms.TextInput(
+        attrs={'placeholder': _('e.g., ABC+3TC+DTG'),
+               'class': 'form-control' ,
+            #    'data-parsley-required': "false",
+            #    'data-parsley-type': "number",
+               # ,
+               #    'data-parsley-required': "false"
+               }))
 
     HIV_MGMT_1_E_DATE = forms.DateField(
         widget = forms.widgets.DateInput(
