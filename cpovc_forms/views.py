@@ -9911,6 +9911,8 @@ def new_hivscreeningtool(request, id):
 def new_hivmanagementform(request, id):
     if request.method == 'POST':
         # try:
+        data = request.POST
+        print(data)
         msg = ''
         person = RegPerson.objects.get(id=id)
         event_date = request.POST.get('HIV_MGMT_2_A')
@@ -9919,14 +9921,15 @@ def new_hivmanagementform(request, id):
         house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
 
         event_counter = OVCCareEvents.objects.filter(
-            event_type_id=event_type_id, person=id, is_void=False).count()
+            event_type_id=event_type_id, person=id, is_void=False).count()+1
         # save event
+        breakpoint()
         ovccareevent = OVCCareEvents.objects.create(
             event_type_id=event_type_id,
             event_counter=event_counter,
             event_score=0,
             created_by=request.user.id,
-            person=RegPerson.objects.get(pk=int(id)),
+            person=person,
             house_hold=house_hold
         )
 
@@ -10688,15 +10691,12 @@ def delete_heitracker(request, id):
 
 # New Cpara action functionality
 def new_cpara(request, id):
-    import pdb
     if request.method == 'POST':
         data = request.POST
-        child = RegPerson.objects.get(id=id)
+        child = RegPerson.objects.get(id=int(id))
         form = CparaAssessment()
-        care_giver = RegPerson.objects.get(
-            id=OVCRegistration.objects.get(person=child).caretaker_id)
-        house_hold = OVCHouseHold.objects.get(
-            id=OVCHHMembers.objects.get(person=child).house_hold_id)
+        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
         ovc_id = int(id)
         creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
 
@@ -10704,8 +10704,7 @@ def new_cpara(request, id):
         hhold = OVCHHMembers.objects.get(is_void=False, person_id=id)
         # Get HH members
         hhid = hhold.house_hold_id
-        hhmqs = OVCHHMembers.objects.filter(
-            is_void=False, house_hold_id=hhid).order_by("-hh_head")
+        hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
         hhmembers2 = hhmqs.exclude(person_id=id)
         hhmembers = hhmembers2.exclude(person=care_giver)
         date_previous = data.get('CP2d')
@@ -10834,7 +10833,7 @@ def new_cpara(request, id):
             person_id_bench=b_item.split('_')[0]
             quiz_code=b_item.split('_')[1]
 
-            print(f'The person id id {person_id_bench} and the quiz code is {quiz_code}')
+            # print(f'The person id id {person_id_bench} and the quiz code is {quiz_code}')
         
             child4 = RegPerson.objects.get(id=int(person_id_bench))
             
@@ -10860,7 +10859,7 @@ def new_cpara(request, id):
                  )
             except Exception as e:
                 error_message=f'The OVCCareIndividaulCpara failed: {e}'
-                print(error_message)
+                # print(error_message)
             
         
 
@@ -10946,7 +10945,7 @@ def new_cpara(request, id):
         messages.add_message(request, messages.INFO,msg)  
         return HttpResponseRedirect(url)
 
-        pdb.set_trace()
+        breakpoint()
     child = RegPerson.objects.get(id=id)
     ovc_id = int(id)
     creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
@@ -11084,8 +11083,7 @@ def new_cpara(request, id):
 
 
 # Update cpara edit functionality
-def edit_cpara(request, id):
-    import pdb
+def edit_cpara(request, id):    
     if request.method == 'POST':
         
         data = request.POST
@@ -11176,7 +11174,6 @@ def edit_cpara(request, id):
 
     # Get an event date of a single question for that event id
     evts = OVCCareCpara.objects.filter(event_id=id) #.first()
-    print('envts', id, evts)
     d_o_a=OVCCareCpara.objects.get(event=id, question_code='CP10q').date_of_event
     CP2d=OVCCareCpara.objects.get(event=id, question_code='CP10q').date_of_previous_event
     # date_event = cpara_data.get('date_of_event')
@@ -11368,8 +11365,8 @@ def edit_cpara(request, id):
 
             
 
-    print(f'Edit data: {edit_data_cpara}')
-    # form = CparaAssessment(data=edit_data_cpara)
+    # print(f'Edit data: {edit_data_cpara}')
+    
     ovc_id = int(person_id)
     child = RegPerson.objects.get(is_void=False, id=ovc_id)
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
@@ -11389,7 +11386,8 @@ def edit_cpara(request, id):
                 'ward': ward,
                 'subcounty': subcounty,
                 'county': county,
-                'care_giver': care_giver
+                'care_giver': care_giver,
+                'sub_pop':ovc_sub_pop_data,
                 
                 }
 
@@ -11524,6 +11522,7 @@ def grad_monitor_tool(request, id):
         event = OVCCareEvents.objects.filter(person_id=ovc_id).values_list('event')
         
         try:
+            breakpoint()
             benchmark_data = OVCBenchmarkMonitoring.objects.filter(is_void=False, caregiver_id=care_giver)   #filter(event=event).order_by('event_date'))
         except Exception as e:
             # benchmark_data = {}

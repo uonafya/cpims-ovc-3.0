@@ -6700,6 +6700,15 @@ class HIV_MANAGEMENT_VISITATION_FORM(forms.Form):
         # 'data-parsley-required': 'true',
         # 'data-parsley-errors-container': "#errorfield"
     }))
+    HIV_MGMT_2_V = forms.ChoiceField(
+        choices = (YESNO_CHOICES
+        ),
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        # 'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
 
 
 

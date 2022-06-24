@@ -9,7 +9,7 @@ triggerSkip('CP6Skip','ANA','CP6b','4');
 triggerSkip('CP63Skip','ANA','CP28q','4');
 
 
-triggerSkip('CP93Skip','ANA','CP9b','5');
+triggerSkip('CP93Skip','ANA','CP35q','5');
 triggerSkip('CP91Skip','ANA','CP9b','5');
 
 triggerSkip('CP41Skip','ANA','CP4b','2');

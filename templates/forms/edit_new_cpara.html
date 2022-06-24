@@ -445,49 +445,49 @@ print(blu.sing("'Happy'"))
                                                                         <td id="{{ sibling.person.id }}_CP6d_1_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_1">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_1" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_1'  in sub_pop %} checked {% endif %} id="{{sibling.person.id|stringformat:'s'|add:'_CP6d_1'}}"> 
                                                                             </div>
                                                                         </td>
                                                                         <td id="{{ sibling.person.id }}_CP6d_2_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_2">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_2" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_2'  in sub_pop %} checked {% endif %}>
                                                                             </div>
                                                                         </td>
                                                                         <td id="{{ sibling.person.id }}_CP6d_3_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_3">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_3" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_3'  in sub_pop %} checked {% endif %}>
                                                                             </div>
                                                                         </td>
                                                                         <td id="{{ sibling.person.id }}_CP6d_4_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_4">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_4" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_4'  in sub_pop %} checked {% endif %}>
                                                                             </div>
                                                                         </td>
                                                                         <td id="{{ sibling.person.id }}_CP6d_5_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_5">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_5" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_5'  in sub_pop %} checked {% endif %}>
                                                                             </div>
                                                                         </td>
                                                                         <td id="{{ sibling.person.id }}_CP6d_6_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_6">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_6" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_6'  in sub_pop %} checked {% endif %}>
                                                                             </div>
                                                                         </td>
                                                                         <td id="{{ sibling.person.id }}_CP6d_7_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_7">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_7" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_7'  in sub_pop %} checked {% endif %}>
                                                                             </div>
                                                                         </td>
                                                                         <td id="{{ sibling.person.id }}_CP6d_8_Qn">
                                                                             <div class="radio-inline">
                                                                         
-                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_8">
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_8" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_8'  in sub_pop %} checked {% endif %}>
                                                                             </div>
                                                                         </td>
                                                                       
@@ -1285,9 +1285,9 @@ print(blu.sing("'Happy'"))
                                                     </div>
                                                 </div>
                                                 <hr>
-                                            <!-- </div> -->
+                                            </div>
     
-                                            <!-- <div class="row"> -->
+                                            <div class="row">
                                                 <div class="col-md-12 bg-sub-skip">
                                                     <div class="form-group">
                                                         <div class="col-md-9 text-left">
@@ -1622,6 +1622,7 @@ print(blu.sing("'Happy'"))
                                                     </div>
                                                 </div>
                                                 <hr>
+                                            <div class="row">
                                                 <div class="col-md-12 bg-sub-skip">
                                                     <div class="form-group">
                                                         <div class="col-md-9">
@@ -1643,6 +1644,7 @@ print(blu.sing("'Happy'"))
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
                                                 <hr>
                                                 <div class="col-md-12">
                                                     <div class="form-group" id="CPschool4_Qn">
@@ -1892,16 +1894,16 @@ jQuery(document).ready(function()
 
         <script>
             
-            
+            var checkker = 0;
             var count_r12 = 0; $('tr.row12 td.r12q1 input[type=radio]').each( () => { count_r12 += 1 }); count_r12 /= 2
             $('.row12 input[type=radio]').on('change', function () {
                 //R12Q1
-                var checkker = null;
+                
                 $('tr.row12 td.r12q1 input[type=radio]:checked').each( (inx, ele) => {
-                    var this_val = $(this).val(); if(this_val == 'AYES'){ checkker += true; }else{ checkker += false; }
-                    
+                    var this_val = $(this).val(); if(this_val == 'AYES'){ checkker += 1; }else{ checkker += -1; }
+                    // console.log(checkker)
                 });
-               
+                console.log(checkker)
                 if(checkker == count_r12){ q12MainQn(true, 'a'); }else{ q12MainQn(false, 'a'); }
                 //R12Q2
                 var checkker2 = false;
