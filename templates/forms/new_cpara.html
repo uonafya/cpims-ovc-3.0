@@ -249,9 +249,9 @@ print(blu.sing("'Happy'"))
                                                                 M
                                                                 {% endif %}
                                                             </td>
+                                                            <td>{{child.id}}</td>
                                                             <td></td>
-                                                            <td></td>
-                                                            <td></td>
+                                                            <td>Yes</td>
                                                         </tr>
                                                         {% if hhmembers %}
                                                             {% for sibling in hhmembers %}
@@ -267,9 +267,9 @@ print(blu.sing("'Happy'"))
                                                                     M
                                                                 {% endif %}
                                                                 </td>
+                                                            <td>{{sibling.person.id}}</td>
                                                             <td></td>
-                                                            <td></td>
-                                                            <td></td>
+                                                            <td>{% if sibling.member_type == "TOVC" %} Yes {%else%} No {%endif%}</td>
                                                             </tr>
                                                             {% endfor %}
                                                             {% else %}
@@ -796,7 +796,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth13_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">2.8  For those no documented viral load results; Have the caregiver living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment)<span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">2.8  For those with no documented viral load results; Have the caregiver living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment)<span class="asteriskField">*</label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP13q }}
@@ -877,31 +877,31 @@ print(blu.sing("'Happy'"))
                                                                     </td>
                                                                     <td class="r12q1" id="{{ child.id }}_q12a_Qn" >
                                                                         <label class="radio-inline">
-                                                                            <input type="radio" name="{{ child.id }}_CP15q"  value="AYES">
+                                                                            <input type="radio" id="{{ child.id }}_CP15q" name="{{ child.id }}_CP15q"  value="AYES">
                                                                             Yes
                                                                         </label>
                                                                         <label class="radio-inline">
-                                                                            <input type="radio"  name="{{ child.id }}_CP15q"  value="ANNO">
+                                                                            <input type="radio" id="{{ child.id }}_CP15q"  name="{{ child.id }}_CP15q"  value="ANNO">
                                                                             No
                                                                         </label>
                                                                     </td>
                                                                     <td class="r12q2" id="{{ child.id }}_q12b_Qn">
                                                                         <label class="radio-inline">
-                                                                        <input type="radio" name="{{ child.id }}_CP16q" value="AYES">
+                                                                        <input type="radio" id="{{ child.id }}_CP16q" name="{{ child.id }}_CP16q" value="AYES">
                                                                             Yes
                                                                         </label>
                                                                         <label class="radio-inline">
-                                                                            <input type="radio"  name="{{ child.id }}_CP16q" value="ANNO">
+                                                                            <input type="radio" id="{{ child.id }}_CP16q" name="{{ child.id }}_CP16q" value="ANNO">
                                                                             No
                                                                         </label>
                                                                     </td>
                                                                     <td class="r12q3" id="{{ child.id }}_q12c_Qn">
                                                                         <label class="radio-inline">
-                                                                            <input type="radio" name="{{ child.id }}_CP17q" value="AYES">
+                                                                            <input type="radio" id="{{ child.id }}_CP17q" name="{{ child.id }}_CP17q" value="AYES">
                                                                                 Yes
                                                                         </label>
                                                                         <label class="radio-inline">
-                                                                            <input type="radio"  name="{{ child.id }}_CP17q" value="ANNO">
+                                                                            <input type="radio" id="{{ child.id }}_CP17q"  name="{{ child.id }}_CP17q" value="ANNO">
                                                                                 No
                                                                         </label>
                                                                     </td>
@@ -922,31 +922,31 @@ print(blu.sing("'Happy'"))
                                                                             </td>
                                                                             <td class="r12q1" id="{{ sibling.person.id }}_q12a_Qn" >
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio" name="{{ sibling.person.id }}_CP15q"  value="AYES">
+                                                                                    <input type="radio" id="{{ sibling.person.id }}_CP15q" name="{{ sibling.person.id }}_CP15q"  value="AYES">
                                                                                     Yes
                                                                                 </label>
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP15q"  value="ANNO">
+                                                                                    <input type="radio" id="{{ sibling.person.id }}_CP15q"  name="{{ sibling.person.id }}_CP15q"  value="ANNO">
                                                                                     No
                                                                                 </label>
                                                                             </td>
                                                                             <td class="r12q2" id="{{ sibling.person.id }}_q12b_Qn">
                                                                                 <label class="radio-inline">
-                                                                                <input type="radio" name="{{ sibling.person.id }}_CP16q" value="AYES">
+                                                                                <input type="radio" id="{{ sibling.person.id }}_CP16q" name="{{ sibling.person.id }}_CP16q" value="AYES">
                                                                                     Yes
                                                                                 </label>
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP16q" value="ANNO">
+                                                                                    <input type="radio" id="{{ sibling.person.id }}_CP16q" name="{{ sibling.person.id }}_CP16q" value="ANNO">
                                                                                     No
                                                                                 </label>
                                                                             </td>
                                                                             <td class="r12q3" id="{{ sibling.person.id }}_q12c_Qn">
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio" name="{{ sibling.person.id }}_CP17q" value="AYES">
+                                                                                    <input type="radio" id="{{ sibling.person.id }}_CP17q" name="{{ sibling.person.id }}_CP17q" value="AYES">
                                                                                         Yes
                                                                                 </label>
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP17q" value="ANNO">
+                                                                                    <input type="radio" id="{{ sibling.person.id }}_CP17q" name="{{ sibling.person.id }}_CP17q" value="ANNO">
                                                                                         No
                                                                                 </label>
                                                                             </td>
@@ -1614,7 +1614,7 @@ print(blu.sing("'Happy'"))
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                            </div>
                                                 <div class="col-md-12">
                                                     <div class="form-group">
                                                         <p> <blockquote> If there is a child between 4-5 years in the household and there is an ECDE center in the area, please ask the caregiver, otherwise skip and score the benchmark appropriately:</blockquote>
@@ -1658,8 +1658,8 @@ print(blu.sing("'Happy'"))
                                                 </div>
 
                                                 <hr>
-                                            </div>
-                                            <div class="tow mt-15">
+                                        <!-- </div> -->
+                                            <div class="row mt-15">
                                                 <div class="col-md-12">
                                                     <div class="col-md-12">
                                                         <div class="form-group note note-default" id="CP9b_Qn">
@@ -2008,6 +2008,7 @@ jQuery(document).ready(function()
                     if(qn == 'a'){ $('input[name=CP23q_b_1][value=AYES]').prop("checked", true);}
                     else if(qn == 'b'){ $('input[name=CP23q_b_2][value=AYES]').prop('checked', true); }
                     else if(qn == 'c'){ $('input[name=CP23q_b_3][value=AYES]').prop('checked', true); }
+                    validBench(['CP23q_b_1','CP23q_b_2','CP23q_b_3'],['AYES','AYES','AYES'],'CP3b')
                 }else{
                     
                     // if(qn == 'a'){ $('.ro12_total td.r12_t_q1 label input[value=ANNO]').prop('checked', true); }

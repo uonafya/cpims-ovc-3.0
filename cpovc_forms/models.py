@@ -1678,9 +1678,9 @@ class OVCCareIndividaulCpara(models.Model):
     def __unicode__(self):
         return self.answer
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.question_code = self.question.code
-        super(OVCCareCpara, self).save(force_insert, force_update, using, update_fields)
+    # def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    #     self.question_code = self.question.code
+    #     super(OVCCareCpara, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
         db_table = 'ovc_care_individual_cpara'
