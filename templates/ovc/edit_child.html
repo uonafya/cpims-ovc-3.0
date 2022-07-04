@@ -562,6 +562,12 @@
                             <td>Positive</td>
                             <td>{{data.date_of_event}}</td>
                         </tr>
+                        {% elif data.hiv_status == "HHEI" %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>Unknown (HEI)</td>
+                            <td>{{data.date_of_event}}</td>
+                        </tr>
                         {% elif data.hiv_status == "HSTN" %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
@@ -1092,7 +1098,7 @@
         }
     }
     function handle_hstatus(hstatus){
-        if (hstatus == 'HSTP') {
+        if ((hstatus == 'HSTP') || (hstatus == 'HHEI')){
             $('#facility_div').show();
             $('#facility_id_div').show();
             $('#art_div').show();

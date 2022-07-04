@@ -304,7 +304,19 @@ def ovc_registration(request, ovc_id, edit=0):
         else:
             org_cid = org_uid
             nhiv_status = str(hiv_status)
+            ohiv_status = ovc_detail.hiv_status
             edit_hiv = False
+            if ohiv_status == 'HSTP' and nhiv_status != 'HSTP':
+                edit_hiv = False
+                if request.user.is_staff:
+                    edit_hiv = True
+                print('Not allowed from Positive')
+            if nhiv_status == 'HHEI' and ohiv_status != 'HHEI':
+                edit_hiv = False
+                if ohiv_status == 'HSKN':
+                    edit_hiv = True
+                print('Not allowed to HEI')
+            '''
             if ovc_detail.hiv_status == 'HSKN':
                 edit_hiv = True
                 ovc_detail.hiv_status = nhiv_status
@@ -321,6 +333,7 @@ def ovc_registration(request, ovc_id, edit=0):
             elif ovc_detail.hiv_status == 'XXXX' or not ovc_detail.hiv_status:
                 edit_hiv = True
                 ovc_detail.hiv_status = nhiv_status
+            '''
         is_active = False if is_exited else True
         ovc_detail.registration_date = reg_date
         ovc_detail.has_bcert = has_bcert
@@ -345,7 +358,7 @@ def ovc_registration(request, ovc_id, edit=0):
                 person_id=ovc_id, criteria=criteria_id, is_void=False,
                 defaults={'person_id': ovc_id, 'criteria': criteria_id},)
         # Update Health status
-        if hiv_status == 'HSTP' and edit_hiv:
+        if hiv_status in ['HSTP', 'HHEI'] and edit_hiv:
             facility = request.POST.get('facility_id')
             art_status = request.POST.get('art_status')
             link_date = request.POST.get('link_date')
@@ -359,6 +372,16 @@ def ovc_registration(request, ovc_id, edit=0):
                               'art_status': art_status,
                               'date_linked': date_linked, 'ccc_number': ccc_no,
                               'is_void': False},)
+        # Delete linkage details
+        hiv_stats = ['HSTP', 'HHEI']
+        if ohiv_status in hiv_stats and nhiv_status not in hiv_stats:
+            print('Delete Linkage details')
+            try:
+                hhealth = get_object_or_404(OVCHealth, person_id=ovc_id)
+                hhealth.is_void = True
+                hhealth.save(update_fields=["is_void"])
+            except Exception:
+                print('No existing linkage details')
         # Update School details
         if school_level != 'SLNS':
             school_id = request.POST.get('school_id')

@@ -163,7 +163,7 @@
         "pk": 39810,
         "model": "cpovc_main.SetupList",
         "fields": {
-            "the_order": 14,
+            "the_order": 15,
             "user_configurable": false,
             "sms_keyword": false,
             "item_sub_category": "",
@@ -179,7 +179,7 @@
         "pk": 39811,
         "model": "cpovc_main.SetupList",
         "fields": {
-            "the_order": 14,
+            "the_order": 16,
             "user_configurable": false,
             "sms_keyword": false,
             "item_sub_category": "",
@@ -195,7 +195,7 @@
         "pk": 39812,
         "model": "cpovc_main.SetupList",
         "fields": {
-            "the_order": 14,
+            "the_order": 17,
             "user_configurable": false,
             "sms_keyword": false,
             "item_sub_category": "",
@@ -205,6 +205,22 @@
             "field_name": "eligibility_criteria_id",
             "item_description": "HIV- Breast-Feeding Adolescent",
             "item_category": "Eligibility Criteria"
+        }
+    },
+    {
+        "pk": 39813,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "HHEI",
+            "item_description_short": "Unknown (HEI)",
+            "field_name": "hiv_status_id",
+            "item_description": "Unknown (HEI)",
+            "item_category": "HIV Status"
         }
     }
 ]
