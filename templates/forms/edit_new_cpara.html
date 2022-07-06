@@ -877,31 +877,31 @@ print(blu.sing("'Happy'"))
                                                                     </td>
                                                                     <td class="r12q1" id="{{ child.id }}_q12a_Qn" >
                                                                         <label class="radio-inline">
-                                                                            <input type="radio" name="{{ child.id }}_CP15q" value="AYES" >
+                                                                            <input type="radio" name="{{ child.id }}_CP15q" value="AYES" {% if child.id|stringformat:'s'|add:'_CP15q'  in ind_cpara_data %} checked="" {% endif %}>
                                                                             Yes
                                                                         </label>
                                                                         <label class="radio-inline">
-                                                                            <input type="radio"  name="{{ child.id }}_CP15q"  value="ANNO">
+                                                                            <input type="radio"  name="{{ child.id }}_CP15q"  value="ANNO" {% if child.id|stringformat:'s'|add:'_CP15q' not in ind_cpara_data %} checked="" {% endif %}>
                                                                             No
                                                                         </label>
                                                                     </td>
                                                                     <td class="r12q2" id="{{ child.id }}_q12b_Qn">
                                                                         <label class="radio-inline">
-                                                                        <input type="radio" name="{{ child.id }}_CP16q" value="AYES">
+                                                                        <input type="radio" name="{{ child.id }}_CP16q" value="AYES" {% if child.id|stringformat:'s'|add:'_CP16q'  in ind_cpara_data %} checked="" {% endif %}>
                                                                             Yes
                                                                         </label>
                                                                         <label class="radio-inline">
-                                                                            <input type="radio"  name="{{ child.id }}_CP16q" value="ANNO">
+                                                                            <input type="radio"  name="{{ child.id }}_CP16q" value="ANNO" {% if child.id|stringformat:'s'|add:'_CP16q' not in ind_cpara_data %} checked="" {% endif %}>
                                                                             No
                                                                         </label>
                                                                     </td>
                                                                     <td class="r12q3" id="{{ child.id }}_q12c_Qn">
                                                                         <label class="radio-inline">
-                                                                            <input type="radio" name="{{ child.id }}_CP17q" value="AYES">
+                                                                            <input type="radio" name="{{ child.id }}_CP17q" value="AYES" {% if child.id|stringformat:'s'|add:'_CP17q'  in ind_cpara_data %} checked="" {% endif %}>
                                                                                 Yes
                                                                         </label>
                                                                         <label class="radio-inline">
-                                                                            <input type="radio"  name="{{ child.id }}_CP17q" value="ANNO">
+                                                                            <input type="radio"  name="{{ child.id }}_CP17q" value="ANNO" {% if child.id|stringformat:'s'|add:'_CP17q'  in ind_cpara_data %} checked="" {% endif %}>
                                                                                 No
                                                                         </label>
                                                                     </td>
@@ -922,31 +922,31 @@ print(blu.sing("'Happy'"))
                                                                             </td>
                                                                             <td class="r12q1" id="{{ sibling.person.id }}_q12a_Qn" >
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio" name="{{ sibling.person.id }}_CP15q"  value="AYES">
+                                                                                    <input type="radio" name="{{ sibling.person.id }}_CP15q"  value="AYES" {% if sibling.person.id|stringformat:'s'|add:'_CP15q'  in ind_cpara_data %} checked="" {% endif %}>
                                                                                     Yes
                                                                                 </label>
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP15q"  value="ANNO">
+                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP15q"  value="ANNO" {% if sibling.person.id|stringformat:'s'|add:'_CP15q' not in ind_cpara_data %} checked="" {% endif %}>
                                                                                     No
                                                                                 </label>
                                                                             </td>
                                                                             <td class="r12q2" id="{{ sibling.person.id }}_q12b_Qn">
                                                                                 <label class="radio-inline">
-                                                                                <input type="radio" name="{{ sibling.person.id }}_CP16q" value="AYES">
+                                                                                <input type="radio" name="{{ sibling.person.id }}_CP16q" value="AYES" {% if sibling.person.id|stringformat:'s'|add:'_CP16q'  in ind_cpara_data %} checked="" {% endif %}>
                                                                                     Yes
                                                                                 </label>
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP16q" value="ANNO">
+                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP16q" value="ANNO"  {% if sibling.person.id|stringformat:'s'|add:'_CP16q' not in ind_cpara_data %} checked="" {% endif %}>
                                                                                     No
                                                                                 </label>
                                                                             </td>
                                                                             <td class="r12q3" id="{{ sibling.person.id }}_q12c_Qn">
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio" name="{{ sibling.person.id }}_CP17q" value="AYES">
+                                                                                    <input type="radio" name="{{ sibling.person.id }}_CP17q" value="AYES" {% if sibling.person.id|stringformat:'s'|add:'_CP17q'  in ind_cpara_data %} checked="" {% endif %}>
                                                                                         Yes
                                                                                 </label>
                                                                                 <label class="radio-inline">
-                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP17q" value="ANNO">
+                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP17q" value="ANNO" {% if sibling.person.id|stringformat:'s'|add:'_CP17q' not in ind_cpara_data %} checked="" {% endif %}>
                                                                                         No
                                                                                 </label>
                                                                             </td>
@@ -1816,7 +1816,20 @@ print(blu.sing("'Happy'"))
 jQuery(document).ready(function()
 {
 
-   
+    //    Get the date validated on the go
+    
+    console.log($('input[name="CP1d"]').val())
+    var prev_date = $('input[name="CP1d"]').val()
+
+    if (prev_date === 'AYES'){
+        $('input[name="CP2d"]').attr('disabled', true);
+    }else{
+        $('input[name="CP2d"]').attr('disabled', true);
+    }
+
+    //  load data from individual cpara
+
+    
     
 	//multi selects
     $('#hhva_ha6, #hhva_ha21, #hhva_ha22, #hhva_ha28, #hhva_ha29, #hhva_ha30, #hhva_ha31').multiselect({

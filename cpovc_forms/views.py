@@ -11277,20 +11277,20 @@ def edit_cpara(request, id):
     edit_data_cpara['d_o_a']=d_o_a
     edit_data_cpara['CP2d']=CP2d
 
-    individual_cpara_data = []
+    individual_cpara_data = {}
 
-    individual_cpara = OVCCareIndividaulCpara.objects.filter(event=id)
+    individual_cpara = OVCCareIndividaulCpara.objects.filter(event=id, answer=True)
     for one_individual_cpara in individual_cpara:
-        question_s = one_individual_cpara.person+'_'+one_individual_cpara.question_code
+        question_s = str(one_individual_cpara.person.id) + '_' + (one_individual_cpara.question_code)
         answer = one_individual_cpara.answer
         if answer == True:
             answer = 'AYES'
         else:
             answer = 'ANNO'
-        
+                
         individual_cpara_data[question_s] = answer
 
-    
+    # breakpoint()
     # person_id=OVCSubPopulation.objects.filter(event=id).first().person_id
     # house_id = OVCHHMembers.objects.get(person_id=person_id).house_hold_id
     # person_id = OVCHHMembers.objects.get(house_hold=house_id, member_type='TOVC').person_id
@@ -11490,26 +11490,32 @@ def delete_cpara(request, id, btn_event_pk):
                 ovcpara = OVCCareCpara.objects.filter(event=del_event)
                 ovc_bench = OVCCareBenchmarkScore.objects.filter(event=del_event)
                 ovc_sub = OVCSubPopulation.objects.filter(event=del_event)
+                ovc_ind = OVCCareIndividaulCpara.objects.filter(event=del_event)
                 # pdb.set_trace()
                 if ovcpara:                    
                     ovcpara.update(is_void=True)
-                    msg = "OVC Cpara Deleted successfully"
+                    msg1 = "OVC Cpara Deleted successfully"
               
-                event_to_del.update(is_void=True)  
-                msg = "OVC Event Deleted successfully"
+                    event_to_del.update(is_void=True)  
+                    msg2 = "OVC Event Deleted successfully"
 
-                ovc_bench.update(is_void=True)
-                msg = "Benchmark Score deleted successfuly"
+                    ovc_bench.update(is_void=True)
+                    msg3 = "Benchmark Score deleted successfuly"
 
-                ovc_sub.update(is_void=True)
-                msg = "OVC sub population deleted successfuly"
+                    ovc_sub.update(is_void=True)
+                    msg4 = "OVC sub population deleted successfuly"
+
+                    ovc_ind.update(is_void=True)
+                    msg5 = "OVC individual deleted successfuly"
+
+                    messages = " ".join(msg1, msg2, msg3, msg4, msg5)
 
         else:
             msg = "Can't delete after 90 days"
     except Exception as e:
         msg = 'An error occured : %s' % str(e)
         print(str(e))
-    jsonCPARAData.append({'msg': msg})
+    jsonCPARAData.append({'msg': messages})
     return JsonResponse(jsonCPARAData,
                         content_type='application/json',
                         safe=False)

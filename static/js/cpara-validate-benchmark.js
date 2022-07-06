@@ -227,7 +227,7 @@ validBench(['CP1q', 'CP2q', 'CP3q', 'CP4q', 'CP5q'], ['AYES','AYES,ANA','AYES,AN
 validBench(['CP6q','CP7q','CP8q','CP9q','CP10q','CP11q','CP12q','CP13q','CP14q'], ['AYES','AYES,ANA','AYES','AYES','AYES,ANA','AYES','AYES','AYES,ANA','AYES'], 'CP2b');
 
 // Healthy Goal 3 >> Benchmark 3
-validBench(['CP23q_b_1','CP23q_b_2','CP23q_b_3'],['AYES','AYES','AYES'],'CP3b')
+// validBench(['CP23q_b_1','CP23q_b_2','CP23q_b_3'],['AYES','AYES','AYES'],'CP3b')
 // Healthy Goal 4 >> Benchmark 4
 $('input[name=CP41Skip').change(function (e){
 if ($('input[name=CP41Skip]:checked').val()==='ANA'){markBenchmark('CP4b',null);}
