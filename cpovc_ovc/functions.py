@@ -301,11 +301,13 @@ def ovc_registration(request, ovc_id, edit=0):
             cbo_uid = gen_cbo_id(cbo_id, ovc_id)
             org_cid = cbo_uid if org_uid == org_uid_check else org_uid
             ovc_detail.hiv_status = str(hiv_status)
+            nhiv_status = str(hiv_status)
+            ohiv_status = str(hiv_status)
         else:
             org_cid = org_uid
             nhiv_status = str(hiv_status)
             ohiv_status = ovc_detail.hiv_status
-            edit_hiv = False
+            edit_hiv = True
             if ohiv_status == 'HSTP' and nhiv_status != 'HSTP':
                 edit_hiv = False
                 if request.user.is_staff:
