@@ -13,7 +13,7 @@ triggerSkip('CP93Skip','ANA','CP35q','5');
 triggerSkip('CP91Skip','ANA','CP9b','5');
 
 triggerSkip('CP41Skip','ANA','CP4b','2');
-triggerSkip('CP44Skip','ANA','CP4b','2');
+triggerSkip('CP44Skip','ANA','CP21q','2');
 
 // Hard coded
 // Skip 2.1
@@ -21,14 +21,19 @@ $('input[name=CP21Skip]').change(function(){
     // console.log('Hello')
     let this_value = $('input[name=CP21Skip]:checked').val()
     
+    
     if(this_value==='AYES'){
-        // alert($('input[name=CP6q],input[name=CP7q],input[name=CP8q],input[name=CP9q],input[name=CP10q],input[name=CP11q]'))
-        $('input[name=CP6q],input[name=CP7q],input[name=CP8q]').removeAttr('disabled')
+        $('input[name=CP6q],input[name=CP7q],input[name=CP8q]').prop('readonly', false)
         $('input[name=CP6q],input[name=CP7q],input[name=CP8q]').prop('checked', false);
+        $('input[name=CP6q],input[name=CP7q],input[name=CP8q]').unbind('click')
+        
+        
 
     }else{
         $('input[name=CP6q][value=AYES],input[name=CP7q][value=AYES],input[name=CP8q][value=AYES]').prop('checked', true);
-        $('input[name=CP6q],input[name=CP7q],input[name=CP8q]').attr('disabled', true)
+        $('input[name=CP6q],input[name=CP7q],input[name=CP8q]').prop('required', false)
+        $('input[name=CP6q],input[name=CP7q],input[name=CP8q]').click(function(){return false;});
+        $('#skip21').addClass('hidden').after('<span id="skyp"><br><i style="color: grey;">Skipped questions</i><br/></span>')
     }
 })
 
@@ -38,13 +43,16 @@ $('input[name=CP24Skip]').change(function(){
     let this_value = $('input[name=CP24Skip]:checked').val()
     
     if(this_value==='AYES'){
-        // alert($('input[name=CP6q],input[name=CP7q],input[name=CP8q],input[name=CP9q],input[name=CP10q],input[name=CP11q]'))
-        $('input[name=CP9q],input[name=CP10q],input[name=CP11q]').removeAttr('disabled')
+        $('input[name=CP9q],input[name=CP10q],input[name=CP11q]').prop('readonly', false)
         $('input[name=CP9q],input[name=CP10q],input[name=CP11q]').prop('checked', false);
+        $('input[name=CP9q],input[name=CP10q],input[name=CP11q]').unbind('click');
+        $('#skip24').removeClass('hidden').after('')
 
     }else{
         $('input[name=CP9q][value=AYES],input[name=CP10q][value=AYES],input[name=CP11q][value=AYES]').prop('checked', true);
-        $('input[name=CP9q],input[name=CP10q],input[name=CP11q]').attr('disabled', true)
+        $('input[name=CP9q],input[name=CP10q],input[name=CP11q]').prop('required', false)
+        $('input[name=CP9q],input[name=CP10q],input[name=CP11q]').click(function(){return false;});
+        $('#skip24').addClass('hidden').after('<span id="skyp"><br><i style="color: grey;">Skipped questions</i><br/></span>')
     }
 })
 // triggerSkip('CP21Skip','ANA','CP27q','2')

@@ -10849,7 +10849,7 @@ def new_cpara(request, id):
         for b_item in bench_three:            
             person_id_bench=b_item.split('_')[0]
             quiz_code=b_item.split('_')[1]
-
+            
             print(f'The person id {person_id_bench} and the quiz code is {quiz_code}')
         
             child4 = RegPerson.objects.get(id=int(person_id_bench))
@@ -11515,7 +11515,7 @@ def delete_cpara(request, id, btn_event_pk):
     except Exception as e:
         msg = 'An error occured : %s' % str(e)
         print(str(e))
-    jsonCPARAData.append({'msg': messages})
+    jsonCPARAData.append({'msg': msg})
     return JsonResponse(jsonCPARAData,
                         content_type='application/json',
                         safe=False)

@@ -213,11 +213,11 @@ $('input[type=radio]').change(function (e) {
 });
 // Cpara
 
-markBenchmark('CP23q_b_1', false)
+// markBenchmark('CP23q_b_1', false)
 
-markBenchmark('CP23q_b_2', false)
+// markBenchmark('CP23q_b_2', false)
 
-markBenchmark('CP23q_b_3', false)
+// markBenchmark('CP23q_b_3', false)
 
 // markBenchmark('CP58q', false)
 
@@ -229,10 +229,14 @@ validBench(['CP6q','CP7q','CP8q','CP9q','CP10q','CP11q','CP12q','CP13q','CP14q']
 // Healthy Goal 3 >> Benchmark 3
 // validBench(['CP23q_b_1','CP23q_b_2','CP23q_b_3'],['AYES','AYES','AYES'],'CP3b')
 // Healthy Goal 4 >> Benchmark 4
-$('input[name=CP41Skip').change(function (e){
-if ($('input[name=CP41Skip]:checked').val()==='ANA'){markBenchmark('CP4b',null);}
-else{validBench(['CP18q', 'CP19q', 'CP20q', 'CP21q'], ['AYES','AYES,ANA', 'AYES','AYES'], 'CP4b')};
-})
+// $('input[name=CP41Skip').change(function (e){
+// if ($('input[name=CP41Skip]:checked').val()==='ANA'){
+//     $('input[name=CP4b][value=ANA]').prop("checked", true);
+//     }
+// else{
+validBench(['CP18q', 'CP19q', 'CP20q', 'CP21q'], ['AYES','AYES,ANA', 'AYES,ANA','AYES'], 'CP4b')
+// };
+// })
 // Stable: Goal 5: >> Benchmark 5
 validBench(['CP22q','CP23q','CP24q'], ['AYES,ANA','AYES,ANA','AYES'], 'CP5b');
 // Safe: Goal 6 >> Benchmark 6
@@ -260,32 +264,32 @@ $('input[name=p76q],input[name=p75q],input[name=p77q],input[name=p78q],input[nam
 
 // disable benchmark editing 
 
-// // $('input[name=CP1b]').attr('disabled', true);
-// $('input[name=CP1b]').click(function(){return false;});
+$('input[name=CP1b]').attr('disabled', true);
+$('input[name=CP1b]').click(function(){return false;});
 
-// // $('input[name=CP2b]').attr('disabled', true);
-// $('input[name=CP2b]').click(function(){return false;});
+$('input[name=CP2b]').attr('disabled', true);
+$('input[name=CP2b]').click(function(){return false;});
 
-// // $('input[name=CP3b]').attr('disabled', true);
-// $('input[name=CP3b]').click(function(){return false;});
+$('input[name=CP3b]').attr('disabled', true);
+$('input[name=CP3b]').click(function(){return false;});
 
-// // $('input[name=CP4b]').attr('disabled', true);
-// $('input[name=CP4b]').click(function(){return false;});
+$('input[name=CP4b]').attr('disabled', true);
+$('input[name=CP4b]').click(function(){return false;});
 
-// // $('input[name=CP5b]').attr('disabled', true);
-// $('input[name=CP5b]').click(function(){return false;});
+$('input[name=CP5b]').attr('disabled', true);
+$('input[name=CP5b]').click(function(){return false;});
 
-// // $('input[name=CP6b]').attr('disabled', true);
-// $('input[name=CP6b]').click(function(){return false;});
+$('input[name=CP6b]').attr('disabled', true);
+$('input[name=CP6b]').click(function(){return false;});
 
-// // $('input[name=CP7b]').attr('disabled', true);
-// $('input[name=CP7b]').click(function(){return false;});
+$('input[name=CP7b]').attr('disabled', true);
+$('input[name=CP7b]').click(function(){return false;});
 
-// // $('input[name=CP8b]').attr('disabled', true);
-// $('input[name=CP8b]').click(function(){return false;});
+$('input[name=CP8b]').attr('disabled', true);
+$('input[name=CP8b]').click(function(){return false;});
 
-// // $('input[name=CP9b]').attr('disabled', true);
-// $('input[name=CP9b]').click(function(){return false;});
+$('input[name=CP9b]').attr('disabled', true);
+$('input[name=CP9b]').click(function(){return false;});
 
 
 $('input[type=radio]').change(function (e) {  
@@ -339,11 +343,12 @@ $('input[type=radio]').change(function (e) {
     else{CP90b = 1;}
     console.log('benchScore CP90b=> '+CP90b);
     
-    benchmarkScore =  parseFloat(CP1b) + parseFloat(CP2b) + parseFloat(CP3b) + parseFloat(CP4b) + parseFloat(CP5b) + parseFloat(CP6b) + parseFloat(CP7b) + parseFloat(CP8b) + parseFloat(CP9b) // + parseFloat(CP10b) + parseFloat(CP11b) + parseFloat(CP12b) + parseFloat(CP13b) + parseFloat(CP14b) + parseFloat(CP15b) + parseFloat(CP16b) + parseFloat(CP17b);
-    healthScore = parseFloat(CP1b)+parseFloat(CP2b)+parseFloat(CP3b)+parseFloat(CP4b)
-    stableScore = parseFloat(CP5b)
-    safeScore = parseFloat(CP6b)+parseFloat(CP7b)+parseFloat(CP8b)
-    schoolScore = parseFloat(CP9b)
+    benchmarkScore =  parseFloat(CP1b) + parseFloat(CP2b) + parseFloat(CP3b) + parseFloat(CP4b) + parseFloat(CP5b) + parseFloat(CP6b) + parseFloat(CP7b) + parseFloat(CP8b) + parseFloat(CP9b);
+     // + parseFloat(CP10b) + parseFloat(CP11b) + parseFloat(CP12b) + parseFloat(CP13b) + parseFloat(CP14b) + parseFloat(CP15b) + parseFloat(CP16b) + parseFloat(CP17b);
+    healthScore = parseFloat(CP1b)+parseFloat(CP2b)+parseFloat(CP3b)+parseFloat(CP4b);
+    stableScore = parseFloat(CP5b);
+    safeScore = parseFloat(CP6b)+parseFloat(CP7b)+parseFloat(CP8b);
+    schoolScore = parseFloat(CP9b);
 
     console.log('TOTAL benchScore=> '+benchmarkScore);
     
@@ -460,7 +465,7 @@ function validBenchOLD(arrayOfInputsToCheck, arrayOfExpectedValues, idOfBenchmar
                     // $('input[name=CP74q]').val(benchmarkScore);
                     // console.log("added benchmark + 1 = "+benchmarkScore);
                     //update benchmark score
-                }else{
+                }else{click(function(){return true;})
                     $('input[name='+idOfBenchmarkQn+']').removeAttr('disabled');
                     $('input[name='+idOfBenchmarkQn+'][value=ANNO]').prop("checked", true);
                     $('input[name='+idOfBenchmarkQn+']').attr('disabled', true);
