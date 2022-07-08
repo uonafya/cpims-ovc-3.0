@@ -1145,7 +1145,13 @@ class OVCHIVManagement(models.Model):
     visit_date = models.DateTimeField(null=False)
     duration_art = models.CharField(max_length=3, null=True)
     height = models.CharField(max_length=3, null=True)
+    weight = models.CharField(max_length=3, null=True)
     muac = models.CharField(max_length=20, null=True)
+    currentregimen = models.CharField(max_length=20, null=True)
+    enoughdrugs = models.CharField(max_length=20, null=True)
+    attendingsuppportgroup = models.CharField(max_length=20, null=True)
+    pamacare = models.CharField(max_length=20, null=True)
+    enrolledotz = models.CharField(max_length=20, null=True)
     adherence = models.CharField(max_length=20, null=False)
     adherence_drugs_duration = models.CharField(max_length=3, null=True)
     adherence_counselling = models.CharField(max_length=20, null=True)
@@ -1672,9 +1678,9 @@ class OVCCareIndividaulCpara(models.Model):
     def __unicode__(self):
         return self.answer
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.question_code = self.question.code
-        super(OVCCareCpara, self).save(force_insert, force_update, using, update_fields)
+    # def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    #     self.question_code = self.question.code
+    #     super(OVCCareCpara, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
         db_table = 'ovc_care_individual_cpara'
