@@ -191,7 +191,7 @@ def save_cpara_form_by_domain(
 def get_past_cpt(ovc_id):
     # past cpt
     all_cpt_events = OVCCareEvents.objects.filter(
-        event_type_id='CPAR', person_id=ovc_id)
+        event_type_id='CPAR', person_id=ovc_id, is_void=False)
 
     caseplan_events = []
     try:
@@ -201,7 +201,8 @@ def get_past_cpt(ovc_id):
             one_event_healthy = []
             one_event_school = []
 
-            all_cpt = OVCCareCasePlan.objects.filter(event=one_caseplan_event)
+            all_cpt = OVCCareCasePlan.objects.filter(
+                event=one_caseplan_event, is_void=False)
             if all_cpt:
                 for one_cpt in all_cpt:
                     comp_date = one_cpt.completion_date.strftime('%d-%b-%Y')

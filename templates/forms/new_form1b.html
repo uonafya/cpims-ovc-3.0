@@ -49,7 +49,7 @@
 
 <h1 class="page-header">Forms <small>Caregiver Status and Service Monitoring (Form 1B)
 <b>{{ ovc.caretaker.first_name }} {{ ovc.caretaker.surname }} {{ ovc.caretaker.other_names }} | {{ ovc.caretaker.sex_id|gen_value:vals }} | 
-{% if ovc.caretaker.age >= '116 years' %}
+{% if ovc.caretaker.date_of_birth == '1900-01-01' %}
     DOB Not Provided
 {% else %}
     {{ ovc.caretaker.age }}

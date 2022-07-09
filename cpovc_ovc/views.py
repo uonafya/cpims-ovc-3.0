@@ -606,4 +606,3 @@ def ovc_manage(request):
         results = {'message': msg}
         return JsonResponse(results, content_type='application/json',
                             safe=False)
-

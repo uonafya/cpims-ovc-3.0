@@ -5,7 +5,7 @@ from import_export.admin import ImportExportModelAdmin
 from .models import (
     OVCAggregate, OVCFacility, OVCSchool, OVCCluster,
     OVCClusterCBO, OVCRegistration, OVCEligibility,
-    OVCHHMembers, OVCHouseHold)
+    OVCHHMembers, OVCHouseHold, OVCHealth)
 
 from django.contrib.admin.helpers import ActionForm
 from django import forms
@@ -40,7 +40,7 @@ class UpdateActionForm(ActionForm):
 class OVCRegistrationAdmin(admin.ModelAdmin):
     """Aggregate data admin."""
 
-    search_fields = ['person', 'person_id']
+    search_fields = ['caretaker__id', 'person__id', 'child_chv__id']
     list_display = ['person_id', 'person', 'child_cbo', 'child_chv',
                     'caretaker', 'registration_date', 'hiv_status',
                     'is_active', 'is_void']

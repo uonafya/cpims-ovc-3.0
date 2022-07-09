@@ -681,42 +681,11 @@
             }
         });
 
-         $("#HIV_RS_15").prop('disabled', true);
-        $("input[type='radio'][name='HIV_RS_14']").click(function() {
-            var value = $(this).val();
-            if(value=='ANNO') {
-                $("#HIV_RS_15").prop('disabled', true);
-                $("#HIV_RS_15").prop('required', false);
-                HIV_RS_15=true;
-            }
-            else {
-                $("#HIV_RS_15").prop('disabled', false);
-                HIV_RS_19=true;
-            }
-
-        });
-
-        $("#HIV_RS_17").prop('disabled', true);
-        $("input[type='radio'][name='HIV_RS_16']").click(function() {
-            var value = $(this).val();
-            if(value=='ANNO') {
-                $("#HIV_RS_17").prop('disabled', true);
-                $("#HIV_RS_17").prop('required', false);
-                HIV_RS_15=true;
-            }
-            else {
-                $("#HIV_RS_17").prop('disabled', false);
-                HIV_RS_19=true;
-            }
-
-        });
-
         $("#HIV_RS_19").prop('disabled', true);
         $("input[type='radio'][name='HIV_RS_18']").click(function() {
             var value = $(this).val();
             if(value=='ANNO') {
                 $("#HIV_RS_19").prop('disabled', true);
-                $("#HIV_RS_19").prop('required', false);
                 HIV_RS_19=true;
             }
             else {
@@ -737,68 +706,25 @@
             }
             else {
                 $("#HIV_RS_18A").prop('disabled', true);
-                $("#HIV_RS_18A").prop('required', false);
                 HIV_RS_18A=true;
             }       
         });
 
-        $('input[name=HIV_RS_18B]').attr("disabled",true);
-        $("input[type='radio'][name='HIV_RS_18']").click(function() {
-            var value = $(this).val();
-            if(value=='ANNO') {
-                $('input[name=HIV_RS_18B]').attr("disabled",true);
-                $('input[name=HIV_RS_18B]').attr("required",false);
-                $('input[name=HIV_RS_21]').attr("disabled",true);
-                $('input[name=HIV_RS_21]').attr("required",false);
-                $('input[name=HIV_RS_22]').attr("disabled",true);
-                $('input[name=HIV_RS_22]').attr("required",false);
-                $('input[name=HIV_RS_23]').attr("disabled",true);
-                $('input[name=HIV_RS_23]').attr("required",false);
-                $('input[name=HIV_RS_24]').attr("disabled",true);
-                $('input[name=HIV_RS_24]').attr("required",false);
-                HIV_RS_18B=true;
-            }
-            else {
-                $('input[name=HIV_RS_18B]').attr("disabled",false);
-                $('input[name=HIV_RS_18B]').attr("required",true);
-                $('input[name=HIV_RS_21]').attr("disabled",false);
-                $('input[name=HIV_RS_21]').attr("required",true);
-                $('input[name=HIV_RS_22]').attr("disabled",false);
-                $('input[name=HIV_RS_22]').attr("required",true);
-                $('input[name=HIV_RS_23]').attr("disabled",false);
-                $('input[name=HIV_RS_23]').attr("required",true);
-                $('input[name=HIV_RS_24]').attr("disabled",false);
-                $('input[name=HIV_RS_24]').attr("required",true);
-                HIV_RS_18B=true;
-            }
-        });
-
         $('input[name=HIV_RS_21]').attr("disabled",true);
-        $('input[name=HIV_RS_22]').attr("disabled",true);
         $("input[type='radio'][name='HIV_RS_18B']").click(function() {
             var value = $(this).val();
             if(value=='1') {
                 $('input[name=HIV_RS_21]').attr("disabled",false);
-                $('input[name=HIV_RS_22]').attr("disabled",false);
-                $('input[name=HIV_RS_24]').attr("disabled",false);
                 
                 HIV_RS_21=true;
             }
             else {
                 $('input[name=HIV_RS_21]').attr("disabled",true);
-                $('input[name=HIV_RS_21]').attr("required",false);
-                $('input[name=HIV_RS_22]').attr("disabled",true);
-                $('input[name=HIV_RS_22]').attr("required",false);
-                $('input[name=HIV_RS_23]').attr("disabled",true);
-                $('input[name=HIV_RS_23]').attr("required",false);
-                $('input[name=HIV_RS_24]').attr("disabled",true);
-                $('input[name=HIV_RS_24]').attr("required",false);
                 HIV_RS_21=true;
             }       
         });
 
         $('input[name=HIV_RS_23]').attr("disabled",true);
-        $('input[name=HIV_RS_24]').attr("disabled",true);
         $("input[type='radio'][name='HIV_RS_18B']").click(function() {
             var value = $(this).val();
             if(value=='1') {

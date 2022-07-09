@@ -247,12 +247,11 @@ def write_csv(data, file_name, params):
             uid = report_details[-1]
             fname = '%s-%s' % (uid, s_name)
             excel_file = '%s.xlsx' % (fname)
-            excel_file_path = '%s/%s' % (MEDIA_ROOT, excel_file)
+            excel_file_path = '%s/xlsx/%s.xlsx' % (MEDIA_ROOT, fname)
             writer = pd.ExcelWriter(excel_file_path, engine='xlsxwriter')
             data = pd.read_csv(csv_file)
             data.to_excel(writer, sheet_name='Sheet1', index=False)
             workbook = writer.book
-            excel_file_path = '%s/xlsx/%s.xlsx' % (MEDIA_ROOT, fname)
             workbook.add_worksheet('Sheet2')
             workbook.add_worksheet('Sheet3')
             if os.path.isfile(vba_file):

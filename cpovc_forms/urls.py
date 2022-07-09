@@ -205,6 +205,8 @@ urlpatterns = [
         name='new_caseplan'),
     path('caseplan/update/<int:ovcid>/<uuid:event_id>/',
          views.update_caseplan, name='update_caseplan'),
+    path('caseplan/delete/<int:id>/<uuid:event_id>/',
+         views.delete_caseplan, name='delete_caseplan'),
     path('caseplan-monitoring/new/<int:id>/',
          views.new_case_plan_monitoring, name='new_caseplan_monitoring'),
 
@@ -258,20 +260,11 @@ urlpatterns = [
     # New Graduation Monitoring Tool
     path('grad_monitor/new/<int:id>/',
          views.grad_monitor_tool, name='grad_monitor_tool'),
-
     path('edit_grad_monitor/new/<uuid:id>/',
          views.edit_grad_monitor, name='edit_grad_monitor'),
-
     path('delete_bench/<uuid:id>/',
          views.delete_benchmark, name='delete_benchmark'),
 
-    # HEI Tracker
-    path('new_hei_tracker/new/<int:id>/',
-         views.new_hei_tracker, name='new_hei_tracker'),
-    path('edit_heitracker/edit/<uuid:id>/',
-         views.edit_heitracker, name='edit_heitracker'),
-    path('delete_heitracker/<uuid:id>/',
-         views.delete_heitracker, name='delete_heitracker'),
 
     # cpara view
     path('cpara/new/<int:id>/', views.new_cpara, name='new_cpara'),
