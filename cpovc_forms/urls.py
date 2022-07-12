@@ -207,6 +207,8 @@ urlpatterns = [
          views.update_caseplan, name='update_caseplan'),
     path('caseplan/delete/<int:id>/<uuid:event_id>/',
          views.delete_caseplan, name='delete_caseplan'),
+    path('caseplan/monitor/<int:ovcid>/<uuid:event_id>/',
+         views.monitor_caseplan, name='monitor_caseplan'),
     path('caseplan-monitoring/new/<int:id>/',
          views.new_case_plan_monitoring, name='new_caseplan_monitoring'),
 
