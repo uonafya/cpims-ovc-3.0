@@ -6,7 +6,7 @@ triggerSkip('CP2bSkip','ANA','CP2b','2')
 triggerSkip('CP27Skip','ANA','CP2b','2')
 
 triggerSkip('CP6Skip','ANA','CP6b','4');
-triggerSkip('CP63Skip','ANA','CP28q','4');
+// triggerSkip('CP63Skip','ANA','CP58q','4');
 
 
 triggerSkip('CP93Skip','ANA','CP35q','5');
@@ -58,6 +58,25 @@ $('input[name=CP24Skip]').change(function(){
     }
 })
 // triggerSkip('CP21Skip','ANA','CP27q','2')
+
+// Skip 6.3
+$('input[name=CP63Skip]').change(function(){
+    // console.log('Hello')
+    let this_value = $('input[name=CP63Skip]:checked').val()
+    
+    if(this_value==='AYES'){       
+        $('input[name=CP58q]').prop('checked', false)
+        $('input[name=CP58q]').attr('disabled', false)
+        $('.r13q1').removeClass('hidden').after('');
+        $('.skyp3').remove();
+
+    }else{
+        $('input[name=CP58q][value=AYES]').prop('checked', true)
+        $('input[name=CP58q]').attr('disabled', true)
+        // &("input[name*='CP27q']").prop('checked', true)
+        $('.r13q1').addClass('hidden').after('<span class="skyp3"><br><i style="color: grey;">Skipped questions</i><br/></span>')
+    }
+})
 
 
 
