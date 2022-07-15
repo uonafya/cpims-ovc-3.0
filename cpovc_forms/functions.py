@@ -206,8 +206,10 @@ def get_past_cpt(ovc_id):
             if all_cpt:
                 for one_cpt in all_cpt:
                     comp_date = one_cpt.completion_date.strftime('%d-%b-%Y')
+                    cid = one_cpt.case_plan_id
                     if one_cpt.domain == 'DHNU':
                         one_event_healthy.append({
+                            'cid': cid,
                             'ev_domain': one_cpt.domain,
                             'ev_goal': one_cpt.goal,
                             'ev_need': one_cpt.need,
@@ -221,6 +223,7 @@ def get_past_cpt(ovc_id):
                         })
                     elif one_cpt.domain == 'DHES':
                         one_event_stable.append({
+                            'cid': cid,
                             'ev_domain': one_cpt.domain,
                             'ev_goal': one_cpt.goal,
                             'ev_need': one_cpt.need,
@@ -234,6 +237,7 @@ def get_past_cpt(ovc_id):
                         })
                     elif one_cpt.domain == 'DPRO':
                         one_event_safe.append({
+                            'cid': cid,
                             'ev_domain': one_cpt.domain,
                             'ev_goal': one_cpt.goal,
                             'ev_need': one_cpt.need,
@@ -247,6 +251,7 @@ def get_past_cpt(ovc_id):
                         })
                     elif one_cpt.domain == 'DEDU':
                         one_event_school.append({
+                            'cid': cid,
                             'ev_domain': one_cpt.domain,
                             'ev_goal': one_cpt.goal,
                             'ev_need': one_cpt.need,
