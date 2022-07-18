@@ -511,6 +511,7 @@
 {% if data.date_of_birth|gen_age > 15 %}
     <script>
         $(document).ready(function () {
+            
             // $('.under_15').find('input').addClass('skip_this').attr('disabled', true);
             // $('.under_15').find('label').addClass('skip_this_label');
             // disableSection('section_a');
@@ -535,15 +536,23 @@
 
 <!-- Working skip logic code based on age (esp tab 2) -->
 <script>
-    $(document).ready(function () {
+
+
+function age_filter(){
         var t_age = $('#the_age').val();
         if(t_age > 15){
             // alert("over "+t_age)
-            disableSection('section_a')
+            disableSection('under_15')
         }else{
             // alert("under "+t_age)
-            disableSection('section_b')
+            disableSection('over_15')
         }
+        }
+    $(document).ready(function () {
+        $('input[name=HIV_RS_15],input[name=HIV_RS_17]').prop('disabled', true)
+
+
+    age_filter()
     });
 </script>
 <!-- Working skip logic code based on age (esp tab 2) -->
@@ -677,7 +686,8 @@
                 switchTab("3");
             }else {
                 enableSection("section_a"); enableSection("section_b"); enableSection("section_c");
-                switchTab("1");
+                age_filter()
+                switchTab("2");
             }
         });
 
@@ -695,6 +705,28 @@
     
         });
 
+
+        $("input[name=HIV_RS_14]").click(function() {
+            q_rs14 = $(this).val()
+        if (q_rs14=='ANNO'){
+            $('#HIV_RS_15').prop('disabled', true);
+            console.log(q_rs4)
+        }
+        else
+        {
+            $('#HIV_RS_15').prop('disabled', false);
+            console.log($(this).val())
+        }
+        });
+
+        $("input[name=HIV_RS_16]").click(function() {
+            q_rs16 = $(this).val()
+        if (q_rs16=='ANNO'){        
+            $('#HIV_RS_17').prop('disabled', true)
+        }else{
+            $('#HIV_RS_17').prop('disabled', false)
+        }
+        });
         
 
         $("#HIV_RS_18A").prop('disabled', true);
@@ -710,30 +742,34 @@
             }       
         });
 
-        $('input[name=HIV_RS_21]').attr("disabled",true);
-        $("input[type='radio'][name='HIV_RS_18B']").click(function() {
-            var value = $(this).val();
-            if(value=='1') {
-                $('input[name=HIV_RS_21]').attr("disabled",false);
-                
-                HIV_RS_21=true;
+        // Section 2 Question 8 validation
+        $('input[name=HIV_RS_11]').click(function(){
+            var q8_val = $(this).val();
+            if (q8_val=='ANNO'){
+                disableSection("section_c")
+                switchTab("3");
             }
-            else {
-                $('input[name=HIV_RS_21]').attr("disabled",true);
-                HIV_RS_21=true;
-            }       
-        });
+            else{
+                enableSection("section_c")
+                switchTab("2");
+            }
+        })
 
+        // Section 3 Question 3b validation
         $('input[name=HIV_RS_23]').attr("disabled",true);
         $("input[type='radio'][name='HIV_RS_18B']").click(function() {
             var value = $(this).val();
             if(value=='1') {
-                $('input[name=HIV_RS_23]').attr("disabled",false);
+                $('input[name=HIV_RS_23], input[name=HIV_RS_24]').attr("disabled",false);
+                $('input[name=HIV_RS_21], input[name=HIV_RS_22]').attr("disabled",false);
+                $('input[name=facility_field]').attr('disabled',false)
                 
                 HIV_RS_23=true;
             }
             else {
-                $('input[name=HIV_RS_23]').attr("disabled",true);
+                $('input[name=HIV_RS_23], input[name=HIV_RS_24]').attr("disabled",true);
+                $('input[name=HIV_RS_21], input[name=HIV_RS_22]').attr("disabled",true);
+                $('input[name=facility_field]').attr('disabled',true)
                 HIV_RS_23=true;
             }       
         });

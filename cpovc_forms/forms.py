@@ -9202,7 +9202,7 @@ class CparaAssessment(forms.Form):
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))
     CP36q = forms.ChoiceField(
-        choices=YESNO_CHOICES,
+        choices=YESNOANA_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,
             attrs={'data-parsley-required': 'true'}))  

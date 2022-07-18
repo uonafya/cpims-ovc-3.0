@@ -246,7 +246,7 @@ validBench(['CP30q','CP31q'],['AYES','AYES'],'CP7b')
 // Safe: Goal 8  >> Benchmark 8
 validBench(['CP32q'],['AYES'],'CP8b')
 // Schooled: Goal 8: Benachmark 9
-validBench(['CP33q','CP34q','CP35q','CP36q'],['AYES','AYES','AYES','AYES'],'CP9b')
+validBench(['CP33q','CP34q','CP35q','CP36q'],['AYES','AYES','AYES','AYES,ANA'],'CP9b')
 // control
 validBench(['CP330q','CP340q','CP350q','CP360q'],['AYES','AYES','AYES','AYES'],'CP90b')
 
