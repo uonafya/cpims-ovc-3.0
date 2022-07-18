@@ -9976,7 +9976,7 @@ def new_hivscreeningtool(request, id):
                     data_to_save[skip] = False
 
                 print(data_to_save)
-                breakpoint()
+                # breakpoint()
                 ovcscreeningtool = OVCHIVRiskScreening.objects.create(
                     person=RegPerson.objects.get(pk=int(id)),
                     date_of_event=data_to_save.get('HIV_RA_1A'),
