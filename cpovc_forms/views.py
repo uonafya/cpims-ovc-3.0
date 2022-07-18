@@ -9269,14 +9269,22 @@ def monitor_caseplan(request, event_id, ovcid):
     caseplan_events = get_past_cpt(ovc_id)
 
     check_fields = ['sex_id', 'relationship_type_id', 'case_plan_goals_health',
-                    'case_plan_goals_school']
+                    'case_plan_goals_school', 'case_plan_goals_stable',
+                    'case_plan_goals_safe', 'case_plan_gaps_health',
+                    'case_plan_gaps_school', 'case_plan_gaps_stable',
+                    'case_plan_gaps_safe', 'case_plan_priorities_health',
+                    'case_plan_priorities_school',
+                    'case_plan_priorities_stable',
+                    'case_plan_priorities_safe', 'case_plan_services_health',
+                    'case_plan_services_school', 'case_plan_services_stable',
+                    'case_plan_services_safe']
     vals = get_dict(field_name=check_fields)
     init_data = RegPerson.objects.filter(pk=ovcid)
 
     return render(request, 'forms/monitor_case_plan.html',
                   {'form': form, 'init_data': init_data, 'vals': vals,
                    'child': child, 'this_event': this_eventt,
-                   'care_giver': care_giver,
+                   'care_giver': care_giver, 'cp_id': event_id,
                    'caseplan_events': caseplan_events})
 
 
