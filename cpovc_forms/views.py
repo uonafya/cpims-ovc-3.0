@@ -9949,6 +9949,7 @@ def new_hivscreeningtool(request, id):
                     'HIV_RS_14',
                     'HIV_RS_16',
                     'HIV_RS_18',
+                    'HIV_RS_18A',
                     'HIV_RS_21',
                     'HIV_RS_23',
 
@@ -9969,7 +9970,13 @@ def new_hivscreeningtool(request, id):
                     facility_res = OVCFacility.objects.get(id=facility).facility_code
                 else:
                     facility_res = None
+                
+                skipped = boolean_fields - data_to_save.keys()
+                for skip in skipped:
+                    data_to_save[skip] = False
 
+                print(data_to_save)
+                breakpoint()
                 ovcscreeningtool = OVCHIVRiskScreening.objects.create(
                     person=RegPerson.objects.get(pk=int(id)),
                     date_of_event=data_to_save.get('HIV_RA_1A'),
