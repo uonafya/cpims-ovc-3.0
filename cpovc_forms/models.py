@@ -1088,9 +1088,49 @@ class OVCCareQuestions(models.Model):
 
 
 
+# class OVCHIVRiskScreening(models.Model):
+#     risk_id = models.UUIDField( primary_key=True, default=uuid.uuid4, editable=False)
+#     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+#     test_done_when = models.BooleanField(null=True)
+#     test_donewhen_result = models.BooleanField(null=True)
+#     caregiver_know_status = models.BooleanField(null=True)
+#     caregiver_knowledge_yes = models.CharField(max_length=50, null=True)
+#     parent_PLWH = models.BooleanField(null=True)
+#     child_sick_malnourished = models.BooleanField(null=True)
+#     child_sexual_abuse = models.BooleanField(null=True)
+#     adol_sick = models.BooleanField(null=True)
+#     adol_sexual_abuse = models.BooleanField(null=True)
+#     sex = models.BooleanField(null=True)
+#     sti = models.BooleanField(null=True)
+#     hiv_test_required = models.BooleanField(null=True)
+#     parent_consent_testing = models.BooleanField(null=True)
+#     parent_consent_date = models.DateTimeField(default=timezone.now, null=True)
+#     referral_made = models.BooleanField(null=True)
+#     referral_made_date = models.DateTimeField(default=timezone.now, null=True)
+#     referral_completed = models.BooleanField(null=True)
+#     referral_completed_date = models.DateTimeField(default=timezone.now, null=True)
+#     not_completed = models.CharField(max_length=50)
+#     test_result = models.CharField(max_length=20, null=True)
+#     art_referral = models.BooleanField(null=True)
+#     art_referral_date = models.DateTimeField(default=timezone.now, null=True)
+#     art_referral_completed = models.BooleanField(null=True)
+#     art_referral_completed_date = models.DateTimeField(default=timezone.now, null=True)
+#     facility_code = models.CharField(max_length=10, null=True)
+#     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+#     is_void = models.BooleanField(null=True)
+#     date_of_event = models.DateField(default=timezone.now, null=True)
+#     timestamp_created = models.DateTimeField(auto_now_add=True)
+#     timestamp_updated = models.DateTimeField(auto_now=True)
+
+#     class Meta:
+#         db_table = 'ovc_risk_screening'
+
+#     def __unicode__(self):
+#         return str(self.risk_id)
 class OVCHIVRiskScreening(models.Model):
-    risk_id = models.UUIDField( primary_key=True, default=uuid.uuid4, editable=False)
+    risk_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+
     test_done_when = models.BooleanField(null=True)
     test_donewhen_result = models.BooleanField(null=True)
     caregiver_know_status = models.BooleanField(null=True)
@@ -1098,27 +1138,30 @@ class OVCHIVRiskScreening(models.Model):
     parent_PLWH = models.BooleanField(null=True)
     child_sick_malnourished = models.BooleanField(null=True)
     child_sexual_abuse = models.BooleanField(null=True)
+    traditional_procedure = models.BooleanField(null=True)
     adol_sick = models.BooleanField(null=True)
+    adol_had_tb = models.BooleanField(null=True)
     adol_sexual_abuse = models.BooleanField(null=True)
     sex = models.BooleanField(null=True)
     sti = models.BooleanField(null=True)
+    sharing_needles = models.BooleanField(null=True)
     hiv_test_required = models.BooleanField(null=True)
     parent_consent_testing = models.BooleanField(null=True)
-    parent_consent_date = models.DateTimeField(default=timezone.now, null=True)
+    parent_consent_date = models.DateField(default=timezone.now, null=True)  ###date new 1
     referral_made = models.BooleanField(null=True)
-    referral_made_date = models.DateTimeField(default=timezone.now, null=True)
+    referral_made_date = models.DateField(default=timezone.now, null=True)  ####
     referral_completed = models.BooleanField(null=True)
-    referral_completed_date = models.DateTimeField(default=timezone.now, null=True)
+    referral_completed_date = models.DateField(default=timezone.now, null=True)  ### date new 2
     not_completed = models.CharField(max_length=50)
     test_result = models.CharField(max_length=20, null=True)
     art_referral = models.BooleanField(null=True)
-    art_referral_date = models.DateTimeField(default=timezone.now, null=True)
+    art_referral_date = models.DateField(default=timezone.now, null=True)  #### date
     art_referral_completed = models.BooleanField(null=True)
-    art_referral_completed_date = models.DateTimeField(default=timezone.now, null=True)
+    art_referral_completed_date = models.DateField(default=timezone.now, null=True)  #### date
     facility_code = models.CharField(max_length=10, null=True)
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+    date_of_event = models.DateField(default=timezone.now, null=True)  ### date
     is_void = models.BooleanField(null=True)
-    date_of_event = models.DateField(default=timezone.now, null=True)
     timestamp_created = models.DateTimeField(auto_now_add=True)
     timestamp_updated = models.DateTimeField(auto_now=True)
 
