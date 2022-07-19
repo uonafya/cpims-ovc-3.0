@@ -6197,6 +6197,15 @@ class HIV_SCREENING_FORM(forms.Form):
         # 'data-parsley-errors-container': "#errorfield"
     }))
 
+    HIV_RS_06A = forms.ChoiceField(
+        choices = YESNO_CHOICES,
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        # 'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+
     HIV_RS_07 = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
@@ -6225,6 +6234,24 @@ class HIV_SCREENING_FORM(forms.Form):
     }))
 
     HIV_RS_10 = forms.ChoiceField(
+        choices = YESNO_CHOICES,
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        # 'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+
+    HIV_RS_10A = forms.ChoiceField(
+        choices = YESNO_CHOICES,
+        widget = forms.RadioSelect(
+        # renderer=RadioCustomRenderer,
+        attrs={
+        # 'data-parsley-required': 'true',
+        # 'data-parsley-errors-container': "#errorfield"
+    }))
+
+    HIV_RS_10B = forms.ChoiceField(
         choices = YESNO_CHOICES,
         widget = forms.RadioSelect(
         # renderer=RadioCustomRenderer,
