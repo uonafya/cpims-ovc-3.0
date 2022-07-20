@@ -125,7 +125,7 @@
                                                     {{ form.HIV_RS_03 }}
                                             </td>
                                             <td>
-                                                <!-- {{form.HIV_RS_03A}} -->
+                                                    <!-- {{form.HIV_RS_03A}} -->
                                             </td>
 
                                         </tr>
@@ -160,7 +160,8 @@
                                         </tr>
                                         <tr class="section_a q1 under_15">
                                             <td>Q1</td>
-                                            <td>Is the biological father/mother of the child living/ lived with HIV?  
+                                            <td>
+                                                Is the biological father/mother/siblings of the child living/ lived with HIV?
                                             </td>
                                             <td>
                                                     {{ form.HIV_RS_04 }}
@@ -169,22 +170,31 @@
                                         </tr>
                                         <tr class="section_a q2 under_15">
                                             <td>Q2</td>
-                                            <td>Has the child been persistently sick/malnurished in the past 3 months without improvement?
-                                                </td>
+                                            <td>
+                                                Has the child been persistently sick/malnourished/Failure to trive in the past 3 months without improvement?
+                                            </td>
                                             <td>
                                                     {{ form.HIV_RS_05 }}
 
                                             </td>
-                                        </tr>
-                                    
+                                        </tr>                                    
                                         <tr class="section_a q3 under_15">
                                             <td>Q3</td>
                                             <td>
-                                            Is the child exposed to sexual abuse (defiled/raped) or has been physically forced to have sexual intercouse?
-
+                                                Is the child exposed to sexual abuse (defiled/raped) ?
                                             </td>
                                             <td>
                                                     {{ form.HIV_RS_06 }}
+
+                                            </td>
+                                        </tr>
+                                        <tr class="section_a q4 under_15">
+                                            <td>Q4</td>
+                                            <td>
+                                                Has the child been subjected to traditional/non medical procedures (eg scarification/tattooing, traditional circumcision) ?
+                                            </td>
+                                            <td>
+                                                    {{ form.HIV_RS_06A }}
 
                                             </td>
                                         </tr>
@@ -193,9 +203,9 @@
                                         </tr>
                                         
                                         <tr class="section_b q4 over_15">
-                                            <td>Q4</td>
+                                            <td>Q5</td>
                                             <td>
-                                                    Have you been persistently sick in the past 3 months without improvement?
+                                                Have you been persistently sick in the past 3 months without improvement?			
                                             </td>
                                             <td>
                                                     {{ form.HIV_RS_07 }}
@@ -203,9 +213,9 @@
                                             </td>
                                         </tr>
                                         <tr class="section_b q5 over_15">
-                                            <td>Q5</td>
+                                            <td>Q6</td>
                                             <td>
-                                                    Have you been sexually abuse (defiled) or been physically forced to have sexual intercourse?
+                                                Have you had TB in the last 12 months?
 
                                             </td>
                                             <td>
@@ -214,19 +224,43 @@
                                             </td>
                                         </tr>
                                         <tr class="section_b q6 over_15">
-                                            <td>Q6</td>
-                                            <td>Have you had sexual intercourse in the past 6 months?                                                </td>
+                                            <td>Q7</td>
+                                            <td>
+                                                Have you been sexually abuse (defiled) or been physically forced to have sexual intercouse?			
+                                            </td>
                                             <td>
                                                     {{ form.HIV_RS_09 }}
                                             </td>
                                         </tr>
                                         <tr class="section_b q7 over_15">
-                                            <td>Q7</td>
+                                            <td>Q8</td>
                                             <td>
-                                            Do you have any Symptoms of sexually transmitted infections? {Penial/Vaginal sores, unusual discharge or Pain)
+                                                Have you had unprotected sexual intercourse in the past 6 months?
                                             </td>
                                             <td>
                                                     {{ form.HIV_RS_10 }}
+
+                                            </td>
+                                            
+                                        </tr>
+                                        <tr class="section_b q7 over_15">
+                                            <td>Q9</td>
+                                            <td>
+                                                Do you have any Symptoms of sexually transmitted infections? {Penial/Vaginal sores, unusual discharge or Pain) ?
+                                            </td>
+                                            <td>
+                                                    {{ form.HIV_RS_10A }}
+
+                                            </td>
+                                            
+                                        </tr>
+                                        <tr class="section_b q7 over_15">
+                                            <td>Q10</td>
+                                            <td>
+                                                Are you an IV drug user sharing needles?
+                                            </td>
+                                            <td>
+                                                    {{ form.HIV_RS_10B }}
 
                                             </td>
                                             
@@ -238,19 +272,13 @@
                                         <tr class="section_b q8">
                                                 <td>Q8</td>
                                                 <td>
-                                                Did the child/Adolescent/youth have a YES to at least one of the above questions?
+                                                    Did the child/Adolescent/youth have a YES to Question 2 to 10?										
                                                 </td>
                                                 <td>
-                                                        {{ form.HIV_RS_11 }}
-
-                                                </td>
-                                                
-                                            </tr>
-
-                                
-
-                                        
-                                    </tbody>
+                                                    {{ form.HIV_RS_11 }}
+                                                </td>                                                
+                                        </tr>
+                                     </tbody>
                                 </table>
 
                                 <p>&nbsp;</p>
@@ -262,6 +290,7 @@
                         <!-- begin wizard step-3 -->
                         <div class="wizard-step-3">
                             <h3 style="margin-top: 0;color:#55518a">3. PROGRESS MONITORING</h3>
+                            <small>This section is used to track progress of children who are at risk and require an HIV test.</small>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>

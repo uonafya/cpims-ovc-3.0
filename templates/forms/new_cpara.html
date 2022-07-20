@@ -2068,21 +2068,31 @@ jQuery(document).ready(function()
         $('input[type=radio]').on('change', function () {
 
             //  Score benchamrk 3
+            let incremenr = 0
             if($('input[name={{child.id}}_CP15q]:checked').val() == 'AYES'){
-                $('input[name=CP23q_b_1][value=AYES]').prop("checked", true);}
-            else{
+                $('input[name=CP23q_b_1][value=AYES]').prop("checked", true);
+                incremenr += 1
+            }else{
                 $('input[name=CP23q_b_1][value=ANNO]').prop("checked", true);}
        
             if($('input[name={{child.id}}_CP16q]:checked').val() == 'AYES'){
-                $('input[name=CP23q_b_2][value=AYES]').prop("checked", true);}
-            else{
+                $('input[name=CP23q_b_2][value=AYES]').prop("checked", true);
+                incremenr += 1
+            }else{
                 $('input[name=CP23q_b_2][value=ANNO]').prop("checked", true);}
         
         
             if($('input[name={{child.id}}_CP17q]:checked').val() == 'AYES'){
-                $('input[name=CP23q_b_3][value=AYES]').prop("checked", true);}
-            else{
+                $('input[name=CP23q_b_3][value=AYES]').prop("checked", true);
+                incremenr += 1
+            }else{
                 $('input[name=CP23q_b_3][value=ANNO]').prop("checked", true);}
+
+                if (incremenr==3){
+                    $('input[name=CP3b][value=AYES]').prop("checked", true);
+                }else{
+                    $('input[name=CP3b][value=ANNO]').prop("checked", true);
+                }
 
             // Question 6.3
             if($('input[name={{child.id}}_CP27q2]:checked').val() == 'AYES'){
