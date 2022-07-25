@@ -310,32 +310,18 @@ def ovc_registration(request, ovc_id, edit=0):
             edit_hiv = True
             if ohiv_status == 'HSTP' and nhiv_status != 'HSTP':
                 edit_hiv = False
-                if request.user.is_staff:
-                    edit_hiv = True
-                print('Not allowed from Positive')
-            if nhiv_status == 'HHEI' and ohiv_status != 'HHEI':
-                edit_hiv = False
-                if ohiv_status == 'HSKN':
-                    edit_hiv = True
-                print('Not allowed to HEI')
-            '''
-            if ovc_detail.hiv_status == 'HSKN':
+            elif nhiv_status == 'HHEI' and ohiv_status != 'HHEI':
                 edit_hiv = True
-                ovc_detail.hiv_status = nhiv_status
-            elif ovc_detail.hiv_status == 'HSTN' and nhiv_status == 'HSTP':
+                if nhiv_status == 'HSTP':
+                    edit_hiv = False
+            elif ohiv_status == 'HHEI' and nhiv_status != 'HHEI':
                 edit_hiv = True
-                ovc_detail.hiv_status = nhiv_status
-            elif ovc_detail.hiv_status == 'HSTP' and nhiv_status == 'HSTN':
-                if request.user.is_staff:
-                    edit_hiv = True
-                    ovc_detail.hiv_status = nhiv_status
-            elif ovc_detail.hiv_status == 'HSTP' and nhiv_status == 'HSTP':
-                edit_hiv = True
-                ovc_detail.hiv_status = nhiv_status
-            elif ovc_detail.hiv_status == 'XXXX' or not ovc_detail.hiv_status:
-                edit_hiv = True
-                ovc_detail.hiv_status = nhiv_status
-            '''
+                if nhiv_status == 'HSKN':
+                    edit_hiv = False
+        if request.user.is_staff:
+            edit_hiv = True
+        if edit_hiv:
+            ovc_detail.hiv_status = nhiv_status
         is_active = False if is_exited else True
         ovc_detail.registration_date = reg_date
         ovc_detail.has_bcert = has_bcert
@@ -369,15 +355,13 @@ def ovc_registration(request, ovc_id, edit=0):
             if facility and art_status and date_linked and ccc_no:
                 health, created = OVCHealth.objects.update_or_create(
                     person_id=ovc_id,
-                    defaults={'person_id': ovc_id,
-                              'facility_id': facility,
+                    defaults={'facility_id': facility,
                               'art_status': art_status,
                               'date_linked': date_linked, 'ccc_number': ccc_no,
                               'is_void': False},)
         # Delete linkage details
         hiv_stats = ['HSTP', 'HHEI']
         if ohiv_status in hiv_stats and nhiv_status not in hiv_stats:
-            print('Delete Linkage details')
             try:
                 hhealth = get_object_or_404(OVCHealth, person_id=ovc_id)
                 hhealth.is_void = True

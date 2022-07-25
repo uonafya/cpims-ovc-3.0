@@ -312,7 +312,7 @@ Caregiver details | {{care_giver}}
                             <td class="field">HIV Status</td>
                             <td>{{ creg.hiv_status|gen_value:vals }}</td>
                         </tr>
-                        {% if creg.hiv_status == 'HSTP' %}
+                        {% if creg.hiv_status == 'HSTP' or creg.hiv_status == 'HHEI' %}
                         <tr>
                             <td class="field">Facility</td>
                             <td>{{ health.facility.facility_name }}</td>

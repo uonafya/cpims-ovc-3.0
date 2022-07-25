@@ -252,7 +252,7 @@ def ovc_edit(request, id):
         # Get health information
         ccc_no, date_linked, art_status = '', '', ''
         facility_id, facility = '', ''
-        if creg.hiv_status == 'HSTP':
+        if creg.hiv_status in ['HSTP', 'HHEI']:
             health = get_health(ovc_id)
             if health:
                 ccc_no = health.ccc_number
@@ -391,7 +391,7 @@ def ovc_view(request, id):
                 gparams[gkey] = extid.identifier
         # Health details
         health = {}
-        if creg.hiv_status == 'HSTP':
+        if creg.hiv_status in ['HSTP', 'HHEI']:
             health = get_health(ovc_id)
         # School details
         school = {}
