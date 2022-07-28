@@ -33,13 +33,25 @@ REPORTS[26] = 'caregivers_served'
 REPORTS[27] = 'kpis'
 REPORTS[28] = 'hiv_risk_screening'
 REPORTS[29] = 'hiv_management'
-
+# New reports
+REPORTS[31] = 'registration'
+REPORTS[32] = 'registration'
+REPORTS[33] = 'registration'
+REPORTS[34] = 'registration'
+REPORTS[35] = 'registration'
+REPORTS[36] = 'registration'
+REPORTS[37] = 'registration'
+REPORTS[38] = 'registration'
+REPORTS[39] = 'registration'
+REPORTS[40] = 'registration'
+# Other
 REPORTS[51] = 'datim'
 REPORTS[52] = 'pepfar'
 REPORTS[53] = 'kpi'
 REPORTS[54] = 'datim_mer_22'
 REPORTS[55] = 'datim_mer_23'
 REPORTS[56] = 'datim_mer_24'
+REPORTS[57] = 'datim_mer_26'
 
 # Master List
 QUERIES['master_list'] = '''
