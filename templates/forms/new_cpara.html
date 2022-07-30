@@ -915,7 +915,7 @@ print(blu.sing("'Happy'"))
                                                                 {% endif %}
                                                                 {% if hhmembers %}
                                                                     {% for sibling in hhmembers %}
-                                                                        {% if sibling.person.years >= 10 and sibling.person.years <= 20 %}
+                                                                        {% if sibling.person.years >= 12 and sibling.person.years <= 20 %}
                                                                         <tr class="row12">
                                                                             <td>
                                                                                 <a href="{% url 'view_person' id=sibling.person.id %}">{{ sibling.person.first_name }} {{ sibling.person.surname }} {{ sibling.person.last_name }}</a>
@@ -951,6 +951,7 @@ print(blu.sing("'Happy'"))
                                                                                 </label>
                                                                             </td>
                                                                         </tr>
+                                                                        
                                                                        
                                                                         {% endif %}
                                                                     {% endfor %}

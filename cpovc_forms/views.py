@@ -10741,7 +10741,7 @@ def new_cpara(request, id):
                 ind_answer = True
             else:
                 ind_answer = False
-            breakpoint()
+            # breakpoint()
             
             try:
                 OVCCareIndividaulCpara.objects.create(
@@ -10763,8 +10763,8 @@ def new_cpara(request, id):
                 print(error_message)
 
         else:
-            for h_mmembers in hhmembers:
-                hh_members = []
+            hh_members = []
+            for h_mmembers in hhmembers:                
                 hh_person_ids = h_mmembers.person.id
                 hh_members.append(hh_person_ids)
             hh_members.append(id)
