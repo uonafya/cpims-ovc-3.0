@@ -34,16 +34,17 @@ REPORTS[27] = 'kpis'
 REPORTS[28] = 'hiv_risk_screening'
 REPORTS[29] = 'hiv_management'
 # New reports
-REPORTS[31] = 'registration'
-REPORTS[32] = 'registration'
-REPORTS[33] = 'registration'
-REPORTS[34] = 'registration'
-REPORTS[35] = 'registration'
-REPORTS[36] = 'registration'
-REPORTS[37] = 'registration'
-REPORTS[38] = 'registration'
-REPORTS[39] = 'registration'
-REPORTS[40] = 'registration'
+REPORTS[30] = 'case_transfer'
+REPORTS[31] = 'critical_events'
+REPORTS[32] = 'list_of_not_served_q'
+REPORTS[33] = 'list_of_not_served_m'
+REPORTS[34] = 'cpara_v1'
+REPORTS[35] = 'case_plan_achievement'
+REPORTS[36] = 'active_beneficiary'
+REPORTS[37] = 'benchmark_v1'
+REPORTS[38] = 'graduation'
+REPORTS[39] = 'hei'
+REPORTS[40] = 'exit_without_graduation'
 # Other
 REPORTS[51] = 'datim'
 REPORTS[52] = 'pepfar'
@@ -4316,4 +4317,37 @@ WHERE
 AND (vw_cpims_treatment.exit_status = 'ACTIVE' 
  AND vw_cpims_treatment.registration_date <= '31-mar-2019')
 GROUP BY CBO, ward, County,AgeRange,ward_id,countyid,Gender,vw_cpims_treatment.linked
+'''
+# 30
+QUERIES['case_transfer'] = '''
+'''
+# 31
+QUERIES['critical_events'] = '''
+'''
+# 32
+QUERIES['list_of_not_served_q'] = '''
+'''
+# 33
+QUERIES['list_of_not_served_m'] = '''
+'''
+# 34
+QUERIES['cpara_v1'] = '''
+'''
+# 35
+QUERIES['case_plan_achievement'] = '''
+'''
+# 36
+QUERIES['active_beneficiary'] = '''
+'''
+# 37
+QUERIES['benchmark_v1'] = '''
+'''
+# 38
+QUERIES['graduation'] = '''
+'''
+# 39
+QUERIES['hei'] = '''
+'''
+# 40
+QUERIES['exit_without_graduation'] = '''
 '''
