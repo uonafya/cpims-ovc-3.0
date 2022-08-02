@@ -11394,14 +11394,14 @@ def delete_cpara(request, id, btn_event_pk):
 def grad_monitor_tool(request, id):
     if request.method == 'POST':
         data = request.POST
-        # print(data)
+        print(data)
 
         child = RegPerson.objects.get(id=id)       
         house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
         caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
         caregiver = RegPerson.objects.get(id=caregiver_id)
  
-        event_date = convert_date(data.get('gm1d'))
+        event_date = data.get('gm1d')
         event_type_id = 'obm'
         time_saved = timezone.now()
 
@@ -11424,7 +11424,8 @@ def grad_monitor_tool(request, id):
        
         answer_value = {
             'AYES': True,
-            'ANNO': False
+            'ANNO': False,
+            None: False
         }
         try:
             OVCBenchmarkMonitoring.objects.create(
