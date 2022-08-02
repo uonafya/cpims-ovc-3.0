@@ -9856,6 +9856,7 @@ def new_hivscreeningtool(request, id):
     hiv_screen = None
     hiv_facility = None
     if request.method == 'POST':
+        
         try:
 
             form = HIV_SCREENING_FORM(request.POST, initial={'person': id})
@@ -9979,7 +9980,7 @@ def new_hivscreeningtool(request, id):
                     data_to_save[skip] = False
 
                 print(data_to_save)
-                # breakpoint()
+                
                 ovcscreeningtool = OVCHIVRiskScreening.objects.create(
                     person = RegPerson.objects.get(pk=int(id)),
                     test_done_when = data_to_save.get('HIV_RS_03'),
