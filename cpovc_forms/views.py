@@ -9864,6 +9864,7 @@ def new_hivscreeningtool(request, id):
     hiv_screen = None
     hiv_facility = None
     if request.method == 'POST':
+        
         try:
 
             form = HIV_SCREENING_FORM(request.POST, initial={'person': id})
@@ -9987,7 +9988,7 @@ def new_hivscreeningtool(request, id):
                     data_to_save[skip] = False
 
                 print(data_to_save)
-                # breakpoint()
+                
                 ovcscreeningtool = OVCHIVRiskScreening.objects.create(
                     person = RegPerson.objects.get(pk=int(id)),
                     test_done_when = data_to_save.get('HIV_RS_03'),
@@ -10741,7 +10742,7 @@ def new_cpara(request, id):
                 ind_answer = True
             else:
                 ind_answer = False
-            breakpoint()
+            # breakpoint()
             
             try:
                 OVCCareIndividaulCpara.objects.create(
@@ -10763,8 +10764,8 @@ def new_cpara(request, id):
                 print(error_message)
 
         else:
-            for h_mmembers in hhmembers:
-                hh_members = []
+            hh_members = []
+            for h_mmembers in hhmembers:                
                 hh_person_ids = h_mmembers.person.id
                 hh_members.append(hh_person_ids)
             hh_members.append(id)
@@ -11401,14 +11402,14 @@ def delete_cpara(request, id, btn_event_pk):
 def grad_monitor_tool(request, id):
     if request.method == 'POST':
         data = request.POST
-        # print(data)
+        print(data)
 
         child = RegPerson.objects.get(id=id)       
         house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
         caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
         caregiver = RegPerson.objects.get(id=caregiver_id)
  
-        event_date = convert_date(data.get('gm1d'))
+        event_date = data.get('gm1d')
         event_type_id = 'obm'
         time_saved = timezone.now()
 
@@ -11431,7 +11432,8 @@ def grad_monitor_tool(request, id):
        
         answer_value = {
             'AYES': True,
-            'ANNO': False
+            'ANNO': False,
+            None: False
         }
         try:
             OVCBenchmarkMonitoring.objects.create(

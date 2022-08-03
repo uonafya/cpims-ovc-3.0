@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+    {% extends 'base.html' %}
 {% load app_filters %}
 {% load static %}
 {% block page_title %} Graduation Monitoring Tool {% endblock %}
@@ -213,7 +213,7 @@
 						<div class="form-group">
 							<label class="control-label col-md-4 col-sm-4"></label>
 							<div class="col-md-6 col-sm-6">
-								<button type="submit" class="btn btn-primary">Update</button>
+								<button type="submit" onClick="submitActivate()" class="btn btn-primary">Update</button>
 								<a href="javascript:history.go(-1)" class="btn btn-white">Cancel</a>
 							</div>
 						</div>
@@ -248,6 +248,64 @@ jQuery(document).ready(function()
 	$('html,body').scrollTop(0);
 	FormWizardValidation.init();
     $('#monitoring_date').datepicker({ format: 'yyyy-mm-dd' }).val();
+    $('input[name=cm13q]').prop("disabled", true);
+    $('input[name=cm14q]').prop("disabled", true);
+
+
 });
+
+function submitActivate(){
+    $('input[name=cm13q]').removeAttr('disabled')
+    $('input[name=cm14q]').removeAttr('disabled')
+}
+
+$('input[name=form1_type]').on('change', function(){
+    let f_type = $(this).val()
+    console.log(f_type)
+    if (f_type == 'bm'){
+        $('.grad_control').hide()
+        $('input[name=cm13q][value=ANNO]').prop("checked", true);
+        $('input[name=cm14q][value=ANNO]').prop("checked", true);
+    }else if (f_type=='hhrcpa'){
+        $('.grad_control').show()
+        $('input[name=cm13q][value=ANNO]').prop("checked", true);
+        $('input[name=cm14q][value=ANNO]').prop("checked", true);
+
+    }
+})
+$('input[type=radio]').on('change', function(){
+    ben_m1 = $('input[name=cm1q]:checked').val()
+    if(ben_m1=='AYES'){benchmark_1 =  1}else{benchmark_1 =  0}
+    ben_m2 = $('input[name=cm2q]:checked').val()
+    if(ben_m2=='AYES'){benchmark_2 =  1}else{benchmark_2 =  0}
+    ben_m3 = $('input[name=cm3q]:checked').val()
+    if(ben_m3=='AYES'){benchmark_3 =  1}else{benchmark_3 =  0}
+    ben_m4 = $('input[name=cm4q]:checked').val()
+    if(ben_m4=='AYES'){benchmark_4 =  1}else{benchmark_4 =  0}
+    ben_m5 = $('input[name=cm5q]:checked').val()
+    if(ben_m5=='AYES'){benchmark_5 =  1}else{benchmark_5 =  0}
+    ben_m6 = $('input[name=cm6q]:checked').val()
+    if(ben_m6=='AYES'){benchmark_6 =  1}else{benchmark_6 =  0}
+    ben_m7 = $('input[name=cm7q]:checked').val()
+    if(ben_m7=='AYES'){benchmark_7 =  1}else{benchmark_7 =  0}
+    ben_m8 = $('input[name=cm8q]:checked').val()
+    if(ben_m8=='AYES'){benchmark_8 =  1}else{benchmark_8 =  0}
+    ben_m9 = $('input[name=cm9q]:checked').val()
+    if(ben_m9=='AYES'){benchmark_9 =  1}else{benchmark_9 =  0}
+
+    total_score = benchmark_1+benchmark_2+benchmark_3+benchmark_4+benchmark_5+benchmark_6+benchmark_7+benchmark_8+benchmark_9
+
+    console.log(total_score)
+    $('#total_score').html(total_score+' / 9 ')
+    
+    let form_type = $('input[name=form1_type]').val()
+    if (total_score >= 8 && form_type == 'hhrcpa'){
+        $('input[name=cm13q][value=AYES]').prop("checked", true);
+        $('input[name=cm14q][value=AYES]').prop("checked", true);
+    }else{
+        $('input[name=cm13q][value=ANNO]').prop("checked", true);
+        $('input[name=cm14q][value=ANNO]').prop("checked", true);
+    }
+})
 </script>
 {% endblock lazy_javascript_code %}
