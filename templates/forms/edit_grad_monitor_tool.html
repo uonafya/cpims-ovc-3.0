@@ -297,8 +297,9 @@ $('input[type=radio]').on('change', function(){
 
     console.log(total_score)
     $('#total_score').html(total_score+' / 9 ')
-
-    if (total_score >= 8){
+    
+    let form_type = $('input[name=form1_type]').val()
+    if (total_score >= 8 && form_type == 'hhrcpa'){
         $('input[name=cm13q][value=AYES]').prop("checked", true);
         $('input[name=cm14q][value=AYES]').prop("checked", true);
     }else{
