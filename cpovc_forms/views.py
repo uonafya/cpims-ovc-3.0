@@ -9192,75 +9192,34 @@ def monitor_caseplan(request, event_id, ovcid):
     child = RegPerson.objects.get(id=ovcid)
 
     if request.method == 'POST':
-        d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created
+        d_event = OVCCareEvents.objects.filter(
+            pk=event_id)[0].timestamp_created
         delta = get_days_difference(d_event)
-
         if delta < 90:
             try:
-                my_request = request.POST.get('final_submission')
-
-                child = RegPerson.objects.get(id=ovcid)
-                house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-
-                care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-                caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
-
-                if my_request:
-                    caseplandata = json.loads(my_request)
-                    for all_data in caseplandata:
-                        acd = all_data['actual_completion_date'] if 'actual_completion_date' in all_data else '1900-01-01'
-                        my_domain = all_data['domain']
-                        my_goal = all_data['goal']
-                        my_gap = all_data['gaps']
-                        my_action = all_data['actions']
-                        my_service = all_data['services']
-                        my_responsible = all_data['responsible']
-                        my_date_completed = all_data['date']
-                        my_actual_completion_date = acd
-                        my_date_of_prev_evnt = timezone.now()
-                        my_date_of_caseplan = all_data['CPT_DATE_CASEPLAN']
-                        my_results = all_data['results']
-                        my_reason = all_data['reasons']
-
-                    xyz = RegPerson.objects.filter(id=caregiver_id).values('id')
-
-                    for service in my_service:
-                        print(('person_id', id))
-                        print(('person_ovcid', ovcid))
-                        print(('caregiver_id', caregiver_id))
-                        OVCCareCasePlan(
-                            domain=my_domain,
-                            goal=my_goal,
-                            person_id=ovcid,
-                            caregiver_id=caregiver_id,
-                            household=house_hold,
-                            need=my_gap,
-                            priority=my_action,
-                            cp_service=service,
-                            responsible=my_responsible,
-                            date_of_previous_event=my_date_of_prev_evnt,
-                            date_of_event=convert_date(my_date_of_caseplan, fmt='%Y-%m-%d'),
-                            form=OVCCareForms.objects.get(name='OVCCareCasePlan'),
-                            completion_date=convert_date(my_date_completed, fmt='%Y-%m-%d'),
-                            actual_completion_date=convert_date(my_actual_completion_date, fmt='%Y-%m-%d'),
-                            results=my_results,
-                            reasons=my_reason,
-                            case_plan_status='D',
-                            event_id=this_event_pk
-                        ).save()
-
-                msg = 'Case Plan updated successfully'
-                messages.add_message(request, messages.INFO, msg)
-                url = reverse('ovc_view', kwargs={'id': ovcid})
-                return HttpResponseRedirect(url)
+                cp_item_id = request.POST.get('item_id')
+                cpta_date = request.POST.get('CPT_ACTUAL_DATE_COMPLETION')
+                cp_results = request.POST.get('CPT_RESULTS')
+                cp_reasons = request.POST.get('CPT_REASONS')
+                cp_actual_date = convert_date(cpta_date)
+                case_plan = OVCCareCasePlan.objects.get(pk=cp_item_id)
+                case_plan.results = cp_results
+                case_plan.reasons = cp_reasons
+                case_plan.actual_completion_date = cp_actual_date
+                case_plan.case_plan_status = 'M'
+                case_plan.save()
+                status = 0
+                msg = 'Case Plan monitoring saved successfully'
             except Exception as e:
-                print('error updating caseplan - %s' % (str(e)))
-                return False
+                status = 9
+                msg = 'Error updating case plan - %s' % (e)
         else:
+            status = 1
             msg = "Can't update after 30 days"
-            messages.add_message(request, messages.ERROR, msg)
-            url = reverse('ovc_view', kwargs={'id': ovcid})
-            return HttpResponseRedirect(url)
+        messages.add_message(request, messages.INFO, msg)
+        return JsonResponse({'message': msg, 'status': status})
+
+    # Default GET
     form = CasePlanTemplate()
     ovc_id = int(ovcid)
     child = RegPerson.objects.get(is_void=False, id=ovc_id)
@@ -9949,13 +9908,10 @@ def new_hivscreeningtool(request, id):
                     'HIV_RS_04',
                     'HIV_RS_05',
                     'HIV_RS_06',
-                    'HIV_RS_06A',
                     'HIV_RS_07',
                     'HIV_RS_08',
                     'HIV_RS_09',
                     'HIV_RS_10',
-                    'HIV_RS_10A',
-                    'HIV_RS_10B',
                     'HIV_RS_11',
                     'HIV_RS_14',
                     'HIV_RS_16',
@@ -9989,38 +9945,34 @@ def new_hivscreeningtool(request, id):
                 print(data_to_save)
                 # breakpoint()
                 ovcscreeningtool = OVCHIVRiskScreening.objects.create(
-                    person = RegPerson.objects.get(pk=int(id)),
-                    test_done_when = data_to_save.get('HIV_RS_03'),
-                    test_donewhen_result = data_to_save.get(''),
-                    caregiver_know_status = data_to_save.get('HIV_RS_01'),
-                    caregiver_knowledge_yes = data_to_save.get('HIV_RS_02'),
-                    parent_PLWH = data_to_save.get('HIV_RS_04'),
-                    child_sick_malnourished = data_to_save.get('HIV_RS_05'),
-                    child_sexual_abuse = data_to_save.get('HIV_RS_06'),
-                    traditional_procedure = data_to_save.get('HIV_RS_06A'),
-                    adol_sick = data_to_save.get('HIV_RS_07'),
-                    adol_had_tb = data_to_save.get('HIV_RS_08'),
-                    adol_sexual_abuse = data_to_save.get('HIV_RS_09'),
-                    sex = data_to_save.get('HIV_RS_10'),
-                    sti = data_to_save.get('HIV_RS_10A'),
-                    sharing_needles = data_to_save.get('HIV_RS_10B'),
-                    hiv_test_required = data_to_save.get('HIV_RS_11'),
-                    parent_consent_testing = data_to_save.get('HIV_RS_14'),
-                    parent_consent_date = parent_consentdate,
-                    referral_made = data_to_save.get('HIV_RS_16'),
-                    referral_made_date = referal_madedate,
-                    referral_completed = data_to_save.get('HIV_RS_18'),
-                    referral_completed_date = referal_completeddate,
-                    not_completed = data_to_save.get('HIV_RS_18A'),
-                    test_result = data_to_save.get('HIV_RS_18B'),
-                    art_referral = data_to_save.get('HIV_RS_21'),
-                    art_referral_date = art_referaldate,
-                    art_referral_completed = data_to_save.get('HIV_RS_23'),
-                    art_referral_completed_date = art_refer_completeddate,
-                    facility_code = facility_res,
-                    event = ovccareevent,
-                    date_of_event = data_to_save.get('HIV_RA_1A'),
-                    timestamp_created = timezone.now(),
+                    person=RegPerson.objects.get(pk=int(id)),
+                    date_of_event=data_to_save.get('HIV_RA_1A'),
+                    test_done_when=data_to_save.get('HIV_RS_03'),  # date of assesment
+                    test_donewhen_result=data_to_save.get('HIV_RS_03A'),
+                    caregiver_know_status=data_to_save.get('HIV_RS_01'),
+                    caregiver_knowledge_yes=data_to_save.get('HIV_RS_02'),
+                    parent_PLWH=data_to_save.get('HIV_RS_04'),
+                    child_sick_malnourished=data_to_save.get('HIV_RS_05'),
+                    child_sexual_abuse=data_to_save.get('HIV_RS_06'),
+                    adol_sick=data_to_save.get('HIV_RS_07'),
+                    adol_sexual_abuse=data_to_save.get('HIV_RS_08'),
+                    sex=data_to_save.get('HIV_RS_09'),
+                    sti=data_to_save.get('HIV_RS_10'),
+                    hiv_test_required=data_to_save.get('HIV_RS_11'),
+                    parent_consent_testing=data_to_save.get('HIV_RS_14'),
+                    parent_consent_date=parent_consentdate,
+                    referral_made=data_to_save.get('HIV_RS_16'),
+                    referral_made_date=referal_madedate,
+                    referral_completed=data_to_save.get('HIV_RS_18'),
+                    referral_completed_date=referal_completeddate,
+                    not_completed=data_to_save.get('HIV_RS_18A'),
+                    test_result=data_to_save.get('HIV_RS_18B'),
+                    art_referral=data_to_save.get('HIV_RS_21'),
+                    art_referral_date=art_referaldate,
+                    art_referral_completed=data_to_save.get('HIV_RS_23'),
+                    art_referral_completed_date=art_refer_completeddate,
+                    facility_code=facility_res,
+                    event=ovccareevent
                 )
                 msg = 'HIV risk screening saved successful'
                 messages.add_message(request, messages.INFO, msg)
@@ -10741,7 +10693,7 @@ def new_cpara(request, id):
                 ind_answer = True
             else:
                 ind_answer = False
-            breakpoint()
+            # breakpoint()
             
             try:
                 OVCCareIndividaulCpara.objects.create(
@@ -10763,8 +10715,8 @@ def new_cpara(request, id):
                 print(error_message)
 
         else:
+            hh_members = []
             for h_mmembers in hhmembers:
-                hh_members = []
                 hh_person_ids = h_mmembers.person.id
                 hh_members.append(hh_person_ids)
             hh_members.append(id)
