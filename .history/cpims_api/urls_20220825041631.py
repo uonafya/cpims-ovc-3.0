@@ -1,0 +1,12 @@
+from django.urls import path, include
+
+from rest_framework.routers import DefaultRouter
+
+from cpims_api import views
+
+router = DefaultRouter()
+router.register('date_counter', views.RegOrgUnit, basename='cpovc_registry.models.RegOrgUnit')
+
+urlpatterns = [
+    path('', views.RegOrgUnitViewSet.as_view()),
+]
