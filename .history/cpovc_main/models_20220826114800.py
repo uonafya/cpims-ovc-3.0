@@ -43,8 +43,8 @@ class FacilityList(models.Model):
     subcounty_name = models.CharField(max_length=255)
     latitude = models.DecimalField(decimal_places=5, max_digits=10)
     longitude = models.DecimalField(decimal_places=5, max_digits=10)
-    # timestamp_created = models.DateTimeField(default=timezone.now)
-    # timestamp_updated = models.DateTimeField(auto_now=True, null=True)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(auto_now=True, null=True)
     is_void = models.BooleanField(default=False)
 
     class Meta:
