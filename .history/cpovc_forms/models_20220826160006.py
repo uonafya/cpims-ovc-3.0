@@ -485,7 +485,7 @@ class OVCEducationFollowUp(models.Model):
     placement_id = models.ForeignKey(OVCPlacement, on_delete=models.CASCADE,  null=True)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     created_by = models.IntegerField(null=True, default=404)
-    timestamp_created = models.DateTimeField(default=timezone.now)
+    # timestamp_created = models.DateTimeField(default=timezone.now)
     is_void = models.BooleanField(default=False)
     sync_id = models.UUIDField(default=uuid.uuid1, editable=False)
 

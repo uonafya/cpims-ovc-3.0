@@ -625,7 +625,7 @@ class OVCCareEvents(models.Model):
     event_counter = models.IntegerField(default=0)
     event_score = models.IntegerField(null=True, default=0)
     date_of_event = models.DateField(default=timezone.now)
-    # date_of_previous_event = models.DateTimeField(null=True)
+    date_of_previous_event = models.DateTimeField(null=True)
     created_by = models.IntegerField(null=True, default=404)
     timestamp_created = models.DateTimeField(default=timezone.now)
     is_void = models.BooleanField(default=False)
