@@ -36,8 +36,7 @@ class RegOrgUnitViewSet(viewsets.ModelViewSet):
     serializer_class = RegOrgUnitSerializer
     
 
-class OVCRegistrationViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,) 
+class OVCRegistrationViewSet(viewsets.ModelViewSet): 
     queryset = OVCRegistration.objects.all()
     serializer_class = OVCRegistrationSerializers
     
@@ -47,45 +46,37 @@ class RegpersonViewSet(viewsets.ModelViewSet):
     serializer_class = RegPersonSerializers
     
 class FacilityListViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = FacilityList.objects.all()
     serializer_class = FacilityListSerializers
     
 class SchoolListViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset  = SchoolList.objects.all()
     serializer_class = SchoolistSeriallizers
     
 class OvcCareServicesViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset =  OVCCareServices.objects.all()
     serializer_class = OvcCareServicesSerializers
 
 class OvcViralLoadViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = OVCViralload.objects.all()
     serializer_class = OvcViralLoadSerializers
     
 
 class OVCEducationLevelViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = OVCEducationLevelFollowUp.objects.all()
     serializer_class = OVCEducationLevelFollowUpSerializer
     
     
 class OVCEducationFollowUpViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = OVCEducationFollowUp.objects.all()
     serializer_class = OVCEducationFollowUpSerializers
     
 class OVCExitViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = OVCExit.objects.all()
     serializer_class = OVCExitSerializer  
     
     
 class OVCCarePriorityViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = OVCCarePriority.objects.all()
     serializer_class = OVCCarePrioritySerializer  
 

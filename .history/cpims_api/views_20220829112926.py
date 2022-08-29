@@ -31,6 +31,7 @@ from cpims_api.serializers import (
 )
 
 class RegOrgUnitViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
     authentication_classes = (TokenAuthentication,)   
     queryset = RegOrgUnit.objects.all()
     serializer_class = RegOrgUnitSerializer

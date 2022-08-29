@@ -21,5 +21,5 @@ router.register('reg_org_unit', views.RegOrgUnitViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),    
-    path('token-auth', obtain_auth_token, name='api_token_auth'),
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
 ]
