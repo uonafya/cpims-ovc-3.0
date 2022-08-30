@@ -11,7 +11,6 @@ from cpovc_access import models
 from cpovc_registry.models import (
     OVCCheckin,
     OVCSibling,
-    PersonsMaster,
     RegBiometric,
     RegOrgUnit,
     RegOrgUnitsAuditTrail, 
@@ -216,8 +215,7 @@ class OVCSiblingSerializer(serializers.ModelSerializer):
     class Meta:
         model = OVCSibling
         fields = "__all__"
-    
-# no urls here
+        
 class OVCCheckinSerializers(serializers.ModelSerializer):
     
     class Meta:
@@ -227,11 +225,4 @@ class OVCCheckinSerializers(serializers.ModelSerializer):
 class OVCHouseHoldSerializers(serializers.ModelSerializer):
     class Meta:
         model = OVCHouseHold
-        fields = "__all__"
-        
-class PersonsMasterSerializers(serializers.ModelSerializer):
-    
-    class Meta:
-        
-        model = PersonsMaster
         fields = "__all__"

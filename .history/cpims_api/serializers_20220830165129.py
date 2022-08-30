@@ -234,4 +234,4 @@ class PersonsMasterSerializers(serializers.ModelSerializer):
     class Meta:
         
         model = PersonsMaster
-        fields = "__all__"
+        fields = "__all_"

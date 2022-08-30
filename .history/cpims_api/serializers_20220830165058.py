@@ -217,7 +217,7 @@ class OVCSiblingSerializer(serializers.ModelSerializer):
         model = OVCSibling
         fields = "__all__"
     
-# no urls here
+# here
 class OVCCheckinSerializers(serializers.ModelSerializer):
     
     class Meta:
@@ -234,4 +234,5 @@ class PersonsMasterSerializers(serializers.ModelSerializer):
     class Meta:
         
         model = PersonsMaster
-        fields = "__all__"
+        fields = "__all_"
+        

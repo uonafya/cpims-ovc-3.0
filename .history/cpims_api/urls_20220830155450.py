@@ -7,9 +7,6 @@ from rest_framework.authtoken.views import obtain_auth_token
 from cpims_api import views
 
 router = DefaultRouter()
-router.register('persons_master', views.PersonsMasterViewSets   )
-router.register('ovc_household', views.OVCHouseHoldViewSets   )
-router.register('ovc_chekins', views.OVCCheckinViewSets   )
 router.register('ovc_sibling', views.OVCSiblingViewSet   )
 router.register('reg_person_audit_trail', views.RegPersonsAuditTrailViewSet)
 router.register('reg_org_unit_audit_trail', views.RegOrgUnitsAuditTrailViewSet)

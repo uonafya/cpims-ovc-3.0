@@ -52,7 +52,6 @@ from cpims_api.serializers import (
     OVCCheckinSerializers,
     OVCHouseHoldSerializers,
     OVCSiblingSerializer,
-    PersonsMasterSerializers,
     RegBiometricSerializer,
     RegOrgUnitGeographySerializer,
     RegOrgUnitSerializer,

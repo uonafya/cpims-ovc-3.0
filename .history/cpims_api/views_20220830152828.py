@@ -6,29 +6,20 @@ from rest_framework import viewsets
 
 # models
 from cpovc_registry.models import (
-    OVCCheckin,
-    OVCSibling,
-    PersonsMaster,
     RegBiometric,
     RegOrgUnit,
     RegOrgUnitGeography,
-    RegOrgUnitsAuditTrail,
     RegPerson,
     RegOrgUnitContact,
     RegOrgUnitExternalID,
-    RegPersonsAuditTrail,
-    RegPersonsBeneficiaryIds,
     RegPersonsContact,
     RegPersonsExternalIds,
     RegPersonsGeo,
     RegPersonsGuardians,
-    RegPersonsOrgUnits,
     RegPersonsSiblings,
-    RegPersonsTypes,
-    RegPersonsWorkforceIds
+    RegPersonsTypes
 )
 from cpovc_ovc.models import (
-    OVCHouseHold,
     OVCRegistration, 
     OVCViralload, 
     OVCExit
@@ -49,27 +40,18 @@ from rest_framework.authentication import TokenAuthentication
 
 # Create your views here.
 from cpims_api.serializers import (
-    OVCCheckinSerializers,
-    OVCHouseHoldSerializers,
-    OVCSiblingSerializer,
-    PersonsMasterSerializers,
     RegBiometricSerializer,
     RegOrgUnitGeographySerializer,
     RegOrgUnitSerializer,
     OVCRegistrationSerializers,
-    RegOrgUnitsAuditTrailSerializers,
     RegPersonSerializers,
     FacilityListSerializers,
-    RegPersonsAuditTrailSerializers,
-    RegPersonsBeneficiaryIdsSerializers,
     RegPersonsContactSerialzer,
     RegPersonsExternalIdsSerializers,
     RegPersonsGeoSerializer,
     RegPersonsGuardiansSerialzer,
-    RegPersonsOrgUnitsSerializer,
     RegPersonsSiblingsSerializer,
     RegPersonsTypesSerializer,
-    RegPersonsWorkforceIdsSerializer,
     SchoolistSeriallizers,
     OvcCareServicesSerializers,
     OvcViralLoadSerializers,
@@ -198,49 +180,7 @@ class RegPersonsContactViewSet(viewsets.ModelViewSet):
     
 class RegPersonsOrgUnitsViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
-    queryset = RegPersonsOrgUnits.objects.all()
-    serializer_class = RegPersonsOrgUnitsSerializer
     
-class RegPersonsWorkforceIdsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = RegPersonsWorkforceIds.objects.all()
-    serializer_class = RegPersonsWorkforceIdsSerializer    
-    
-class RegPersonsBeneficiaryIdsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = RegPersonsBeneficiaryIds.objects.all()
-    serializer_class = RegPersonsBeneficiaryIdsSerializers
-    
-class RegOrgUnitsAuditTrailViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = RegOrgUnitsAuditTrail.objects.all()
-    serializer_class = RegOrgUnitsAuditTrailSerializers
-    
-class RegPersonsAuditTrailViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = RegPersonsAuditTrail.objects.all()
-    serializer_class = RegPersonsAuditTrailSerializers
-
-class OVCSiblingViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCSibling.objects.all()
-    serializer_class = OVCSiblingSerializer
-    
-# no urls here
-class OVCCheckinViewSets(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCheckin.objects.all()
-    serializer_class = OVCCheckinSerializers
-    
-class OVCHouseHoldViewSets(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCHouseHold.objects.all()
-    serializer_class = OVCHouseHoldSerializers
-    
-class PersonsMasterViewSets(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = PersonsMaster.objects.all()
-    serializer_class = PersonsMasterSerializers
 
 
 

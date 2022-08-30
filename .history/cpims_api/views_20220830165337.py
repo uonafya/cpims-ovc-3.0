@@ -8,7 +8,6 @@ from rest_framework import viewsets
 from cpovc_registry.models import (
     OVCCheckin,
     OVCSibling,
-    PersonsMaster,
     RegBiometric,
     RegOrgUnit,
     RegOrgUnitGeography,
@@ -28,7 +27,6 @@ from cpovc_registry.models import (
     RegPersonsWorkforceIds
 )
 from cpovc_ovc.models import (
-    OVCHouseHold,
     OVCRegistration, 
     OVCViralload, 
     OVCExit
@@ -50,9 +48,7 @@ from rest_framework.authentication import TokenAuthentication
 # Create your views here.
 from cpims_api.serializers import (
     OVCCheckinSerializers,
-    OVCHouseHoldSerializers,
     OVCSiblingSerializer,
-    PersonsMasterSerializers,
     RegBiometricSerializer,
     RegOrgUnitGeographySerializer,
     RegOrgUnitSerializer,
@@ -234,13 +230,6 @@ class OVCCheckinViewSets(viewsets.ModelViewSet):
     
 class OVCHouseHoldViewSets(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
-    queryset = OVCHouseHold.objects.all()
-    serializer_class = OVCHouseHoldSerializers
-    
-class PersonsMasterViewSets(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = PersonsMaster.objects.all()
-    serializer_class = PersonsMasterSerializers
 
 
 
