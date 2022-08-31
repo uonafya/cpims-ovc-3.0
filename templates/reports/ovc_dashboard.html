@@ -347,6 +347,98 @@
                 <!-- end col-5 -->
             </div>
             <!-- end row -->
+
+            <!-- begin row -->
+            <div class="row">
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
+                    <div class="panel panel-inverse">
+                        <div class="panel-body">
+                            <div id="container-1I" class="cont"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-6 -->
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
+                    <div class="panel panel-inverse">
+                        <div class="panel-body">
+                            <div id="container-1J" class="cont"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-6 -->
+            </div>
+            <!-- end row -->
+
+            <!-- begin row -->
+            <div class="row">
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
+                    <div class="panel panel-inverse">
+                        <div class="panel-body">
+                            <div id="container-1K" class="cont"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-6 -->
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
+                    <div class="panel panel-inverse">
+                        <div class="panel-body">
+                            <div id="container-1L" class="cont"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-6 -->
+            </div>
+            <!-- end row -->
+            <!-- begin row -->
+            <div class="row">
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
+                    <div class="panel panel-inverse">
+                        <div class="panel-body">
+                            <div id="container-1M" class="cont"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-6 -->
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
+                    <div class="panel panel-inverse">
+                        <div class="panel-body">
+                            <div id="container-1N" class="cont"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-6 -->
+            </div>
+            <!-- end row -->
+
+            <!-- begin row -->
+            <div class="row">
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
+                    <div class="panel panel-inverse">
+                        <div class="panel-body">
+                            <div id="container-1O" class="cont"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-6 -->
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
+                    <div class="panel panel-inverse">
+                        <div class="panel-body">
+                            <div id="container-1P" class="cont"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-6 -->
+            </div>
+            <!-- end row -->
+
             <!-- begin row -->
             <div class="row">
                 <!-- begin col-12 -->
@@ -448,10 +540,11 @@
            window.print();
         }
         $(document).ready(function() {
-           App.init();
+            App.init();
 
            // Dynamically load Charts
-           var chartlists = ['1A', '1B', '1C', '1D', '1E', '1F', '1G', '1H'];
+           var chartlists = ['1A', '1B', '1C', '1D', '1E', '1F', '1G', '1H',
+                             '1I', '1J', '1K', '1L', '1M', '1N', '1O'];
            // Change colors here
            var colors = ["#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9",
                          "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"];
@@ -554,7 +647,17 @@
                   // Page Loader
                   $("#container-"+ itm).html("<center><div class='page_loader'></div></center>");
                   // Load Data
-                  $("#container-"+ itm).load(url);
+                  // $("#container-"+ itm).load(url);
+                  $.ajax(url, {
+                       timeout: 5000, // 1000 ms
+                       success: function (data) {
+                           //$("#container-"+ itm).html("<center><div class='page_loader'></div></center>");
+                           $("#container-"+ itm).html(data);
+                       },
+                        error: function(){
+                            $("#container-"+ itm).html("Error Generating chart.")
+                        }
+                    });
                });
                // Change URLS to pick current page selections
                $("a#main_url").prop("href", "/d/#"+ hashes)
