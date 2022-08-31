@@ -28,6 +28,8 @@ from cpovc_access.forms import StrictPasswordChangeForm
 # New changes
 from cpovc_pfs import urls as pfs_urls
 from cpovc_pmtct import urls as pmtct_urls
+from notifications import urls as noti_urls
+# from simple_forums import urls as forum_urls
 
 
 urlpatterns = [
@@ -118,6 +120,9 @@ urlpatterns = [
     # Preventive and Family Support
     path('ovc-care/pfs/', include(pfs_urls)),
     path('ovc-care/pmtct/', include(pmtct_urls)),
+    # Notifications
+    path('notifications/', include(noti_urls, namespace='notifications')),
+    # path('forums/', include(forum_urls)),
 ]
 
 handler400 = 'cpims.views.handler_400'

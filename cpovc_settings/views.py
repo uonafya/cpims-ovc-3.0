@@ -4,7 +4,7 @@ import time
 import pandas as pd
 from datetime import datetime
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -14,6 +14,8 @@ from cpovc_ovc.models import OVCFacility, OVCSchool
 from cpovc_access.views import open_terms
 from cpovc_reports.queries import QUERIES
 from cpovc_reports.functions import run_sql_data, get_variables
+
+from .functions import report_bug
 
 MEDIA_ROOT = settings.MEDIA_ROOT
 
@@ -41,7 +43,9 @@ def settings_reports(request):
         for filename in os.listdir(directory):
             is_admin = True if request.user.is_superuser else False
             is_allowed = True if filename.startswith(user_in) else is_admin
-            if (filename.endswith(".xlsx") or filename.endswith(".xlsm") ) and is_allowed:
+            check_xlsx = filename.endswith(".xlsx")
+            check_xlsm = filename.endswith(".xlsm")
+            if (check_xlsx or check_xlsm) and is_allowed:
                 rname = os.path.join(directory, filename)
                 cdate = os.stat(rname)
                 (md, ino, dev, nnk, uid, gid, size, atm, mtime, ctime) = cdate
@@ -204,7 +208,9 @@ def settings_rawdata(request):
         for filename in os.listdir(directory):
             is_admin = True if request.user.is_superuser else False
             is_allowed = True if filename.startswith(user_in) else is_admin
-            if (filename.endswith(".xlsx") or filename.endswith(".xlsm") ) and is_allowed:
+            check_xlsx = filename.endswith(".xlsx")
+            check_xlsm = filename.endswith(".xlsm")
+            if (check_xlsx or check_xlsm) and is_allowed:
                 print(filename)
                 rname = os.path.join(directory, filename)
                 cdate = os.stat(rname)
@@ -270,3 +276,21 @@ def change_notes(request):
         raise e
     else:
         pass
+
+
+@login_required(login_url='/')
+def manage_bugs(request):
+    """Main home method and view."""
+    try:
+        icode = int(request.POST.get('issue-code', 0))
+        resp = report_bug(request, icode)
+        msg = resp['message']
+        result = {"response_code": 0,
+                  "message": "Issue Successfully sent to %s" % (msg)}
+        return JsonResponse(result, content_type='application/json',
+                            safe=False)
+    except Exception as e:
+        print('Bug report error - %s' % (e))
+        result = {"response_code": 9, "message": "Error while reporting bug"}
+        return JsonResponse(result, content_type='application/json',
+                            safe=False)
