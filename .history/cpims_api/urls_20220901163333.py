@@ -53,16 +53,16 @@ router.register( 'OVCMonitoringViewSet', views.OVCMonitoringViewSet)# not workin
 router.register( 'OVCMonitoring11ViewSet', views.OVCMonitoring11ViewSet) #not working
 router.register( 'OVCHivStatusViewSet', views.OVCHivStatusViewSet) #not working
 router.register( 'OVCHIVRiskScreeningViewSet', views.OVCHIVRiskScreeningViewSet) #not working
-router.register( 'OVCHIVManagementViewSet', views.OVCHIVManagementViewSet) # not working
-router.register( 'OVCBasicCRSViewSet', views.OVCBasicCRSViewSet) #not working
-router.register( 'OVCBasicPersonViewSet', views.OVCBasicPersonViewSet) #not working
-router.register( 'OVCBasicCategoryViewSet', views.OVCBasicCategoryViewSet) #not working
-router.register( 'OvcCasePersonsViewSet', views.OvcCasePersonsViewSet) # not working
-router.register( 'OvcCaseInformationViewSet', views.OvcCaseInformationViewSet) # not working
-router.register( 'OVCCaseLocationViewSet', views.OVCCaseLocationViewSet) # not working
-router.register( 'OVCCareQuestionsViewSet', views.OVCCareQuestionsViewSet) # not working
-router.register( 'OVCCareCpara_upgradeViewSet', views.OVCCareCpara_upgradeViewSet)  # not working
-router.register( 'OVCSubPopulationViewSet', views.OVCSubPopulationViewSet) # not working
+router.register( 'OVCHIVManagementViewSet', views.OVCHIVManagementViewSet) #not working
+router.register( 'OVCBasicCRSViewSet', views.OVCBasicCRSViewSet)
+router.register( 'OVCBasicPersonViewSet', views.OVCBasicPersonViewSet)
+router.register( 'OVCBasicCategoryViewSet', views.OVCBasicCategoryViewSet)
+router.register( 'OvcCasePersonsViewSet', views.OvcCasePersonsViewSet)
+router.register( 'OvcCaseInformationViewSet', views.OvcCaseInformationViewSet)
+router.register( 'OVCCaseLocationViewSet', views.OVCCaseLocationViewSet)
+router.register( 'OVCCareQuestionsViewSet', views.OVCCareQuestionsViewSet)
+router.register( 'OVCCareCpara_upgradeViewSet', views.OVCCareCpara_upgradeViewSet)
+router.register( 'OVCSubPopulationViewSet', views.OVCSubPopulationViewSet)
 router.register( 'OVCCareIndividaulCparaViewSet', views.OVCCareIndividaulCparaViewSet)
 
 # done endpoints

@@ -62,7 +62,7 @@ router.register( 'OvcCaseInformationViewSet', views.OvcCaseInformationViewSet) #
 router.register( 'OVCCaseLocationViewSet', views.OVCCaseLocationViewSet) # not working
 router.register( 'OVCCareQuestionsViewSet', views.OVCCareQuestionsViewSet) # not working
 router.register( 'OVCCareCpara_upgradeViewSet', views.OVCCareCpara_upgradeViewSet)  # not working
-router.register( 'OVCSubPopulationViewSet', views.OVCSubPopulationViewSet) # not working
+router.register( 'OVCSubPopulationViewSet', views.OVCSubPopulationViewSet)
 router.register( 'OVCCareIndividaulCparaViewSet', views.OVCCareIndividaulCparaViewSet)
 
 # done endpoints

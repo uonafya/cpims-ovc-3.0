@@ -833,8 +833,8 @@ class OVCCareForms(models.Model):
     name = models.CharField(max_length=100, null=True)
     description = models.CharField(max_length=255, null=True)
     is_void = models.BooleanField(default=False)
-    # timestamp_created = models.DateTimeField(default=timezone.now)
-    # timestamp_updated = models.DateTimeField(auto_now=True)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'ovc_care_forms'
@@ -867,10 +867,10 @@ class OVCCareBenchmarkScore(models.Model):
     score = models.IntegerField(default=0)
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
     care_giver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, null=True)
-    is_void = models.BooleanField(default=False)
-    date_of_event = models.DateField(default=timezone.now)
-    timestamp_created = models.DateTimeField(default=timezone.now)
-    timestamp_updated = models.DateTimeField(auto_now=True)
+    # is_void = models.BooleanField(default=False)
+    # date_of_event = models.DateField(default=timezone.now)
+    # timestamp_created = models.DateTimeField(default=timezone.now)
+    # timestamp_updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return str(self.benchmark_score_id)

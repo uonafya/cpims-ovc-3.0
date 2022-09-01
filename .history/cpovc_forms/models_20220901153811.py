@@ -1,5 +1,4 @@
 from email.policy import default
-from re import T
 from django.db import models
 from django.utils import timezone
 import datetime
@@ -830,10 +829,10 @@ Classes below were added due to ovc case managementOVCCareForms
 
 class OVCCareForms(models.Model):
     form_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
-    name = models.CharField(max_length=100, null=True)
-    description = models.CharField(max_length=255, null=True)
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=255)
     is_void = models.BooleanField(default=False)
-    # timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_created = models.DateTimeField(default=timezone.now)
     # timestamp_updated = models.DateTimeField(auto_now=True)
 
     class Meta:

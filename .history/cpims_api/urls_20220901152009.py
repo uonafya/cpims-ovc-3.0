@@ -41,28 +41,27 @@ router.register( 'OVCCareAssessmentViewSet', views.OVCCareAssessmentViewSet)
 router.register( 'OVCCareEAVViewSet', views.OVCCareEAVViewSet)
 router.register( 'OVCCareF1BViewSet', views.OVCCareF1BViewSet)
 router.register( 'OVCGokBursaryViewSet', views.OVCGokBursaryViewSet)
-router.register( 'OVCCareFormsViewSet', views.OVCCareFormsViewSet) # not working
-router.register( 'OVCCareBenchmarkScoreViewSet', views.OVCCareBenchmarkScoreViewSet) #not working
-router.register( 'OVCCareWellbeingViewSet', views.OVCCareWellbeingViewSet) # not working
-router.register( 'OVCCareCasePlanViewSet', views.OVCCareCasePlanViewSet) # not working
-router.register( 'OVCHouseholdDemographicsViewSet', views.OVCHouseholdDemographicsViewSet)# not working
-router.register( 'OVCExplanationsViewSet', views.OVCExplanationsViewSet)# not working
-router.register( 'OVCReferralsViewSet', views.OVCReferralsViewSet)# not working
-router.register( 'OVCMonitoringViewSet', views.OVCMonitoringViewSet)# not working
-
-router.register( 'OVCMonitoring11ViewSet', views.OVCMonitoring11ViewSet) #not working
-router.register( 'OVCHivStatusViewSet', views.OVCHivStatusViewSet) #not working
-router.register( 'OVCHIVRiskScreeningViewSet', views.OVCHIVRiskScreeningViewSet) #not working
-router.register( 'OVCHIVManagementViewSet', views.OVCHIVManagementViewSet) # not working
-router.register( 'OVCBasicCRSViewSet', views.OVCBasicCRSViewSet) #not working
-router.register( 'OVCBasicPersonViewSet', views.OVCBasicPersonViewSet) #not working
-router.register( 'OVCBasicCategoryViewSet', views.OVCBasicCategoryViewSet) #not working
-router.register( 'OvcCasePersonsViewSet', views.OvcCasePersonsViewSet) # not working
-router.register( 'OvcCaseInformationViewSet', views.OvcCaseInformationViewSet) # not working
-router.register( 'OVCCaseLocationViewSet', views.OVCCaseLocationViewSet) # not working
-router.register( 'OVCCareQuestionsViewSet', views.OVCCareQuestionsViewSet) # not working
-router.register( 'OVCCareCpara_upgradeViewSet', views.OVCCareCpara_upgradeViewSet)  # not working
-router.register( 'OVCSubPopulationViewSet', views.OVCSubPopulationViewSet) # not working
+router.register( 'OVCCareFormsViewSet', views.OVCCareFormsViewSet)
+router.register( 'OVCCareBenchmarkScoreViewSet', views.OVCCareBenchmarkScoreViewSet)
+router.register( 'OVCCareWellbeingViewSet', views.OVCCareWellbeingViewSet)
+router.register( 'OVCCareCasePlanViewSet', views.OVCCareCasePlanViewSet)
+router.register( 'OVCHouseholdDemographicsViewSet', views.OVCHouseholdDemographicsViewSet)
+router.register( 'OVCExplanationsViewSet', views.OVCExplanationsViewSet)
+router.register( 'OVCReferralsViewSet', views.OVCReferralsViewSet)
+router.register( 'OVCMonitoringViewSet', views.OVCMonitoringViewSet)
+router.register( 'OVCMonitoring11ViewSet', views.OVCMonitoring11ViewSet)
+router.register( 'OVCHivStatusViewSet', views.OVCHivStatusViewSet)
+router.register( 'OVCHIVRiskScreeningViewSet', views.OVCHIVRiskScreeningViewSet)
+router.register( 'OVCHIVManagementViewSet', views.OVCHIVManagementViewSet)
+router.register( 'OVCBasicCRSViewSet', views.OVCBasicCRSViewSet)
+router.register( 'OVCBasicPersonViewSet', views.OVCBasicPersonViewSet)
+router.register( 'OVCBasicCategoryViewSet', views.OVCBasicCategoryViewSet)
+router.register( 'OvcCasePersonsViewSet', views.OvcCasePersonsViewSet)
+router.register( 'OvcCaseInformationViewSet', views.OvcCaseInformationViewSet)
+router.register( 'OVCCaseLocationViewSet', views.OVCCaseLocationViewSet)
+router.register( 'OVCCareQuestionsViewSet', views.OVCCareQuestionsViewSet)
+router.register( 'OVCCareCpara_upgradeViewSet', views.OVCCareCpara_upgradeViewSet)
+router.register( 'OVCSubPopulationViewSet', views.OVCSubPopulationViewSet)
 router.register( 'OVCCareIndividaulCparaViewSet', views.OVCCareIndividaulCparaViewSet)
 
 # done endpoints

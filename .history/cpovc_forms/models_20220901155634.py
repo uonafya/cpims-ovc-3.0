@@ -833,8 +833,8 @@ class OVCCareForms(models.Model):
     name = models.CharField(max_length=100, null=True)
     description = models.CharField(max_length=255, null=True)
     is_void = models.BooleanField(default=False)
-    # timestamp_created = models.DateTimeField(default=timezone.now)
-    # timestamp_updated = models.DateTimeField(auto_now=True)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'ovc_care_forms'
@@ -894,9 +894,9 @@ class OVCCareWellbeing(models.Model):
     domain = models.CharField(max_length=100)
     is_void = models.BooleanField(default=False)
     event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
-    date_of_event = models.DateField()
-    timestamp_created = models.DateTimeField(default=timezone.now)
-    timestamp_updated = models.DateTimeField(auto_now=True)
+    # date_of_event = models.DateField()
+    # timestamp_created = models.DateTimeField(default=timezone.now)
+    # timestamp_updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return self.answer

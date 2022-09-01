@@ -833,7 +833,7 @@ class OVCCareForms(models.Model):
     name = models.CharField(max_length=100, null=True)
     description = models.CharField(max_length=255, null=True)
     is_void = models.BooleanField(default=False)
-    # timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_created = models.DateTimeField(default=timezone.now)
     # timestamp_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
