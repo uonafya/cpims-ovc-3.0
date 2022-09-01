@@ -1,4 +1,3 @@
-from email.policy import default
 from django.db import models
 from django.utils import timezone
 import datetime
@@ -61,7 +60,7 @@ class OVCCaseRecord(models.Model):
     case_remarks = models.CharField(max_length=1000, null=True)
     date_of_summon = models.DateField(null=True)
     summon_status = models.BooleanField(null=True, default=None)
-    # case_stage = models.IntegerField(default=0, null=True)
+    # case_stage = models.IntegerField(default=0)
 
     class Meta:
         db_table = 'ovc_case_record'

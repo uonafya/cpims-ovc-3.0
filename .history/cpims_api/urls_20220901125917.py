@@ -1,0 +1,102 @@
+from django.urls import path, include
+
+from rest_framework.routers import DefaultRouter
+
+from rest_framework.authtoken.views import obtain_auth_token
+
+from cpims_api import views
+
+router = DefaultRouter()
+
+OVCBursaryViewSet
+OVCCaseRecordViewSet
+OVCCaseGeoViewSet
+OVCEconomicStatusViewSet
+OVCFamilyStatusViewSet
+OVCHobbiesViewSet
+OVCFriendsViewSet
+OVCMedicalViewSet
+OVCMedicalSubconditionsViewSet
+OVCCaseCategoryViewSet
+OVCCaseSubCategoryViewSet
+OVCReferralViewSet
+# viewsets
+OVCPlacementViewSet
+OVCCaseEventsViewSet
+OVCCaseEventServicesViewSet
+OVCCaseEventCourtViewSet
+OVCCaseEventSummonViewSet
+OVCCaseEventClosureViewSet
+OVCRemindersViewSet
+OVCDocumentsViewSet
+OVCPlacementFollowUpViewSet
+OVCDischargeFollowUpViewSet
+OVCAdverseEventsFollowUpViewSet
+OVCAdverseEventsOtherFollowUpViewSet
+OVCFamilyCareViewSet
+OVCCareEventsViewSet
+OVCCareAssessmentViewSet
+OVCCareEAVViewSet
+OVCCareF1BViewSet
+OVCGokBursaryViewSet
+OVCCareFormsViewSet
+OVCCareBenchmarkScoreViewSet
+OVCCareWellbeingViewSet
+OVCCareCasePlanViewSet
+OVCHouseholdDemographicsViewSet
+OVCExplanationsViewSet
+# viewsets
+OVCReferralsViewSet
+OVCMonitoringViewSet
+OVCMonitoring11ViewSet
+OVCHivStatusViewSet
+OVCHIVRiskScreeningViewSet
+OVCHIVManagementViewSet
+# viewsets
+OVCBasicCRSViewSet
+OVCBasicPersonViewSet
+OVCBasicCategoryViewSet
+OvcCasePersonsViewSet
+OvcCaseInformationViewSet
+OVCCaseLocationViewSet
+OVCCareQuestionsViewSet
+OVCCareCpara_upgradeViewSet
+OVCSubPopulationViewSet
+OVCCareIndividaulCparaViewSet
+
+router.register('persons_master', views.PersonsMasterViewSets   )
+router.register('ovc_household', views.OVCHouseHoldViewSets   )
+router.register('ovc_chekins', views.OVCCheckinViewSets   )
+router.register('ovc_sibling', views.OVCSiblingViewSet   )
+router.register('reg_person_audit_trail', views.RegPersonsAuditTrailViewSet)
+router.register('reg_org_unit_audit_trail', views.RegOrgUnitsAuditTrailViewSet)
+router.register('reg_person_benefiaciary', views.RegPersonsBeneficiaryIdsViewSet)
+router.register('reg_person_workforce', views.RegPersonsWorkforceIdsViewSet)
+router.register('reg_person_ou', views.RegPersonsOrgUnitsViewSet)
+router.register('reg_person_contact', views.RegPersonsContactViewSet)
+router.register('reg_person_external_ids', views.RegPersonsExternalIdsViewSet)
+router.register('reg_person_geo', views.RegPersonsGeoViewSet)
+router.register('reg_person_types', views.RegPersonsTypesViewSet)
+router.register('reg_person_siblings', views.RegPersonsSiblingsViewSet)
+router.register('reg_person_gurdians', views.RegPersonsGuardiansViewSet)
+router.register('reg_biometric', views.RegBiometricViewSet)
+router.register('reg_person', views.RegPersonViewSet)
+router.register('reg_org_unit_geography', views.RegOrgUnitGeographyViewSet)
+router.register('reg_org_unit_external_id', views.RegOrgUnitExternalIDViewSet)
+router.register('reg_org_unit_contact', views.RegOrgUnitContactViewSet)
+router.register('ovc_care_priorioty', views.OVCCarePriorityViewSet)
+router.register('ovc_exit', views.OVCExitViewSet)
+router.register('ovc_education_follow_up', views.OVCEducationFollowUpViewSet)
+router.register('ovc_education_level_follow_up', views.OVCEducationLevelViewSet)
+router.register('ovc_viral_load', views.OvcViralLoadViewSet)
+router.register('ovc_care_services', views.OvcCareServicesViewSet)
+router.register('school_list', views.SchoolListViewSet)
+router.register('faciity_list', views.FacilityListViewSet)
+router.register('reg_person', views.RegOrgUnitViewSet)
+router.register('ovc_registration', views.OVCRegistrationViewSet)
+router.register('reg_org_unit', views.RegOrgUnitViewSet)
+
+urlpatterns = [
+    path('', include(router.urls)),    
+    path('token-auth', obtain_auth_token, name='api_token_auth'),
+]

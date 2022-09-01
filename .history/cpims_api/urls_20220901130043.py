@@ -10,7 +10,6 @@ router = DefaultRouter()
 
 router.register( 'OVCBursaryViewSet', views.OVCBursaryViewSet)
 router.register( 'OVCCaseRecordViewSet', views.OVCCaseRecordViewSet)
-
 router.register( 'OVCCaseGeoViewSet', views.OVCCaseGeoViewSet)
 router.register( 'OVCEconomicStatusViewSet', views.OVCEconomicStatusViewSet)
 router.register( 'OVCFamilyStatusViewSet', views.OVCFamilyStatusViewSet)
@@ -23,8 +22,6 @@ router.register( 'OVCCaseSubCategoryViewSet', views.OVCCaseSubCategoryViewSet)
 router.register( 'OVCReferralViewSet', views.OVCReferralViewSet)
 # viewsets
 router.register( 'OVCPlacementViewSet', views.OVCPlacementViewSet)
-
-# here
 router.register( 'OVCCaseEventsViewSet', views.OVCCaseEventsViewSet)
 router.register( 'OVCCaseEventServicesViewSet', views.OVCCaseEventServicesViewSet)
 router.register( 'OVCCaseEventCourtViewSet', views.OVCCaseEventCourtViewSet)

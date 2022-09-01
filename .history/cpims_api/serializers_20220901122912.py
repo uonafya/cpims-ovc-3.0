@@ -288,254 +288,325 @@ class PersonsMasterSerializers(serializers.ModelSerializer):
         fields = "__all__"
         
         
-class OVCBursarySerializers(serializers.ModelSerializer):
+class OVCBursarySerializers(serializers.ModelSerializers):
     class Meta:
         model = OVCBursary
         fields = "__all__"
-class OVCCaseRecordSerializers(serializers.ModelSerializer):
+
+class OVCCaseRecordSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCCaseRecord
+        model = OVCCaseRec
         fields = "__all__"
-class OVCCaseGeoSerializers(serializers.ModelSerializer):
+
+class OVCCaseGeoSerializers(serializers.ModelSerializers):
     class Meta:
         model = OVCCaseGeo
         fields = "__all__"
-class OVCEconomicStatusSerializers(serializers.ModelSerializer):
+
+class OVCEconomicStatusSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCEconomicStatus
+        model = OVCEconomi
         fields = "__all__"
-class OVCFamilyStatusSerializers(serializers.ModelSerializer):
+
+class OVCFamilyStatusSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCFamilyStatus
+        model = OVCFamilyS
         fields = "__all__"
-class OVCHobbiesSerializers(serializers.ModelSerializer):
+
+class OVCHobbiesSerializers(serializers.ModelSerializers):
     class Meta:
         model = OVCHobbies
         fields = "__all__"
-class OVCFriendsSerializers(serializers.ModelSerializer):
+
+class OVCFriendsSerializers(serializers.ModelSerializers):
     class Meta:
         model = OVCFriends
         fields = "__all__"
-class OVCMedicalSerializers(serializers.ModelSerializer):
+
+class OVCMedicalSerializers(serializers.ModelSerializers):
     class Meta:
         model = OVCMedical
         fields = "__all__"
-class OVCMedicalSubconditionsSerializers(serializers.ModelSerializer):
+
+class OVCMedicalSubconditionsSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCMedicalSubconditions
-        fields = "__all__"
-class OVCCaseCategorySerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCCaseCategory
-        fields = "__all__"
-class OVCCaseSubCategorySerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCCaseSubCategory
-        fields = "__all__"
-class OVCReferralSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCReferral
-        fields = "__all__"
-class OVCNeedsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCNeeds
-        fields = "__all__"
-class FormsLogSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = FormsLog
-        fields = "__all__"
-class FormsAuditTrailSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = FormsAuditTrail
-        fields = "__all__"
-class OVCPlacementSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCPlacement
-        fields = "__all__"
-class OVCCaseEventsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCCaseEvents
-        fields = "__all__"
-class OVCCaseEventServicesSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCCaseEventServices
-        fields = "__all__"
-class OVCCaseEventCourtSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCCaseEventCourt
-        fields = "__all__"
-class OVCCaseEventSummonSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCCaseEventSummon
-        fields = "__all__"
-class OVCCaseEventClosureSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCCaseEventClosure
-        fields = "__all__"
-class OVCRemindersSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCReminders
-        fields = "__all__"
-class OVCDocumentsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCDocuments
-        fields = "__all__"
-class OVCPlacementFollowUpSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCPlacementFollowUp
-        fields = "__all__"
-class OVCEducationFollowUpSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCEducationFollowUp
-        fields = "__all__"
-class OVCEducationLevelFollowUpSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCEducationLevelFollowUp
-        fields = "__all__"
-class OVCDischargeFollowUpSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCDischargeFollowUp
-        fields = "__all__"
-class OVCAdverseEventsFollowUpSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCAdverseEventsFollowUp
-        fields = "__all__"
-class OVCAdverseEventsOtherFollowUpSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = OVCAdverseEventsOtherFollowUp
+        model = OVCMedical
         fields = "__all__"
 
-class OVCFamilyCareSerializers(serializers.ModelSerializer):
+class OVCCaseCategorySerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCFamilyCare
+        model = OVCCaseCat
         fields = "__all__"
-class OVCCareEventsSerializers(serializers.ModelSerializer):
+
+class OVCCaseSubCategorySerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCCareEvents
+        model = OVCCaseSub
         fields = "__all__"
-class OVCCareAssessmentSerializers(serializers.ModelSerializer):
+
+class OVCInterventionsSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCCareAssessment
+        model = OVCInterve
         fields = "__all__"
-class OVCCarePrioritySerializers(serializers.ModelSerializer):
+
+class OVCReferralSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCCarePriority
+        model = OVCReferra
         fields = "__all__"
-class OVCCareServicesSerializers(serializers.ModelSerializer):
+
+class OVCNeedsSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCCareServices
+        model = OVCNeedsSe
         fields = "__all__"
-class OVCCareEAVSerializers(serializers.ModelSerializer):
+
+class FormsLogSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = FormsLogSe
+        fields = "__all__"
+
+class FormsAuditTrailSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = FormsAudit
+        fields = "__all__"
+
+class OVCPlacementSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCPlaceme
+        fields = "__all__"
+
+class OVCCaseEventsSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCCaseEve
+        fields = "__all__"
+
+class OVCCaseEventServicesSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCCaseEve
+        fields = "__all__"
+
+class OVCCaseEventCourtSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCCaseEve
+        fields = "__all__"
+
+class OVCCaseEventSummonSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCCaseEve
+        fields = "__all__"
+
+class OVCCaseEventClosureSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCCaseEve
+        fields = "__all__"
+
+class OVCRemindersSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCReminde
+        fields = "__all__"
+
+class OVCDocumentsSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCDocumen
+        fields = "__all__"
+
+class OVCPlacementFollowUpSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCPlaceme
+        fields = "__all__"
+
+class OVCEducationFollowUpSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCEducati
+        fields = "__all__"
+
+class OVCEducationLevelFollowUpSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCEducati
+        fields = "__all__"
+
+class OVCDischargeFollowUpSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCDischar
+        fields = "__all__"
+
+class OVCAdverseEventsFollowUpSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCAdverse
+        fields = "__all__"
+
+class OVCAdverseEventsOtherFollowUpSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCAdverse
+        fields = "__all__"
+
+class OVCAdverseMedicalEventsFollowUpSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCAdverse
+        fields = "__all__"
+
+class OVCFamilyCareSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCFamilyC
+        fields = "__all__"
+
+class OVCCareEventsSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCCareEve
+        fields = "__all__"
+
+class OVCCareAssessmentSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCCareAss
+        fields = "__all__"
+
+class OVCCarePrioritySerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCCarePri
+        fields = "__all__"
+
+class OVCCareServicesSerializers(serializers.ModelSerializers):
+    class Meta:
+        model = OVCCareSer
+        fields = "__all__"
+
+class OVCCareEAVSerializers(serializers.ModelSerializers):
     class Meta:
         model = OVCCareEAV
         fields = "__all__"
-class OVCCareF1BSerializers(serializers.ModelSerializer):
+
+class OVCCareF1BSerializers(serializers.ModelSerializers):
     class Meta:
         model = OVCCareF1B
         fields = "__all__"
-class ListBanksSerializers(serializers.ModelSerializer):
+
+class ListBanksSerializers(serializers.ModelSerializers):
     class Meta:
-        model = ListBanks
+        model = ListBanksS
         fields = "__all__"
-class OVCGokBursarySerializers(serializers.ModelSerializer):
+
+class OVCGokBursarySerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCGokBursary
+        model = OVCGokBurs
         fields = "__all__"
-class OVCCareFormsSerializers(serializers.ModelSerializer):
+
+class OVCCareFormsSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCCareForms
+        model = OVCCareFor
         fields = "__all__"
-class OVCCareBenchmarkScoreSerializers(serializers.ModelSerializer):
+
+class OVCCareBenchmarkScoreSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCCareBenchmarkScore
+        model = OVCCareBen
         fields = "__all__"
-class OVCCareWellbeingSerializers(serializers.ModelSerializer):
+
+class OVCCareWellbeingSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCCareWellbeing
+        model = OVCCareWel
         fields = "__all__"
-class OVCCareCasePlanSerializers(serializers.ModelSerializer):
+
+class OVCCareCasePlanSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCCareCasePlan
+        model = OVCCareCas
         fields = "__all__"
-class OVCHouseholdDemographicsSerializers(serializers.ModelSerializer):
+
+class OVCHouseholdDemographicsSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCHouseholdDemographics
+        model = OVCHouseho
         fields = "__all__"
-class OVCExplanationsSerializers(serializers.ModelSerializer):
+
+class OVCExplanationsSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCExplanations
+        model = OVCExplana
         fields = "__all__"
-class OVCGoalsSerializers(serializers.ModelSerializer):
+
+class OVCGoalsSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCGoals
+        model = OVCGoalsSe
         fields = "__all__"
-class OVCReferralsSerializers(serializers.ModelSerializer):
+
+class OVCReferralsSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCReferrals
+        model = OVCReferra
         fields = "__all__"
-class OVCMonitoringSerializers(serializers.ModelSerializer):
+
+class OVCMonitoringSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCMonitoring
+        model = OVCMonitor
         fields = "__all__"
-class OVCMonitoring11Serializers(serializers.ModelSerializer):
+
+class OVCMonitoring11Serializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCMonitoring11
+        model = OVCMonitor
         fields = "__all__"
-class OVCHivStatusSerializers(serializers.ModelSerializer):
+
+class OVCHivStatusSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCHivStatus
+        model = OVCHivStat
         fields = "__all__"
-class OVCHIVRiskScreeningSerializers(serializers.ModelSerializer):
+
+class OVCHIVRiskScreeningSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCHIVRiskScreening
+        model = OVCHIVRisk
         fields = "__all__"
-class OVCHIVManagementSerializers(serializers.ModelSerializer):
+
+class OVCHIVManagementSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCHIVManagement
+        model = OVCHIVMana
         fields = "__all__"
-class OVCDreamsSerializers(serializers.ModelSerializer):
+
+class OVCDreamsSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCDreams
+        model = OVCDreamsS
         fields = "__all__"
-class OVCBasicCRSSerializers(serializers.ModelSerializer):
+
+class OVCBasicCRSSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCBasicCRS
+        model = OVCBasicCR
         fields = "__all__"
-class OVCBasicPersonSerializers(serializers.ModelSerializer):
+
+class OVCBasicPersonSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCBasicPerson
+        model = OVCBasicPe
         fields = "__all__"
-class OVCBasicCategorySerializers(serializers.ModelSerializer):
+
+class OVCBasicCategorySerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCBasicCategory
+        model = OVCBasicCa
         fields = "__all__"
-class OvcCasePersonsSerializers(serializers.ModelSerializer):
+
+class OvcCasePersonsSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OvcCasePersons
+        model = OvcCasePer
         fields = "__all__"
-class OvcCaseInformationSerializers(serializers.ModelSerializer):
+
+class OvcCaseInformationSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OvcCaseInformation
+        model = OvcCaseInf
         fields = "__all__"
-class OVCCaseLocationSerializers(serializers.ModelSerializer):
+
+class OVCCaseLocationSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCCaseLocation
+        model = OVCCaseLoc
         fields = "__all__"
-class OVCCareQuestionsSerializers(serializers.ModelSerializer):
+
+class OVCCareQuestionsSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCCareQuestions
+        model = OVCCareQue
         fields = "__all__"
-class OVCCareCpara_upgradeSerializers(serializers.ModelSerializer):
+
+class OVCCareCpara_upgradeSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCCareCpara_upgrade
+        model = OVCCareCpa
         fields = "__all__"
-class OVCSubPopulationSerializers(serializers.ModelSerializer):
+
+class OVCSubPopulationSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCSubPopulation
+        model = OVCSubPopu
         fields = "__all__"
-class OVCCareIndividaulCparaSerializers(serializers.ModelSerializer):
+
+class OVCCareIndividaulCparaSerializers(serializers.ModelSerializers):
     class Meta:
-        model = OVCCareIndividaulCpara
+        model = OVCCareInd
         fields = "__all__"
+
         
 

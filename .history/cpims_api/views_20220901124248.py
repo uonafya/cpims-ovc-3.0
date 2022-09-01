@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from cpims_api import serializers
 
 from rest_framework import viewsets
 
@@ -138,7 +137,7 @@ from cpims_api.serializers import (
     OVCExitSerializer,
     OVCCarePrioritySerializer,
     RegOrgUnitContactSerializer,
-    RegOrgUnitExternalIDSerializer,
+    RegOrgUnitExternalIDSerializer
     
     OVCBursarySerializers,
     OVCCaseRecordSerializers,
@@ -153,8 +152,8 @@ from cpims_api.serializers import (
     OVCCaseSubCategorySerializers,
     OVCReferralSerializers,
     OVCNeedsSerializers,
-    FormsLogSerializers,
-    FormsAuditTrailSerializers,
+    # FormsLog,
+    # FormsAuditTrail,
     OVCPlacementSerializers,
     OVCCaseEventsSerializers,
     OVCCaseEventServicesSerializers,
@@ -172,7 +171,7 @@ from cpims_api.serializers import (
     OVCCareAssessmentSerializers,
     OVCCareEAVSerializers,
     OVCCareF1BSerializers,
-    ListBanksSerializers,
+    # ListBanks,
     OVCGokBursarySerializers,
     OVCCareFormsSerializers,
     OVCCareBenchmarkScoreSerializers,
@@ -198,6 +197,12 @@ from cpims_api.serializers import (
     OVCCareCpara_upgradeSerializers,
     OVCSubPopulationSerializers,
     OVCCareIndividaulCparaSerializers,
+    
+    
+    
+    
+    
+   
 
 )
 
@@ -360,233 +365,9 @@ class PersonsMasterViewSets(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = PersonsMaster.objects.all()
     serializer_class = PersonsMasterSerializers
+
+
+
+     
     
-class OVCBursaryViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCBursary.objects.all()
-    serializer_class = OVCBursarySerializers
-class OVCCaseRecordViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCaseRecord.objects.all()
-    serializer_class = OVCCaseRecordSerializers
-class OVCCaseGeoViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCaseGeo.objects.all()
-    serializer_class = OVCCaseGeoSerializers
-class OVCEconomicStatusViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCEconomicStatus.objects.all()
-    serializer_class = OVCEconomicStatusSerializers
-class OVCFamilyStatusViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCFamilyStatus.objects.all()
-    serializer_class = OVCFamilyStatusSerializers
-class OVCHobbiesViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCHobbies.objects.all()
-    serializer_class = OVCHobbiesSerializers
-class OVCFriendsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCFriends.objects.all()
-    serializer_class = OVCFriendsSerializers
-class OVCMedicalViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCMedical.objects.all()
-    serializer_class = OVCMedicalSerializers
-class OVCMedicalSubconditionsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCMedicalSubconditions.objects.all()
-    serializer_class = OVCMedicalSubconditionsSerializers
-class OVCCaseCategoryViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCaseCategory.objects.all()
-    serializer_class = OVCCaseCategorySerializers
-class OVCCaseSubCategoryViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCaseSubCategory.objects.all()
-    serializer_class = OVCCaseSubCategorySerializers
-class OVCReferralViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCReferral.objects.all()
-    serializer_class = OVCReferralSerializers
-class OVCNeedsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCNeeds.objects.all()
-    serializer_class = OVCNeedsSerializers
-# FormsLog,
-# FormsAuditTrail,
-class OVCPlacementViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCPlacement.objects.all()
-    serializer_class = OVCPlacementSerializers
-class OVCCaseEventsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCaseEvents.objects.all()
-    serializer_class = OVCCaseEventsSerializers
-class OVCCaseEventServicesViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCaseEventServices.objects.all()
-    serializer_class = OVCCaseEventServicesSerializers
-class OVCCaseEventCourtViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCaseEventCourt.objects.all()
-    serializer_class = OVCCaseEventCourtSerializers
-class OVCCaseEventSummonViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCaseEventSummon.objects.all()
-    serializer_class = OVCCaseEventSummonSerializers
-class OVCCaseEventClosureViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCaseEventClosure.objects.all()
-    serializer_class = OVCCaseEventClosureSerializers
-class OVCRemindersViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCReminders.objects.all()
-    serializer_class = OVCRemindersSerializers
-class OVCDocumentsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCDocuments.objects.all()
-    serializer_class = OVCDocumentsSerializers
-class OVCPlacementFollowUpViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCPlacementFollowUp.objects.all()
-    serializer_class = OVCPlacementFollowUpSerializers
-class OVCDischargeFollowUpViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCDischargeFollowUp.objects.all()
-    serializer_class = OVCDischargeFollowUpSerializers
-class OVCAdverseEventsFollowUpViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCAdverseEventsFollowUp.objects.all()
-    serializer_class = OVCAdverseEventsFollowUpSerializers
-class OVCAdverseEventsOtherFollowUpViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCAdverseEventsOtherFollowUp.objects.all()
-    serializer_class = OVCAdverseEventsOtherFollowUpSerializers
-class OVCFamilyCareViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCFamilyCare.objects.all()
-    serializer_class = OVCFamilyCareSerializers
-class OVCCareEventsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCareEvents.objects.all()
-    serializer_class = OVCCareEventsSerializers
-class OVCCareAssessmentViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCareAssessment.objects.all()
-    serializer_class = OVCCareAssessmentSerializers
-class OVCCareEAVViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCareEAV.objects.all()
-    serializer_class = OVCCareEAVSerializers
-class OVCCareF1BViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCareF1B.objects.all()
-    serializer_class = OVCCareF1BSerializers
-# ListBanks,
-class OVCGokBursaryViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCGokBursary.objects.all()
-    serializer_class = OVCGokBursarySerializers
-class OVCCareFormsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCareForms.objects.all()
-    serializer_class = OVCCareFormsSerializers
-class OVCCareBenchmarkScoreViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCareBenchmarkScore.objects.all()
-    serializer_class = OVCCareBenchmarkScoreSerializers
-class OVCCareWellbeingViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCareWellbeing.objects.all()
-    serializer_class = OVCCareWellbeingSerializers
-class OVCCareCasePlanViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCareCasePlan.objects.all()
-    serializer_class = OVCCareCasePlanSerializers
-class OVCHouseholdDemographicsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCHouseholdDemographics.objects.all()
-    serializer_class = OVCHouseholdDemographicsSerializers
-class OVCExplanationsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCExplanations.objects.all()
-    serializer_class = OVCExplanationsSerializers
-class OVCGoalsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCGoals.objects.all()
-    serializer_class = OVCGoalsSerializers
-class OVCReferralsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCReferrals.objects.all()
-    serializer_class = OVCReferralsSerializers
-class OVCMonitoringViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCMonitoring.objects.all()
-    serializer_class = OVCMonitoringSerializers
-class OVCMonitoring11ViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCMonitoring11.objects.all()
-    serializer_class = OVCMonitoring11Serializers
-class OVCHivStatusViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCHivStatus.objects.all()
-    serializer_class = OVCHivStatusSerializers
-class OVCHIVRiskScreeningViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCHIVRiskScreening.objects.all()
-    serializer_class = OVCHIVRiskScreeningSerializers
-class OVCHIVManagementViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCHIVManagement.objects.all()
-    serializer_class = OVCHIVManagementSerializers
-class OVCDreamsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCDreams.objects.all()
-    serializer_class = OVCDreamsSerializers
-class OVCBasicCRSViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCBasicCRS.objects.all()
-    serializer_class = OVCBasicCRSSerializers
-class OVCBasicPersonViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCBasicPerson.objects.all()
-    serializer_class = OVCBasicPersonSerializers
-class OVCBasicCategoryViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCBasicCategory.objects.all()
-    serializer_class = OVCBasicCategorySerializers
-class OvcCasePersonsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OvcCasePersons.objects.all()
-    serializer_class = OvcCasePersonsSerializers
-class OvcCaseInformationViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OvcCaseInformation.objects.all()
-    serializer_class = OvcCaseInformationSerializers
-class OVCCaseLocationViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCaseLocation.objects.all()
-    serializer_class = OVCCaseLocationSerializers
-class OVCCareQuestionsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCareQuestions.objects.all()
-    serializer_class = OVCCareQuestionsSerializers
-class OVCCareCpara_upgradeViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCareCpara_upgrade.objects.all()
-    serializer_class = OVCCareCpara_upgradeSerializers
-class OVCSubPopulationViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCSubPopulation.objects.all()
-    serializer_class = OVCSubPopulationSerializers
-class OVCCareIndividaulCparaViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = OVCCareIndividaulCpara.objects.all()
-    serializer_class = OVCCareIndividaulCparaSerializers
-
-
-
     
-
-
