@@ -136,6 +136,14 @@ class OVCHouseHold(models.Model):
         verbose_name = 'OVC Registration'
         verbose_name_plural = 'OVC Registration'
         
+    def soft_delete(self):
+        self.is_void = True
+        self.save()
+
+    def restore(self):
+        self.is_void = False
+        self.save()
+
     def __unicode__(self):
         """To be returned by admin actions."""
         return str(self.id)

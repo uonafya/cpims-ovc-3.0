@@ -354,13 +354,9 @@ class OVCCheckinViewSets(viewsets.ModelViewSet):
     
 class OVCHouseHoldViewSets(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
-    queryset = OVCHouseHold.objects.filter(is_void=False)
+    queryset = OVCHouseHold.objects.filter(is_deleted=False)l()
     serializer_class = OVCHouseHoldSerializers
     
-    def destroy(self, request, *args, **kwargs):
-        OVCHouseHold.soft_delete()
-        return "Ok"
-     
     # def list(self, request):
     #     raise MethodNotAllowed('GET', detail='Method "GET" not allowed without lookup')
     

@@ -128,6 +128,14 @@ class OVCHouseHold(models.Model):
     head_identifier = models.CharField(max_length=255)
     created_at = models.DateTimeField(default=timezone.now)
     is_void = models.BooleanField(default=False)
+    
+        def soft_delete(self):
+        self.is_deleted = True
+        self.save()
+
+    def restore(self):
+        self.is_deleted = False
+        self.save()
 
     class Meta:
         """Override table details."""
@@ -135,7 +143,7 @@ class OVCHouseHold(models.Model):
         db_table = 'ovc_household'
         verbose_name = 'OVC Registration'
         verbose_name_plural = 'OVC Registration'
-        
+
     def __unicode__(self):
         """To be returned by admin actions."""
         return str(self.id)

@@ -357,10 +357,6 @@ class OVCHouseHoldViewSets(viewsets.ModelViewSet):
     queryset = OVCHouseHold.objects.filter(is_void=False)
     serializer_class = OVCHouseHoldSerializers
     
-    def destroy(self, request, *args, **kwargs):
-        OVCHouseHold.soft_delete()
-        return "Ok"
-     
     # def list(self, request):
     #     raise MethodNotAllowed('GET', detail='Method "GET" not allowed without lookup')
     

@@ -135,7 +135,7 @@ class OVCHouseHold(models.Model):
         db_table = 'ovc_household'
         verbose_name = 'OVC Registration'
         verbose_name_plural = 'OVC Registration'
-        
+
     def __unicode__(self):
         """To be returned by admin actions."""
         return str(self.id)

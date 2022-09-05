@@ -124,7 +124,7 @@ DATABASES = {
         'USER': cpims_db_user,
         'PASSWORD': cpims_db_pass,
         'HOST': 'localhost',
-        'PORT': '5433', },
+        'PORT': '5433   ', },
     'reporting': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': cpims_db_instance,

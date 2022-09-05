@@ -9,8 +9,7 @@ from cpims_api import views
 router = DefaultRouter()
 
 
-router.register( 'ListBanksViewSet', views.ListBanksViewSet)
-router.register( 'FormsLogViewSet', views.FormsLogViewSet)
+router.register( 'FormsAuditTrailViewSet', views.FormsAuditTrailViewSet)
 router.register( 'FormsLogViewSet', views.FormsLogViewSet)
 router.register( 'OVCBursaryViewSet', views.OVCBursaryViewSet)
 router.register( 'OVCCaseRecordViewSet', views.OVCCaseRecordViewSet)

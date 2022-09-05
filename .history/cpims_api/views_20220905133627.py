@@ -1,11 +1,11 @@
 
 from django.shortcuts import render
+from cpims_api import serializers
 
-from rest_framework import viewsets,status
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import MethodNotAllowed
-from rest_framework.response import Response
 
 
 
@@ -354,13 +354,11 @@ class OVCCheckinViewSets(viewsets.ModelViewSet):
     
 class OVCHouseHoldViewSets(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
-    queryset = OVCHouseHold.objects.filter(is_void=False)
+    queryset = OVCHouseHold.objects.all()
     serializer_class = OVCHouseHoldSerializers
     
-    def destroy(self, request, *args, **kwargs):
-        OVCHouseHold.soft_delete()
-        return "Ok"
-     
+    http_method_names = ['get', 'post', 'head']
+    
     # def list(self, request):
     #     raise MethodNotAllowed('GET', detail='Method "GET" not allowed without lookup')
     
@@ -595,22 +593,9 @@ class OVCCareIndividaulCparaViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCCareIndividaulCpara.objects.all()
     serializer_class = OVCCareIndividaulCparaSerializers
-    
-class FormsLogViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = FormsLog.objects.all()
-    serializer_class = FormsLogSerializers
-    
-class FormsAuditTrailViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = FormsAuditTrail.objects.all()
-    serializer_class = FormsAuditTrailSerializers
 
 
-class ListBanksViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = ListBanks.objects.all()
-    serializer_class = ListBanksSerializers
+
     
 
 
