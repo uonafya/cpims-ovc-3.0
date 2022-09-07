@@ -11,6 +11,8 @@ router = DefaultRouter()
 #
 router.register("FacilityListViewSet",views.FacilityListViewSet)
 router.register("SchoolListViewSet",views.SchoolListViewSet)
+router.register("SchoolListViewSet",views.SchoolListViewSet)
+router.register("FacilityListViewSet",views.FacilityListViewSet)
 router.register("SetupGeographyViewSet",views.SetupGeographyViewSet)
 router.register("SetupLocationViewSet",views.SetupLocationViewSet)
 router.register("SetupListViewSet",views.SetupListViewSet)

@@ -8,38 +8,40 @@ from cpims_api import views
 
 router = DefaultRouter()
 
-#
-router.register("FacilityListViewSet",views.FacilityListViewSet)
-router.register("SchoolListViewSet",views.SchoolListViewSet)
-router.register("SetupGeographyViewSet",views.SetupGeographyViewSet)
-router.register("SetupLocationViewSet",views.SetupLocationViewSet)
-router.register("SetupListViewSet",views.SetupListViewSet)
-router.register("FormsViewSet",views.FormsViewSet)
-router.register("ListQuestionsViewSet",views.ListQuestionsViewSet)
-router.register("ListAnswersViewSet",views.ListAnswersViewSet)
-router.register("FormGenAnswersViewSet",views.FormGenAnswersViewSet)
-router.register("FormGenTextViewSet",views.FormGenTextViewSet)
-router.register("FormGenDatesViewSet",views.FormGenDatesViewSet)
-router.register("FormGenNumericViewSet",views.FormGenNumericViewSet)
-router.register("AdminUploadFormsViewSet",views.AdminUploadFormsViewSet)
-router.register("FormPersonParticipationViewSet",views.FormPersonParticipationViewSet)
-router.register("FormOrgUnitContributionsViewSet",views.FormOrgUnitContributionsViewSet)
-router.register("FormResChildrenViewSet",views.FormResChildrenViewSet)
-router.register("FormResWorkforceViewSet",views.FormResWorkforceViewSet)
-router.register("AdminPreferencesViewSet",views.AdminPreferencesViewSet)
-router.register("CoreAdverseConditionsViewSet",views.CoreAdverseConditionsViewSet)
-router.register("CoreServicesViewSet",views.CoreServicesViewSet)
-router.register("CoreEncountersViewSet",views.CoreEncountersViewSet)
-router.register("CoreEncountersNotesViewSet",views.CoreEncountersNotesViewSet)
-router.register("AdminCaptureSitesViewSet",views.AdminCaptureSitesViewSet)
-router.register("AdminDownloadViewSet",views.AdminDownloadViewSet)
-router.register("CaptureTaskTrackerViewSet",views.CaptureTaskTrackerViewSet)
-router.register("ListReportsViewSet",views.ListReportsViewSet)
-router.register("ListReportsParametersViewSet",views.ListReportsParametersViewSet)
-router.register("ReportsSetsViewSet",views.ReportsSetsViewSet)
-router.register("ReportsSetsOrgUnitsViewSet",views.ReportsSetsOrgUnitsViewSet)
-router.register("RegTempViewSet",views.RegTempViewSet)
-#
+
+FacilityListViewSet
+SchoolListViewSet
+SchoolListViewSet
+FacilityListViewSet
+SetupGeographyViewSet
+SetupLocationViewSet
+SetupListViewSet
+FormsViewSet
+ListQuestionsViewSet
+ListAnswersViewSet
+FormGenAnswersViewSet
+FormGenTextViewSet
+FormGenDatesViewSet
+FormGenNumericViewSet
+AdminUploadFormsViewSet
+FormPersonParticipationViewSet
+FormOrgUnitContributionsViewSet
+FormResChildrenViewSet
+FormResWorkforceViewSet
+AdminPreferencesViewSet
+CoreAdverseConditionsViewSet
+CoreServicesViewSet
+CoreEncountersViewSet
+CoreEncountersNotesViewSet
+AdminCaptureSitesViewSet
+AdminDownloadViewSet
+CaptureTaskTrackerViewSet
+ListReportsViewSet
+ListReportsParametersViewSet
+ReportsSetsViewSet
+ReportsSetsOrgUnitsViewSet
+RegTempViewSet
+
 router.register( 'FormsAuditTrailViewSet', views.FormsAuditTrailViewSet)
 router.register( 'ListBanksViewSet', views.ListBanksViewSet)
 router.register( 'FormsLogViewSet', views.FormsLogViewSet)

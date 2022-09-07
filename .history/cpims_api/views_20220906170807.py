@@ -108,7 +108,98 @@ from cpovc_forms.models  import (
 # 
 
 # Create your views here.
-from cpims_api.serializers import *
+from cpims_api.serializers import (
+    OVCCheckinSerializers,
+    OVCHouseHoldSerializers,
+    OVCSiblingSerializer,
+    PersonsMasterSerializers,
+    RegBiometricSerializer,
+    RegOrgUnitGeographySerializer,
+    RegOrgUnitSerializer,
+    OVCRegistrationSerializers,
+    RegOrgUnitsAuditTrailSerializers,
+    RegPersonSerializers,
+    FacilityListSerializers,
+    RegPersonsAuditTrailSerializers,
+    RegPersonsBeneficiaryIdsSerializers,
+    RegPersonsContactSerialzer,
+    RegPersonsExternalIdsSerializers,
+    RegPersonsGeoSerializer,
+    RegPersonsGuardiansSerialzer,
+    RegPersonsOrgUnitsSerializer,
+    RegPersonsSiblingsSerializer,
+    RegPersonsTypesSerializer,
+    RegPersonsWorkforceIdsSerializer,
+    SchoolistSeriallizers,
+    OvcCareServicesSerializers,
+    OvcViralLoadSerializers,
+    OVCEducationFollowUpSerializers,
+    OVCEducationLevelFollowUpSerializer,
+    OVCExitSerializer,
+    OVCCarePrioritySerializer,
+    RegOrgUnitContactSerializer,
+    RegOrgUnitExternalIDSerializer,
+    
+    OVCBursarySerializers,
+    OVCCaseRecordSerializers,
+    OVCCaseGeoSerializers,
+    OVCEconomicStatusSerializers,
+    OVCFamilyStatusSerializers,
+    OVCHobbiesSerializers,
+    OVCFriendsSerializers,
+    OVCMedicalSerializers,
+    OVCMedicalSubconditionsSerializers,
+    OVCCaseCategorySerializers,
+    OVCCaseSubCategorySerializers,
+    OVCReferralSerializers,
+    OVCNeedsSerializers,
+    FormsLogSerializers,
+    FormsAuditTrailSerializers,
+    OVCPlacementSerializers,
+    OVCCaseEventsSerializers,
+    OVCCaseEventServicesSerializers,
+    OVCCaseEventCourtSerializers,
+    OVCCaseEventSummonSerializers,
+    OVCCaseEventClosureSerializers,
+    OVCRemindersSerializers,
+    OVCDocumentsSerializers,
+    OVCPlacementFollowUpSerializers,
+    OVCDischargeFollowUpSerializers,
+    OVCAdverseEventsFollowUpSerializers,
+    OVCAdverseEventsOtherFollowUpSerializers,
+    OVCFamilyCareSerializers,
+    OVCCareEventsSerializers,
+    OVCCareAssessmentSerializers,
+    OVCCareEAVSerializers,
+    OVCCareF1BSerializers,
+    ListBanksSerializers,
+    OVCGokBursarySerializers,
+    OVCCareFormsSerializers,
+    OVCCareBenchmarkScoreSerializers,
+    OVCCareWellbeingSerializers,
+    OVCCareCasePlanSerializers,
+    OVCHouseholdDemographicsSerializers,
+    OVCExplanationsSerializers,
+    OVCGoalsSerializers,
+    OVCReferralsSerializers,
+    OVCMonitoringSerializers,
+    OVCMonitoring11Serializers,
+    OVCHivStatusSerializers,
+    OVCHIVRiskScreeningSerializers,
+    OVCHIVManagementSerializers,
+    OVCDreamsSerializers,
+    OVCBasicCRSSerializers,
+    OVCBasicPersonSerializers,
+    OVCBasicCategorySerializers,
+    OvcCasePersonsSerializers,
+    OvcCaseInformationSerializers,
+    OVCCaseLocationSerializers,
+    OVCCareQuestionsSerializers,
+    OVCCareCpara_upgradeSerializers,
+    OVCSubPopulationSerializers,
+    OVCCareIndividaulCparaSerializers,
+
+)
 
 class RegOrgUnitViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
@@ -130,6 +221,11 @@ class FacilityListViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = FacilityList.objects.all()
     serializer_class = FacilityListSerializers
+    
+class SchoolListViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
+    queryset  = SchoolList.objects.all()
+    serializer_class = SchoolistSeriallizers
     
 class OvcCareServicesViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
@@ -514,11 +610,27 @@ class ListBanksViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = ListBanks.objects.all()
     serializer_class = ListBanksSerializers
+    
+class FacilityListViewSet(viewsets.ModelViewSet):
+
+    authentication_classes = (TokenAuthentication,)
+    queryset = FacilityList.objects.all()
+    serializer_class = FacilityListSerializers 
 class SchoolListViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
     queryset = SchoolList.objects.all()
-    serializer_class = SchoolistSeriallizers 
+    serializer_class = SchoolListSerializers
+class SchoolListViewSet(viewsets.ModelViewSet):
+
+    authentication_classes = (TokenAuthentication,)
+    queryset = SchoolList.objects.all()
+    serializer_class = SchoolListSerializers
+class FacilityListViewSet(viewsets.ModelViewSet):
+
+    authentication_classes = (TokenAuthentication,)
+    queryset = FacilityList.objects.all()
+    serializer_class = FacilityListSerializers
 class SetupGeographyViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)

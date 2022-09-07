@@ -131,6 +131,11 @@ class FacilityListViewSet(viewsets.ModelViewSet):
     queryset = FacilityList.objects.all()
     serializer_class = FacilityListSerializers
     
+class SchoolListViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
+    queryset  = SchoolList.objects.all()
+    serializer_class = SchoolistSeriallizers
+    
 class OvcCareServicesViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset =  OVCCareServices.objects.all()
@@ -514,11 +519,27 @@ class ListBanksViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = ListBanks.objects.all()
     serializer_class = ListBanksSerializers
+    
+class FacilityListViewSet(viewsets.ModelViewSet):
+
+    authentication_classes = (TokenAuthentication,)
+    queryset = FacilityList.objects.all()
+    serializer_class = FacilityListSerializers 
 class SchoolListViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
     queryset = SchoolList.objects.all()
-    serializer_class = SchoolistSeriallizers 
+    serializer_class = SchoolListSerializers
+class SchoolListViewSet(viewsets.ModelViewSet):
+
+    authentication_classes = (TokenAuthentication,)
+    queryset = SchoolList.objects.all()
+    serializer_class = SchoolListSerializers
+class FacilityListViewSet(viewsets.ModelViewSet):
+
+    authentication_classes = (TokenAuthentication,)
+    queryset = FacilityList.objects.all()
+    serializer_class = FacilityListSerializers
 class SetupGeographyViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)

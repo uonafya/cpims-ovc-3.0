@@ -43,36 +43,36 @@ from cpovc_ovc.models import (
 from cpovc_main.models   import (
     FacilityList, 
     SchoolList,
-    SchoolList,
-    FacilityList,
-    SetupGeography,
-    SetupLocation,
-    SetupList,
-    Forms,
-    ListQuestions,
-    ListAnswers,
-    FormGenAnswers,
-    FormGenText,
-    FormGenDates,
-    FormGenNumeric,
-    AdminUploadForms,
-    FormPersonParticipation,
-    FormOrgUnitContributions,
-    FormResChildren,
-    FormResWorkforce,
-    AdminPreferences,
-    CoreAdverseConditions,
-    CoreServices,
-    CoreEncounters,
-    CoreEncountersNotes,
-    AdminCaptureSites,
-    AdminDownload,
-    CaptureTaskTracker,
-    ListReports,
-    ListReportsParameters,
-    ReportsSets,
-    ReportsSetsOrgUnits,
-    RegTemp,
+    SchoolList
+    # FacilityList,
+    # SetupGeography,
+    # SetupLocation,
+    # SetupList,
+    # Forms,
+    # ListQuestions,
+    # ListAnswers,
+    # FormGenAnswers,
+    # FormGenText,
+    # FormGenDates,
+    # FormGenNumeric,
+    # AdminUploadForms,
+    # FormPersonParticipation,
+    # FormOrgUnitContributions,
+    # FormResChildren,
+    # FormResWorkforce,
+    # AdminPreferences,
+    # CoreAdverseConditions,
+    # CoreServices,
+    # CoreEncounters,
+    # CoreEncountersNotes,
+    # AdminCaptureSites,
+    # AdminDownload,
+    # CaptureTaskTracker,
+    # ListReports,
+    # ListReportsParameters,
+    # ReportsSets,
+    # ReportsSetsOrgUnits,
+    # RegTemp,
 )
 
 # cpovc_forms,
@@ -748,8 +748,8 @@ class RegTempSerializers(serializers.ModelSerializer):
         fields = "__all__"
         
 
-# Serializers(serializers.ModelSerializer):
-# class Meta:
-#     model = class
+Serializers(serializers.ModelSerializer):
+class Meta:
+    model = class
 
-# fields = "
+fields = "

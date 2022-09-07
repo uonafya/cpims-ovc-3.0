@@ -568,7 +568,6 @@ class FormGenNumericViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
     queryset = FormGenNumeric.objects.all()
-    serializer_class = FormGenNumericSerializers
 class AdminUploadFormsViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
