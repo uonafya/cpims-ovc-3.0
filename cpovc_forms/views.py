@@ -10027,8 +10027,19 @@ def new_hivmanagementform(request, id):
             house_hold=house_hold
         )
 
-        
-
+        def getBool(getData):
+            if (getData == 'ANNO'):
+                getData = False
+            elif (getData == 'AYES'):
+                getData = True
+            elif (getData == 'Yes'):
+                getData = True
+            elif (getData == 'No'):
+                getData = False
+            return getData
+        nutritionlist = data.getlist('HIV_MGMT_2_M')
+        if (nutritionlist):
+            nutritiondata = ";".join(nutritionlist)
         _HIV_MGMT_1_E = False
         _HIV_MGMT_1_F = False
         _HIV_MGMT_1_G = False
@@ -10058,45 +10069,50 @@ def new_hivmanagementform(request, id):
         try:
             qry = OVCHIVManagement(
                 person=person,
-                hiv_confirmed_date=request.POST.get('HIV_MGMT_1_A'),
-                baseline_hei=request.POST.get('HIV_MGMT_1_C'),
-                treatment_initiated_date=request.POST.get('HIV_MGMT_1_B'),
-                firstline_start_date=request.POST.get('HIV_MGMT_1_D'),  # date
-                substitution_firstline_arv=_HIV_MGMT_1_E,
+                hiv_confirmed_date = data.get('HIV_MGMT_1_A'),
+                baseline_hei = data.get('HIV_MGMT_1_C'),
+                treatment_initiated_date = data.get('HIV_MGMT_1_B'),
+                firstline_start_date = data.get('HIV_MGMT_1_D'),  # date
+                substitution_firstline_arv= getBool(data.get('HIV_MGMT_1_E')),
                 substitution_firstline_date=_HIV_MGMT_1_E_DATE,
-                switch_secondline_arv=_HIV_MGMT_1_F,
+                switch_secondline_arv = getBool(data.get('HIV_MGMT_1_F')),
                 switch_secondline_date=_HIV_MGMT_1_F_DATE,
-                switch_thirdline_arv=_HIV_MGMT_1_G,
+                switch_thirdline_arv= getBool(data.get('HIV_MGMT_1_G')),
                 switch_thirdline_date=_HIV_MGMT_1_G_DATE,
-                visit_date=request.POST.get('HIV_MGMT_2_A'),
-                duration_art=request.POST.get('HIV_MGMT_2_B'),
-                height=request.POST.get('HIV_MGMT_2_C'),
-                muac=request.POST.get('HIV_MGMT_2_D'),
-                adherence=request.POST.get('HIV_MGMT_2_E'),
-                adherence_drugs_duration=request.POST.get('HIV_MGMT_2_F'),
-                adherence_counselling=request.POST.get('HIV_MGMT_2_G'),
-                treatment_suppoter=request.POST.get('HIV_MGMT_2_H_2'),
-                treatment_supporter_relationship=request.POST.get('HIV_MGMT_2_H_1'),
-                treatment_supporter_gender=request.POST.get('HIV_MGMT_2_H_3'),
-                treament_supporter_hiv=request.POST.get('HIV_MGMT_2_H_5'),
-                viral_load_results=request.POST.get('HIV_MGMT_2_I_1'),
-                viral_load_date=request.POST.get('HIV_MGMT_2_I_DATE'),
-                treatment_supporter_age=request.POST.get('HIV_MGMT_2_H_4'),
-                detectable_viralload_interventions=request.POST.get('HIV_MGMT_2_J'),
-                disclosure=request.POST.get('HIV_MGMT_2_K'),
-                muac_score=request.POST.get('HIV_MGMT_2_L_1'),
-                bmi=request.POST.get('HIV_MGMT_2_L_2'),
-                nutritional_support=request.POST.get('HIV_MGMT_2_M'),
-                support_group_status=request.POST.get('HIV_MGMT_2_N'),
-                nhif_enrollment=_HIV_MGMT_2_O_1,
-                nhif_status=request.POST.get('_HIV_MGMT_2_O_2'),
-                referral_services=request.POST.get('HIV_MGMT_2_P'),
-                nextappointment_date=request.POST.get('HIV_MGMT_2_Q'),
-                peer_educator_name=request.POST.get('HIV_MGMT_2_R'),
-                peer_educator_contact=request.POST.get('HIV_MGMT_2_S'),
-                event=ovccareevent,
-                date_of_event=request.POST.get('HIV_MGMT_2_A'),
-                timestamp_created=timezone.now()
+                visit_date = data.get('HIV_MGMT_2_A'),
+                duration_art = data.get('HIV_MGMT_2_B'),
+                height = data.get('HIV_MGMT_2_C'),
+                weight = data.get('HIV_MGMT_2_D'),
+                muac = data.get('HIV_MGMT_2_L_1'),
+                current_regimen = data.get('HIV_MGMT_1_H'),
+                enough_drugs = getBool(data.get('HIV_MGMT_2_V')),
+                plan_track_unstable = data.get('HIV_MGMT_2_U'),
+                otz = getBool(data.get('HIV_MGMT_2_O_1')),
+                adherence = data.get('HIV_MGMT_2_E'),
+                adherence_drugs_duration = data.get('HIV_MGMT_2_F'),
+                adherence_counselling = data.get('HIV_MGMT_2_G'),
+                treatment_supporter_relationship = data.get('HIV_MGMT_2_H_1'),
+                treatment_supporter_gender = data.get('HIV_MGMT_2_H_3'),
+                treament_supporter_hiv = data.get('HIV_MGMT_2_H_5'),
+                viral_load_results = data.get('HIV_MGMT_2_I_1'),
+                viral_load_date = data.get('HIV_MGMT_2_I_DATE'),
+                treatment_supporter_age = data.get('HIV_MGMT_2_H_4'),
+                detectable_viralload_interventions = data.get('HIV_MGMT_2_J'),
+                disclosure = data.get('HIV_MGMT_2_K'),
+                muac_score = data.get('HIV_MGMT_2_L_1'),
+                bmi = data.get('HIV_MGMT_2_L_2'),
+                nutritional_support = nutritiondata,
+                support_group_status = data.get('HIV_MGMT_2_N'),
+                # support_group_enrollment = data.get('HIV_MGMT_2_N_1'),
+                nhif_enrollment=getBool(data.get('HIV_MGMT_2_O_1')),
+                nhif_status = data.get('_HIV_MGMT_2_O_2'),
+                referral_services = data.get('HIV_MGMT_2_P'),
+                nextappointment_date = data.get('HIV_MGMT_2_Q'),
+                peer_educator_name = data.get('HIV_MGMT_2_R'),
+                peer_educator_contact = data.get('HIV_MGMT_2_S'),
+                event = ovccareevent,
+                date_of_event = data.get('HIV_MGMT_2_A'),
+                timestamp_created = timezone.now()
             ).save()
 
             msg = 'HIV management saved successfully'
@@ -10185,7 +10201,7 @@ def new_benchmarkmonitoring(request, id):
         try:
             event_id = save_event(request, id, event_name, date_of_event, )
 
-        except exception as e:
+        except Exception as e:
             print("an error occured ", e)
 
         benchmark = OVCBenchmarkMonitoring(

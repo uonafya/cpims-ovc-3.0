@@ -303,9 +303,18 @@
                                                     {{form.HIV_MGMT_2_V}}
                                             </td>
                                         </tr>
-                                       
                                         <tr>
                                             <td>Q9</td>
+                                            <td>
+                                                 ARV drugs - Duration for drugs (in months)
+
+                                            </td>
+                                            <td>
+                                                    {{ form.HIV_MGMT_2_F }}
+                                            </td>
+                                        </tr>                                        
+                                        <tr>
+                                            <td>Q10</td>
                                             <td>
                                                 Adherence Counseling
                                             </td>
@@ -315,7 +324,7 @@
                                         </tr>                   
                                             
                                         <tr>
-                                            <td>Q10</td>
+                                            <td>Q11</td>
                                             <td>
                                                     Treatment supporter
                                             </td>
@@ -324,8 +333,8 @@
                                             </td>                                                
                                         </tr>
 
-                                        <tr>
-                                            <td>Q11</td>
+                                        <tr id="treatment_support_others" class="hidden">
+                                            <td>Q12</td>
                                             <td>
                                                 Treatment supporter-Others
                                             </td>
@@ -336,7 +345,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td>Q12</td>
+                                            <td>Q13</td>
                                             <td>
                                                 Treatment supporter-Sex
                                             </td>
@@ -346,7 +355,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td>Q13</td>
+                                            <td>Q14</td>
                                             <td>
                                                     Treatment supporter-Age
                                             </td>
@@ -355,7 +364,7 @@
                                             </td>                                                
                                         </tr>
                                         <tr>
-                                            <td>Q14</td>
+                                            <td>Q15</td>
                                             <td>
                                                 Treatment supporter-HIV_Status
                                             </td>
@@ -375,7 +384,7 @@
                                             </td>                                            
                                         </tr>
                                         <tr>
-                                            <td>Q15</td>
+                                            <td>Q17</td>
                                             <td>
                                                 Lab Investigations-Viral load results
                                             </td>
@@ -383,27 +392,28 @@
                                                 {{ form.HIV_MGMT_2_I_1 }}   
                                             </td>                                            
                                         </tr>
-                                        <tr>
-                                            <td>Q17</td>
-                                            <td>
-                                                 ARV drugs - Duration for drugs (in months)
-
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_F }}
-                                            </td>
-                                        </tr>                                        
+                                                         
                                         <tr>
                                             <td>Q18</td>
                                             <td>
-                                                High Viremia (>401 cp/ml)Viral load interventions
+                                                High Viremia (>400 cp/ml)Viral load interventions
                                             </td>
                                             <td>
                                                     {{ form.HIV_MGMT_2_J }}  
                                             </td>                                                
                                         </tr>
-                                        <tr>
+                                        <tr id="high_viremia_others" class="hidden">
                                             <td>Q19</td>
+                                            <td>
+                                                Treatment supporter-Others
+                                            </td>
+                                            <td>
+                                                    {{ form.HIV_MGMT_2_J_2 }}
+
+                                            </td>                                                
+                                        </tr>
+                                        <tr>
+                                            <td>Q20</td>
                                             <td>
                                                 Enrolled in a suppression initiative (e.g. JMWI/NIMECONFIRM)
                                             </td>
@@ -412,7 +422,7 @@
                                             </td>    
                                         </tr>
                                         <tr>
-                                            <td>Q20</td>
+                                            <td>Q21</td>
                                             <td>
                                                     Disclosure 
                                             </td>
@@ -422,7 +432,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td>Q21</td>
+                                            <td>Q22</td>
                                             <td>
                                                 Attending a support group(status) 
                                             </td>
@@ -431,17 +441,17 @@
                                             </td>                                                
                                         </tr>
                                         <tr>
-                                            <td>Q22</td>
+                                            <td>Q23</td>
                                             <td>
                                                 Last date attended a support group: 
                                             </td>
                                             <td>                                                    
-                                                {{ form.HIV_MGMT_2_N }}  
+                                                {{ form.HIV_MGMT_2_N_1 }}  
                                             </td>                                                
                                         </tr>
 
                                         <tr>
-                                            <td>Q23</td>
+                                            <td>Q24</td>
                                             <td>
                                                 Enrolled to a plan to track Stable, unstable and clients not enrolled <br/>(e.g. PAMA care in PAMA care  0-9 years (same day clinic for caregiver&Child)
                                             </td>
@@ -450,7 +460,7 @@
                                             </td>                                                
                                         </tr>
                                         <tr>
-                                            <td>Q24</td>
+                                            <td>Q25</td>
                                             <td>
                                                 Enrolled in OTZ 10-17 years
                                             </td>
@@ -460,7 +470,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td>Q25</td>
+                                            <td>Q26</td>
                                             <td>
                                                 Enrolled in NHIF -Status? 
                                             </td>
@@ -471,7 +481,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td>Q26</td>
+                                            <td>Q27</td>
                                             <td>
                                                 Referral services (specify)
                                             </td>
@@ -482,9 +492,9 @@
                                         </tr>
 
                                         <tr>
-                                            <td>Q27</td>
+                                            <td>Q28</td>
                                             <td>
-                                                Date of Next Appointment <span class="asteriskField">*
+                                                Date of Next Clinic Appointment <span class="asteriskField">*
                                             </td>
                                             <td>
                                                     {{ form.HIV_MGMT_2_Q }}
@@ -492,7 +502,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td>Q28</td>
+                                            <td>Q29</td>
                                             <td>
                                                 Case manager/Worker's Name
                                             </td>
@@ -502,9 +512,9 @@
                                         </tr>
 
                                         <tr>
-                                            <td>Q29</td>
+                                            <td>Q30</td>
                                             <td>
-                                                Case manager/Worker's Contacts
+                                                Case Manager / Worker's Contacts
 
                                             </td>
                                             <td>
@@ -571,10 +581,11 @@
           $("#HIV_MGMT_1_G_DATE" ).datepicker({ format: 'yyyy-mm-dd' }).val();
           $("#HIV_MGMT_2_A" ).datepicker({ format: 'yyyy-mm-dd' }).val();
           $("#HIV_MGMT_2_I_DATE" ).datepicker({ format: 'yyyy-mm-dd' }).val();
-          $("#HIV_MGMT_2_Q").datepicker({ format: 'yyyy-mm-dd' }).val();
+          $("#HIV_MGMT_2_Q, #HIV_MGMT_2_N_1").datepicker({ format: 'yyyy-mm-dd' }).val();
 
           $(document).ready(function () {
                 $("#wizard-hivmanagementform").bwizard();
+                
             });
 
         } );
@@ -675,7 +686,7 @@
             }
         });
 
-        $("#HIV_MGMT_2_I_DATE").prop('disabled', true);
+        // $("#HIV_MGMT_2_I_DATE").prop('disabled', true);
         $("input[name='HIV_MGMT_2_I_1']").attr('type', 'number')
         $("input[name='HIV_MGMT_2_I_1']").keydown(function() {
             var value = $(this).val();
@@ -691,6 +702,28 @@
                 HIV_MGMT_2_I_DATE=false;
             }
         });
+
+        $("input[name='HIV_MGMT_2_H_1']").on('change', function (){
+            v_al = $(this).val()
+
+            if (v_al === 'Others'){
+                $('#treatment_support_others').removeClass('hidden')
+            }else {
+                $('#treatment_support_others').addClass('hidden')
+                $("input[name='HIV_MGMT_2_H_2']").val('')
+            }
+        })
+
+        $("input[name='HIV_MGMT_2_J']").on('change', function (){
+            v_al = $(this).val()
+
+            if (v_al === 'Other'){
+                $('#high_viremia_others').removeClass('hidden')
+            }else {
+                $('#high_viremia_others').addClass('hidden')
+                $("input[name='HIV_MGMT_2_J_2']").val('')
+            }
+        })
 
 </script>
 
