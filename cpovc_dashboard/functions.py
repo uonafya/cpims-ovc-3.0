@@ -8,7 +8,10 @@ from cpovc_registry.models import RegOrgUnit
 from .parameters import PARAMS, areas, CHART
 from .queries import QUERIES
 from .charts import (
-    column_chart, bar_chart, combo_chart, column_pie_chart)
+    column_chart, bar_chart, combo_chart, column_pie_chart,
+    population_pyramid_chart, sparkline_chart, stacked_bar_chart,
+    stacked_column_chart, column_chart_2, column_compare_chart,
+    pie_chart)
 
 
 def get_geo(area_id, type_id='GDIS'):
@@ -92,14 +95,34 @@ def get_chart_data(request, rid, county_id, const_id,
         params['start_date'] = dates['start_date']
         params['end_date'] = dates['end_date']
         data = get_raw_data(rid, params)
-        ctt = CHART[rid] if rid in CHART else CHART['2A']
-        params['title'] = '%s : %s' % (rid, ctt['ctitle'])
-        if ctt['ctype'] == 'bar':
+        ctts = CHART[rid] if rid in CHART else CHART['2A']
+        xAxis = ctts['xAxis'] if 'xAxis' in ctts else True
+        yAxis = ctts['yAxis'] if 'yAxis' in ctts else True
+        legend = ctts['legend'] if 'legend' in ctts else True
+        params['xAxis'] = xAxis
+        params['yAxis'] = yAxis
+        params['legend'] = legend
+        params['title'] = '%s : %s' % (rid, ctts['ctitle'])
+        if ctts['ctype'] == 'bar':
             resp = bar_chart(request, params, data)
-        elif ctt['ctype'] == 'combo':
+        elif ctts['ctype'] == 'combo':
             resp = combo_chart(request, params, data)
-        elif ctt['ctype'] == 'column_pie':
+        elif ctts['ctype'] == 'column_pie':
             resp = column_pie_chart(request, params, data)
+        elif ctts['ctype'] == 'population_pyramid':
+            resp = population_pyramid_chart(request, params, data)
+        elif ctts['ctype'] == 'sparkline':
+            resp = sparkline_chart(request, params, data)
+        elif ctts['ctype'] == 'stacked_bar':
+            resp = stacked_bar_chart(request, params, data)
+        elif ctts['ctype'] == 'stacked_column':
+            resp = stacked_column_chart(request, params, data)
+        elif ctts['ctype'] == 'column_2':
+            resp = column_chart_2(request, params, data)
+        elif ctts['ctype'] == 'column_compare':
+            resp = column_compare_chart(request, params, data)
+        elif ctts['ctype'] == 'pie':
+            resp = pie_chart(request, params, data)
         else:
             resp = column_chart(request, params, data)
     except Exception as e:
@@ -172,7 +195,7 @@ def get_raw_sql(rid, params):
             # desc = cursor.description
             rows = dictfetchall(cursor)
             # rows = [row for row in cursor.fetchall()]
-        # print('query', rows)
+        # print('DashQuery', rid, sql)
     except Exception as e:
         raise e
     else:
@@ -246,15 +269,20 @@ def get_raw_data(rid, params):
         qparams['odates'] = odates
         datas = get_raw_sql(rid, qparams)
         # print('Query ID', rid, datas)
-        print('Query filter', qparams)
+        # print('Query filter', qparams)
         items = CHART[rid]['categories']
         itd = CHART[rid]['qparam']
+        qft = CHART[rid]['qfilter'] if 'qfilter' in CHART[rid] else ''
         if len(items) == 0:
-            items, rdata = format_other_data(datas, items, itd)
+            if qft:
+                items, rdata = format_all_data(datas, items, itd, qft)
+            else:
+                items, rdata = format_other_data(datas, items, itd)
         else:
             rdata = format_data(rid, datas, items, itd)
         # print('Final data', rid, rdata)
         data['items'] = items
+        data['raw'] = datas
         for rdt in rdata:
             data[rdt] = rdata[rdt]
     except Exception as e:
@@ -280,7 +308,7 @@ def format_data(rid, datas, items, itd='agerange'):
                     elif data['sex_id'] in females:
                         fdata[i] = str(int(data['dcount']))
         rdata['mdata'] = ','.join(mdata)
-        if rid in ['2D']:
+        if rid in ['2E']:
             fdata = format_percentage(rid, mdata, fdata)
         rdata['fdata'] = ','.join(fdata)
         # print(data)
@@ -337,6 +365,62 @@ def format_other_data(datas, items=[], itd='services'):
         # print(data)
     except Exception as e:
         print('error with other data - %s' % (str(e)))
+        return [], {}
+    else:
+        return items, rdata
+
+
+def format_all_data(datas, items=[], itd='services', qft=''):
+    """Method to format data."""
+    try:
+        # print('all dt', itd, qft)
+        all_data = {}
+        rdata = {}
+        categories = []
+        # qfilter = qft if qft else 'sex_id'
+        for data in datas:
+            if qft in data:
+                qf = data[qft]
+                if itd in data:
+                    sname = data[itd]
+                    dcount = data['dcount']
+                    if sname not in categories:
+                        categories.append(sname)
+                    if qf not in all_data:
+                        all_data[qf] = {sname: dcount}
+                    else:
+                        if sname not in all_data[qf]:
+                            all_data[qf][sname] = dcount
+                    # print('--', data, all_data)
+        # Now format the dict to array for charting
+        series = []
+        fseries = []
+        sdata = {}
+        # st = [{'name': '', 'data': []}]
+        for agency in all_data:
+            for category in categories:
+                # for dt in agencies:
+                dts = all_data[agency]
+                dct = dts[category] if category in dts else 0
+                # print('AN', agency, category, dct, dts)
+                if agency not in series:
+                    series.append(agency)
+                if category not in sdata:
+                    sdata[category] = []
+                if category in sdata:
+                    sdata[category].append(int(dct))
+                # print('datas', agencies, category)
+        # print('sdata', sdata)
+        # print('series', series)
+        for sr in sdata:
+            sd = sdata[sr]
+            fseries.append({'name': sr, 'data': sd})
+        rdata['mdata'] = '0'
+        rdata['fdata'] = '0'
+        rdata['categories'] = series
+        rdata['series'] = fseries
+    except Exception as e:
+        print('error with other all data - %s' % (str(e)))
         return [], {}
     else:
         return items, rdata

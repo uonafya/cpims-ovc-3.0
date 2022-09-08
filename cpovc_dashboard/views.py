@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponse
 
 from .forms import CaseLoad
 from .functions import get_geo, get_lips, get_chart_data
+from .parameters import colors
 
 
 @login_required
@@ -11,7 +12,9 @@ def ovc_dashboard(request):
     """Method to do pivot reports."""
     try:
         form = CaseLoad()
-        return render(request, 'reports/ovc_dashboard.html', {'form': form})
+        return render(
+            request, 'reports/ovc_dashboard.html',
+            {'form': form, 'colors': colors})
     except Exception as e:
         raise e
     else:
@@ -24,7 +27,8 @@ def ovc_dashboard_hivstat(request):
     try:
         form = CaseLoad()
         return render(
-            request, 'reports/ovc_dashboard_hivstat.html', {'form': form})
+            request, 'reports/ovc_dashboard_hivstat.html',
+            {'form': form, 'colors': colors})
     except Exception as e:
         raise e
     else:
@@ -37,7 +41,8 @@ def ovc_dashboard_services(request):
     try:
         form = CaseLoad()
         return render(
-            request, 'reports/ovc_dashboard_services.html', {'form': form})
+            request, 'reports/ovc_dashboard_services.html',
+            {'form': form, 'colors': colors})
     except Exception as e:
         raise e
     else:
@@ -50,7 +55,8 @@ def ovc_dashboard_cm(request):
     try:
         form = CaseLoad()
         return render(
-            request, 'reports/ovc_dashboard_cm.html', {'form': form})
+            request, 'reports/ovc_dashboard_cm.html',
+            {'form': form, 'colors': colors})
     except Exception as e:
         raise e
     else:
@@ -63,7 +69,22 @@ def ovc_dashboard_perform(request):
     try:
         form = CaseLoad()
         return render(
-            request, 'reports/ovc_dashboard_perform.html', {'form': form})
+            request, 'reports/ovc_dashboard_perform.html',
+            {'form': form, 'colors': colors})
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+@login_required
+def ovc_dashboard_registration(request):
+    """Method to do pivot reports."""
+    try:
+        form = CaseLoad()
+        return render(
+            request, 'reports/ovc_dashboard_registration.html',
+            {'form': form, 'colors': colors})
     except Exception as e:
         raise e
     else:
@@ -128,3 +149,21 @@ def get_chart(request, rid, county_id, const_id, ward_id=0,
         return HttpResponse('<p>Error Generating Chart. %s</p>' % (msg))
     else:
         return HttpResponse(html)
+
+
+@login_required
+def settings(request):
+    """Method to do pivot reports."""
+    try:
+        if request.method == 'POST':
+            msg = {'status': 0, 'message': 'Settings saved successfully'}
+            sel_color = int(request.POST.get('sel_color', 0))
+            if sel_color:
+                request.session['sel_color'] = sel_color
+        else:
+            msg = {'status': 1, 'message': 'Request not allowed'}
+    except Exception:
+        msg = {'status': 9, 'message': 'Error saving settings'}
+        return JsonResponse(msg, safe=False)
+    else:
+        return JsonResponse(msg, safe=False)

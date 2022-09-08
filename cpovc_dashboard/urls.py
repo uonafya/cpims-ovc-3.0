@@ -7,9 +7,13 @@ i_params = "(?P<ip_id>\d+)/(?P<lip_id>\d+)"
 d_params = "(?P<prd>\d+)/(?P<yr>\d+)"
 
 urlpatterns = [
-    path('constituency/<int:area_id>/', views.get_constituency, name='get_constituency'),
+    path(
+        'constituency/<int:area_id>/', views.get_constituency,
+        name='get_constituency'),
     path('ward/<int:area_id>/', views.get_ward, name='get_ward'),
     path('lip/<int:ip_id>/', views.get_lip, name='get_lip'),
     # path('chart/<int:ip_id>/', views.get_chart, name='get_chart'),
-    re_path(r'^%s/%s/%s/' % (g_params, i_params, d_params), views.get_chart, name='get_chart_data'),
+    re_path(r'^%s/%s/%s/' % (
+        g_params, i_params, d_params), views.get_chart, name='get_chart_data'),
+    path('settings/', views.settings, name='settings'),
 ]
