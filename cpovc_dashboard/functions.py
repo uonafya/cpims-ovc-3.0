@@ -8,8 +8,7 @@ from cpovc_registry.models import RegOrgUnit
 from .parameters import PARAMS, areas, CHART
 from .queries import QUERIES
 from .charts import (
-    column_chart, bar_chart, combo_chart, column_pie_chart,
-    population_pyramid_chart)
+    column_chart, bar_chart, combo_chart, column_pie_chart)
 
 
 def get_geo(area_id, type_id='GDIS'):
@@ -93,20 +92,14 @@ def get_chart_data(request, rid, county_id, const_id,
         params['start_date'] = dates['start_date']
         params['end_date'] = dates['end_date']
         data = get_raw_data(rid, params)
-        ctts = CHART[rid] if rid in CHART else CHART['2A']
-        xAxis = ctts['xAxis'] if 'xAxis' in ctts else True
-        yAxis = ctts['yAxis'] if 'yAxis' in ctts else True
-        params['xAxis'] = xAxis
-        params['yAxis'] = yAxis
-        params['title'] = '%s : %s' % (rid, ctts['ctitle'])
-        if ctts['ctype'] == 'bar':
+        ctt = CHART[rid] if rid in CHART else CHART['2A']
+        params['title'] = '%s : %s' % (rid, ctt['ctitle'])
+        if ctt['ctype'] == 'bar':
             resp = bar_chart(request, params, data)
-        elif ctts['ctype'] == 'combo':
+        elif ctt['ctype'] == 'combo':
             resp = combo_chart(request, params, data)
-        elif ctts['ctype'] == 'column_pie':
+        elif ctt['ctype'] == 'column_pie':
             resp = column_pie_chart(request, params, data)
-        elif ctts['ctype'] == 'population_pyramid':
-            resp = population_pyramid_chart(request, params, data)
         else:
             resp = column_chart(request, params, data)
     except Exception as e:
@@ -179,7 +172,7 @@ def get_raw_sql(rid, params):
             # desc = cursor.description
             rows = dictfetchall(cursor)
             # rows = [row for row in cursor.fetchall()]
-        # print('DashQuery', rid, sql)
+        # print('query', rows)
     except Exception as e:
         raise e
     else:
@@ -253,7 +246,7 @@ def get_raw_data(rid, params):
         qparams['odates'] = odates
         datas = get_raw_sql(rid, qparams)
         # print('Query ID', rid, datas)
-        # print('Query filter', qparams)
+        print('Query filter', qparams)
         items = CHART[rid]['categories']
         itd = CHART[rid]['qparam']
         if len(items) == 0:

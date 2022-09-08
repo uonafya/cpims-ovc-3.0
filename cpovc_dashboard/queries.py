@@ -25,7 +25,7 @@ QUERIES['1C'] = '''
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 gender as sex_id, schoollevel as school_level
 from vw_cpims_registration where exit_status='ACTIVE' {cbos} {areas} {fdate}
-group by gender, schoollevel order by dcount DESC
+group by gender, schoollevel
 '''
 
 QUERIES['1D'] = '''
@@ -64,7 +64,7 @@ when ovchivstatus='HIV Test Not Required' THEN 'HIV Test not Required'
 when ovchivstatus='HIV Referred For Testing' THEN 'HIV Referred For Testing'
 ELSE 'Others' END AS hivstat
 from vw_cpims_registration where exit_status='ACTIVE' {cbos} {areas} {fdate}
-group by gender, ovchivstatus order by dcount DESC
+group by gender, ovchivstatus
 '''
 
 QUERIES['1F-0'] = '''
@@ -167,7 +167,7 @@ group by v.gender
 QUERIES['2B'] = '''
 Select count(distinct(cpims_ovc_id)) as dcount, gender as sex_id, agerange
 from vw_cpims_viral_load where (current_date - date_of_event) < 401
-and viral_load > 1000 {cbos} group by gender, agerange
+and viral_load > 10000 {cbos} group by gender, agerange
 '''
 
 QUERIES['2C'] = '''
@@ -206,7 +206,7 @@ and exit_status='ACTIVE' {cbos} {areas} {fdate}
 group by gender, ovchivstatus
 '''
 
-QUERIES['2E'] = '''
+QUERIES['2D'] = '''
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 'Male' as sex_id, 'HIV Status' as hivstat
 from vw_cpims_registration where exit_status='ACTIVE' {cbos}
@@ -303,65 +303,19 @@ from vw_cpims_two_quarters ) {cbos}
 group by gender
 '''
 
-QUERIES['3C'] = '''
+QUERIES['3B'] = '''
 Select count(distinct(cpims_ovc_id)) as dcount,
-'SMAL' as sex_id, domain as services
-from vw_cpims_list_served {ocbos} group by domain
+gender as sex_id, domain as services
+from vw_cpims_list_served {ocbos} group by gender, domain
 '''
 
-QUERIES['3D'] = '''
+QUERIES['3C'] = '''
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 gender as sex_id, 'OVC Comprehensive' as services
 from vw_cpims_registration where exit_status='ACTIVE' {cbos} group by gender
 '''
 
-QUERIES['3E'] = '''
-Select count(distinct(cpims_ovc_id)) as dcount,
-gender as sex_id, cpara_score as benchmark
-from vw_cpims_benchmark_achieved
-where (current_date - date_of_event) <= 400 {cbos}
-group by gender, cpara_score
-'''
-
-QUERIES['3F'] = '''
-select count(distinct(household_id)) as dcount,
-'SMAL' as sex_id, 1 as benchmark from vw_cpims_benchmark
-where benchmark_1 = 1 and date_of_event > '2022-03-31' group by benchmark_1
-UNION
-select count(distinct(household_id)) as dcount,
-'SMAL' as sex_id, 2 as benchmark from vw_cpims_benchmark
-where benchmark_2 = 1 and date_of_event > '2022-03-31' group by benchmark_2
-UNION
-select count(distinct(household_id)) as dcount,
-'SMAL' as sex_id, 3 as benchmark from vw_cpims_benchmark
-where benchmark_3 = 1 and date_of_event > '2022-03-31' group by benchmark_3
-UNION
-select count(distinct(household_id)) as dcount,
-'SMAL' as sex_id, 4 as benchmark from vw_cpims_benchmark
-where benchmark_4 = 1 and date_of_event > '2022-03-31' group by benchmark_4
-UNION
-select count(distinct(household_id)) as dcount,
-'SMAL' as sex_id, 5 as benchmark from vw_cpims_benchmark
-where benchmark_5 = 1 and date_of_event > '2022-03-31' group by benchmark_5
-UNION
-select count(distinct(household_id)) as dcount,
-'SMAL' as sex_id, 6 as benchmark from vw_cpims_benchmark
-where benchmark_6 = 1 and date_of_event > '2022-03-31' group by benchmark_6
-UNION
-select count(distinct(household_id)) as dcount,
-'SMAL' as sex_id, 7 as benchmark from vw_cpims_benchmark
-where benchmark_7 = 1 and date_of_event > '2022-03-31' group by benchmark_7
-UNION
-select count(distinct(household_id)) as dcount,
-'SMAL' as sex_id, 8 as benchmark from vw_cpims_benchmark
-where benchmark_8 = 1 and date_of_event > '2022-03-31' group by benchmark_8
-UNION
-select count(distinct(household_id)) as dcount,
-'SMAL' as sex_id, 9 as benchmark from vw_cpims_benchmark
-where benchmark_9 = 1 and date_of_event > '2022-03-31' group by benchmark_9;
-'''
-
-QUERIES['3G'] = '''
+QUERIES['3D'] = '''
 Select count(distinct(cpims_ovc_id)) as dcount,
 gender as sex_id, cpara_score as services
 from vw_cpims_benchmark_achieved
@@ -369,7 +323,7 @@ where (current_date - date_of_event) <= 400 {cbos}
 group by gender, cpara_score
 '''
 
-QUERIES['3H'] = '''
+QUERIES['3E'] = '''
 Select count(distinct(cpims_ovc_id)) as dcount,
 gender as sex_id, service as services
 from vw_cpims_list_served
@@ -396,13 +350,8 @@ from vw_cpims_benchmark_achieved
 where (current_date - date_of_event) <= 400 {cbos}
 group by gender, graduationpath
 '''
-QUERIES['4C'] = '''
-select count(distinct(household_id)) as dcount, Graduation_pathway
-from vw_cpims_benchmark where date_of_event > '2022-03-31' {cbos}
-group by graduation_pathway
-'''
 
-QUERIES['4D'] = '''
+QUERIES['4C'] = '''
 Select count(distinct(cpims_ovc_id)) as dcount,
 gender as sex_id, 'Current CPARA' as services
 from vw_cpims_cpara where (current_date - date_of_event) <= 400 {cbos}
