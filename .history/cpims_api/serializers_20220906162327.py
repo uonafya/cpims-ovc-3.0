@@ -4,10 +4,10 @@ from pyexpat import model
 from statistics import mode
 from rest_framework import serializers
 
-# models,
+# models
 from cpovc_access import models
 
-# cpovc_registry,
+# cpovc_registry
 from cpovc_registry.models import (
     OVCCheckin,
     OVCSibling,
@@ -31,7 +31,7 @@ from cpovc_registry.models import (
     RegPersonsWorkforceIds
 )
 
-# cpovc_ovc,
+# cpovc_ovc
 from cpovc_ovc.models import (
     OVCHouseHold,
     OVCRegistration, 
@@ -39,43 +39,43 @@ from cpovc_ovc.models import (
     OVCExit
 )
 
-# cpovc_main,
+# cpovc_main
 from cpovc_main.models   import (
     FacilityList, 
     SchoolList,
-    SchoolList,
-    FacilityList,
-    SetupGeography,
-    SetupLocation,
-    SetupList,
-    Forms,
-    ListQuestions,
-    ListAnswers,
-    FormGenAnswers,
-    FormGenText,
-    FormGenDates,
-    FormGenNumeric,
-    AdminUploadForms,
-    FormPersonParticipation,
-    FormOrgUnitContributions,
-    FormResChildren,
-    FormResWorkforce,
-    AdminPreferences,
-    CoreAdverseConditions,
-    CoreServices,
-    CoreEncounters,
-    CoreEncountersNotes,
-    AdminCaptureSites,
-    AdminDownload,
-    CaptureTaskTracker,
-    ListReports,
-    ListReportsParameters,
-    ReportsSets,
-    ReportsSetsOrgUnits,
-    RegTemp,
+    SchoolList
+    # FacilityList
+    # SetupGeography
+    # SetupLocation
+    # SetupList
+    # Forms
+    # ListQuestions
+    # ListAnswers
+    # FormGenAnswers
+    # FormGenText
+    # FormGenDates
+    # FormGenNumeric
+    # AdminUploadForms
+    # FormPersonParticipation
+    # FormOrgUnitContributions
+    # FormResChildren
+    # FormResWorkforce
+    # AdminPreferences
+    # CoreAdverseConditions
+    # CoreServices
+    # CoreEncounters
+    # CoreEncountersNotes
+    # AdminCaptureSites
+    # AdminDownload
+    # CaptureTaskTracker
+    # ListReports
+    # ListReportsParameters
+    # ReportsSets
+    # ReportsSetsOrgUnits
+    # RegTemp
 )
 
-# cpovc_forms,
+# cpovc_forms
 from cpovc_forms.models  import (
     OVCCareServices, 
     OVCEducationFollowUp,
@@ -298,7 +298,7 @@ class OVCSiblingSerializer(serializers.ModelSerializer):
         model = OVCSibling
         fields = "__all__"
     
-# no, urls here
+# no urls here
 class OVCCheckinSerializers(serializers.ModelSerializer):
     
     class Meta:
@@ -748,8 +748,8 @@ class RegTempSerializers(serializers.ModelSerializer):
         fields = "__all__"
         
 
-# Serializers(serializers.ModelSerializer):
-# class Meta:
-#     model = class
+Serializers(serializers.ModelSerializer):
+class Meta:
+    model = class
 
-# fields = "
+fields = "

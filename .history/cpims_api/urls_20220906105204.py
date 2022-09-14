@@ -4,16 +4,12 @@ from rest_framework.routers import DefaultRouter
 
 from rest_framework.authtoken.views import obtain_auth_token
 
-from cpims_api import views 
-
-from rest_framework.schemas import get_schema_view;
-
-from django.views.generic import TemplateView;
-
+from cpims_api import views
 
 router = DefaultRouter()
 
 
+router.register( 'FormsAuditTrailViewSet', views.FormsAuditTrailViewSet)
 router.register( 'ListBanksViewSet', views.ListBanksViewSet)
 router.register( 'FormsLogViewSet', views.FormsLogViewSet)
 router.register( 'FormsLogViewSet', views.FormsLogViewSet)
@@ -103,7 +99,7 @@ router.register('ovc_education_level_follow_up', views.OVCEducationLevelViewSet)
 router.register('ovc_viral_load', views.OvcViralLoadViewSet)
 router.register('ovc_care_services', views.OvcCareServicesViewSet)
 router.register('school_list', views.SchoolListViewSet)
-router.register('facility_list', views.FacilityListViewSet, basename="facility_list")
+router.register('faciity_list', views.FacilityListViewSet)
 router.register('reg_person', views.RegOrgUnitViewSet)
 router.register('ovc_registration', views.OVCRegistrationViewSet)
 router.register('reg_org_unit', views.RegOrgUnitViewSet)
@@ -111,11 +107,4 @@ router.register('reg_org_unit', views.RegOrgUnitViewSet)
 urlpatterns = [
     path('', include(router.urls)),    
     path('token-auth', obtain_auth_token, name='api_token_auth'),
-    path('api_schema', get_schema_view(title='CPIMS API', description='Guide for the CPIMS REST API schema'), name='api_schema'),
-    path('api_docs', TemplateView.as_view(template_name='swagger-ui.html',
-        extra_context={'schema_url':'api_schema'}), name='api_docs'),
-    path('docs/', TemplateView.as_view(
-        template_name='swagger-ui.html',
-        extra_context={'schema_url':'api_schema'}
-        ), name='swagger-ui'),
 ]

@@ -1,3 +1,4 @@
+
 from django.shortcuts import render
 
 from rest_framework import viewsets,status
@@ -129,6 +130,11 @@ class FacilityListViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = FacilityList.objects.all()
     serializer_class = FacilityListSerializers
+    
+class SchoolListViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
+    queryset  = SchoolList.objects.all()
+    serializer_class = SchoolistSeriallizers
     
 class OvcCareServicesViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
@@ -513,151 +519,139 @@ class ListBanksViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = ListBanks.objects.all()
     serializer_class = ListBanksSerializers
+    
+class FacilityListViewSet(viewsets.ModelViewSet):
+
+    authentication_classes = (TokenAuthentication,)
+    queryset = FacilityList.objects, 
+    serializer_class = FacilityListSerializers
+
 class SchoolListViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = SchoolList.objects.all()
-    serializer_class = SchoolistSeriallizers 
+    queryset = SchoolList.objects,
+    serializer_class = SchoolListSeriallizers
+class SchoolListViewSet(viewsets.ModelViewSet):
+
+    authentication_classes = (TokenAuthentication,)
+    queryset = SchoolList.objects,
+    serializer_class = 
+class FacilityListViewSet(viewsets.ModelViewSet):
+
+    authentication_classes = (TokenAuthentication,)
+    queryset = FacilityList.objects,
 class SetupGeographyViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = SetupGeography.objects.all()
-    serializer_class = SetupGeographySerializers
+    queryset = SetupGeography.objects,
 class SetupLocationViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = SetupLocation.objects.all()
-    serializer_class = SetupLocationSerializers
+    queryset = SetupLocation.objects,
 class SetupListViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = SetupList.objects.all()
-    serializer_class = SetupListSerializers
+    queryset = SetupList.objects,
 class FormsViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = Forms.objects.all()
-    serializer_class = FormsSerializers
+    queryset = Forms.objects,
 class ListQuestionsViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = ListQuestions.objects.all()
-    serializer_class = ListQuestionsSerializers
+    queryset = ListQuestions.objects,
 class ListAnswersViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = ListAnswers.objects.all()
-    serializer_class = ListAnswersSerializers
+    queryset = ListAnswers.objects,
 class FormGenAnswersViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = FormGenAnswers.objects.all()
-    serializer_class = FormGenAnswersSerializers
+    queryset = FormGenAnswers.objects,
 class FormGenTextViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = FormGenText.objects.all()
-    serializer_class = FormGenTextSerializers
+    queryset = FormGenText.objects,
 class FormGenDatesViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = FormGenDates.objects.all()
-    serializer_class = FormGenDatesSerializers
+    queryset = FormGenDates.objects,
 class FormGenNumericViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = FormGenNumeric.objects.all()
-    serializer_class = FormGenNumericSerializers
+    queryset = FormGenNumeric.objects,
 class AdminUploadFormsViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = AdminUploadForms.objects.all()
-    serializer_class = AdminUploadFormsSerializers
+    queryset = AdminUploadForms.objects,
 class FormPersonParticipationViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = FormPersonParticipation.objects.all()
-    serializer_class = FormPersonParticipationSerializers
+    queryset = FormPersonParticipation.objects,
 class FormOrgUnitContributionsViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = FormOrgUnitContributions.objects.all()
-    serializer_class = FormOrgUnitContributionsSerializers
+    queryset = FormOrgUnitContributions.objects,
 class FormResChildrenViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = FormResChildren.objects.all()
-    serializer_class = FormResChildrenSerializers
+    queryset = FormResChildren.objects,
 class FormResWorkforceViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = FormResWorkforce.objects.all()
-    serializer_class = FormResWorkforceSerializers
+    queryset = FormResWorkforce.objects,
 class AdminPreferencesViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = AdminPreferences.objects.all()
-    serializer_class = AdminPreferencesSerializers
+    queryset = AdminPreferences.objects,
 class CoreAdverseConditionsViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = CoreAdverseConditions.objects.all()
-    serializer_class = CoreAdverseConditionsSerializers
+    queryset = CoreAdverseConditions.objects,
 class CoreServicesViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = CoreServices.objects.all()
-    serializer_class = CoreServicesSerializers
+    queryset = CoreServices.objects,
 class CoreEncountersViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = CoreEncounters.objects.all()
-    serializer_class = CoreEncountersSerializers
+    queryset = CoreEncounters.objects,
 class CoreEncountersNotesViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = CoreEncountersNotes.objects.all()
-    serializer_class = CoreEncountersNotesSerializers
+    queryset = CoreEncountersNotes.objects,
 class AdminCaptureSitesViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = AdminCaptureSites.objects.all()
-    serializer_class = AdminCaptureSitesSerializers
+    queryset = AdminCaptureSites.objects,
 class AdminDownloadViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = AdminDownload.objects.all()
-    serializer_class = AdminDownloadSerializers
+    queryset = AdminDownload.objects,
 class CaptureTaskTrackerViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = CaptureTaskTracker.objects.all()
-    serializer_class = CaptureTaskTrackerSerializers
+    queryset = CaptureTaskTracker.objects,
 class ListReportsViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = ListReports.objects.all()
-    serializer_class = ListReportsSerializers
+    queryset = ListReports.objects,
 class ListReportsParametersViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = ListReportsParameters.objects.all()
-    serializer_class = ListReportsParametersSerializers
+    queryset = ListReportsParameters.objects,
 class ReportsSetsViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = ReportsSets.objects.all()
-    serializer_class = ReportsSetsSerializers
+    queryset = ReportsSets.objects,
 class ReportsSetsOrgUnitsViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = ReportsSetsOrgUnits.objects.all()
-    serializer_class = ReportsSetsOrgUnitsSerializers
+    queryset = ReportsSetsOrgUnits.objects,
 class RegTempViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
-    queryset = RegTemp.objects.all()
-    serializer_class = RegTempSerializers
+    queryset = RegTemp.objects,
     
 
 

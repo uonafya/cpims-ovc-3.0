@@ -4,16 +4,43 @@ from rest_framework.routers import DefaultRouter
 
 from rest_framework.authtoken.views import obtain_auth_token
 
-from cpims_api import views 
-
-from rest_framework.schemas import get_schema_view;
-
-from django.views.generic import TemplateView;
-
+from cpims_api import views
 
 router = DefaultRouter()
 
-
+#
+router.register("FacilityListViewSet",views.FacilityListViewSet)
+router.register("SchoolListViewSet",views.SchoolListViewSet)
+router.register("SetupGeographyViewSet",views.SetupGeographyViewSet)
+router.register("SetupLocationViewSet",views.SetupLocationViewSet)
+router.register("SetupListViewSet",views.SetupListViewSet)
+router.register("FormsViewSet",views.FormsViewSet)
+router.register("ListQuestionsViewSet",views.ListQuestionsViewSet)
+router.register("ListAnswersViewSet",views.ListAnswersViewSet)
+router.register("FormGenAnswersViewSet",views.FormGenAnswersViewSet)
+router.register("FormGenTextViewSet",views.FormGenTextViewSet)
+router.register("FormGenDatesViewSet",views.FormGenDatesViewSet)
+router.register("FormGenNumericViewSet",views.FormGenNumericViewSet)
+router.register("AdminUploadFormsViewSet",views.AdminUploadFormsViewSet)
+router.register("FormPersonParticipationViewSet",views.FormPersonParticipationViewSet)
+router.register("FormOrgUnitContributionsViewSet",views.FormOrgUnitContributionsViewSet)
+router.register("FormResChildrenViewSet",views.FormResChildrenViewSet)
+router.register("FormResWorkforceViewSet",views.FormResWorkforceViewSet)
+router.register("AdminPreferencesViewSet",views.AdminPreferencesViewSet)
+router.register("CoreAdverseConditionsViewSet",views.CoreAdverseConditionsViewSet)
+router.register("CoreServicesViewSet",views.CoreServicesViewSet)
+router.register("CoreEncountersViewSet",views.CoreEncountersViewSet)
+router.register("CoreEncountersNotesViewSet",views.CoreEncountersNotesViewSet)
+router.register("AdminCaptureSitesViewSet",views.AdminCaptureSitesViewSet)
+router.register("AdminDownloadViewSet",views.AdminDownloadViewSet)
+router.register("CaptureTaskTrackerViewSet",views.CaptureTaskTrackerViewSet)
+router.register("ListReportsViewSet",views.ListReportsViewSet)
+router.register("ListReportsParametersViewSet",views.ListReportsParametersViewSet)
+router.register("ReportsSetsViewSet",views.ReportsSetsViewSet)
+router.register("ReportsSetsOrgUnitsViewSet",views.ReportsSetsOrgUnitsViewSet)
+router.register("RegTempViewSet",views.RegTempViewSet)
+#
+router.register( 'FormsAuditTrailViewSet', views.FormsAuditTrailViewSet)
 router.register( 'ListBanksViewSet', views.ListBanksViewSet)
 router.register( 'FormsLogViewSet', views.FormsLogViewSet)
 router.register( 'FormsLogViewSet', views.FormsLogViewSet)
@@ -103,7 +130,7 @@ router.register('ovc_education_level_follow_up', views.OVCEducationLevelViewSet)
 router.register('ovc_viral_load', views.OvcViralLoadViewSet)
 router.register('ovc_care_services', views.OvcCareServicesViewSet)
 router.register('school_list', views.SchoolListViewSet)
-router.register('facility_list', views.FacilityListViewSet, basename="facility_list")
+router.register('faciity_list', views.FacilityListViewSet)
 router.register('reg_person', views.RegOrgUnitViewSet)
 router.register('ovc_registration', views.OVCRegistrationViewSet)
 router.register('reg_org_unit', views.RegOrgUnitViewSet)
@@ -111,11 +138,4 @@ router.register('reg_org_unit', views.RegOrgUnitViewSet)
 urlpatterns = [
     path('', include(router.urls)),    
     path('token-auth', obtain_auth_token, name='api_token_auth'),
-    path('api_schema', get_schema_view(title='CPIMS API', description='Guide for the CPIMS REST API schema'), name='api_schema'),
-    path('api_docs', TemplateView.as_view(template_name='swagger-ui.html',
-        extra_context={'schema_url':'api_schema'}), name='api_docs'),
-    path('docs/', TemplateView.as_view(
-        template_name='swagger-ui.html',
-        extra_context={'schema_url':'api_schema'}
-        ), name='swagger-ui'),
 ]

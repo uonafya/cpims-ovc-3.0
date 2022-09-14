@@ -4,10 +4,10 @@ from pyexpat import model
 from statistics import mode
 from rest_framework import serializers
 
-# models,
+# models
 from cpovc_access import models
 
-# cpovc_registry,
+# cpovc_registry
 from cpovc_registry.models import (
     OVCCheckin,
     OVCSibling,
@@ -31,7 +31,7 @@ from cpovc_registry.models import (
     RegPersonsWorkforceIds
 )
 
-# cpovc_ovc,
+# cpovc_ovc
 from cpovc_ovc.models import (
     OVCHouseHold,
     OVCRegistration, 
@@ -39,43 +39,13 @@ from cpovc_ovc.models import (
     OVCExit
 )
 
-# cpovc_main,
+# cpovc_main
 from cpovc_main.models   import (
     FacilityList, 
-    SchoolList,
-    SchoolList,
-    FacilityList,
-    SetupGeography,
-    SetupLocation,
-    SetupList,
-    Forms,
-    ListQuestions,
-    ListAnswers,
-    FormGenAnswers,
-    FormGenText,
-    FormGenDates,
-    FormGenNumeric,
-    AdminUploadForms,
-    FormPersonParticipation,
-    FormOrgUnitContributions,
-    FormResChildren,
-    FormResWorkforce,
-    AdminPreferences,
-    CoreAdverseConditions,
-    CoreServices,
-    CoreEncounters,
-    CoreEncountersNotes,
-    AdminCaptureSites,
-    AdminDownload,
-    CaptureTaskTracker,
-    ListReports,
-    ListReportsParameters,
-    ReportsSets,
-    ReportsSetsOrgUnits,
-    RegTemp,
+    SchoolList
 )
 
-# cpovc_forms,
+# cpovc_forms
 from cpovc_forms.models  import (
     OVCCareServices, 
     OVCEducationFollowUp,
@@ -298,7 +268,7 @@ class OVCSiblingSerializer(serializers.ModelSerializer):
         model = OVCSibling
         fields = "__all__"
     
-# no, urls here
+# no urls here
 class OVCCheckinSerializers(serializers.ModelSerializer):
     
     class Meta:
@@ -568,188 +538,4 @@ class OVCCareIndividaulCparaSerializers(serializers.ModelSerializer):
         model = OVCCareIndividaulCpara
         fields = "__all__"
         
-class SchoolListSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = SchoolList
-        fields = "__all__"
-        
 
-class FacilityListSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = FacilityList
-        fields = "__all__"
-        
-
-class SetupGeographySerializers(serializers.ModelSerializer):
-    class Meta:
-        model = SetupGeography
-        fields = "__all__"
-        
-
-class SetupLocationSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = SetupLocation
-        fields = "__all__"
-        
-
-class SetupListSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = SetupList
-        fields = "__all__"
-        
-
-class FormsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Forms
-        fields = "__all__"
-        
-
-class ListQuestionsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = ListQuestions
-        fields = "__all__"
-        
-
-class ListAnswersSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = ListAnswers
-        fields = "__all__"
-        
-
-class FormGenAnswersSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = FormGenAnswers
-        fields = "__all__"
-        
-
-class FormGenTextSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = FormGenText
-        fields = "__all__"
-        
-
-class FormGenDatesSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = FormGenDates
-        fields = "__all__"
-        
-
-class FormGenNumericSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = FormGenNumeric
-        fields = "__all__"
-        
-
-class AdminUploadFormsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = AdminUploadForms
-        fields = "__all__"
-        
-
-class FormPersonParticipationSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = FormPersonParticipation
-        fields = "__all__"
-        
-
-class FormOrgUnitContributionsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = FormOrgUnitContributions
-        fields = "__all__"
-        
-
-class FormResChildrenSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = FormResChildren
-        fields = "__all__"
-        
-
-class FormResWorkforceSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = FormResWorkforce
-        fields = "__all__"
-        
-
-class AdminPreferencesSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = AdminPreferences
-        fields = "__all__"
-        
-
-class CoreAdverseConditionsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = CoreAdverseConditions
-        fields = "__all__"
-        
-
-class CoreServicesSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = CoreServices
-        fields = "__all__"
-        
-
-class CoreEncountersSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = CoreEncounters
-        fields = "__all__"
-        
-
-class CoreEncountersNotesSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = CoreEncountersNotes
-        fields = "__all__"
-        
-
-class AdminCaptureSitesSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = AdminCaptureSites
-        fields = "__all__"
-        
-
-class AdminDownloadSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = AdminDownload
-        fields = "__all__"
-        
-
-class CaptureTaskTrackerSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = CaptureTaskTracker
-        fields = "__all__"
-        
-
-class ListReportsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = ListReports
-        fields = "__all__"
-        
-
-class ListReportsParametersSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = ListReportsParameters
-        fields = "__all__"
-        
-
-class ReportsSetsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = ReportsSets
-        fields = "__all__"
-        
-
-class ReportsSetsOrgUnitsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = ReportsSetsOrgUnits
-        fields = "__all__"
-        
-
-class RegTempSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = RegTemp
-        fields = "__all__"
-        
-
-# Serializers(serializers.ModelSerializer):
-# class Meta:
-#     model = class
-
-# fields = "

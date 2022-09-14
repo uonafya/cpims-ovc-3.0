@@ -4,10 +4,10 @@ from pyexpat import model
 from statistics import mode
 from rest_framework import serializers
 
-# models,
+models,
 from cpovc_access import models
 
-# cpovc_registry,
+cpovc_registry,
 from cpovc_registry.models import (
     OVCCheckin,
     OVCSibling,
@@ -31,7 +31,7 @@ from cpovc_registry.models import (
     RegPersonsWorkforceIds
 )
 
-# cpovc_ovc,
+cpovc_ovc,
 from cpovc_ovc.models import (
     OVCHouseHold,
     OVCRegistration, 
@@ -748,8 +748,8 @@ class RegTempSerializers(serializers.ModelSerializer):
         fields = "__all__"
         
 
-# Serializers(serializers.ModelSerializer):
-# class Meta:
-#     model = class
+Serializers(serializers.ModelSerializer):
+class Meta:
+    model = class
 
-# fields = "
+fields = "

@@ -31,7 +31,7 @@ from cpovc_registry.models import (
     RegPersonsWorkforceIds
 )
 
-# cpovc_ovc,
+cpovc_ovc,
 from cpovc_ovc.models import (
     OVCHouseHold,
     OVCRegistration, 
