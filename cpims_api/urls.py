@@ -4,7 +4,12 @@ from rest_framework.routers import DefaultRouter
 
 from rest_framework.authtoken.views import obtain_auth_token
 
-from cpims_api import views
+from cpims_api import views 
+
+from rest_framework.schemas import get_schema_view;
+
+from django.views.generic import TemplateView;
+
 
 router = DefaultRouter()
 
@@ -106,4 +111,11 @@ router.register('reg_org_unit', views.RegOrgUnitViewSet)
 urlpatterns = [
     path('', include(router.urls)),    
     path('token-auth', obtain_auth_token, name='api_token_auth'),
+    path('api_schema', get_schema_view(title='CPIMS API', description='Guide for the CPIMS REST API schema'), name='api_schema'),
+    path('api_docs', TemplateView.as_view(template_name='swagger-ui.html',
+        extra_context={'schema_url':'api_schema'}), name='api_docs'),
+    path('docs/', TemplateView.as_view(
+        template_name='swagger-ui.html',
+        extra_context={'schema_url':'api_schema'}
+        ), name='swagger-ui'),
 ]

@@ -1,4 +1,3 @@
-
 from django.shortcuts import render
 
 from rest_framework import viewsets,status
@@ -139,8 +138,7 @@ from cpims_api.serializers import (
     OVCExitSerializer,
     OVCCarePrioritySerializer,
     RegOrgUnitContactSerializer,
-    RegOrgUnitExternalIDSerializer,
-    
+    RegOrgUnitExternalIDSerializer,  
     OVCBursarySerializers,
     OVCCaseRecordSerializers,
     OVCCaseGeoSerializers,
