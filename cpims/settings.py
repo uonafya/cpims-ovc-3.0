@@ -19,7 +19,7 @@ ALLOWED_HOSTS = ['*']
 cpims_db_host = os.environ.get('CPIMS_HOST') if os.environ.get('CPIMS_HOST') else '127.0.0.1'
 cpims_db_pass = os.environ.get('CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'ayan4411'
 cpims_db_instance = os.environ.get('CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims'
-cpims_db_port = os.environ.get('CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5433'
+cpims_db_port = os.environ.get('CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5432'
 cpims_db_user = os.environ.get('CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'postgres'
 cpims_debug = eval(os.environ.get('CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else False
 
@@ -124,7 +124,7 @@ DATABASES = {
         'USER': cpims_db_user,
         'PASSWORD': cpims_db_pass,
         'HOST': 'localhost',
-        'PORT': '5433', },
+        'PORT': '5432', },
     'reporting': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': cpims_db_instance,
