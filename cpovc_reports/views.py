@@ -249,7 +249,7 @@ def write_csv(data, file_name, params):
             excel_file = '%s.xlsx' % (fname)
             excel_file_path = '%s/xlsx/%s.xlsx' % (MEDIA_ROOT, fname)
             writer = pd.ExcelWriter(excel_file_path, engine='xlsxwriter')
-            data = pd.read_csv(csv_file)
+            data = pd.read_csv(csv_file, low_memory=False)
             data.to_excel(writer, sheet_name='Sheet1', index=False)
             workbook = writer.book
             workbook.add_worksheet('Sheet2')
@@ -1242,3 +1242,4 @@ def reports_bursary(request):
         raise e
     else:
         pass
+

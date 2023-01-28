@@ -161,7 +161,7 @@ class RegPerson(models.Model):
             date_check = (today.month, today.day) < (dob.month, dob.day)
             yrs = int(today.year - dob.year - date_check)
             age = '{} years'.format(yrs)
-            if yrs < 1:
+            if yrs == 0:
                 days = int((today - dob).days)
                 mon = int(days / 30)
                 rem_days = days - int(mon * 30)

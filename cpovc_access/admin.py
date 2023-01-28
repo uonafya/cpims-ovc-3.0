@@ -4,9 +4,8 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import REDIRECT_FIELD_NAME
+# from django.contrib.auth.views import password_change
 from django.contrib import messages
-
-from django.contrib.auth.views import PasswordResetView
 
 from cpovc_access.forms import StrictPasswordChangeForm
 from cpovc_access.models import AccessLog, AccessAttempt
@@ -26,7 +25,6 @@ def unlock_user(modeladmin, request, queryset):
     message = ('User(s) failed login counts reset to 0. '
                'User(s) can now log in.')
     messages.info(request, message)
-
 
 unlock_user.short_description = u"Unlock selected user(s)"
 
@@ -73,7 +71,6 @@ class AccessAttemptAdmin(admin.ModelAdmin):
 
     actions = [unlock_user]
 
-
 admin.site.register(AccessAttempt, AccessAttemptAdmin)
 
 
@@ -114,7 +111,6 @@ class AccessLogAdmin(admin.ModelAdmin):
             'fields': ('user_agent', 'ip_address', 'http_accept')
         })
     )
-
 
 admin.site.register(AccessLog, AccessLogAdmin)
 
@@ -167,7 +163,6 @@ class PasswordChangeAdmin(admin.ModelAdmin):
             del actions['delete_selected']
         return actions
 
-
 admin.site.register(PasswordChange, PasswordChangeAdmin)
 
 
@@ -199,7 +194,6 @@ class UserChangeAdmin(admin.ModelAdmin):
             del actions['delete_selected']
         return actions
 
-
 admin.site.register(UserChange, UserChangeAdmin)
 
 
@@ -213,8 +207,6 @@ def admin_password_change(request):
     }
     if admin.site.password_change_template is not None:
         defaults['template_name'] = admin.site.password_change_template
-    # return password_change(request, **defaults)
-    return PasswordResetView.as_view(request, **defaults)
-
+    return password_change(request, **defaults)
 
 admin.site.password_change = admin_password_change

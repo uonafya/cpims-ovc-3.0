@@ -3,8 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
 
 from .forms import CaseLoad
-from .functions import get_geo, get_lips, get_chart_data
-from .parameters import colors
+from .functions import get_geo, get_lips, get_chart_data, get_ips
+from .parameters import colors as dcolors
+from .parameters import CHART
+from .params import CHART as GCHART
 
 
 @login_required
@@ -14,7 +16,7 @@ def ovc_dashboard(request):
         form = CaseLoad()
         return render(
             request, 'reports/ovc_dashboard.html',
-            {'form': form, 'colors': colors})
+            {'form': form, 'colors': dcolors})
     except Exception as e:
         raise e
     else:
@@ -28,7 +30,7 @@ def ovc_dashboard_hivstat(request):
         form = CaseLoad()
         return render(
             request, 'reports/ovc_dashboard_hivstat.html',
-            {'form': form, 'colors': colors})
+            {'form': form, 'colors': dcolors})
     except Exception as e:
         raise e
     else:
@@ -42,7 +44,7 @@ def ovc_dashboard_services(request):
         form = CaseLoad()
         return render(
             request, 'reports/ovc_dashboard_services.html',
-            {'form': form, 'colors': colors})
+            {'form': form, 'colors': dcolors})
     except Exception as e:
         raise e
     else:
@@ -56,7 +58,7 @@ def ovc_dashboard_cm(request):
         form = CaseLoad()
         return render(
             request, 'reports/ovc_dashboard_cm.html',
-            {'form': form, 'colors': colors})
+            {'form': form, 'colors': dcolors})
     except Exception as e:
         raise e
     else:
@@ -70,7 +72,7 @@ def ovc_dashboard_perform(request):
         form = CaseLoad()
         return render(
             request, 'reports/ovc_dashboard_perform.html',
-            {'form': form, 'colors': colors})
+            {'form': form, 'colors': dcolors})
     except Exception as e:
         raise e
     else:
@@ -84,7 +86,35 @@ def ovc_dashboard_registration(request):
         form = CaseLoad()
         return render(
             request, 'reports/ovc_dashboard_registration.html',
-            {'form': form, 'colors': colors})
+            {'form': form, 'colors': dcolors})
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+@login_required
+def ovc_dashboard_MER(request):
+    """Method to do pivot reports."""
+    try:
+        form = CaseLoad()
+        return render(
+            request, 'reports/ovc_dashboard_mer.html',
+            {'form': form, 'colors': dcolors})
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+@login_required
+def ovc_dashboard_epc(request):
+    """Method to do pivot reports."""
+    try:
+        form = CaseLoad()
+        return render(
+            request, 'reports/ovc_dashboard_epc.html',
+            {'form': form, 'colors': dcolors})
     except Exception as e:
         raise e
     else:
@@ -122,13 +152,13 @@ def get_ward(request, area_id):
 
 
 @login_required
-def get_lip(request, ip_id):
+def get_ip(request, fund_id):
     """Method to do pivot reports."""
     try:
         values = []
-        lips = get_lips(ip_id)
-        for lip in lips:
-            vls = {'id': lip.id, 'name': lip.org_unit_name}
+        ips = get_ips(fund_id)
+        for ip in ips:
+            vls = {'id': ip.org_unit.id, 'name': ip.org_unit.org_unit_name}
             values.append(vls)
     except Exception:
         return JsonResponse([], safe=False)
@@ -137,12 +167,27 @@ def get_lip(request, ip_id):
 
 
 @login_required
-def get_chart(request, rid, county_id, const_id, ward_id=0,
+def get_lip(request, ip_id):
+    """Method to do pivot reports."""
+    try:
+        values = []
+        lips = get_lips(ip_id)
+        for lip in lips:
+            vls = {'id': lip.org_unit.id, 'name': lip.org_unit.org_unit_name}
+            values.append(vls)
+    except Exception:
+        return JsonResponse([], safe=False)
+    else:
+        return JsonResponse(values, safe=False)
+
+
+@login_required
+def get_chart(request, rid, county_id, const_id, ward_id=0, mech_id=0,
               ip_id=0, lip_id=0, prd=0, yr=0):
     """Method to do pivot reports."""
     try:
         html = get_chart_data(request, rid, county_id, const_id, ward_id,
-                              ip_id, lip_id, prd, yr)
+                              mech_id, ip_id, lip_id, prd, yr)
     except Exception as e:
         print('Chart view error - %s' % (str(e)))
         msg = 'Please change the Filters and try again.'
@@ -167,3 +212,32 @@ def settings(request):
         return JsonResponse(msg, safe=False)
     else:
         return JsonResponse(msg, safe=False)
+
+
+@login_required
+def ovc_dashboard_help(request):
+    """Method to do pivot reports."""
+    try:
+        form = CaseLoad()
+        charts = {}
+        cats = [1, 2, 3]
+        for cat in cats:
+            charts[cat] = []
+            for cts in CHART:
+                if cts.startswith(str(cat)):
+                    CHART[cts]['number'] = cts
+                    if cts in GCHART:
+                        icts = GCHART[cts]
+                        idesc = icts['desc'] if 'desc' in icts else ''
+                        icalc = icts['calc'] if 'calc' in icts else ''
+                        CHART[cts]['desc'] = idesc
+                        CHART[cts]['calc'] = icalc
+                    charts[cat].append(CHART[cts])
+        return render(
+            request, 'reports/ovc_dashboard_help.html',
+            {'form': form, 'colors': dcolors, 'chart': CHART,
+             'charts': charts})
+    except Exception as e:
+        raise e
+    else:
+        pass

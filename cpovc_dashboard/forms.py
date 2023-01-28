@@ -63,7 +63,7 @@ period_vars = (('1', 'APR'), ('2', 'SAPR'), )
 
 fy_vars = (('21', 'FY21'), ('22', 'FY22'), )
 
-fund_vars = (('', 'All Funding Agency'), ('1', 'USAID'),
+fund_vars = (('', 'All Agencies'), ('1', 'USAID'),
              ('2', 'CDC'), ('3', 'DoD'),)
 
 

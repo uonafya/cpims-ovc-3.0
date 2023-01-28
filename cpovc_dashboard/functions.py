@@ -11,7 +11,10 @@ from .charts import (
     column_chart, bar_chart, combo_chart, column_pie_chart,
     population_pyramid_chart, sparkline_chart, stacked_bar_chart,
     stacked_column_chart, column_chart_2, column_compare_chart,
-    pie_chart)
+    pie_chart, basic_bar_chart, table_chart, scatter_chart,
+    column_category_chart)
+
+from .models import IPInfo
 
 
 def get_geo(area_id, type_id='GDIS'):
@@ -56,12 +59,25 @@ def get_ip():
         return my_list.items
 
 
+def get_ips(fund_id):
+    """Method to get LIP Listing."""
+    try:
+        # All IPs should be attached DCS - ID #2
+        ips = IPInfo.objects.filter(
+            agency=fund_id, parent_unit_id=2, is_void=False)
+    except Exception as e:
+        print('error getting LIP', str(e))
+        return []
+    else:
+        return ips
+
+
 def get_lips(ip_id):
     """Method to get LIP Listing."""
     try:
         # print('IP', ip_id)
-        lips = RegOrgUnit.objects.filter(
-            parent_org_unit_id=ip_id, is_void=False)
+        lips = IPInfo.objects.filter(
+            parent_unit_id=ip_id, is_void=False)
     except Exception as e:
         print('error getting LIP', str(e))
         return []
@@ -69,8 +85,21 @@ def get_lips(ip_id):
         return lips
 
 
+def get_lips_mechanism(fund_id):
+    """Method to get LIP Listing."""
+    try:
+        # All IPs should be attached to DCS - ID #2
+        ips = IPInfo.objects.filter(
+            agency=fund_id, parent_unit_id__gt=2, is_void=False)
+    except Exception as e:
+        print('error getting LIP', str(e))
+        return []
+    else:
+        return ips
+
+
 def get_chart_data(request, rid, county_id, const_id,
-                   ward_id, ip_id, lip_id, prd, yr):
+                   ward_id, mech_id, ip_id, lip_id, prd, yr):
     """Method to get chart data."""
     try:
         params = {}
@@ -89,6 +118,7 @@ def get_chart_data(request, rid, county_id, const_id,
         params['area_type'] = area_type
         params['ip_id'] = int(ip_id)
         params['lip_id'] = int(lip_id)
+        params['mech_id'] = int(mech_id)
         params['dates'] = ''
         params['cont'] = str(rid)
         dates = get_dates(prd, yr)
@@ -99,9 +129,19 @@ def get_chart_data(request, rid, county_id, const_id,
         xAxis = ctts['xAxis'] if 'xAxis' in ctts else True
         yAxis = ctts['yAxis'] if 'yAxis' in ctts else True
         legend = ctts['legend'] if 'legend' in ctts else True
+        has_sex = ctts['has_sex'] if 'has_sex' in ctts else True
+        colors = ctts['colors'] if 'colors' in ctts else []
+        defaults = ctts['defaults'] if 'defaults' in ctts else []
+        yLabel = ctts['yLabel'] if 'yLabel' in ctts else '# of OVC'
+        stacking = ctts['stacking'] if 'stacking' in ctts else 'percent'
         params['xAxis'] = xAxis
         params['yAxis'] = yAxis
+        params['yLabel'] = yLabel
         params['legend'] = legend
+        params['has_sex'] = has_sex
+        params['colors'] = colors
+        params['defaults'] = defaults
+        params['stacking'] = stacking
         params['title'] = '%s : %s' % (rid, ctts['ctitle'])
         if ctts['ctype'] == 'bar':
             resp = bar_chart(request, params, data)
@@ -123,6 +163,14 @@ def get_chart_data(request, rid, county_id, const_id,
             resp = column_compare_chart(request, params, data)
         elif ctts['ctype'] == 'pie':
             resp = pie_chart(request, params, data)
+        elif ctts['ctype'] == 'basic_bar_chart':
+            resp = basic_bar_chart(request, params, data)
+        elif ctts['ctype'] == 'scatter':
+            resp = scatter_chart(request, params, data)
+        elif ctts['ctype'] == 'column_category':
+            resp = column_category_chart(request, params, data)
+        elif ctts['ctype'] == 'table':
+            resp = table_chart(request, params, data)
         else:
             resp = column_chart(request, params, data)
     except Exception as e:
@@ -212,17 +260,25 @@ def get_raw_data(rid, params):
         lip_id = params['lip_id']
         area_id = params['area_id']
         area_type = params['area_type']
+        # Handle Funding mechanism
+        mech_id = params['mech_id']
         if ip_id > 0 and lip_id == 0:
             lips = get_lips(ip_id)
             for lip in lips:
-                cbos_list.append(lip.id)
-                cbos.append(str(lip.id))
+                cbos_list.append(lip.org_unit.id)
+                cbos.append(str(lip.org_unit.id))
             # Handle IPs that are also LIPs
             cbos_list.append(ip_id)
             cbos.append(str(ip_id))
         if lip_id > 0:
             cbos_list = [lip_id]
             cbos = [str(lip_id)]
+        if mech_id > 0 and ip_id == 0 and lip_id == 0:
+            # Filter for all the lips under agency
+            mlips = get_lips_mechanism(mech_id)
+            for mlip in mlips:
+                cbos_list.append(mlip.org_unit.id)
+                cbos.append(str(mlip.org_unit.id))
         # CBO Query Filters
         cboq, cbov, ocboq = '', '', ''
         if len(cbos) > 0:
@@ -308,7 +364,7 @@ def format_data(rid, datas, items, itd='agerange'):
                     elif data['sex_id'] in females:
                         fdata[i] = str(int(data['dcount']))
         rdata['mdata'] = ','.join(mdata)
-        if rid in ['2E']:
+        if rid in ['3F', '7E']:
             fdata = format_percentage(rid, mdata, fdata)
         rdata['fdata'] = ','.join(fdata)
         # print(data)

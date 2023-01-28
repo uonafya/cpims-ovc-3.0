@@ -121,7 +121,7 @@ def register_new(request):
         if request.method == 'POST':
             form = FormRegistry(data=request.POST)
             cform = FormContact(data=request.POST)
-            # print('POST', request.POST)
+            # print request.POST
             org_unit_type = request.POST.get('org_unit_type')
             org_unit_name = request.POST.get('org_unit_name')
             handle_ovc = request.POST.get('handle_ovc')
@@ -446,7 +446,6 @@ def new_person(request):
         titles = merge_two_dicts(person_titles, unused_titles)
         # We handle POST request
         if request.method == 'POST':
-            print('POST', request.POST)
             form = RegistrationForm(request.user, data=request.POST)
             # Check duplicate first
             person_uid = request.POST.get('person_uid')
@@ -555,8 +554,6 @@ def new_person(request):
                 save_person_type(person_types, reg_person_pk)
 
             # Capture attached Organisation units
-            pid_int = int(reg_person_pk)
-            pid_ints = []
             if attached_ou:
                 for unid in attached_ou:
                     org_unit_id = int(unid)
@@ -564,7 +561,6 @@ def new_person(request):
                     reg_ass = attached_ou[unid]['reg']
                     is_pri_unit = True if pri_unit == 'AYES' else False
                     is_reg_ass = True if reg_ass == 'AYES' else False
-                    pid_ints.append(pid_int)
                     RegPersonsOrgUnits(
                         person=RegPerson.objects.get(pk=int(reg_person_pk)),
                         org_unit_id=org_unit_id,
@@ -578,7 +574,7 @@ def new_person(request):
             ovc_cbos = ['TBGR', 'TWVL', 'TBVC']
             ovc_type = str(person_type)
             print('person_types', ovc_type)
-            if reg_ovc and ovc_type in ovc_cbos and pid_int not in pid_ints:
+            if reg_ovc and ovc_type in ovc_cbos:
                 cbo_id = request.POST.get('cbo_unit_id')
                 person_id = int(reg_person_pk)
                 RegPersonsOrgUnits(

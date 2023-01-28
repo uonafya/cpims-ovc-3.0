@@ -515,7 +515,7 @@
         "pk": 31312,
         "model": "cpovc_main.SetupList",
         "fields": {
-            "the_order": 5,
+            "the_order": 6,
             "field_name": "attendance_reg_domains",
             "item_category": "Attendance Register",
             "item_id": "DOOTH",
@@ -681,6 +681,22 @@
             "item_id": "CLCGV",
             "item_description": "Caregiver",
             "item_description_short": "Caregiver",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 31323,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "field_name": "attendance_reg_domains",
+            "item_category": "Attendance Register",
+            "item_id": "HCBF",
+            "item_description": "HCBF",
+            "item_description_short": "HCBF",
             "item_sub_category": "",
             "user_configurable": false,
             "sms_keyword": false,

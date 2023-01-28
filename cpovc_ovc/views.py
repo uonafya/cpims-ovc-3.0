@@ -171,10 +171,202 @@ def ovc_register(request, id):
         print("error with OVC registration - %s" % (str(e)))
         raise e
 
-
 @login_required(login_url='/')
 @is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
 def ovc_edit(request, id):
+    """Some default page for Server Errors."""
+    try:
+        ovc_id = int(id)
+        date_reg = None
+        if request.method == 'POST':
+            ovc_registration(request, ovc_id, 1)
+            # Save external ids from here
+            msg = "OVC Registration details edited successfully"
+            messages.info(request, msg)
+            url = reverse('ovc_view', kwargs={'id': ovc_id})
+            return HttpResponseRedirect(url)
+        child = RegPerson.objects.get(is_void=False, id=ovc_id)
+        creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
+        exit_org_name = get_exit_org(ovc_id)
+        bcert = 'on' if creg.has_bcert else ''
+        disb = 'on' if creg.is_disabled else ''
+        exited = '' if creg.is_active else 'on'
+        reg_date = creg.registration_date
+        child.caretaker = creg.caretaker_id
+        child.cbo = creg.child_cbo.org_unit_name
+        child.chv_name = creg.child_chv.full_name
+        params = {}
+        gparams = {}
+        siblings = 0
+        # Get house hold
+        hhold = OVCHHMembers.objects.get(
+            is_void=False, person_id=child.id)
+        hhid = hhold.house_hold_id
+        head_id = hhold.house_hold.head_person_id
+        cgs = RegPerson.objects.filter(id=head_id)
+        hhmqs = OVCHHMembers.objects.filter(
+            is_void=False, house_hold_id=hhid).order_by("-hh_head")
+        # Viral Load
+
+        vloads = OVCViralload.objects.filter(
+            is_void=False, person_id=ovc_id).order_by("-viral_date")
+        vlist = []
+        for vl in vloads:
+            obj = {}
+            obj['viral_date'] = vl.viral_date
+            obj['viral_load'] = vl.viral_load
+
+            delta = get_days_difference(vl.viral_date)
+            print(delta)
+
+            if (delta) < 183:
+                obj['status'] = 0
+            else:
+                obj['status'] = 1
+
+            vlist.append(obj)
+        # add caregivers hiv status
+        hhmembers, hhm_ids = [], []
+        hhms = hhmqs.exclude(person_id=child.id)
+        for hhm in hhms:
+            hhm_ids.append(hhm.person_id)
+            hhmembers.append(hhm)
+        # After upgrade CG is missing on Members table - hacking this
+        m_type = 'CCGV'
+        gtypes = RegPersonsGuardians.objects.filter(
+            child_person_id=child.id, guardian_person_id=head_id,
+            is_void=False)
+        for gtype in gtypes:
+            m_type = gtype.relationship
+        pobj = PersonObj()
+        pobj.member_type = m_type
+        pobj.member_alive = 'AYES'
+        for cg in cgs:
+            if cg.id not in hhm_ids:
+                pobj.person = cg
+                pobj.person_id = cg.id
+                hhmembers.append(pobj)
+        # Get guardians and siblings ids
+        guids, chids = [], []
+        ctaker = 0
+        for hh_member in hhms:
+            member_type = hh_member.member_type
+            member_head = hh_member.hh_head
+            if member_head:
+                ctaker = hh_member.person_id
+            if member_type == 'TBVC' or member_type == 'TOVC':
+                chids.append(hh_member.person_id)
+                siblings += 1
+            else:
+                guids.append(hh_member.person_id)
+        guids.append(child.id)
+        pids = {'guids': guids, 'chids': chids}
+        extids = RegPersonsExternalIds.objects.filter(
+            person_id__in=guids)
+        for extid in extids:
+            if extid.person_id == child.id:
+                params[extid.identifier_type_id] = extid.identifier
+            else:
+                gkey = '%s_%s' % (extid.person_id, extid.identifier_type_id)
+                gparams[gkey] = extid.identifier
+        # Get health information
+        ccc_no, date_linked, art_status = '', '', ''
+        facility_id, facility = '', ''
+        if creg.hiv_status in ['HSTP', 'HHEI']:
+            health = get_health(ovc_id)
+            if health:
+                ccc_no = health.ccc_number
+                date_linked = health.date_linked.strftime('%d-%b-%Y')
+                art_status = health.art_status
+                facility_id = health.facility_id
+                facility = health.facility.facility_name
+        # Get School information
+        sch_class, sch_adm_type = '', ''
+        school_id, school = '', ''
+        if creg.school_level != 'SLNS':
+            school = get_school(ovc_id)
+            if school:
+                sch_class = school.school_class
+                sch_adm_type = school.admission_type
+                school_id = school.school_id
+                school = school.school.school_name
+        bcert_no = params['ISOV'] if 'ISOV' in params else ''
+        ncpwd_no = params['IPWD'] if 'IPWD' in params else ''
+        # Eligibility
+        criterias = OVCEligibility.objects.filter(
+            is_void=False, person_id=child.id).values_list(
+            'criteria', flat=True)
+        if reg_date:
+            date_reg = reg_date.strftime('%d-%b-%Y')
+        exit_date = None
+        if creg.exit_date:
+            exit_date = creg.exit_date.strftime('%d-%b-%Y')
+
+        all_values = {'reg_date': date_reg, 'cbo_uid': creg.org_unique_id,
+                      'cbo_uid_check': creg.org_unique_id,
+                      'has_bcert': bcert, 'disb': disb,
+                      'bcert_no': bcert_no, 'ncpwd_no': ncpwd_no,
+                      'immunization': creg.immunization_status,
+                      'school_level': creg.school_level, 'facility': facility,
+                      'facility_id': facility_id, 'school_class': sch_class,
+                      'school_name': school, 'school_id': school_id,
+                      'admission_type': sch_adm_type,
+                      'hiv_status': creg.hiv_status, 'link_date': date_linked,
+                      'ccc_number': ccc_no, 'art_status': art_status,
+                      'eligibility': list(criterias), 'is_exited': exited,
+                      'exit_reason': creg.exit_reason,
+                      'ovc_exit_reason': creg.exit_reason,
+                      'exit_date': exit_date,
+                      'exit_org_name': exit_org_name}
+        form = OVCRegistrationForm(guids=pids, data=all_values)
+        for hhm in hhms:
+            status_id = 'status_%s' % (hhm.person_id)
+            all_values['a%s' % (status_id)] = hhm.member_alive
+            all_values['g%s' % (status_id)] = hhm.hiv_status
+            all_values['sg%s' % (status_id)] = hhm.hiv_status
+        # Class levels
+        levels = {}
+        levels["SLNS"] = []
+        levels["SLEC"] = ["BABY,Baby Class", "MIDC,Middle Class",
+                          "PREU,Pre-Unit"]
+        levels["SLPR"] = ["CLS1,Class 1", "CLS2,Class 2", "CLS3,Class 3",
+                          "CLS4,Class 4", "CLS5,Class 5", "CLS6,Class 6",
+                          "CLS7,Class 7", "CLS8,Class 8"]
+        levels["SLSE"] = ["FOM1,Form 1", "FOM2,Form 2", "FOM3,Form 3",
+                          "FOM4,Form 4", "FOM5,Form 5", "FOM6,Form 6"]
+        levels["SLUN"] = ["YER1,Year 1", "YER2,Year 2", "YER3,Year 3",
+                          "YER4,Year 4", "YER5,Year 5", "YER6,Year 6"]
+        levels["SLTV"] = ["TVC1,Year 1", "TVC2,Year 2", "TVC3,Year 3",
+                          "TVC4,Year 4", "TVC5,Year 5"]
+        # Re-usable values
+
+        check_fields = ['relationship_type_id']
+        vals = get_dict(field_name=check_fields)
+        hiv_data = OVCHivStatus.objects.filter(
+            person_id=ovc_id).order_by('date_of_event')
+
+        # date manenos
+        date_langu = datetime.now().month
+
+        return render(request, 'ovc/edit_child.html',
+                      {'form': form, 'status': 200, 'child': child,
+                       'vals': vals, 'hhold': hhold, 'extids': gparams,
+                       'hhmembers': hhmembers, 'levels': levels,
+                       'sch_class': sch_class, 'siblings': siblings,
+                       'ctaker': ctaker, 'vloads': vlist, 'mydate': date_langu,
+                       'hiv_data': hiv_data})
+    except Exception as e:
+        print("error with OVC viewing - %s" % (str(e)))
+        # raise e
+        msg = "Error occured during ovc edit"
+        messages.error(request, msg)
+        form = OVCSearchForm()
+        return render(request, 'ovc/home.html', {'form': form, 'status': 200})
+
+
+@login_required(login_url='/')
+@is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
+def ovc_edit_old(request, id):
     """Some default page for Server Errors."""
     try:
         ovc_id = int(id)

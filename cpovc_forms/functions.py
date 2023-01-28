@@ -206,8 +206,6 @@ def get_past_cpt(ovc_id):
             if all_cpt:
                 for one_cpt in all_cpt:
                     comp_date = one_cpt.completion_date.strftime('%d-%b-%Y')
-                    ac_date = one_cpt.actual_completion_date
-                    actual_comp_date = ac_date.strftime('%d-%b-%Y')
                     cid = one_cpt.case_plan_id
                     if one_cpt.domain == 'DHNU':
                         one_event_healthy.append({
@@ -221,10 +219,7 @@ def get_past_cpt(ovc_id):
                             'ev_reasons': one_cpt.reasons,
                             'ev_completion_date': comp_date,
                             'ev_responsible': one_cpt.responsible,
-                            'ev_person': ovc_id,
-                            'ev_actual_completion_date': actual_comp_date,
-                            'ev_reasons': one_cpt.reasons,
-                            'ev_results': one_cpt.results
+                            'ev_person': ovc_id
                         })
                     elif one_cpt.domain == 'DHES':
                         one_event_stable.append({
@@ -238,10 +233,7 @@ def get_past_cpt(ovc_id):
                             'ev_reasons': one_cpt.reasons,
                             'ev_completion_date': comp_date,
                             'ev_responsible': one_cpt.responsible,
-                            'ev_person': ovc_id,
-                            'ev_actual_completion_date': actual_comp_date,
-                            'ev_reasons': one_cpt.reasons,
-                            'ev_results': one_cpt.results
+                            'ev_person': ovc_id
                         })
                     elif one_cpt.domain == 'DPRO':
                         one_event_safe.append({
@@ -255,10 +247,7 @@ def get_past_cpt(ovc_id):
                             'ev_reasons': one_cpt.reasons,
                             'ev_completion_date': comp_date,
                             'ev_responsible': one_cpt.responsible,
-                            'ev_person': ovc_id,
-                            'ev_actual_completion_date': actual_comp_date,
-                            'ev_reasons': one_cpt.reasons,
-                            'ev_results': one_cpt.results
+                            'ev_person': ovc_id
                         })
                     elif one_cpt.domain == 'DEDU':
                         one_event_school.append({
@@ -272,10 +261,7 @@ def get_past_cpt(ovc_id):
                             'ev_reasons': one_cpt.reasons,
                             'ev_completion_date': comp_date,
                             'ev_responsible': one_cpt.responsible,
-                            'ev_person': ovc_id,
-                            'ev_actual_completion_date': actual_comp_date,
-                            'ev_reasons': one_cpt.reasons,
-                            'ev_results': one_cpt.results
+                            'ev_person': ovc_id
                         })
             ev_date = one_caseplan_event.date_of_event.strftime('%d-%b-%Y')
             caseplan_events.append({
@@ -288,7 +274,7 @@ def get_past_cpt(ovc_id):
                 'event_healthy': one_event_healthy,
                 'event_school': one_event_school
             })
-        # print(("get_past_cpt successful::::::::::::", caseplan_events))
+        print(("get_past_cpt successful::::::::::::", caseplan_events))
         return caseplan_events
     except Exception as e:
         caseplan_events = []

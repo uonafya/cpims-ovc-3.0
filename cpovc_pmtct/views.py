@@ -316,7 +316,6 @@ def view_pmtct(request, id):
         pass
 
 
-@login_required
 def new_pregnantwomen(request, id):
 
     person = RegPerson.objects.get(pk=int(id))
@@ -425,7 +424,6 @@ def new_pregnantwomen(request, id):
     return render(request, 'pmtct/new_pregnant_women.html', context)
 
 
-@login_required
 def edit_pregnantwomen(request, id):
     if request.method == 'POST':
         data = request.POST
@@ -464,7 +462,6 @@ def edit_pregnantwomen(request, id):
             print(f'The table pmtct didnt update: {e} ')
 
 
-@login_required
 def delete_pregnantwomen(request, id, btn_event_pk):
     uid = uuid.UUID(id)
     new_tracker = PMTCTPregnantWA.objects.filter(event_id__in=uid)
@@ -474,7 +471,6 @@ def delete_pregnantwomen(request, id, btn_event_pk):
     return redirect('new_pregnantwomen', id=new_tracker1.person_id)
 
 
-@login_required
 def new_hei_tracker(request, id):
     hei8 = hei9 = hei10 = hei11 = hei12 = hei13 = hei14 = hei15 = hei16 = hei17 = hei18 = hei19 = hei20 = hei21 = hei22 = hei23 = hei24 = hei25 = hei26 = hei27 = hei28 = hei29 = hei30 = hei31 = hei32 = hei33 = hei34 = hei35 = hei36 = ''
     contact_date1 = contact_date2 = contact_date3 = contact_date4 = contact_date5 = '1900-01-01'
@@ -599,7 +595,7 @@ def new_hei_tracker(request, id):
 
     form = OVCHEITrackerForm(initial={'household_id': household_id})
     return render(request,
-                  'pmtct/new_hei_tracker.html',
+                  'forms/new_hei_tracker.html',
                   {
                       'form': form,
                       'init_data': init_data,
@@ -615,7 +611,6 @@ def new_hei_tracker(request, id):
                   })
 
 
-@login_required
 def edit_heitracker(request, id):
     """Some default page for Server Errors."""
 
@@ -793,7 +788,7 @@ def edit_heitracker(request, id):
 
         form = OVCHEITrackerForm(data=hei)
         return render(
-            request, 'pmtct/edit_hei_tracker.html',
+            request, 'forms/edit_hei_tracker.html',
             {'form': form, 'status': 200})
 
     except Exception as e:
@@ -805,7 +800,6 @@ def edit_heitracker(request, id):
         return HttpResponseRedirect(reverse(url))
 
 
-@login_required
 def delete_heitracker(request, id):
     new_eval = PMTCTHEI.objects.get(hei_id=id)
     PMTCTHEI.objects.filter(event_id=id).update(is_void=True)

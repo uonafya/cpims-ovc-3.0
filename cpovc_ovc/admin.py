@@ -5,7 +5,7 @@ from import_export.admin import ImportExportModelAdmin
 from .models import (
     OVCAggregate, OVCFacility, OVCSchool, OVCCluster,
     OVCClusterCBO, OVCRegistration, OVCEligibility,
-    OVCHHMembers, OVCHouseHold, OVCHealth)
+    OVCHHMembers, OVCHouseHold)
 
 from django.contrib.admin.helpers import ActionForm
 from django import forms

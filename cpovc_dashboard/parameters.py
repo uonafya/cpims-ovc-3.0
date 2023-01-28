@@ -371,22 +371,38 @@ kpis = ['New Registrations', 'Exited OVC', 'Exited HH',
 
 hivstats = ['Known HIV Status', 'On ART', 'Suppression']
 
-hiv_statuses = ['Active', 'Positive', 'On ART', 'VL Accessed',
+hiv_statuses = ['Positive', 'On ART', 'VL Accessed',
                 'Valid VL', 'Suppressed', 'Not Suppressed']
 
 colors = {}
-colors[1] = ["#377eb8", "#984ea3", "#7cb5ec", "#e41a1c",
+colors[3] = ["#377eb8", "#984ea3", "#7cb5ec", "#e41a1c",
              "#434348", "#E80C7A", "#e4d354"]
 colors[2] = ["#7cb5ec", "#434348", "#90ed7d", "#f7a35c",
              "#8085e9", "#f15c80", "#e4d354"]
-colors[3] = ["#90ed7d", "#f7a35c", "#8085e9", "#f15c80",
-             "#e4d354", "#a6cee3", "#1f78b4"]
+colors[1] = ["#90ed7d", "#f7a35c", "#8085e9", "#f15c80",
+             "#e4d354", "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c",
+             "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6",
+             "#6a3d9a", "#ffff99", "#b15928", "#8dd3c7", "#ffffb3",
+             "#bebada"]
 colors[4] = ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c",
              "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00",
              "#cab2d6", "#6a3d9a", "#ffff99", "#b15928",
              "#8dd3c7", "#ffffb3", "#bebada", "#fb8072",
              "#80b1d3", "#fdb462", "#b3de69", "#fccde5"]
 
+colors[13] = ["#7cb5ec", "#e41a1c", "#434348", "#E80C7A", "#e4d354"]
+colors[12] = ["#90ed7d", "#f7a35c", "#8085e9", "#f15c80", "#e4d354"]
+colors[11] = ["#8085e9", "#f15c80", "#e4d354", "#a6cee3", "#1f78b4",
+              "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f",
+              "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928",
+              "#8dd3c7", "#ffffb3", "#bebada"]
+colors[14] = ["#b2df8a", "#33a02c",
+              "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00",
+              "#cab2d6", "#6a3d9a", "#ffff99", "#b15928",
+              "#8dd3c7", "#ffffb3", "#bebada", "#fb8072",
+              "#80b1d3", "#fdb462", "#b3de69", "#fccde5"]
+
+# =================== Section 1 : Registration Charts =================
 # -- Registration dashboard
 CHART = {}
 CHART['1A'] = {}
@@ -395,31 +411,30 @@ CHART['1A']['ctype'] = 'pie'
 CHART['1A']['qparam'] = 'sex_id'
 CHART['1A']['dfilter'] = 'registration_date'
 CHART['1A']['categories'] = []
+CHART['1A']['colors'] = ['#1E87A5', '#8980CB']
 
 # - Registrations by sex
 CHART['1B'] = {}
-CHART['1B']['ctitle'] = 'OVC registration by program status'
+CHART['1B']['ctitle'] = 'OVC registration by program status - ever registered'
 CHART['1B']['ctype'] = 'column'
 CHART['1B']['qparam'] = 'active_status'
 CHART['1B']['dfilter'] = 'registration_date'
 CHART['1B']['categories'] = ['Ever Registered',
-                             'Current Caseload', 'Exited(Left Program)']
-# - Registrations by school categories
-'''
+                             'Active', 'Exited(Left Program)']
+CHART['1B']['has_sex'] = False
+CHART['1B']['legend'] = False
+CHART['1B']['xAxis'] = False
+CHART['1B']['colors'] = ['#939598', '#287C6F', '#C43D4D']
+
+# - Eligibility criterias
 CHART['1C'] = {}
-CHART['1C']['ctitle'] = 'Active School going OVC'
-CHART['1C']['ctype'] = 'population_pyramid'
-CHART['1C']['qparam'] = 'school_level'
-CHART['1C']['dfilter'] = 'registration_date'
-CHART['1C']['categories'] = ['Not in School', 'ECDE', 'Primary', 'Secondary',
-                             'Tertiary', 'University']
-'''
-CHART['1C'] = {}
-CHART['1C']['ctitle'] = 'Exit reasons since 2018'
+CHART['1C']['ctitle'] = 'Ever registered eligibility criteria as at enrolment'
 CHART['1C']['ctype'] = 'bar'
-CHART['1C']['qparam'] = 'exit_reason'
+CHART['1C']['qparam'] = 'eligibility'
 CHART['1C']['dfilter'] = 'registration_date'
 CHART['1C']['categories'] = []
+CHART['1C']['has_sex'] = False
+CHART['1C']['colors'] = ['#939598']
 
 # - Other summaries on birth certificates and disability
 CHART['1D'] = {}
@@ -427,419 +442,879 @@ CHART['1D']['ctitle'] = 'Other registration summaries for ever registered'
 CHART['1D']['ctype'] = 'column'
 CHART['1D']['qparam'] = 'services'
 CHART['1D']['dfilter'] = 'registration_date'
-CHART['1D']['categories'] = ['Active', 'Has Birth Certificate',
+CHART['1D']['categories'] = ['Current case load', 'Has Birth Certificate',
                              'Has Disability', 'School Going']
-# - HIV Status from registration list
-CHART['1E'] = {}
-CHART['1E']['ctitle'] = 'HIV status - ever registered'
-CHART['1E']['ctype'] = 'population_pyramid'
-CHART['1E']['qparam'] = 'hivstat'
-CHART['1E']['dfilter'] = 'registration_date'
-CHART['1E']['categories'] = ['HIV Status -Ve', 'HIV Status +Ve',
-                             'HIV Test not Required', 'HIV Status Unknown']
-# - Eligibility criterias
-CHART['1F'] = {}
-CHART['1F']['ctitle'] = 'Ever registered eligibility criteria as at enrolment'
-CHART['1F']['ctype'] = 'bar'
-CHART['1F']['qparam'] = 'eligibility'
-CHART['1F']['dfilter'] = 'registration_date'
-CHART['1F']['categories'] = []
+CHART['1D']['legend'] = False
+CHART['1D']['has_sex'] = False
+CHART['1D']['xAxis'] = False
+CHART['1D']['colors'] = ['#287C6F', '#F2BC40', '#E07653', '#72C3B4']
 
 # - Caseload by Agency - New 29-Aug-2022
+CHART['1E'] = {}
+CHART['1E']['ctitle'] = 'Case load by funding agency'
+CHART['1E']['ctype'] = 'column'
+CHART['1E']['qparam'] = 'agency'
+CHART['1E']['categories'] = []
+CHART['1E']['defaults'] = ['CDC', 'DOD', 'USAID']
+CHART['1E']['xAxis'] = False
+CHART['1E']['legend'] = False
+CHART['1E']['has_sex'] = False
+CHART['1E']['colors'] = ['#A7C6ED', '#89DACB', '#002A6C']
+
+# - HIV Status from registration list
+CHART['1F'] = {}
+CHART['1F']['ctitle'] = 'HIV status - ever registered'
+CHART['1F']['ctype'] = 'population_pyramid'
+CHART['1F']['qparam'] = 'hivstat'
+CHART['1F']['dfilter'] = 'registration_date'
+CHART['1F']['categories'] = ['HIV Status -Ve', 'HIV Status +Ve',
+                             'HIV Test not Required', 'HIV Status Unknown']
+CHART['1F']['has_sex'] = True
+CHART['1F']['colors'] = ['#1E87A5', '#8980CB']
+
+#
 CHART['1G'] = {}
-CHART['1G']['ctitle'] = 'Case Load by Funding Agency'
-CHART['1G']['ctype'] = 'column'
-CHART['1G']['qparam'] = 'agency'
+CHART['1G']['ctitle'] = 'Exit reasons for ever Registered'
+CHART['1G']['ctype'] = 'bar'
+CHART['1G']['qparam'] = 'exit_reason'
+CHART['1G']['dfilter'] = 'registration_date'
 CHART['1G']['categories'] = []
-CHART['1G']['xAxis'] = False
-CHART['1G']['legend'] = False
+CHART['1G']['has_sex'] = False
+CHART['1G']['colors'] = ['#C43D4D']
 
-# -- Viral Load and HIV_STAT charts ----------------------------------------
+
+# =================== Section 2 : OVC eligible for Reporting Charts ==========
+# - Registrations by sex
 CHART['2A'] = {}
-CHART['2A']['ctitle'] = 'Viral load cascade for active OVC'
+CHART['2A']['ctitle'] = 'OVC eligible for reporting'
 CHART['2A']['ctype'] = 'column'
-CHART['2A']['qparam'] = 'hivstat'
-CHART['2A']['categories'] = hiv_statuses
-# - Viral load > 1,000
+CHART['2A']['qparam'] = 'services'
+CHART['2A']['dfilter'] = 'registration_date'
+CHART['2A']['categories'] = []
+CHART['2A']['legend'] = False
+CHART['2A']['xAxis'] = False
+CHART['2A']['has_sex'] = False
+CHART['2A']['colors'] = ['#939598', '#287C6F', '#C43D4D', '#8980CB', '#F2BC40']
+
+# - 2B
 CHART['2B'] = {}
-CHART['2B']['ctitle'] = 'Critical results - Viral load more than 1,000 cp/ml'
-CHART['2B']['ctype'] = 'column'
+CHART['2B']['ctitle'] = 'Current case load by gender and age ranges'
+CHART['2B']['ctype'] = 'population_pyramid'
 CHART['2B']['qparam'] = 'agerange'
-CHART['2B']['categories'] = ageranges
+CHART['2B']['dfilter'] = 'registration_date'
+CHART['2B']['categories'] = []
+CHART['2B']['colors'] = ['#1E87A5', '#8980CB']
 
-# - OVC_HIVSTAT
+# - Eligibility criterias
 CHART['2C'] = {}
-CHART['2C']['ctitle'] = 'OVC_HIVSTAT Results'
-CHART['2C']['ctype'] = 'column'
-CHART['2C']['qparam'] = 'hivstat'
-CHART['2C']['categories'] = ['OVC_SERV', 'HIV Status +Ve', 'HIV Status -Ve',
-                             'HIV Status Unknown', 'HIV Test not Required',
-                             'HIV Referred For Testing']
+CHART['2C']['ctitle'] = 'Current case load profile at enrollment'
+CHART['2C']['ctype'] = 'bar'
+CHART['2C']['qparam'] = 'eligibility'
+CHART['2C']['dfilter'] = 'registration_date'
+CHART['2C']['categories'] = []
+CHART['2C']['has_sex'] = False
+CHART['2C']['colors'] = ['#939598']
+
+# - Registrations by school categories
+CHART['2D'] = {}
+CHART['2D']['ctitle'] = 'Current case load by schooling information'
+CHART['2D']['ctype'] = 'population_pyramid'
+CHART['2D']['qparam'] = 'school_level'
+CHART['2D']['dfilter'] = 'registration_date'
+CHART['2D']['categories'] = ['Not in School', 'ECDE', 'Primary', 'Secondary',
+                             'Tertiary', 'University']
+CHART['2D']['colors'] = ['#1E87A5', '#8980CB']
+
+# - HIV Status from registration list
+CHART['2E'] = {}
+CHART['2E']['ctitle'] = 'Current case load HIV status'
+CHART['2E']['ctype'] = 'population_pyramid'
+CHART['2E']['qparam'] = 'hivstat'
+CHART['2E']['dfilter'] = 'registration_date'
+CHART['2E']['categories'] = []
+CHART['2E']['colors'] = ['#1E87A5', '#8980CB']
+
+# - Other summaries on birth certificates and disability
+CHART['2F'] = {}
+CHART['2F']['ctitle'] = 'Current case load summaries'
+CHART['2F']['ctype'] = 'column'
+CHART['2F']['qparam'] = 'services'
+CHART['2F']['dfilter'] = 'registration_date'
+CHART['2F']['categories'] = ['Current case load', 'Has Birth Certificate',
+                             'Has Disability', 'School Going']
+CHART['2F']['legend'] = False
+CHART['2F']['xAxis'] = False
+CHART['2F']['has_sex'] = False
+CHART['2F']['colors'] = ['#287C6F', '#F2BC40', '#E07653', '#72C3B4']
+
+# -
+CHART['2G'] = {}
+CHART['2G']['ctitle'] = 'New registrations in the current reporting year'
+CHART['2G']['ctype'] = 'pie'
+CHART['2G']['qparam'] = 'sex_id'
+CHART['2G']['dfilter'] = 'registration_date'
+CHART['2G']['categories'] = []
+CHART['2G']['xAxis'] = False
+CHART['2G']['legend'] = False
+CHART['2G']['colors'] = ['#1E87A5', '#8980CB']
+
+# - Exit reasons
+CHART['2H'] = {}
+CHART['2H']['ctitle'] = 'Current case load exit reasons'
+CHART['2H']['ctype'] = 'bar'
+CHART['2H']['qparam'] = 'exit_reason'
+CHART['2H']['dfilter'] = 'registration_date'
+CHART['2H']['categories'] = []
+CHART['2H']['has_sex'] = False
+CHART['2H']['colors'] = ['#C43D4D']
+
+# - Caseload Profile - New 29-Aug-2022
+CHART['2I'] = {}
+CHART['2I']['ctitle'] = 'Current case load profile'
+CHART['2I']['ctype'] = 'bar'
+CHART['2I']['qparam'] = 'eligibility'
+CHART['2I']['categories'] = []
+CHART['2I']['has_sex'] = False
+CHART['2I']['colors'] = ['#939598']
+
+# - Caseload by Agency - New 29-Aug-2022
+CHART['2J'] = {}
+CHART['2J']['ctitle'] = 'Current case load by funding agency'
+CHART['2J']['ctype'] = 'column'
+CHART['2J']['qparam'] = 'agency'
+CHART['2J']['categories'] = []
+CHART['2J']['xAxis'] = False
+CHART['2J']['legend'] = False
+CHART['2J']['has_sex'] = False
+CHART['2J']['defaults'] = ['CDC', 'DOD', 'USAID']
+CHART['2J']['colors'] = ['#A7C6ED', '#89DACB', '#002A6C']
+
+# - School going - school level
+CHART['2K'] = {}
+CHART['2K']['ctitle'] = 'Current case load - School going by school level'
+CHART['2K']['ctype'] = 'column'
+CHART['2K']['qparam'] = 'schoollevel'
+CHART['2K']['categories'] = []
+CHART['2K']['xAxis'] = False
+CHART['2K']['legend'] = False
+CHART['2K']['has_sex'] = False
+CHART['2K']['defaults'] = ['a.Not in School', 'ECDE', 'Primary', 'Secondary', 'Tertiary', 'University']
+CHART['2K']['colors'] = ['#FFB5BA', '#BFDDFF', '#5B82D8', '#72C3B4', '#459688', '#E6E7E8']
+
+# - School going - school level and agency
+CHART['2L'] = {}
+CHART['2L']['ctitle'] = 'Current case load - School going by agency and school level'
+CHART['2L']['ctype'] = 'stacked_bar'
+CHART['2L']['qparam'] = 'schoollevel'
+CHART['2L']['qfilter'] = 'agency'
+CHART['2L']['categories'] = []
+CHART['2L']['legend'] = False
+CHART['2L']['defaults'] = ['a.Not in School', 'ECDE', 'Primary', 'Secondary', 'Tertiary', 'University']
+CHART['2L']['colors'] = ['#FFB5BA', '#BFDDFF', '#5B82D8', '#72C3B4', '#459688', '#E6E7E8']
+
+# - School going - by sex
+CHART['2M'] = {}
+CHART['2M']['ctitle'] = 'Current case load - School going by sex'
+CHART['2M']['ctype'] = 'pie'
+CHART['2M']['qparam'] = 'sex_id'
+CHART['2M']['categories'] = []
+CHART['2M']['xAxis'] = False
+CHART['2M']['legend'] = False
+CHART['2M']['colors'] = ['#1E87A5', '#8980CB']
+
+# - School going - school level and sex
+CHART['2N'] = {}
+CHART['2N']['ctitle'] = 'Current case load - school going by sex and school level'
+CHART['2N']['ctype'] = 'population_pyramid'
+CHART['2N']['qparam'] = 'schoollevel'
+CHART['2N']['categories'] = []
+CHART['2N']['colors'] = ['#1E87A5', '#8980CB']
+
+# - School going - school level and agency
+CHART['2P'] = {}
+CHART['2P']['ctitle'] = 'Current case load - school going by agency, mechanism and school level'
+CHART['2P']['ctype'] = 'sparkline'
+CHART['2P']['qparam'] = 'exit_reason'
+CHART['2P']['qfilter'] = 'agency'
+CHART['2P']['categories'] = []
+CHART['2P']['has_sex'] = False
+CHART['2P']['yLabel'] = 'Distribution of OVC Education Levels'
+CHART['2P']['defaults'] = ['a.Not in School', 'ECDE', 'Primary', 'Secondary', 'Tertiary', 'University']
+CHART['2P']['colors'] = ['#FFB5BA', '#BFDDFF', '#5B82D8', '#72C3B4', '#459688', '#E6E7E8']
+
+# - Not in school - by agebands
+CHART['2Q'] = {}
+CHART['2Q']['ctitle'] = 'Not in school by agerange and sex'
+CHART['2Q']['ctype'] = 'population_pyramid'
+CHART['2Q']['qparam'] = 'agerange'
+CHART['2Q']['categories'] = []
+CHART['2Q']['colors'] = ['#1E87A5', '#8980CB']
+
+# - School going - school level and sex
+CHART['2R'] = {}
+CHART['2R']['ctitle'] = 'Current caseload - school information by agerange'
+CHART['2R']['ctype'] = 'stacked_bar'
+CHART['2R']['qparam'] = 'schoollevel'
+CHART['2R']['qfilter'] = 'agerange'
+CHART['2R']['categories'] = []
+CHART['2R']['defaults'] = ['a.Not in School', 'ECDE', 'Primary', 'Secondary', 'Tertiary', 'University']
+CHART['2R']['colors'] = ['#FFB5BA', '#BFDDFF', '#5B82D8', '#72C3B4', '#459688', '#E6E7E8']
+
+
+# =================== Section 3 : Services Reporting Charts =================
+CHART['3A'] = {}
+CHART['3A']['ctitle'] = 'OVC registration by program status'
+CHART['3A']['ctype'] = 'stacked_column'
+CHART['3A']['qparam'] = 'agency'
+CHART['3A']['qfilter'] = 'services'
+CHART['3A']['categories'] = []
+CHART['3A']['defaults'] = ['Case load', 'Active', 'Exits', 'Graduated', 'Transfers']
+CHART['3A']['colors'] = ['#939598', '#287C6F', '#C43D4D', '#8980CB', '#F2BC40']
+
+# OVC_HIVSTAT Charts
+CHART['3B'] = {}
+CHART['3B']['ctitle'] = 'OVC_HIVSTAT'
+CHART['3B']['ctype'] = 'stacked_column'
+CHART['3B']['qparam'] = 'mechanism'
+CHART['3B']['qfilter'] = 'agency'
+CHART['3B']['categories'] = []
 
 # - OVC_HIVSTAT
-CHART['2D'] = {}
-CHART['2D']['ctitle'] = 'OVC_HIVSTAT Results < 18'
-CHART['2D']['ctype'] = 'column'
-CHART['2D']['qparam'] = 'hivstat'
-CHART['2D']['categories'] = ['OVC_SERV', 'HIV Status +Ve', 'HIV Status -Ve',
-                             'HIV Status Unknown', 'HIV Test not Required',
-                             'HIV Referred For Testing']
-# - OVC 95-95-95 Cascade
-CHART['2E'] = {}
-CHART['2E']['ctitle'] = '95 - 95 - 95 Cascade'
-CHART['2E']['ctype'] = 'combo'
-CHART['2E']['qparam'] = 'hivstat'
-CHART['2E']['categories'] = hivstats
-
-# - OVC_HIVSTAT - New 29-Aug-2022
-CHART['2F'] = {}
-CHART['2F']['ctitle'] = 'OVC_HIVSTAT'
-CHART['2F']['ctype'] = 'column'
-CHART['2F']['qparam'] = 'hivstat'
-CHART['2F']['categories'] = []
-
-# Services Reporting Charts -----------------------------------------
-CHART['3A'] = {}
-CHART['3A']['ctitle'] = 'Services Reporting'
-CHART['3A']['ctype'] = 'column'
-CHART['3A']['qparam'] = 'services'
-CHART['3A']['categories'] = ['Active', 'Served', 'Served Two Quarters',
-                             'Case Plans', 'Graduated',
-                             'Active Beneficiary', 'OVC_SERV',
-                             'OVC_HIVSTAT', 'Exit without Graduation']
-CHART['3A']['legend'] = False
-CHART['3A']['xAxis'] = False
-# New
-CHART['3B'] = {}
-CHART['3B']['ctitle'] = 'Services Reporting - HH'
-CHART['3B']['ctype'] = 'column'
-CHART['3B']['qparam'] = 'services'
-CHART['3B']['categories'] = []
-CHART['3B']['legend'] = False
-CHART['3B']['xAxis'] = False
-
-# - Services by domain
 CHART['3C'] = {}
-CHART['3C']['ctitle'] = 'Services provided by domain'
+CHART['3C']['ctitle'] = 'OVC_HIVSTAT'
 CHART['3C']['ctype'] = 'column'
-CHART['3C']['qparam'] = 'services'
-CHART['3C']['categories'] = ['Healthy', 'Safe', 'Schooled', 'Stable']
+CHART['3C']['qparam'] = 'hivstat'
+CHART['3C']['categories'] = ['OVC_SERV', 'HIV Status +Ve', 'HIV Status -Ve',
+                             'HIV Status Unknown', 'HIV Test not Required']
 CHART['3C']['legend'] = False
+CHART['3C']['has_sex'] = False
 CHART['3C']['xAxis'] = False
+CHART['3C']['colors'] = ['#2057A7', '#C43D4D', '#1E87A5', '#F2BC40', '#E07653']
 
-# Beneficiary categories
+# - OVC_HIVSTAT
 CHART['3D'] = {}
-CHART['3D']['ctitle'] = 'OVC_SERV Beneficiary Categories'
+CHART['3D']['ctitle'] = 'OVC_HIVSTAT - under 18 years'
 CHART['3D']['ctype'] = 'column'
-CHART['3D']['qparam'] = 'services'
-CHART['3D']['categories'] = ['OVC Comprehensive', 'DREAMS',
-                             'OVC Preventive']
-# - Benchmarks Version 1
+CHART['3D']['qparam'] = 'hivstat'
+CHART['3D']['categories'] = ['OVC_SERV', 'HIV Status +Ve', 'HIV Status -Ve',
+                             'HIV Status Unknown', 'HIV Test not Required']
+CHART['3D']['legend'] = False
+CHART['3D']['has_sex'] = False
+CHART['3D']['xAxis'] = False
+CHART['3D']['colors'] = ['#2057A7', '#C43D4D', '#1E87A5', '#F2BC40', '#E07653']
+
 CHART['3E'] = {}
-CHART['3E']['ctitle'] = 'Household benchmark scores - V1'
-CHART['3E']['ctype'] = 'bar'
-CHART['3E']['qparam'] = 'benchmark'
-CHART['3E']['categories'] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-                             10, 11, 12, 13, 14, 15, 16, 17]
-# - Benchmarks Version 1
+CHART['3E']['ctitle'] = 'Viral load cascade for current case load'
+CHART['3E']['ctype'] = 'column'
+CHART['3E']['qparam'] = 'hivstat'
+CHART['3E']['categories'] = []
+CHART['3E']['xAxis'] = False
+CHART['3E']['legend'] = False
+CHART['3E']['has_sex'] = False
+
+# - OVC 95-95-95 Cascade
 CHART['3F'] = {}
-CHART['3F']['ctitle'] = 'New CPARA benchmarks achieved'
-CHART['3F']['ctype'] = 'bar'
-CHART['3F']['qparam'] = 'benchmark'
-CHART['3F']['categories'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+CHART['3F']['ctitle'] = '95 - 95 - 95 Cascade'
+CHART['3F']['ctype'] = 'combo'
+CHART['3F']['qparam'] = 'hivstat'
+CHART['3F']['categories'] = hivstats
+CHART['3F']['has_sex'] = False
+CHART['3F']['colors'] = ['#E6E7E8', '#74CCEC', '#287C6F']
 
-# - Benchmarks Version 1
+# New
 CHART['3G'] = {}
-CHART['3G']['ctitle'] = 'Household benchmark scores'
-CHART['3G']['ctype'] = 'column'
-CHART['3G']['qparam'] = 'services'
+CHART['3G']['ctitle'] = 'Current case load critical results - Viral load more than 1,000 cp/ml'
+CHART['3G']['ctype'] = 'population_pyramid'
+CHART['3G']['qparam'] = 'agerange'
 CHART['3G']['categories'] = []
-CHART['3G']['legend'] = False
-CHART['3G']['xAxis'] = False
-# - Specific services
+CHART['3G']['colors'] = ['#1E87A5', '#8980CB']
+
+# CALHIV
 CHART['3H'] = {}
-CHART['3H']['ctitle'] = 'Services provided in the reporting period'
-CHART['3H']['ctype'] = 'bar'
-CHART['3H']['qparam'] = 'services'
-CHART['3H']['dfilter'] = 'date_of_service'
+CHART['3H']['ctitle'] = 'CLHIV distribution by age range'
+CHART['3H']['ctype'] = 'population_pyramid'
+CHART['3H']['qparam'] = 'agerange'
 CHART['3H']['categories'] = []
+CHART['3H']['colors'] = ['#1E87A5', '#8980CB']
 
-#############################################
 
-# - Services by Domain - ALL
-CHART['3I'] = {}
-CHART['3I']['ctitle'] = 'Services by Domain'
-CHART['3I']['ctype'] = 'column'
-CHART['3I']['qparam'] = 'domain'
-CHART['3I']['dfilter'] = 'date_of_service'
-CHART['3I']['categories'] = []
-CHART['3I']['legend'] = False
-CHART['3I']['xAxis'] = False
-
-# - Services by Domain - Agency
-CHART['3J'] = {}
-CHART['3J']['ctitle'] = 'Services by Domain by Agency'
-CHART['3J']['ctype'] = 'column'
-CHART['3J']['qparam'] = 'services'
-CHART['3J']['dfilter'] = 'date_of_service'
-CHART['3J']['categories'] = []
-
-# - Services by Domain - IP
-CHART['3K'] = {}
-CHART['3K']['ctitle'] = 'Services by Domain by IP'
-CHART['3K']['ctype'] = 'column'
-CHART['3K']['qparam'] = 'services'
-CHART['3K']['dfilter'] = 'date_of_service'
-CHART['3K']['categories'] = []
-
-# - Top 5 Services by Domain - Agency
-CHART['3L'] = {}
-CHART['3L']['ctitle'] = 'Top 5 Services by Domain'
-CHART['3L']['ctype'] = 'column'
-CHART['3L']['qparam'] = 'services'
-CHART['3L']['dfilter'] = 'date_of_service'
-CHART['3L']['categories'] = []
-
-# -- Case Management OVC ---------------------------------
+# =================== Section 4 : Services Reporting Charts =================
 CHART['4A'] = {}
-CHART['4A']['ctitle'] = 'Case Management'
+CHART['4A']['ctitle'] = 'Services Reporting'
 CHART['4A']['ctype'] = 'column'
 CHART['4A']['qparam'] = 'services'
-CHART['4A']['categories'] = ['Active', 'Current Case Plan']
-# - Graduation pathways - Old
+CHART['4A']['categories'] = ['Case Load', 'Received Services',
+                             'Served Two Quarters',
+                             'Case Plans', 'Graduated',
+                             'Active Beneficiary', 'OVC_SERV']
+CHART['4A']['legend'] = False
+CHART['4A']['xAxis'] = False
+CHART['4A']['has_sex'] = False
+
+# New
 CHART['4B'] = {}
-CHART['4B']['ctitle'] = 'Graduation Pathways CPARA V1'
+CHART['4B']['ctitle'] = 'Households with current CPARA and Case Plans'
 CHART['4B']['ctype'] = 'column'
 CHART['4B']['qparam'] = 'services'
-CHART['4B']['categories'] = ['Not Ready For Graduation',
-                             'On Path To Graduation-Low',
-                             'On Path To Graduation-Medium',
-                             'Ready for Graduation']
-# - Graduation pathways
+CHART['4B']['categories'] = []
+CHART['4B']['legend'] = False
+CHART['4B']['xAxis'] = False
+CHART['4B']['has_sex'] = False
+CHART['4B']['yLabel'] = '# of HH'
+CHART['4B']['defaults'] = ['Case Plans', 'CPARA']
+CHART['4B']['colors'] = ['#FFB790', '#FFD4AC']
+
+# - Services by domain
 CHART['4C'] = {}
-CHART['4C']['ctitle'] = 'Graduation Pathways CPARA'
+CHART['4C']['ctitle'] = 'Services provided to OVCs by Domain'
 CHART['4C']['ctype'] = 'column'
 CHART['4C']['qparam'] = 'services'
-CHART['4C']['categories'] = ['Not Ready For Graduation',
+CHART['4C']['categories'] = ['Healthy', 'Safe', 'Stable', 'Schooled']
+CHART['4C']['legend'] = False
+CHART['4C']['xAxis'] = False
+CHART['4C']['has_sex'] = False
+CHART['4C']['colors'] = ['#BFDDFF', '#F2BC40', '#E07653', '#72C3B4']
+
+# Beneficiary categories
+CHART['4D'] = {}
+CHART['4D']['ctitle'] = 'OVC_SERV Beneficiary Categories'
+CHART['4D']['ctype'] = 'column'
+CHART['4D']['qparam'] = 'services'
+CHART['4D']['categories'] = ['OVC Comprehensive', 'DREAMS',
+                             'OVC Preventive']
+CHART['4D']['legend'] = False
+CHART['4D']['xAxis'] = False
+CHART['4D']['has_sex'] = False
+CHART['4D']['colors'] = ['#2057A7', '#8980CB ', '#287C6F']
+
+# - Specific services
+CHART['4E'] = {}
+CHART['4E']['ctitle'] = 'Top 35 services provided in the reporting period'
+CHART['4E']['ctype'] = 'bar'
+CHART['4E']['qparam'] = 'services'
+CHART['4E']['dfilter'] = 'date_of_service'
+CHART['4E']['categories'] = []
+CHART['4E']['has_sex'] = False
+
+# - Services by Domain - ALL
+CHART['4F'] = {}
+CHART['4F']['ctitle'] = 'Services provided to OVCs by Domain by gender'
+CHART['4F']['ctype'] = 'column'
+CHART['4F']['qparam'] = 'domain'
+CHART['4F']['dfilter'] = 'date_of_service'
+CHART['4F']['categories'] = []
+
+# - Services by Domain - Agency
+CHART['4G'] = {}
+CHART['4G']['ctitle'] = 'Services provided to HHs by Domain'
+CHART['4G']['ctype'] = 'column'
+CHART['4G']['qparam'] = 'domain'
+CHART['4G']['dfilter'] = 'date_of_service'
+CHART['4G']['categories'] = []
+CHART['4G']['legend'] = False
+CHART['4G']['xAxis'] = False
+CHART['4G']['has_sex'] = False
+CHART['4G']['yLabel'] = '# of HH'
+CHART['4G']['defaults'] = ['Healthy', 'Safe', 'Stable', 'Schooled']
+CHART['4G']['colors'] = ['#BFDDFF', '#F2BC40', '#E07653', '#72C3B4']
+
+# - Services by Domain - IP
+CHART['4H'] = {}
+CHART['4H']['ctitle'] = 'Percentage of services provided by domain and agency'
+CHART['4H']['ctype'] = 'stacked_bar'
+CHART['4H']['qparam'] = 'domain'
+CHART['4H']['qfilter'] = 'agency'
+CHART['4H']['categories'] = []
+CHART['4H']['legend'] = False
+CHART['4H']['yLabel'] = 'Percentage of Services Provided'
+CHART['4H']['defaults'] = ['Healthy', 'Safe', 'Stable', 'Schooled']
+CHART['4H']['colors'] = ['#BFDDFF', '#F2BC40', '#E07653', '#72C3B4']
+
+# - Top 5 Services by Domain - Agency
+CHART['4I'] = {}
+CHART['4I']['ctitle'] = 'Top 5 Services by Domain'
+CHART['4I']['ctype'] = 'sparkline'
+CHART['4I']['qparam'] = 'service'
+CHART['4I']['qfilter'] = 'domain'
+CHART['4I']['categories'] = []
+CHART['4I']['has_sex'] = False
+CHART['4I']['defaults'] = ['Healthy', 'Safe', 'Stable', 'Schooled']
+CHART['4I']['colors'] = ['#BFDDFF', '#F2BC40', '#E07653', '#72C3B4']
+
+# -- Case Management OVC ---------------------------------
+# =================== Section 5 : Services Reporting Charts =================
+CHART['5A'] = {}
+CHART['5A']['ctitle'] = 'Number of OVCs with current case plan'
+CHART['5A']['ctype'] = 'column'
+CHART['5A']['qparam'] = 'services'
+CHART['5A']['categories'] = ['Active', 'Current Case Plan']
+CHART['5A']['legend'] = False
+CHART['5A']['xAxis'] = False
+CHART['5A']['has_sex'] = False
+CHART['5A']['colors'] = ['#287C6F', '#FFB790']
+
+# - Graduation pathways - Old
+CHART['5B'] = {}
+CHART['5B']['ctitle'] = 'Graduation Pathways CPARA V1'
+CHART['5B']['ctype'] = 'column'
+CHART['5B']['qparam'] = 'services'
+CHART['5B']['categories'] = ['Not Ready For Graduation',
                              'On Path To Graduation-Low',
                              'On Path To Graduation-Medium',
                              'Ready for Graduation']
-# -- Case Management - HH
-CHART['4D'] = {}
-CHART['4D']['ctitle'] = 'Case Management by HH'
-CHART['4D']['ctype'] = 'column'
-CHART['4D']['qparam'] = 'services'
-CHART['4D']['categories'] = ['Current CPARA']
-
-# - Services reporting
-CHART['4E'] = {}
-CHART['4E']['ctitle'] = 'Services Reporting'
-CHART['4E']['ctype'] = 'column'
-CHART['4E']['qparam'] = 'services'
-CHART['4E']['categories'] = []
-
-# - Case plans - HH by Agency
-CHART['4F'] = {}
-CHART['4F']['ctitle'] = 'Household with case plans by Funding Agency'
-CHART['4F']['ctype'] = 'column'
-CHART['4F']['qparam'] = 'agency'
-CHART['4F']['categories'] = []
-CHART['4F']['legend'] = False
-
-# - Case plans - HH by IP
-CHART['4G'] = {}
-CHART['4G']['ctitle'] = 'Household with case plans by IP'
-CHART['4G']['ctype'] = 'stacked_bar'
-CHART['4G']['qparam'] = 'mechanism'
-CHART['4G']['qfilter'] = 'agency'
-CHART['4G']['categories'] = []
-CHART['4G']['legend'] = False
-
-# - OVC HH along Graduation pathway
-CHART['4H'] = {}
-CHART['4H']['ctitle'] = 'OVC HH Along Graduation Pathways'
-CHART['4H']['ctype'] = 'column'
-CHART['4H']['qparam'] = 'services'
-CHART['4H']['dfilter'] = 'date_of_service'
-CHART['4H']['categories'] = []
-
-# Performance Charts-----------------------------------------------
-# OVC_HIVSTAT Charts
-CHART['5A'] = {}
-CHART['5A']['ctitle'] = 'OVC_HIVSTAT'
-CHART['5A']['ctype'] = 'stacked_column'
-CHART['5A']['qparam'] = 'mechanism'
-CHART['5A']['qfilter'] = 'agency'
-CHART['5A']['categories'] = []
-
-# Exit without graduation - Agency
-CHART['5B'] = {}
-CHART['5B']['ctitle'] = 'Exit without Graduation by Funding Agency'
-CHART['5B']['ctype'] = 'column_2'
-CHART['5B']['qparam'] = 'agency'
-# CHART['5B']['qfilter'] = 'agency'
-CHART['5B']['categories'] = []
 CHART['5B']['legend'] = False
 CHART['5B']['xAxis'] = False
+CHART['5B']['has_sex'] = False
+CHART['5B']['colors'] = ['#C43D4D', '#FC7A83', '#CFC3FF', '#8980CB']
 
-# Exit without graduation - Agency, IP, County
+# Ready to Graduate: : #8980CB    Low: #CFC3FF    Medium: #FC7A83 High: #C43D4D
+
+# - Graduation pathways
 CHART['5C'] = {}
-CHART['5C']['ctitle'] = 'Exit without Graduation by agency'
-CHART['5C']['ctype'] = 'column_2'
-CHART['5C']['qparam'] = 'agency'
+CHART['5C']['ctitle'] = 'Graduation Pathways CPARA'
+CHART['5C']['ctype'] = 'column'
+CHART['5C']['qparam'] = 'graduation_pathway'
 CHART['5C']['categories'] = []
 CHART['5C']['legend'] = False
 CHART['5C']['xAxis'] = False
+CHART['5C']['has_sex'] = False
+CHART['5C']['defaults'] = ['Highly Vulnerable 0-4', 'Low Vulnerability', 'Medium Vulnerability', 'Ready to Graduate']
+CHART['5C']['colors'] = ['#C43D4D', '#FC7A83', '#CFC3FF', '#8980CB']
 
-# Attrition - Agency
+# -- Case Management - HH
 CHART['5D'] = {}
-CHART['5D']['ctitle'] = 'Reasons for attrition by Funding Agency'
-CHART['5D']['ctype'] = 'stacked_bar'
-CHART['5D']['qparam'] = 'exit_reason'
-CHART['5D']['qfilter'] = 'agency'
-CHART['5D']['categories'] = []
+CHART['5D']['ctitle'] = 'Number of HHs with current CPARA'
+CHART['5D']['ctype'] = 'column'
+CHART['5D']['qparam'] = 'services'
+CHART['5D']['categories'] = ['Current CPARA']
+CHART['5D']['has_sex'] = False
 CHART['5D']['legend'] = False
+CHART['5D']['xAxis'] = False
+CHART['5D']['colors'] = ['#FFD4AC']
+CHART['5D']['yLabel'] = '# of HH'
 
-# Exit without graduation - Agency - ALL IPs
+
+# - Services reporting
 CHART['5E'] = {}
-CHART['5E']['ctitle'] = 'Exit without Graduation by Funding Agency V2'
-CHART['5E']['ctype'] = 'stacked_bar'
-CHART['5E']['qparam'] = 'mechanism'
-CHART['5E']['qfilter'] = 'agency'
+CHART['5E']['ctitle'] = '# of HHs by funding agency'
+CHART['5E']['ctype'] = 'column'
+CHART['5E']['qparam'] = 'agency'
 CHART['5E']['categories'] = []
 CHART['5E']['legend'] = False
+CHART['5E']['xAxis'] = False
+CHART['5E']['has_sex'] = False
+CHART['5E']['yLabel'] = '# of HH'
+CHART['5E']['defaults'] = ['CDC', 'DOD', 'USAID']
+CHART['5E']['colors'] = ['#A7C6ED', '#89DACB', '#002A6C']
+
+# - Case plans - HH by Agency
+CHART['5F'] = {}
+CHART['5F']['ctitle'] = 'Household with case plans by funding agency'
+CHART['5F']['ctype'] = 'basic_bar_chart'
+CHART['5F']['qparam'] = 'services'
+CHART['5F']['qfilter'] = 'agency'
+CHART['5F']['categories'] = []
+CHART['5F']['yLabel'] = '# of HH'
+CHART['5F']['xAxis'] = False
+CHART['5F']['stacking'] = 'percent'
+CHART['5F']['defaults'] = ['HH with case plans', 'All Households']
+CHART['5F']['colors'] = ['#FFB790', '#BCBEC0']
+
+# - Case plans - HH by IP
+CHART['5G'] = {}
+CHART['5G']['ctitle'] = 'Household with case plans by IP'
+CHART['5G']['ctype'] = 'stacked_bar'
+CHART['5G']['qparam'] = 'mechanism'
+CHART['5G']['qfilter'] = 'agency'
+CHART['5G']['categories'] = []
+CHART['5G']['legend'] = False
+CHART['5G']['yLabel'] = '# of HH'
+
+# - OVC HH along Graduation pathway
+CHART['5H'] = {}
+CHART['5H']['ctitle'] = 'OVC HH Along Graduation Pathways'
+CHART['5H']['ctype'] = 'stacked_bar'
+CHART['5H']['qparam'] = 'services'
+CHART['5H']['dfilter'] = 'agency'
+CHART['5H']['categories'] = []
+CHART['5H']['yLabel'] = '# of HH'
+
+# - Benchmarks Version 1
+CHART['5I'] = {}
+CHART['5I']['ctitle'] = 'Number of Households Achieving Individual Benchmarks - CPARA V1'
+CHART['5I']['ctype'] = 'bar'
+CHART['5I']['qparam'] = 'benchmark'
+CHART['5I']['categories'] = []
+CHART['5I']['yLabel'] = '# of HH'
+
+# - Benchmarks Version 1
+CHART['5J'] = {}
+CHART['5J']['ctitle'] = 'Number of Households Achieving Individual Benchmarks - CPARA'
+CHART['5J']['ctype'] = 'bar'
+CHART['5J']['qparam'] = 'benchmark'
+CHART['5J']['categories'] = []
+CHART['5J']['colors'] = ['#e6550d']
+CHART['5J']['yLabel'] = '# of HH'
+
+# - Benchmarks Total scores
+CHART['5K'] = {}
+CHART['5K']['ctitle'] = 'Households Total Benchmark Scores'
+CHART['5K']['ctype'] = 'bar'
+CHART['5K']['qparam'] = 'services'
+CHART['5K']['categories'] = []
+CHART['5K']['colors'] = ['#D56D4B']
+CHART['5K']['yLabel'] = '# of HH'
+
+# - Benchmarks Total scores Version 1
+CHART['5L'] = {}
+CHART['5L']['ctitle'] = 'Households Total Benchmark Scores - CPARA V1'
+CHART['5L']['ctype'] = 'bar'
+CHART['5L']['qparam'] = 'benchmark_total_scores'
+CHART['5L']['categories'] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+                             10, 11, 12, 13, 14, 15, 16, 17]
+CHART['5L']['yLabel'] = '# of HH'
+
+# Performance Charts-----------------------------------------------
+# =================== Section 6 : Services Reporting Charts =================
+CHART['6A'] = {}
+CHART['6A']['ctitle'] = 'OVC registration by program status'
+CHART['6A']['ctype'] = 'stacked_column'
+CHART['6A']['qparam'] = 'agency'
+CHART['6A']['qfilter'] = 'services'
+CHART['6A']['categories'] = []
+CHART['6A']['defaults'] = ['Case load', 'Active', 'Exits', 'Graduated', 'Transfers']
+CHART['6A']['colors'] = ['#939598', '#287C6F', '#C43D4D', '#8980CB', '#F2BC40']
+
+# OVC_HIVSTAT Charts
+CHART['6B'] = {}
+CHART['6B']['ctitle'] = 'OVC_HIVSTAT'
+CHART['6B']['ctype'] = 'stacked_column'
+CHART['6B']['qparam'] = 'mechanism'
+CHART['6B']['qfilter'] = 'agency'
+CHART['6B']['categories'] = []
+
+
+# Exit without graduation - Agency
+CHART['6C'] = {}
+CHART['6C']['ctitle'] = 'OVC_SERV - < 18'
+CHART['6C']['ctype'] = 'population_pyramid'
+CHART['6C']['qparam'] = 'agerange'
+CHART['6C']['categories'] = []
+CHART['6C']['colors'] = ['#1E87A5', '#8980CB']
+
+# Exit without graduation - Agency
+CHART['6D'] = {}
+CHART['6D']['ctitle'] = 'Exit without graduation - service only by agency'
+CHART['6D']['ctype'] = 'column_2'
+CHART['6D']['qparam'] = 'agency'
+CHART['6D']['categories'] = []
+CHART['6D']['legend'] = False
+CHART['6D']['xAxis'] = False
+CHART['6D']['has_sex'] = False
+CHART['6D']['defaults'] = ['CDC', 'DOD', 'USAID']
+CHART['6D']['colors'] = ['#A7C6ED', '#89DACB', '#002A6C']
+
+# Exit without graduation - Agency, IP, County
+CHART['6E'] = {}
+CHART['6E']['ctitle'] = ' Exit without graduation - services and attrition by agency'
+CHART['6E']['ctype'] = 'column_2'
+CHART['6E']['qparam'] = 'agency'
+CHART['6E']['categories'] = []
+CHART['6E']['legend'] = False
+CHART['6E']['xAxis'] = False
+CHART['6E']['defaults'] = ['CDC', 'DOD', 'USAID']
+CHART['6E']['colors'] = ['#A7C6ED', '#89DACB', '#002A6C']
+
+# Attrition - Agency
+CHART['6F'] = {}
+CHART['6F']['ctitle'] = 'Reasons for attrition by Funding Agency'
+CHART['6F']['ctype'] = 'stacked_bar'
+CHART['6F']['qparam'] = 'exit_reason'
+CHART['6F']['qfilter'] = 'agency'
+CHART['6F']['categories'] = []
+CHART['6F']['legend'] = False
+
+# Exit without graduation - Agency - ALL IPs
+CHART['6G'] = {}
+CHART['6G']['ctitle'] = 'Exit without Graduation by Funding Agency V2'
+CHART['6G']['ctype'] = 'stacked_bar'
+CHART['6G']['qparam'] = 'mechanism'
+CHART['6G']['qfilter'] = 'agency'
+CHART['6G']['categories'] = []
+CHART['6G']['legend'] = False
 
 
 # Exit without graduation - Agency - ALL IPs
-CHART['5F'] = {}
-CHART['5F']['ctitle'] = 'Exit without Graduation by Funding Agency V3'
-CHART['5F']['ctype'] = 'column_compare'
-CHART['5F']['qparam'] = 'agency'
-CHART['5F']['categories'] = []
-CHART['5F']['legend'] = False
-CHART['5F']['xAxis'] = False
-
-# ==================================== TDY changes =====================
-
-CHART['6A'] = {}
-CHART['6A']['ctitle'] = 'Current case load by gender and ageranges'
-CHART['6A']['ctype'] = 'population_pyramid'
-CHART['6A']['qparam'] = 'agerange'
-CHART['6A']['dfilter'] = 'registration_date'
-CHART['6A']['categories'] = []
-
-# - Registrations by sex
-CHART['6B'] = {}
-CHART['6B']['ctitle'] = 'OVC registration by Sex'
-CHART['6B']['ctype'] = 'column'
-CHART['6B']['qparam'] = 'services'
-CHART['6B']['dfilter'] = 'registration_date'
-CHART['6B']['categories'] = []
-CHART['6B']['legend'] = False
-CHART['6B']['xAxis'] = False
-
-# - Registrations by school categories
-CHART['6C'] = {}
-CHART['6C']['ctitle'] = 'Current case load by school levels'
-CHART['6C']['ctype'] = 'population_pyramid'
-CHART['6C']['qparam'] = 'school_level'
-CHART['6C']['dfilter'] = 'registration_date'
-CHART['6C']['categories'] = ['Not in School', 'ECDE', 'Primary', 'Secondary',
-                             'Tertiary', 'University']
-# - Other summaries on birth certificates and disability
-CHART['6D'] = {}
-CHART['6D']['ctitle'] = 'Current case load summaries'
-CHART['6D']['ctype'] = 'column'
-CHART['6D']['qparam'] = 'services'
-CHART['6D']['dfilter'] = 'registration_date'
-CHART['6D']['categories'] = ['Active', 'Has Birth Certificate',
-                             'Has Disability', 'School Going']
-# - HIV Status from registration list
-CHART['6E'] = {}
-CHART['6E']['ctitle'] = 'Current case load HIV status'
-CHART['6E']['ctype'] = 'population_pyramid'
-CHART['6E']['qparam'] = 'hivstat'
-CHART['6E']['dfilter'] = 'registration_date'
-CHART['6E']['categories'] = ['HIV Status -Ve', 'HIV Status +Ve',
-                             'HIV Test not Required', 'HIV Status Unknown']
-# - Eligibility criterias
-CHART['6F'] = {}
-CHART['6F']['ctitle'] = 'Current case load at enrolment'
-CHART['6F']['ctype'] = 'bar'
-CHART['6F']['qparam'] = 'eligibility'
-CHART['6F']['dfilter'] = 'registration_date'
-CHART['6F']['categories'] = []
-# - Exit reasons
-CHART['6G'] = {}
-CHART['6G']['ctitle'] = 'Current case load exit reasons'
-CHART['6G']['ctype'] = 'bar'
-CHART['6G']['qparam'] = 'exit_reason'
-CHART['6G']['dfilter'] = 'registration_date'
-CHART['6G']['categories'] = []
-
 CHART['6H'] = {}
-CHART['6H']['ctitle'] = 'New registrations in the current reporting year'
-CHART['6H']['ctype'] = 'column'
-CHART['6H']['qparam'] = 'sex_id'
-CHART['6H']['dfilter'] = 'registration_date'
+CHART['6H']['ctitle'] = 'Exit without Graduation by Funding Agency V3'
+CHART['6H']['ctype'] = 'column_compare'
+CHART['6H']['qparam'] = 'agency'
 CHART['6H']['categories'] = []
-CHART['6H']['xAxis'] = False
 CHART['6H']['legend'] = False
+CHART['6H']['xAxis'] = False
 
-# - Caseload by Agency - New 29-Aug-2022
+
+# =================== Section 7 : Services Reporting Charts =================
+CHART['7A'] = {}
+CHART['7A']['ctitle'] = 'OVC registration by program status'
+CHART['7A']['ctype'] = 'stacked_column'
+CHART['7A']['qparam'] = 'agency'
+CHART['7A']['qfilter'] = 'services'
+CHART['7A']['categories'] = []
+CHART['7A']['defaults'] = ['Case load', 'Active', 'Exits', 'Graduated', 'Transfers']
+CHART['7A']['colors'] = ['#939598', '#287C6F', '#C43D4D', '#8980CB', '#F2BC40']
+
+# -- Viral Load and HIV_STAT charts ----------------------------------------
+CHART['7D'] = {}
+CHART['7D']['ctitle'] = 'Viral load cascade for current case load'
+CHART['7D']['ctype'] = 'column'
+CHART['7D']['qparam'] = 'hivstat'
+CHART['7D']['categories'] = hiv_statuses
+CHART['7D']['legend'] = False
+CHART['7D']['xAxis'] = False
+CHART['7D']['has_sex'] = False
+
+# - OVC_HIVSTAT
+CHART['7C'] = {}
+CHART['7C']['ctitle'] = 'OVC_HIVSTAT - under 18 years'
+CHART['7C']['ctype'] = 'column'
+CHART['7C']['qparam'] = 'hivstat'
+CHART['7C']['categories'] = ['OVC_SERV', 'HIV Status +Ve', 'HIV Status -Ve',
+                             'HIV Status Unknown', 'HIV Test not Required']
+CHART['7C']['legend'] = False
+CHART['7C']['xAxis'] = False
+CHART['7C']['has_sex'] = False
+CHART['7C']['colors'] = ['#2057A7', '#C43D4D', '#1E87A5', '#F2BC40', '#E07653']
+
+# OVC_HIVSTAT Charts
+CHART['7B'] = {}
+CHART['7B']['ctitle'] = 'OVC_HIVSTAT'
+CHART['7B']['ctype'] = 'stacked_column'
+CHART['7B']['qparam'] = 'mechanism'
+CHART['7B']['qfilter'] = 'agency'
+CHART['7B']['categories'] = []
+
+# - OVC 95-95-95 Cascade
+CHART['7E'] = {}
+CHART['7E']['ctitle'] = '95 - 95 - 95 Cascade'
+CHART['7E']['ctype'] = 'combo'
+CHART['7E']['qparam'] = 'hivstat'
+CHART['7E']['categories'] = hivstats
+CHART['7E']['has_sex'] = False
+
+
+# =================== Section 8 : Epidemic control Charts =================
+CHART['8A'] = {}
+CHART['8A']['ctitle'] = 'Case load vs positives by agency'
+CHART['8A']['ctype'] = 'stacked_column'
+CHART['8A']['qparam'] = 'services'
+CHART['8A']['qfilter'] = 'agency'
+CHART['8A']['categories'] = []
+CHART['8A']['colors'] = ['#d7191c', '#7cb5ec']
+
+CHART['8B'] = {}
+CHART['8B']['ctitle'] = 'Case load vs positives by IP'
+CHART['8B']['ctype'] = 'stacked_column'
+CHART['8B']['qparam'] = 'services'
+CHART['8B']['qfilter'] = 'ip'
+CHART['8B']['categories'] = []
+CHART['8B']['colors'] = ['#d7191c', '#7cb5ec']
+
+CHART['8C'] = {}
+CHART['8C']['ctitle'] = 'Case load vs positives by LIP'
+CHART['8C']['ctype'] = 'stacked_column'
+CHART['8C']['qparam'] = 'services'
+CHART['8C']['qfilter'] = 'lip'
+CHART['8C']['categories'] = []
+CHART['8C']['colors'] = ['#d7191c', '#7cb5ec']
+
+CHART['8D'] = {}
+CHART['8D']['ctitle'] = 'Case load vs positives by county'
+CHART['8D']['ctype'] = 'stacked_column'
+CHART['8D']['qparam'] = 'services'
+CHART['8D']['qfilter'] = 'county'
+CHART['8D']['categories'] = []
+CHART['8D']['colors'] = ['#d7191c', '#7cb5ec']
+
+CHART['8E'] = {}
+CHART['8E']['ctitle'] = 'Positives vs those on treatment (ART) by agency'
+CHART['8E']['ctype'] = 'stacked_column'
+CHART['8E']['qparam'] = 'services'
+CHART['8E']['qfilter'] = 'agency'
+CHART['8E']['categories'] = []
+CHART['8E']['colors'] = ['#c51b8a', '#fdae6b']
+
+CHART['8F'] = {}
+CHART['8F']['ctitle'] = 'Positives vs those on treatment (ART) by IP'
+CHART['8F']['ctype'] = 'stacked_column'
+CHART['8F']['qparam'] = 'services'
+CHART['8F']['qfilter'] = 'ip'
+CHART['8F']['categories'] = []
+CHART['8F']['colors'] = ['#c51b8a', '#fdae6b']
+
+CHART['8G'] = {}
+CHART['8G']['ctitle'] = 'Positives vs those on treatment (ART) by LIP'
+CHART['8G']['ctype'] = 'stacked_column'
+CHART['8G']['qparam'] = 'services'
+CHART['8G']['qfilter'] = 'lip'
+CHART['8G']['categories'] = []
+CHART['8G']['colors'] = ['#c51b8a', '#fdae6b']
+
+CHART['8H'] = {}
+CHART['8H']['ctitle'] = 'Positives vs those on treatment (ART) by county'
+CHART['8H']['ctype'] = 'stacked_column'
+CHART['8H']['qparam'] = 'services'
+CHART['8H']['qfilter'] = 'county'
+CHART['8H']['categories'] = []
+CHART['8H']['colors'] = ['#c51b8a', '#fdae6b']
+
+CHART['8I'] = {}
+CHART['8I']['ctitle'] = 'On ART with valid viral load results by agency'
+CHART['8I']['ctype'] = 'stacked_column'
+CHART['8I']['qparam'] = 'services'
+CHART['8I']['qfilter'] = 'agency'
+CHART['8I']['categories'] = []
+CHART['8I']['colors'] = ['#a6d96a', '#8c96c6']
+
+CHART['8J'] = {}
+CHART['8J']['ctitle'] = 'On ART with valid viral load results by IP'
+CHART['8J']['ctype'] = 'stacked_column'
+CHART['8J']['qparam'] = 'services'
+CHART['8J']['qfilter'] = 'ip'
+CHART['8J']['categories'] = []
+CHART['8J']['colors'] = ['#a6d96a', '#8c96c6']
+
+CHART['8K'] = {}
+CHART['8K']['ctitle'] = 'On ART with valid viral load results by LIP'
+CHART['8K']['ctype'] = 'stacked_column'
+CHART['8K']['qparam'] = 'services'
+CHART['8K']['qfilter'] = 'lip'
+CHART['8K']['categories'] = []
+CHART['8K']['colors'] = ['#a6d96a', '#8c96c6']
+
+CHART['8L'] = {}
+CHART['8L']['ctitle'] = 'On ART with valid viral load results by county'
+CHART['8L']['ctype'] = 'stacked_column'
+CHART['8L']['qparam'] = 'services'
+CHART['8L']['qfilter'] = 'county'
+CHART['8L']['categories'] = []
+CHART['8L']['colors'] = ['#a6d96a', '#8c96c6']
+
+CHART['8M'] = {}
+CHART['8M']['ctitle'] = 'On ART (suppressed vs not suppressed) by agency'
+CHART['8M']['ctype'] = 'stacked_column'
+CHART['8M']['qparam'] = 'services'
+CHART['8M']['qfilter'] = 'agency'
+CHART['8M']['categories'] = []
+CHART['8M']['colors'] = ['#1a9641', '#88419d']
+
+CHART['8N'] = {}
+CHART['8N']['ctitle'] = 'On ART (suppressed vs not suppressed) by IP'
+CHART['8N']['ctype'] = 'stacked_column'
+CHART['8N']['qparam'] = 'services'
+CHART['8N']['qfilter'] = 'ip'
+CHART['8N']['categories'] = []
+CHART['8N']['colors'] = ['#1a9641', '#88419d']
+
+CHART['8P'] = {}
+CHART['8P']['ctitle'] = 'On ART (suppressed vs not suppressed) by LIP'
+CHART['8P']['ctype'] = 'stacked_column'
+CHART['8P']['qparam'] = 'services'
+CHART['8P']['qfilter'] = 'lip'
+CHART['8P']['categories'] = []
+CHART['8P']['colors'] = ['#1a9641', '#88419d']
+
+CHART['8Q'] = {}
+CHART['8Q']['ctitle'] = 'On ART (suppressed vs not suppressed) by county'
+CHART['8Q']['ctype'] = 'stacked_column'
+CHART['8Q']['qparam'] = 'services'
+CHART['8Q']['qfilter'] = 'county'
+CHART['8Q']['categories'] = []
+CHART['8Q']['colors'] = ['#1a9641', '#88419d']
+
+CHART['8R'] = {}
+CHART['8R']['ctitle'] = 'Suppression trends by agency'
+CHART['8R']['ctype'] = 'scatter'
+CHART['8R']['qparam'] = 'agency'
+CHART['8R']['qfilter'] = 'suppression'
+CHART['8R']['categories'] = []
+CHART['8R']['has_sex'] = False
+
+
+CHART['8S'] = {}
+CHART['8S']['ctitle'] = 'Suppression trends by agency and duration on ART'
+CHART['8S']['ctype'] = 'scatter'
+CHART['8S']['qparam'] = 'services'
+CHART['8S']['qfilter'] = 'duration_on_art'
+CHART['8S']['categories'] = []
+CHART['8S']['has_sex'] = False
+
+# 5-9
 CHART['6I'] = {}
-CHART['6I']['ctitle'] = 'Current case load by funding agency'
-CHART['6I']['ctype'] = 'column'
+CHART['6I']['ctitle'] = 'COP targets by agency'
+CHART['6I']['ctype'] = 'table'
 CHART['6I']['qparam'] = 'agency'
 CHART['6I']['categories'] = []
-CHART['6I']['xAxis'] = False
-CHART['6I']['legend'] = False
+CHART['6I']['has_sex'] = False
 
-# - Caseload Profile - New 29-Aug-2022
 CHART['6J'] = {}
-CHART['6J']['ctitle'] = 'Current case load profile'
-CHART['6J']['ctype'] = 'bar'
-CHART['6J']['qparam'] = 'eligibility'
+CHART['6J']['ctitle'] = 'OVC_SERV performance by agency (table)'
+CHART['6J']['ctype'] = 'table'
+CHART['6J']['qparam'] = 'agency'
 CHART['6J']['categories'] = []
 
-# - School going - school level
 CHART['6K'] = {}
-CHART['6K']['ctitle'] = 'Current case load - School going by school level'
-CHART['6K']['ctype'] = 'column'
-CHART['6K']['qparam'] = 'schoollevel'
+CHART['6K']['ctitle'] = 'OVC_SERV performance by county (table)'
+CHART['6K']['ctype'] = 'table'
+CHART['6K']['qparam'] = 'agency'
 CHART['6K']['categories'] = []
-CHART['6K']['xAxis'] = False
-CHART['6K']['legend'] = False
 
-# - School going - school level and agency
 CHART['6L'] = {}
-CHART['6L']['ctitle'] = 'Current case load - School going by agency and school level'
-CHART['6L']['ctype'] = 'stacked_bar'
-CHART['6L']['qparam'] = 'schoollevel'
-CHART['6L']['qfilter'] = 'agency'
+CHART['6L']['ctitle'] = 'OVC_SERV performance by mechanism (table)'
+CHART['6L']['ctype'] = 'table'
+CHART['6L']['qparam'] = 'agency'
 CHART['6L']['categories'] = []
-CHART['6L']['legend'] = False
 
-# - School going - by sex
+# 12-18
+
 CHART['6M'] = {}
-CHART['6M']['ctitle'] = 'Current case load - School going by sex'
-CHART['6M']['ctype'] = 'column'
-CHART['6M']['qparam'] = 'sex_id'
+CHART['6M']['ctitle'] = 'OVC_HIVSTAT performance'
+CHART['6M']['ctype'] = 'table'
+CHART['6M']['qparam'] = 'agency'
 CHART['6M']['categories'] = []
-CHART['6M']['xAxis'] = False
-CHART['6M']['legend'] = False
 
-# - School going - school level and sex
 CHART['6N'] = {}
-CHART['6N']['ctitle'] = 'Current case load - school going by sex and school level'
-CHART['6N']['ctype'] = 'population_pyramid'
-CHART['6N']['qparam'] = 'schoollevel'
+CHART['6N']['ctitle'] = 'Overall OVC_HIVSTAT performance by agency (table)'
+CHART['6N']['ctype'] = 'table'
+CHART['6N']['qparam'] = 'agency'
 CHART['6N']['categories'] = []
 
-# - School going - school level and agency
 CHART['6P'] = {}
-CHART['6P']['ctitle'] = 'Current case load - school going by agency, mechanism and school level'
-CHART['6P']['ctype'] = 'sparkline'
-CHART['6P']['qparam'] = 'exit_reason'
-CHART['6P']['qfilter'] = 'agency'
+CHART['6P']['ctitle'] = 'Progress towards 90 percent of HIV+ Children <18 Years on ART  Enrolment into OVC Comprehensive Program in target counties (table)'
+CHART['6P']['ctype'] = 'table'
+CHART['6P']['qparam'] = 'agency'
 CHART['6P']['categories'] = []
+
+CHART['6Q'] = {}
+CHART['6Q']['ctitle'] = 'Progress towards >90 percent of children in PEPFAR supported high volume treatment sites (age <18) in high burden SNUs are offered enrollment in the OVC program (table)'
+CHART['6Q']['ctype'] = 'table'
+CHART['6Q']['qparam'] = 'agency'
+CHART['6Q']['categories'] = []
+
+CHART['6R'] = {}
+CHART['6R']['ctitle'] = 'Enrolled CLHIV by Age cohort by county (table)'
+CHART['6R']['ctype'] = 'table'
+CHART['6R']['qparam'] = 'agency'
+CHART['6R']['categories'] = []
+
+CHART['6S'] = {}
+CHART['6S']['ctitle'] = 'Enrolled CALHIV by Age cohort  by Agency (table)'
+CHART['6S']['ctype'] = 'table'
+CHART['6S']['qparam'] = 'agency'
+CHART['6S']['categories'] = []
+
+CHART['6T'] = {}
+CHART['6T']['ctitle'] = 'Household graduation pathways (table)'
+CHART['6T']['ctype'] = 'table'
+CHART['6T']['qparam'] = 'agency'
+CHART['6T']['categories'] = []

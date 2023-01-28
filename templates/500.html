@@ -1,136 +1,44 @@
-{% extends 'base.html' %}
+{% extends 'base_home.html' %}
 {% load static %}
-{% block page_title %} Error 500 page {% endblock %}
 
-{% load crispy_forms_tags %}
-
-{% block style_code %}
-
-{% endblock %}
+{% block page_title %} {{block.super}} Server error {% endblock page_title%}    
 
 {% block primary %}
-<!-- begin breadcrumb -->
-<ol class="breadcrumb pull-right">
-	<li><a href="#">Home</a></li>
-	<li class="active">Error page</li>
-</ol>
-<!-- end breadcrumb -->
-<!-- begin page-header -->
-<h1 class="page-header"><i class="fa fa-bug"></i> Error / bug reporting page <small>Home</small></h1>
-<!-- end page-header -->
-<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
-    <span class="close" data-dismiss="alert">×</span>
-    <i class="fa fa-check fa-2x pull-left"></i>
-    <span class="invalid-form-message" id="invalid-form-message"></span>
-</div>
-<!-- begin row -->
-<div class="row">
-  <!-- begin col-12 -->
-    <div class="col-md-12">
-        <!-- begin panel -->
-        <div class="panel panel-inverse">
-            <div class="panel-heading">
-                <div class="panel-heading-btn">
-                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-                </div>                      
-                <h4 class="panel-title">Error occured while processing your request. Current page: {{ request.get_full_path }}</h4>
-            </div>
-            <!-- start panel body -->
-            <div class="panel-body">
-            	<div id="log_500_bug" class="alert alert-info fade in m-b-15">
-							<strong>Info!</strong>
-							A copy of the reported issue will be sent to your email for easier tracking of support Ticket.
-							<span class="close" data-dismiss="alert">&times;</span>
-						</div>
-
-            	<p class="lead mb-10px  text-inverse">To serve you better please provide additional information below and report;</p>
-            	<form class="form-horizontal" id="report-500-form" method="POST" action=".">
-                     	{% csrf_token %}
-                     	<input type="hidden" name="issue-code" value="500">
-                     	<div class="form-group">
-                            <label class="col-md-3 control-label">URL</label>
-                            <div class="col-md-7">
-                                <input type="text" readonly name="issue-500-url" id="issue-500-url" class="form-control" value="{{ request.META.HTTP_HOST }}{{ request.get_full_path }}"/>
-                            </div>
-                            <div class="col-md-2"></div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Title of the issue</label>
-                            <div class="col-md-7">
-                                <input type="text" name="issue-500-title" id="issue-500-title" class="form-control" placeholder="Title in summary" />
-                            </div>
-                            <div class="col-md-2"></div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Description of the issue</label>
-                            <div class="col-md-7">
-                                <textarea name="issue-500-details" id="issue-500-details" class="form-control" placeholder="Detailed explanation" rows="5"></textarea>
-                            </div>
-                            <div class="col-md-2"></div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Attachment (screenshot)</label>
-                            <div class="col-md-7">
-                                <input type="file" name="issue-attach" id="issue-attach" class="form-control" placeholder="Attachment" disabled />
-                            </div>
-                            <div class="col-md-2"></div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label"></label>
-                            <div class="col-md-9">
-                                <button type="button" class="btn btn-primary" id="report-500-bug"/> Report Issue</button>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="note note-gray-500 mb-0">
-								<div class="note-content">
-									<h4><b>Additional Support Details!</b></h4>
-									<p>
-										Email: help@cpims.on.spiceworks.com
-									</p>
-								</div>
-							</div>
-                    </form>
-            </div>
-            <!-- end panel body -->
-        </div>
-        <!-- end panel -->  
+<!-- begin right-content -->
+<div class="right-content">
+    <!-- begin register-header -->
+    <div class="register-header">
+        <h4 class="brand shome">Department of Children Services (DCS)</h4>
     </div>
-    <!-- end col-12 -->
+    <h1 class="register-header">
+        <small>There was a server error while processing your request - Error 500</small>
+    </h1>
+    <!-- end register-header -->  
+    <!-- begin register-content -->
+    <div class="register-content"> 
+
+        <div class="m-t-40 m-b-40">
+            <p><strong>You may not be able to find the page you were after because of:</strong></p>
+			<ol type="a">
+			<li>An <strong>out-of-date bookmark/favorite</strong></li>
+			<li>A search engine that has an <strong>out-of-date listing for us</strong></li>
+			<li>A <strong>mis-typed address or page</strong></li>
+			</ol>
+		</div>
+		<div class="m-t-20 m-b-20 p-b-20">
+	        Please visit our <a href="{% url 'home' %}" class="text-success">home page</a> or 
+	        <a href="{% url 'login' %}" class="text-success">login page</a> or contact administrator at cpims&lt;@&gt;labour&lt;dot&gt;go.ke
+	    </div>
+	        <span class="promo m-t-40">
+	            <p>
+	                <img src="{% static 'img/logo_public.jpg' %}" height="80">
+	            </span>
+	            <hr />
+	            <p class="text-center text-inverse">
+	                &copy; {% now "Y" %} Department of Children Services (DCS). All Rights Reserved.
+	            </p>
+    </div>
+    <!-- end register-content -->
 </div>
-<!-- end row -->
-{% endblock %}
-
-{% block lazy_javascript_code %}
-<script type="text/javascript">
-$('#report-500-bug').click(function() {
- 	var ititle = $("#issue-500-title").val();
- 	var idetail = $("#issue-500-details").val();
- 	if ((ititle == '') || (idetail == '' )){
- 		$("#log_500_bug").addClass( "alert alert-danger fade in" );
-        $('#log_500_bug').html("Please provide title and details");
-        return false;
- 	}
- 	$.ajax({
-       type: "POST",
-       url: "{% url 'manage_bugs' %}",
-       data: $("#report-500-form").serialize(),
-       success: function(data)
-       {
-           var rid = data.response_code;
-           var msg = data.message;
-           $("#log_500_bug").addClass( "alert alert-success fade in" );
-           $('#log_500_bug').html(msg);
-           $("#issue-500-title").val('');
-           $("#issue-500-details").val('');
-       },
-        error: function(){
-            $("#log_500_bug").addClass( "alert alert-danger fade in" );
-            $('#log_500_bug').html("Error while reporting bug");
-        }
-     });
- });
-</script>
-
-{% endblock %}
+<!-- end right-content -->
+{% endblock primary %}

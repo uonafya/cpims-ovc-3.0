@@ -85,12 +85,17 @@
                     {% csrf_token %}
                     <div id="wizard-hivmanagementform">
                         <ol>
+
                             <li>
                                 ART Therapy
+                                <small></small>
                             </li>
+
                             <li>
                                 Visitation
+                                <small></small>
                             </li>
+
                         </ol>
 
                         <!-- begin wizard step-1 -->
@@ -127,7 +132,7 @@
                                         </tr>
                                         <tr>
                                             <td>2b</td>
-                                            <td>Baseline viral load for seroconverted HEI</td>
+                                            <td>Baseline viral load for HEI</td>
                                             <td>
                                                     {{ form_arvtherapy.HIV_MGMT_1_C }}
                                             </td>
@@ -180,17 +185,6 @@
                                                     {{ form_arvtherapy.HIV_MGMT_1_G_DATE }}
                                             </td>
                                         </tr>
-
-                                        <tr>
-                                            <td>7</td>
-                                            <td>Current Regimen (To enable review ART optimisation)</td>
-                                            <td>
-                                                    {{ form_arvtherapy.HIV_MGMT_1_H }}
-                                            </td>
-                                            <td style="background-color: grey">
-                                                    
-                                            </td>
-                                        </tr>
                                         
                                     </tbody>
                                 </table>
@@ -229,6 +223,17 @@
                                         <tr>
                                             <td>Q2</td>
                                             <td>
+                                                Duration on ARTs (in months)
+                                            </td>
+                                            <td>
+                                                {{ form.HIV_MGMT_2_B }}
+
+                                            </td>
+                                        </tr>
+                                    
+                                        <tr>
+                                            <td>Q3</td>
+                                            <td>
                                                 Height (cm)
 
                                             </td>
@@ -238,9 +243,9 @@
                                         </tr>
                                         
                                         <tr>
-                                            <td>Q3</td>
+                                            <td>Q4</td>
                                             <td>
-                                                Weight (kg)
+                                                MUAC
                                             </td>
                                             <td>
                                                     {{ form.HIV_MGMT_2_D }}
@@ -248,42 +253,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Q4</td>
-                                            <td>
-                                                    MUAC Score 
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_L_1 }} 
-
-                                            </td>
-                                            
-                                        </tr>
-                                        <tr>
                                             <td>Q5</td>
-                                            <td>
-                                                  BMI(Z Score) 
-                                            </td>
-                                            <td>
-                                                    
-                                                    {{ form.HIV_MGMT_2_L_2}}
-
-                                            </td>
-                                            
-                                        </tr>
-                                       
-                                        <tr>
-                                            <td>Q6</td>
-                                            <td>
-                                                    Nutritional Support 
-                                            </td>
-                                            <td>
-                                                     {{ form.HIV_MGMT_2_M }} 
-
-                                            </td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <td>Q7</td>
                                             <td>
                                                 ARV drugs - Adherence 
                                             </td>
@@ -294,222 +264,245 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Q8</td>
+                                            <td>Q6</td>
+                                            <td> ARV drugs - Duration for drugs (in months)</td>
                                             <td>
-                                                Enough drugs to next clinic date (Do a pill count)
-
-                                            </td>
-                                            <td>                                                
-                                                    {{form.HIV_MGMT_2_V}}
+                                                    {{ form.HIV_MGMT_2_F }}
                                             </td>
                                         </tr>
-                                       
                                         <tr>
-                                            <td>Q9</td>
+                                            <td>Q7</td>
                                             <td>
                                                 Adherence Counseling
                                             </td>
                                             <td>
                                                     {{ form.HIV_MGMT_2_G }}
-                                            </td>                                            
-                                        </tr>                   
-                                            
-                                        <tr>
-                                            <td>Q10</td>
-                                            <td>
-                                                    Treatment supporter
-                                            </td>
-                                            <td>
-                                                {{ form.HIV_MGMT_2_H_1 }}
-                                            </td>                                                
-                                        </tr>
-
-                                        <tr>
-                                            <td>Q11</td>
-                                            <td>
-                                                Treatment supporter-Others
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_H_2 }}
-
-                                            </td>                                                
-                                        </tr>
-
-                                        <tr>
-                                            <td>Q12</td>
-                                            <td>
-                                                Treatment supporter-Sex
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_H_3 }}
-                                            </td>                                                
-                                        </tr>
-
-                                        <tr>
-                                            <td>Q13</td>
-                                            <td>
-                                                    Treatment supporter-Age
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_H_4 }}
-                                            </td>                                                
-                                        </tr>
-                                        <tr>
-                                            <td>Q14</td>
-                                            <td>
-                                                Treatment supporter-HIV_Status
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_H_5 }}
-
                                             </td>
                                             
                                         </tr>
+                    
+                                            
                                         <tr>
-                                            <td>Q16</td>
-                                            <td>
-                                                Lab Investigations - Date<span class="asteriskField">*
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_I_DATE }}  
-                                            </td>                                            
-                                        </tr>
-                                        <tr>
-                                            <td>Q15</td>
-                                            <td>
-                                                Lab Investigations-Viral load results
-                                            </td>
-                                            <td>                                                
-                                                {{ form.HIV_MGMT_2_I_1 }}   
-                                            </td>                                            
-                                        </tr>
-                                        <tr>
-                                            <td>Q17</td>
-                                            <td>
-                                                 ARV drugs - Duration for drugs (in months)
-
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_F }}
-                                            </td>
-                                        </tr>                                        
-                                        <tr>
-                                            <td>Q18</td>
-                                            <td>
-                                                High Viremia (>401 cp/ml)Viral load interventions
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_J }}  
-                                            </td>                                                
-                                        </tr>
-                                        <tr>
-                                            <td>Q19</td>
-                                            <td>
-                                                Enrolled in a suppression initiative (e.g. JMWI/NIMECONFIRM)
-                                            </td>
-                                            <td>
-                                                {{ form.HIV_MGMT_2_T }}
-                                            </td>    
-                                        </tr>
-                                        <tr>
-                                            <td>Q20</td>
-                                            <td>
-                                                    Disclosure 
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_K }}   
-                                            </td>    
-                                        </tr>
-
-                                        <tr>
-                                            <td>Q21</td>
-                                            <td>
-                                                Attending a support group(status) 
-                                            </td>
-                                            <td>                                                    
-                                                {{ form.HIV_MGMT_2_N }}  
-                                            </td>                                                
-                                        </tr>
-                                        <tr>
-                                            <td>Q22</td>
-                                            <td>
-                                                Last date attended a support group: 
-                                            </td>
-                                            <td>                                                    
-                                                {{ form.HIV_MGMT_2_N }}  
-                                            </td>                                                
-                                        </tr>
-
-                                        <tr>
-                                            <td>Q23</td>
-                                            <td>
-                                                Enrolled to a plan to track Stable, unstable and clients not enrolled <br/>(e.g. PAMA care in PAMA care  0-9 years (same day clinic for caregiver&Child)
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_U }}
-                                            </td>                                                
-                                        </tr>
-                                        <tr>
-                                            <td>Q24</td>
-                                            <td>
-                                                Enrolled in OTZ 10-17 years
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_O_1 }}
-                                            </td>                                                
-                                        </tr>
-
-                                        <tr>
-                                            <td>Q25</td>
-                                            <td>
-                                                Enrolled in NHIF -Status? 
-                                            </td>
-                                            <td>
-                                                {{ form.HIV_MGMT_2_O_2 }}
-                                            </td>
+                                                <td>Q8</td>
+                                                <td>
+                                                     Treatment supporter
+                                                </td>
+                                                <td>
+                                                    {{ form.HIV_MGMT_2_H_1 }}
+                                                </td>
                                                 
                                         </tr>
 
                                         <tr>
-                                            <td>Q26</td>
-                                            <td>
-                                                Referral services (specify)
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_P }}
-                                            </td>
+                                                <td>Q9</td>
+                                                <td>
+                                                    Treatment supporter-Others
+                                                </td>
+                                                <td>
+                                                        {{ form.HIV_MGMT_2_H_2 }}
+
+                                                </td>
                                                 
                                         </tr>
 
                                         <tr>
-                                            <td>Q27</td>
-                                            <td>
-                                                Date of Next Appointment <span class="asteriskField">*
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_Q }}
-                                            </td>                                                
+                                                <td>Q10</td>
+                                                <td>
+                                                    Treatment supporter-Sex
+                                                </td>
+                                                <td>
+                                                        {{ form.HIV_MGMT_2_H_3 }}
+                                                </td>
+                                                
                                         </tr>
 
                                         <tr>
-                                            <td>Q28</td>
-                                            <td>
-                                                Case manager/Worker's Name
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_R }}   
-                                            </td>                                                
+                                                <td>Q11</td>
+                                                <td>
+                                                        Treatment supporter-Age
+                                                </td>
+                                                <td>
+                                                        {{ form.HIV_MGMT_2_H_4 }}
+
+                                                </td>
+                                                
                                         </tr>
 
                                         <tr>
-                                            <td>Q29</td>
-                                            <td>
-                                                Case manager/Worker's Contacts
+                                                <td>Q12</td>
+                                                <td>
+                                                    Treatment supporter-HIV_Status
+                                                </td>
+                                                <td>
+                                                        {{ form.HIV_MGMT_2_H_5 }}
 
-                                            </td>
-                                            <td>
-                                                    {{ form.HIV_MGMT_2_S }}
-                                            </td>
+                                                </td>
+                                                
+                                        </tr>
+
+                                        <tr>
+                                                <td>Q13</td>
+                                                <td>
+                                                    Lab Investigations-Viral load results
+                                                </td>
+                                                <td>
+                                                    
+                                                    {{ form.HIV_MGMT_2_I_1 }}   
+
+                                                </td>
+                                                
+                                        </tr>
+
+                                        <tr>
+                                                <td>Q14</td>
+                                                <td>
+                                                    Lab Investigations - Date<span class="asteriskField">*
+                                                </td>
+                                                <td>
+                                                        {{ form.HIV_MGMT_2_I_DATE }}   
+
+                                                </td>
+                                                
+                                        </tr>
+
+                                        <tr>
+                                                <td>Q15</td>
+                                                <td>
+                                                    Detectable (>401 cp/ml)Viral load interventions
+                                                </td>
+                                                <td>
+                                                        {{ form.HIV_MGMT_2_J }}   
+
+
+                                                </td>
+                                                
+                                        </tr>
+                                        <tr>
+                                                <td>Q16</td>
+                                                <td>
+                                                        Disclosure 
+                                                </td>
+                                                <td>
+                                                        {{ form.HIV_MGMT_2_K }}   
+
+                                                </td>    
+                                        </tr>
+
+                                        <tr>
+                                                <td>Q17</td>
+                                                <td>
+                                                        Nutritional assessment-MUAC Score 
+                                                </td>
+                                                <td>
+                                                        {{ form.HIV_MGMT_2_L_1 }} 
+
+                                                </td>
+                                                
+                                        </tr>
+                                        <tr>
+                                                <td>Q18</td>
+                                                <td>
+                                                      Nutritional assessment-BMI(Z Score) 
+                                                </td>
+                                                <td>
+                                                        
+                                                        {{ form.HIV_MGMT_2_L_2}}
+
+                                                </td>
+                                                
+                                        </tr>
+
+                                        <tr>
+                                                <td>Q19</td>
+                                                <td>
+                                                        Nutritional Support 
+                                                </td>
+                                                <td>
+                                                         {{ form.HIV_MGMT_2_M }} 
+
+                                                </td>
+                                                
+                                        </tr>
+
+                                        <tr>
+                                                <td>Q20</td>
+                                                <td>
+                                                    Enrolled in support group(status) 
+                                                </td>
+                                                <td>
+                                                    
+                                                    {{ form.HIV_MGMT_2_N }}   
+
+                                                </td>
+                                                
+                                        </tr>
+
+                                        <tr>
+                                                <td>Q21</td>
+                                                <td>
+                                                        Enrolled in NHIF? 
+                                                </td>
+                                                <td>
+                                                        {{ form.HIV_MGMT_2_O_1 }}
+                                                </td>
+                                                
+                                        </tr>
+
+                                        <tr>
+                                                <td>Q22</td>
+                                                <td>
+                                                    Enrolled in NHIF -Status? 
+                                                </td>
+                                                <td>
+                                                    {{ form.HIV_MGMT_2_O_2 }}
+                                                </td>
+                                                
+                                        </tr>
+
+                                        <tr>
+                                                <td>Q23</td>
+                                                <td>
+                                                    Referral services (specify)
+                                                </td>
+                                                <td>
+                                                        {{ form.HIV_MGMT_2_P }}
+                                                </td>
+                                                
+                                        </tr>
+
+                                        <tr>
+                                                <td>Q24</td>
+                                                <td>
+                                                    Date of Next Appointment <span class="asteriskField">*
+                                                </td>
+                                                <td>
+                                                        {{ form.HIV_MGMT_2_Q }}
+                                                </td>
+                                                
+                                        </tr>
+
+                                        <tr>
+                                                <td>Q25</td>
+                                                <td>
+                                                    Peer Educator Name
+                                                </td>
+                                                <td>
+                                                        {{ form.HIV_MGMT_2_R }}   
+
+                                                </td>
+                                                
+                                        </tr>
+
+
+                                        <tr>
+                                                <td>Q26</td>
+                                                <td>
+                                                    Peer Educator Contacts
+                                                </td>
+                                                <td>
+                                                        {{ form.HIV_MGMT_2_S }}
+
+                                                </td>
 
                                         </tr>
 

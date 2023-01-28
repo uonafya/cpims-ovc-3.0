@@ -1,0 +1,66 @@
+[
+    {
+        "pk": 31324,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items - Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP214aHEGs",
+            "item_description_short": "Facilitated to obtain Food basket",
+            "sms_keyword": false,
+            "item_description": "CP 2.14a HEGs Facilitated to obtain Food basket",
+            "the_order": 17
+        }
+    },
+    {
+        "pk": 31325,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Form 1B Items - Healthy",
+            "user_configurable": false,
+            "field_name": "form1b_items",
+            "item_sub_category": "1s",
+            "is_void": false,
+            "item_id": "CP214bHEGs",
+            "item_description_short": "Completed a referral to obtain Food basket",
+            "sms_keyword": false,
+            "item_description": "CP 2.14b HEGs Completed a referral to obtain Food basket",
+            "the_order": 18
+        }
+    },
+    {
+        "pk": 31326,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Service - Schooled",
+            "user_configurable": false,
+            "field_name": "olmis_education_service_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CP911aSCs",
+            "item_description_short": "Lighting equipment provided (e.g. solar lamps)",
+            "sms_keyword": false,
+            "item_description": "CP911aSCs Lighting equipment provided (e.g. solar lamps)",
+            "the_order": 82
+        }
+    },
+    {
+        "pk": 31327,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_category": "Service - Schooled",
+            "user_configurable": false,
+            "field_name": "olmis_education_service_id",
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "CP911bSCs",
+            "item_description_short": "Completed referral for lighting equipment (e.g. solar lamps)",
+            "sms_keyword": false,
+            "item_description": "CP911bSCs Completed referral for lighting equipment (e.g. solar lamps)",
+            "the_order": 83
+        }
+    }
+]

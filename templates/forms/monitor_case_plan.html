@@ -56,29 +56,36 @@
 <!-- {% endfor %} -->
 <!-- end page-header -->
 
-{% if messages %}
-    {% for message in messages %}
-    {% if 'error' in message.tags %}
-        <div id="messages" class="alert alert-danger fade in">
-        <span class="close" data-dismiss="alert">×</span>
-        <i class="fa fa-info fa-2x pull-left"></i>
-    {% else %}
-        <div id="messages" class="alert alert-success fade in">
-        <span class="close" data-dismiss="alert">×</span>
-        <i class="fa fa-check fa-2x pull-left"></i>
-    {% endif %}    
-        <p>{{ message }}</p>
-    </div>
-   {% endfor %}
-{% endif %}
+<div id="error_message" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+    <!--<span class="close" data-dismiss="alert">×</span>-->
+    <button type="button" class="close" data-hide="alert">&times;</button>
+    <i class="fa fa-info fa-2x pull-left"></i>
+    <span class="invalid-form-message" id="invalid-form-message"></span>
+</div>
 
 
 <div id="success_message" class="alert alert-success fade in" style="display: none;">
     <!--<span class="close" data-dismiss="alert">×</span>-->
     <button type="button" class="close" data-hide="alert">&times;</button>
     <i class="fa fa-check fa-2x pull-left"></i>
-    <p id="msg"></p>
+    <p></p>
 </div>
+
+
+{% if err_msgg  %}
+
+<div class="alert alert-danger" id="error-message-reuse">
+  <a class="close" data-dismiss="alert" href="#">&times;</a>
+  <span class="mesgg"></span>
+  {{ err_msgg }}
+</div>
+
+{% endif %}
+
+<div id="warning_message" class="alert alert-warning hidden">
+    <span class="mesagg" id="mesagg"></span>
+</div>
+
 
 <!-- begin row -->
 <div id='case_details' class="row">
@@ -94,7 +101,10 @@
                 </div>
                 <h4 class="panel-title"> Case Plan Monitoring</h4>
             </div>
-            <div class="panel-body">        	
+            <div class="panel-body">
+                <form class="form-horizontal" method="POST" id="new-form-1a" action="." data-parsley-validate="true">
+            	
+
 					<div id="wizard-f1a">
 
 						<!-- begin wizard step-1 -->
@@ -139,11 +149,8 @@
                                                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                           <h4 class="modal-title">Monitor - {{ one_cpt_event.event_id }}</h4>
                                                         </div>
-                                                        <form id="cpt-monitoring-{{ one_healthy.cid }}" class="cptManage" method="post" action=".">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="item_id" value="{{ one_healthy.cid }}">
-                                                        <div class="modal-body">
-                                                          <div id="msg-{{ one_healthy.cid }}"></div>                                                         
+                                                        <form id='cpt-monitoring-{{ one_healthy.cid }}' class="cptManage" method="post" action=".">
+                                                        <div class="modal-body">                                                          
                                                           <table class="table">
                                                               <tr><th>Item</th><th>Value</th></tr>
                                                               <tr><td>Domain</td><td>Healthy</td></tr>
@@ -152,25 +159,14 @@
                                                               <tr><td>Priority Actions</td><td>{{ one_healthy.ev_priority }} - {{ one_healthy.ev_priority|gen_value:vals }}</td></tr>
                                                               <tr><td>Services</td><td>{{ one_healthy.ev_services }} - {{ one_healthy.ev_services|gen_value:vals }}</td></tr>
                                                               <tr><td>Person Responsible</td><td>{{ one_healthy.ev_responsible }}</td></tr>
-                                                              <tr><td>Date to be Completed</td><td>{{ one_healthy.ev_completion_date }}</td></tr>
-                                                              <tr><td>Actual Date of Completion</td>
-                                                                <td><input type="text" name="CPT_ACTUAL_DATE_COMPLETION" placeholder="Actual date of completion" class="form-control cpt_date" id="CPT_ACTUAL_DATE_COMPLETION" value="{{ one_healthy.ev_actual_completion_date }}" required> </td></tr>
-                                                              <tr><td>Results</td>
-                                                                  <td>
-                                                              <select name="CPT_RESULTS" class="form-control" id="id_CPT_RESULTS">
-                                                                  <option value="">Please Select</option>
-                                                                  <option value="AC" {% if one_healthy.ev_results == 'AC' %}selected{% endif %}>Achieved</option>
-                                                                  <option value="NA" {% if one_healthy.ev_results == 'NA' %}selected{% endif %}>Not Achieved</option>
-                                                                </select>
-                                                                  </td>
-                                                              </tr>
-                                                              <tr><td>Reasons</td>
-                                                                <td><input type="text" name="CPT_REASONS" placeholder="State Reasons" class="form-control" required id="id_CPT_REASONS" value="{{ one_healthy.ev_reasons }}"></td></tr>
+                                                              <tr><td>Date Completed</td><td>{{ one_healthy.ev_completion_date }}</td></tr>
+                                                              <tr><td>Results</td><td>{{ form.CPT_RESULTS }}</td></tr>
+                                                              <tr><td>Reasons</td><td>{{ form.CPT_REASONS }}</td></tr>
                                                               <tr><td></td><td></td></tr>
                                                           </table>
                                                         </div>
                                                         <div class="modal-footer">
-                                                          <button type="submit" id="cpt-mnt-{{ one_healthy.cid }}" class="btn btn-default btn-primary">Submit Monitoring</button>
+                                                          <button type="submit" class="btn btn-default btn-primary">Monitor H</button>
                                                           <button type="button" class="btn btn-default btn-default" data-dismiss="modal">Cancel</button>
                                                         </div>
                                                         </form>
@@ -209,9 +205,6 @@
                                                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                           <h4 class="modal-title">Monitor - {{ one_cpt_event.event_id }}</h4>
                                                         </div>
-                                                        <form id="cpt-monitoring-{{ one_stable.cid }}" class="cptManage" method="post" action=".">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="item_id" value="{{ one_stable.cid }}">
                                                         <div class="modal-body">
                                                           <table class="table">
                                                               <tr><th>Item</th><th>Value</th></tr>
@@ -221,29 +214,17 @@
                                                               <tr><td>Priority Actions</td><td>{{ one_stable.ev_priority }} - {{ one_stable.ev_priority|gen_value:vals }}</td></tr>
                                                               <tr><td>Services</td><td>{{ one_stable.ev_services }} - {{ one_stable.ev_services|gen_value:vals }}</td></tr>
                                                               <tr><td>Person Responsible</td><td>{{ one_stable.ev_responsible }}</td></tr>
-                                                              <tr><td>Date to be Completed</td><td>{{ one_stable.ev_completion_date }}</td></tr>
-                                                              <tr><td>Actual Date of Completion</td>
-                                                                <td><input type="text" name="CPT_ACTUAL_DATE_COMPLETION" placeholder="Actual date of completion" class="form-control cpt_date" id="CPT_ACTUAL_DATE_COMPLETION" value="{{ one_stable.ev_actual_completion_date }}" required> </td></tr>
-                                                              <tr><td>Results</td>
-                                                                  <td>
-                                                              <select name="CPT_RESULTS" class="form-control" id="id_CPT_RESULTS">
-                                                                  <option value="">Please Select</option>
-                                                                  <option value="AC" {% if one_stable.ev_results == 'AC' %}selected{% endif %}>Achieved</option>
-                                                                  <option value="NA" {% if one_stable.ev_results == 'NA' %}selected{% endif %}>Not Achieved</option>
-                                                                </select>
-                                                                  </td>
-                                                              </tr>
-                                                              <tr><td>Reasons</td>
-                                                                <td><input type="text" name="CPT_REASONS" placeholder="State Reasons" class="form-control" required id="id_CPT_REASONS" value="{{ one_stable.ev_reasons }}"></td></tr>
+                                                              <tr><td>Date Completed</td><td>{{ one_stable.ev_completion_date }}</td></tr>
+                                                              <tr><td>Results</td><td>{{ form.CPT_RESULTS }}</td></tr>
+                                                              <tr><td>Reasons</td><td>{{ form.CPT_REASONS }}</td></tr>
                                                               <tr><td></td><td></td></tr>
                                                           </table>
                                                         </div>
                                                         <div class="modal-footer">
-                                                          <button type="submit" id="cpt-mnt-{{ one_stable.cid }}" class="btn btn-default btn-primary">Submit Monitoring</button>
+                                                          <button type="button" class="btn btn-default btn-primary"  data-dismiss="modal">Monitor</button>
                                                           <button type="button" class="btn btn-default btn-default" data-dismiss="modal">Cancel</button>
                                                         </div>
                                                       </div>
-                                                      </form>
 
                                                     </div>
                                                   </div>
@@ -278,9 +259,6 @@
                                                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                           <h4 class="modal-title">Monitor - {{ one_cpt_event.event_id }}</h4>
                                                         </div>
-                                                        <form id="cpt-monitoring-{{ one_safe.cid }}" class="cptManage" method="post" action=".">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="item_id" value="{{ one_safe.cid }}">
                                                         <div class="modal-body">
                                                           <table class="table">
                                                               <tr><th>Item</th><th>Value</th></tr>
@@ -290,29 +268,18 @@
                                                               <tr><td>Priority Actions</td><td>{{ one_safe.ev_priority }} - {{ one_safe.ev_priority|gen_value:vals }}</td></tr>
                                                               <tr><td>Services</td><td>{{ one_safe.ev_services }} - {{ one_safe.ev_services|gen_value:vals }}</td></tr>
                                                               <tr><td>Person Responsible</td><td>{{ one_safe.ev_responsible }}</td></tr>
-                                                              <tr><td>Date to be Completed</td><td>{{ one_safe.ev_completion_date }}</td></tr>
-                                                              <tr><td>Actual Date of Completion</td>
-                                                                <td><input type="text" name="CPT_ACTUAL_DATE_COMPLETION" placeholder="Actual date of completion" class="form-control cpt_date" id="CPT_ACTUAL_DATE_COMPLETION" value="{{ one_safe.ev_actual_completion_date }}" required> </td></tr>
-                                                              <tr><td>Results</td>
-                                                                  <td>
-                                                              <select name="CPT_RESULTS" class="form-control" id="id_CPT_RESULTS">
-                                                                  <option value="">Please Select</option>
-                                                                  <option value="AC" {% if one_safe.ev_results == 'AC' %}selected{% endif %}>Achieved</option>
-                                                                  <option value="NA" {% if one_safe.ev_results == 'NA' %}selected{% endif %}>Not Achieved</option>
-                                                                </select>
-                                                                  </td>
-                                                              </tr>
-                                                              <tr><td>Reasons</td>
-                                                                <td><input type="text" name="CPT_REASONS" placeholder="State Reasons" class="form-control" required id="id_CPT_REASONS" value="{{ one_safe.ev_reasons }}"></td></tr>
+                                                              <tr><td>Date Completed</td><td>{{ one_safe.ev_completion_date }}</td></tr>
+                                                              <tr><td>Results</td><td>{{ form.CPT_RESULTS }}</td></tr>
+                                                              <tr><td>Reasons</td><td>{{ form.CPT_REASONS }}</td></tr>
                                                               <tr><td></td><td></td></tr>
                                                           </table>
                                                         </div>
                                                         <div class="modal-footer">
-                                                          <button type="submit" id="cpt-mnt-{{ one_safe.cid }}" class="btn btn-default btn-primary">Submit Monitoring</button>
+                                                          <button type="button" class="btn btn-default btn-primary"  data-dismiss="modal">Monitor</button>
                                                           <button type="button" class="btn btn-default btn-default" data-dismiss="modal">Cancel</button>
                                                         </div>
                                                       </div>
-                                                  </form>
+
                                                     </div>
                                                   </div>
                                                </td>
@@ -346,9 +313,6 @@
                                                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                           <h4 class="modal-title">Monitor - {{ one_cpt_event.event_id }}</h4>
                                                         </div>
-                                                        <form id="cpt-monitoring-{{ one_school.cid }}" class="cptManage" method="post" action=".">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="item_id" value="{{ one_school.cid }}">
                                                         <div class="modal-body">
                                                           <table class="table">
                                                               <tr><th>Item</th><th>Value</th></tr>
@@ -358,29 +322,18 @@
                                                               <tr><td>Priority Actions</td><td>{{ one_school.ev_priority }} - {{ one_school.ev_priority|gen_value:vals }}</td></tr>
                                                               <tr><td>Services</td><td>{{ one_school.ev_services }} - {{ one_school.ev_services|gen_value:vals }}</td></tr>
                                                               <tr><td>Person Responsible</td><td>{{ one_school.ev_responsible }}</td></tr>
-                                                              <tr><td>Date to be Completed</td><td>{{ one_school.ev_completion_date }}</td></tr>
-                                                              <tr><td>Actual Date of Completion</td>
-                                                                <td><input type="text" name="CPT_ACTUAL_DATE_COMPLETION" placeholder="Actual date of completion" class="form-control cpt_date" id="CPT_ACTUAL_DATE_COMPLETION" value="{{ one_school.ev_actual_completion_date }}" required> </td></tr>
-                                                              <tr><td>Results</td>
-                                                                  <td>
-                                                              <select name="CPT_RESULTS" class="form-control" id="id_CPT_RESULTS">
-                                                                  <option value="">Please Select</option>
-                                                                  <option value="AC" {% if one_school.ev_results == 'AC' %}selected{% endif %}>Achieved</option>
-                                                                  <option value="NA" {% if one_school.ev_results == 'NA' %}selected{% endif %}>Not Achieved</option>
-                                                                </select>
-                                                                  </td>
-                                                              </tr>
-                                                              <tr><td>Reasons</td>
-                                                                <td><input type="text" name="CPT_REASONS" placeholder="State Reasons" class="form-control" required id="id_CPT_REASONS" value="{{ one_school.ev_reasons }}"></td></tr>
+                                                              <tr><td>Date Completed</td><td>{{ one_school.ev_completion_date }}</td></tr>
+                                                              <tr><td>Results</td><td>{{ form.CPT_RESULTS }}</td></tr>
+                                                              <tr><td>Reasons</td><td>{{ form.CPT_REASONS }}</td></tr>
                                                               <tr><td></td><td></td></tr>
                                                           </table>
                                                         </div>
                                                         <div class="modal-footer">
-                                                          <button type="submit"  id="cpt-mnt-{{ one_school.cid }}" class="btn btn-default btn-primary">Submit Monitoring</button>
+                                                          <button type="button" class="btn btn-default btn-primary"  data-dismiss="modal">Monitor</button>
                                                           <button type="button" class="btn btn-default btn-default" data-dismiss="modal">Cancel</button>
                                                         </div>
                                                       </div>
-                                                      </form>
+
                                                     </div>
                                                   </div>
                                                </td>
@@ -396,6 +349,10 @@
                         </fieldset>
 
                     </div>
+                <form class="hidden" action="." method="POST" data-parsley-validate="true" name="form-wizard-f1a" id="new_f1a">
+                    {% csrf_token %}
+                    <input type="hidden" name="final_submission"/>
+				</form>
             </div>
             <a href="{% url 'ovc_view' id=child.id %}" class="badge badge-primary m-4"> Back to OVC</a>
             <div class="badge pull-right m-4">Revised: May 2022</div>
@@ -703,9 +660,10 @@
 <script src="{% static 'js/tag-it.js' %}"></script>
 <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+<script src="{% static 'js/cpt-script.js' %}"></script>	
 
 <script>
-jQuery(document).ready(function() {	
+	
 	$('input[name=if_first_cpara],input[name=date_first_cpara]').removeAttr('required');
     $('input[name=date_first_cpara]').attr('disabled', true);
 	$('input[name=if_first_cpara]').change(function(){
@@ -718,35 +676,32 @@ jQuery(document).ready(function() {
 			$('input[name=date_first_cpara]').removeAttr('disabled');
 		}
 	});
-
-    // $('#CPT_ACTUAL_DATE_COMPLETION').removeAttr('required');
-    $('.cpt_date').datepicker({ endDate: '0d', format: 'dd-M-yyyy' });
-
-
-    $("form").submit(function(event){
-        event.preventDefault();
-        var form = $(this);
-        var item_id = form.find('input[name="item_id"]').val();
-        var data = form.serialize();
-        $.ajax({
-           type: "POST",
-           url: "{{ request.path }}",
-           data: data,
-           success: function(resp)
-           {
-               var message = resp.message;
-                $("#success_message").show();
-                $("#msg").html(message);
-                $("#monitor-caseplan-"+ item_id).modal("hide");
-                window.location.href = "{{ request.path }}";
-           },
-            error: function(){
-                $("#msg-"+ item_id).addClass( "alert alert-danger fade in" );
-                $("#msg-"+ item_id).html("Error while Monitoring Case Plan.");
-            }
-         });
+    $(document).ready(function () {
+        $('#CPT_ACTUAL_DATE_COMPLETION').removeAttr('required');
     });
-});
+    $('*[name=CPT_RESULTS]').prepend('<option selected value="">Pick an item</option>').attr('required', true)
+	
+    ///////
+    $('#div_CPT_ACTUAL_DATE_COMPLETION').addClass('hidden');
+    $('#CPT_ACTUAL_DATE_COMPLETION').val('1900-01-01');
+    $('*[name=CPT_RESULTS]').change(function(){
+        var thisval=$('*[name=CPT_RESULTS] option:selected').val();
+        if(thisval=='NA'){
+            $('#div_CPT_ACTUAL_DATE_COMPLETION').removeClass('hidden');
+        }else{
+            $('#div_CPT_ACTUAL_DATE_COMPLETION').addClass('hidden');
+        }
+    })
+    function deleteCPTEntry(ovc_id, event_id){
+        //alert('Delete record');
+        var CPTDelete= "{% url 'delete_caseplan' id=1234 event_id='00000000-0000-0000-0000-000000000000' %}".replace(/1234/, ovc_id.toString()).replace(/00000000-0000-0000-0000-000000000000/, event_id.toString());
+        // alert();
+        window.location.href = CPTDelete;
+    }
+
+    $(".cptManage").submit(function(e){
+        alert('Failed');
+    });
 </script>
 {% endblock %}
 	

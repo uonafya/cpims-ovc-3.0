@@ -1,13 +1,14 @@
 """Decorator to handle permissions."""
 from functools import wraps
+# from functools import wraps, WRAPPER_ASSIGNMENTS
 from django.shortcuts import render, get_object_or_404
+# from django.utils.decorators import available_attrs
 from cpovc_registry.models import (
     RegPersonsAuditTrail, RegOrgUnitsAuditTrail, RegPersonsGeo,
     RegPersonsOrgUnits, RegOrgUnit, RegPerson)
 from cpovc_ovc.models import OVCRegistration
 from .models import AppUser
 from .perms import PERM
-from .functions import get_groups
 
 ORG_GROUPS = ['DEC', 'DSU', 'DUU', 'RGU']
 APPS = {'registry': 1, 'auth': 2, 'forms': 3, 'ovcare': 4, 'reports': 5}
@@ -35,71 +36,9 @@ def is_allowed_groups(allowed_groups, page=11):
 def check_permisions(request, allowed_groups):
     """ Return permissions."""
     try:
-        is_allowed = False
-        if request.user.is_active and request.user.is_superuser:
-            is_allowed = True
-        else:
-            # Check if this user has user groups
-            user_id = request.user.id
-            user_person_id = request.user.reg_person_id
-            print('User', user_id, user_person_id, allowed_groups)
-            curr_url = request.path_info
-            url_parts = curr_url.split('/')
-            grps = request.user.groups.values_list('id', flat=True)
-            ou_attached = request.session.get('ou_attached', 0)
-            reg_ovc = request.session.get('reg_ovc', 0)
-            ou_parts = ou_attached.split(',') if ou_attached else []
-            ous = [int(iou) for iou in ou_parts] if ou_attached else []
-            # Groups
-            print('user groups', grps)
-            ovc_id, item_id, ou_id, au_id = 0, 0, 0, 0
-            for url_part in url_parts:
-                if url_part.isnumeric():
-                    item_id = int(url_part)
-            if 'registry/ou' in curr_url:
-                ovc_id, au_id = 0, 0
-                ou_id = item_id
-            if 'auth/roles' in curr_url:
-                ovc_id, ou_id = 0, 0
-                au_id = item_id
-            if '/ovc-care/' in curr_url or '/forms/' in curr_url:
-                au_id, ou_id = 0, 0
-                ovc_id = item_id
-            if ovc_id:
-                if reg_ovc:
-                    ovc = get_ovc(ovc_id)
-                    if ovc:
-                        if ovc.child_cbo_id in ous:
-                            is_allowed = True
-                        if not ovc.is_active:
-                            is_allowed = True
-                    else:
-                        is_allowed = check_registry(ovc_id, ous)
-                else:
-                    is_allowed = check_registry(ovc_id, ous)
-            else:
-                if ou_id and ou_id in ous:
-                    is_allowed = True
-                else:
-                    if not ou_id and not ovc_id and not au_id:
-                        # Pages without PIDs e.g. Search page
-                        is_allowed = True
-                    else:
-                        if au_id:
-                            uid, cid = get_person(au_id)
-                            is_allowed = check_registry(uid, ous)
-                            if cid and cid == user_id:
-                                is_allowed = True
-                        else:
-                            is_allowed = False
-            print('OVC ID', ovc_id, ou_id, au_id, curr_url)
-            if is_allowed:
-                cpgrp = get_groups('')
-                cpims_grps = [cpgrp[grp] for grp in grps if grp in cpgrp]
-                u_grp = any(value in cpims_grps for value in allowed_groups)
-                print('u_grp', u_grp)
-                if not u_grp:
-                    is_allowed = False
+        profile = request.user.id
+        print('User', profile, allowed_groups)
+        is_allowed = True
     except Exception:
         return False
     else:
@@ -289,17 +228,6 @@ def get_audit_details(item_id, audit_type='Person'):
         return None
 
 
-def get_ovc(child_id):
-    """Method to get OVC details."""
-    try:
-        ovc = OVCRegistration.objects.get(
-            person_id=child_id, is_void=False)
-    except Exception:
-        return None
-    else:
-        return ovc
-
-
 def get_child_cbo(child_id):
     """Method to get child cbo."""
     try:
@@ -401,17 +329,3 @@ def get_orgs_child(child_units):
         return []
     else:
         return all_units
-
-
-def check_registry(ovc_id, ou_ids):
-    """Method to check in reg persons org units."""
-    try:
-        is_member = False
-        orgs = RegPersonsOrgUnits.objects.filter(
-            person_id=ovc_id, org_unit_id__in=ou_ids, is_void=False)
-        if orgs:
-            is_member = True
-    except Exception as e:
-        raise e
-    else:
-        return is_member

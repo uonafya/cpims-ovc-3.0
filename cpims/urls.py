@@ -28,7 +28,7 @@ from cpovc_access.forms import StrictPasswordChangeForm
 # New changes
 from cpovc_pfs import urls as pfs_urls
 from cpovc_pmtct import urls as pmtct_urls
-from notifications import urls as noti_urls
+#from notifications import urls as noti_urls
 # from simple_forums import urls as forum_urls
 
 
@@ -108,20 +108,26 @@ urlpatterns = [
     path('offline_mode/', include(offline_mode_urls)),
     # Dashboards
     path('d/', dash_views.ovc_dashboard, name='ovc_dashboard'),
+    path(
+        'd/registration/', dash_views.ovc_dashboard_registration,
+        name='ovc_registration'),
     path('d/hivstat/', dash_views.ovc_dashboard_hivstat, name='hivstat_dash'),
     path(
         'd/services/', dash_views.ovc_dashboard_services,
         name='services_dash'),
     path('d/cm/', dash_views.ovc_dashboard_cm, name='cm_dash'),
+    path('d/MER/', dash_views.ovc_dashboard_MER, name='mer_dash'),
+    path('d/epidemic-control/', dash_views.ovc_dashboard_epc, name='epc_dash'),
     path(
         'd/performance/', dash_views.ovc_dashboard_perform,
         name='perform_dash'),
+    path('d/glossary/', dash_views.ovc_dashboard_help, name='dash_help'),
     path('api/v2/', include(dashboard_api_urls)),
     # Preventive and Family Support
     path('ovc-care/pfs/', include(pfs_urls)),
     path('ovc-care/pmtct/', include(pmtct_urls)),
     # Notifications
-    path('notifications/', include(noti_urls, namespace='notifications')),
+    #path('notifications/', include(noti_urls, namespace='notifications')),
     # path('forums/', include(forum_urls)),
 ]
 

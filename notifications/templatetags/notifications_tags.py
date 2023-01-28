@@ -1,11 +1,15 @@
 ''' Django notifications template tags file '''
 # -*- coding: utf-8 -*-
+# from distutils.version import StrictVersion  # pylint: disable=no-name-in-module,import-error
 from packaging.version import Version
 from django import get_version
 from django.template import Library
 from django.utils.html import format_html
 
-from django.urls import reverse
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.urls import reverse, resolve # pylint: disable=no-name-in-module,import-error
 
 register = Library()
 
@@ -18,11 +22,9 @@ def notifications_unread(context):
 
 
 if Version(get_version()) >= Version('2.0'):
-    notifications_unread = register.simple_tag(
-        takes_context=True)(notifications_unread)
+    notifications_unread = register.simple_tag(takes_context=True)(notifications_unread)  # pylint: disable=invalid-name
 else:
-    notifications_unread = register.assignment_tag(
-        takes_context=True)(notifications_unread)
+    notifications_unread = register.assignment_tag(takes_context=True)(notifications_unread)  # noqa
 
 
 @register.filter
@@ -34,7 +36,7 @@ def has_notification(user):
 
 # Requires vanilla-js framework - http://vanilla-js.com/
 @register.simple_tag
-def register_notify_callbacks(badge_class='live_notify_badge',
+def register_notify_callbacks(badge_class='live_notify_badge',  # pylint: disable=too-many-arguments,missing-docstring
                               menu_class='live_notify_list',
                               refresh_period=15,
                               callbacks='',

@@ -6,7 +6,7 @@
 <!--<![endif]-->
 <head>
     <meta charset="utf-8" />
-    <title>CPIMS Dashboard</title>
+    <title>CPIMS Dashboard - 1. Registrations (ever)</title>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <meta content="" name="description" />
     <meta content="" name="author" />
@@ -23,6 +23,7 @@
     <link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
     <link href="{% static 'css/dashboards.css' %}" rel="stylesheet">
     <!-- ================== END BASE CSS STYLE ================== -->
+    <script src="{% static 'plugins/pace/pace.min.js' %}"></script>
 
 </head>
 <body>
@@ -59,14 +60,15 @@
                         </form>
                     </li>
                     -->
-                    <li><a href="{% url 'ovc_dashboard' %}" id="main_url"><b>Registrations (Ever)</b></a></li>
-                    <li><a href="{% url 'ovc_registration' %}" id="reg_url">Current Caseload</a></li>
-                    <li><a href="{% url 'hivstat_dash' %}" id="hivstat_url">HIVSTAT & VL</a></li>
-                    <li><a href="{% url 'services_dash' %}" id="services_url">Services</a></li>
-                    <li><a href="{% url 'cm_dash' %}" id="cm_url">Case Management</a></li>
-                    <li><a href="{% url 'perform_dash' %}" id="pf_url">Performance</a></li>
-                    <li><a href="#" id="mer_url">MER Reporting</a></li>
-                    <li><a href="#" id="epd_url">Epidemic Control</a></li>
+                    <li><a href="{% url 'ovc_dashboard' %}" id="main_url"><b>1. Registrations</b></a></li>
+                    <li><a href="{% url 'ovc_registration' %}" id="reg_url">2. OVC Eligible for reporting</a></li>
+                    <li><a href="{% url 'hivstat_dash' %}" id="hivstat_url">3. HIVSTAT & VL</a></li>
+                    <li><a href="{% url 'services_dash' %}" id="services_url">4. Services</a></li>
+                    <li><a href="{% url 'cm_dash' %}" id="cm_url">5. Case Management</a></li>
+                    <li><a href="{% url 'perform_dash' %}" id="pf_url">6. Performance</a></li>
+                    <li><a href="{% url 'mer_dash' %}" id="mer_url">7. MER Reporting</a></li>
+                    <li><a href="{% url 'epc_dash' %}" id="epd_url">8. Epidemic Control</a></li>
+                    <li><a href="{% url 'dash_help' %}" id="help_url">Glossary</a></li>
                     <li><a href="#" onclick="printChart(); return false;"><i class="fa fa-print"></i> </a></li>
                     {% if user.is_authenticated %}
                     <li class="dropdown" id="session_status"></li>
@@ -195,15 +197,20 @@
 
             <!-- begin row -->
             <div class="row">
-                <!-- begin col-6 -->
-                <div class="col-md-6">            
+                <!-- begin col-12 -->
+                <div class="col-md-12">            
                     <div class="panel panel-inverse">
                         <div class="panel-body">
-                            <div id="container-1C" class="cont"></div>
+                            <div id="container-1C" class="cont" style="height: 645px;"></div>
                         </div>
                     </div>
                 </div>
-                <!-- end col-6 -->
+                <!-- end col-12 -->
+            </div>
+            <!-- end row -->
+
+            <!-- begin row -->
+            <div class="row">
                 <!-- begin col-6 -->
                 <div class="col-md-6">            
                     <div class="panel panel-inverse">
@@ -212,53 +219,43 @@
                         </div>
                     </div>
                 </div>
-                <!-- end col-4 -->
-            </div>
-            <!-- end row -->
-            <!-- begin row -->
-            <div class="row">
-                <!-- begin col-7 -->
-                <div class="col-md-7">            
+                <!-- end col-6 -->
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
                     <div class="panel panel-inverse">
                         <div class="panel-body">
                             <div id="container-1E" class="cont"></div>
                         </div>
                     </div>
                 </div>
-                <!-- end col-7 -->
-                <!-- begin col-5 -->
-                <div class="col-md-5">            
+                <!-- end col-6 -->
+            </div>
+            <!-- end row -->
+
+            <!-- begin row -->
+            <div class="row">
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
                     <div class="panel panel-inverse">
                         <div class="panel-body">
                             <div id="container-1F" class="cont"></div>
                         </div>
                     </div>
                 </div>
-                <!-- end col-5 -->
-            </div>
-            <!-- end row -->
-            <!-- begin row -->
-            <div class="row">
-                <!-- begin col-7 -->
-                <div class="col-md-7">            
+                <!-- end col-6 -->
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
                     <div class="panel panel-inverse">
                         <div class="panel-body">
-                            <div id="container-1G" class="cont"></div>
+                            <div id="container-1G" class="cont" style="height: 645px;"></div>
                         </div>
                     </div>
                 </div>
-                <!-- end col-7 -->
-                <!-- begin col-5 -->
-                <div class="col-md-5">            
-                    <div class="panel panel-inverse">
-                        <div class="panel-body">
-                            <div id="container-1H" class="cont"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end col-5 -->
+                <!-- end col-6 -->
             </div>
             <!-- end row -->
+
+            
 
             <!-- begin row -->
             <div class="row">
@@ -407,15 +404,13 @@
 
            // Dynamically load Charts
            var chartlists = ['1A', '1B', '1C', '1D', '1E', '1F', '1G'];
-           // Change colors here
-           var colors = ["#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9",
-                         "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"];
            var hashes = window.location.hash.substr(1);
            var fields = hashes.split('/');
            $('#hashes').html(hashes);
            var cn = fields[0];
            var con = fields[1];
            var wd = fields[2];
+           var mid = fields[2];
            var ipv = fields[3];
            var lipv = fields[4];
            $( "#sel-county" ).val(cn);
@@ -455,14 +450,25 @@
                reloadVars();
             });
 
+           $("#sel-funding").change(function(){
+               var fund_id = $(this).val();
+               var ip = $( "#sel-ip" ).val();
+               getIP(fund_id, ip);
+               // Always clear LIP list
+               $('#sel-lip').empty();
+               $('#sel-lip').append("<option value=''> All LIPs </option>");
+               reloadVars();
+            });
+
            $("#sel-period, #sel-year").change(function(){
                reloadVars();
             });
 
            $("#sel-ip").change(function(){
                var ip_id = $(this).val();
+               var lip = $( "#sel-lip" ).val();
+               getLIP(ip_id, lip);
                reloadVars();
-               getLIP(ip_id, '');
             });
 
            $("#fsettings").click(function(){
@@ -476,7 +482,7 @@
                    },
                     error: function(){
                         $("#log_cg").addClass( "alert alert-danger fade in" );
-                        $('#log_cg').html("Error checking if child is duplicate");
+                        $('#log_cg').html("Error");
                     }
                  });
                reloadVars();
@@ -484,14 +490,15 @@
                // $('#modal-dialog').modal('toggle'); 
            });
 
-           function createPage(county_id, const_id, ward_id, ip, lip, prd, yr){
+           function createPage(county_id, const_id, ward_id, mid, ip, lip, prd, yr){
                 var cid = (county_id == '' ? "000" : county_id);
                 var ctid = (const_id == '' ? "000" : const_id);
                 var wid = (ward_id == '' ? "000" : ward_id);
+                var mcid = (mid == '' ? "0" : mid);
                 var ipd = (ip == '' ? "0" : ip);
                 var lipd = (lip == '' ? "0" : lip);
                 var geo_uri = cid + '/' + ctid + '/' + wid;
-                var ip_uri = ipd + '/' + lipd;
+                var ip_uri = mcid + '/' +ipd + '/' + lipd;
                 var dt_uri = prd+ '/' + yr;
                 window.location.hash = geo_uri + '/' + ip_uri + '/' + dt_uri;
                 var hashes = window.location.hash.substr(1);
@@ -502,11 +509,19 @@
                var county_id = $( "#sel-county" ).val();
                var const_id = $( "#sel-constituency" ).val();
                var ward_id = $( "#sel-ward" ).val();
+               var mid = $( "#sel-funding" ).val();
+               if (mid == '0'){
+                   $( "#sel-ip" ).val('');
+                   $( "#sel-lip" ).val('');
+               }
                var ip = $( "#sel-ip" ).val();
+               if (ip == '0'){
+                   $( "#sel-lip" ).val('');
+               }
                var lip = $( "#sel-lip" ).val();
                var prd = $( "#sel-period" ).val();
                var yr = $( "#sel-year" ).val();
-               createPage(county_id, const_id, ward_id, ip, lip, prd, yr);
+               createPage(county_id, const_id, ward_id, mid, ip, lip, prd, yr);
                // Current selections text for UI
                var county_name = $("#sel-county option:selected").text();
                var const_name = $( "#sel-constituency option:selected").text();
@@ -524,7 +539,9 @@
                var hashes = window.location.hash.substr(1);
                
                chartlists.forEach(function (itm, idx) {
-                  var url = "/api/v2/"+ itm +"/"+ hashes;
+                  var dt = new Date();
+                  let dts = dt.getTime();
+                  var url = "/api/v2/"+ itm +"/"+ hashes +"?t="+ dts;
                   // Page Loader
                   $("#container-"+ itm).html("<center><div class='page_loader'></div></center>");
                   // Load Data
@@ -591,17 +608,37 @@
            function getLIP(ip_id, sel_lip){
                 var curl = "{% url 'get_lip' ip_id=0 %}"
                 var url = curl.replace('0', ip_id.toString());
+                $('#sel-lip').empty();
+                $('#sel-lip').append("<option value=''> All LIPs </option>");
                 $.ajax({
                     type: "GET",
                     url: url, 
                     contentType: "application/json; charset-utf-8",
                     dataType: "json",
                     success: function(data) {
-                      $('#sel-lip').empty();
-                      $('#sel-lip').append("<option value=''> All LIPs </option>");
                       $.each(data, function(i, item){
                         var sel = (sel_lip == data[i].id) ? 'selected="selected"' : ''; 
                         $('#sel-lip').append('<option value="'+data[i].id+'" '+ sel +'>'+data[i].name+'</option>');
+                      });
+                    }, 
+                    complete: function() {}
+                  });
+           }
+
+           function getIP(fund_id, sel_ip){
+                var curl = "{% url 'get_ip' fund_id=0 %}"
+                var url = curl.replace('0', fund_id.toString());
+                $('#sel-ip').empty();
+                $('#sel-ip').append("<option value=''> All IPs </option>");
+                $.ajax({
+                    type: "GET",
+                    url: url, 
+                    contentType: "application/json; charset-utf-8",
+                    dataType: "json",
+                    success: function(data) {
+                      $.each(data, function(i, item){
+                        var sel = (sel_ip == data[i].id) ? 'selected="selected"' : ''; 
+                        $('#sel-ip').append('<option value="'+data[i].id+'" '+ sel +'>'+data[i].name+'</option>');
                       });
                     }, 
                     complete: function() {}
