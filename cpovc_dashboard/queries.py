@@ -3,7 +3,7 @@ QUERIES = {}
 QUERIES['1A'] = '''
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 gender as sex_id
-from vw_cpims_registration {ocbos}
+from vw_cpims_registration_fy22 where not (exit_status = 'EXITED' and exit_reason = 'Duplicated') {cbos}
 group by gender
 '''
 # {odate}
@@ -12,48 +12,48 @@ group by gender
 QUERIES['1B'] = '''
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id,
-CASE exit_status WHEN 'ACTIVE' THEN 'Active'
+CASE exit_status WHEN 'ACTIVE' THEN 'Current case load'
 ELSE 'Exited(Left Program)' END AS active_status
-from vw_cpims_registration {ocbos} {oareas}
+from vw_cpims_registration_fy22 where not (exit_status = 'EXITED' and exit_reason = 'Duplicated') {cbos}
 group by active_status
 UNION
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, 'Ever Registered' AS active_status
-from vw_cpims_registration {ocbos} {oareas}
+from vw_cpims_registration_fy22 where not (exit_status = 'EXITED' and exit_reason = 'Duplicated') {cbos}
 '''
 
 QUERIES['1C'] = '''
 SELECT count(cpims_ovc_id) as dcount,
 'SMAL' as sex_id, eligibility
-from vw_cpims_registration {ocbos} {oareas}
+from vw_cpims_registration_fy22 where not (exit_status = 'EXITED' and exit_reason = 'Duplicated') {cbos}
 group by eligibility order by dcount desc
 '''
 
 QUERIES['1G'] = '''
-SELECT count(cpims_ovc_id) as dcount,
+SELECT count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, exit_reason
-from vw_cpims_registration where exit_status = 'EXITED' {cbos} {areas}
+from vw_cpims_registration_fy22 where exit_status = 'EXITED' {cbos}
 group by exit_reason order by dcount desc
 '''
 
 QUERIES['1D'] = '''
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, 'Current case load' as services
-from vw_cpims_registration where exit_status='ACTIVE' {cbos} {areas}
+from vw_cpims_registration_fy22 where exit_status='ACTIVE' {cbos} {areas}
 UNION
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, 'Has Birth Certificate' as services
-from vw_cpims_registration where exit_status='ACTIVE'
+from vw_cpims_registration_fy22 where exit_status='ACTIVE'
 and birthcert = 'HAS BIRTHCERT' {cbos} {areas}
 UNION
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, 'Has Disability' as services
-from vw_cpims_registration where exit_status='ACTIVE'
+from vw_cpims_registration_fy22 where exit_status='ACTIVE'
 and ovcdisability = 'HAS DISABILITY' {cbos} {areas}
 UNION
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, 'School Going' as services
-from vw_cpims_registration where exit_status='ACTIVE'
+from vw_cpims_registration_fy22 where exit_status='ACTIVE'
 and schoollevel != 'Not in School' {cbos} {areas}
 '''
 
@@ -73,7 +73,7 @@ when ovchivstatus='NOT KNOWN' THEN 'HIV Status Unknown'
 when ovchivstatus='HIV Test Not Required' THEN 'HIV Test not Required'
 when ovchivstatus='HIV Referred For Testing' THEN 'HIV Referred For Testing'
 ELSE 'Others' END AS hivstat
-from vw_cpims_registration where exit_status='ACTIVE' {cbos} {areas}
+from vw_cpims_registration_fy22 where exit_status='ACTIVE' {cbos} {areas}
 group by gender, ovchivstatus order by dcount DESC
 '''
 
@@ -189,12 +189,17 @@ select count(distinct(cpims_ovc_id)) as dcount, gender as sex_id
 from vw_cpims_registration where registration_date >'2021-09-30' {cbos}
 group by gender
 '''
+'''
+select count(distinct(cpims_ovc_id)) as dcount,eligibility
+from vw_cpims_registration where registration_date_fy22 >'2021-09-30' and registration_date < '2022-10-01' and exit_reason !='Duplicated'
+group by eligibility
+'''
 
 QUERIES['2H'] = '''
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, exit_reason
 from vw_cpims_dash_caseload
-WHERE exit_reason <> 'None' or exit_reason <> 'Duplicated' {cbos} {areas}
+WHERE (exit_reason <> 'None' or exit_reason <> 'Duplicated') {cbos} {areas}
 group by exit_reason
 having count(distinct(cpims_ovc_id)) > 0
 order by dcount desc
@@ -303,13 +308,25 @@ OR vw_cpims_dash_caseload.exit_reason = 'Transition' )
 ) x order by services asc
 '''
 
+'''
+select sum(count) as dcount, 'OVC_SERV' AS mechanism,
+'OVC_SERV_FY' AS agency FROM (
+select sum(served) as count, mechanism, agency
+from vw_Active_Beneficiary_APR22 {ocbos} group by mechanism, agency
+UNION
+select sum(graduated) as count, mechanism, agency
+from vw_cpims_dash_graduated {ocbos} group by mechanism, agency
+) srv
+UNION ALL
+'''
+
 QUERIES['3B'] = '''
 select sum(count) as dcount, 'OVC_SERV' AS mechanism,
 'OVC_SERV_FY' AS agency FROM (
-select count(distinct(person_id)) as count, mechanism, agency
+select sum(served) as count, mechanism, agency
 from vw_Active_Beneficiary_APR22 {ocbos} group by mechanism, agency
 UNION
-select count(distinct(person_id)) as count, mechanism, agency
+select sum(graduated) as count, mechanism, agency
 from vw_cpims_dash_graduated {ocbos} group by mechanism, agency
 ) srv
 UNION ALL
@@ -584,10 +601,10 @@ from vw_cpims_dash_caseload where exit_status='ACTIVE' {cbos}
 QUERIES['4E'] = '''
 Select count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, service as services
-from vw_cpims_dash_list_served {ocbos}
+from vw_cpims_dash_list_served
+where date_of_service > '2022-03-31' {cbos}
 group by service
 order by dcount desc limit 35
-
 '''
 
 QUERIES['4F'] = '''
@@ -643,7 +660,7 @@ order by domain asc, dcount desc
 QUERIES['5A'] = '''
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, 'Active' as services
-from vw_cpims_registration where exit_status='ACTIVE' {cbos}
+from vw_cpims_registration_fy22 where exit_status='ACTIVE' {cbos}
 UNION
 Select count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, 'Current Case Plan' as services
@@ -668,7 +685,7 @@ group by graduation_pathway
 QUERIES['5D'] = '''
 Select count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, 'Current CPARA' as services
-from vw_cpims_cpara_v1 where (current_date - date_of_event) <= 400 {cbos}
+from vw_cpims_cpara_final where (current_date - date_of_event) <= 400 {cbos}
 '''
 
 QUERIES['5E'] = '''
@@ -848,7 +865,7 @@ Select count(distinct(cpims_ovc_id)) as dcount,
  cpara_score as services, 'SMAL' as sex_id
 from vw_cpims_benchmark
 where (current_date - date_of_event) <= 400 {cbos}
-group by cpara_score
+group by cpara_score order by cpara_score asc
 '''
 
 QUERIES['5L'] = '''
@@ -856,7 +873,7 @@ Select count(distinct(cpims_ovc_id)) as dcount,
  cpara_score as benchmark_total_scores, 'SMAL' as sex_id
 from vw_cpims_benchmark_achieved_v1
 where (current_date - date_of_event) <= 400 {cbos}
-group by cpara_score
+group by cpara_score order by cpara_score asc
 '''
 
 # ==== Section 6 ===============================
@@ -976,7 +993,7 @@ from vw_cpims_dash_attrition {ocbos} group by agency
 ) srv
 group by agency
 UNION ALL
-select sum(counts) AS dcount, agency, 'Male' as sex_id
+select count(distinct(cpims_ovc_id)) as dcount, agency, 'Male' as sex_id
 from vw_cpims_dash_caseload {ocbos} group by agency
 '''
 

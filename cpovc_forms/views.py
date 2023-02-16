@@ -10921,7 +10921,7 @@ def new_cpara(request, id):
         subcounty = None
         county = None
     else:
-        ward_id = int(geo_wards)
+        ward_id = int(geo_wards.split(',')[0])
         ward = SetupGeography.objects.get(area_id=ward_id)
         subcounty = SetupGeography.objects.get(area_id=ward.parent_area_id)
         county = SetupGeography.objects.get(area_id=subcounty.parent_area_id)
