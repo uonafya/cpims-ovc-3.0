@@ -10663,7 +10663,8 @@ def new_cpara(request, id):
                 benchmark_9=int(ovc_score[8]),
                 score=sum([int(i) for i in ovc_score]),
                 event=event,
-                care_giver=care_giver    
+                care_giver=care_giver,
+                date_of_event = event_date    
             
             )
         except Exception as e:
@@ -10713,7 +10714,8 @@ def new_cpara(request, id):
         q31 = 'CP15q'
         q32 = 'CP16q'
         q33 = 'CP17q'
-        ind_cpara = ['CP15q','CP16q','CP17q']
+        q63 = 'CP17q'
+        ind_cpara = ['CP15q','CP16q','CP17q', 'CP27q']
         bench_three=[]
         for i, element in enumerate(to_process):
             if q31 in element:
@@ -10721,6 +10723,8 @@ def new_cpara(request, id):
             elif q32 in element:
                 bench_three.append(element)
             elif q33 in element:
+                bench_three.append(element)
+            elif q63 in element:
                 bench_three.append(element)
         
         for b_item in bench_three:            
