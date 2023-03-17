@@ -1,12 +1,15 @@
+from datetime import datetime
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
 
 from .forms import CaseLoad
-from .functions import get_geo, get_lips, get_chart_data, get_ips
+from .functions import get_geo, get_lips, get_chart_data, get_ips, get_data
 from .parameters import colors as dcolors
 from .parameters import CHART
 from .params import CHART as GCHART
+
+from cpovc_settings.forms import SettingsForm
 
 
 @login_required
@@ -115,6 +118,46 @@ def ovc_dashboard_epc(request):
         return render(
             request, 'reports/ovc_dashboard_epc.html',
             {'form': form, 'colors': dcolors})
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+@login_required
+def raw_dashboard(request, did=1):
+    """Method to do pivot reports."""
+    try:
+        # form = CaseLoad()
+        dcols = ['ID', 'OVC CPIMS ID', 'OVC Names', 'CBO ID', 'CBO',
+                 'CHV CPIMS ID', 'CHV Names', 'Caregiver CPIMS ID',
+                 'Caregiver Names', 'Registration Date', 'Exit status',
+                 'Exit Date']
+        if did == 4:
+            dcols = dcols + ['Domain', 'Service', 'Event date']
+        cols = dcols + ['User', 'Timestamp']
+        today = datetime.now()
+        primary_org_unt = request.session.get('ou_primary')
+        todate = str(today.strftime("%d-%b-%Y"))
+        sdata = {'report_from_date': '01-Jan-2000', 'report_to_date': todate,
+                 'org_unit': primary_org_unt}
+        form = SettingsForm(request.user, sdata)
+        data, params = [], {'did': did}
+        org_unit = request.GET.get('org_unit', 0)
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+        cluster = request.GET.get('cluster')
+        print(org_unit, from_date, to_date)
+        if org_unit and from_date and to_date:
+            params['cluster'] = cluster
+            params['org_unit'] = org_unit
+            params['from_date'] = from_date
+            params['to_date'] = to_date
+            data = get_data(request, params)
+            return JsonResponse({'data': data}, safe=False)
+        return render(
+            request, 'reports/ovc_dashboard_rawdata.html',
+            {'form': form, 'colors': dcolors, 'cols': cols, 'did': did})
     except Exception as e:
         raise e
     else:

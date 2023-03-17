@@ -1354,7 +1354,7 @@ from vw_cpims_dash_viral_load where agency is not null
 and vl_period_validity='Valid' {cbos}
 group by agency
 UNION
-select count(distinct(cpims_ovc_id)) as count, agency,
+select count(distinct(cpims_ovc_id)) as dcount, agency,
 'On ART without valid VL' as services
 from vw_cpims_dash_caseload where ovchivstatus='POSITIVE' and artstatus='ART'
 and cpims_ovc_id not in (
@@ -1374,7 +1374,7 @@ from vw_cpims_dash_viral_load where agency is not null
 and vl_period_validity='Valid' {cbos}
 group by mechanism
 UNION
-select count(distinct(cpims_ovc_id)) as count, mechanism as ip,
+select count(distinct(cpims_ovc_id)) as dcount, mechanism as ip,
 'On ART without valid VL' as services
 from vw_cpims_dash_caseload where ovchivstatus='POSITIVE'
 and artstatus='ART' and agency is not null
@@ -1395,7 +1395,7 @@ from vw_cpims_dash_viral_load where cbo is not null
 and vl_period_validity='Valid' {cbos}
 group by cbo
 UNION
-select count(distinct(cpims_ovc_id)) as count, cbo as lip,
+select count(distinct(cpims_ovc_id)) as dcount, cbo as lip,
 'On ART without valid VL' as services
 from vw_cpims_dash_caseload where ovchivstatus='POSITIVE'
 and artstatus='ART' and cbo is not null
@@ -1416,7 +1416,7 @@ from vw_cpims_dash_viral_load where county is not null
 and vl_period_validity='Valid' {cbos}
 group by county
 UNION
-select count(distinct(cpims_ovc_id)) as count, county,
+select count(distinct(cpims_ovc_id)) as dcount, county,
 'On ART without valid VL' as services
 from vw_cpims_dash_caseload where ovchivstatus='POSITIVE'
 and artstatus='ART' and county is not null
@@ -1439,19 +1439,24 @@ or suppression = '400 - 999'
 or suppression = 'LDL') {cbos}
 group by agency
 UNION
-select count(distinct(cpims_ovc_id)) as count, agency,
+select count(distinct(cpims_ovc_id)) as dcount, agency,
 'On ART and not suppressed' as services
 from vw_cpims_dash_caseload where ovchivstatus='POSITIVE' and artstatus='ART'
+and cpims_ovc_id in (
+select distinct(cpims_ovc_id) from vw_cpims_dash_viral_load
+where agency is not null and vl_period_validity='Valid' {cbos}
+)
 and cpims_ovc_id not in (
 select distinct(cpims_ovc_id) from vw_cpims_dash_viral_load
 where agency is not null and vl_period_validity='Valid'
 and (suppression = '0-400' or suppression = '400 - 999'
 or suppression = 'LDL') {cbos}
-) {cbos}
+)
 group by agency
 ) x
 order by services desc, dcount desc
 '''
+
 
 QUERIES['8N'] = '''
 select * from (
@@ -1463,15 +1468,19 @@ or suppression = '400 - 999'
 or suppression = 'LDL') {cbos}
 group by mechanism
 UNION
-select count(distinct(cpims_ovc_id)) as count, mechanism as ip,
+select count(distinct(cpims_ovc_id)) as dcount, mechanism as ip,
 'On ART and not suppressed' as services
 from vw_cpims_dash_caseload where ovchivstatus='POSITIVE' and artstatus='ART'
+and cpims_ovc_id in (
+select distinct(cpims_ovc_id) from vw_cpims_dash_viral_load
+where agency is not null and vl_period_validity='Valid' {cbos}
+)
 and cpims_ovc_id not in (
 select distinct(cpims_ovc_id) from vw_cpims_dash_viral_load
 where agency is not null and vl_period_validity='Valid'
 and (suppression = '0-400' or suppression = '400 - 999'
 or suppression = 'LDL') {cbos}
-) {cbos}
+)
 group by mechanism
 ) x
 order by services desc, dcount desc
@@ -1481,22 +1490,25 @@ QUERIES['8P'] = '''
 select * from (
 select count(distinct(cpims_ovc_id)) as dcount, cbo as lip,
 'Suppressed' as services
-from vw_cpims_dash_viral_load where cbo is not null
+from vw_cpims_dash_viral_load where agency is not null
 and vl_period_validity='Valid' and (suppression = '0-400'
 or suppression = '400 - 999'
 or suppression = 'LDL') {cbos}
 group by cbo
 UNION
-select count(distinct(cpims_ovc_id)) as count, cbo as lip,
+select count(distinct(cpims_ovc_id)) as dcount, cbo as lip,
 'On ART and not suppressed' as services
-from vw_cpims_dash_caseload where ovchivstatus='POSITIVE'
-and artstatus='ART' and cbo is not null
+from vw_cpims_dash_caseload where ovchivstatus='POSITIVE' and artstatus='ART'
+and cpims_ovc_id in (
+select distinct(cpims_ovc_id) from vw_cpims_dash_viral_load
+where agency is not null and vl_period_validity='Valid' {cbos}
+)
 and cpims_ovc_id not in (
 select distinct(cpims_ovc_id) from vw_cpims_dash_viral_load
-where cbo is not null and vl_period_validity='Valid'
+where agency is not null and vl_period_validity='Valid'
 and (suppression = '0-400' or suppression = '400 - 999'
 or suppression = 'LDL') {cbos}
-) {cbos}
+)
 group by cbo
 ) x
 order by services desc, dcount desc
@@ -1506,22 +1518,26 @@ QUERIES['8Q'] = '''
 select * from (
 select count(distinct(cpims_ovc_id)) as dcount, county,
 'Suppressed' as services
-from vw_cpims_dash_viral_load where county is not null
+from vw_cpims_dash_viral_load where agency is not null and county is not null
 and vl_period_validity='Valid' and (suppression = '0-400'
 or suppression = '400 - 999'
 or suppression = 'LDL') {cbos}
 group by county
 UNION
-select count(distinct(cpims_ovc_id)) as count, county,
+select count(distinct(cpims_ovc_id)) as dcount, county,
 'On ART and not suppressed' as services
-from vw_cpims_dash_caseload where ovchivstatus='POSITIVE'
-and artstatus='ART' and county is not null
+from vw_cpims_dash_caseload where ovchivstatus='POSITIVE' and artstatus='ART'
+and cpims_ovc_id in (
+select distinct(cpims_ovc_id) from vw_cpims_dash_viral_load
+where agency is not null and county is not null
+and vl_period_validity='Valid' {cbos}
+)
 and cpims_ovc_id not in (
 select distinct(cpims_ovc_id) from vw_cpims_dash_viral_load
-where county is not null and vl_period_validity='Valid'
+where agency is not null and county is not null and vl_period_validity='Valid'
 and (suppression = '0-400' or suppression = '400 - 999'
 or suppression = 'LDL') {cbos}
-) {cbos}
+)
 group by county
 ) x
 order by services desc, dcount desc

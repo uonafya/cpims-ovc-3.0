@@ -92,8 +92,7 @@
                             <th>CPIMS ID</th>
                             <th>Names</th>
                             <th>Sex</th>
-                            <th>Case ID</th>
-                            <th>Case Date</th>
+                            <th>DOB</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -101,17 +100,16 @@
                    <tr>
                        <td>{{ forloop.counter }}</td>
                        <td>{{ child.id }}</td>
-                       <td>{{ child.first_name }} {{ case.surname }}</td>
+                       <td>{{ child.first_name }} {{ child.surname }} {% if child.other_names %}{{ child.other_names }}{% endif %}</td>
                        <td>{% if child.sex_id == 'SMAL' %} Male {% else %} Female {% endif %}</td>
-                       <td>{{ child.case }} {{ case.case_t }}</td>
-                       <td>{{ child.case_date }}</td>
+                       <td>{{ child.date_of_birth }}</td>
                        <td>
                         {% if child.case_level == 2 %}
                            <a href="{% url 'view_pmtct' id=child.id %}" class="btn btn-sm btn-primary m-r-5">View details</a>
                         {% elif child.case_level == 1 %}
                            <a href="{% url 'new_pmtct' id=child.id %}" class="btn btn-sm btn-primary m-r-5">New Registration</a>
                         {% else %}
-                            <a href="{% url 'new_case_record_sheet' id=child.id %}" class="btn btn-sm btn-danger m-r-5"> <i class="fa fa-file-o"></i> New Case Record Sheet</a>
+                            <!--<a href="{% url 'new_case_record_sheet' id=child.id %}" class="btn btn-sm btn-danger m-r-5"> <i class="fa fa-file-o"></i> New Case Record Sheet</a>-->
                             <a href="{% url 'new_pmtct' id=child.id %}" class="btn btn-sm btn-primary m-r-5"> <i class="fa fa-file-o"></i> New Registration</a>
                         {% endif %}
                            

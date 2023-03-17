@@ -210,4 +210,7 @@
     <li><a href="{% url 'ovc_dashboard' %}">
     	<i class="fa fa-bar-chart"></i> <span>OVC Dashboards</span></a>
     </li>
+    <li class="{{ request.path|get_class:'dashboard' }}"><a href="{% url 'raw_dashboard' %}">
+    	<i class="fa fa-bar-chart"></i> <span>Raw Data</span></a>
+    </li>
 </ul>

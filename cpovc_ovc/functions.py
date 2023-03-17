@@ -1,5 +1,5 @@
 """OVC common methods."""
-from datetime import datetime
+import datetime
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.shortcuts import get_list_or_404
@@ -11,11 +11,13 @@ from .models import (
 from cpovc_registry.models import (
     RegPerson, RegOrgUnit, RegPersonsTypes, OVCCheckin,
     RegPersonsExternalIds, RegPersonsOrgUnits)
-from cpovc_main.functions import convert_date
+from cpovc_main.functions import convert_date, get_days_difference
 from cpovc_registry.functions import (
     extract_post_params, save_person_extids, get_attached_ous,
     get_orgs_child, get_specific_orgs)
 from cpovc_main.models import SetupList
+
+from django.contrib import messages
 
 
 def get_checkins(user_id):
@@ -147,6 +149,10 @@ def search_ovc(request):
         elif cid == 6:
             pids = RegPerson.objects.filter(
                 id=name, is_void=False).values_list('id', flat=True)
+        elif cid == 7:
+            pids = OVCRegistration.objects.filter(
+                caretaker_id=name, is_void=False).values_list(
+                'person_id', flat=True)
 
         else:
             for nm in names:
@@ -235,14 +241,19 @@ def search_master(request):
         return results
 
 
-def get_hh_members(ovc_id):
+def get_hh_members(ovc_id, hh_id=None):
     """Method to get child chv details."""
     try:
-        ovc_detail = get_object_or_404(
-            OVCHHMembers, person_id=ovc_id, is_void=False)
+        if hh_id:
+            ovc_detail = get_list_or_404(
+                OVCHHMembers, person_id=ovc_id,
+                house_hold_id=hh_id, is_void=False)
+        else:
+            ovc_detail = get_list_or_404(
+                OVCHHMembers, person_id=ovc_id, is_void=False)
     except Exception as e:
         print('error getting ovc hh members - %s' % (str(e)))
-        return {}
+        return []
     else:
         return ovc_detail
 
@@ -262,6 +273,8 @@ def get_ovcdetails(ovc_id):
 def ovc_registration(request, ovc_id, edit=0):
     """Method to complete ovc registration."""
     try:
+        status_id = 0
+        msg = "OVC Registration completed successfully"
         min_date = convert_date('01-Jan-1900')
         reg_date = request.POST.get('reg_date')
         reg_date = convert_date(reg_date)
@@ -276,11 +289,14 @@ def ovc_registration(request, ovc_id, edit=0):
 
         bcert_no = request.POST.get('bcert_no')
         ncpwd_no = request.POST.get('ncpwd_no')
+        dreams_id = request.POST.get('dreams_id')
         ext_ids = {}
         if bcert_no:
             ext_ids['ISOV'] = bcert_no
         if ncpwd_no:
             ext_ids['IPWD'] = ncpwd_no
+        if dreams_id:
+            ext_ids['IDRM'] = dreams_id
         if ext_ids:
             save_person_extids(ext_ids, ovc_id)
 
@@ -293,9 +309,11 @@ def ovc_registration(request, ovc_id, edit=0):
         is_exited = request.POST.get('is_exited')
         exit_reason = request.POST.get('exit_reason')
         criterias = request.POST.getlist('eligibility')
-        exit_date = datetime.now().strftime("%Y-%m-%d")
+        current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        exit_date = request.POST.get('exit_date')
         ovc_detail = get_object_or_404(OVCRegistration, person_id=ovc_id)
         # HIV status update only if unknown
+        ovc_dob = ovc_detail.person.date_of_birth
         if edit == 0:
             edit_hiv = True
             cbo_uid = gen_cbo_id(cbo_id, ovc_id)
@@ -323,7 +341,6 @@ def ovc_registration(request, ovc_id, edit=0):
         if edit_hiv:
             ovc_detail.hiv_status = nhiv_status
         is_active = False if is_exited else True
-        ovc_detail.registration_date = reg_date
         ovc_detail.has_bcert = has_bcert
         ovc_detail.is_disabled = is_disabled
         ovc_detail.immunization_status = str(immmune)
@@ -332,6 +349,32 @@ def ovc_registration(request, ovc_id, edit=0):
         ovc_detail.school_level = school_level
         ovc_detail.is_active = is_active
         ovc_detail.exit_reason = exit_reason
+        # Validate changes in Registration/Exit dates
+        create_date = ovc_detail.created_at
+        reg_year = reg_date.year
+        days_diff = get_days_difference(reg_date)
+        days_diff2 = dates_difference(create_date, reg_date)
+        days_diff3 = dates_difference(ovc_dob, reg_date)
+        # Diff dates checks
+        ui_reg_date_str = str(reg_date.date())
+        db_reg_date_str = str(ovc_detail.registration_date)
+        reg_check = True if ui_reg_date_str != db_reg_date_str else False
+        print('REG CHECK', reg_date, ovc_detail.registration_date, reg_check)
+        allowed_reg = True
+        if days_diff < 0:
+            allowed_reg = False
+            msg = 'Future date (%s) of registration not allowed' % (reg_date)
+        elif days_diff2 > 28 and reg_year > 1900 and reg_check:
+            allowed_reg = False
+            msg = 'Registration date (%s) is ' % (reg_date)
+            msg += 'more than 28 days from system date and is NOT allowed'
+        elif days_diff3 > 0:
+            allowed_reg = False
+            msg = 'Registration date (%s) is before OVC DOB.' % (reg_date)
+        if allowed_reg:
+            ovc_detail.registration_date = reg_date
+        else:
+            status_id = 1
         if exit_reason:
             ovc_detail.exit_date = exit_date
         ovc_detail.save(
@@ -368,6 +411,13 @@ def ovc_registration(request, ovc_id, edit=0):
                 hhealth.save(update_fields=["is_void"])
             except Exception:
                 print('No existing linkage details')
+            # Delete viral load - Feb 2023
+            try:
+                vls = get_object_or_404(OVCViralload, person_id=ovc_id)
+                vls.is_void = True
+                vls.save(update_fields=["is_void"])
+            except Exception:
+                print('No Viral load data available')
         # Update School details
         if school_level != 'SLNS':
             school_id = request.POST.get('school_id')
@@ -384,6 +434,9 @@ def ovc_registration(request, ovc_id, edit=0):
                               'school_class': school_class,
                               'admission_type': school_adm,
                               'is_void': False},)
+        else:
+            # Void Education detail when Not in school from Being in school
+            OVCEducation.objects.filter(person_id=ovc_id).update(is_void=True)
         # cgs = extract_post_params(request, naming='cg_')
         hhrs = extract_post_params(request, naming='hhr_')
         # Alive status, HIV status and Death cause for Guardian
@@ -440,9 +493,7 @@ def ovc_registration(request, ovc_id, edit=0):
                     hh_death = cst[hh_m][0] if hh_m in cst else None
                 if oid == hh_m:
                     hh_hiv, hh_alive, hh_death = hiv_status, 'AYES', None
-
-                membership = get_hh_members(hh_m)
-                print('membership', membership)
+                membership = get_hh_members(hh_m, hh_id)
                 if not membership:
                     OVCHHMembers(
                         house_hold_id=hh_id, person_id=hh_m,
@@ -473,18 +524,34 @@ def ovc_registration(request, ovc_id, edit=0):
                     hh_death = cst[hh_m][0] if hh_m in cst else None
                 if oid == hh_m:
                     hh_hiv, hh_alive, hh_death = hiv_status, 'AYES', None
-                hhm, created = OVCHHMembers.objects.update_or_create(
+                mbss = OVCHHMembers.objects.filter(
                     person_id=hh_m, house_hold_id=hhid,
-                    defaults={'person_id': hh_m, 'hh_head': hh_head,
-                              'member_type': member_type, 'is_void': False,
-                              'death_cause': hh_death,
-                              'member_alive': hh_alive,
-                              'date_linked': todate, 'hiv_status': hh_hiv},)
+                    is_void=False).order_by("-date_linked")
+                mbct = 0
+                for mbs in mbss:
+                    mbct += 1
+                    mbs_id = mbs.pk
+                    if mbct == 1:
+                        print('Update this membership', mbct, hh_m, mbs_id)
+                        hhm, created = OVCHHMembers.objects.update_or_create(
+                            person_id=hh_m, house_hold_id=hhid, pk=mbs_id,
+                            defaults={'person_id': hh_m, 'hh_head': hh_head,
+                                      'member_type': member_type,
+                                      'is_void': False,
+                                      'death_cause': hh_death,
+                                      'member_alive': hh_alive,
+                                      'date_linked': todate,
+                                      'hiv_status': hh_hiv})
+                    else:
+                        print('Delete this membership', mbct, hh_m, mbs_id)
+                        hhms = OVCHHMembers.objects.get(id=mbs_id)
+                        hhms.is_void = True
+                        hhms.save(update_fields=["is_void"])
     except Exception as e:
-        print('Error updating OVCID:%s - %s' % (ovc_id, str(e)))
-        pass
+        msg = 'Error updating OVC ID: %s - %s' % (ovc_id, str(e))
+        return {'status_id': 9, 'status_msg': msg}
     else:
-        pass
+        return {'status_id': status_id, 'status_msg': msg}
 
 
 def get_timediff(create_time):
@@ -612,40 +679,64 @@ def manage_checkins(request, gid=0):
 
 def ovc_management(request):
     try:
+        msg = 'Successful'
         action_id = int(request.POST.get('action'))
         if action_id == 2:
-            perform_exit(request)
+            msg = perform_exit(request)
         elif action_id == 3:
-            save_viral_load(request)
+            msg = save_viral_load(request)
+        messages.add_message(request, messages.INFO, msg)
     except Exception as e:
-        raise e
+        msg = 'Error - %s' % str(e)
+        return msg
     else:
-        pass
+        return msg
 
 
 def perform_exit(request):
     try:
+        msg = 'Exit saved successfully'
         ovcid = request.POST.get('ovc_id')
         exit_date = convert_date(request.POST.get('exit_date'))
         exit_reason = request.POST.get('exit_reason')
         exit_org_name = request.POST.get('exit_org_name')
-        #
+        # Today's date
+        days_diff = get_days_difference(exit_date)
+        month_exit = exit_date.month
         ovc_details = OVCRegistration.objects.get(person_id=ovcid)
-        ovc_details.exit_date = exit_date
-        ovc_details.exit_reason = exit_reason
-        if exit_org_name:
-            # ovc_details.exit_org_name = exit_org_name
-            org, created = OVCExit.objects.update_or_create(
-                person_id=ovcid,
-                defaults={'person_id': ovcid, 'org_unit_name': exit_org_name},)
-        ovc_details.is_active = False
-        ovc_details.save(
-            update_fields=["exit_date", "exit_reason", "is_active"])
+        db_exit_date = ovc_details.exit_date
+        ui_exit_date_str = str(exit_date.date())
+        db_exit_date_str = str(db_exit_date) if db_exit_date else ''
+        exit_check = True if ui_exit_date_str != db_exit_date_str else False
+        print('Days diff, month', days_diff, month_exit)
+        allow_exit = True
+        if days_diff > 90:
+            allow_exit = False
+            msg = 'Exit not allowed after 90 days from today not allowed.'
+        elif days_diff < 0:
+            allow_exit = False
+            msg = 'Exit not allowed in future dates'
+        elif exit_check and db_exit_date_str:
+            allow_exit = False
+            msg = 'Change of exit dates not allowed'
+        if allow_exit or request.user.is_superuser:
+            ovc_details.exit_date = exit_date
+            ovc_details.exit_reason = exit_reason
+            if exit_org_name:
+                # ovc_details.exit_org_name = exit_org_name
+                org, created = OVCExit.objects.update_or_create(
+                    person_id=ovcid,
+                    defaults={'person_id': ovcid,
+                              'org_unit_name': exit_org_name},)
+            ovc_details.is_active = False
+            ovc_details.save(
+                update_fields=["exit_date", "exit_reason", "is_active"])
     except Exception as e:
-        print('error exiting - %s' % (str(e)))
-        raise e
+        msg = 'error exiting - %s' % (str(e))
+        print(msg)
+        return msg
     else:
-        pass
+        return msg
 
 
 def get_exit_org(ovc_id):
@@ -661,6 +752,7 @@ def get_exit_org(ovc_id):
 
 def save_viral_load(request):
     try:
+        msg = ' Viral load saved successful'
         ovcid = request.POST.get('ovc_id')
         viral_date = convert_date(request.POST.get('viral_date'))
         ldl = request.POST.get('ldl')
@@ -672,9 +764,9 @@ def save_viral_load(request):
             defaults={'person_id': ovcid, 'viral_load': viral_load},)
     except Exception as e:
         print('error exiting - %s' % (str(e)))
-        raise e
+        return 'error'
     else:
-        pass
+        return msg
 
 
 def method_once(method):
@@ -768,6 +860,29 @@ def limit_person_ids_orgs(request, pids):
         return []
     else:
         return pids
+
+
+def dates_difference(event_date, from_date=None):
+    """method to get days difference."""
+    try:
+        fmt = '%d-%b-%Y'
+        if not from_date:
+            from_date = datetime.datetime.now()
+        # ev_date = convert_date(event_date)
+        if isinstance(event_date, datetime.datetime):
+            ev_date = event_date.date()
+        elif isinstance(event_date, datetime.date):
+            ev_date = event_date
+        else:
+            edate = datetime.datetime.strptime(event_date, fmt)
+            ev_date = edate.date()
+        ev_diff = ev_date - from_date.date()
+        diff_days = ev_diff.days
+    except Exception as e:
+        print('Error - %s' % str(e))
+        return 0
+    else:
+        return diff_days
 
 
 class PersonObj(object):

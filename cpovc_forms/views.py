@@ -84,6 +84,7 @@ from cpovc_ovc.views import ovc_view
 from .helpers.events import save_event
 
 from cpovc_pfs.models import OVCPreventiveEvents
+from cpovc_auth.decorators import validate_ovc
 
 
 def validate_serialnumber(user_id, subcounty, serial_number):
@@ -887,7 +888,7 @@ def documents_manager_search(request):
     return render(request, 'forms/documents_manager.html', {'form': form})
 
 
-# @login_required
+@login_required
 # @is_allowed_groups(['DUU'])
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def documents_manager(request):
@@ -6339,7 +6340,7 @@ def bursary_followup(request, id):
 
 
 # -------------------- OVC Care ------------------------------------------#
-# @login_required
+@login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def csi(request):
     form = OVCCareSearchForm(
@@ -6410,7 +6411,7 @@ def csi(request):
                       {'form': form})
 
 
-# @login_required
+@login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_csi(request, id):
     try:
@@ -6536,7 +6537,7 @@ def new_csi(request, id):
                    'person': id})
 
 
-# @login_required
+@login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_csi(request, id):
     try:
@@ -6785,7 +6786,7 @@ def edit_csi(request, id):
                    'resultsetssvc': resultsetssvc})
 
 
-# @login_required
+@login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_csi(request, id):
     f = OVCCareEvents.objects.get(pk=id, is_void=False)
@@ -6913,7 +6914,7 @@ def view_csi(request, id):
                    'vals': vals, })
 
 
-# @login_required
+@login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_csi(request, id):
     try:
@@ -6927,90 +6928,103 @@ def delete_csi(request, id):
 
 
 @login_required
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@validate_ovc([], 1)
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_form1b(request, id):
-    if request.method == 'POST':
-        save_form1b(request, id)
-        msg = 'Form 1B saved successfully'
-        messages.add_message(request, messages.INFO, msg)
-        url = reverse('new_form1b', kwargs={'id': id})
+    try:
+        if request.method == 'POST':
+            save_form1b(request, id)
+            msg = 'Form 1B saved successfully'
+            messages.add_message(request, messages.INFO, msg)
+            url = reverse('new_form1b', kwargs={'id': id})
+            return HttpResponseRedirect(url)
+        deleted = request.GET.get('deleted', 0)
+        if deleted:
+            msg = 'Form 1B deleted successfully'
+            messages.add_message(request, messages.SUCCESS, msg)
+        init_data = get_ovcdetails(id)
+        ovc = get_ovcdetails(id)
+        cid = ovc.caretaker_id
+        # Hard check for Caregiver
+        ovc_id = int(id)
+        child = RegPerson.objects.get(is_void=False, id=ovc_id)
+        care_giver = RegPerson.objects.get(
+            id=OVCRegistration.objects.get(person=child).caretaker_id)
+        check_fields = ['sex_id']
+        months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        today = datetime.now()
+        month = str(today.strftime('%b'))
+        f1b_allow = True if month in months else False
+        vals = get_dict(field_name=check_fields)
+        ffs = create_fields(['form1b_items'])
+        domains = create_form_fields(ffs)
+        # print ffsd
+        form = OVCF1AForm(initial={'person': id, 'caretaker_id': cid})
+        f1bs = OVCCareEvents.objects.filter(
+            event_type_id='FM1B', person_id=cid, is_void=False)
+
+        ev_dict = get_dict(['caregiver_critical_event_id'])
+
+        ev_data = []
+        for ovc_evt in f1bs:
+            sservi, assem, ce_data = [], [], []
+            event_key = str(ovc_evt.pk)
+            event_date = ovc_evt.date_of_event.strftime('%d-%b-%Y')
+
+            ovccareassems = OVCCareF1B.objects.filter(
+                event=ovc_evt, is_void=False)
+
+            for ovccareassem in ovccareassems:
+                full_f1b_qn_assess = SetupList.objects.filter(
+                    item_id=ovccareassem.entity, item_sub_category__icontains='a')
+                full_f1b_qn_servi = SetupList.objects.filter(
+                    item_id=ovccareassem.entity, item_sub_category__icontains='s')
+                for one_f1b_qn_assess in full_f1b_qn_assess:
+                    assem.append({
+                        # 'event_type': 'ASSESSMENTS',
+                        'data': str('(' + one_f1b_qn_assess.item_id + ') ' + one_f1b_qn_assess.item_description)
+                    })
+
+                for one_f1b_qn_servi in full_f1b_qn_servi:
+                    sservi.append({
+                        # 'event_type': 'SERVICES',
+                        'data': str('(' + one_f1b_qn_servi.item_id + ') ' + one_f1b_qn_servi.item_description)
+                    })
+            # Assign CE
+            cevents = OVCCareEAV.objects.filter(
+                event_id=event_key, entity='CEVT', is_void=False)
+            for event in cevents:
+                edata = event.value
+                evalue = ev_dict[edata] if edata in ev_dict else edata
+                ce_data.append({'data': str('(' + edata + ') ' + evalue)})
+                print('ce-data', ce_data)
+
+            ev_data.append({
+                'event_key': event_key,
+                'ev_date': event_date,
+                'ev_person': id,
+                'services': sservi,
+                'assessments': assem,
+                'critical_events': ce_data,
+            })
+
+        return render(request,
+                      'forms/new_form1b.html',
+                      {'form': form, 'data': init_data,
+                       'vals': vals, 'domains': domains, 'ovc': ovc,
+                       'ev_data': ev_data, 'caregiver': care_giver,
+                       'form1b_allowed': f1b_allow, 'f1bs': f1bs})
+    except Exception as e:
+        url = reverse('ovc_view', kwargs={'id': id})
+        msg = 'Missing Caregiver Error - %s' % str(e)
+        messages.add_message(request, messages.ERROR, msg)
         return HttpResponseRedirect(url)
-    deleted = request.GET.get('deleted', 0)
-    if deleted:
-        msg = 'Form 1B deleted successfully'
-        messages.add_message(request, messages.SUCCESS, msg)
-    init_data = get_ovcdetails(id)
-    ovc = get_ovcdetails(id)
-    cid = ovc.caretaker_id
-    check_fields = ['sex_id']
-    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    today = datetime.now()
-    month = str(today.strftime('%b'))
-    f1b_allow = True if month in months else False
-    vals = get_dict(field_name=check_fields)
-    ffs = create_fields(['form1b_items'])
-    domains = create_form_fields(ffs)
-    # print ffsd
-    form = OVCF1AForm(initial={'person': id, 'caretaker_id': cid})
-    f1bs = OVCCareEvents.objects.filter(
-        event_type_id='FM1B', person_id=cid, is_void=False)
-
-    ev_dict = get_dict(['caregiver_critical_event_id'])
-
-    ev_data = []
-    for ovc_evt in f1bs:
-        sservi, assem, ce_data = [], [], []
-        event_key = str(ovc_evt.pk)
-        event_date = ovc_evt.date_of_event.strftime('%d-%b-%Y')
-
-        ovccareassems = OVCCareF1B.objects.filter(
-            event=ovc_evt, is_void=False)
-
-        for ovccareassem in ovccareassems:
-            full_f1b_qn_assess = SetupList.objects.filter(
-                item_id=ovccareassem.entity, item_sub_category__icontains='a')
-            full_f1b_qn_servi = SetupList.objects.filter(
-                item_id=ovccareassem.entity, item_sub_category__icontains='s')
-            for one_f1b_qn_assess in full_f1b_qn_assess:
-                assem.append({
-                    # 'event_type': 'ASSESSMENTS',
-                    'data': str('(' + one_f1b_qn_assess.item_id + ') ' + one_f1b_qn_assess.item_description)
-                })
-
-            for one_f1b_qn_servi in full_f1b_qn_servi:
-                sservi.append({
-                    # 'event_type': 'SERVICES',
-                    'data': str('(' + one_f1b_qn_servi.item_id + ') ' + one_f1b_qn_servi.item_description)
-                })
-        # Assign CE
-        cevents = OVCCareEAV.objects.filter(
-            event_id=event_key, entity='CEVT', is_void=False)
-        for event in cevents:
-            edata = event.value
-            evalue = ev_dict[edata] if edata in ev_dict else edata
-            ce_data.append({'data': str('(' + edata + ') ' + evalue)})
-            print('ce-data', ce_data)
-
-        ev_data.append({
-            'event_key': event_key,
-            'ev_date': event_date,
-            'ev_person': id,
-            'services': sservi,
-            'assessments': assem,
-            'critical_events': ce_data,
-        })
-
-    return render(request,
-                  'forms/new_form1b.html',
-                  {'form': form, 'data': init_data,
-                   'vals': vals, 'domains': domains, 'ovc': ovc,
-                   'ev_data': ev_data,
-                   #    'services': sservi, 'assessments': assem,
-                   'form1b_allowed': f1b_allow, 'f1bs': f1bs})
+    else:
+        pass
 
 
-# @login_required
+@login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def form1a_events(request, id):
     init_data = RegPerson.objects.filter(pk=id)
@@ -7023,7 +7037,7 @@ def form1a_events(request, id):
                    'vals': vals})
 
 
-# @login_required
+@login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def save_form1a(request):
     jsonResponse = []
@@ -7211,7 +7225,7 @@ def update_event_date(pk, date_of_assessment):
     OVCCareEvents.objects.filter(pk=pk).update(date_of_event=date_of_assessment)
 
 
-# @login_required
+@login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def update_form1a(request):
     jsonResponse = []
@@ -7353,7 +7367,8 @@ def update_form1a(request):
     return JsonResponse(jsonResponse, content_type='application/json', safe=False)
 
 
-# @login_required
+@login_required
+@validate_ovc([], 1)
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_form1a(request, id, btn_event_type, btn_event_pk):
     init_data = RegPerson.objects.filter(pk=id)
@@ -7474,6 +7489,7 @@ def edit_form1a(request, id, btn_event_type, btn_event_pk):
 
 
 @login_required(login_url='/')
+@validate_ovc([], 1)
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_form1a(request, id, btn_event_type, btn_event_pk):
     jsonForm1AData = []
@@ -7579,7 +7595,8 @@ def delete_previous_event_entry(request, btn_event_type, entry_id):
                         safe=False)
 
 
-# @login_required
+@login_required
+@validate_ovc([])
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_form1a(request):
     jsonForm1AData = []
@@ -7728,7 +7745,8 @@ def manage_form1b_events(request):
                             safe=False)
 
 
-# @login_required
+@login_required
+@validate_ovc([], 1)
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_hhva(request, id):
     try:
@@ -7953,7 +7971,8 @@ def new_hhva(request, id):
                   })
 
 
-# @login_required
+@login_required
+@validate_ovc([], 1)
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_hhva(request, id):
     try:
@@ -7964,7 +7983,7 @@ def edit_hhva(request, id):
         raise e
 
 
-# @login_required
+@login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_hhva(request, id):
     try:
@@ -7975,7 +7994,7 @@ def view_hhva(request, id):
         raise e
 
 
-# @login_required
+@login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_hhva(request, id):
     try:
@@ -8994,6 +9013,7 @@ from .models import OVCCareCasePlan
 
 
 @login_required
+@validate_ovc([], 1)
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def case_plan_template(request, id):
     if request.method == 'POST':
@@ -9069,27 +9089,36 @@ def case_plan_template(request, id):
         return HttpResponseRedirect(url)
 
     # get child data
-    init_data = RegPerson.objects.filter(pk=id)
-    check_fields = ['sex_id', 'relationship_type_id']
-    vals = get_dict(field_name=check_fields)
-    ovc_id = int(id)
-    child = RegPerson.objects.get(is_void=False, id=ovc_id)
-    care_giver = RegPerson.objects.get(
-        id=OVCRegistration.objects.get(person=child).caretaker_id)
-    form = CasePlanTemplate()
+    try:
+        init_data = RegPerson.objects.filter(pk=id)
+        check_fields = ['sex_id', 'relationship_type_id']
+        vals = get_dict(field_name=check_fields)
+        ovc_id = int(id)
+        child = RegPerson.objects.get(is_void=False, id=ovc_id)
+        care_giver = RegPerson.objects.get(
+            id=OVCRegistration.objects.get(person=child).caretaker_id)
+        form = CasePlanTemplate()
 
-    # past cpt
-    caseplan_events = get_past_cpt(child.id)
+        # past cpt
+        caseplan_events = get_past_cpt(child.id)
 
-    return render(request,
-                  'forms/case_plan_template.html',
-                  {'form': form, 'init_data': init_data,
-                   'vals': vals, 'child': child,
-                   'caseplan_events': caseplan_events,
-                   'care_giver': care_giver})
+        return render(request,
+                      'forms/case_plan_template.html',
+                      {'form': form, 'init_data': init_data,
+                       'vals': vals, 'child': child,
+                       'caseplan_events': caseplan_events,
+                       'care_giver': care_giver})
+    except Exception as e:
+        msg = 'Missing Caregiver Error - %s' % str(e)
+        messages.add_message(request, messages.ERROR, msg)
+        url = reverse('ovc_view', kwargs={'id': id})
+        return HttpResponseRedirect(url)
+    else:
+        pass
 
 
 @login_required
+@validate_ovc([], 1)
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def update_caseplan(request, event_id, ovcid):
     this_eventt = OVCCareEvents.objects.get(event_type_id='CPAR', pk=event_id)
@@ -9100,7 +9129,7 @@ def update_caseplan(request, event_id, ovcid):
         d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created
         delta = get_days_difference(d_event)
 
-        if delta < 90:
+        if delta < 730:
             try:
                 my_request = request.POST.get('final_submission')
 
@@ -9162,7 +9191,7 @@ def update_caseplan(request, event_id, ovcid):
                 print('error updating caseplan - %s' % (str(e)))
                 return False
         else:
-            msg = "Can't update after 30 days"
+            msg = "Can't update after 2 years"
             messages.add_message(request, messages.ERROR, msg)
             url = reverse('ovc_view', kwargs={'id': ovcid})
             return HttpResponseRedirect(url)
@@ -9185,6 +9214,7 @@ def update_caseplan(request, event_id, ovcid):
 
 
 @login_required
+@validate_ovc([], 1)
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def monitor_caseplan(request, event_id, ovcid):
     this_eventt = OVCCareEvents.objects.get(event_type_id='CPAR', pk=event_id)
@@ -9310,7 +9340,8 @@ def delete_caseplan(request, id, event_id):
         pass
 
 
-# @login_required
+@login_required
+@validate_ovc([], 1)
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_case_plan_monitoring(request, id):
     if request.method == 'POST':
@@ -9365,20 +9396,30 @@ def new_case_plan_monitoring(request, id):
         url = reverse('ovc_view', kwargs={'id': id})
         return HttpResponseRedirect(url)
     else:
-        form = CparaMonitoring()
+        try:
+            form = CparaMonitoring()
+            ovc_id = int(id)
+            child = RegPerson.objects.get(is_void=False, id=ovc_id)
+            care_giver = RegPerson.objects.get(
+                id=OVCRegistration.objects.get(person=child).caretaker_id)
 
-        ovc_id = int(id)
-        child = RegPerson.objects.get(is_void=False, id=ovc_id)
-        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+            # Show previous cpara monitoring events
+            event = OVCCareEvents.objects.filter(
+                person_id=ovc_id).values_list('event')
+            cpara_mon_data = OVCMonitoring.objects.filter(
+                event_id__in=event).order_by('event_date')
 
-        # Show previous cpara monitoring events
-        event = OVCCareEvents.objects.filter(person_id=ovc_id).values_list('event')
-        cpara_mon_data = OVCMonitoring.objects.filter(event_id__in=event).order_by('event_date')
-
-        return render(request, 'forms/new_case_plan_monitoring.html',
-                      {'form': form, 'care_giver': care_giver,
-                       'cpara_mon_data': cpara_mon_data,
-                       'child': child})
+            return render(request, 'forms/new_case_plan_monitoring.html',
+                          {'form': form, 'care_giver': care_giver,
+                           'cpara_mon_data': cpara_mon_data,
+                           'child': child})
+        except Exception as e:
+            msg = 'Missing Caregiver Error - %s' % str(e)
+            messages.add_message(request, messages.ERROR, msg)
+            url = reverse('ovc_view', kwargs={'id': id})
+            return HttpResponseRedirect(url)
+        else:
+            pass
 
 
 def fetch_question(answer_item_code):
@@ -9537,7 +9578,8 @@ def persist_per_child_wellbeing_question(request, key, house_hold, new_events_pk
                                            request)
 
 
-# @login_required
+@login_required
+@validate_ovc([], 1)
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_wellbeing(request, id):
     # try:
@@ -9716,7 +9758,8 @@ def new_wellbeing(request, id):
                   })
 
 
-# @login_required
+@login_required
+@validate_ovc([], 1)
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_wellbeingadolescent(request, id):
     try:
@@ -9855,7 +9898,8 @@ def hiv_status(request):
         return HttpResponseRedirect(reverse(forms_home))
 
 
-# @login_required
+@login_required
+@validate_ovc([], 1)
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_hivscreeningtool(request, id):
     init_data = RegPerson.objects.filter(pk=id)
@@ -10048,7 +10092,8 @@ def new_hivscreeningtool(request, id):
 
 
 # New HIV Manangement Form
-# @login_required
+@login_required
+@validate_ovc([], 1)
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_hivmanagementform(request, id):
     if request.method == 'POST':
@@ -10183,7 +10228,7 @@ def new_hivmanagementform(request, id):
 
 
 # DREAMS Service Uptake Form
-# @login_required
+@login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def new_dreamsform(request, id):
     try:
@@ -10472,10 +10517,9 @@ def delete_case_closure(request, id):
 
     return HttpResponseRedirect(url)
 
+
 def edit_case_closure(request, id):
     """Some default page for Server Errors."""
-
-
 
     try:
 
@@ -10566,31 +10610,27 @@ def edit_case_closure(request, id):
         url = reverse('new_case_closure', kwargs={'id': person_id})
         return HttpResponseRedirect(url)
 
-        msg = 'HEI tracker save error: (%s)' % (str(e))
-        messages.add_message(request, messages.ERROR, msg)
-        print('Error saving HEI tracker : %s' % str(e))
-        url = reverse('ovc_view', kwargs={'id': id})
-        return HttpResponseRedirect(reverse(url))
-
 
 # New Cpara action functionality
+@validate_ovc([], 1)
 def new_cpara(request, id):
+    ovc_id = int(id)
+    child = RegPerson.objects.get(id=ovc_id)
+    ovc_reg = OVCRegistration.objects.get(person_id=ovc_id)
+    care_giver_id = ovc_reg.caretaker_id
+    care_giver = RegPerson.objects.get(id=care_giver_id)
+    household = OVCHHMembers.objects.filter(
+        is_void=False, person_id=care_giver_id).first()
+    house_hold_id = household.house_hold_id
+    house_hold = OVCHouseHold.objects.get(id=house_hold_id)
+    hhmqs = OVCHHMembers.objects.filter(
+        is_void=False, house_hold_id=house_hold_id).order_by("-hh_head")
+    hhmembers2 = hhmqs.exclude(person_id=id)
+    hhmembers = hhmembers2.exclude(person=care_giver_id)
     if request.method == 'POST':
         data = request.POST
-        child = RegPerson.objects.get(id=int(id))
         form = CparaAssessment()
-        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-        ovc_id = int(id)
-        creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
 
-        # Get house hold
-        hhold = OVCHHMembers.objects.get(is_void=False, person_id=id)
-        # Get HH members
-        hhid = hhold.house_hold_id
-        hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
-        hhmembers2 = hhmqs.exclude(person_id=id)
-        hhmembers = hhmembers2.exclude(person=care_giver)
         date_previous = data.get('CP2d')
 
         questions = OVCCareQuestions.objects.filter(
@@ -10603,7 +10643,7 @@ def new_cpara(request, id):
                 event_type_id='cpr',
                 created_by=request.user.id,
                 person=child,
-                house_hold=house_hold,
+                house_hold_id=house_hold_id,
                 date_of_event=event_date
             )
 
@@ -10611,7 +10651,6 @@ def new_cpara(request, id):
             d_previous=data.get('CP2d')
             date_previous = d_previous if d_previous else None
             answer = data.get(question['code'])
-            # print(f'date_previous{date_previous} date of event {date_of_event}')
             
             if answer is None:
                 answer = 'No'
@@ -10627,11 +10666,12 @@ def new_cpara(request, id):
             try:
                 OVCCareCpara.objects.create(
                     person=child,
-                    caregiver=care_giver,
-                    question=OVCCareQuestions.objects.get(question_id=question['question_id']),
+                    caregiver_id=care_giver_id,
+                    question=OVCCareQuestions.objects.get(
+                        question_id=question['question_id']),
                     question_code=question['code'],
                     answer=answer,
-                    household=house_hold,
+                    household_id=house_hold_id,
                     question_type=question['question_type'],
                     domain=question['domain'],
                     event=event,
@@ -10651,7 +10691,7 @@ def new_cpara(request, id):
         
         try:
             OVCCareBenchmarkScore.objects.create(
-                household=house_hold,
+                household_id=house_hold_id,
                 benchmark_1=int(ovc_score[0]),
                 benchmark_2=int(ovc_score[1]),
                 benchmark_3=int(ovc_score[2]),
@@ -10663,42 +10703,18 @@ def new_cpara(request, id):
                 benchmark_9=int(ovc_score[8]),
                 score=sum([int(i) for i in ovc_score]),
                 event=event,
-                care_giver=care_giver    
+                date_of_event=event_date,
+                care_giver_id=care_giver_id    
             
             )
         except Exception as e:
             print (f"Error while saving to ovccarebenchmark: {e}" )
             messages.add_message(request, messages.INFO,"f'Error while saving to ovccarebenchmark: {e}'")
 
-
-        # sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC'}
-
-        # try:
-        #     for q, v in sub_pop.items():
-        #         if data.get(q) == 'on':
-        #             OVCSubPopulation.objects.create(
-        #                 person=child,
-        #                 criteria=v,
-        #                 date_of_event=convert_date(date_of_event),
-        #                 timestamp_created = timezone.now(),
-        #                 event=event
-        #             )
-        # except Exception as e:
-        #     print(f'The error is {e}')
-
-        hhold = OVCHHMembers.objects.get(is_void=False, person_id=id)
-        # Get HH members
-        hhid = hhold.house_hold_id
-        hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
-        hhmembers2 = hhmqs.exclude(person_id=id)
-        hhmembers = hhmembers2.exclude(person=care_giver)
-
-        # start of appending the results
-
-
-
+        # start of appending the results to HH
         # Save data for table data for 3.1 , 3.2 and 3.3
-        quiz_saved = OVCCareQuestions.objects.filter(code__startswith='CP', is_void=False)
+        quiz_saved = OVCCareQuestions.objects.filter(
+            code__startswith='CP', is_void=False)
 
         # get a list of the question code from the OVC Care question table
         saved_quiz = [i.code for i in quiz_saved]
@@ -10709,7 +10725,8 @@ def new_cpara(request, id):
         to_process = set(post_quiz)-set(saved_quiz)
         
         # Gets the values for questions 3.1 to 3.6 individual cpara
-        # ['43_CP16q', '60_CP16q', '23_CP15q', '23_CP16q', '43_CP15q', '60_CP17q', '60_CP15q', '43_CP17q', '23_CP17q']
+        # ['43_CP16q', '60_CP16q', '23_CP15q', '23_CP16q', '43_CP15q',
+        # '60_CP17q', '60_CP15q', '43_CP17q', '23_CP17q']
         q31 = 'CP15q'
         q32 = 'CP16q'
         q33 = 'CP17q'
@@ -10742,15 +10759,15 @@ def new_cpara(request, id):
             else:
                 ind_answer = False
             # breakpoint()
-            
+
             try:
                 OVCCareIndividaulCpara.objects.create(
                     person=child4,
-                    caregiver=care_giver,
+                    caregiver_id=care_giver_id,
                     question_code=quiz_code,
                     question=question_inst,
                     answer=ind_answer,
-                    household=house_hold,
+                    household_id=house_hold_id,
                     question_type=question1[0]['question_type'],
                     domain=question1[0]['domain'],
                     date_of_event=event_date,
@@ -10763,8 +10780,8 @@ def new_cpara(request, id):
                 print(error_message)
 
         else:
+            hh_members = []
             for h_mmembers in hhmembers:
-                hh_members = []
                 hh_person_ids = h_mmembers.person.id
                 hh_members.append(hh_person_ids)
             hh_members.append(id)
@@ -10774,11 +10791,11 @@ def new_cpara(request, id):
                     try:
                         OVCCareIndividaulCpara.objects.create(
                         person=RegPerson.objects.get(id=hh_person_id),
-                        caregiver=care_giver,
+                        caregiver_id=care_giver_id,
                         question_code=ind_cpa,
                         question=OVCCareQuestions.objects.get(code=ind_cpa),
                         answer=True,
-                        household=house_hold,
+                        household_id=house_hold_id,
                         question_type='OVC',
                         domain='DHNU',
                         date_of_event=event_date,
@@ -10794,9 +10811,12 @@ def new_cpara(request, id):
             
 
         # Gets the values for questions in OVC sub population
-        # ['23_CP6d_2', 'CP6d_7', '23_CP6d_6', 'CP6d_1', '23_CP6d_5', '43_CP6d_4', '43_CP6d_6', '43_CP6d_2', '23_CP6d_1', 'CP6d_5', '43_CP6d_7', '43_CP6d_5', '23_CP6d_3', '23_CP6d_4', '23_CP6d_7']
+        # ['23_CP6d_2', 'CP6d_7', '23_CP6d_6', 'CP6d_1', '23_CP6d_5', '43_CP6d_4',
+        # '43_CP6d_6', '43_CP6d_2', '23_CP6d_1', 'CP6d_5', '43_CP6d_7',
+        # '43_CP6d_5', '23_CP6d_3', '23_CP6d_4', '23_CP6d_7']
         ovc_pp = 'CP6d'
-        sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC','CP6d_8':'AHIV'}
+        sub_pop = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW',
+                   'CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC','CP6d_8':'AHIV'}
         ovc_sub_pp=[]
         for i, element in enumerate(to_process):
             if ovc_pp in element:
@@ -10828,7 +10848,7 @@ def new_cpara(request, id):
 
         # Gets the values for questions in Question 6.3 
         # ['60_CP27q2', '23_CP27q2', '43_CP27q2']
-        q61 = 'CP27q2'
+        q61 = 'CP27q'
      
         quiz_63=[]
         for i, element in enumerate(to_process):
@@ -10853,11 +10873,11 @@ def new_cpara(request, id):
             try:
                 OVCCareCpara.objects.create(
                     person=child3,
-                    caregiver=care_giver,
+                    caregiver_id=care_giver_id,
                     question=quest_type_1,
                     question_code=quizs_code,
                     answer=data.get(quizs),
-                    household=house_hold,
+                    household_id=house_hold_id,
                     question_type=quest_type[0]['question_type'],
                     domain=quest_type[0]['domain'],
                     event=event,
@@ -10875,144 +10895,126 @@ def new_cpara(request, id):
         messages.add_message(request, messages.INFO,msg)  
         return HttpResponseRedirect(url)
 
-        
-    child = RegPerson.objects.get(id=id)
-    ovc_id = int(id)
-    creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
-    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-
-    house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-
-    # Get house hold
-    hhold = OVCHHMembers.objects.get(is_void=False, person_id=id)
-    # Get HH members
-    hhid = hhold.house_hold_id
-    hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
-    hhmembers2 = hhmqs.exclude(person_id=id)
-    hhmembers = hhmembers2.exclude(person=care_giver)
-
-    # Get child geo
-    child_geos = RegPersonsGeo.objects.select_related().filter(
-        person=child, is_void=False, date_delinked=None)
-    all_geos_county, all_geos_wards, all_geos = [], [], []
-    for person_geo in child_geos:
-        geo_name = str(person_geo.area.area_id)
-        geo_type = person_geo.area.area_type_id
-        if geo_type == 'GPRV':
-            all_geos_county.append(geo_name)
-        elif geo_type == 'GDIS':
-            all_geos.append(geo_name)
-        else:
-            all_geos_wards.append(geo_name)
-    if all_geos:
-        geos = ', '.join(all_geos)
-    else:
-        geos = None
-    if all_geos_wards:
-        geo_wards = ', '.join(all_geos_wards)
-    else:
-        geo_wards = None
-    if all_geos_county:
-        geo_county = ', '.join(all_geos_county)
-    # geo_wards = geo_wards
-
-    if geo_wards is None:
-        ward = None
-        subcounty = None
-        county = None
-    else:
-        ward_id = int(geo_wards.split(',')[0])
-        ward = SetupGeography.objects.get(area_id=ward_id)
-        subcounty = SetupGeography.objects.get(area_id=ward.parent_area_id)
-        county = SetupGeography.objects.get(area_id=subcounty.parent_area_id)
-
-    # orgunit = RegPersonsOrgUnits.objects.get(person=child)
-    form = CparaAssessment()
-    ovc_id = int(id)
-    child = RegPerson.objects.get(is_void=False, id=ovc_id)
-    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-
-    # pdb.set_trace()  
-    # PAST CPARA
-    
-    past_cpara = []
-    cpara_events = OVCCareEvents.objects.filter(event_type_id='cpr', person_id=id, is_void=False)
-    if cpara_events:
-        for one_cpara_event in cpara_events:
-            event_detail = ""
-            total_benchmark_score = 0
-            # cpara_data = OVCCareCpara.objects.filter(event=one_cpara_event)
-            cpara_data = OVCCareBenchmarkScore.objects.filter(event_id=one_cpara_event.event)
-            bm_array = []
-            if cpara_data:
-                for one_cpara_bench in cpara_data:
-                    bm_array.append("Yes" if one_cpara_bench.benchmark_1 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.benchmark_2 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.benchmark_3 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.benchmark_4 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.benchmark_5 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.benchmark_6 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.benchmark_7 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.benchmark_8 == 1 else "No")
-                    bm_array.append("Yes" if one_cpara_bench.benchmark_9 == 1 else "No")
-
-                    
-                    benchmark_1 = "Benchmark 1: (Yes)" if one_cpara_bench.benchmark_1 == 1 else "Benchmark 1: (No)"
-                    benchmark_2 = "Benchmark 2: (Yes)" if one_cpara_bench.benchmark_2 == 1 else "Benchmark 2: (No)"
-                    benchmark_3 = "Benchmark 3: (Yes)" if one_cpara_bench.benchmark_3 == 1 else "Benchmark 3: (No)"
-                    benchmark_4 = "Benchmark 4: (Yes)" if one_cpara_bench.benchmark_4 == 1 else "Benchmark 4: (No)"
-                    benchmark_5 = "Benchmark 5: (Yes)" if one_cpara_bench.benchmark_5 == 1 else "Benchmark 5: (No)"
-                    benchmark_6 = "Benchmark 6: (Yes)" if one_cpara_bench.benchmark_6 == 1 else "Benchmark 6: (No)"
-                    benchmark_7 = "Benchmark 7: (Yes)" if one_cpara_bench.benchmark_7 == 1 else "Benchmark 7: (No)"
-                    benchmark_8 = "Benchmark 8: (Yes)" if one_cpara_bench.benchmark_8 == 1 else "Benchmark 8: (No)"
-                    benchmark_9 = "Benchmark 9: (Yes)" if one_cpara_bench.benchmark_9 == 1 else "Benchmark 9: (No)"
-
-                    str_1 = benchmark_1 + ", " + benchmark_2 + ", " + benchmark_3 + ", " + benchmark_4 + ", " + benchmark_5 + ", "
-                    str_2 = benchmark_6 + ", " + benchmark_7 + ", " + benchmark_8 + ", " + benchmark_9 + ", "
-                    
-
-                    total_benchmark_score = int(one_cpara_bench.benchmark_1) + int(one_cpara_bench.benchmark_2) + int(
-                        one_cpara_bench.benchmark_3) + int(one_cpara_bench.benchmark_4) + int(
-                        one_cpara_bench.benchmark_5) + int(one_cpara_bench.benchmark_6) + int(
-                        one_cpara_bench.benchmark_7) + int(one_cpara_bench.benchmark_8) + int(
-                        one_cpara_bench.benchmark_9) 
-                        
-                    full_str = str_1 + str_2 # + str_3 + str_4
-                    event_detail = event_detail + full_str
+    try:
+        child = RegPerson.objects.get(id=id)
+        # Get child geo
+        child_geos = RegPersonsGeo.objects.select_related().filter(
+            person=child, is_void=False, date_delinked=None)
+        all_geos_county, all_geos_wards, all_geos = [], [], []
+        for person_geo in child_geos:
+            geo_name = str(person_geo.area.area_id)
+            geo_type = person_geo.area.area_type_id
+            if geo_type == 'GPRV':
+                all_geos_county.append(geo_name)
+            elif geo_type == 'GDIS':
+                all_geos.append(geo_name)
             else:
-                event_detail = "No answered questions found"
-                total_benchmark_score = 0
-                bm_array = []
-            past_cpara.append({
-                'ev_date': one_cpara_event.date_of_event,
-                'ev_person': child.id,
-                'ev_type': 'CPARA',
-                'ev_id': str(one_cpara_event.pk),
-                'ev_detail': str(event_detail),
-                'ev_score': total_benchmark_score,
-                'bm_array': bm_array
-            })
+                all_geos_wards.append(geo_name)
+        if all_geos_wards:
+            geo_wards = ', '.join(all_geos_wards)
+        else:
+            geo_wards = None
 
-            
-    context = {'form':form,
-                'person': id,
-                'hhmembers': hhmembers,
-                'child': child,
-                'creg': creg,
-                'caregiver': care_giver,
-                'household': house_hold,
-                'ward': ward,
-                'subcounty': subcounty,
-                'county': county,
-                'care_giver': care_giver,
-                'past_cpara': past_cpara
-                
-                }    
-    return render(request,'forms/new_cpara.html',context)
+        if geo_wards is None:
+            ward = None
+            subcounty = None
+            county = None
+        else:
+            ward_id = int(geo_wards.split(',')[0])
+            ward = SetupGeography.objects.get(area_id=ward_id)
+            subcounty = SetupGeography.objects.get(area_id=ward.parent_area_id)
+            county = SetupGeography.objects.get(
+                area_id=subcounty.parent_area_id)
+
+        # orgunit = RegPersonsOrgUnits.objects.get(person=child)
+        form = CparaAssessment()
+
+        past_cpara = []
+        cpara_events = OVCCareEvents.objects.filter(
+            event_type_id='cpr', house_hold_id=house_hold_id, is_void=False)
+        if cpara_events:
+            for one_cpara_event in cpara_events:
+                event_detail = ""
+                total_benchmark_score = 0
+                # cpara_data = OVCCareCpara.objects.filter(event=one_cpara_event)
+                cpara_data = OVCCareBenchmarkScore.objects.filter(event_id=one_cpara_event.event)
+                bm_array = []
+                if cpara_data:
+                    for one_cpara_bench in cpara_data:
+                        bm_array.append("Yes" if one_cpara_bench.benchmark_1 == 1 else "No")
+                        bm_array.append("Yes" if one_cpara_bench.benchmark_2 == 1 else "No")
+                        bm_array.append("Yes" if one_cpara_bench.benchmark_3 == 1 else "No")
+                        bm_array.append("Yes" if one_cpara_bench.benchmark_4 == 1 else "No")
+                        bm_array.append("Yes" if one_cpara_bench.benchmark_5 == 1 else "No")
+                        bm_array.append("Yes" if one_cpara_bench.benchmark_6 == 1 else "No")
+                        bm_array.append("Yes" if one_cpara_bench.benchmark_7 == 1 else "No")
+                        bm_array.append("Yes" if one_cpara_bench.benchmark_8 == 1 else "No")
+                        bm_array.append("Yes" if one_cpara_bench.benchmark_9 == 1 else "No")
+
+                        
+                        benchmark_1 = "Benchmark 1: (Yes)" if one_cpara_bench.benchmark_1 == 1 else "Benchmark 1: (No)"
+                        benchmark_2 = "Benchmark 2: (Yes)" if one_cpara_bench.benchmark_2 == 1 else "Benchmark 2: (No)"
+                        benchmark_3 = "Benchmark 3: (Yes)" if one_cpara_bench.benchmark_3 == 1 else "Benchmark 3: (No)"
+                        benchmark_4 = "Benchmark 4: (Yes)" if one_cpara_bench.benchmark_4 == 1 else "Benchmark 4: (No)"
+                        benchmark_5 = "Benchmark 5: (Yes)" if one_cpara_bench.benchmark_5 == 1 else "Benchmark 5: (No)"
+                        benchmark_6 = "Benchmark 6: (Yes)" if one_cpara_bench.benchmark_6 == 1 else "Benchmark 6: (No)"
+                        benchmark_7 = "Benchmark 7: (Yes)" if one_cpara_bench.benchmark_7 == 1 else "Benchmark 7: (No)"
+                        benchmark_8 = "Benchmark 8: (Yes)" if one_cpara_bench.benchmark_8 == 1 else "Benchmark 8: (No)"
+                        benchmark_9 = "Benchmark 9: (Yes)" if one_cpara_bench.benchmark_9 == 1 else "Benchmark 9: (No)"
+
+                        str_1 = benchmark_1 + ", " + benchmark_2 + ", " + benchmark_3 + ", " + benchmark_4 + ", " + benchmark_5 + ", "
+                        str_2 = benchmark_6 + ", " + benchmark_7 + ", " + benchmark_8 + ", " + benchmark_9 + ", "
+                        
+
+                        total_benchmark_score = int(one_cpara_bench.benchmark_1) + int(one_cpara_bench.benchmark_2) + int(
+                            one_cpara_bench.benchmark_3) + int(one_cpara_bench.benchmark_4) + int(
+                            one_cpara_bench.benchmark_5) + int(one_cpara_bench.benchmark_6) + int(
+                            one_cpara_bench.benchmark_7) + int(one_cpara_bench.benchmark_8) + int(
+                            one_cpara_bench.benchmark_9) 
+                            
+                        full_str = str_1 + str_2 # + str_3 + str_4
+                        event_detail = event_detail + full_str
+                else:
+                    event_detail = "No answered questions found"
+                    total_benchmark_score = 0
+                    bm_array = []
+                past_cpara.append({
+                    'ev_date': one_cpara_event.date_of_event,
+                    'ev_person': child.id,
+                    'ev_type': 'CPARA',
+                    'ev_id': str(one_cpara_event.pk),
+                    'ev_detail': str(event_detail),
+                    'ev_score': total_benchmark_score,
+                    'bm_array': bm_array
+                })
+
+        context = {'form':form,
+                    'person': id,
+                    'hhmembers': hhmembers,
+                    'child': child,
+                    'creg': ovc_reg,
+                    'caregiver': care_giver_id,
+                    'household': house_hold,
+                    'ward': ward,
+                    'subcounty': subcounty,
+                    'county': county,
+                    'care_giver': care_giver,
+                    'past_cpara': past_cpara
+                    
+                    }    
+        return render(request,'forms/new_cpara.html',context)
+    except Exception as e:
+        url = reverse('ovc_view', kwargs={'id': id})
+        msg = 'Missing Caregiver Error - %s' % str(e)
+        messages.add_message(request, messages.ERROR, msg)
+        return HttpResponseRedirect(url)
+    else:
+        pass
 
 
 
 # Update cpara edit functionality
+@validate_ovc([], 1)
 def edit_cpara(request, id):    
     if request.method == 'POST':
         
@@ -11398,6 +11400,7 @@ def delete_cpara(request, id, btn_event_pk):
                         safe=False)
 
 
+@validate_ovc([], 1)
 def grad_monitor_tool(request, id):
     if request.method == 'POST':
         data = request.POST
@@ -11428,7 +11431,7 @@ def grad_monitor_tool(request, id):
         except Exception as e:
             error_message = f'Events didn\'t save : {e}'
             print(error_message)
-       
+
         answer_value = {
             'AYES': True,
             'ANNO': False
@@ -11465,38 +11468,47 @@ def grad_monitor_tool(request, id):
         return HttpResponseRedirect(url)        
 
     else:
-        
-        ovc_id = int(id)
-        child = RegPerson.objects.get(is_void=False, id=ovc_id)        
-        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-        creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
-        caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
-        caregiver = RegPerson.objects.get(id=caregiver_id)
-        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-        
-        # Show previous cpara monitoring events
-        event = OVCCareEvents.objects.filter(person_id=ovc_id).values_list('event')
-        
         try:
+            ovc_id = int(id)
+            child = RegPerson.objects.get(is_void=False, id=ovc_id)        
+            care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+            creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
+            caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
+            caregiver = RegPerson.objects.get(id=caregiver_id)
+            house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
             
-            benchmark_data = OVCBenchmarkMonitoring.objects.filter(is_void=False, household=house_hold)   #filter(event=event).order_by('event_date'))
+            # Show previous cpara monitoring events
+            event = OVCCareEvents.objects.filter(person_id=ovc_id).values_list('event')
+            
+            try:
+                
+                benchmark_data = OVCBenchmarkMonitoring.objects.filter(
+                is_void=False, household=house_hold)   #filter(event=event).order_by('event_date'))
+            except Exception as e:
+                benchmark_data = {}
+                print(e)
+            
+            form = gradMonitoringToolform()
+                 
+            context = {
+                'form': form, 
+                'care_giver': care_giver,
+                'creg':creg,
+                'child':child,
+                'ovc_id':ovc_id,
+                'caregiver':caregiver,
+                'benchmark_data': benchmark_data
+                }
+            
+            return render(request, 'forms/new_grad_monitor_tool.html',context)
         except Exception as e:
-            benchmark_data = {}
-            print(e)
-        
-        form = gradMonitoringToolform()
-             
-        context = {
-            'form': form, 
-            'care_giver': care_giver,
-            'creg':creg,
-            'child':child,
-            'ovc_id':ovc_id,
-            'caregiver':caregiver,
-            'benchmark_data': benchmark_data
-            }
-        
-        return render(request, 'forms/new_grad_monitor_tool.html',context)
+            msg = 'Missing Caregiver error - %s' % str(e)
+            messages.add_message(request, messages.ERROR, msg)
+            url = reverse('ovc_view', kwargs={'id': id})
+            return HttpResponseRedirect(url)
+        else:
+            pass
+
 
 def delete_benchmark(request, id):
     ovc_bench = OVCBenchmarkMonitoring.objects.filter(obm_id=id)
@@ -11511,7 +11523,8 @@ def delete_benchmark(request, id):
     messages.add_message(request, messages.WARNING, msg)
     return HttpResponseRedirect(url)    
 
-    
+
+@validate_ovc([], 1)
 def edit_grad_monitor(request, id):
     if request.method=='POST':
         data=request.POST
@@ -11523,7 +11536,8 @@ def edit_grad_monitor(request, id):
         event_date = convert_date(data.get('gm1d'))
         time_updated = timezone.now()
         household1 =OVCBenchmarkMonitoring.objects.get(obm_id=id)
-        re_person = OVCHHMembers.objects.filter(house_hold=household1.household, hh_head=False, member_type = 'TOVC').first().person.id
+        re_person = OVCHHMembers.objects.filter(
+            house_hold=household1.household, hh_head=False, member_type = 'TOVC').first().person.id
         
         try:
             OVCBenchmarkMonitoring.objects.filter(obm_id=id).update(
@@ -11620,9 +11634,9 @@ def get_org(request, name):
     )
 
 
+@validate_ovc([], 1)
 def case_transfer(request, id):
     try:
-        import pdb
         init_data = RegPerson.objects.filter(pk=id)
         child = RegPerson.objects.get(id=id)
         care_giver = RegPerson.objects.get(
@@ -11706,4 +11720,3 @@ def case_transfer(request, id):
         raise e
     else:
         pass
-

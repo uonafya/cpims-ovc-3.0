@@ -46,7 +46,7 @@
 
 {% for data in init_data %}
 
-	<h1 class="page-header">Forms <small>HEI Tracker - <b>{{ data.first_name }} {{ data.surname }} | {{ data.sex_id|gen_value:vals }} | {% if data.date_of_birth|gen_age == 0 %}
+	<h1 class="page-header">Forms <small>HEI Tracker - <b> {{ data.first_name }} {{ data.surname }} | {{ data.sex_id|gen_value:vals }} | {% if data.date_of_birth|gen_age == 0 %}
                             UNDER 1 YEAR
                         {% else %}
                             {{ data.date_of_birth|gen_age }} YRS 
@@ -72,7 +72,7 @@
                     <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i class="fa fa-minus"></i></a>
                     <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i class="fa fa-times"></i></a>
                 </div>
-                <h4 class="panel-title"> HEI Tracker </h4>
+                <h4 class="panel-title"> HEI Tracker 000000</h4>
 			</div>
 			<div style="overflow-x: auto; min-height: 300px;">
 		  		<div class="panel-body">
@@ -246,12 +246,14 @@
                             </div>
                         </div>
                     </div>
+                    <a href="{% url 'view_pmtct' id=person.id %}" class="badge badge-primary m-4"> Back to OVC</a>
+                    <div class="badge pull-right m-4">Revised: May 2022</div>
 
 
 				    </form>
 				</div>
             </div>
-            <div class="badge pull-right m-4">Revised: Oct 6th 2016</div>
+            
         </div>
         <!-- end panel -->
 

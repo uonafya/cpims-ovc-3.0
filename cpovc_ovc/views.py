@@ -21,6 +21,7 @@ from cpovc_forms.models import OVCCareEvents
 from cpovc_forms.models import OVCHivStatus
 
 from .functions import PersonObj
+from cpovc_auth.decorators import validate_ovc
 
 
 @login_required(login_url='/')
@@ -121,10 +122,14 @@ def ovc_register(request, id):
                 gparams[gkey] = extid.identifier
         if request.method == 'POST':
             form = OVCRegistrationForm(guids=pids, data=request.POST)
-            print(request.POST)
-            ovc_registration(request, ovc_id)
-            msg = "OVC Registration completed successfully"
-            messages.info(request, msg)
+            status = ovc_registration(request, ovc_id)
+            msg = status['status_msg']
+            msg_id = status['status_id']
+            # msg = "OVC Registration completed successfully"
+            if msg_id:
+                messages.error(request, msg)
+            else:
+                messages.info(request, msg)
             url = reverse('ovc_view', kwargs={'id': ovc_id})
             return HttpResponseRedirect(url)
         else:
@@ -140,6 +145,8 @@ def ovc_register(request, id):
                 guids=pids, initial=initial)
         # Check users changing ids in urls
         ovc_detail = get_hh_members(ovc_id)
+        hhmembers = OVCHHMembers.objects.filter(
+            person_id=ovc_id).order_by('-date_linked')
         if ovc_detail:
             msg = "OVC already registered. Visit edit page."
             messages.error(request, msg)
@@ -166,23 +173,31 @@ def ovc_register(request, id):
                       {'form': form, 'status': 200, 'child': child,
                        'guardians': guardians, 'siblings': siblings,
                        'vals': vals, 'extids': gparams, 'ovc': ovc,
-                       'levels': levels})
+                       'levels': levels, 'hhmembers': hhmembers})
     except Exception as e:
         print("error with OVC registration - %s" % (str(e)))
         raise e
 
+
 @login_required(login_url='/')
-@is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
+@validate_ovc([])
+# @is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
 def ovc_edit(request, id):
     """Some default page for Server Errors."""
     try:
         ovc_id = int(id)
         date_reg = None
         if request.method == 'POST':
-            ovc_registration(request, ovc_id, 1)
+            status = ovc_registration(request, ovc_id, 1)
+            msg = status['status_msg']
+            msg_id = status['status_id']
             # Save external ids from here
-            msg = "OVC Registration details edited successfully"
-            messages.info(request, msg)
+            if msg_id:
+                imsg = "Other OVC Registration details edited successfully"
+                messages.error(request, msg)
+            else:
+                imsg = "OVC Registration details edited successfully"
+            messages.info(request, imsg)
             url = reverse('ovc_view', kwargs={'id': ovc_id})
             return HttpResponseRedirect(url)
         child = RegPerson.objects.get(is_void=False, id=ovc_id)
@@ -199,8 +214,8 @@ def ovc_edit(request, id):
         gparams = {}
         siblings = 0
         # Get house hold
-        hhold = OVCHHMembers.objects.get(
-            is_void=False, person_id=child.id)
+        hhold = OVCHHMembers.objects.filter(
+            is_void=False, person_id=child.id).order_by('-date_linked').first()
         hhid = hhold.house_hold_id
         head_id = hhold.house_hold.head_person_id
         cgs = RegPerson.objects.filter(id=head_id)
@@ -216,11 +231,12 @@ def ovc_edit(request, id):
             obj['viral_date'] = vl.viral_date
             obj['viral_load'] = vl.viral_load
 
-            delta = get_days_difference(vl.viral_date)
-            print(delta)
-
-            if (delta) < 183:
-                obj['status'] = 0
+            if vl.viral_date:
+                delta = get_days_difference(vl.viral_date)
+                if (delta) < 183:
+                    obj['status'] = 0
+                else:
+                    obj['status'] = 1
             else:
                 obj['status'] = 1
 
@@ -292,6 +308,7 @@ def ovc_edit(request, id):
                 school = school.school.school_name
         bcert_no = params['ISOV'] if 'ISOV' in params else ''
         ncpwd_no = params['IPWD'] if 'IPWD' in params else ''
+        dreams_id = params['IDRM'] if 'IDRM' in params else ''
         # Eligibility
         criterias = OVCEligibility.objects.filter(
             is_void=False, person_id=child.id).values_list(
@@ -299,12 +316,14 @@ def ovc_edit(request, id):
         if reg_date:
             date_reg = reg_date.strftime('%d-%b-%Y')
         exit_date = None
+        print('we are here finally', creg.exit_date)
         if creg.exit_date:
             exit_date = creg.exit_date.strftime('%d-%b-%Y')
+        drms = 'on' if dreams_id else ''
 
         all_values = {'reg_date': date_reg, 'cbo_uid': creg.org_unique_id,
                       'cbo_uid_check': creg.org_unique_id,
-                      'has_bcert': bcert, 'disb': disb,
+                      'has_bcert': bcert, 'disb': disb, 'dreams_id': dreams_id,
                       'bcert_no': bcert_no, 'ncpwd_no': ncpwd_no,
                       'immunization': creg.immunization_status,
                       'school_level': creg.school_level, 'facility': facility,
@@ -316,7 +335,7 @@ def ovc_edit(request, id):
                       'eligibility': list(criterias), 'is_exited': exited,
                       'exit_reason': creg.exit_reason,
                       'ovc_exit_reason': creg.exit_reason,
-                      'exit_date': exit_date,
+                      'exit_date': exit_date, 'is_dreams_enrolled': drms,
                       'exit_org_name': exit_org_name}
         form = OVCRegistrationForm(guids=pids, data=all_values)
         for hhm in hhms:
@@ -340,7 +359,7 @@ def ovc_edit(request, id):
                           "TVC4,Year 4", "TVC5,Year 5"]
         # Re-usable values
 
-        check_fields = ['relationship_type_id']
+        check_fields = ['relationship_type_id', 'exit_reason_id']
         vals = get_dict(field_name=check_fields)
         hiv_data = OVCHivStatus.objects.filter(
             person_id=ovc_id).order_by('date_of_event')
@@ -356,7 +375,7 @@ def ovc_edit(request, id):
                        'ctaker': ctaker, 'vloads': vlist, 'mydate': date_langu,
                        'hiv_data': hiv_data})
     except Exception as e:
-        print("error with OVC viewing - %s" % (str(e)))
+        print("error with OVC edit - %s" % (str(e)))
         # raise e
         msg = "Error occured during ovc edit"
         messages.error(request, msg)
@@ -537,7 +556,8 @@ def ovc_edit_old(request, id):
 
 
 @login_required(login_url='/')
-@is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
+@validate_ovc([])
+# @is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
 def ovc_view(request, id):
     """Some default page for Server Errors."""
     try:
@@ -590,13 +610,13 @@ def ovc_view(request, id):
         if creg.school_level != 'SLNS':
             school = get_school(ovc_id)
         # Get house hold
-        hhold = OVCHHMembers.objects.get(
-            is_void=False, person_id=child.id)
+        hhold = OVCHHMembers.objects.filter(
+            is_void=False, person_id=child.id).order_by('-date_linked').first()
         # Get HH members
         hhid = hhold.house_hold_id
         hhmqs = OVCHHMembers.objects.filter(
-            is_void=False, house_hold_id=hhid).order_by("-hh_head")
-        hhmembers = hhmqs.exclude(person_id=child.id)
+            is_void=False, house_hold_id=hhid).order_by("-person_id")
+        hhmembers = hhmqs.exclude(person_id=child.id).distinct("person_id")
         # Viral load
         vload = OVCViralload.objects.filter(
             is_void=False, person_id=ovc_id).order_by("-viral_date")[:1]
@@ -690,7 +710,8 @@ def hh_manage(request, hhid):
 
 
 @login_required(login_url='/')
-@is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
+# @validate_ovc([], 1)
+# @is_allowed_ous(['RGM', 'RGU', 'DSU', 'STD'])
 def hh_edit(request, hhid, id):
     """Some default page for Server Errors."""
     try:
@@ -789,7 +810,7 @@ def hh_edit(request, hhid, id):
 def ovc_manage(request):
     """Some default page for Server Errors."""
     try:
-        ovc_management(request)
+        msg = ovc_management(request)
         results = {'message': 'Successful'}
         return JsonResponse(results, content_type='application/json',
                             safe=False)

@@ -66,9 +66,9 @@ class SetupGeography(models.Model):
     timestamp_updated = models.DateTimeField(auto_now=True, null=True)
     is_void = models.BooleanField(default=False)
 
-    # def __unicode__(self):
-    #     """To be returned by admin actions."""
-    #     return '%s - %s' % (self.area_type_id, self.area_name)
+    def __str__(self):
+        """To be returned by admin actions."""
+        return self.area_name
 
     class Meta:
         """Override some params."""

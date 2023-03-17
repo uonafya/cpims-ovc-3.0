@@ -296,6 +296,18 @@ Caregiver details | {{care_giver}}
                                     {% endfor %}
                             </td>
                         </tr>
+                        <tr>
+                            <td class="field">Other Identifiers</td>
+                            <td colspan="3">
+                                    DREAMS ID : {% if params.IDRM %} {{ params.IDRM }} {% else %} N/A {% endif %}, NEMIS : {% if params.INEM %} {{ params.INEM }} {% else %} N/A {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="field">System create datetime</td>
+                            <td colspan="3">
+                                    {{ creg.created_at }}
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                  <fieldset>

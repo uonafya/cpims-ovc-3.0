@@ -74,8 +74,8 @@
                       <small>Parents and Caregiver details.</small>
                   </li>
                   <li>
-                     Siblings
-                      <small>Siblings details.</small>
+                     HH and Siblings
+                      <small>HH and Siblings details.</small>
                   </li>        
                 </ol>
                 <!-- begin wizard step-1 -->
@@ -447,6 +447,30 @@
                     {% endif %}
                     </div>
                 </div>
+                <hr>
+                <legend class="pull-left width-full">HH details</legend>
+                <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>HH ID</th>
+                        <th>Date Linked</th>
+                        <th>HH Head CPIMS ID</th>
+                        <th>HH Head Names</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                {% for hhmember in hhmembers %}
+                  <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ hhmember.house_hold_id }}</td>
+                      <td>{{ hhmember.date_linked }}</td>
+                      <td>{{ hhmember.house_hold.head_person_id }} {% if ovc.caretaker_id == hhmember.house_hold.head_person_id %} (Current Caregiver){% endif %}</td>
+                      <td>{{ hhmember.house_hold.head_person.first_name }} {{ hhmember.house_hold.head_person.surname }}</td>
+                      <td>{% if ovc.caretaker_id != hhmember.house_hold.head_person_id %} Remove from HH {% endif %}</td>
+                  </tr>
+                {% endfor %}
+                </table>
                 </fieldset>
             </div>
             </div>

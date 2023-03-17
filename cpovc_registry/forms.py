@@ -595,6 +595,28 @@ class RegistrationForm(forms.Form):
                    'data-parsley-required': "true",
                    'id': 'ovc_programs'}))
 
+    # Feb 2023
+    birth_not_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Birth Notification Number'),
+                   'class': 'form-control',
+                   'id': 'birth_not_id'}))
+
+    nemis_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('NEMIS Number'),
+                   'class': 'form-control',
+                   'id': 'nemis_id'}))
+
+    dreams_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('DREAMS ID'),
+                   'class': 'form-control',
+                   'id': 'dreams_id'}))
+
     class Meta:
         """Override model class."""
 

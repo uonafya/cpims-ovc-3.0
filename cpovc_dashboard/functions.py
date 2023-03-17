@@ -4,6 +4,7 @@ import collections
 
 from cpovc_main.models import SetupGeography
 from cpovc_registry.models import RegOrgUnit
+from cpovc_main.functions import convert_date
 
 from .parameters import PARAMS, areas, CHART
 from .queries import QUERIES
@@ -15,6 +16,7 @@ from .charts import (
     column_category_chart)
 
 from .models import IPInfo
+from cpovc_ovc.models import OVCRegistration
 
 
 def get_geo(area_id, type_id='GDIS'):
@@ -480,3 +482,58 @@ def format_all_data(datas, items=[], itd='services', qft=''):
         return [], {}
     else:
         return items, rdata
+
+
+def get_data(request, params):
+    """Method to get raw data."""
+    try:
+        cnt, data = 0, []
+        from_date = convert_date(params['from_date'])
+        to_date = convert_date(params['to_date'])
+        if params['cluster']:
+            cbos = [9]
+        else:
+            cbos = [int(params['org_unit'])]
+        rows = OVCRegistration.objects.filter(
+            child_cbo_id__in=cbos, is_void=False,
+            registration_date__range=(from_date, to_date))
+        for row in rows:
+            cnt += 1
+            # OVC
+            fname = row.person.first_name
+            onames = row.person.other_names
+            lname = ' %s' % onames if onames else ''
+            ovc_names = '%s %s %s' % (fname, row.person.surname, lname)
+            # CHV
+            ch_fname = row.child_chv.first_name
+            ch_sname = row.child_chv.surname
+            ch_onames = row.child_chv.other_names
+            ch_lname = ' %s' % ch_onames if ch_onames else ''
+            chv_names = '%s %s %s' % (ch_fname, ch_sname, ch_lname)
+            # Caregiver
+            cg_fname = row.caretaker.first_name
+            cg_sname = row.caretaker.surname
+            cg_onames = row.caretaker.other_names
+            cg_lname = ' %s' % cg_onames if cg_onames else ''
+            caregiver_names = '%s %s %s' % (cg_fname, cg_sname, cg_lname)
+            user = row.person.created_by.username
+            exit_status = 'Active' if row.is_active else 'Exited'
+            # Timestamp
+            created_at = row.created_at
+            ts = created_at.strftime("%d-%b-%Y %H:%M:%S")
+            dts = {'id': cnt, 'registration_date': row.registration_date,
+                   'ovc_cpims_id': row.person_id, 'ovc_names': ovc_names,
+                   'cbo_id': row.child_cbo_id,
+                   'cbo': row.child_cbo.org_unit_name,
+                   'chv_id': row.child_chv_id, 'chv_names': chv_names,
+                   'caregiver_id': row.caretaker_id,
+                   'caregiver_names': caregiver_names,
+                   'exit_status': exit_status, 'exit_date': row.exit_date,
+                   'timestamp': ts,
+                   'user': user, 'domain': '', 'service': '',
+                   'date_of_event': ''}
+            data.append(dts)
+    except Exception as e:
+        raise e
+    else:
+        return data
