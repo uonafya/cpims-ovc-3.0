@@ -15,14 +15,14 @@ from cpovc_registry.models import (
 from cpovc_main.functions import convert_date, get_dict
 from cpovc_ovc.functions import (
     get_school, get_health, limit_person_ids_orgs)
-from cpovc_pfs.functions import save_school
+from cpovc_preventive.functions import save_school
 
 from .forms import (
     OVCPMTCTRegistrationForm, OVCHEITrackerForm, PREGNANT_WOMEN_ADOLESCENT)
 from .models import (
     OVCPMTCTRegistration, PMTCTPregnantWA, PMTCTEvents, PMTCTQuestions,
     PMTCTHEI, OVCHEITracker)
-from cpovc_pfs.functions import get_person_org_unit, save_health
+from cpovc_preventive.functions import get_person_org_unit, save_health
 
 from cpovc_ovc.models import OVCHouseHold, OVCFacility
 
@@ -317,7 +317,6 @@ def view_pmtct(request, id):
 
 
 def new_pregnantwomen(request, id):
-
     person = RegPerson.objects.get(pk=int(id))
     if request.method == 'POST':
         data = request.POST

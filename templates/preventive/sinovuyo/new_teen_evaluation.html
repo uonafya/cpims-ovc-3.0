@@ -1,0 +1,676 @@
+{% extends 'base.html' %}
+{% load app_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block page_title %}Sinovuyo Preventive Pre and Post Program Assessment Form  {% endblock %}
+{% block style_code %}
+<link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
+
+{% endblock %}
+
+{% block javascript_code%}
+{% endblock javascript_code%}
+
+{% block primary %}
+
+<!--validation error messages-->
+{% if messages %}
+{% for message in messages %}
+{% if 'error' in message.tags %}
+    <div id="messages" class="alert alert-danger fade in">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-info fa-2x pull-left"></i>
+{% else %}
+    <div id="messages" class="alert alert-success fade in">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+{% endif %}    
+    <p>{{ message }}</p>
+</div>
+{% endfor %}
+{% endif %}
+<div id="message" class="alert alert-success fade in" style="display: none">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+    <span id="response"></span>
+</div>
+<!-- end validation error messages-->
+
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+    <li><a href="#">Home</a></li>
+    <li class="active">Forms</li>
+</ol>
+<!-- end breadcrumb -->
+
+<!-- begin page-header -->
+<h1 class="page-header">Forms
+    <small>Sinovuyo Teen Preventive Pre and Post Program Assessment Form 
+        {% if edit_form %}
+        <b>{{care_giver.first_name}} {{care_giver.surname}} | {{ care_giver_gender }} | {{ care_giver.age}} YRS
+        </b></small></h1>
+        {%else%}
+        {%endif%}
+    </b></small>
+</h1>
+
+<!-- error messages -->
+
+
+
+
+<!-- end page-header -->
+
+<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-info fa-2x pull-left"></i>
+    <span class="invalid-form-message" id="invalid-form-message"></span>
+</div>
+
+<!-- begin row -->
+<div id='case_details' class="row">
+    <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin panel -->
+      <div style="overflow-x: auto; min-height: 300px;">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i
+                            class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i
+                            class="fa fa-times"></i></a>
+                    </div>    
+                    <br>
+            </div>
+            <form class="form form-horizontal form-bordered" action="{{ request.get_full_path }}" method="POST" data-parsley-validate="true"
+                    name="form-wizard-hhva" id="new_hhva">
+                    {% csrf_token %}
+                    <table class="table table-striped ">
+                        <tbody>
+                            <tr>
+                                <td width="60%"><strong>Caregiver names:</strong>
+                                {% if care_giver %}{{ care_giver.first_name }} {{care_giver.surname}} {% else %} Missing Caregiver details {% endif %}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Type of assessment: </strong></td>
+                                <td>{{ form.type_of_assessment }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Date of assessment: </strong></td>
+                                <td>{{ form.date_of_assessment }}</td>
+                            </tr>
+                     </tbody>
+
+                   </table>
+
+                <div class="panel panel-form">
+                    <div   class="table-responsive">
+                            <div class="" style="background-color: #d9edf7; padding: 5px;">
+                                <h3 class="" style="color: dimgrey;"><b>1. BACKGROUND DETAILS ABOUT THE TEEN </b></h3>
+                            </div>
+                            <table id="" class="table ">
+                                <tbody>
+
+                                        <tr>
+                                            <td width="60%">   1. Age</td>
+                                            <td>
+                                                <div class="form-group m-r-10">
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>   2. Gender</td>
+                                            <td>
+                                                <div class="form-group m-r-10">
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>   3. Can you read?</td>
+                                            <td>
+                                                <div class="form-group m-r-10">
+                                                    {{ form.SINO_TNQ03 }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>4(a) School Level</td>
+                                            <td>
+                                            {{ form.SINO_TNQ04A }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td> &nbsp; (b) Name of School</td>
+                                            <td>
+                                            {{ form.SINO_TNQ04B }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td> &nbsp; (c) Class/Grade/Form</td>
+                                            <td>
+                                            {{ form.SINO_TNQ04C }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td> &nbsp; (d) Boarding Status</td>
+                                            <td>
+                                            {{ form.SINO_TNQ04D }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                                <td>5. Do you have any children of your own??</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ05 }}
+                                                </td>
+
+                                        </tr>
+
+                                        <tr>
+                                                <td>6. Do you live with your biological mother?</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ06 }}
+                                                </td>
+                                        </tr>
+
+                                        <tr>
+                                                <td>7. Do you live with your biological father?</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ07 }}
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                                <td>8. Do you have any form of disability?</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ08 }}
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><p><b>Lots of families struggle with different problems. Please tell us if you have experienced any of these challenges at home:</b></p></td>
+                                        </tr>
+
+                                        <tr>
+                                                <td>9. In the last month, did your family run out of money for food or essentials such as school fees, medical expenses, rent expenses, clothes?</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ09 }}
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                                <td>10. In the last month have there been any arguments in the home with shouting, hitting, sexual violence or threats</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ10 }}
+                                                </td>
+                                        </tr>
+
+                                        <tr>
+                                                <td>11. In the past month has there been an adult who was unwell – in hospital or in bed a lot of the time?</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ11 }}
+                                                </td>
+                                        </tr>
+
+                                        <tr>
+                                                <td>12. In the past month is there a child who has been unwell?</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ12 }}
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                                <td colspan="2"><p><b>Our health and well-being is important. Please remember that the information you provide with me will be kept confidential. May I ask you something?</b></p></td>
+                                        </tr>
+                                        <tr >
+                                                <td>13. In the past term did you ever had to miss school more than 15 days because you were unwell?</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ13 }}
+                                                </td>
+                                        </tr>
+                                        <tr >
+                                                <td>14. Are you aware of your HIV status?</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ14 }}
+                                                </td>
+                                        </tr>
+
+                                        <tr>
+                                                <td>15. Has your caregiver ever discussed HIV prevention/sexual and reproductive health with you?</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ15 }}
+                                                </td>
+                                        </tr>
+
+                                        <tr>
+                                                <td>16. Do you eat two or more meals a day?</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ16 }}
+                                                </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>17. In the past month are there times you have gone a day without eating a meal?</td>
+                                            <td>
+                                                    {{ form.SINO_TNQ17 }}
+                                            </td>
+                                    </tr>
+
+                                    </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div  class="panel panel-form">
+                    <div id="case-events"  class="table-responsive">
+                            <div class="" style="background-color: #d9edf7; padding: 10px;">
+                                <h3 class="" style="color: dimgrey;"><b>2. MY RELATIONSHIP WITH MY CAREGIVER</b></h3>
+                            </div>
+                            <table id="" class="table ">
+                                    <tbody>
+
+                                        <tr>
+                                            <td width="60%">18. Do you spend time to discuss your needs (wishes, aspirations, studies, achievements) with your caregiver?</td>
+                                            <td>
+                                                    {{ form.SINO_TNQ18 }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                                <td>19. Are you subjected to any form of discipline if you fail to adhere to your family rules?</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ19 }}
+                                                </td>
+                                        </tr>
+
+                                        <tr>
+                                                <td>20. I feel generally free to disclose something that bothers me to my caregiver</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ20 }}
+                                                </td>
+                                        </tr>
+
+
+                                        <tr>
+                                                <td>21. My caregiver involves me in important decisions of my family</td>
+                                                <td>
+                                                      {{ form.SINO_TNQ21 }}
+                                                </td>
+                                        </tr>                                        
+
+                                    </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div  class="panel panel-form">
+                    <div id="case-events"  class="table-responsive">
+                        <table id="" class="table ">
+                            <div class="" style="background-color: #d9edf7; padding: 10px;">
+                                <h3 class="" style="color: dimgrey;"><b>3. MY BEHAVIOUR</b></h3>
+                            </div>
+                                    <thead>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td width="60%">22. I usually do as I am told</td>
+                                                <td>
+                                                        {{ form.SINO_TNQ22 }}
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                     <td>23. I fight a lot. I can make people do what I want</td>
+                                                     <td>
+                                                            {{ form.SINO_TNQ23 }}
+                                                     </td>
+
+                                            </tr>
+
+                                        </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+                <div  class="panel panel-form">
+                    <div id="case-events"  class="table-responsive">
+                        <table id="" class="table ">
+                            <div class="" style="background-color: #d9edf7; padding: 10px;">
+                                <h3 class="" style="color: dimgrey;"><b>4. DISCIPLINE FROM MY CAREGIVER </b></h3>
+                            </div>
+                                    <tbody>
+
+
+                                                <tr>
+                                                        <td width="60%">24. In the past 4 weeks, how often did your caregiver spank, slap or hit you with his/her hand?
+                                                        </td>
+                                                        <td>
+                                                                {{ form.SINO_TNQ24 }}
+                                                        </td>
+                                                </tr>
+
+                                                <tr>
+                                                        <td>25. Can you tell me how many times in the past 4 weeks your caregiver used any form of physical discipline on you?</td>
+                                                        <td>
+                                                                {{ form.SINO_TNQ25 }}
+                                                        </td>
+
+                                                </tr>
+
+                                                <tr>
+                                                        <td>26. In the past 4 weeks, how often did your caregiver say things about you that upset you?
+                                                        </td>
+                                                        <td>
+                                                            {{ form.SINO_TNQ26 }}
+                                                        </td>
+                                                </tr>
+                                                 <tr>
+                                                        <td>27. In order to bring up, raise, or educate a child properly, a child needs to be physically punished</td>
+                                                        <td>
+                                                            {{ form.SINO_TNQ27 }}
+                                                        </td>
+                                                </tr>
+
+                                        </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+
+                 <div  class="panel panel-form">
+                    <div id="case-events"  class="table-responsive">
+                        <table id="" class="table ">
+                            <div class="" style="background-color: #d9edf7; padding: 10px;">
+                                <h3 class="" style="color: dimgrey;"><b>6. FEELING SAD </b></h3>
+                            </div>
+                                   <tbody>
+                                        <tr>
+                                            <td width="60%">28. How often in the past week have you felt down and unhappy?</td>
+                                            <td>
+                                                    {{ form.SINO_TNQ28 }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+
+                                            <td>29. How often in the past week have you felt like you were too tired to do things?</td>
+                                            <td>
+                                                    {{ form.SINO_TNQ29 }}
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>30. How often in the past week have you felt like something good was going to happen?</td>
+                                            <td>
+                                                    {{ form.SINO_TNQ30 }}
+                                            </td>
+
+                                        </tr>
+
+
+
+
+
+
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <button id="mysubmit-hivscreeningtool" type="submit" class="btn btn-primary">Submit</button>
+                                                <a href="javascript:history.go(-1)" class="btn btn-white">Cancel</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+
+        
+
+                </div>
+                </form>
+            </div>
+            <a href="{% url 'view_pfs' id=ovc.person_id %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: May 2022</div>
+        </div>
+</div>
+        </div>
+
+
+    <!-- List of fomrs start -->
+
+                    <div class="panel panel-inverse">
+                        <div class="table-responsive">
+                                <table id="tableData"  class="table table-success table-bordered" border="1" id="past-hst">
+                                        <thead>
+                                            <tr>
+                                                <th width="2%">#</th>
+                                                <th width="7%">Type</th>
+                                                <th width="10%">Date</th>
+                                                <th>Answers</th>
+                                                <th width="15%">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% if events %}
+                                            {% for data in events %}                                                 
+                                                <tr id="evaluation-{{ data.pk }}">
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{% if data.event_type_id == 'SINO_CG_A' %} Pre {% else %} Post {% endif %}</td>
+                                                    <td>{{ data.date_of_event }}</td>
+                                                     <td>
+                                                        <p>{{data.type_of_assessment |gen_value:vals}}</p>
+                                                        <div id="evaluation_show-{{data.evaluation_id}}">
+                                                            <p> <strong>Q1: </strong>,
+                                                                <strong>Q2: </strong>,
+                                                                <strong>Q3: </strong>{{data.SINO_TNQ03|gen_value:vals}},
+                                                                <strong>Q4: </strong>{{data.SINO_TNQ04|gen_value:vals}}, 
+                                                                <strong>Q5: </strong>{{data.SINO_TNQ05 }},
+                                                                <strong>Q6: </strong>{{data.SINO_TNQ06 }}, 
+                                                                <strong>Q7: </strong>{{data.SINO_TNQ07|gen_value:vals}},
+                                                                <strong>Q8: </strong>{{data.SINO_TNQ08|gen_value:vals}},
+                                                                <strong>Q9: </strong>{{data.SINO_TNQ09|gen_value:vals}},
+                                                                <strong>Q10:</strong> {{data.SINO_TNQ10|gen_value:vals}},
+                                                                <strong>Q11:</strong> {{data.SINO_TNQ11|gen_value:vals}},
+                                                                <strong>Q12:</strong> {{data.SINO_TNQ12|gen_value:vals}},
+                                                                <strong>Q13:</strong> {{data.SINO_TNQ13|gen_value:vals}},
+                                                                <strong>Q14:</strong> {{data.SINO_TNQ14|gen_value:vals}},
+                                                                <strong>Q15:</strong> {{data.SINO_TNQ15|gen_value:vals}},
+                                                                <strong>Q16:</strong> {{data.SINO_TNQ16|gen_value:vals}},
+                                                                <strong>Q17:</strong> {{data.SINO_TNQ17|gen_value:vals}}, 
+                                                                <strong>Q18:</strong> {{data.SINO_TNQ18|gen_value:vals}},
+                                                                <strong>Q19:</strong> {{data.SINO_TNQ19|gen_value:vals}},
+                                                                <strong>Q20:</strong> {{data.SINO_TNQ20|gen_value:vals}},
+                                                                <strong>Q21:</strong> {{data.SINO_TNQ21|gen_value:vals}},
+                                                                <strong>Q22:</strong> {{data.SINO_TNQ22|gen_value:vals}},
+                                                                <strong>Q23:</strong> {{data.SINO_TNQ23|gen_value:vals}},
+                                                                <strong>Q24:</strong> {{data.SINO_TNQ24|gen_value:vals}},
+                                                                <strong>Q25:</strong> {{data.SINO_TNQ25|gen_value:vals}},
+                                                                <strong>Q26:</strong> {{data.SINO_TNQ26|gen_value:vals}},
+                                                                <strong>Q27:</strong> {{data.SINO_TNQ27|gen_value:vals}},
+                                                                <strong>Q28:</strong> {{data.SINO_TNQ28|gen_value:vals}},
+                                                                <strong>Q29:</strong> {{data.SINO_TNQ29|gen_value:vals}},
+                                                                <strong>Q30:</strong> {{data.SINO_TNQ30|gen_value:vals}}</p>
+                                                        </div>
+                                                     </td>
+                                                    <td><a href="{% url 'edit_sinovuyo_evaluation_teen' event_id=data.pk %}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
+                                                    <a><button type="button" class="btn btn-sm btn-danger m-r-5" data-toggle="modal" data-target="#evaluation-{{ data.pk }}"><i class="fa fa-trash"></i>&nbsp;Delete</button></td></a>
+                                                    
+                                                 <!-- Modal -->
+                                                 <div class="modal fade" id="evaluation-{{ data.pk }}" role="dialog">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div style="background-color:#d9edf7" class="modal-header">
+                                                            <button type="button" class="close " data-dismiss="modal">&times;</button>
+                                                            <h4 class="modal-title" style="font-weight: 100; color: #696969"><strong>Delete Assessment record - {{ data.date_of_event }}</strong></h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                            <p>Are you sure you want to delete this Assessment dated {{ data.date_of_event }} ? </p>
+                                                            <br>
+                                                            <p>Click Yes to proceed to delete or Close to Cancel.</p>
+                                                            <hr>
+                                                            <a><button onclick="deleteEvaluation('{{ data.pk }}')" type="button" class="btn btn-danger" data-dismiss="modal">Yes</button></a>
+                                                            <button  type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </tr>
+                                            {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td></td>
+                                                <td colspan="8">No Previous Assessment done</td>
+                                            </tr>
+                                            {% endif %}
+                                        </tbody>                                        
+                                    </table>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="outOfWindow" role="dialog">
+                                            <div class="modal-dialog modal-sm">
+                                                <div class="modal-content">
+                                                    <div style="background-color: #ff9966" class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title" style="font-weight: 100; color: #696969"><strong>Deletion NOT completed.</strong></h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                    <p>This item can not be deleted. <span id="msg_id"></span></p>
+                                                    <button  type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <!-- Modal -->
+                                        <div  class="modal fade" id="successMsg" role="dialog">
+                                            <div class="modal-dialog modal-sm">
+                                                <div class="modal-content" style="background-color: #8f9191">
+                                                    <div style="background-color: #d9edf7" class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title" style="font-weight: 100; color: #696969"><strong>Successful Deletion of Assessment</strong></h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                    <p>Deleted successfully!</p>
+                                                    <button  type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+
+            </div>
+        </div>
+    </div>
+    <!--list of forms end -->
+
+            </div>
+        </div>
+
+        </div>
+        <!-- end panel -->
+
+    </div>
+    <!-- end col-12 -->
+
+</div>
+<!-- end row -->
+
+<script type="text/javascript">
+
+// Delete Django Ajax Call
+function deleteEvaluation(event_id) {
+    var csrftoken = $.cookie('csrftoken');
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'delete_sinovuyo_evaluation' %}",
+        
+        data: {'event_id': event_id, 'csrfmiddlewaretoken': csrftoken },
+        dataType: 'json',
+        
+        success: function (data) {
+            if (data.deleted == 1) {
+                console.log(data);
+              $("#tableData #evaluation-" + event_id).remove();
+              $("#successMsg").modal('show');
+            }
+            if(data.deleted == 0){
+                console.log(data.days)
+                console.log("Out of response window");
+                $("#msg_id").html(data.message);
+                $("#outOfWindow").modal('show');
+    
+            }
+        },
+        error: function(error){
+            console.log(error);
+        }
+    });
+}
+</script>
+
+
+
+{% endblock %}
+
+{% block lazy_javascript_code %}
+<script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
+    
+<script>
+    $(document).ready(function() {
+        $('#assessment_date').datepicker({ endDate: '0y', format: 'dd-M-yyyy' });
+    });
+    jQuery(document).ready(function(){
+        //document.getElementById('bd_bf_live_hh').style.display = "none";
+        $('select#bd_biologocal_father').change(function () {
+            var optionSelected = $(this).find("option:selected");
+            var valueSelected  = $(this).val();
+            var yesOrNo   = optionSelected.text();
+            //console.log(optionSelected)
+            console.log(valueSelected)
+            //console.log(yesOrNo)
+            var y = document.getElementById('bd_bf_live_hh')
+            if(valueSelected == 'AYES' || valueSelected == ''){
+               y.style.display = "none"
+               y.setAttribute('value', '');
+            }else{
+                y.style.display = "block"
+                
+            }
+        });
+    });
+        jQuery(document).ready(function(){
+            //document.getElementById('bd_bm_live_hh').style.display = "none";
+            $('select#bd_biologocal_mother').change(function () {
+                var optionSelected = $(this).find("option:selected");
+                var valueSelected  = $(this).val();
+                var yesOrNo   = optionSelected.text();
+                //console.log(optionSelected)
+                console.log(valueSelected)
+                var x = document.getElementById('bd_bm_live_hh')
+            if(valueSelected == 'AYES' || valueSelected == ''){
+                x.style.display = "none"
+                x.setAttribute('value', '');
+
+            }
+            else{
+                x.style.display = "block"
+            }
+        });
+    });
+
+</script>
+
+{% endblock %}

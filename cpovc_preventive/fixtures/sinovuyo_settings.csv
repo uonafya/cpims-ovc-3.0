@@ -1,0 +1,81 @@
+pk,the_order,field_name,item_category,item_id,item_description,item_description_short,item_sub_category,user_configurable,sms_keyword,is_void
+40200,1,dsp_times_id,Displine,DSPN,Never,Never,,FALSE,FALSE,FALSE
+40201,2,dsp_times_id,Displine,DSP1,1 time,1 time,,FALSE,FALSE,FALSE
+40203,3,dsp_times_id,Displine,DSP2,2 times,2 times,,FALSE,FALSE,FALSE
+40204,4,dsp_times_id,Displine,DSP3,3 times,3 times,,FALSE,FALSE,FALSE
+40205,5,dsp_times_id,Displine,DSP4,4 times,4 times,,FALSE,FALSE,FALSE
+40206,6,dsp_times_id,Displine,DSP5,5 times,5 times,,FALSE,FALSE,FALSE
+40207,7,dsp_times_id,Displine,DSP6,6 times,6 times,,FALSE,FALSE,FALSE
+40208,8,dsp_times_id,Displine,DSP7,7 times,7 times,,FALSE,FALSE,FALSE
+40209,9,dsp_times_id,Displine,DSP8,8 or mote times,8 times,,FALSE,FALSE,FALSE
+40210,1,feeling_sad_id,Feeling_Sad,FSD1,Rarely or none of the time (less than 1 day),Rarely,,FALSE,FALSE,FALSE
+40211,2,feeling_sad_id,Feeling_Sad,FSD2,Some or a little of the time (1-2 days),Some,,FALSE,FALSE,FALSE
+40212,3,feeling_sad_id,Feeling_Sad,FSD3,Occasionally or a moderate amount of time (3-4 days),Occasionally,,FALSE,FALSE,FALSE
+40213,4,feeling_sad_id,Feeling_Sad,FSD4,Most or all of the time (5-7 days),Most,,FALSE,FALSE,FALSE
+40214,1,my_behaviour_id,Behaviour,MBHV1,Not true,Not true,,FALSE,FALSE,FALSE
+40215,2,my_behaviour_id,Behaviour,MBHV2,Somewhat true,Somewhat true,,FALSE,FALSE,FALSE
+40216,3,my_behaviour_id,Behaviour,MBHV3,Very true,Very true,,FALSE,FALSE,FALSE
+40217,1,relationship_caregiver_id,Relationship_caregiver,RTN1,Never,Never,,FALSE,FALSE,FALSE
+40218,2,relationship_caregiver_id,Relationship_caregiver,RTN2,Almost never,Almost never,,FALSE,FALSE,FALSE
+40219,3,relationship_caregiver_id,Relationship_caregiver,RTN3,Sometimes,Sometimes,,FALSE,FALSE,FALSE
+40220,4,relationship_caregiver_id,Relationship_caregiver,RTN4,Often,Often,,FALSE,FALSE,FALSE
+40221,5,relationship_caregiver_id,Relationship_caregiver,RTN5,Always,Always,,FALSE,FALSE,FALSE
+40222,1,father_mortality_id,Father_mortality,FMT1,Yes,Yes,,FALSE,FALSE,FALSE
+40223,2,father_mortality_id,Father_mortality,FMT2,"No, he passed away","No, he passed away",,FALSE,FALSE,FALSE
+40224,3,father_mortality_id,Father_mortality,FMT3,"No, he lives elsewhere","No, he lives elsewhere",,FALSE,FALSE,FALSE
+40225,4,mother_mortality_id,Mother_mortality,MMT1,Yes,Yes,,FALSE,FALSE,FALSE
+40226,5,mother_mortality_id,Mother_mortality,MMT2,"No, she passed away","No, she passed away",,FALSE,FALSE,FALSE
+40227,6,mother_mortality_id,Mother_mortality,MMT3,"No, she lives elsewhere","No, she lives elsewhere",,FALSE,FALSE,FALSE
+40228,1,literacy_lvl_id,Literacy_lvl,LIT1,Cannot read at all,Cannot read at all,,FALSE,FALSE,FALSE
+40229,2,literacy_lvl_id,Literacy_lvl,LIT2,Can read but with lots of difficulty,Can read but with lots of difficulty,,FALSE,FALSE,FALSE
+40230,3,literacy_lvl_id,Literacy_lvl,LIT3,Can read with a little difficulty,Can read with a little difficulty,,FALSE,FALSE,FALSE
+40231,4,literacy_lvl_id,Literacy_lvl,LIT4,Can read easily,Can read easily,,FALSE,FALSE,FALSE
+40232,1,under_care_id,Under_care,UCRN,No,No,,FALSE,FALSE,FALSE
+40233,2,under_care_id,Under_care,UCRY,"Yes, all of them",Yes,,FALSE,FALSE,FALSE
+40234,3,under_care_id,Under_care,UCRS,"Yes, some of them","Yes, some of them",,FALSE,FALSE,FALSE
+40235,1,employed_id,Income source,SOIU,"No, unemployed","No, unemployed",,FALSE,FALSE,FALSE
+40236,2,employed_id,Income source,SOIS,"Yes, self-employed","Yes, self-employed",,FALSE,FALSE,FALSE
+40237,3,employed_id,Income source,SOIF,"Yes, employed full-time","Yes, employed full-time",,FALSE,FALSE,FALSE
+40238,4,employed_id,Income source,SOIP,"Yes, employed part time","Yes, employed part time",,FALSE,FALSE,FALSE
+40239,1,agree_level_id,Agree level,AGSD,Strongly disagree,Strongly disagree,,FALSE,FALSE,FALSE
+40240,2,agree_level_id,Agree level,AGDI,Disagree,Disagree,,FALSE,FALSE,FALSE
+40241,3,agree_level_id,Agree level,AGNS,Not sure,Not sure,,FALSE,FALSE,FALSE
+40242,4,agree_level_id,Agree level,AGAG,Agree,Agree,,FALSE,FALSE,FALSE
+40243,5,agree_level_id,Agree level,AGSA,Strongly agree,Strongly agree,,FALSE,FALSE,FALSE
+40244,1,often_id,Handle Finances,HFNE,Never,Never,,FALSE,FALSE,FALSE
+40245,2,often_id,Handle Finances,HFRA,Rarely,Rarely,,FALSE,FALSE,FALSE
+40246,3,often_id,Handle Finances,HFSO,Sometimes,Sometimes,,FALSE,FALSE,FALSE
+40247,4,often_id,Handle Finances,HFOF,Often,Often,,FALSE,FALSE,FALSE
+40248,1,evaluation_type_id,Evaluation Type,EPRE,Pre Evaluation,Pre,,FALSE,FALSE,FALSE
+40249,2,evaluation_type_id,Evaluation Type,EPOS,Post Evaluation,Post,,FALSE,FALSE,FALSE
+40250,1,rate_times_id,Rate times,RTNN,"No, never","No, never",,FALSE,FALSE,FALSE
+40251,2,rate_times_id,Rate times,RTYO,"Yes, once","Yes, once",,FALSE,FALSE,FALSE
+40252,3,rate_times_id,Rate times,RTMO,"Yes, more than once","Yes, more than once",,FALSE,FALSE,FALSE
+40253,1,count_times_id,Count times,CTNV,Never,Never,,FALSE,FALSE,FALSE
+40254,2,count_times_id,Count times,CTST,Sometimes,Sometimes,,FALSE,FALSE,FALSE
+40255,3,count_times_id,Count times,CTMT,A lot of times,A lot of times,,FALSE,FALSE,FALSE
+40256,4,count_times_id,Count times,CTAT,All of the time,All of the time,,FALSE,FALSE,FALSE
+40257,1,rate_truth_id,Truth rate,RTNT,Not at all true,Not at all true,,FALSE,FALSE,FALSE
+40258,2,rate_truth_id,Truth rate,RTAT,A little true,A little true,,FALSE,FALSE,FALSE
+40259,3,rate_truth_id,Truth rate,RTVT,Very true,Very true,,FALSE,FALSE,FALSE
+40260,1,rate_likely_id,Likely rate,LRVU,Very unlikely,Very unlikely,,FALSE,FALSE,FALSE
+40261,2,rate_likely_id,Likely rate,LRUN,Unlikely,Unlikely,,FALSE,FALSE,FALSE
+40262,3,rate_likely_id,Likely rate,LRNS,Not Sure,Not Sure,,FALSE,FALSE,FALSE
+40263,4,rate_likely_id,Likely rate,LRLK,Likely,Likely,,FALSE,FALSE,FALSE
+40264,5,rate_likely_id,Likely rate,LRVL,Very likely,Very likely,,FALSE,FALSE,FALSE
+40265,1,rate_abuse_id,Abuse rate,ABR1,1 ------(not abusive),1 ------(not abusive),,FALSE,FALSE,FALSE
+40266,2,rate_abuse_id,Abuse rate,ABR2,2 ------,2 ------,,FALSE,FALSE,FALSE
+40267,3,rate_abuse_id,Abuse rate,ABR3,3 ------,3 ------,,FALSE,FALSE,FALSE
+40268,4,rate_abuse_id,Abuse rate,ABR4,4 ------,4 ------,,FALSE,FALSE,FALSE
+40269,5,rate_abuse_id,Abuse rate,ABR5,5 ------(abusive),5 ------(abusive),,FALSE,FALSE,FALSE
+40270,1,age_rate_id,Age rate,A9T14,9 – 14 years,9 – 14 years,,FALSE,FALSE,FALSE
+40271,2,age_rate_id,Age rate,AOV14,over 14,over 14,,FALSE,FALSE,FALSE
+40272,1,race_id,Race,RCAI,American Indian/Alaska Native,American Indian/Alaska Native,,FALSE,FALSE,FALSE
+40273,2,race_id,Race,RCAS,Asian,Asian,,FALSE,FALSE,FALSE
+40274,3,race_id,Race,RCBA,Black or African American,Black or African American,,FALSE,FALSE,FALSE
+40275,4,race_id,Race,RCNH,Native Hawaiian or Other Pacific Islander,Native Hawaiian or Other Pacific Islander,,FALSE,FALSE,FALSE
+40276,5,race_id,Race,RCWH,White,White,,FALSE,FALSE,FALSE
+40277,6,race_id,Race,RPNT,Prefer not to say,Prefer not to say,,FALSE,FALSE,FALSE
+40278,1,cbim_coaching_id,CBIM Coaching,CBIM1,"Yes, my coach talked to us about this.",Yes,,FALSE,FALSE,FALSE
+40279,2,cbim_coaching_id,CBIM Coaching,CBIM2,"No, my coach didn’t talk to us about this.",No,,FALSE,FALSE,FALSE
+40280,3,cbim_coaching_id,CBIM Coaching,CBIM3,I wasn’t involved in this group for the past three months.,Not involved,,FALSE,FALSE,FALSE

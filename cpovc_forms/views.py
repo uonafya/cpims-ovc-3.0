@@ -83,7 +83,7 @@ from .documents import create_mcert
 from cpovc_ovc.views import ovc_view
 from .helpers.events import save_event
 
-from cpovc_pfs.models import OVCPreventiveEvents
+from cpovc_preventive.models import OVCPreventiveEvents
 from cpovc_auth.decorators import validate_ovc
 
 

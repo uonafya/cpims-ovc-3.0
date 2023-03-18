@@ -1,0 +1,226 @@
+[
+    {
+        "pk": 39800,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PFSSIN",
+            "item_description_short": "SINOVUYO",
+            "field_name": "pfs_intervention_id",
+            "item_description": "SINOVUYO",
+            "item_category": "Prevention Programs"
+        }
+    },
+    {
+        "pk": 39801,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PFSFMP",
+            "item_description_short": "FMP",
+            "field_name": "pfs_intervention_id",
+            "item_description": "Families Matter! Program(FMP)",
+            "item_category": "Prevention Programs"
+        }
+    },
+    {
+        "pk": 39802,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PFHCBF",
+            "item_description_short": "HCBF",
+            "field_name": "pfs_intervention_id",
+            "item_description": "Healthy Choices for Better Future(HCBF)",
+            "item_category": "Prevention Programs"
+        }
+    },
+    {
+        "pk": 39803,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PFCBIM",
+            "item_description_short": "CBIM",
+            "field_name": "pfs_intervention_id",
+            "item_description": "Coaching Boys Into Men(CBIM)",
+            "item_category": "Prevention Programs"
+        }
+    },
+    {
+        "pk": 39804,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PFSFSP",
+            "item_description_short": "Other Family Support",
+            "field_name": "pfs_intervention_id",
+            "item_description": "Other Family Support",
+            "item_category": "Prevention Programs"
+        }
+    },
+    {
+        "pk": 39805,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "POVC",
+            "item_description_short": "OVC",
+            "field_name": "ovc_program_id",
+            "item_description": "OVC",
+            "item_category": "OVC Programs"
+        }
+    },
+    {
+        "pk": 39806,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PPRE",
+            "item_description_short": "Preventive",
+            "field_name": "ovc_program_id",
+            "item_description": "Preventive",
+            "item_category": "OVC Programs"
+        }
+    },
+    {
+        "pk": 39807,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "PDRE",
+            "item_description_short": "DREAMS",
+            "field_name": "ovc_program_id",
+            "item_description": "DREAMS",
+            "item_category": "OVC Programs"
+        }
+    },
+    {
+        "pk": 39808,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "POTH",
+            "item_description_short": "FS / Other",
+            "field_name": "ovc_program_id",
+            "item_description": "FS / Other",
+            "item_category": "OVC Programs"
+        }
+    },
+    {
+        "pk": 39809,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 14,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "ECHEI",
+            "item_description_short": "HIV Exposed Infant",
+            "field_name": "eligibility_criteria_id",
+            "item_description": "HIV Exposed Infant",
+            "item_category": "Eligibility Criteria"
+        }
+    },
+    {
+        "pk": 39810,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 15,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "ECPPA",
+            "item_description_short": "HIV+ Pregnant Adolescent",
+            "field_name": "eligibility_criteria_id",
+            "item_description": "HIV+ Pregnant Adolescent",
+            "item_category": "Eligibility Criteria"
+        }
+    },
+    {
+        "pk": 39811,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 16,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "ECNPA",
+            "item_description_short": "HIV- Pregnant Adolescent",
+            "field_name": "eligibility_criteria_id",
+            "item_description": "HIV- Pregnant Adolescent",
+            "item_category": "Eligibility Criteria"
+        }
+    },
+    {
+        "pk": 39812,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 17,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "ECBFA",
+            "item_description_short": "HIV- Breast-Feeding Adolescent",
+            "field_name": "eligibility_criteria_id",
+            "item_description": "HIV- Breast-Feeding Adolescent",
+            "item_category": "Eligibility Criteria"
+        }
+    },
+    {
+        "pk": 39813,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "HHEI",
+            "item_description_short": "Unknown (HEI)",
+            "field_name": "hiv_status_id",
+            "item_description": "Unknown (HEI)",
+            "item_category": "HIV Status"
+        }
+    }
+]

@@ -26,7 +26,7 @@ from django.views.generic import TemplateView
 from cpovc_dashboard import urls as dashboard_api_urls
 from cpovc_access.forms import StrictPasswordChangeForm
 # New changes
-from cpovc_pfs import urls as pfs_urls
+from cpovc_preventive import urls as preventive_urls
 from cpovc_pmtct import urls as pmtct_urls
 # from notifications import urls as noti_urls
 # from simple_forums import urls as forum_urls
@@ -98,7 +98,7 @@ urlpatterns = [
         name='raw_dashboard'),
     path('api/v2/', include(dashboard_api_urls)),
     # Preventive and Family Support
-    path('ovc-care/pfs/', include(pfs_urls)),
+    path('ovc-care/preventive/', include(preventive_urls)),
     path('ovc-care/pmtct/', include(pmtct_urls)),
     # Notifications
     # path('notifications/', include(noti_urls, namespace='notifications')),
