@@ -110,7 +110,10 @@ router.register('reg_person', views.RegOrgUnitViewSet)
 router.register('ovc_registration', views.OVCRegistrationViewSet)
 router.register('reg_org_unit', views.RegOrgUnitViewSet)
 
+from .views import get_random_int
+
 urlpatterns = [
+    path('random_int/', get_random_int, name='random_int'),
     path('token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('', include(router.urls)),    

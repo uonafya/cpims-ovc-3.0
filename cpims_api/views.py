@@ -6,6 +6,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.response import Response
 
+from django.http import JsonResponse
+import random
+
 
 
 # models
@@ -108,6 +111,10 @@ from cpovc_forms.models  import (
 
 # Create your views here.
 from cpims_api.serializers import *
+
+def get_random_int(request):
+    random_int = random.randint(1000000, 9999999)
+    return JsonResponse({'random_int': random_int})
 
 class RegOrgUnitViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
