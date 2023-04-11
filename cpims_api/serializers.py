@@ -746,10 +746,24 @@ class RegTempSerializers(serializers.ModelSerializer):
     class Meta:
         model = RegTemp
         fields = "__all__"
-        
 
-# Serializers(serializers.ModelSerializer):
-# class Meta:
-#     model = class
+class DashboardSerializer(serializers.Serializer):
+    children = serializers.IntegerField()
+    guardian = serializers.IntegerField()
+    government = serializers.IntegerField()
+    ngo = serializers.IntegerField()
+    org_units = serializers.IntegerField()
+    case_records = serializers.IntegerField()
+    workforce_members = serializers.IntegerField()
+    pending_cases = serializers.IntegerField()
+    case_regs = serializers.DictField()
+    case_cats = serializers.ListField(child=serializers.DictField())
 
-# fields = "
+    def get_case_cats(self, obj):
+        return [
+            {
+                'case_category': category['case_category'],
+                'unit_count': category['unit_count']
+            } for category in obj['case_cats']
+        ]
+

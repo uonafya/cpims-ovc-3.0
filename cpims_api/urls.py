@@ -108,6 +108,9 @@ router.register('reg_person', views.RegOrgUnitViewSet)
 router.register('ovc_registration', views.OVCRegistrationViewSet)
 router.register('reg_org_unit', views.RegOrgUnitViewSet)
 
+# #dash
+router.register('dashboard', views.MobileDashboardViewSet, basename="dashboard")
+
 urlpatterns = [
     path('', include(router.urls)),    
     path('token-auth', obtain_auth_token, name='api_token_auth'),

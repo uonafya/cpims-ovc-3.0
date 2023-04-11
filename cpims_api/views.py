@@ -1,10 +1,15 @@
+from datetime import datetime
+
 from django.shortcuts import render
 
-from rest_framework import viewsets,status
+from rest_framework import viewsets,status,mixins
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.response import Response
+from django.db.models import Count
+
 
 
 
@@ -41,9 +46,9 @@ from cpovc_ovc.models import (
 from cpovc_main.models  import  *
 
 from cpovc_forms.models  import (
-    OVCCareServices, 
+    OVCCareServices,
     OVCEducationFollowUp,
-    OVCEducationLevelFollowUp, 
+    OVCEducationLevelFollowUp,
     OVCCarePriority,
     OVCBursary,
     OVCCaseRecord,
@@ -155,9 +160,9 @@ class OVCEducationFollowUpViewSet(viewsets.ModelViewSet):
 class OVCExitViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCExit.objects.all()
-    serializer_class = OVCExitSerializer  
-    
-    
+    serializer_class = OVCExitSerializer
+
+
 class OVCCarePriorityViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCCarePriority.objects.all()
@@ -658,6 +663,75 @@ class RegTempViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegTemp.objects.all()
     serializer_class = RegTempSerializers
-    
 
+class MobileDashboardViewSet(viewsets.ViewSet):
+    """Viewset to return the mobile dashboard data."""
 
+    queryset = OVCCaseRecord.objects.filter(is_void=False)
+
+    def get_queryset(self):
+        return self.queryset
+
+    def list(self, request):
+        try:
+            dash = {}
+            vals = {'TBVC': 0, 'TBGR': 0, 'TWGE': 0, 'TWNE': 0}
+            person_types = RegPersonsTypes.objects.filter(
+                is_void=False, date_ended=None).values(
+                'person_type_id').annotate(dc=Count('person_type_id'))
+            for person_type in person_types:
+                vals[person_type['person_type_id']] = person_type['dc']
+            dash['children'] = vals['TBVC']
+            dash['guardian'] = vals['TBGR']
+            dash['government'] = vals['TWGE']
+            dash['ngo'] = vals['TWNE']
+            # Get org units
+            org_units = RegOrgUnit.objects.filter(is_void=False).count()
+            dash['org_units'] = org_units
+            # Case records counts
+            case_records = self.get_queryset()
+            case_counts = case_records.count()
+            dash['case_records'] = case_counts
+            # Workforce members
+            workforce_members = RegPersonsExternalIds.objects.filter(
+                identifier_type_id='IWKF', is_void=False).count()
+            dash['workforce_members'] = workforce_members
+            # Case categories to find pending cases
+            pending_cases = OVCCaseCategory.objects.filter(
+                is_void=False)
+            pending_count = pending_cases.exclude(
+                case_id__summon_status=True).count()
+            dash['pending_cases'] = pending_count
+            # Child registrations
+            case_regs = {}
+            # Case Records
+            ovc_regs = case_records.values(
+                'date_case_opened').annotate(unit_count=Count('date_case_opened'))
+            for ovc_reg in ovc_regs:
+                the_date = ovc_reg['date_case_opened']
+                cdate = datetime.strftime(the_date, '%d-%b-%y')
+                case_regs[str(cdate)] = ovc_reg['unit_count']
+            # Case categories Top 5
+            case_categories = pending_cases.values(
+                'case_category').annotate(unit_count=Count(
+                'case_category')).order_by('-unit_count')
+            dash['case_regs'] = case_regs
+            dash['case_cats'] = case_categories
+        except Exception as e:
+            print('error with dash - {}'.format(str(e)))
+            dash = {}
+            dash['children'] = 0
+            dash['guardian'] = 0
+            dash['government'] = 0
+            dash['ngo'] = 0
+            dash['org_units'] = 0
+            dash['case_records'] = 0
+            dash['workforce_members'] = 0
+            dash['pending_cases'] = 0
+            dash['case_regs'] = []
+            dash['case_categories'] = 0
+            serializer = DashboardSerializer(dash)
+            return Response(serializer.data)
+        else:
+            serializer = DashboardSerializer(dash)
+            return Response(serializer.data)
