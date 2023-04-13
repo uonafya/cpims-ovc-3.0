@@ -767,3 +767,39 @@ class DashboardSerializer(serializers.Serializer):
             } for category in obj['case_cats']
         ]
 
+class CombinedDataSerializer(serializers.Serializer):
+    # person_id = serializers.IntegerField()
+    persons = serializers.ListSerializer(child=serializers.DictField())
+    # ovc_household = serializers.ListSerializer(child=serializers.DictField())
+    # ovc_chekins = serializers.ListSerializer(child=serializers.DictField())
+    # ovc_sibling = serializers.ListSerializer(child=serializers.DictField())
+    # reg_person_audit_trail = serializers.ListSerializer(child=serializers.DictField())
+    # reg_org_unit_audit_trail = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_person_benefiaciary = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_person_workforce = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_person_ou = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_person_contact = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_person_external_ids = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_person_geo = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_person_types = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_person_siblings = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_person_gurdians = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_biometric = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_person = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_org_unit_geography = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_org_unit_external_id = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_org_unit_contact = serializers.ListSerializer(child=serializers.DictSerializer())
+    # ovc_care_priorioty = serializers.ListSerializer(child=serializers.DictSerializer())
+    # ovc_exit = serializers.ListSerializer(child=serializers.DictSerializer())
+    # ovc_education_follow_up = serializers.ListSerializer(child=serializers.DictSerializer())
+    # ovc_education_level_follow_up = serializers.ListSerializer(child=serializers.DictSerializer())
+    # ovc_viral_load = serializers.ListSerializer(child=serializers.DictSerializer())
+    # ovc_care_services = serializers.ListSerializer(child=serializers.DictSerializer())
+    # school_list = serializers.ListSerializer(child=serializers.DictSerializer())
+    # facility_list = serializers.ListSerializer(child=serializers.DictSerializer())
+    # ovc_registration = serializers.ListSerializer(child=serializers.DictSerializer())
+    # reg_org_unit = serializers.ListSerializer(child=serializers.DictSerializer())
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        return {ret.pop('person_id'): ret}

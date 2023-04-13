@@ -735,3 +735,29 @@ class MobileDashboardViewSet(viewsets.ViewSet):
         else:
             serializer = DashboardSerializer(dash)
             return Response(serializer.data)
+
+
+class CombinedDataViewSet(viewsets.ViewSet):
+    authentication_classes = (TokenAuthentication,)
+    queryset = RegPerson.objects.filter(is_void=False)
+
+    def get_queryset(self):
+        return self.queryset
+
+
+
+    def list(self, request):
+        person = RegPerson.objects.values(
+          'id', 'designation','first_name', 'other_names','surname', 'email',
+          'des_phone_number', 'date_of_birth', 'date_of_death','sex_id')
+        dataset={
+            'persons':person
+        }
+
+
+
+
+        serializer = CombinedDataSerializer(dataset)
+        return Response(serializer.data)
+
+

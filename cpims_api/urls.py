@@ -110,6 +110,8 @@ router.register('reg_org_unit', views.RegOrgUnitViewSet)
 
 # #dash
 router.register('dashboard', views.MobileDashboardViewSet, basename="dashboard")
+#dataset
+router.register('dataset', views.CombinedDataViewSet, basename='dataset')
 
 urlpatterns = [
     path('', include(router.urls)),    
