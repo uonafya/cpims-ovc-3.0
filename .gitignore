@@ -1,3 +1,4 @@
 __pycache__
 *.pyc
 /utilities/ovc_households_cleaning.csv
+cpims/settings.py
