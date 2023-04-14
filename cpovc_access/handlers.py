@@ -122,7 +122,7 @@ class AuthenticationPolicyHandler(object):
         if self._policies:
             return
 
-        for policy_path, kwargs in settings.AUTHENTICATION_POLICIES:
+        for policy_path, kwargs in settings.AUTHENTICATION_BACKENDS:
             policy_class = import_string(policy_path)
             policy = policy_class(**kwargs)
 
@@ -133,7 +133,7 @@ class AuthenticationPolicyHandler(object):
 
         No `User` instance is available yet
 
-        Raises ValidationError for failed login attempts
+    Raises ValidationError for failed login attempts
         On success it returns a LoginAttempt instance
 
         `username` must be a string that uniquely identifies a user.

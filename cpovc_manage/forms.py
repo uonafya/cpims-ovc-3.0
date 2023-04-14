@@ -13,7 +13,7 @@ class NOTTForm(forms.Form):
     person_type = forms.ChoiceField(
         choices=person_type_list,
         initial='0',
-        required=True,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'person_type',

@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load app_filters %}
+{% load static %}
+{% block page_title %} OVC Care - Preventive Services / Referrals {% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block style_code %}
+
+{% endblock %}
+
+{% block primary %}
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+	<li><a href="#">Home</a></li>
+	<li class="active">Services / Referrals</li>
+</ol>
+<!-- end breadcrumb -->
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-child"></i> {{ ebi_name }} - Services / Referrals - <small>Home</small></h1>
+
+<!-- end page-header -->
+{% if messages %}
+    {% for message in messages %}
+    {% if 'error' in message.tags %}
+        <div id="messages" class="alert alert-danger fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-info fa-2x pull-left"></i>
+    {% else %}
+        <div id="messages" class="alert alert-success fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+    {% endif %}    
+        <p>{{ message }}</p>
+    </div>
+   {% endfor %}
+{% endif %}
+<div id="message" class="alert alert-success fade in" style="display: none">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+
+    <span id="response"></span>
+</div>
+
+<!-- begin row -->
+<div class="row">
+  <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin panel -->
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>                      
+                <h4 class="panel-title">{{ ovc.first_name }} {{ ovc.surname }} | {{ ovc.sex_id|gen_value:vals }} | {{ ovc.age }}</h4>
+            </div>
+            <!-- start panel body -->
+            <div class="panel-body">
+                <form class="form-horizontal" action="." method="POST" data-parsley-validate="true"   name="form-prev-reg" id="new_prev_reg">
+                {% csrf_token %}
+                <div class="row" >
+                <div class="control-label col-md-12 col-sm-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th colspan="20">Services / Referrals made(R) and Completed(C) for Teen</th>
+                        </tr>
+                        <tr>
+                            <th width="2%"></th>
+                            <th width="5%">No.</th>
+                            <th width="8%">Date</th>
+                            <th colspan="2" width="8%">VMMC</th>
+                            <th colspan="2" width="8%">PV/RC</th>
+                            <th colspan="2" width="8%">PSS</th>
+                            <th colspan="2" width="8%">HTS</th>
+                            <th colspan="2" width="10%">Legal Aid</th>
+                            <th colspan="2" width="10%">DREAMS</th>
+                            <th colspan="2" width="10%">OVC (Comp)</th>
+                            <th colspan="2" width="8%">Others</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>R</th>
+                            <th>C</th>
+                            <th>R</th>
+                            <th>C</th>
+                            <th>R</th>
+                            <th>C</th>
+                            <th>R</th>
+                            <th>C</th>
+                            <th>R</th>
+                            <th>C</th>
+                            <th>R</th>
+                            <th>C</th>
+                            <th>R</th>
+                            <th>C</th>
+                            <th>R</th>
+                            <th>C</th>
+                            <th>Specify</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sess in sessions %}
+                        <tr id="ar_{{ sess.id }}" valign="center">
+                            <td>
+                                <input type="checkbox" class="check_session" name="session_id" value="{{ sess.id }}" {% if sess.event_date %} checked {% endif %} disabled />
+                                <input name="event_id_{{ sess.id }}" value="{{ sess.event_id }}" type ="hidden">
+                                <input name="event_date_{{ sess.id }}" value="{{ sess.event_date }}" type ="hidden">
+                            </td>
+                            <td align="left">SESS{{ sess.id }}</td>
+                            <td align="left">{{ sess.event_date }}</td>
+                            <td align="left"><input type="checkbox" {{ sess.services.VMMC_R }} name="SESS{{ sess.id }}_VMMC_R"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.VMMC_C }} name="SESS{{ sess.id }}_VMMC_C"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.SRPVRC_R }} name="SESS{{ sess.id }}_SRPVRC_R"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.SRPVRC_C }} name="SESS{{ sess.id }}_SRPVRC_C"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.SRPSS_R }} name="SESS{{ sess.id }}_SRPSS_R"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.SRPSS_C }} name="SESS{{ sess.id }}_SRPSS_C"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.SRHTS_R }} name="SESS{{ sess.id }}_SRHTS_R"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.SRHTS_C }} name="SESS{{ sess.id }}_SRHTS_C"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.LEGAID_R }} name="SESS{{ sess.id }}_LEGAID_R"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.LEGAID_C }} name="SESS{{ sess.id }}_LEGAID_C"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.DREAMS_R }} name="SESS{{ sess.id }}_DREAMS_R"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.DREAMS_C }} name="SESS{{ sess.id }}_DREAMS_C"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.OVCOMP_R }} name="SESS{{ sess.id }}_OVCOMP_R"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.OVCOMP_C }} name="SESS{{ sess.id }}_OVCOMP_C"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.SROTH_R }} name="SESS{{ sess.id }}_SROTH_R"></td>
+                            <td align="left"><input type="checkbox" {{ sess.services.SROTH_C }} name="SESS{{ sess.id }}_SROTH_C"></td>
+                            <td><input type="text" class="form-control" value="{{ sess.services.SROTH_T }}" name="SESS{{ sess.id }}_SROTH_T"></td>
+                        </tr>
+                        {% endfor %}
+                        {% for sess in make_ups %}
+                        <tr id="mk_{{ sess.id }}" valign="center">
+                            <td>
+                                <input type="checkbox" class="check_session" name="mkp_session_id" disabled value="{{ sess.id }}" {% if sess.event_date %} checked {% endif %} />
+                                <input name="event_id_mkp_{{ sess.id }}" value="{{ sess.event_id }}" type ="hidden">
+                            </td>
+                            <td align="left">MKPS{{ sess.id }}</td>
+                            <td align="left">{{ sess.event_date }}</td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_VMMC_R"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_VMMC_C"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_SRPVRC_R"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_SRPVRC_C"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_SRPSS_R"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_SRPSS_C"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_SRHTS_R"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_SRHTS_C"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_LEGAID_R"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_LEGAID_C"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_DREAMS_R"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_DREAMS_C"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_OVCOMP_R"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_OVCOMP_C"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_SROTH_R"></td>
+                            <td align="left"><input type="checkbox" class="check_session" name="MKPS{{ sess.id }}_SROTH_C"></td>
+                            <td><input type="text" class="form-control" name="MKPS{{ sess.id }}_SROTH_T"></td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="20" align="left">
+                                <p><b>VMMC</b> - Voluntary Medical Male circumcision; <b>PV/RC</b> - Post violence / rape care (includes counseling, clinical services); <b>PSS</b> - Psychosocial support; <b>HTS</b> - HIV Testing Services; <br>
+                                <b>DREAMS</b> - Determined, Resilient, Empowered, AIDS-free, Mentored and Safe; <b>OVC</b> - Orphans and Vulnerable Children (Comprehensive)</p>
+                                <p><b>NOTE : </b> Services and Referrals can only be filled for the dates already filled in the attendance register.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                
+            </div>
+                <hr>
+                <div class="panel-body panel-form">
+                    <div class="form-group">
+                        <label class="control-label col-md-5 col-sm-5"></label>
+                        <div class="col-md-6 col-sm-6">
+                            <button id="mysubmit-prev-register" class="btn btn-primary" type="submit">Submit Service / Referral</button>
+                            <a href="{% url 'view_pfs' id=ovc.id %}" class="btn btn-white">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <a href="{% url 'view_pfs' id=creg.person_id %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: March 2023</div>
+            <!-- end panel body -->
+        </div>
+        <!-- end panel -->  
+    </div>
+    <!-- end col-12 -->
+</div>
+<!-- end row -->
+{% endblock %}
+
+{% block lazy_javascript_code %}
+
+<script>
+jQuery(document).ready(function () {
+
+    $('.date_field').datepicker({ endDate: '0y', format: 'dd-M-yyyy' });
+
+    $('.check_session, .check_make_up').change(function() {        
+
+    });
+
+    $('.ar_check').click(function () {
+        var val = $(this).val();
+        var atid = $(this).attr('id');
+        // alert("Test " + val + " " + atid);
+     });
+ });
+</script>
+{% endblock %}

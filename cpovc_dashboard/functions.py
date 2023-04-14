@@ -8,7 +8,13 @@ from cpovc_registry.models import RegOrgUnit
 from .parameters import PARAMS, areas, CHART
 from .queries import QUERIES
 from .charts import (
-    column_chart, bar_chart, combo_chart, column_pie_chart)
+    column_chart, bar_chart, combo_chart, column_pie_chart,
+    population_pyramid_chart, sparkline_chart, stacked_bar_chart,
+    stacked_column_chart, column_chart_2, column_compare_chart,
+    pie_chart, basic_bar_chart, table_chart, scatter_chart,
+    column_category_chart)
+
+from .models import IPInfo
 
 
 def get_geo(area_id, type_id='GDIS'):
@@ -53,12 +59,25 @@ def get_ip():
         return my_list.items
 
 
+def get_ips(fund_id):
+    """Method to get LIP Listing."""
+    try:
+        # All IPs should be attached DCS - ID #2
+        ips = IPInfo.objects.filter(
+            agency=fund_id, parent_unit_id=2, is_void=False)
+    except Exception as e:
+        print('error getting LIP', str(e))
+        return []
+    else:
+        return ips
+
+
 def get_lips(ip_id):
     """Method to get LIP Listing."""
     try:
         # print('IP', ip_id)
-        lips = RegOrgUnit.objects.filter(
-            parent_org_unit_id=ip_id, is_void=False)
+        lips = IPInfo.objects.filter(
+            parent_unit_id=ip_id, is_void=False)
     except Exception as e:
         print('error getting LIP', str(e))
         return []
@@ -66,8 +85,21 @@ def get_lips(ip_id):
         return lips
 
 
+def get_lips_mechanism(fund_id):
+    """Method to get LIP Listing."""
+    try:
+        # All IPs should be attached to DCS - ID #2
+        ips = IPInfo.objects.filter(
+            agency=fund_id, parent_unit_id__gt=2, is_void=False)
+    except Exception as e:
+        print('error getting LIP', str(e))
+        return []
+    else:
+        return ips
+
+
 def get_chart_data(request, rid, county_id, const_id,
-                   ward_id, ip_id, lip_id, prd, yr):
+                   ward_id, mech_id, ip_id, lip_id, prd, yr):
     """Method to get chart data."""
     try:
         params = {}
@@ -86,20 +118,59 @@ def get_chart_data(request, rid, county_id, const_id,
         params['area_type'] = area_type
         params['ip_id'] = int(ip_id)
         params['lip_id'] = int(lip_id)
+        params['mech_id'] = int(mech_id)
         params['dates'] = ''
         params['cont'] = str(rid)
         dates = get_dates(prd, yr)
         params['start_date'] = dates['start_date']
         params['end_date'] = dates['end_date']
         data = get_raw_data(rid, params)
-        ctt = CHART[rid] if rid in CHART else CHART['2A']
-        params['title'] = '%s : %s' % (rid, ctt['ctitle'])
-        if ctt['ctype'] == 'bar':
+        ctts = CHART[rid] if rid in CHART else CHART['2A']
+        xAxis = ctts['xAxis'] if 'xAxis' in ctts else True
+        yAxis = ctts['yAxis'] if 'yAxis' in ctts else True
+        legend = ctts['legend'] if 'legend' in ctts else True
+        has_sex = ctts['has_sex'] if 'has_sex' in ctts else True
+        colors = ctts['colors'] if 'colors' in ctts else []
+        defaults = ctts['defaults'] if 'defaults' in ctts else []
+        yLabel = ctts['yLabel'] if 'yLabel' in ctts else '# of OVC'
+        stacking = ctts['stacking'] if 'stacking' in ctts else 'percent'
+        params['xAxis'] = xAxis
+        params['yAxis'] = yAxis
+        params['yLabel'] = yLabel
+        params['legend'] = legend
+        params['has_sex'] = has_sex
+        params['colors'] = colors
+        params['defaults'] = defaults
+        params['stacking'] = stacking
+        params['title'] = '%s : %s' % (rid, ctts['ctitle'])
+        if ctts['ctype'] == 'bar':
             resp = bar_chart(request, params, data)
-        elif ctt['ctype'] == 'combo':
+        elif ctts['ctype'] == 'combo':
             resp = combo_chart(request, params, data)
-        elif ctt['ctype'] == 'column_pie':
+        elif ctts['ctype'] == 'column_pie':
             resp = column_pie_chart(request, params, data)
+        elif ctts['ctype'] == 'population_pyramid':
+            resp = population_pyramid_chart(request, params, data)
+        elif ctts['ctype'] == 'sparkline':
+            resp = sparkline_chart(request, params, data)
+        elif ctts['ctype'] == 'stacked_bar':
+            resp = stacked_bar_chart(request, params, data)
+        elif ctts['ctype'] == 'stacked_column':
+            resp = stacked_column_chart(request, params, data)
+        elif ctts['ctype'] == 'column_2':
+            resp = column_chart_2(request, params, data)
+        elif ctts['ctype'] == 'column_compare':
+            resp = column_compare_chart(request, params, data)
+        elif ctts['ctype'] == 'pie':
+            resp = pie_chart(request, params, data)
+        elif ctts['ctype'] == 'basic_bar_chart':
+            resp = basic_bar_chart(request, params, data)
+        elif ctts['ctype'] == 'scatter':
+            resp = scatter_chart(request, params, data)
+        elif ctts['ctype'] == 'column_category':
+            resp = column_category_chart(request, params, data)
+        elif ctts['ctype'] == 'table':
+            resp = table_chart(request, params, data)
         else:
             resp = column_chart(request, params, data)
     except Exception as e:
@@ -172,7 +243,7 @@ def get_raw_sql(rid, params):
             # desc = cursor.description
             rows = dictfetchall(cursor)
             # rows = [row for row in cursor.fetchall()]
-        # print('query', rows)
+        # print('DashQuery', rid, sql)
     except Exception as e:
         raise e
     else:
@@ -189,17 +260,25 @@ def get_raw_data(rid, params):
         lip_id = params['lip_id']
         area_id = params['area_id']
         area_type = params['area_type']
+        # Handle Funding mechanism
+        mech_id = params['mech_id']
         if ip_id > 0 and lip_id == 0:
             lips = get_lips(ip_id)
             for lip in lips:
-                cbos_list.append(lip.id)
-                cbos.append(str(lip.id))
+                cbos_list.append(lip.org_unit.id)
+                cbos.append(str(lip.org_unit.id))
             # Handle IPs that are also LIPs
             cbos_list.append(ip_id)
             cbos.append(str(ip_id))
         if lip_id > 0:
             cbos_list = [lip_id]
             cbos = [str(lip_id)]
+        if mech_id > 0 and ip_id == 0 and lip_id == 0:
+            # Filter for all the lips under agency
+            mlips = get_lips_mechanism(mech_id)
+            for mlip in mlips:
+                cbos_list.append(mlip.org_unit.id)
+                cbos.append(str(mlip.org_unit.id))
         # CBO Query Filters
         cboq, cbov, ocboq = '', '', ''
         if len(cbos) > 0:
@@ -246,15 +325,20 @@ def get_raw_data(rid, params):
         qparams['odates'] = odates
         datas = get_raw_sql(rid, qparams)
         # print('Query ID', rid, datas)
-        print('Query filter', qparams)
+        # print('Query filter', qparams)
         items = CHART[rid]['categories']
         itd = CHART[rid]['qparam']
+        qft = CHART[rid]['qfilter'] if 'qfilter' in CHART[rid] else ''
         if len(items) == 0:
-            items, rdata = format_other_data(datas, items, itd)
+            if qft:
+                items, rdata = format_all_data(datas, items, itd, qft)
+            else:
+                items, rdata = format_other_data(datas, items, itd)
         else:
             rdata = format_data(rid, datas, items, itd)
         # print('Final data', rid, rdata)
         data['items'] = items
+        data['raw'] = datas
         for rdt in rdata:
             data[rdt] = rdata[rdt]
     except Exception as e:
@@ -280,7 +364,7 @@ def format_data(rid, datas, items, itd='agerange'):
                     elif data['sex_id'] in females:
                         fdata[i] = str(int(data['dcount']))
         rdata['mdata'] = ','.join(mdata)
-        if rid in ['2D']:
+        if rid in ['3F', '7E']:
             fdata = format_percentage(rid, mdata, fdata)
         rdata['fdata'] = ','.join(fdata)
         # print(data)
@@ -337,6 +421,62 @@ def format_other_data(datas, items=[], itd='services'):
         # print(data)
     except Exception as e:
         print('error with other data - %s' % (str(e)))
+        return [], {}
+    else:
+        return items, rdata
+
+
+def format_all_data(datas, items=[], itd='services', qft=''):
+    """Method to format data."""
+    try:
+        # print('all dt', itd, qft)
+        all_data = {}
+        rdata = {}
+        categories = []
+        # qfilter = qft if qft else 'sex_id'
+        for data in datas:
+            if qft in data:
+                qf = data[qft]
+                if itd in data:
+                    sname = data[itd]
+                    dcount = data['dcount']
+                    if sname not in categories:
+                        categories.append(sname)
+                    if qf not in all_data:
+                        all_data[qf] = {sname: dcount}
+                    else:
+                        if sname not in all_data[qf]:
+                            all_data[qf][sname] = dcount
+                    # print('--', data, all_data)
+        # Now format the dict to array for charting
+        series = []
+        fseries = []
+        sdata = {}
+        # st = [{'name': '', 'data': []}]
+        for agency in all_data:
+            for category in categories:
+                # for dt in agencies:
+                dts = all_data[agency]
+                dct = dts[category] if category in dts else 0
+                # print('AN', agency, category, dct, dts)
+                if agency not in series:
+                    series.append(agency)
+                if category not in sdata:
+                    sdata[category] = []
+                if category in sdata:
+                    sdata[category].append(int(dct))
+                # print('datas', agencies, category)
+        # print('sdata', sdata)
+        # print('series', series)
+        for sr in sdata:
+            sd = sdata[sr]
+            fseries.append({'name': sr, 'data': sd})
+        rdata['mdata'] = '0'
+        rdata['fdata'] = '0'
+        rdata['categories'] = series
+        rdata['series'] = fseries
+    except Exception as e:
+        print('error with other all data - %s' % (str(e)))
         return [], {}
     else:
         return items, rdata

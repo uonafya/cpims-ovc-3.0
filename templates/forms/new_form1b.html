@@ -56,16 +56,28 @@
 {% endif %}</b>
 <span class="label label-primary">Active</span>
 </small></h1>
-
-
 <!-- end page-header -->
-
-<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
-    <!-- <span class="close" data-dismiss="alert">×</span> -->
-    <i class="fa fa-info pull-left"></i>
-    <p></p>
-    <span class="invalid-form-message" id="invalid-form-message"></span>
-</div>
+{% if messages %}
+    {% for message in messages %}
+    {% if 'error' in message.tags %}
+        <div id="messages" class="alert alert-danger fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-info fa-2x pull-left"></i>
+    {% else %}
+        <div id="messages" class="alert alert-success fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+    {% endif %}    
+        <p>{{ message }}</p>
+    </div>
+   {% endfor %}
+{% endif %}
+    <div id="message" class="alert alert-success fade in" style="display: none">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+        <p></p>
+        <span id="response"></span>
+    </div>
 
 <!-- begin row -->
 <div id='case_details' class="row">
@@ -88,7 +100,7 @@
                     <span class="close" data-dismiss="alert">&times;</span>
                 </div>
             <div class="panel-body">
-            <div style="overflow-x: auto; min-height: 300px;">     
+            <div>     
             	<form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true"
                 name="form-wizard-f1b" id="new_form1b">
                 	{% csrf_token %} {{ form.caretaker_id }}
@@ -111,16 +123,21 @@
 							<!-- <li>
 							    Psychosocial Support
 							    <small>Caregiver psychosocial support service</small>
-							</li> -->
+							</li>
 							<li>
                                 Schooled
 							    <small>(Education)</small>
 							    <small>Caregiver Education status</small>
 							</li>
+                            </li> -->
                             <li>
                                 Stable
                                 <small>(Economic Strengthening)</small>
                                 <small>Caregiver household economic strengthning status</small>
+                            </li>
+                            <li>
+                                Critical Event
+                                <small>Caregiver critical event</small>
                             </li>							
                         </ol>
                         <input type="hidden" id="person_id" value="{{ovc.child_chv.id}}">
@@ -183,7 +200,7 @@
                                                 <h5 class="m-t-0 m-b-5">{{ itm.name }}</h5>
                                             </td>
                                             <td>
-                                                <input type="checkbox" value="{{ itm.id }}" name="f1b[]" />
+                                                <div class="checkbox"><input type="checkbox" value="{{ itm.id }}" name="f1b[]" /></div>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -318,6 +335,7 @@
 						<!-- end wizard step-4 --> 
 
 						<!-- begin wizard step-5 -->
+                        <!--
 						<div class="wizard-step-3">
 							<fieldset>
                             <legend class="pull-left width-full">
@@ -369,7 +387,7 @@
                                 </div>
                                 </div>
                             </fieldset>
-						</div> 
+						</div>-->
 						<!-- end wizard step-5 --> 
 
                         <!-- begin wizard step-6 -->
@@ -425,10 +443,26 @@
                                 </div>
                             </fieldset>
                         </div> 
-                        <!-- end wizard step-6 -->                          
-					</div>
+                        <!-- end wizard step-6 -->
+
+                        <!-- begin wizard step-5 -->
+                        <div class="wizard-step-5">
+                            <div class="panel-body"> 
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2" for="critical_events">Critical Event(s) :</label>
+                                    <div class="col-md-8 col-sm-8">
+                                        {{ form.caregiver_critical_event }}
+                                        <h6><span id="sel_caregiver_critical_event"></span></h6>
+                                    </div>
+                                    <a href="#" data-toggle="tooltip" title="Describe critical events"><i class="fa fa-info-circle fa-sm"></i></a>
+                                </div>                              
+                            </div>
+                        </div> 
+                        <!-- end wizard step-5 -->                          
+                    </div>                        
+
                     <div class="row">
-                    <label class="control-label col-md-4 col-sm-4" for="csi_qs">Date of Service(s)/Monitoring : <span class="asteriskField">* </span></label>
+                    <label class="control-label col-md-4 col-sm-4" for="csi_qs">Date of Service(s) / Event : <span class="asteriskField">* </span></label>
                     <div class="col-md-4 col-sm-4">
                         {{ form.olmis_service_date }}
                     </div>
@@ -459,7 +493,8 @@
                 </a>
             </div>
             {% endif %}
-            <div class="badge pull-right m-4">Revised: October 6th 2016</div>
+            <a href="{% url 'ovc_view' id=form.person.value %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: May 2022</div>
         </div>
         <!-- end panel -->
         <div class="panel">
@@ -467,28 +502,6 @@
                     <h4 class="title"><b>Past Form 1B</b></h4>
                 </div>
                 <div class="panel-body">
-                    <table id="data-table" class="table table-striped table-bordered hidden">
-                        <thead>
-                            <tr>
-                                <th width="5%">ID</th>
-                                <th>Caregiver Names</th>
-                                <th>Date</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for f1b in f1bs %}
-                            <tr id="cluster_tr_{{ cluster.id }}">
-                                <td>{{ forloop.counter }}</td>
-                                <td class="f1b_p_id" id="{{ f1b.person.id }}">{{ f1b.person.first_name }} {{ f1b.person.surname }}</td>
-                                <td>{{ f1b.date_of_event }}
-                                </td>
-                                <td></td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-
                     <table id="past_f1b" class="table table-condensed table-bordered">
                         <thead>
                             <tr>
@@ -502,8 +515,8 @@
                         <tbody>
                             {% for eventt in ev_data %}
                                 <tr>
-                                    <td rowspan="2" valign="center" style="text-align: center;vertical-align: middle;">{{ forloop.counter }}</td>
-                                    <td rowspan="2" valign="center" style="text-align: center;vertical-align: middle;"><b>{{ eventt.ev_date }}</b></td>
+                                    <td rowspan="3" valign="center" style="text-align: center;vertical-align: middle;">{{ forloop.counter }}</td>
+                                    <td rowspan="3" valign="center" style="text-align: center;vertical-align: middle;"><b>{{ eventt.ev_date }}</b></td>
                                     <td valign="center" style="text-align: center;vertical-align: middle;">Services</td>
                                     <td width="40%">
                                         
@@ -518,9 +531,9 @@
                                         {% endif %}
 
                                     </td>
-                                    <td rowspan="2" valign="center" style="text-align: center;vertical-align: middle;">
-                                        <a class="btn btn-danger" data-toggle="modal" href='#del_f1b_e'> <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
-                                        <div class="modal fade" id="del_f1b_e">
+                                    <td rowspan="3" valign="center" style="text-align: center;vertical-align: middle;">
+                                        <a class="btn btn-danger" data-toggle="modal" href='#del_f1b_e_{{eventt.event_key}}'> <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                                        <div class="modal fade" id="del_f1b_e_{{eventt.event_key}}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -529,15 +542,9 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         Are you sure you want to delete the <b>{{eventt.ev_date}}</b> event?
-                                                        <input type="hidden" name="ev_person" id="ev_person" value="{{eventt.ev_person}}"/>
-                                                        <input type="hidden" name="ev_key" id="ev_key" value="{{eventt.event_key}}"/>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <script>
-                                                            var pid = document.getElementById("ev_person").value;
-                                                            var ev_key = document.getElementById("ev_key").value;
-                                                        </script>
-                                                        <button type="button" class="btn btn-danger" onclick="deleteForm1bEntry( pid,ev_key )" id="del_f1b_{{forloop.counter}}">Yes, DELETE</button>
+                                                        <button type="button" class="btn btn-danger" onclick="deleteForm1bEntry( {{eventt.ev_person}},'{{eventt.event_key}}' )" id="del_f1b_{{forloop.counter}}">Yes, DELETE</button>
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">No, cancel</button>
                                                     </div>
                                                 </div>
@@ -546,7 +553,7 @@
                                         
                                     </td>
                                 </tr>
-                                <tr style="border-bottom: 8px solid #ccc;">
+                                <tr>
                                     <td valign="center" style="text-align: center;vertical-align: middle;">Assessments</td>
                                     <td width="40%">
                                         {% if eventt.assessments %}
@@ -557,6 +564,21 @@
                                             <!-- </ul> -->
                                         {% else %}
                                             <div class="alert alert-warning">No assessments found</div>
+                                        {% endif %}
+
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 8px solid #ccc;">
+                                    <td valign="center" style="text-align: center;vertical-align: middle;">Critical Events</td>
+                                    <td width="40%">
+                                        {% if eventt.critical_events %}
+                                            <!-- <ul> -->
+                                                {% for 1asem in eventt.critical_events %}
+                                                    {{ 1asem.data }}, &nbsp;
+                                                {% endfor %}
+                                            <!-- </ul> -->
+                                        {% else %}
+                                            <div class="alert alert-warning">No critical events found</div>
                                         {% endif %}
 
                                     </td>
@@ -589,6 +611,17 @@
     FormWizardValidation.init();
 
     $('#olmis_service_date').attr('data-parsley-required', 'true');
+
+    //multi selects
+    $('#caregiver_critical_event').multiselect({
+        selectAllValue: 'multiselect-all',
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true,
+        numberDisplayed: 1,
+        maxHeight: 300,
+        buttonWidth: '100%',
+        buttonClass: 'btn btn-white'
+    });
 
     $("#new_form1b").submit(function(e){
             e.preventDefault();
@@ -631,7 +664,7 @@
                 }else{
                     $('#messages').addClass('alert-success').removeClass('alert-danger').css({'display': 'block'});
                     $('#messages p').html(result[0].msg);
-                    var url = "{% url 'new_form1b' id=1234%}".replace(/1234/, personId.toString());
+                    var url = "{% url 'new_form1b' id=1234%}?deleted=1".replace(/1234/, personId.toString());
                     window.open(url,"_self");
                 }
                 console.log("delered");
@@ -640,7 +673,7 @@
                 alert('not deleted ==> status: '+ JSON.stringify(status) + ' & error: '+JSON.stringify(error));
                 $('#messages').css({'display': 'block'}).removeClass('alert-success').addClass('alert-danger');
                 $('#messages p').html(result[0].msg);
-                console.log("errorr delering");
+                console.log("error deleting");
             }
         });
     }

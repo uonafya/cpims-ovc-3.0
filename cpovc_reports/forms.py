@@ -71,7 +71,7 @@ class CaseLoad(forms.Form):
             org_inst = get_org_units_list('Please select Unit', inst_types)
         org_unit = forms.ChoiceField(
             choices=org_units,
-            initial='',
+            required=False,
             widget=forms.Select(
                 attrs={'class': 'form-control',
                        'autofocus': 'true'}))
@@ -79,7 +79,7 @@ class CaseLoad(forms.Form):
 
         org_inst = forms.ChoiceField(
             choices=org_inst,
-            initial='',
+            required=False,
             widget=forms.Select(
                 attrs={'class': 'form-control',
                        'autofocus': 'true',
@@ -88,6 +88,7 @@ class CaseLoad(forms.Form):
 
         cluster = forms.ChoiceField(
             choices=cluster_list,
+            required=False,
             widget=forms.Select(
                 attrs={'class': 'form-control',
                        'data-parsley-required': 'false',
@@ -96,7 +97,7 @@ class CaseLoad(forms.Form):
 
     county = forms.ChoiceField(
         choices=county_list,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'true',
@@ -104,7 +105,7 @@ class CaseLoad(forms.Form):
                    'id': 'county'}))
     sub_county = forms.ChoiceField(
         choices=sub_county_list,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'true',
@@ -113,7 +114,7 @@ class CaseLoad(forms.Form):
 
     document_type = forms.ChoiceField(
         choices=document_type,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'true',
@@ -121,7 +122,7 @@ class CaseLoad(forms.Form):
 
     report_type = forms.ChoiceField(
         choices=report_types,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'true',
@@ -129,7 +130,7 @@ class CaseLoad(forms.Form):
 
     report_type_datim = forms.ChoiceField(
         choices=report_types_datim,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'id_report_type',
@@ -138,7 +139,7 @@ class CaseLoad(forms.Form):
 
     report_type_other = forms.ChoiceField(
         choices=report_types_other,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'id_report_type',
@@ -147,7 +148,7 @@ class CaseLoad(forms.Form):
 
     report_type_others = forms.ChoiceField(
         choices=report_types_others,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'id': 'id_report_type',
@@ -156,7 +157,7 @@ class CaseLoad(forms.Form):
 
     report_year = forms.ChoiceField(
         choices=YEAR_CHOICES,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'true',
@@ -164,7 +165,7 @@ class CaseLoad(forms.Form):
 
     report_years = forms.ChoiceField(
         choices=YEAR_ICHOICES,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'true',
@@ -172,37 +173,46 @@ class CaseLoad(forms.Form):
 
     report_period = forms.ChoiceField(
         choices=report_period,
-        initial='',
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'true',
                    'autofocus': 'true'}))
 
-    child = forms.IntegerField(widget=forms.TextInput(
-        attrs={'class': 'form-control',
-               'data-parsley-required': 'true',
-               'id': 'child_id'}))
+    child = forms.IntegerField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'class': 'form-control',
+                   'data-parsley-required': 'true',
+                   'id': 'child_id'}))
 
     report_from_date = forms.CharField(
+        required=False,
         widget=forms.TextInput(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'true',
                    'id': 'from_date'}))
 
     report_to_date = forms.CharField(
+        required=False,
         widget=forms.TextInput(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'true',
                    'id': 'to_date'}))
 
-    cpims_child = forms.CharField(widget=forms.HiddenInput(
-        attrs={'id': 'cpims_child_id'}))
+    cpims_child = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(
+            attrs={'id': 'cpims_child_id'}))
 
-    report_id = forms.CharField(widget=forms.HiddenInput(
-        attrs={'id': 'report_id'}))
+    report_id = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(
+            attrs={'id': 'report_id'}))
 
     report_vars = forms.ChoiceField(
         choices=report_vars,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'true',
@@ -210,6 +220,7 @@ class CaseLoad(forms.Form):
 
     institution_type = forms.ChoiceField(
         choices=inst_vars,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'true',
@@ -217,6 +228,7 @@ class CaseLoad(forms.Form):
 
     org_type = forms.ChoiceField(
         choices=(),
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'false',
@@ -224,6 +236,7 @@ class CaseLoad(forms.Form):
 
     report_ovc = forms.ChoiceField(
         choices=usg_reports,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'true',
@@ -244,7 +257,7 @@ class ClusterForm(forms.Form):
 
         cbo_unit_id = forms.MultipleChoiceField(
             choices=org_units_list,
-            initial='',
+            required=True,
             widget=forms.SelectMultiple(
                 attrs={'class': 'form-control',
                        'data-parsley-required': 'true',
@@ -253,6 +266,7 @@ class ClusterForm(forms.Form):
         self.fields['cbo'] = cbo_unit_id
 
     cluster = forms.CharField(
+        required=True,
         widget=forms.TextInput(
             attrs={'class': 'form-control',
                    'data-parsley-required': 'true',

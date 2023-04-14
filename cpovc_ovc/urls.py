@@ -10,4 +10,5 @@ urlpatterns = [
     path('ovc/view/<int:id>/', views.ovc_view, name='ovc_view'),
     path('ovc/manage/', views.ovc_manage, name='ovc_manage'),
     path('hh/view/<uuid:hhid>/', views.hh_manage, name='hh_manage'),
+    path('hh/edit/<uuid:hhid>/<int:id>/', views.hh_edit, name='hh_edit'),
 ]

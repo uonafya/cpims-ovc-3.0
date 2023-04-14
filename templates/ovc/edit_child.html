@@ -170,7 +170,9 @@
                     <div class="col-md-4" id="exit_reason_div">
                     <div class="form-group">
                         <label class="text-bold">Exit reason</label>
-                        {{ form.exit_reason }}
+                        <div><br>
+                        {{ form.exit_reason.value|default_if_none:"N/A"|gen_value:vals }}
+                        </div>
                       </div>
                     </div>
                     <!-- end col-4 -->
@@ -482,7 +484,7 @@
                         <div class="col-md-8 col-md-offset-4">
                             <button type="submit" class="btn btn-primary" value="submit" id="s1"> <i class="fa fa-save"></i> Update</button>
                             <button type="button" class="btn btn-danger" value="exit-ovc" id="ovcexit"> <i class="fa fa-pencil"></i> Exit OVC</button>
-                            <a href="{% url 'ovc_home' %}">
+                            <a href="{% url 'ovc_view' id=child.id %}">
                             <button type="button" class="btn btn-default"> Cancel </button>
                             </a>
                         </div>
@@ -560,6 +562,12 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td>Positive</td>
+                            <td>{{data.date_of_event}}</td>
+                        </tr>
+                        {% elif data.hiv_status == "HHEI" %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>Unknown (HEI)</td>
                             <td>{{data.date_of_event}}</td>
                         </tr>
                         {% elif data.hiv_status == "HSTN" %}
@@ -665,6 +673,8 @@
                             {% endfor %}
                         </thead>
                     </table>
+                <hr>
+                    <b>EID Key:</b> -995/-996: Empty results; -997: Collect new sample; -998: Invalid results; -999: Failed Test; 0: LDL
                 </div>
                 <div class="modal-footer">
                     <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
@@ -787,6 +797,8 @@
     
          
     });
+    $("#is_exited").prop("disabled", true);
+
     console.log('{{date_difference}}')
 
     $('#ovcexit').click(function() { 
@@ -878,25 +890,6 @@
         $('#modal-hiv').find('button.close').trigger('click');
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     $('#oexit').click(function() {
         $('#ovcreg_form').parsley().validate("primary4");
         var ovc_id = $('#ovc_id').val();
@@ -1092,7 +1085,7 @@
         }
     }
     function handle_hstatus(hstatus){
-        if (hstatus == 'HSTP') {
+        if ((hstatus == 'HSTP') || (hstatus == 'HHEI')){
             $('#facility_div').show();
             $('#facility_id_div').show();
             $('#art_div').show();

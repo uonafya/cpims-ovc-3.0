@@ -2259,8 +2259,7 @@ def save_person_extids(identifier_types, person_id):
             location, created = RegPersonsExternalIds.objects.update_or_create(
                 person_id=person_id, identifier_type_id=identifier_type,
                 is_void=False,
-                defaults={'person_id': person_id, 'identifier': identifier,
-                          'identifier_type_id': identifier_type,
+                defaults={'identifier': identifier,
                           'is_void': False}, )
     except Exception as e:
         raise e
@@ -2760,18 +2759,18 @@ def get_geo_list(geo_lists, geo_filter, add_select=False, user_filter=[]):
     try:
 
         if geo_lists:
-            for i, geo_list in enumerate(geo_lists):
+            for i, geo_list in enumerate(list(geo_lists)):
                 area_id = geo_list['area_id']
                 area_name = geo_list['area_name']
                 area_type = geo_list['area_type_id']
                 if geo_filter == area_type:
                     if user_filter:
-                        if area_id in user_filter:
+                        if area_id in list(user_filter):
                             area_detail[area_id] = area_name
                     else:
                         area_detail[area_id] = area_name
-                        result = area_detail.items()
-
+            # Got migraine because someone changed this indent
+            result = area_detail.items()
     except Exception as e:
         print('Error - %s' % e)
         return ()

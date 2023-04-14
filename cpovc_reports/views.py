@@ -5,7 +5,9 @@ import csv
 import time
 import uuid
 import base64
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import string
 import mimetypes
 import calendar
@@ -25,11 +27,11 @@ from .functions import (
     get_sub_county_info, get_raw_data, create_year_list, get_totals,
     get_case_data, org_unit_tree, get_performance, get_performance_detail,
     get_pivot_data, get_pivot_ovc, get_variables, get_sql_data, write_xls,
-    csvxls_data, write_xlsm, get_cluster, edit_cluster, create_pepfar,get_viral_load_rpt_stats,
-    get_dashboard_summary)
+    csvxls_data, write_xlsm, get_cluster, edit_cluster, create_pepfar,
+    get_viral_load_rpt_stats, get_dashboard_summary)
 
 from cpovc_registry.models import RegOrgUnit
-from cpovc_registry.functions import get_contacts, merge_two_dicts, get_ovc_hiv_status
+from cpovc_registry.functions import get_contacts, merge_two_dicts
 
 from cpovc_auth.models import AppUser
 
@@ -46,7 +48,6 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .parameters import ORPTS, RPTS
 
-from django.db import connection
 from cpovc_forms.models import OVCGokBursary
 
 MEDIA_ROOT = settings.MEDIA_ROOT
@@ -54,7 +55,7 @@ DOC_ROOT = settings.DOCUMENT_ROOT
 STATIC_ROOT = settings.STATICFILES_DIRS[0]
 
 
-# @login_required
+@login_required
 def reports_cpims(request, id):
     """Method for all other reports."""
     try:
@@ -96,7 +97,7 @@ def arrange_pending(mylist):
     return vals
 
 
-# @login_required
+@login_required
 def reports_home(request):
     """Some default page for reports home page."""
     try:
@@ -226,7 +227,9 @@ def write_csv(data, file_name, params):
     """Method to write csv given data."""
     try:
         csv_file = '%s/%s.csv' % (MEDIA_ROOT, file_name)
-        with open(csv_file, 'wb') as csvfile:
+        # columns = data[0]
+        # del data[0] delete row zero when using pandas
+        with open(csv_file, 'w') as csvfile:
             csvwriter = csv.writer(csvfile, delimiter=',', quotechar='"',
                                    quoting=csv.QUOTE_MINIMAL)
             csvwriter.writerows(data)
@@ -236,32 +239,27 @@ def write_csv(data, file_name, params):
         vba_file = '%s/%s/vbaProject.bin' % (DOC_ROOT, s_name)
         excel_file = ''
         if 'archive' in params:
-            print(file_name)
             epoch_time = int(time.time())
             file_name = file_name.replace('tmp-', '')
-            rnames = base64.urlsafe_b64decode(str(file_name))
-            print(rnames)
-            report_details = rnames.split('_')
+            rnames = base64.urlsafe_b64decode(file_name.encode('ascii'))
+            report_details = rnames.decode("utf-8").split('_')
             s_name = '%s.%s' % (report_details[0], epoch_time)
             uid = report_details[-1]
             fname = '%s-%s' % (uid, s_name)
-            df_new = pd.read_csv(csv_file)
             excel_file = '%s.xlsx' % (fname)
-            xlsx_file = '%s/xlsx/%s.xlsx' % (MEDIA_ROOT, fname)
-
-            writer = pd.ExcelWriter(xlsx_file, engine='xlsxwriter')
-            df_new.to_excel(writer, sheet_name='Sheet1', index=False)
-            # This is it
+            excel_file_path = '%s/xlsx/%s.xlsx' % (MEDIA_ROOT, fname)
+            writer = pd.ExcelWriter(excel_file_path, engine='xlsxwriter')
+            data = pd.read_csv(csv_file, low_memory=False)
+            data.to_excel(writer, sheet_name='Sheet1', index=False)
             workbook = writer.book
-            xlsm_file = '%s/xlsx/%s.xlsm' % (MEDIA_ROOT, fname)
             workbook.add_worksheet('Sheet2')
             workbook.add_worksheet('Sheet3')
             if os.path.isfile(vba_file):
-                excel_file = excel_file.replace('xlsx', 'xlsm')
-                workbook.filename = xlsm_file
+                excel_file = excel_file.replace('.xlsx', '.xlsm')
+                excel_file_path = excel_file_path.replace('.xlsx', '.xlsm')
+                workbook.filename = excel_file_path
                 workbook.add_vba_project(vba_file)
             writer.save()
-            writer.close()
     except Exception as e:
         print('Error creating csv Results - %s' % (str(e)))
         pass
@@ -310,7 +308,6 @@ def get_viral_load_report(request):
             ext = request.POST.get('ext')
         print(ext)
         report_ovc_id = int(report_variables['report_ovc'])
-        #report_name = report_variables['report_ovc_name']
         report_name = 'Viral Load'
         start_date = report_variables['start_date']
         report_id = int(request.POST.get('rpt_ovc_id', 1))
@@ -318,26 +315,19 @@ def get_viral_load_report(request):
         if start_date > today:
             results = []
         else:
-            #results = get_pivot_ovc(request, report_variables)
-            results =get_viral_load_rpt_stats(get_variables(request))
+            results = get_viral_load_rpt_stats(get_variables(request))
 
         fid = '%s_%s_%s' % (report_name, today, user_id)
         fid = fid.replace(':', '').replace(' ', '_')
         fid = base64.urlsafe_b64encode(fid)
-        titles = ['CPIMS ID', 'NAME','VIRAL LOAD','SUPPRESSION']
-        # if report_ovc_id == 6 and report_id == 5:
-        #     titles = []
-        # if report_ovc_id == 6 and (report_id == 12 or report_id == 8):
-        #     titles = []
-        # if report_ovc_id == 6 and report_id == 14:
-        #     titles = []
+        titles = ['CPIMS ID', 'NAME', 'VIRAL LOAD', 'SUPPRESSION']
         data = [titles]
         print('Results count - ', len(results))
         for res in results:
             vals = []
             for n, i in enumerate(titles):
                 val = res[i]
-                if type(val) is str:
+                if isinstance(val, str):
                     val = val.encode('ascii', 'ignore').decode('ascii')
                 vals.append(val)
             data.append(vals)
@@ -364,13 +354,12 @@ def get_viral_load_report(request):
         return JsonResponse(datas, content_type='application/json',
                             safe=False)
     except Exception as e:
-        print('error getting raw data - %s' % (str(e)))
+        print('error getting raw data VL - %s' % (str(e)))
         return JsonResponse([], content_type='application/json',
                             safe=False)
 
 
-
-# @login_required
+@login_required
 def reports_caseload(request):
     """Case load views."""
     results, html = {}, None
@@ -664,13 +653,14 @@ def reports_generate(request):
         raise e
 
 
-# @login_required
+@login_required
 def reports_download(request, file_name):
     """Generic method for downloading files."""
     try:
         if '_' not in file_name:
             file_name = base64.urlsafe_b64decode(str(file_name))
-        file_path = '%s/%s' % (MEDIA_ROOT, file_name)
+        file_name = file_name.decode('utf-8')
+        file_path = '%s/%s' % (MEDIA_ROOT, file_name.decode('utf-8'))
         fp = open(file_path, 'rb')
         response = HttpResponse(fp.read())
         fp.close()
@@ -713,7 +703,7 @@ def reports_download(request, file_name):
         return response
 
 
-# @login_required
+@login_required
 def print_pdf(request):
     """Download without printing."""
     response = HttpResponse(content_type='application/pdf')
@@ -730,7 +720,7 @@ def print_pdf(request):
     return response
 
 
-# @login_required
+@login_required
 def manage_reports(request):
     """For cleaning up the reports."""
     data, users, vals = [], [], {}
@@ -802,7 +792,7 @@ def manage_reports(request):
         raise e
 
 
-# @login_required
+@login_required
 def manage_dashboard(request):
     """Method to manage user dashboard."""
     try:
@@ -882,7 +872,7 @@ def clean_reports(report_id):
         return 99, 'File removal error. Please contact Administrator.'
 
 
-# @login_required
+@login_required
 def reports_pivot(request):
     """Method to do pivot reports."""
     try:
@@ -894,7 +884,7 @@ def reports_pivot(request):
         pass
 
 
-# @login_required
+@login_required
 def reports_ovc_pivot(request):
     """Method to do pivot reports."""
     try:
@@ -906,7 +896,7 @@ def reports_ovc_pivot(request):
         pass
 
 
-# @login_required
+@login_required
 def reports_ovc_datim_mer_pivot(request):
     """Method to do pivot reports."""
     try:
@@ -917,40 +907,47 @@ def reports_ovc_datim_mer_pivot(request):
     else:
         pass
 
-# @login_required
+
+@login_required
 def reports_ovc_datim_mer23_pivot(request):
     """Method to do pivot reports."""
     try:
         form = CaseLoad(request.user)
-        return render(request, 'reports/pivot_datim_mer23.html', {'form': form})
+        return render(
+            request, 'reports/pivot_datim_mer23.html', {'form': form})
     except Exception as e:
         raise e
     else:
         pass
 
-# @login_required
+
+@login_required
 def reports_ovc_datim_mer24_pivot(request):
     """Method to do pivot reports."""
     try:
         form = CaseLoad(request.user)
-        return render(request, 'reports/pivot_datim_mer24.html', {'form': form})
+        return render(
+            request, 'reports/pivot_datim_mer24.html', {'form': form})
     except Exception as e:
         raise e
     else:
         pass
 
-# @login_required
+
+@login_required
 def reports_ovc_datim_mer25_pivot(request):
     """Method to do pivot reports."""
     try:
         form = CaseLoad(request.user)
-        return render(request, 'reports/pivot_datim_mer25.html', {'form': form})
+        return render(
+            request, 'reports/pivot_datim_mer25.html', {'form': form})
     except Exception as e:
         raise e
     else:
         pass
 
-# @login_required
+
+@login_required
 def reports_ovc_pepfar(request):
     """Method to do pivot reports."""
     try:
@@ -962,7 +959,7 @@ def reports_ovc_pepfar(request):
         pass
 
 
-# @login_required
+@login_required
 def viral_load(request):
     """Method to do pivot reports."""
     try:
@@ -973,7 +970,8 @@ def viral_load(request):
     else:
         pass
 
-# @login_required
+
+@login_required
 def reports_ovc_kpi(request):
     """Method to do pivot reports."""
     try:
@@ -985,7 +983,7 @@ def reports_ovc_kpi(request):
         pass
 
 
-# @login_required
+@login_required
 def reports_ovc_list(request):
     """Method to list OVC reports."""
     try:
@@ -1019,7 +1017,7 @@ def reports_rawdata(request):
         return JsonResponse(data, content_type='application/json',
                             safe=False)
     except Exception as e:
-        print('error getting raw data 2 - %s' % (str(e)))
+        print('error getting raw data CSV - %s' % (str(e)))
         return JsonResponse([], content_type='application/json',
                             safe=False)
 
@@ -1027,13 +1025,9 @@ def reports_rawdata(request):
 def reports_ovc_rawdata(request):
     """Method to do adhoc pivot reports."""
     try:
-        ext = 'Pivot'
         # time_now = int(datetime.now().strftime('%H'))
         user_id = request.user.id
         report_variables = get_variables(request)
-        if request.method == 'POST':
-            ext = request.POST.get('ext')
-        print(ext)
         report_ovc_id = int(report_variables['report_ovc'])
         report_name = report_variables['report_ovc_name']
         start_date = report_variables['start_date']
@@ -1044,8 +1038,10 @@ def reports_ovc_rawdata(request):
         else:
             results = get_pivot_ovc(request, report_variables)
         fid = '%s_%s_%s' % (report_name, today, user_id)
+        print('Newton May 26')
         fid = fid.replace(':', '').replace(' ', '_')
-        fid = base64.urlsafe_b64encode(fid)
+        print('File ID', fid)
+        fid = base64.urlsafe_b64encode(fid.encode('ascii'))
         #
         titles = []
         if results:
@@ -1059,14 +1055,15 @@ def reports_ovc_rawdata(request):
             vals = []
             for n, i in enumerate(titles):
                 val = res[i]
-                if type(val) is str:
-                    val = val.encode('ascii', 'ignore').decode('ascii')
+                if isinstance(val, str):
+                    val = val.encode('ascii', 'ignore').decode('utf-8')
                 vals.append(val)
             data.append(vals)
-        csv_file = 'tmp-%s' % (fid)
-        xls_name = write_csv(data, csv_file, {'archive': True, 'report_id': report_id})
-        xls = ''
-        status = 9
+        fid_string = fid.decode("utf-8")
+        csv_file = 'tmp-%s' % (fid_string)
+        xls_name = write_csv(
+            data, csv_file, {'archive': True, 'report_id': report_id})
+        status, xls = 9, ''
         message = "No results matching your query."
         if len(results) > 0:
             status = 0
@@ -1074,22 +1071,23 @@ def reports_ovc_rawdata(request):
             if len(results) > 30000:
                 message += " File too big to render. Please download."
                 results = []
-            '''
-            xlsm_name = '%sReport_%s' % (report_name, user_id)
-            xls = write_xlsm(csv_file, xlsm_name)
-            '''
-        datas = {'file_name': fid, 'data': results,
+            # xlsm_name = '%sReport_%s' % (report_name, user_id)
+            # write_xlsm(csv_file, xls_name)
+        datas = {'file_name': fid_string, 'data': results,
                  'status': status, 'message': message, 'xls': xls_name}
         print('Results', message)
         return JsonResponse(datas, content_type='application/json',
                             safe=False)
     except Exception as e:
-        print('error getting raw data - %s' % (str(e)))
-        return JsonResponse([], content_type='application/json',
+        print('error getting raw data OVC - %s' % (str(e)))
+        error_msg = {}
+        error_msg['status'] = 9
+        error_msg['message'] = "ERROR - No results matching your query."
+        return JsonResponse(error_msg, content_type='application/json',
                             safe=False)
 
 
-# @login_required
+@login_required
 def reports_ovc(request, id):
     """Method to do pivot reports."""
     try:
@@ -1110,9 +1108,8 @@ def reports_ovc_download(request):
     today = datetime.now()
     dates = today.strftime('%d%m%Y')
     f = request.GET.get('f')
-    rnames = base64.urlsafe_b64decode(str(f))
-    print(rnames)
-    s_name = rnames.split('_')[0]
+    rnames = base64.urlsafe_b64decode(f.encode('ascii'))
+    s_name = rnames.decode('utf-8').split('_')[0]
     file_name = "REGISTRATIONReport_%s" % (dates)
     mc_name = "%s.xlsx" % (file_name)
     if f:
@@ -1136,7 +1133,7 @@ def reports_ovc_download(request):
     return response
 
 
-# @login_required
+@login_required
 def cluster(request):
     """Method to handle clusters."""
     try:
@@ -1206,7 +1203,7 @@ def raw_data(request):
         zf.write(os.path.join(dirname, filename))
         zf.close()
     except Exception as e:
-        print('Error getting Raw data - %s' % (str(e)))
+        print('Error getting Raw data Custom - %s' % (str(e)))
         return 0
     else:
         return res
@@ -1220,7 +1217,7 @@ def my_custom_sql(sql):
     return row
 
 
-# @login_required
+@login_required
 def reports_bursary(request):
     """Method to do pivot reports."""
     try:

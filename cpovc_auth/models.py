@@ -11,6 +11,11 @@ from django.dispatch import receiver
 
 class CPOVCUserManager(BaseUserManager):
 
+    def get_by_natural_key(self, username):
+        i_field = '{}__iexact'.format(self.model.USERNAME_FIELD)
+        case_insensitive_username_field = i_field
+        return self.get(**{case_insensitive_username_field: username})
+
     def create_user(self, username, reg_person, password=None):
         from cpovc_registry.models import RegPerson
         if not username:

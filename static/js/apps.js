@@ -834,45 +834,45 @@ function goBack() {
 /* Application Controller
 ------------------------------------------------ */
 var App = function () {
-	"use strict";
-	
-	return {
-		//main function
-		init: function () {
-		
-		    // draggable panel & local storage
-			handleDraggablePanel();
-		    handleLocalStorage();
-		    handleResetLocalStorage();
-		
-			// slimscroll
-			handleSlimScroll();
-			
-			// sidebar
-			handleSidebarMenu();
-			handleMobileSidebarToggle();
-			handleSidebarMinify();
-			handleMobileSidebar();
-			
-			// theme configuration
-			handleThemePageStructureControl();
-			handleThemePanelExpand();
-			
-			handleAfterPageLoadAddClass();
-			
-			handlePanelAction();
-			handelTooltipPopoverActivation();
-			handleScrollToTopButton();
-			handlePageContentView();
-			
-			// IE Compatibility
-			handleIEFullHeightContent();
-			
-			// unlimited nav tabs
-			handleUnlimitedTabsRender();
+    "use strict";
+    
+    return {
+        //main function
+        init: function () {
+        
+            // draggable panel & local storage
+            handleDraggablePanel();
+            handleLocalStorage();
+            handleResetLocalStorage();
+        
+            // slimscroll
+            handleSlimScroll();
+            
+            // sidebar
+            handleSidebarMenu();
+            handleMobileSidebarToggle();
+            handleSidebarMinify();
+            handleMobileSidebar();
+            
+            // theme configuration
+            handleThemePageStructureControl();
+            handleThemePanelExpand();
+            
+            handleAfterPageLoadAddClass();
+            
+            handlePanelAction();
+            handelTooltipPopoverActivation();
+            handleScrollToTopButton();
+            handlePageContentView();
+            
+            // IE Compatibility
+            handleIEFullHeightContent();
+            
+            // unlimited nav tabs
+            handleUnlimitedTabsRender();
 
             handleDatepicker();
 
-		}
+        }
   };
 }();

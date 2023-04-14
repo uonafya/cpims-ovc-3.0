@@ -20,7 +20,7 @@
 		</ul>
 	</li>
 
-	<li class="has-sub {{ request.path|get_class:'forms' }} {{ request.path|get_class:'ovcare' }}">
+	<li class="has-sub {{ request.path|get_class:'forms' }} {{ request.path|get_class:'ovc-care' }}">
 		<a href="#">
 		    <b class="caret pull-right"></b>
 		    <i class="fa fa-file-o"></i>
@@ -34,8 +34,9 @@
 			<li class="online_mode"><a href="{% url 'forms_registry' %}">Follow-ups</a></li>
 			<li class="online_mode"><a href="{% url 'documents_manager' %}">Documents Manager</a></li>
 			<li class="online_mode"><a href="{% url 'ovc_home' %}">OVC Care (Comp)</a></li>
-			<li class="online_mode"><a href="{% url 'pfs_home' %}">Preventive and Family Support</a></li>
+		        <li class="online_mode"><a href="{% url 'pfs_home' %}">OVC Care (Preventive)</a></li>
 			<li class="online_mode"><a href="{% url 'pmtct_home' %}">PMTCT</a></li>
+			<li class="online_mode"><a href="#">DREAMS</a></li>
 			<li><a href="#ovc_home" class="btn_ovc_home_offline">OVC Care Offline</a></li>
 		</ul>
 
@@ -63,20 +64,22 @@
 				    <span>OVC Reports</span>
 				</a>
 				<ul class="sub-menu">
-					<li><a href="{% url 'pivot_ovc_reports' %}">DATIM</a></li>
+					<li><a href="{% url 'pivot_ovc_reports' %}">DATIM (All Versions)</a></li>
                     <li><a href="{% url 'pivot_ovc_reports_mer' %}">DATIM MER ver 2.2</a></li>
 					<li><a href="{% url 'pivot_ovc_reports_mer23' %}">DATIM MER ver 2.3</a></li>
                     <li><a href="{% url 'pivot_ovc_reports_mer24' %}">DATIM MER ver 2.4</a></li>
                     <li><a href="{% url 'pivot_ovc_reports_mer25' %}">DATIM MER ver 2.5</a></li>
-
-
+                    <li><a href="#">DATIM MER ver 2.6</a></li>
 					<li><a href="{% url 'pivot_ovc_pepfar' %}">Services by Domain (PEPFAR Summary)</a></li>
 					<li><a href="{% url 'pivot_ovc_kpi' %}">Key Performance Indicator</a></li>
 					<li><a href="{% url 'reports_ovc' id=1 %}">Registration List</a></li>
 					<li><a href="{% url 'reports_ovc' id=2 %}">Registration by HH</a></li>
 					<li><a href="{% url 'reports_ovc' id=3 %}">CSI</a></li>
+					<li><a href="{% url 'reports_ovc' id=31 %}">Critical events</a></li>					
 					<li><a href="{% url 'reports_ovc' id=4 %}">CHV monthly RR</a></li>
-					<li><a href="{% url 'reports_ovc' id=5 %}">List of OVC not served</a></li>
+					<li><a href="{% url 'reports_ovc' id=5 %}">List of OVC Not Served Semi Annual</a></li>
+					<li><a href="{% url 'reports_ovc' id=32 %}">List of OVC Not Served Quarterly</a></li>
+					<li><a href="{% url 'reports_ovc' id=33 %}">List of OVC Not Served Monthly</a></li>
 					<li><a href="{% url 'reports_ovc' id=12 %}">List of OVC served</a></li>
 					<li><a href="{% url 'reports_ovc' id=14 %}">List of OVC Assessed</a></li>
 					<li><a href="{% url 'reports_ovc' id=6 %}">PEPFAR Summary</a></li>
@@ -87,22 +90,52 @@
 					<li><a href="{% url 'reports_ovc' id=10 %}">Needs vs Served by domain</a></li>
 					<li><a href="{% url 'reports_ovc' id=15 %}">OVC Overall View</a></li>
                     <li><a href="{% url 'reports_ovc' id=17 %}">CPARA</a></li>
+                    <li><a href="{% url 'reports_ovc' id=34 %}">CPARA ver. 1</a></li>
                     <li><a href="{% url 'reports_ovc' id=17 %}">CPARA Monitoring</a></li>
                     <li><a href="{% url 'reports_ovc' id=18 %}">Case Plans</a></li>
+                    <li><a href="{% url 'reports_ovc' id=35 %}">Case Plan Achievement</a></li>
                     <li><a href="{% url 'reports_ovc' id=15 %}">Case Plan Monitoring</a></li>
                     <li><a href="{% url 'reports_ovc' id=19 %}">Serverd two quaters</a></li>
+                    <li><a href="{% url 'reports_ovc' id=36 %}">Active beneficiary</a></li>
                     <li><a href="{% url 'reports_ovc' id=20 %}">Benchmarks</a></li>
+                    <li><a href="{% url 'reports_ovc' id=37 %}">Benchmarks ver. 1</a></li>
                     <li><a href="{% url 'reports_ovc' id=13 %}">Master List</a></li>
                     <li><a href="{% url 'reports_ovc' id=21 %}">Exits</a></li>
+                    <li><a href="{% url 'reports_ovc' id=38 %}">Graduation</a></li>
                     <li><a href="{% url 'reports_ovc' id=22 %}">Assessments needs vs served detailed</a></li>
                     <li><a href="{% url 'reports_ovc' id=23 %}">Assessments needs vs serverd summary</a></li>
                     <li><a href="{% url 'reports_ovc' id=24 %}">Viral Load</a></li>
+                    <li><a href="{% url 'reports_ovc' id=39 %}">HEI</a></li>
                     <li><a href="{% url 'reports_ovc' id=25 %}">Eligibility Criteria</a></li>
                     <li><a href="{% url 'reports_ovc' id=26 %}">Caregivers Served</a></li>
                     <li><a href="{% url 'reports_ovc' id=27 %}">KPIs</a></li>
                     <li><a href="{% url 'reports_ovc' id=28 %}">HIV Risk Screening</a></li>
                     <li><a href="{% url 'reports_ovc' id=29 %}">HIV Management</a></li>
-
+                    <li><a href="{% url 'reports_ovc' id=30 %}">Case Transfer</a></li>
+                    <li><a href="/reports/ovc/">ALL Reports</a></li>
+				</ul>
+			</li>
+			<li class="has-sub">
+				<a href="#">
+				    <b class="caret pull-right"></b>
+				    <i class="fa fa-align-left"></i>
+				    <span>Preventive Reports</span>
+				</a>
+				<ul class="sub-menu">
+					<li><a href="#">Attendance</a></li>
+					<li><a href="#">Sinovuyo Pre/Post</a></li>
+					<li><a href="#">FMP Pre/Post</a></li>
+				</ul>
+			</li>
+			<li class="has-sub">
+				<a href="#">
+				    <b class="caret pull-right"></b>
+				    <i class="fa fa-align-left"></i>
+				    <span>PMTCT Reports</span>
+				</a>
+				<ul class="sub-menu">
+					<li><a href="#">Pregnant teens / mothers</a></li>
+					<li><a href="#">HEI</a></li>
 				</ul>
 			</li>
 		</ul>
@@ -173,4 +206,8 @@
 	    <i class="fa fa-angle-double-left"></i></a>
 	</li>
     <!-- end sidebar minify button -->
+
+    <li><a href="{% url 'ovc_dashboard' %}">
+    	<i class="fa fa-bar-chart"></i> <span>OVC Dashboards</span></a>
+    </li>
 </ul>

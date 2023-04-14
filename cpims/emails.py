@@ -3,7 +3,7 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import settings
+import cpims.live_settings as live_settings
 
 
 def send_email(email, tmsg, hmsg, settings):
@@ -41,5 +41,5 @@ if __name__ == '__main__':
     em = 'nmugaya@gmail.com'
     tm = 'Hi!\nThis is a test email.'
     hm = '<p>Hi!<br/>This is a test email'
-    send_email(em, tm, hm, settings)
+    send_email(em, tm, hm, live_settings)
 

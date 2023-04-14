@@ -1,47 +1,24 @@
 """Admin backend for editing this aggregate data."""
-import csv
-import time
 from django.contrib import admin
-from django.http import HttpResponse
 from import_export.admin import ImportExportModelAdmin
 
 from .models import (
     OVCAggregate, OVCFacility, OVCSchool, OVCCluster,
-    OVCClusterCBO, OVCRegistration, OVCEligibility)
+    OVCClusterCBO, OVCRegistration, OVCEligibility,
+    OVCHHMembers, OVCHouseHold)
+
+from django.contrib.admin.helpers import ActionForm
+from django import forms
+from cpovc_main.utils import dump_to_csv
 
 
-def dump_to_csv(modeladmin, request, qs):
-    """
-    These takes in a Django queryset and spits out a CSV file.
-
-    Generic method for any queryset
-    """
-    model = qs.model
-    file_id = 'CPIMS_%s_%d' % (model.__name__, int(time.time()))
-    file_name = 'attachment; filename=%s.csv' % (file_id)
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = file_name,
-    writer = csv.writer(response, csv.excel)
-
-    headers = []
-    for field in model._meta.fields:
-        headers.append(field.name)
-    writer.writerow(headers)
-
-    for obj in qs:
-        row = []
-        for field in headers:
-            val = getattr(obj, field)
-            if callable(val):
-                val = val()
-            if type(val) == unicode:
-                val = val.encode("utf-8")
-            row.append(val)
-        writer.writerow(row)
-    return response
+def bulk_transfer(modeladmin, request, queryset):
+    transfer_to = request.POST['transfer_to']
+    cbo_id = int(transfer_to)
+    queryset.update(child_cbo_id=cbo_id)
 
 
-dump_to_csv.short_description = u"Dump to CSV"
+bulk_transfer.short_description = 'Bulk Transfer to selected CBO'
 
 
 class OVCEligibilityAdmin(admin.ModelAdmin):
@@ -56,15 +33,23 @@ class OVCEligibilityAdmin(admin.ModelAdmin):
 admin.site.register(OVCEligibility, OVCEligibilityAdmin)
 
 
+class UpdateActionForm(ActionForm):
+    transfer_to = forms.IntegerField()
+
+
 class OVCRegistrationAdmin(admin.ModelAdmin):
     """Aggregate data admin."""
 
-    search_fields = ['person', ]
-    list_display = ['id', 'person', 'child_cbo', 'child_chv',
+    search_fields = ['caretaker__id', 'person__id', 'child_chv__id']
+    list_display = ['person_id', 'person', 'child_cbo', 'child_chv',
                     'caretaker', 'registration_date', 'hiv_status',
                     'is_active', 'is_void']
     readonly_fields = ['id', 'person', 'caretaker', 'child_chv']
     list_filter = ['is_active', 'is_void', 'hiv_status']
+
+    action_form = UpdateActionForm
+
+    actions = [bulk_transfer]
 
 
 admin.site.register(OVCRegistration, OVCRegistrationAdmin)
@@ -134,10 +119,33 @@ admin.site.register(OVCCluster, OVCClusterAdmin)
 class OVCClusterCBOAdmin(admin.ModelAdmin):
     """Aggregate data admin."""
 
-    search_fields = ['cluster', 'cbo']
+    search_fields = ['cluster', 'cbo__org_unit_name']
     list_display = ['id', 'cluster', 'cbo', 'added_at']
     # readonly_fields = ['id']
     list_filter = ['is_void']
 
 
 admin.site.register(OVCClusterCBO, OVCClusterCBOAdmin)
+admin.site.disable_action('delete_selected')
+
+
+class OVCHHMembersInline(admin.StackedInline):
+    model = OVCHHMembers
+    readonly_fields = ['person']
+
+
+class OVCHouseHoldAdmin(admin.ModelAdmin):
+    """Aggregate data admin."""
+
+    search_fields = ['head_person__id', 'head_person__first_name',
+                     'head_person__surname']
+    list_display = ['head_person_id', 'head_person', 'head_identifier']
+
+    readonly_fields = ['head_person']
+
+    list_filter = ['is_void', 'created_at']
+    inlines = (OVCHHMembersInline, )
+    actions = [dump_to_csv]
+
+
+admin.site.register(OVCHouseHold, OVCHouseHoldAdmin)

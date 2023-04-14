@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load app_filters %}
+{% load static %}
+{% block page_title %}Case Transfer Form{% endblock %}
+{% block style_code %}
+    <link href="{% static 'plugins/parsley/src/parsley.css' %}"
+          rel="stylesheet"/>
+    <link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}"
+          rel="stylesheet"/>
+    <link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}"
+          rel="stylesheet"/>
+    <link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}"
+          rel="stylesheet">
+{% endblock style_code %}
+{% block javascript_code %}
+{% endblock javascript_code %}
+{% block primary %}
+    <!-- begin breadcrumb -->
+    {% if messages %}
+        {% for message in messages %}
+            {% if 'error' in message.tags %}
+                <div id="messages" class="alert alert-danger fade in">
+                    <span class="close" data-dismiss="alert">×</span>
+                    <i class="fa fa-info fa-2x pull-left"></i>
+                {% else %}
+                    <div id="messages" class="alert alert-success fade in">
+                        <span class="close" data-dismiss="alert">×</span>
+                        <i class="fa fa-check fa-2x pull-left"></i>
+                    {% endif %}
+                    <p>
+                        {{ message }}
+                    </p>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div id="message"
+             class="alert alert-success fade in"
+             style="display: none">
+            <span class="close" data-dismiss="alert">×</span>
+            <i class="fa fa-check fa-2x pull-left"></i>
+        </div>
+        <!-- end page-header -->
+        <!-- begin row -->
+        <div id="case_details" class="row">
+            <!-- begin col-12 -->
+            <div class="col-md-12">
+                <!-- begin panel -->
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <div class="panel-heading-btn">
+                            <a href="#"
+                               class="btn btn-xs btn-icon btn-circle btn-warning"
+                               data-click="panel-expand"><i class="fa fa-minus"></i></a>
+                            <a href="#"
+                               class="btn btn-xs btn-icon btn-circle btn-default"
+                               data-click="panel-collapse"><i class="fa fa-times"></i></a>
+                        </div>
+                        <h4 class="panel-title">Case Transfer Form</h4>
+                    </div>
+                    <div class="panel-body">
+                        <fieldset>
+                            <legend class="pull-left width-full">
+                                Case Transfer Details
+                            </legend>
+                            <!-- begin row -->
+                            <form action="."
+                                  method="post"
+                                  name="ovcreg_form"
+                                  id="checkboxform"
+                                  class="form-horizontal"
+                                  data-toggle="validator"
+                                  role="form"
+                                  data-parsley-validate>
+                                {% csrf_token %}
+                                <div class="row form-group">
+                                    <div >
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="margin-top:-9!important;">#</th>
+                                                    <th>Names</th>
+                                                    <th>Age</th>
+                                                    <th>Reason</th>
+                                                    <th>Follow Up Date</th>
+                                                    <th>Comment</th>
+                                                </tr>
+                                            </thead>
+                                            {% for hhmember in hhmembers %}
+                                                <tbody>
+                                                    <tr id="mid_{{hhmember.person_id}}">
+                                                        <td>
+                                                            <input name="member_id" value="{{hhmember.person_id}}" type ="checkbox" class="check_transfer">
+                                                            <input name="member_id_check" value="{{hhmember.person_id}}" type ="hidden">
+                                                        </td>
+                                                        <td >{{ hhmember.person.first_name }} {{ hhmember.person.surname }}</td>
+                                                        <td>{{ hhmember.person.years }}yrs</td>
+                                                        <td >{{ case_transfer_form.REASON }}</td>
+                                                        <td>{{ case_transfer_form.FOLLOW_UP_DATE }}</td>
+                                                        <td>{{ case_transfer_form.COMMENT }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            {% endfor %}
+                                        </table>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Receiving Organization</label>
+                                            <div class="col-md-8">
+                                                <input id="org" onkeyup="fetchOrgUnits()" type="text" class="form-control">
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Transfer date</label>
+                                            <div class="col-md-8">
+                                                {{ case_transfer_form.TRANSFER_DATE }}
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                        </div>
+
+                                         <div class="form-group">
+                                            <label class="col-md-3 control-label"></label>
+                                            <div class="col-md-9">
+                                                <button type="submit" class="btn btn-sm btn-success">Submit</button>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+                                        <p>Past Transfers</p>
+                                        <div class="row">
+
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Date</th>
+                                                    <th>Age</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                
+                                            </tbody>
+                                        </table>
+                                        </div>
+                                </div>
+                            </form>                            
+                        </fieldset>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+{% endblock primary %}
+<!-- End content area -->
+{% block lazy_javascript_code %}
+<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'js/form-wizards.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap-multiselect.js' %}"></script>
+<script>
+jQuery(document).ready(function() 
+{
+    //FormWizardValidation.init();
+    //$('#form').parsley();
+
+    $('.event_date').datepicker({ endDate: '0y', format: 'dd-M-yyyy' });
+
+    $('.check_transfer').change(function() {        
+        if($(this).is(":checked")){
+            var sib_id = $(this).val();
+            $(this).closest('tr').find(':input').attr('data-parsley-required', true);
+        }else{
+            $(this).closest('tr').find(':input').attr('data-parsley-required', false);
+        }
+    });
+});
+
+
+
+</script>
+{% endblock %}

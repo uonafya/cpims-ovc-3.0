@@ -1,0 +1,2059 @@
+{% extends 'base.html' %}
+print(blu.sing("'Happy'"))
+{% load app_filters %}
+{% load static %}
+{% block page_title %} Case Plan Achievement Readiness Assessment {% endblock %}
+{% block style_code %}
+<link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet" />
+<style type="text/css">
+.dialog_paragraph {
+  color: #f00;
+}
+
+.table_data {
+  display: none;
+}
+
+.container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.td_style {
+  /*color: #000000;*/
+  color: #0057e7;
+}
+.parsley-error{
+    bottom: -8px !important;
+}
+#table_view td {
+    border: solid 1px lightsteelblue;
+}
+
+#table_view th {
+    border: solid 1px lightsteelblue;
+}
+
+
+</style>
+{% endblock %}
+
+{% block javascript_code%}
+{% endblock javascript_code%}
+
+{% block primary %}
+
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+	<li><a href="#">Home</a></li>
+	<li class="active">Forms</li>
+</ol>
+<!-- end breadcrumb -->
+
+<!-- begin page-header -->
+
+{% for data in init_data %}
+
+	<h1 class="page-header">Forms <small>New Case Plan Achievement Readiness Assessment<b> | {{ data.first_name }} {{ data.surname }} | {{ data.sex_id|gen_value:vals }} | {% if data.date_of_birth|gen_age == 0 %}
+                            UNDER 1 YEAR
+                        {% else %}
+                            {{ data.date_of_birth|gen_age }} YRS 
+                        {% endif %}</b></small></h1>
+
+{% endfor %}
+<!-- end page-header -->
+{% if messages %}
+    {% for message in messages %}
+    {% if 'error' in message.tags %}
+        <div id="messages" class="alert alert-danger fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-info fa-2x pull-left"></i>
+    {% else %}
+        <div id="messages" class="alert alert-success fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+    {% endif %}    
+        <p>{{ message }}</p>
+    </div>
+   {% endfor %}
+{% endif %}
+    <div id="message" class="alert alert-success fade in" style="display: none">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+  
+        <span id="response"></span>
+    </div>
+<!-- begin row -->
+<div id='case_details' class="row">
+	<!-- begin col-12 -->
+    <div class="col-md-12">
+    	<!-- begin panel -->
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title"> Case Plan Achievement Readiness Assessment || {{care_giver}}</h4> 
+            </div>
+            <div class="panel-body">
+            	<form class="form-horizontal form-bordered form-control" style="border: 0px" action="." method="POST" data-parsley-validate="false" name="form-wizard-hhva" id="new_hhva" novalidate>
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="wizard-hhva">
+                                <ol>
+                                    <li>Details
+                                        <small>CPARA Base Details</small>
+                                    </li>
+                                    <li>
+                                        Healthy
+                                        <small></small>
+                                    </li>
+                                    <li>
+                                        Stable
+                                    <small></small>
+                                    </li>
+                                    <li>
+                                        Safe
+                                        <small></small>
+                                    </li>
+                                    <li>
+                                        Schooled
+                                        <small></small>
+                                    </li>
+                                </ol>
+
+                                                        
+                                <!-- begin wizard step-1 -->
+                                <div class="wizard-step-1">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label formlabel">Date of Assessment:</label><br/>
+                                                    <!-- <input type="text" class="form-control display-flex flex-direction-row flex-grow" name="d_o_a"> -->
+                                                    {{ form.d_o_a }}
+                                                </div>
+                                            </div>                                           
+                                        </div>
+                                        <hr/>
+                                        <div class="panel-body">
+                                            {#<form action="." method="post" name="ovcreg_form" id="ovcreg_form" data-parsley-validate="true">#}
+                                                {#{% csrf_token %}#}
+                                                    <div style="overflow-x: auto; display: flex; flex-direction: row; flex: auto;">
+                                                        <input type="hidden" name="ovc_id" id="ovc_id" value="{{ creg.person_id }}">
+                                                            <table width="100%" class="table table-profile">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td><b>Name of Organization (LIP):</b></td>
+                                                                        <td>{{ creg.child_cbo.org_unit_name }}</td>
+                                                                        <td><b>Date enrolled in the project: </b></td>
+                                                                        <td>{{ creg.registration_date }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><b>County:</b></td>
+                                                                        <td>{{ county.area_name }}</td>
+                                                                        <td><b>Sub County:</b></td>
+                                                                        <td>{{subcounty.area_name}}</td>
+                                                                        <td><b>Ward:</b></td>
+                                                                        <td>{{ward.area_name}}</td>
+                                                                    </tr>                                                                
+                                                                    <tr>
+                                                                        <td><b>Name of case worker/CHV conducting assesment:</b></td>
+                                                                        <td>{{ creg.child_chv.full_name }}</td>
+                                                                        <td><b>Name of SDP staff/Case Manager:</b></td>
+                                                                        <td>{{ creg.child_cbo.org_unit_name }}</td>
+                                                                    </tr>
+                                                                        
+                                                                    <tr>
+                                                                        <td><b>Name of Caregiver:</b></td>
+                                                                        <td>{{caregiver}}</td>
+                                                                        <td><b>Caregiver ID Number:</b></td>                                                                    
+                                                                        <td>{{household.head_identifier }}</td> 
+                                                                    </tr>                                                                
+                                                                    <tr>                                                                                                                                       
+                                                                        <td><b>Caregiver Gender:</b></td>
+                                                                        <td>{% if caregiver.sex_id == 'SMAL' %}
+                                                                                Male
+                                                                            {% endif %}
+                                                                            {% if caregiver.sex_id == 'SFEM' %}
+                                                                                Female
+                                                                            {% endif %}</td>
+                                                                        <td><b>Caregiver DOB:</b></td>
+                                                                        <td>{{caregiver.date_of_birth}}</td>
+                                                                    </tr>
+                                                                    <tr>                                                                    
+                                                                        <td><b>Caregiver Phone Number:</b></td>
+                                                                        <td>{{caregiver.des_phone_number}}</td>
+                                                                    </tr>                                              
+                                                                </tbody>
+                                                            </table> 
+                                                    </div>
+                                            {# </form>#}
+                                        </div>
+                                        <hr/> 
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group"> 
+                                                    <label class="control-label formlabel">Is this the first Case Plan Readiness Assessment?:<span class="asteriskField">*  </label><br/>
+                                                    {{ form.CP1d }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label formlabel">If No, give date of Previous Case Plan Readiness Assessment:</label><br/>
+                                                    {{ form.CP2d }}
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <hr/>
+                                            <div class="col-md-12">
+                                                <h4>Details of all children below 18 years currently living in the household.</h4>
+                                                <div class="alert alert-info    ">
+                                                    <strong>Note:</strong><br/>
+                                                    <p>Includes any other aged above 18 years if still in school</p> 
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 containsTable">
+                                                <div class="form-group">
+                                                {% comment %} {% if siblings or osiblings %} {% endcomment %}
+                                                <table class="table table-condensed">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Age</th>
+                                                            <th>Gender</th>
+                                                            <th>Child Unique Number</th>
+                                                            <th>School Level</th>
+                                                            <th>Registered in this OVC Program</th>
+                                                            <!--<th>Age</th>-->
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><a href="{% url 'ovc_view' child.id %}"><b>{{ child.first_name }} {{ child.surname }} {{ child.last_name }}</b></a> <small>(This child)</small></td>
+                                                            {#{% if child.sibling_person.age < 18 %}#}
+                                                            <td>{{ child.age }}</td>
+                                                            {#{% endif %}#}
+                                                            <td>
+                                                                {% if child.sex_id == 'SFEM' %}
+                                                                F
+                                                                {% else %}
+                                                                M
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>{{child.id}}</td>
+                                                            <td></td>
+                                                            <td>Yes</td>
+                                                        </tr>
+                                                        {% if hhmembers %}
+                                                            {% for sibling in hhmembers %}
+                                                            <tr>
+                                                                <td><a href="{% url 'ovc_view' sibling.person.id %}">{{ sibling.person.first_name }} {{ sibling.person.surname }} {{ sibling.person.last_name }}</a></td>
+                                                                {#{% if sibling.sibling_person.age < 18 %}#}
+                                                                <td>{{ sibling.person.age }}</td>
+                                                                {#{% endif %}#}
+                                                                <td>
+                                                                    {% if sibling.person.sex_id == 'SFEM' %}
+                                                                    F
+                                                                    {% else %}
+                                                                    M
+                                                                {% endif %}
+                                                                </td>
+                                                            <td>{{sibling.person.id}}</td>
+                                                            <td></td>
+                                                            <td>{% if sibling.member_type == "TOVC" %} Yes {%else%} No {%endif%}</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                            {% else %}
+                                                                <tr>
+                                                                    <td colspan="6">
+                                                                        <p class="custom-alert-warning">No siblings provided for this person.</p>  
+                                                                    </td>
+                                                                </tr>
+                                                            {% endif %}
+                                                        </tbody>
+                                                    </table>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">                                                
+                                                    <div class="col-md-12">
+                                                        <h4 class="alert alert-primary">
+                                                            Other Household Characteristics. Please tick either <b>Yes</b> or <b>No</b> on each of the statements below.
+                                                        </h4>
+                                                    </div>                                                
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">Is this household child-headed (i.e. Household head age is less than 18 years)?<span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP3d }}
+                                                        <!-- TODOne if no handle q11 skips then score benchmark -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">Does this HH have HIV exposed infant?<span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP4d }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">Does this HH currently have a pregnant and/or breastfeeding woman/ adolescent?
+                                                        <!-- TODOne if no skip 6.1 & 6.2 then score benchmark -->
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP5d }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                       
+                                        <!-- End of OVC Sub Option Questions-->
+                                        <div class="col-md-12">
+                                            <h4 class="alert alert-primary text-center">
+                                             <strong>OVC Sub Population </strong></strong>
+                                            </h4>
+                                        </div>
+
+                                        <div class="col-md-12 containsTable">
+                                            <div class="form-group">
+                                                <input type="text" class="hidden" name="q3p6" value=""/>
+                                                <table id="table_view" class="table table-condensed table-responsive">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>orphans (double or Child headed)?</th>
+                                                            <th>
+                                                                At Risk Adolescent Girls andYoung Women (AGYW)? </th>
+                                                            <th>
+                                                                HEI? </th>
+                                                            <th>Children of Female Sex Workers (FSW)?*</th>
+                                                            <th>Children of People Living with HIV/AIDS (PLHIV)?</th>
+                                                            <th>Children living with HIV/AIDS (CLHIV)?</th>
+                                                            <th>sexual violence against children (SVAC)?</th>
+                                                            <th>Household affected by HIV ?</th>
+
+                                                        </tr>
+                                                        </thead>
+                                                    
+                                                        <tbody>
+                                                            {% if child %}
+
+                                                            <!-- Child -->
+                                                            <tr>
+                                                                <td>
+                                                                    <a href="{% url 'view_person' id=child.id %}"><b>{{ child.first_name }} {{ child.surname }} {{ child.last_name }}</b></a> <small>(This child)</small>
+                                                                </td>
+                                                                <td id="{{ sibling.id }}_q3p6_Qn">
+                                                                    <div class="radio-inline">
+                                                                        
+                                                                      
+                                                                            {{ form.CP6d_1 }}
+
+                                                                     </div>
+                                                               
+                                                                </td>
+                                                                <td id="{{ sibling.id }}_q3p7_Qn">
+                                                                    <div class="radio-inline">
+                                                                        
+                                                                      
+                                                                            {{ form.CP6d_2 }}
+
+                                                                        </div>
+                                                                </td>
+                                                                <td id="{{ sibling.id }}_q3p8_Qn">
+                                                                    <div class="radio-inline">
+                                                                        
+                                                                       
+                                                                            {{ form.CP6d_3 }}
+
+                                                                        </div>
+                                                                </td>
+                                                                <td id="{{ sibling.id }}_q3p9_Qn">
+                                                                    <div class="radio-inline">
+                                                                        
+                                                                       
+                                                                            {{ form.CP6d_4 }}
+
+                                                                        </div>
+                                                                </td>
+                                                                <td id="{{ sibling.id }}_q3p10_Qn">
+                                                                    <div class="radio-inline">
+                                                                        
+                                                                       
+                                                                            {{ form.CP6d_5}}
+
+                                                                        </div>
+                                                                </td>
+                                                                <td id="{{ sibling.id }}_q3p11_Qn">
+                                                                    <div class="radio-inline">
+                                                                        
+                                                                       
+                                                                            {{ form.CP6d_6 }}
+
+                                                                        </div>
+                                                                </td>
+                                                                <td id="{{ sibling.id }}_q3p12_Qn">
+                                                                    <div class="radio-inline">
+                                                                        
+                                                                       
+                                                                            {{ form.CP6d_7 }}
+
+                                                                        </div>
+                                                                </td>
+                                                                <td id="{{ sibling.id }}_q3p12_Qn">
+                                                                    <div class="radio-inline">
+                                                                        
+                                                                       
+                                                                            {{ form.CP6d_8 }}
+
+                                                                        </div>
+                                                                </td>
+                                                            </tr>
+                                                            
+                                                            {% endif %}
+                                                            {% if hhmembers %}
+                                                                {% for sibling in hhmembers %}
+                                                                    {% if sibling.person %}
+                                                                    <tr>
+                                                                        <td>
+                                                                            <a href="{% url 'view_person' id=sibling.person.id %}">{{ sibling.person.first_name }} {{ sibling.person.surname }} {{ sibling.person.last_name }}</a>
+                                                                        </td>
+                                                                        <td id="{{ sibling.person.id }}_CP6d_1_Qn">
+                                                                            <div class="radio-inline">
+                                                                        
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_1" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_1'  in sub_pop %} checked {% endif %} id="{{sibling.person.id|stringformat:'s'|add:'_CP6d_1'}}"> 
+                                                                            </div>
+                                                                        </td>
+                                                                        <td id="{{ sibling.person.id }}_CP6d_2_Qn">
+                                                                            <div class="radio-inline">
+                                                                        
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_2" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_2'  in sub_pop %} checked {% endif %}>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td id="{{ sibling.person.id }}_CP6d_3_Qn">
+                                                                            <div class="radio-inline">
+                                                                        
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_3" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_3'  in sub_pop %} checked {% endif %}>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td id="{{ sibling.person.id }}_CP6d_4_Qn">
+                                                                            <div class="radio-inline">
+                                                                        
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_4" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_4'  in sub_pop %} checked {% endif %}>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td id="{{ sibling.person.id }}_CP6d_5_Qn">
+                                                                            <div class="radio-inline">
+                                                                        
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_5" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_5'  in sub_pop %} checked {% endif %}>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td id="{{ sibling.person.id }}_CP6d_6_Qn">
+                                                                            <div class="radio-inline">
+                                                                        
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_6" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_6'  in sub_pop %} checked {% endif %}>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td id="{{ sibling.person.id }}_CP6d_7_Qn">
+                                                                            <div class="radio-inline">
+                                                                        
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_7" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_7'  in sub_pop %} checked {% endif %}>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td id="{{ sibling.person.id }}_CP6d_8_Qn">
+                                                                            <div class="radio-inline">
+                                                                        
+                                                                              <input type="checkbox" name="{{sibling.person.id}}_CP6d_8" {% if sibling.person.id|stringformat:'s'|add:'_CP6d_8'  in sub_pop %} checked {% endif %}>
+                                                                            </div>
+                                                                        </td>
+                                                                      
+                                                                    </tr>
+                                                                    {% else %}
+                                                                    <tr>
+                                                                        <td colspan="9">
+                                                                            <p class="custom-alert-warning">&nbsp;No siblings  found.</p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                                
+                                                            {% else %}
+                                                                
+                                                                <tr>
+                                                                    <td colspan="9">
+                                                                        <p class="custom-alert-warning">&nbsp;No matching sibling details provided for this person.</p>
+                                                                    </td>
+                                                                </tr>
+                                                            {% endif %}
+                                                          
+                                                        </tbody>
+                                                    </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end wizard step-1 -->  
+
+                                <!-- begin wizard step-2 -->
+                                <div class="wizard-step-2">
+                                    <div class="panel-body">
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class=" col-md-12 p-15 bg-info">
+                                                        <h4 class="">
+                                                            Healthy:  Goal 1: Increase diagnosis of HIV infection                                                  
+                                                        </h4>
+                                                        <i>Benchmark 1: All children, adolescents, and caregivers in the household have known HIV status or a test is not required based on risk assessment</i>
+                                                        <br><small>Caseworker is advised to refer to job aid about discussing sensitive topics for this section, if needed.</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="col-md-12">
+                                                <div class="formgroup">
+                                                    <div class="col-md-12">
+                                                        <q><h5>(Adolescent must have tested HIV negative or screened for HIV risk and HIV test was not required in the last six months)</h5></q>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <p class="p-15 bg-sub-header">HIV diagnosis for children</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                  
+                                            <hr/>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPhealth1_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">1.1 Have all your children been tested for HIV and their HIV status known (HIV negative, positive) ? <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP1q }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPhealth2_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">1.2 For those with unknown HIV status, have they been screened for HIV risk and results showed test not required ? <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP2q }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <p class="p-15 bg-sub-header">Early Infant Diagnosis</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPhealth3_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">1.3 If there is an infant Exposed to HIV (HEI), has the final HIV status been confirmed at 18 months or one week after cessation of breastfeeding, whichever comes later? <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP3q }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <p class="p-15 bg-sub-header">HIV diagnosis for caregiver</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPhealth4_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">1.4 Is the HIV status of the caregiver known (positive, negative)? <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP4q }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPhealth5_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">1.5 For caregiver with unknown HIV status have they been screened for HIV risk and the results showing test not required? <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP5q }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                         </div>
+                                         <div class="row mt-15">
+                                            <div class="col-md-12">
+                                                <div class="form-group note note-default" id="CP1b_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">Has the household achieved this benchmark? </label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP1b}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                            <hr>                                     
+                                        
+                                        <div class="row mt-15">
+                                            <div class="col-md-12">
+                                                
+                                                <div class="form-group">
+                                                    <div class=" col-md-12 p-15 bg-info">
+                                                        <h4 class="">
+                                                            Healthy:  Goal 2: Increase HIV treatment adherence, continuity of treatment and viral suppression                                                  
+                                                        </h4>
+                                                        <i>Benchmark 2: All HIV+ children, adolescents, and caregivers in the household with a viral load result documented in the medical record and/or laboratory information systems (LIS) have been virally suppressed for the last 12 months.
+                                                            All HIV+ children, adolescents, and caregivers in the household have adhered to treatment for 12 months after initiation of antiretroviral therapy</i>
+                                                        <br><small><b>Note:</b> The questions below apply to HHs with child/adolescent living with HIV and HIV positive caregivers (If the child/caregiver has not sustained viral load suppression for the past 12 months the benchmark is achieved if they are adhering to treatment for the last 12 months)</small>
+                                                    </div>
+                                                </div>
+                                            </div>                                         
+                                        </div>
+
+                                        <div class="row mt-15">
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Is there anyone who is HIV positive in the Household ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP2bSkip}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <p class="p-15 bg-sub-header">Children 0-12</p>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                            
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Is there a child 0 -12 years who is HIV positive ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP21Skip}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="col-md-12 skip21">
+                                                <div class="form-group" id="CPhealth6_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">2.1 Have all HIV positive children on treatment with documented viral load results been suppressed in the past 12 months? <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP6q }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 skip21">
+                                                <div class="form-group" id="CPhealth7_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">2.2 For those with no documented viral load results; Have all the children living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment) <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP7q }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="col-md-12 skip21">
+                                                <div class="form-group"  id="CPhealth8_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">2.3 Have all HIV+ children been regularly taking medication without missing doses for the past 12 months (reported by caregiver for the 0-12 years)? <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP8q }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <p class="p-15 bg-sub-header">Adolescents and children above 12 years</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Is there an adolescents or a child above 12 years who is HIV positive ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP24Skip}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-12 skip24">
+                                                <div class="form-group" id="CPhealth9_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">2.4 Have all HIV positive children and adolescents (12years and above) on treatment with documented viral load results been suppressed in the past 12 months? <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP9q }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 skip24">
+                                                <div class="form-group" id="CPhealth10_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">2.5 For those with no documented viral load results; Have all the children and adolescents (12years and above) living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment) <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP10q }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 skip24">
+                                                <div class="form-group" id="CPhealth11_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">2.6 Have all HIV+ adolescent been regularly taking medication without missing doses for the past 12 months? (Adolescents self-reported). <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP11q }}
+                                                    </div>
+                                                </div>
+                                            </div>                                        
+                                        <!-- </div>
+                                        <div class="col-md-12"> -->
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <p class="p-15 bg-sub-header">Caregiver</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Is the caregiver HIV positive ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP27Skip}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPhealth12_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">2.7 Have all HIV positive caregivers on treatment with documented viral load results been suppressed in the past 12 months? <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP12q }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPhealth13_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">2.8  For those no documented viral load results; Have the caregiver living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment)<span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP13q }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPhealth14_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">2.9 Have all HIV+ caregivers been regularly taking medication without missing doses for the past 12 months? (Caregiver self-reported).<span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP14q }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                        </div>  
+                                            <div class="col-md-12">
+                                                <div class="form-group note note-default" id="CP2b_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">Has the household achieved this benchmark? </label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{ form.CP2b }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+
+                                        <div class="row mt-15">
+                                            <div class="col-md-12">                                                
+                                                <div class="form-group">
+                                                    <div class=" col-md-12 p-15 bg-info">
+                                                        <h4 class="">
+                                                            Healthy:  Goal 3: Reduce Risk of HIV Infection
+                                                        </h4>
+                                                        <i>Benchmark3: All adolescents 10-17 years of age in the household have key knowledge about preventing HIV infection
+                                                            Adolescents aged 10-17 can describe at least two HIV infection risks in their local community, can provide at least one example of how they can protect themselves against HIV risk, and can correctly describe the location of at least one place where HIV prevention support is available.</i>
+                                                        <br><small><b>Note:</b>  For HHs with no adolescent girls and boys, skip questions below and select “N/A” for “Achievement of this benchmark.”</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <hr/>
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Does the household have adolescent girls and boys ? 
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP31Skip}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+
+                                            <div class="col-md-12 containsTable">
+                                                <div class="form-group">
+                                                    <input type="text" class="hidden" name="q3p6" value=""/>
+                                                    <table class="table table-condensed table-responsive">
+                                                        <thead>
+                                                            <tr>
+                                                                    <th>Child Name</th>
+                                                                    <th>3.1 Can you tell me two behaviors that increase risk of HIV infection?</th>
+                                                                    <th>3.2 Can you tell me two ways you can protect yourself/ others against HIV?</th>
+                                                                    <th>3.3 Can you name two places in the community where you can access HIV prevention services?</th>
+                                                                    <!--<th>Age</th>-->
+                                                                </tr>
+                                                            </thead>
+                                                        
+                                                            <tbody>
+                                                                {% if child.years > 10 %}
+                                                                <tr class="row12">
+                                                                    <td>
+                                                                        <a href="{% url 'view_person' id=child.id %}"><b>{{ child.first_name }} {{ child.surname }} {{ child.last_name }}</b></a> <small>(This child)</small>
+                                                                    </td>
+                                                                    <td class="r12q1" id="{{ child.id }}_q12a_Qn" >
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio" name="{{ child.id }}_CP15q" value="AYES" {% if child.id|stringformat:'s'|add:'_CP15q'  in ind_cpara_data %} checked="" {% endif %}>
+                                                                            Yes
+                                                                        </label>
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio"  name="{{ child.id }}_CP15q"  value="ANNO" {% if child.id|stringformat:'s'|add:'_CP15q' not in ind_cpara_data %} checked="" {% endif %}>
+                                                                            No
+                                                                        </label>
+                                                                    </td>
+                                                                    <td class="r12q2" id="{{ child.id }}_q12b_Qn">
+                                                                        <label class="radio-inline">
+                                                                        <input type="radio" name="{{ child.id }}_CP16q" value="AYES" {% if child.id|stringformat:'s'|add:'_CP16q'  in ind_cpara_data %} checked="" {% endif %}>
+                                                                            Yes
+                                                                        </label>
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio"  name="{{ child.id }}_CP16q" value="ANNO" {% if child.id|stringformat:'s'|add:'_CP16q' not in ind_cpara_data %} checked="" {% endif %}>
+                                                                            No
+                                                                        </label>
+                                                                    </td>
+                                                                    <td class="r12q3" id="{{ child.id }}_q12c_Qn">
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio" name="{{ child.id }}_CP17q" value="AYES" {% if child.id|stringformat:'s'|add:'_CP17q'  in ind_cpara_data %} checked="" {% endif %}>
+                                                                                Yes
+                                                                        </label>
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio"  name="{{ child.id }}_CP17q" value="ANNO" {% if child.id|stringformat:'s'|add:'_CP17q'  in ind_cpara_data %} checked="" {% endif %}>
+                                                                                No
+                                                                        </label>
+                                                                    </td>
+                                                                </tr>
+                                                                {% else %}
+                                                                <tr>
+                                                                    <td colspan="6">
+                                                                        <p class="custom-alert-warning">&nbsp;This OVC is under 10 years.</p>
+                                                                    </td>
+                                                                </tr>
+                                                                {% endif %}
+                                                                {% if hhmembers %}
+                                                                    {% for sibling in hhmembers %}
+                                                                        {% if sibling.person.years >= 10 and sibling.person.years <= 20 %}
+                                                                        <tr class="row12">
+                                                                            <td>
+                                                                                <a href="{% url 'view_person' id=sibling.person.id %}">{{ sibling.person.first_name }} {{ sibling.person.surname }} {{ sibling.person.last_name }}</a>
+                                                                            </td>
+                                                                            <td class="r12q1" id="{{ sibling.person.id }}_q12a_Qn" >
+                                                                                <label class="radio-inline">
+                                                                                    <input type="radio" name="{{ sibling.person.id }}_CP15q"  value="AYES" {% if sibling.person.id|stringformat:'s'|add:'_CP15q'  in ind_cpara_data %} checked="" {% endif %}>
+                                                                                    Yes
+                                                                                </label>
+                                                                                <label class="radio-inline">
+                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP15q"  value="ANNO" {% if sibling.person.id|stringformat:'s'|add:'_CP15q' not in ind_cpara_data %} checked="" {% endif %}>
+                                                                                    No
+                                                                                </label>
+                                                                            </td>
+                                                                            <td class="r12q2" id="{{ sibling.person.id }}_q12b_Qn">
+                                                                                <label class="radio-inline">
+                                                                                <input type="radio" name="{{ sibling.person.id }}_CP16q" value="AYES" {% if sibling.person.id|stringformat:'s'|add:'_CP16q'  in ind_cpara_data %} checked="" {% endif %}>
+                                                                                    Yes
+                                                                                </label>
+                                                                                <label class="radio-inline">
+                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP16q" value="ANNO"  {% if sibling.person.id|stringformat:'s'|add:'_CP16q' not in ind_cpara_data %} checked="" {% endif %}>
+                                                                                    No
+                                                                                </label>
+                                                                            </td>
+                                                                            <td class="r12q3" id="{{ sibling.person.id }}_q12c_Qn">
+                                                                                <label class="radio-inline">
+                                                                                    <input type="radio" name="{{ sibling.person.id }}_CP17q" value="AYES" {% if sibling.person.id|stringformat:'s'|add:'_CP17q'  in ind_cpara_data %} checked="" {% endif %}>
+                                                                                        Yes
+                                                                                </label>
+                                                                                <label class="radio-inline">
+                                                                                    <input type="radio"  name="{{ sibling.person.id }}_CP17q" value="ANNO" {% if sibling.person.id|stringformat:'s'|add:'_CP17q' not in ind_cpara_data %} checked="" {% endif %}>
+                                                                                        No
+                                                                                </label>
+                                                                            </td>
+                                                                        </tr>
+                                                                       
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                    
+                                                                {% else %}
+                                                                    {% comment %} 
+                                                                    <tr class="hidden">
+                                                                        <td class="semi-bold">
+                                                                            Hidden fields for no-OVC
+                                                                        </td>
+                                                                        <td id="15_Qn">
+                                                                            <td id="{{ sibling.person.id }}_q3p9_Qn">
+                                                                                <label class="radio-inline">
+                                                                            
+                                                                                    <input type="radio" name="" value="AYES">
+                                                                                        Yes
+                                                    
+                                                                                </label>
+                                                                                <br>
+                                                                                <label class="radio-inline">
+                                                                            
+                                                                                    <input type="radio" name="" value="ANNO">
+                                                                                        No
+                                                                                    
+                                                                                </label>
+                                                                            </td>
+                                                                        </td>
+                                                                        <td id="16_Qn">
+                                                                            <td id="{{ sibling.person.id }}_q3p10_Qn">
+                                                                                <label class="radio-inline">
+                                                                            
+                                                                                    <input type="radio" name="" value="AYES">
+                                                                                        Yes
+                                                                                    
+                                                                                </label>
+                                                                                <br>
+                                                                                <label class="radio-inline">
+                                                                            
+                                                                                    <input type="radio" name="" value="ANNO">
+                                                                                        No
+                                                                                    
+                                                                                </label>
+                                                                            </td>
+                                                                        </td>
+                                                                        <td id="17_Qn">
+                                                                  
+                                                                        </td>
+                                                                    </tr> {% endcomment %}
+                                                                    <tr>
+                                                                        <td colspan="6">
+                                                                            <p class="custom-alert-warning">&nbsp;No matching sibling details provided for this person.</p>
+                                                                        </td>
+                                                                    </tr>
+                                                                {% endif %}
+                                                                    <tr class="ro12_total">
+                                                                        <td class="semi-bold">
+                                                                            Tick <u>Yes</u> if <u>YES</u> for all children
+                                                                        </td>
+                                                                        <td id="r12_t_q1">
+                                                                            {{ form.CP23q_b_1 }}
+                                                                        </td>
+                                                                        <td id="r12_t_q2">
+                                                                            {{ form.CP23q_b_2 }}
+                                                                        </td>
+                                                                        <td id="r12_t_q3">
+                                                                            {{ form.CP23q_b_3 }}
+                                                                        </td>
+                                                                        
+                                                                    </tr>
+                                                            </tbody>
+                                                        </table>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                        <div class="row mt-15">
+                                            <div class="col-md-12">
+                                                <div class="form-group note note-default" id="CP3b_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="col-md-4 control-label formlabel">Has the household achieved this benchmarks? </label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP3b}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </div>
+
+
+                                        <div class="mt-15 row">
+                                            <div class="col-md-12">                                                
+                                                <div class="form-group">
+                                                    <div class=" col-md-12 p-15 bg-info">
+                                                        <h4 class="">
+                                                            Healthy:  Goal 4: Improve Development for Children &lt;5 Years (Particularly HIV Exposed and Infected Infants/Young Children)
+                                                        </h4>
+                                                        <i>Benchmark 4: No children < 5 years in the household are undernourished</i>
+                                                        <br><small><b>Note:</b>  If none of the children in the household is &lt;5 years) select “N/A” and move to the stale domain<br>
+                                                               </small>
+                                                    </div>
+                                                </div>
+                                            </div>   
+                                            <hr>
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Is there child < 5 years in the household ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP41Skip}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPhealth21_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">4.1 Have all children below the age of five been assessed using MUAC and scored green? <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP18q}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPhealth22_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">4.2 Have all the children below five years showed no signs of bipedal edema (e.g. Pressure applied on top of both feet for three seconds and did not leave a pit)? <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP19q}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPhealth23_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">4.3 Have all the children previously identified as malnourished been treated and has a Z score of >-2? (Confirm with clinical as appropriate)
+                                                            <br><u style="color:red"><i>NB: Score</i> YES if none in the HH has ever been previously malnourished <strong>NB-Score YES if none in the HH has ever been previously malnourished</u></strong> <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP20q}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Is there child < 2 years in the household ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP44Skip}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPhealth24_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">4.4 If there is a child under 2 years in the household, Is the infant’s immunization on schedule? (Check mother baby booklet pages 33-35)</strong> <span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP21q}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </div>    
+                                        <div class="row mt-15">
+                                            <div class="col-md-12">
+                                                <div class="col-md-12">
+                                                    <div class="form-group note note-default" id="CP4b_Qn">
+                                                        <div class="col-md-9">
+                                                            <label class="col-md-4 control-label formlabel">Has the household achieved this benchmarks? </label>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP4b}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>                                     
+                                        </div>
+                                        
+                                     
+
+                                        <!-- end of panel group -->
+                                    </div> 							
+                                </div> 
+                                <!-- end wizard step-2 -->
+                                
+
+                                <!-- begin wizard step-3 -->
+                                <div class="wizard-step-3">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-12">                                                
+                                                <div class="form-group">
+                                                    <div class=" col-md-12 p-15 bg-info">
+                                                        <h4 class="">
+                                                            Stable: Goal 5:  Increase Caregiver’s Ability to Meet Important Family Need
+                                                        </h4>
+                                                        <i>Benchmark 5: Caregivers are able to access money (without selling productive assets) to pay for school fees, medical costs (buy medicine, transport to facility etc), legal and other administrative fees (related to guardianship, civil registration, or inheritance) for children 0-17 years
+                                                        The HH meets the benchmark if a primary caregiver has confirmed that the HH has the ability to pay for education and medical care without distress selling of HH assets /productive assets and or using a PEPFAR cash transfer. (Unplanned sale of HH items/emergency sale of productive assets to address emergency needs)</i>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <p class="p-15 bg-sub-header">Question for caregiver:</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPstable1_Qn">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel">5.1 Were you able to pay school fees for the last two terms for all school going children in your household without PEPFAR support? (Confirm availability of school fees receipt, government supported cash transfer/scholarships, confirm school going children are retained in school)<span class="asteriskField">* </label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP22q}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <hr>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPstable2_Qn">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel">5.2 Was anyone sick in the past six months, were you able to pay all medical costs in the past 6 months for all children in your household under the age of 18 without PEPFAR support? Medical costs include medicine and transport to medical appointments<span class="asteriskField">* </label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP23q}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPstable3_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="control-label formlabel">5.3 In case you find yourself in a situation, are you currently able to pay for legal and other administrative fees related to guardianship, civil registration or inheritance?<span class="asteriskField">*</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP24q}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="col-md-12">
+                                                <div class="col-md-12">
+                                                    <div class="form-group note note-default" id="CP5b_Qn">
+                                                        <div class="col-md-9">
+                                                            <label class="col-md-4 control-label formlabel">Has the household achieved this benchmarks? </label>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP5b}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </div>
+
+                                        
+
+                                    </div>
+                                </div> 
+                                <!-- end wizard step-3 -->  
+
+                                <!-- begin wizard step-4 -->
+                                <div class="wizard-step-4">
+                                    <div class="panel-body">
+                                        <div class="row mt-15">
+                                            <div class="col-md-12">                                                
+                                                <div class="form-group">
+                                                    <div class=" col-md-12 p-15 bg-info">
+                                                        <h4 class="">
+                                                            Safe: Goal 6: Reduce Risk of Physical, Emotional and Psychological Injury Due to Exposure to Violence
+                                                        </h4>
+                                                        <i>Benchmark 6: No children, adolescents, and caregivers in the household report experiences of violence (including physical violence, emotional violence, sexual violence, gender-based violence, and neglect) in the last six months. If there is no reported form of violence in the HH, skip all the questions and score N/A</i>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                        
+                                        
+
+                                        
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <p class="p-15 bg-sub-header">Question for caregiver:</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Are there children, adolescents, and caregivers in the household who have experienced violence (including physical violence, emotional violence, sexual violence, gender-based violence, and neglect) in the last six months ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP6Skip}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPsafe1_Qn">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel">6.1 Have you experienced violence, abuse (sexual, physical, or emotional) in the last six months?<span class="asteriskField">* </label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP25q}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <hr>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPsafe2_Qn">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> 6.2 Is there a child below 12 years who has been exposed to violence or abuse (sexual, physical or emotional), neglect, or exploitation in the last six months?<span class="asteriskField">* </label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP26q}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12 bg-sub-skip">
+                                                <div class="form-group">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel"> Is there adolescents 12 years and above ?
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP63Skip}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 containsTable">
+                                                <div class="form-group">
+                                                    <input type="text" class="hidden" name="q3p6" value=""/>
+                                                    <table class="table table-condensed table-responsive">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Child Name</th>
+                                                                <th>OVC CPIMS ID</th>
+                                                                 <th>6.3 Have you been exposed to violence, abuse (sexual, physical or emotional), neglect, or exploitation in the last six months? </th>
+                                                             
+                                                                </tr>
+                                                            </thead>
+                                                        
+                                                            <tbody>
+                                                                {% if child.years >= 12 %}
+                                                                <tr class="row13">
+                                                                    <td>
+                                                                        <a href="{% url 'view_person' id=child.id %}"><b>{{ child.first_name }} {{ child.surname }} {{ child.last_name }}</b></a> <small>(This child)</small>
+                                                                    </td>
+                                                                    <td id="{{ child.id }}_CP27q1_Qn">
+                                                                       {{ child.id }}
+                                                                    </td>
+                                                                    <td class="r13q1" id="{{ child.id }}_CP27q2_Qn" class="r13q1">
+                                                                        <!-- <div class="radio-inline">
+                                                                           {{form.CP27q}}
+                                                                        </div> -->
+                                                                        <div class="radio-inline">
+                                                                            <label class="radio-inline">
+                                                                
+                                                                                <input type="radio" value="AYES" name="{{ child.id }}_CP27q" {% if sibling.person.id|stringformat:'s'|add:'_CP27q' in ind_cpara_data %} checked="" {% endif %}>
+                                                                                    Yes
+                                                
+                                                                            </label>
+                                                                            <br>
+                                                                            <label class="radio-inline">
+                                                                        
+                                                                                <input type="radio" value="ANNO" name="{{ child.id }}_CP27q" {% if sibling.person.id|stringformat:'s'|add:'_CP27q' not  in ind_cpara_data %} checked="" {% endif %}>
+                                                                                    No
+                                                                                
+                                                                            </label>
+                                                                         </div>
+                                                                        
+                                                                    </td>
+                                                                </tr>
+                                                                {% else %}
+                                                                <tr>
+                                                                    <td colspan="6">
+                                                                        <p class="custom-alert-warning">&nbsp;This OVC is under 10 years.</p>
+                                                                    </td>
+                                                                </tr>
+                                                                {% endif %}
+                                                                {% if hhmembers %}
+                                                                    {% for sibling in hhmembers %}
+                                                                        {% if sibling.person.years > 10 and sibling.person.years < 18 %}
+                                                                        <tr class="row13">
+                                                                            <td>
+                                                                                <a href="{% url 'view_person' id=sibling.person.id %}">{{ sibling.person.first_name }} {{ sibling.person.surname }} {{ sibling.person.last_name }}</a>
+                                                                            </td>
+                                                                            <td id="{{ sibling.person.id }}_CP27q1_Qn">
+                                                                               {{ sibling.person.id }}
+                                                                            </td>
+                                                                            <td class="r13q1" id="{{ sibling.person.id }}_CP27q2_Qn">
+                                                                                <div class="radio-inline">
+                                                                                    <label class="radio-inline">
+                                                                        
+                                                                                        <input type="radio" value="AYES" name="{{ sibling.person.id }}_CP27q">
+                                                                                            Yes
+                                                        
+                                                                                    </label>
+                                                                                    <br>
+                                                                                    <label class="radio-inline">
+                                                                                
+                                                                                        <input type="radio" value="ANNO" name="{{ sibling.person.id }}_CP27q" >
+                                                                                            No
+                                                                                        
+                                                                                    </label>
+                                                                                 </div>
+                                                                            </td>
+
+                                                                        </tr>
+                                                                        {% else %}
+                                                                        <tr>
+                                                                            <td colspan="6">
+                                                                                <p class="custom-alert-warning">&nbsp;No siblings over 10 years found.</p>
+                                                                            </td>
+                                                                        </tr>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                
+                                                                    
+                                                                {% else %}
+                                                                    {% comment %} <tr class="hidden">
+                                                                        <td class="semi-bold">
+                                                                            Hidden fields for no-OVC
+                                                                        </td>
+                                                                        <td>
+                                                                    
+                                                                        </td>
+                                                                        <td>
+                                                                           
+                                                                        </td>
+                                                                    </tr> {% endcomment %}
+                                                                    <tr>
+                                                                        <td colspan="6">    
+                                                                            <p class="custom-alert-warning">&nbsp;No matching sibling details provided for this person.</p>
+                                                                        </td>
+                                                                    </tr>
+                                                                {% endif %}
+                                                                <tr class="ro13_total">
+                                                                    <td class="semi-bold">
+                                                                        Tick <u>Yes</u> if <u>YES</u> for all children
+                                                                    </td>
+                                                                    <td class="r13_t_q1">
+                                                                       
+                                                                    </td>
+                                                                    <td class="r13_t_q2" id="58q_Qn" style="padding-left: 32px;">
+                                                                        <div class="radio-inline">
+                                                                            {{ form.CP58q }}
+                                                                        
+                                                                    </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                </div>
+                                            </div>                                            
+                                        </div>
+
+                                        <div class="row mt-15">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                   <blockquote> <h4>If yes to any of the three questions above, answer the questions below</h4></blockquote>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPsafe6_Qn">
+                                                        <div class="col-md-9">
+                                                            <label class="control-label formlabel">6.4 Is there any evidence that the case has referred for services such as child protection?<span class="asteriskField">* </label>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP28q}}
+                                                        </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPsafe7_Qn">
+                                                        <div class="col-md-9">
+                                                            <label class="control-label formlabel">6.5 Is there documentation that they received   services (e,g counseling, psycho-social, legal or health services)?<span class="asteriskField">* </label>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP29q}}
+                                                        </div>
+                                                </div>
+                                            </div>
+                                          </div>  
+                                            <div class="col-md-12">
+                                                <div class="form-group note note-default" id="CP6b_Qn">
+                                                    <div class="col-md-9">
+                                                        <label class="col-md-4 control-label formlabel">Has the household achieved this benchmarks? </label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP6b}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+
+                                        <div class="row mt-15">
+                                                <div class="col-md-12">                                                
+                                                    <div class="form-group">
+                                                        <div class=" col-md-12 p-15 bg-info">
+                                                            <h4 class="">
+                                                                Safe: Benchmark 7: All children and adolescents in the household are under the care of a stable adult caregiver
+                                                        </div>
+                                                    </div>
+                                        </div> 
+                                        <!-- </div> -->
+
+                                        <div class="row">
+                                            <hr>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPsafe8_Qn">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel">7.1 Is the primary caregiver 18yrs and above?<span class="asteriskField">* </label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP30q}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+
+                                            <hr>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPsafe9_Qn">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel">7.2 Has the caregiver cared for and lived in the same home as the child/adolescents for at least the last 12 months?<span class="asteriskField">* </label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP31q}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="col-md-12">
+                                                <div class="col-md-12">
+                                                    <div class="form-group note note-default" id="CP7b_Qn">
+                                                        <div class="col-md-9">
+                                                            <label class="col-md-4 control-label formlabel">Has the household achieved this benchmarks? </label>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP7b}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </div>
+
+                                        <div class="row mt-15">
+                                            <div class="col-md-12">                                                
+                                                <div class="form-group">
+                                                    <div class=" col-md-12 p-15 bg-info">
+                                                        <h4 class="">Safe: Goal 7: All children &lt; 18 years have legal proof of identity</h4>
+                                                            <i><strong>Safe: Benchmark 8: All children and adolescents in the household under the age of 18 years have legal documents (e.g., birth registration certificate)</strong></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    
+
+                                        <div class="row">
+                                            <hr>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="CPsafe10_Qn">
+                                                    <div class="col-md-9 text-left">
+                                                        <label class="control-label formlabel">8.1 Do all children under the age of 18 have legal documents (birth certificate)?<span class="asteriskField">* </label>
+                                                    </div>
+                                                    <div class="col-md-3 text-left">
+                                                        {{form.CP32q}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <hr>
+                                            <div class="col-md-12">
+                                                <div class="col-md-12">
+                                                    <div class="form-group note note-default" id="CP8b_Qn">
+                                                        <div class="col-md-9">
+                                                            <label class="col-md-4 control-label formlabel">Has the household achieved this benchmarks? </label>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP8b}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </div>                                          
+                                </div> 
+                            </div> 
+                            </div>
+                                <!-- end wizard step-4 --> 
+                                
+                                <!-- begin wizard step-5 -->
+                                <div class="wizard-step-5">
+                                        <div class="panel-body">
+
+                                            <div class="row">
+                                                <div class="col-md-12">                                                
+                                                    <div class="form-group">
+                                                        <div class=" col-md-12 p-15 bg-info">
+                                                            <h4 >
+                                                                Schooled:  Goal 8: Increase School Attendance and Progression <br></h4>
+                                                                <i><strong>Benchmark 9: All school-aged children (4-17) and adolescents aged 18-20 enrolled in school in the household regularly attended school and progressed during the last year.</strong></i>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 bg-sub-skip">
+                                                    <div class="form-group">
+                                                        <div class="col-md-9">
+                                                            <p class="p-15">Are there school going childre in this Household ?</p>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP91Skip}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="col-md-12">
+                                                    <div class="form-group" id="CPschool1_Qn">
+                                                        <div class="col-md-9 text-left">
+                                                            <label class="control-label formlabel">9.1 Are all school aged children (6-17) enrolled in school? (And out of school OVC aged 15-20 years engaged in approved economic intervention?<span class="asteriskField">* </label>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP33q}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            
+                                            
+    
+                                                <hr>
+                                                <div class="col-md-12">
+                                                    <div class="form-group" id="CPschool2_Qn">
+                                                        <div class="col-md-9 text-left">
+                                                            <label class="control-label formlabel">9.2 Are the enrolled children attending school regularly? (i.e. have not missed school for more than five school days in a month). Probe the trend of absence). Verify with the school attendance tracking tool where applicable)<span class="asteriskField">* </label>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP34q}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <p> <blockquote> If there is a child between 4-5 years in the household and there is an ECDE center in the area, please ask the caregiver, otherwise skip and score the benchmark appropriately:</blockquote>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                            <div class="row">
+                                                <div class="col-md-12 bg-sub-skip">
+                                                    <div class="form-group">
+                                                        <div class="col-md-9">
+                                                            <p class="p-15">Is there a child between 4-5 years in the household and is there an ECDE center in the area ?</p>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP93Skip}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="col-md-12">
+                                                    <div class="form-group" id="CPschool3_Qn">
+                                                        <div class="col-md-9 text-left">
+                                                            <label class="control-label formlabel">9.3 Is your child (4–5-year-old) attending ECDE?<span class="asteriskField">* </label>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP35q}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                <hr>
+                                                <div class="col-md-12">
+                                                    <div class="form-group" id="CPschool4_Qn">
+                                                        <div class="col-md-9 text-left">
+                                                            <label class="control-label formlabel">9.4 Have all the enrolled children progressed/graduated from one level to the other in the last school calendar year? Note: if possible, please ask to see report card.<span class="asteriskField">* </label>
+                                                        </div>
+                                                        <div class="col-md-3 text-left">
+                                                            {{form.CP36q}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <hr>
+                                        <!-- </div> -->
+                                            <div class="row mt-15">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group note note-default" id="CP9b_Qn">
+                                                            <div class="col-md-9">
+                                                                <label class="col-md-4 control-label formlabel">Has the household achieved this benchmarks? </label>
+                                                            </div>
+                                                            <div class="col-md-3 text-left">
+                                                                {{form.CP9b}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                            </div>
+
+                                            
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group" id="CP74q_Qn">
+                                                        <div class="col-md-6">
+                                                            <label class="control-label formlabel">Overall number of points from all DOMAINS:</label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            {{ form.CP_b_total }}
+                                                            <input type="hidden" name="bench_array"/>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                           <p class="" style="font-size: 2em;">/ (9 Points)</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <!-- </div> -->
+
+                                            <div class="row mt-15">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <table class="overallScore" style="width: 100%;">
+                                                            <thead>
+                                                                    <th>Domain</th>
+                                                                    <th>Max Score</th>
+                                                                    <th>HH Score</th>
+                                                                    <th>Key</th>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>Heallthy</td>
+                                                                    <td>4</td>
+                                                                    <td>{{form.p75q}}</td> 
+                                                                    <td rowspan="5" class="p-15" style="line-height: 30px;">
+                                                                       <span id="score_key_1"> Highly Vulnerable  0-4 </span> <br>
+                                                                       <span id="score_key_2">   Medium vulnerability 5-7 </span><br>
+                                                                       <span id="score_key_3">   Low vulnerability 8 </span><br>
+                                                                       <span id="score_key_4">   Ready to graduate 9</span>
+                                                                    </td> 
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Stable</td>
+                                                                    <td>1</td>
+                                                                    <td>{{form.p76q}} </td>
+                                                                    
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Safe</td>
+                                                                    <td>3</td>
+                                                                    <td>{{form.p77q}}</td> 
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Schoold</td>
+                                                                    <td>1</td>
+                                                                    <td>{{form.p78q}}</td> 
+                                                                </tr>
+                                                                <tr style="font-weight: bold;">
+                                                                    <td>Total Score</td>
+                                                                    <td>9</td>
+                                                                    <td>{{form.p79q}}</td> 
+                                                                 </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        <!-- </div> -->
+                                    </div> 
+                                </div> 
+                                <!-- end wizard step-5 -->
+                                <!-- begin wizard step-6 -->
+                                <div class="wizard-step-6">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end wizard step-6 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <label class="control-label formlabel" for="csi_qs">Date of CPARA : <span class="asteriskField">* </span></label>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.date_of_hhva }}
+                                </div> 
+                            </div>
+                        </div>
+                    </div> -->
+
+					                     
+
+					<div class="panel-body panel-form">
+						<div class="form-group">
+							<!-- <label class="control-label formlabel col-md-4 col-sm-4"></label> -->
+							<div class="col-md-2 col-md-offset-5">
+								<button type="submit" class="btn btn-primary">Update</button>
+								<a href="javascript:history.go(-1)" class="btn btn-white">Cancel</a>
+							</div>
+						<!-- begin wizard step-9 -->
+                        </div>
+                    </div>
+				</form>
+            </div>
+            <a href="" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: May 2022</div>
+        </div>
+        <!-- end panel -->
+
+    </div>
+    <!-- end col-12 -->
+</div>
+<!-- end row -->
+
+<!-- {% endblock %} -->
+
+{% block lazy_javascript_code %}
+<script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>	
+<script src="{% static 'plugins/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}"></script>
+<script src="{% static 'js/apps.js' %}"></script>
+<script src="{% static 'js/form-wizards.js' %}"></script>
+<script src="{% static 'js/tag-it.js' %}"></script>
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+
+<script src="{% static 'js/cpara-skipto.js' %}"></script>
+<script src="{% static 'js/cpara-validate-benchmark.js' %}"></script>
+<script>
+jQuery(document).ready(function()
+{
+
+    //    Get the date validated on the go
+    
+    console.log($('input[name="CP1d"]').val())
+    var prev_date = $('input[name="CP1d"]').val()
+
+    if (prev_date === 'AYES'){
+        $('input[name="CP2d"]').attr('disabled', true);
+    }else{
+        $('input[name="CP2d"]').attr('disabled', false);
+    }
+
+    //  load data from individual cpara
+
+    
+    $('input[name=CP23q_b_1],input[name=CP23q_b_2],input[name=CP23q_b_3]').attr('disabled', true)
+	//multi selects
+    $('#hhva_ha6, #hhva_ha21, #hhva_ha22, #hhva_ha28, #hhva_ha29, #hhva_ha30, #hhva_ha31').multiselect({
+        selectAllValue: 'multiselect-all',
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true,
+        numberDisplayed: 1,
+        maxHeight: 300,
+        buttonWidth: '100%',
+        buttonClass: 'btn btn-white'
+    });
+
+    $( function() {
+        $('input[name="d_o_a"], input[name="CP2d"]').datepicker({ format: 'yyyy-mm-dd', endDate: 'today' }).val();
+    } );
+
+	$('html,body').scrollTop(0);
+    FormWizardValidation.init();
+    
+
+    $('.bwizard-steps li, li.next').on("click", function(){
+        $(window).scrollTop(0)
+    });
+
+	
+	
+});
+
+</script>
+
+
+<script>
+        function deleteCPARAentry(personId,btn_event_pk){
+            $('#del_cpara_e').modal('hide');
+            var CParaUrlToDelete= "{% url 'delete_cpara' id=1234 btn_event_pk='00000000-0000-0000-0000-000000000000' %}".replace(/1234/, personId.toString()).replace(/00000000-0000-0000-0000-000000000000/, btn_event_pk.toString());
+            // Debug
+            console.log({CParaUrlToDelete})
+
+            $.ajax({
+                url: CParaUrlToDelete,
+                dataType: 'json',
+                method: 'GET',
+                success: function(result)
+                {
+                    // Debug
+                    console.log("Deleted result: ", result[0])
+                    if (result[0].msg.includes("30")){
+                        $('#messages').removeClass('alert-success').addClass('alert-danger').css({'display': 'block'});
+                        $('#messages p').html(result[0].msg);
+    
+                    }else{
+                        $('#messages').addClass('alert-success').removeClass('alert-danger').css({'display': 'block'});
+                        $('#messages p').html(result[0].msg);
+                        var url = "{% url 'new_cpara' id=1234%}".replace(/1234/, personId.toString());
+                        console.log({url})
+                        window.open(url,"_self");
+                    }
+                    console.log("deleted");
+                },
+                error: function(xhr, status, error){
+                    console.error('not deleted ==> status: '+ JSON.stringify(status) + ' & error: '+JSON.stringify(error));
+                    $('#messages').css({'display': 'block'}).removeClass('alert-success').addClass('alert-danger');
+                    $('#messages p').html(result[0].msg);
+                    console.log("errorr delering");
+                }
+            });
+        }
+    
+    
+    </script>
+    {% if hhmembers %}     
+        
+    
+        <!-- cpara -->
+
+        <script>
+            
+            //  Benchmark 3 with household members and or OVC is not less than 10 years
+
+            
+            var count_r12 = 0;
+            $('tr.row12 td.r12q1 input[type=radio]').each( () => { count_r12 += 1 }); count_r12 /= 2
+            $('.row12 .r12q1 input[type=radio]').on('change', function () {
+                //R12Q1
+                var checkker = false;
+                $('tr.row12 td.r12q1 input[type=radio]:checked').each( (inx, ele) => {
+                    var this_val = $(ele).val();
+                    if(this_val == 'AYES'){ checkker += 1; console.log('checkker > '+checkker)}else{ checkker += false; console.log('checkker > '+checkker) }
+                    
+                });
+                if(checkker == count_r12){ q12MainQn(true, 'a'); }else{ q12MainQn(false, 'a'); }
+            });
+                
+            $('.row12 .r12q2 input[type=radio]').on('change', function () {
+                var checkker2 = false;
+                $('tr.row12 td.r12q2 input[type=radio]:checked').each( (inx, ele) => {
+                    var this_val = $(ele).val();
+                    if(this_val == 'AYES'){ checkker2 += 1; console.log('checkker2 > '+checkker2)}else{ checkker2 += false; console.log('checkker2 > '+checkker2) }
+                });
+                if(checkker2 == count_r12){ q12MainQn(true, 'b'); }else{ q12MainQn(false, 'b'); }
+            });
+                
+            $('.row12 .r12q3 input[type=radio]').on('change', function () {
+                var checkker3 = false;
+                $('tr.row12 td.r12q3 input[type=radio]:checked').each( (inx, ele) => {
+                    var this_val = $(ele).val();
+                    if(this_val == 'AYES'){ checkker3 += 1; console.log('checkker3 > ' +checkker3)}else{ checkker3 += false; console.log('checkker3 > '+checkker3) }
+                });
+                if(checkker3 == count_r12){ q12MainQn(true, 'c'); }else{ q12MainQn(false, 'c'); }
+            
+            });
+    
+            //------tick main qn
+            function q12MainQn(pass, qn) {
+                if(pass){
+                    
+                    // if(qn == 'a'){ $('.ro12_total td.r12_t_q1 label input[value=AYES]').prop('checked', true); }
+                    if(qn == 'a'){ $('input[name=CP23q_b_1][value=AYES]').prop("checked", true);}
+                    else if(qn == 'b'){ $('input[name=CP23q_b_2][value=AYES]').prop('checked', true); }
+                    else if(qn == 'c'){ $('input[name=CP23q_b_3][value=AYES]').prop('checked', true); }
+                    validBench(['CP23q_b_1','CP23q_b_2','CP23q_b_3'],['AYES','AYES','AYES'],'CP3b')
+                }else{
+                    
+                    // if(qn == 'a'){ $('.ro12_total td.r12_t_q1 label input[value=ANNO]').prop('checked', true); }
+                    if(qn == 'a'){ $('input[name=CP23q_b_1][value=ANNO]').prop("checked", true);}
+                    else if(qn == 'b'){ $('input[name=CP23q_b_2][value=ANNO]').prop('checked', true); }
+                    else if(qn == 'c'){ $('input[name=CP23q_b_3][value=ANNO]').prop('checked', true); }
+                }
+            }
+
+      </script>
+
+      <script>
+
+        // Question 6.3
+        var count_r13 = 0; $('tr.row13 td.r13q1 input[type=radio]').each( () => { count_r13 += 1 }); count_r13 /= 2
+        $('.row13 input[type=radio]').on('change', function () {
+            
+            var checkker13_q = 0;
+            $('tr.row13 td.r13q1 input[type=radio]:checked').each( (inx, ele) => {
+                var this_val = $(ele).val(); if(this_val == 'AYES'){ checkker13_q += true; }else{ checkker13_q += false; }
+            });
+            if(checkker13_q == count_r13){ q13MainQn_v1(true, 'a'); }else{ q13MainQn_v1(false, 'a'); }
+           
+            
+        });
+
+            //------tick main qn
+            function q13MainQn_v1(pass, qn) {
+                if(pass){
+                    if(qn === 'a'){
+                         $('.ro13_total td.r13_t_q2 label input[value=AYES]').prop('checked', true); 
+                         $('input[name=CP58q]').attr('disabled',true);
+                        } 
+                }else{
+                    if(qn === 'a'){ $('.ro13_total td.r13_t_q2 label input[value=ANNO]').prop('checked', true);
+                    $('input[name=CP58q]').attr('disabled',true);
+                 } 
+                }
+            }
+            
+    </script>
+
+    {% else %}
+        {% if child.years > 10 %}
+    <script>
+        // cpara
+        
+        $('input[type=radio]').on('change', function () {
+
+            //  Score benchamrk 3
+            if($('input[name={{child.id}}_CP15q]:checked').val() == 'AYES'){
+                $('input[name=CP23q_b_1][value=AYES]').prop("checked", true);}
+            else{
+                $('input[name=CP23q_b_1][value=ANNO]').prop("checked", true);}
+       
+            if($('input[name={{child.id}}_CP16q]:checked').val() == 'AYES'){
+                $('input[name=CP23q_b_2][value=AYES]').prop("checked", true);}
+            else{
+                $('input[name=CP23q_b_2][value=ANNO]').prop("checked", true);}
+        
+        
+            if($('input[name={{child.id}}_CP17q]:checked').val() == 'AYES'){
+                $('input[name=CP23q_b_3][value=AYES]').prop("checked", true);}
+            else{
+                $('input[name=CP23q_b_3][value=ANNO]').prop("checked", true);}
+
+            // Question 6.3
+            if($('input[name={{child.id}}_CP27q2]:checked').val() == 'AYES'){
+                $('input[name=CP58q]').attr('disabled', true);
+                
+                $('input[name=CP58q]').click(function(){return false;});
+                $('input[name=CP58q][value=AYES]').prop("checked", true);}
+
+            else{
+                $('input[name=CP58q]').attr('disabled', true);
+                $('input[name=CP58q]').click(function(){return false;});
+
+                $('input[name=CP58q][value=ANNO]').prop("checked", true);}
+        })
+
+    </script>  
+        {% else %}
+        <script>
+            //  Get the evaluaton if No OVC under 10 and no sibling
+            $('input[type=radio]').on('change', function () {
+                
+                //  Score the subtotal row
+                $('input[name=CP23q_b_1][value=AYES]').prop("checked", true);
+                $('input[name=CP23q_b_2][value=AYES]').prop("checked", true);
+                $('input[name=CP23q_b_3][value=AYES]').prop("checked", true);
+
+                //  Score benchamrk 3
+                $('input[name=CP31Skip]').attr('disabled', true);
+                $('input[name=CP3b][value=AYES]').prop("checked", true);
+
+                //  Question 6.3
+                $('input[name=CP58q]').attr('disabled', true);
+                $('input[name=CP58q][value=AYES]').prop("checked", true);
+            })
+        </script>
+        {% endif %}
+    {% endif %}
+    
+        
+{% endblock %}
+
