@@ -335,8 +335,8 @@ select sum(graduated) as count, mechanism, agency
 from vw_cpims_dash_graduated {ocbos} group by mechanism, agency
 ) srv
 UNION ALL
-select sum(count) as dcount, 'OVC_SERV - >18' AS mechanism,
-'OVC_SERV - >18 & <18' AS agency FROM (
+select sum(count) as dcount, 'OVC_SERV - 18-20' AS mechanism,
+'OVC_SERV - 18-20 & <18' AS agency FROM (
 select count(distinct(person_id)) as count
 from vw_Active_Beneficiary_APR22 where agerange = 'f.[18-20yrs]' {cbos}
 UNION
@@ -345,7 +345,7 @@ from vw_cpims_dash_graduated where agerange = 'f.[18-20yrs]' {cbos}
 ) srv
 UNION ALL
 select sum(count) as dcount, 'OVC_SERV - <18' AS mechanism,
-'OVC_SERV - >18 & <18' AS agency FROM (
+'OVC_SERV - 18-20 & <18' AS agency FROM (
 select count(distinct(person_id)) as count
 from vw_Active_Beneficiary_APR22 where agerange <> 'f.[18-20yrs]' {cbos}
 UNION
@@ -937,8 +937,8 @@ select sum(graduated) as count, mechanism, agency
 from vw_cpims_dash_graduated {ocbos} group by mechanism, agency
 ) srv
 UNION ALL
-select sum(count) as dcount, 'OVC_SERV - >18' AS mechanism,
-'OVC_SERV - >18 & <18' AS agency FROM (
+select sum(count) as dcount, 'OVC_SERV - 18-20' AS mechanism,
+'OVC_SERV - 18-20 & <18' AS agency FROM (
 select sum(served) as count
 from vw_Active_Beneficiary_APR22 where agerange = 'f.[18-20yrs]' {cbos}
 UNION
@@ -947,7 +947,7 @@ from vw_cpims_dash_graduated where agerange = 'f.[18-20yrs]' {cbos}
 ) srv
 UNION ALL
 select sum(count) as dcount, 'OVC_SERV - <18' AS mechanism,
-'OVC_SERV - >18 & <18' AS agency FROM (
+'OVC_SERV - 18-20 & <18' AS agency FROM (
 select sum(served) as count
 from vw_Active_Beneficiary_APR22 where agerange <> 'f.[18-20yrs]' {cbos}
 UNION
@@ -979,8 +979,8 @@ select count(distinct(person_id)) as count, mechanism, agency
 from vw_cpims_dash_graduated {ocbos} group by mechanism, agency
 ) srv
 UNION ALL
-select sum(count) as dcount, 'OVC_SERV - >18' AS mechanism,
-'OVC_SERV - >18 & <18' AS agency FROM (
+select sum(count) as dcount, 'OVC_SERV - 18-20' AS mechanism,
+'OVC_SERV - 18-20 & <18' AS agency FROM (
 select count(distinct(person_id)) as count
 from vw_Active_Beneficiary_APR22 where agerange = 'f.[18-20yrs]' {cbos}
 UNION
@@ -989,7 +989,7 @@ from vw_cpims_dash_graduated where agerange = 'f.[18-20yrs]' {cbos}
 ) srv
 UNION ALL
 select sum(count) as dcount, 'OVC_SERV - <18' AS mechanism,
-'OVC_SERV - >18 & <18' AS agency FROM (
+'OVC_SERV - 18-20 & <18' AS agency FROM (
 select count(distinct(person_id)) as count
 from vw_Active_Beneficiary_APR22 where agerange <> 'f.[18-20yrs]' {cbos}
 UNION
@@ -1240,8 +1240,8 @@ select sum(graduated) as count, mechanism, agency
 from vw_cpims_dash_graduated {ocbos} group by mechanism, agency
 ) srv
 UNION ALL
-select sum(count) as dcount, 'OVC_SERV - >18' AS mechanism,
-'OVC_SERV - >18 & <18' AS agency FROM (
+select sum(count) as dcount, 'OVC_SERV - 18-20' AS mechanism,
+'OVC_SERV - 18-20 & <18' AS agency FROM (
 select sum(served) as count
 from vw_Active_Beneficiary_APR22 where agerange = 'f.[18-20yrs]' {cbos}
 UNION
@@ -1250,7 +1250,7 @@ from vw_cpims_dash_graduated where agerange = 'f.[18-20yrs]' {cbos}
 ) srv
 UNION ALL
 select sum(count) as dcount, 'OVC_SERV - <18' AS mechanism,
-'OVC_SERV - >18 & <18' AS agency FROM (
+'OVC_SERV - 18-20 & <18' AS agency FROM (
 select sum(served) as count
 from vw_Active_Beneficiary_APR22 where agerange <> 'f.[18-20yrs]' {cbos}
 UNION

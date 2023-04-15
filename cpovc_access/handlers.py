@@ -122,11 +122,11 @@ class AuthenticationPolicyHandler(object):
         if self._policies:
             return
 
-        for policy_path, kwargs in settings.AUTHENTICATION_BACKENDS:
+        for policy_path in settings.AUTHENTICATION_BACKENDS:
             policy_class = import_string(policy_path)
-            policy = policy_class(**kwargs)
+            # policy = policy_class(**kwargs)
 
-            self._policies.append(policy)
+            self._policies#.append(policy)
 
     def pre_auth_checks(self, username, password, remote_addr, host):
         """Policy checks before a user is authenticated.
