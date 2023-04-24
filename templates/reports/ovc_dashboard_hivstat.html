@@ -54,7 +54,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{% url 'ovc_dashboard' %}" id="main_url">1. Registrations</a></li>
                     <li><a href="{% url 'ovc_registration' %}" id="reg_url">2. OVC Eligible for reporting</a></li>
-                    <li><a href="{% url 'hivstat_dash' %}" id="hivstat_url"><b>3. HIVSTAT & VL</b></a></li>
+                    <li><a href="{% url 'hivstat_dash' %}" id="hivstat_url"><b>3. OVC Served & HIV Information</b></a></li>
                     <li><a href="{% url 'services_dash' %}" id="services_url">4. Services</a></li>
                     <li><a href="{% url 'cm_dash' %}" id="cm_url">5. Case Management</a></li>
                     <li><a href="{% url 'perform_dash' %}" id="pf_url">6. Performance</a></li>
@@ -252,6 +252,29 @@
 
             <!-- begin row -->
             <div class="row">
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
+                    <div class="panel panel-inverse">
+                        <div class="panel-body">
+                            <div id="container-3I"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-6 -->
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
+                    <div class="panel panel-inverse">
+                        <div class="panel-body">
+                            <div id="container-3J"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-6 -->
+            </div>
+            <!-- end row -->
+
+            <!-- begin row -->
+            <div class="row">
                 <!-- begin col-12 -->
                 <div class="col-md-12">            
                     <div class="panel panel-inverse">
@@ -399,7 +422,7 @@
            App.init();App.init();
            // $('table').addClass('table');
            // Dynamically load Charts
-           var chartlists = ['3A', '3B', '3C', '3D', '3E', '3F', '3G', '3H'];
+           var chartlists = ['3A', '3B', '3C', '3D', '3E', '3F', '3G', '3H', '3I'];
 
            var colors = ["#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9",
                          "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"];

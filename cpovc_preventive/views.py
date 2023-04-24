@@ -2,6 +2,7 @@ import json
 import uuid
 from datetime import datetime
 from django.utils import timezone
+from django.db.models import Count
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -14,13 +15,13 @@ from cpovc_forms.functions import get_person_ids, get_ovc_program
 from cpovc_forms.models import OVCCaseRecord
 from cpovc_registry.models import (
     RegPerson, RegPersonsGeo, RegPersonsGuardians, RegPersonsSiblings,
-    RegPersonsExternalIds)
+    RegPersonsExternalIds, RegPersonsOrgUnits)
 
 from cpovc_main.functions import (
     convert_date, get_dict, translate, get_days_difference,
     get_list, convert_date)
 from cpovc_ovc.functions import get_school, limit_person_ids_orgs
-from cpovc_ovc.models import OVCHHMembers, OVCHouseHold
+from cpovc_ovc.models import OVCHHMembers, OVCHouseHold, OVCRegistration
 from cpovc_preventive.functions import (
     save_school, save_household, get_house_hold, save_ebi, save_event)
 from .forms import OVCPreventiveRegistrationForm
@@ -34,7 +35,7 @@ from .forms import (
     OVCCBIMAssessmentForm)
 from .settings import PROGS
 
-from .functions import save_evaluation
+from .functions import save_evaluation, save_ebi_service
 
 
 @login_required
@@ -127,7 +128,6 @@ def new_pfs(request, id):
             user_id = request.user.id
             intervention = request.POST.get('intervention')
             cbo_id = request.POST.get('cbo_id')
-            # request.POST.get('cbo_id')
             school_level = request.POST.get('school_level')
             school_id = request.POST.get('school_id')
             if school_level == 'SLNS' or school_level == '':
@@ -149,7 +149,7 @@ def new_pfs(request, id):
                           'registration_date': reg_date},
             )
             action = "Created" if created else "edited"
-            msg = "Child registration %s Successfully" % action
+            msg = "OVC (Preventive) registration %s Successfully" % action
             messages.info(request, msg)
             url = reverse('view_pfs', kwargs={'id': id})
             return HttpResponseRedirect(url)
@@ -179,7 +179,7 @@ def new_pfs(request, id):
                           "TVC4,Year 4", "TVC5,Year 5"]
         return render(request, 'preventive/new_registration.html',
                       {'form': form, 'child': child, 'levels': levels,
-                       'ovc': ovc, 'guardians': guardians,
+                       'ovc': ovc, 'guardians': guardians, 'edits': 0,
                        'siblings': siblings, 'extids': extids,
                        'vals': vals, 'extids': gparams})
     except Exception as e:
@@ -195,6 +195,8 @@ def edit_pfs(request, id):
         initial = {}
         person_id = int(id)
         child = RegPerson.objects.get(is_void=False, id=person_id)
+        creg = OVCPreventiveRegistration.objects.get(
+            is_void=False, person_id=person_id)
         guardians = RegPersonsGuardians.objects.filter(
             is_void=False, child_person_id=child.id)
         # Get siblings
@@ -216,11 +218,18 @@ def edit_pfs(request, id):
             else:
                 gkey = '%s_%s' % (extid.person_id, extid.identifier_type_id)
                 gparams[gkey] = extid.identifier
+        # Org units
+        orgs = RegPersonsOrgUnits.objects.filter(
+            person_id=person_id, is_void=False)
         if request.method == 'POST':
+            print(request.POST)
             form = OVCPreventiveRegistrationForm(guids=pids, data=request.POST)
             user_id = request.user.id
-            intervention = request.POST.get('intervention')
-            cbo_id = request.POST.get('cbo_id')
+            intervention = request.POST.get('ebi')
+            edit_type = int(request.POST.get('edits', 0))
+            cbo_id = int(request.POST.get('cbo_id'))
+            if edit_type == 1 and cbo_id == 1:
+                cbo_id = request.POST.get('cbo')
             school_level = request.POST.get('school_level')
             school_id = request.POST.get('school_id')
             if school_level == 'SLNS':
@@ -240,7 +249,7 @@ def edit_pfs(request, id):
             if cg_id:
                 save_household(request, cg_id, person_id)
             action = "Created" if created else "edited"
-            msg = "Child registration %s Successfully" % action
+            msg = "OVC (Preventive) registration %s Successfully" % action
             messages.info(request, msg)
             url = reverse('view_pfs', kwargs={'id': id})
             return HttpResponseRedirect(url)
@@ -285,10 +294,14 @@ def edit_pfs(request, id):
         levels["SLTV"] = ["TVC1,Year 1", "TVC2,Year 2", "TVC3,Year 3",
                           "TVC4,Year 4", "TVC5,Year 5"]
         allow_edit = True
+        check_fields = ['relationship_type_id']
+        vals = get_dict(field_name=check_fields)
         return render(request, 'preventive/new_registration.html',
                       {'form': form, 'child': child, 'levels': levels,
                        'allow_edit': allow_edit, 'sch_class': sch_class,
-                       'school': school, 'ovc': ovc})
+                       'school': school, 'ovc': ovc, 'guardians': guardians,
+                       'extids': gparams, 'vals': vals, 'edits': 1,
+                       'orgs': orgs, 'creg': creg})
     except Exception as e:
         print('fps error - %s' % (str(e)))
         raise e
@@ -304,15 +317,60 @@ def view_pfs(request, id):
             is_void=False, person_id=ovc_id)
         check_fields = ['school_level_id', 'pfs_intervention_id',
                         'class_level_id', 'school_type_id',
-                        'art_status_id', 'hiv_status_id']
+                        'art_status_id', 'hiv_status_id',
+                        'relationship_type_id']
         vals = get_dict(field_name=check_fields)
         school_level = 'SLNS'
         school = get_school(ovc_id)
+        # Get Summaries for the view page
+        summs = OVCPreventiveEvents.objects.filter(
+            person_id=ovc_id, is_void=False).values(
+            'event_type_id').annotate(dcount=Count('event_type_id'))
+        ssumms = OVCPreventiveService.objects.filter(
+            person_id=ovc_id, is_void=False).values(
+            'ebi_service_client').annotate(
+            dcount=Count('ebi_service_client'))
+        # print(ssumms)
+        summary = {'EBI': 0, 'SINO_CG': 0, 'SINO_TN': 0,
+                   'FMP_CG': 0, 'HCBF_TN': 0, 'CBIM_TN': 0}
+        for smm in summs:
+            summary[smm['event_type_id']] = smm['dcount']
+            if smm['event_type_id'].startswith('SINO_CG'):
+                summary['SINO_CG'] = summary['SINO_CG'] + smm['dcount']
+            if smm['event_type_id'].startswith('SINO_TN'):
+                summary['SINO_TN'] = summary['SINO_TN'] + smm['dcount']
+            if smm['event_type_id'].startswith('FMP_CG'):
+                summary['FMP_CG'] = summary['FMP_CG'] + smm['dcount']
+            if smm['event_type_id'].startswith('HCBF_TN'):
+                summary['HCBF_TN'] = summary['HCBF_TN'] + smm['dcount']
+            if smm['event_type_id'].startswith('CBIM_TN'):
+                summary['CBIM_TN'] = summary['CBIM_TN'] + smm['dcount']
+        for ssmm in ssumms:
+            summary[ssmm['ebi_service_client']] = ssmm['dcount']
         if school:
             school_level = school.school_level
+        # Just use the caregiver details directly
+        guardians = RegPersonsGuardians.objects.filter(
+            is_void=False, child_person_id=child.id)
+        # Get external ids
+        guids = []
+        params, gparams = {}, {}
+        for guardian in guardians:
+            guids.append(guardian.guardian_person_id)
+        guids.append(child.id)
+        extids = RegPersonsExternalIds.objects.filter(
+            person_id__in=guids)
+        for extid in extids:
+            if extid.person_id == child.id:
+                params[extid.identifier_type_id] = extid.identifier
+            else:
+                gkey = '%s_%s' % (extid.person_id, extid.identifier_type_id)
+                gparams[gkey] = extid.identifier
         return render(request, 'preventive/view_registration.html',
                       {'creg': creg, 'child': child, 'vals': vals,
-                       'school': school, 'school_level': school_level})
+                       'school': school, 'school_level': school_level,
+                       'summary': summary, 'guardians': guardians,
+                       'extids': gparams})
     except Exception as e:
         print('error - %s' % e)
         msg = "Child not registered in any Program"
@@ -493,50 +551,51 @@ def manage_preventive_register(request):
     try:
 
         person = request.POST.get('person')
-        # pdb.set_trace()
         ovcpreventiveevents = OVCPreventiveEvents.objects.filter(
-            person=person).order_by('-date_of_event')
+            person_id=person).order_by('-date_of_event')
 
         for event in ovcpreventiveevents:
-            event_type = None
-            event_details = None
-            services = []
-            event_keywords = []
-            event_keyword_group = []
-            register = []
-            event_date = event.date_of_event
 
-            # get Assessment
-            ovccaregister = OVCPreventiveEbi.objects.filter(event=event.pk)
+            # Get Register and Services
+            ovccaregister = OVCPreventiveEbi.objects.filter(event_id=event.pk)
             ovccareservice = OVCPreventiveService.objects.filter(
-                event=event.pk)
+                event_id=event.pk)
 
             for ovccareg in ovccaregister:
                 # pdb.set_trace()
-                register.append(translate(ovccareg.domain) + ',' + translate(ovccareg.ebi_session_type) + ',' + translate(
-                    ovccareg.ebi_session) + ',' + translate(ovccareg.date_of_encounter_event.strftime('%d-%b-%Y')))
-                event_keywords.append(ovccareg.ebi_provided)
+                reg = translate(ovccareg.domain) + ',' + translate(ovccareg.ebi_session_type) + ',' + translate(
+                    ovccareg.ebi_session) + ',' + translate(ovccareg.date_of_encounter_event.strftime('%d-%b-%Y'))
+                # event_keywords.append(ovccareg.ebi_provided)
+                encounter_date = ovccareg.date_of_encounter_event
+                itm = {
+                        'event_pk': str(event.pk),
+                        'event_type': 'EBI',
+                        'event_details': reg,
+                        'event_keyword_group': ovccareg.ebi_provided,
+                        'event_date': encounter_date.strftime('%d-%b-%Y')
+                    }
+                preventiveEventsData.append(itm)
             for ovcservice in ovccareservice:
-                services.append(translate(ovcservice.domain) + ',' + translate(
-                    ovcservice.ebi_service_provided) + ',' + translate(ovcservice.ebi_service_client))
-                event_keywords.append(ovcservice.ebi_service_reffered)
-            # pdb.set_trace()
-
-            if (services):
-                event_type = 'SERVICE'
-                event_details = ', '.join(services)
-            elif (register):
-                event_type = 'EBI'
-                event_details = ', '.join(register)
-                event_keyword_group = ', '.join(event_keywords)
-
-            preventiveEventsData.append({
-                'event_pk': str(event.pk),
-                'event_type': event_type,
-                'event_details': event_details,
-                'event_keyword_group': event_keyword_group,
-                'event_date': event_date.strftime('%d-%b-%Y')
-            })
+                sref = translate(ovcservice.ebi_service_reffered) if ovcservice.ebi_service_reffered else None
+                scom = translate(ovcservice.ebi_service_completed) if ovcservice.ebi_service_completed else None
+                srefs = sref + '(R) ' if sref else ''
+                scoms = scom + '(C) ' if scom else ''
+                if scoms and srefs:
+                    servs = srefs + ' / ' + scoms
+                else:
+                    servs = srefs + '' + scoms
+                serv = servs + ',' + translate(
+                    ovcservice.ebi_service_provided) + ',' + translate(
+                    ovcservice.ebi_service_client)
+                encounter_date = ovcservice.date_of_encounter_event
+                itm = {
+                        'event_pk': str(event.pk),
+                        'event_type': 'SERVICE',
+                        'event_details': serv,
+                        'event_keyword_group': ovccareg.ebi_provided,
+                        'event_date': encounter_date.strftime('%d-%b-%Y')
+                     }
+                preventiveEventsData.append(itm)
 
         return JsonResponse(preventiveEventsData,
                             content_type='application/json',
@@ -804,46 +863,275 @@ def new_register_v2(request, id):
         form = OVCSearchForm(data=request.GET)
         domain = creg.intervention
         cbo_id = creg.child_cbo_id
-        # Create Event
-        old_event_id = request.POST.get('event_id')
-        if old_event_id:
-            event_id = uuid.UUID(old_event_id)
-        else:
-            event = save_event(request, 'EBI', person_id)
-            event_id = event.pk
+        # Get settings
+        sessions, make_ups = [], []
+        prog = PROGS[domain] if domain in PROGS else PROGS['DEFAULT']
+        total_sessions = prog['sessions'] + 1
+        ebi_name = prog['name']
+        ebi_domain = prog['code']
         if request.method == 'POST':
-            session_ids = request.POST.getlist("session_id")
-            make_up_ids = request.POST.getlist("make_up_id")
-            dates = request.POST.getlist("date_attended")
-            for sess_id in session_ids:
-                sess_idx = int(sess_id) - 1
-                sess_date = dates[sess_idx]
-                session_id = 'SESS%s' % (sess_id)
-                save_ebi(
-                    request, person_id, cbo_id, event_id, 'GENERAL',
-                    domain, session_id, sess_date)
-            for sess_id in make_up_ids:
-                sess_idx = int(sess_id) - 1
-                sess_date = dates[sess_idx]
-                session_id = 'MKPS%s' % (sess_id)
-                save_ebi(
-                    request, person_id, cbo_id, event_id, 'MAKE UP',
-                    domain, session_id, sess_date)
+            print(request.POST)
+            session_ids = request.POST.getlist("session_id_check")
+            make_up_ids = request.POST.getlist("make_up_id_check")
+            for session_id in session_ids:
+                ev_id = 'event_id_sess%s' % (session_id)
+                old_event_id = request.POST.get(ev_id)
+                if old_event_id:
+                    event_id = uuid.UUID(old_event_id)
+                else:
+                    event = save_event(request, 'EBI', person_id)
+                    event_id = event.pk
+                sess_date = request.POST.get('date_attended_%s' % (session_id))
+                print('Index', session_id, sess_date, domain)
+                if sess_date:
+                    save_ebi(
+                        request, person_id, cbo_id, event_id, 'GENERAL',
+                        ebi_domain, session_id, sess_date)
+            for session_id in make_up_ids:
+                ev_id = 'event_id_mkps%s' % (session_id)
+                old_event_id = request.POST.get(ev_id)
+                if old_event_id:
+                    event_id = uuid.UUID(old_event_id)
+                else:
+                    event = save_event(request, 'EBI', person_id)
+                    event_id = event.pk
+                sess_date = request.POST.get('date_attended_%s' % (session_id))
+                if sess_date:
+                    save_ebi(
+                        request, person_id, cbo_id, event_id, 'MAKE UP',
+                        ebi_domain, session_id, sess_date)
             msg = "Register updated Successfully"
             messages.info(request, msg)
             url = reverse('new_register', kwargs={'id': id})
             return HttpResponseRedirect(url)
+        # Attendances
+        atts, evs = {}, {}
+        attendances = OVCPreventiveEbi.objects.filter(person_id=person_id)
+        for attendance in attendances:
+            sess_id = attendance.ebi_session
+            doe = attendance.date_of_encounter_event
+            event_date = doe.strftime('%d-%b-%Y') if doe else ''
+            atts[sess_id] = event_date
+            evs[sess_id] = attendance.event_id
+        for i in range(1, total_sessions):
+            sid = 'SESS%s' % i
+            e_date = atts[sid] if sid in atts else ''
+            ev_id = evs[sid] if sid in evs else ''
+            sessions.append({'id': i, 'event_date': e_date, 'event_id': ev_id})
+        for i in range(1, 5):
+            sid = 'MKPS%s' % i
+            e_date = atts[sid] if sid in atts else ''
+            ev_id = evs[sid] if sid in evs else ''
+            make_ups.append({'id': i, 'event_date': e_date, 'event_id': ev_id})
+        # Settings
+        check_fields = ['sex_id']
+        vals = get_dict(field_name=check_fields)
+        return render(request, 'preventive/new_register.html',
+                      {'status': 200, 'creg': creg, 'form': form,
+                       'ovc': child, 'sessions': sessions, 'vals': vals,
+                       'make_ups': make_ups, 'ebi_name': ebi_name})
+    except Exception as e:
+        print('fps error - %s' % (str(e)))
+        raise e
+
+
+@login_required
+def new_service_v2(request, id):
+    """Some default page for the home page for preventive and FS."""
+    try:
+        person_id = int(id)
+        child = RegPerson.objects.get(is_void=False, id=person_id)
+        creg = OVCPreventiveRegistration.objects.get(
+            is_void=False, person_id=person_id)
+        form = OVCSearchForm(data=request.GET)
+        domain = creg.intervention
+        cbo_id = creg.child_cbo_id
+        # Get settings
         sessions, make_ups = [], []
         prog = PROGS[domain] if domain in PROGS else PROGS['DEFAULT']
         total_sessions = prog['sessions'] + 1
+        ebi_name = prog['name']
+        client_type = 'CLOVC'
+        if request.method == 'POST':
+            print(request.POST)
+            for ssid in request.POST:
+                if ssid.startswith('SESS') or ssid.startswith('MKPS'):
+                    sessions = request.POST.get(ssid)
+                    if sessions == 'on':
+                        spref = 'SESS' if ssid.startswith('SESS') else 'MKPS'
+                        sid = ssid.replace(spref, '').split('_')[0]
+                        ev_id = 'event_id_%s' % (sid)
+                        ev_date = 'event_date_%s' % (sid)
+                        session_number = '%s%s' % (spref, sid)
+                        event_uid = request.POST.get(ev_id)
+                        session_date = request.POST.get(ev_date)
+                        service_date = convert_date(session_date)
+                        ss_id, service_id, service_type = ssid.split('_')
+                        event_id = uuid.UUID(event_uid)
+                        service_detail = None
+                        if service_id == 'SROTH':
+                            service_detail = request.POST.get(
+                                '%s%s_SROTH_T' % (spref, sid))
+                        print('Index', ssid, service_date,
+                              session_number, service_id, service_type,
+                              event_id, client_type, service_detail)
+                        # Save to DB
+                        save_ebi_service(
+                            request, person_id, cbo_id, event_id,
+                            client_type, service_date, session_number,
+                            service_id, service_type, service_detail)
+                        # TO DO - How to handle unchecking
+            msg = "%s Caregiver Services - Updated Successfully" % (ebi_name)
+            messages.info(request, msg)
+            url = reverse('view_pfs', kwargs={'id': id})
+            return HttpResponseRedirect(url)
+        # Attendances
+        atts, evs, servs = {}, {}, {}
+        attendances = OVCPreventiveEbi.objects.filter(
+            person_id=person_id, is_void=False)
+        services = OVCPreventiveService.objects.filter(
+            person_id=person_id, is_void=False, ebi_service_client=client_type)
+        # Organize attendances for presentation
+        for attendance in attendances:
+            sess_id = attendance.ebi_session
+            doe = attendance.date_of_encounter_event
+            event_date = doe.strftime('%d-%b-%Y') if doe else ''
+            atts[sess_id] = event_date
+            evs[sess_id] = attendance.event_id
+        # Organize services for presentation
+        for service in services:
+            sls = {}
+            sref = service.ebi_service_reffered
+            scom = service.ebi_service_completed
+            soth = service.ebi_service_other
+            if sref:
+                sls[sref + '_R'] = 'checked'
+            if scom:
+                sls[scom + '_C'] = 'checked'
+            if soth:
+                sls['SROTH_T'] = soth
+            serv_prov = service.ebi_service_provided
+            servs[serv_prov] = sls
         for i in range(1, total_sessions):
-            sessions.append({'id': i})
+            sid = 'SESS%s' % i
+            e_date = atts[sid] if sid in atts else ''
+            ev_id = evs[sid] if sid in evs else ''
+            serv = servs[sid] if sid in servs else {}
+            sessions.append({'id': i, 'event_date': e_date,
+                             'event_id': ev_id, 'services': serv})
         for i in range(1, 5):
-            make_ups.append({'id': i})
-        return render(request, 'preventive/new_register.html',
+            mid = 'MKPS%s' % i
+            e_date = atts[mid] if mid in atts else ''
+            ev_id = evs[mid] if mid in evs else ''
+            make_ups.append({'id': i, 'event_date': e_date, 'event_id': ev_id})
+        # Settings
+        check_fields = ['sex_id']
+        vals = get_dict(field_name=check_fields)
+        return render(request, 'preventive/new_service.html',
                       {'status': 200, 'creg': creg, 'form': form,
-                       'ovc': child, 'sessions': sessions,
-                       'make_ups': make_ups})
+                       'ovc': child, 'sessions': sessions, 'vals': vals,
+                       'make_ups': make_ups, 'ebi_name': ebi_name})
+    except Exception as e:
+        print('fps error - %s' % (str(e)))
+        raise e
+
+
+@login_required
+def new_service_caregiver_v2(request, id):
+    """Some default page for the home page for preventive and FS."""
+    try:
+        person_id = int(id)
+        child = RegPerson.objects.get(is_void=False, id=person_id)
+        creg = OVCPreventiveRegistration.objects.get(
+            is_void=False, person_id=person_id)
+        form = OVCSearchForm(data=request.GET)
+        domain = creg.intervention
+        cbo_id = creg.child_cbo_id
+        # Get settings
+        sessions, make_ups = [], []
+        prog = PROGS[domain] if domain in PROGS else PROGS['DEFAULT']
+        total_sessions = prog['sessions'] + 1
+        ebi_name = prog['name']
+        client_type = 'CLCGV'
+        if request.method == 'POST':
+            print(request.POST)
+            for ssid in request.POST:
+                if ssid.startswith('SESS') or ssid.startswith('MKPS'):
+                    sessions = request.POST.get(ssid)
+                    if sessions == 'on':
+                        spref = 'SESS' if ssid.startswith('SESS') else 'MKPS'
+                        sid = ssid.replace(spref, '').split('_')[0]
+                        ev_id = 'event_id_%s' % (sid)
+                        ev_date = 'event_date_%s' % (sid)
+                        session_number = '%s%s' % (spref, sid)
+                        event_uid = request.POST.get(ev_id)
+                        session_date = request.POST.get(ev_date)
+                        service_date = convert_date(session_date)
+                        ss_id, service_id, service_type = ssid.split('_')
+                        event_id = uuid.UUID(event_uid)
+                        service_detail = None
+                        if service_id == 'SROTH':
+                            service_detail = request.POST.get(
+                                '%s%s_SROTH_T' % (spref, sid))
+                        print('Index', ssid, service_date,
+                              session_number, service_id, service_type,
+                              event_id, client_type, service_detail)
+                        # Save to DB
+                        save_ebi_service(
+                            request, person_id, cbo_id, event_id,
+                            client_type, service_date, session_number,
+                            service_id, service_type, service_detail)
+                        # TO DO - How to handle unchecking
+            msg = "%s Caregiver Services - Updated Successfully" % (ebi_name)
+            messages.info(request, msg)
+            url = reverse('view_pfs', kwargs={'id': id})
+            return HttpResponseRedirect(url)
+        # Attendances
+        atts, evs, servs = {}, {}, {}
+        attendances = OVCPreventiveEbi.objects.filter(
+            person_id=person_id, is_void=False)
+        services = OVCPreventiveService.objects.filter(
+            person_id=person_id, is_void=False, ebi_service_client=client_type)
+        # Organize attendances for presentation
+        for attendance in attendances:
+            sess_id = attendance.ebi_session
+            doe = attendance.date_of_encounter_event
+            event_date = doe.strftime('%d-%b-%Y') if doe else ''
+            atts[sess_id] = event_date
+            evs[sess_id] = attendance.event_id
+        # Organize services for presentation
+        for service in services:
+            sls = {}
+            sref = service.ebi_service_reffered
+            scom = service.ebi_service_completed
+            soth = service.ebi_service_other
+            if sref:
+                sls[sref + '_R'] = 'checked'
+            if scom:
+                sls[scom + '_C'] = 'checked'
+            if soth:
+                sls['SROTH_T'] = soth
+            serv_prov = service.ebi_service_provided
+            servs[serv_prov] = sls
+        for i in range(1, total_sessions):
+            sid = 'SESS%s' % i
+            e_date = atts[sid] if sid in atts else ''
+            ev_id = evs[sid]
+            serv = servs[sid] if sid in servs else {}
+            sessions.append({'id': i, 'event_date': e_date,
+                             'event_id': ev_id, 'services': serv})
+        for i in range(1, 5):
+            mid = 'MKPS%s' % i
+            e_date = atts[mid] if mid in atts else ''
+            ev_id = evs[mid] if mid in evs else ''
+            make_ups.append({'id': i, 'event_date': e_date, 'event_id': ev_id})
+        # Settings
+        check_fields = ['sex_id']
+        vals = get_dict(field_name=check_fields)
+        return render(request, 'preventive/new_service_caregiver.html',
+                      {'status': 200, 'creg': creg, 'form': form,
+                       'ovc': child, 'sessions': sessions, 'vals': vals,
+                       'make_ups': make_ups, 'ebi_name': ebi_name})
     except Exception as e:
         print('fps error - %s' % (str(e)))
         raise e
@@ -880,7 +1168,7 @@ def new_sinovuyo_evaluation(request, id):
                 request, event_type_id, assessment_date, ovc_id,
                 caregiver_id, datasets)
             # Save the form details here
-            msg = 'Assessment saved successfully'
+            msg = 'SINOVUYO Caregiver Assessment saved successfully'
             messages.add_message(request, messages.SUCCESS, msg)
             url = reverse('view_pfs', kwargs={'id': ovc_id})
             return HttpResponseRedirect(url)
@@ -943,7 +1231,7 @@ def edit_sinovuyo_evaluation(request, event_id):
                     defaults={'timestamp_updated': now,
                               'question_answer': answer,
                               'is_void': False})
-            msg = 'Assessment edited successfully'
+            msg = 'SINOVUYO caregiver Assessment edited successfully'
             messages.add_message(request, messages.SUCCESS, msg)
             url = reverse('view_pfs', kwargs={'id': ovc_id})
             return HttpResponseRedirect(url)
@@ -967,7 +1255,7 @@ def edit_sinovuyo_evaluation(request, event_id):
 
 
 @login_required
-def delete_sinovuyo_evaluation(request):
+def delete_evaluation(request):
     """Method for New Sinovuyo Evaluation."""
     try:
         response = {'message': 'Record deleted successfully'}
@@ -1027,7 +1315,7 @@ def new_sinovuyo_evaluation_teen(request, id):
                 request, event_type_id, assessment_date, ovc_id,
                 caregiver_id, datasets)
             # Save the form details here
-            msg = 'Assessment saved successfully'
+            msg = 'SINOVUYO Teen Assessment saved successfully'
             messages.add_message(request, messages.SUCCESS, msg)
             url = reverse('view_pfs', kwargs={'id': ovc_id})
             return HttpResponseRedirect(url)
@@ -1091,7 +1379,7 @@ def edit_sinovuyo_evaluation_teen(request, event_id):
                     defaults={'timestamp_updated': now,
                               'question_answer': answer,
                               'is_void': False})
-            msg = 'Assessment edited successfully'
+            msg = 'SINOVUYO Teen Assessment edited successfully'
             messages.add_message(request, messages.SUCCESS, msg)
             url = reverse('view_pfs', kwargs={'id': ovc_id})
             return HttpResponseRedirect(url)
@@ -1142,7 +1430,7 @@ def new_hcbf_evaluation(request, id):
                 request, event_type_id, assessment_date, ovc_id,
                 caregiver_id, datasets)
             # Save the form details here
-            msg = 'Assessment saved successfully'
+            msg = 'HCBF Assessment saved successfully'
             messages.add_message(request, messages.SUCCESS, msg)
             url = reverse('view_pfs', kwargs={'id': ovc_id})
             return HttpResponseRedirect(url)
@@ -1253,7 +1541,7 @@ def new_fmp_evaluation(request, id):
                 request, event_type_id, assessment_date, ovc_id,
                 caregiver_id, datasets)
             # Save the form details here
-            msg = 'Assessment saved successfully'
+            msg = 'FMP Assessment saved successfully'
             messages.add_message(request, messages.SUCCESS, msg)
             url = reverse('view_pfs', kwargs={'id': ovc_id})
             return HttpResponseRedirect(url)

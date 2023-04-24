@@ -1,12 +1,14 @@
 import datetime
 from django.db import connection
 import collections
+import html
 
 from cpovc_main.models import SetupGeography
 from cpovc_registry.models import RegOrgUnit
 from cpovc_main.functions import convert_date
 
 from .parameters import PARAMS, areas, CHART
+from .params import CHART as PCHART
 from .queries import QUERIES
 from .charts import (
     column_chart, bar_chart, combo_chart, column_pie_chart,
@@ -128,6 +130,7 @@ def get_chart_data(request, rid, county_id, const_id,
         params['end_date'] = dates['end_date']
         data = get_raw_data(rid, params)
         ctts = CHART[rid] if rid in CHART else CHART['2A']
+        pctts = PCHART[rid] if rid in PCHART else PCHART['2A']
         xAxis = ctts['xAxis'] if 'xAxis' in ctts else True
         yAxis = ctts['yAxis'] if 'yAxis' in ctts else True
         legend = ctts['legend'] if 'legend' in ctts else True
@@ -145,6 +148,10 @@ def get_chart_data(request, rid, county_id, const_id,
         params['defaults'] = defaults
         params['stacking'] = stacking
         params['title'] = '%s : %s' % (rid, ctts['ctitle'])
+        sub_title = pctts['desc'] if 'desc' in pctts else ''
+        print('sub title', sub_title)
+        params['subtitle'] = ''
+        # html.escape(sub_title)
         if ctts['ctype'] == 'bar':
             resp = bar_chart(request, params, data)
         elif ctts['ctype'] == 'combo':

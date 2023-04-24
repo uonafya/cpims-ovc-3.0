@@ -83,7 +83,7 @@ from .documents import create_mcert
 from cpovc_ovc.views import ovc_view
 from .helpers.events import save_event
 
-from cpovc_preventive.models import OVCPreventiveEvents
+from cpovc_pfs.models import OVCPreventiveEvents
 from cpovc_auth.decorators import validate_ovc
 
 
@@ -9017,17 +9017,8 @@ from .models import OVCCareCasePlan
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def case_plan_template(request, id):
     if request.method == 'POST':
-        # child = RegPerson.objects.get(id=id)
-        # house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-        ovc_id = int(id)
-        child = RegPerson.objects.get(id=ovc_id)
-        ovc_reg = OVCRegistration.objects.get(person_id=ovc_id, is_void=False)
-        caregiver_id = ovc_reg.caretaker_id
-        care_giver = RegPerson.objects.get(id=caregiver_id)
-        household = OVCHHMembers.objects.filter(
-            is_void=False, person_id=caregiver_id).first()
-        house_hold_id = household.house_hold_id
-        house_hold = OVCHouseHold.objects.get(id=house_hold_id)
+        child = RegPerson.objects.get(id=id)
+        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
         event_type_id = 'CPAR'
 
         """ Save caseplan-event """
@@ -9047,8 +9038,8 @@ def case_plan_template(request, id):
         my_request = request.POST.get('final_submission')
 
         # house_hold=
-        # care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-        # caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
+        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+        caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
 
         if my_request:
             caseplandata = json.loads(my_request)
@@ -9104,9 +9095,8 @@ def case_plan_template(request, id):
         vals = get_dict(field_name=check_fields)
         ovc_id = int(id)
         child = RegPerson.objects.get(is_void=False, id=ovc_id)
-        ovc_reg = OVCRegistration.objects.get(person_id=ovc_id, is_void=False)
-        caregiver_id = ovc_reg.caretaker_id
-        care_giver = RegPerson.objects.get(id=caregiver_id)
+        care_giver = RegPerson.objects.get(
+            id=OVCRegistration.objects.get(person=child).caretaker_id)
         form = CasePlanTemplate()
 
         # past cpt
@@ -9139,19 +9129,15 @@ def update_caseplan(request, event_id, ovcid):
         d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created
         delta = get_days_difference(d_event)
 
-        if delta < 730:
+        if delta < 90:
             try:
                 my_request = request.POST.get('final_submission')
 
-                ovc_id = int(ovcid)
-                child = RegPerson.objects.get(id=ovc_id)
-                ovc_reg = OVCRegistration.objects.get(person_id=ovc_id, is_void=False)
-                caregiver_id = ovc_reg.caretaker_id
-                care_giver = RegPerson.objects.get(id=caregiver_id)
-                household = OVCHHMembers.objects.filter(
-                    is_void=False, person_id=caregiver_id).first()
-                house_hold_id = household.house_hold_id
-                house_hold = OVCHouseHold.objects.get(id=house_hold_id)
+                child = RegPerson.objects.get(id=ovcid)
+                house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+
+                care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+                caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
 
                 if my_request:
                     caseplandata = json.loads(my_request)
@@ -9205,16 +9191,15 @@ def update_caseplan(request, event_id, ovcid):
                 print('error updating caseplan - %s' % (str(e)))
                 return False
         else:
-            msg = "Can't update caseplan after 2 years"
+            msg = "Can't update after 30 days"
             messages.add_message(request, messages.ERROR, msg)
             url = reverse('ovc_view', kwargs={'id': ovcid})
             return HttpResponseRedirect(url)
     form = CasePlanTemplate()
     ovc_id = int(ovcid)
     child = RegPerson.objects.get(is_void=False, id=ovc_id)
-    ovc_reg = OVCRegistration.objects.get(person_id=ovc_id, is_void=False)
-    caregiver_id = ovc_reg.caretaker_id
-    care_giver = RegPerson.objects.get(id=caregiver_id)
+    care_giver = RegPerson.objects.get(
+        id=OVCRegistration.objects.get(person=child).caretaker_id)
     caseplan_events = get_past_cpt(ovc_id)
 
     check_fields = ['sex_id', 'relationship_type_id']
@@ -10629,22 +10614,22 @@ def edit_case_closure(request, id):
 # New Cpara action functionality
 @validate_ovc([], 1)
 def new_cpara(request, id):
-    form = CparaAssessment()
-    ovc_id = int(id)
-    child = RegPerson.objects.get(id=ovc_id)
-    creg = OVCRegistration.objects.get(person_id=ovc_id, is_void=False)
-    care_giver_id = creg.caretaker_id
-    care_giver = RegPerson.objects.get(id=care_giver_id)
-    household = OVCHHMembers.objects.filter(
-        is_void=False, person_id=care_giver_id).first()
-    hhid = household.house_hold_id
-    house_hold = OVCHouseHold.objects.get(id=hhid)
-    hhmqs = OVCHHMembers.objects.filter(
-        is_void=False, house_hold_id=hhid).order_by("-hh_head")
-    hhmembers2 = hhmqs.exclude(person_id=ovc_id)
-    hhmembers = hhmembers2.exclude(person=care_giver_id)
     if request.method == 'POST':
         data = request.POST
+        child = RegPerson.objects.get(id=int(id))
+        form = CparaAssessment()
+        care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+        ovc_id = int(id)
+        creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
+
+        # Get house hold
+        hhold = OVCHHMembers.objects.get(is_void=False, person_id=id)
+        # Get HH members
+        hhid = hhold.house_hold_id
+        hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
+        hhmembers2 = hhmqs.exclude(person_id=id)
+        hhmembers = hhmembers2.exclude(person=care_giver)
         date_previous = data.get('CP2d')
 
         questions = OVCCareQuestions.objects.filter(
@@ -10717,7 +10702,6 @@ def new_cpara(request, id):
                 benchmark_9=int(ovc_score[8]),
                 score=sum([int(i) for i in ovc_score]),
                 event=event,
-                date_of_event=event_date,
                 care_giver=care_giver    
             
             )
@@ -10919,16 +10903,6 @@ def new_cpara(request, id):
     try:
         child = RegPerson.objects.get(id=id)
         ovc_id = int(id)
-        creg = OVCRegistration.objects.get(person_id=ovc_id, is_void=False)
-        care_giver_id = creg.caretaker_id
-        care_giver = RegPerson.objects.get(id=care_giver_id)
-        household = OVCHHMembers.objects.filter(is_void=False, person_id=care_giver_id).first()
-        house_hold_id = household.house_hold_id
-        house_hold = OVCHouseHold.objects.get(id=house_hold_id)
-        hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=house_hold_id).order_by("-hh_head")
-        hhmembers2 = hhmqs.exclude(person_id=id)
-        hhmembers = hhmembers2.exclude(person=care_giver_id)
-        '''
         creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
         care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
 
@@ -10941,7 +10915,6 @@ def new_cpara(request, id):
         hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
         hhmembers2 = hhmqs.exclude(person_id=id)
         hhmembers = hhmembers2.exclude(person=care_giver)
-        '''
 
         # Get child geo
         child_geos = RegPersonsGeo.objects.select_related().filter(
@@ -10979,9 +10952,7 @@ def new_cpara(request, id):
         form = CparaAssessment()
 
         past_cpara = []
-        # cpara_events = OVCCareEvents.objects.filter(event_type_id='cpr', person_id=id, is_void=False)
-        cpara_events = OVCCareEvents.objects.filter(
-            event_type_id='cpr', house_hold_id=house_hold_id, is_void=False)
+        cpara_events = OVCCareEvents.objects.filter(event_type_id='cpr', person_id=id, is_void=False)
         if cpara_events:
             for one_cpara_event in cpara_events:
                 event_detail = ""
@@ -11065,20 +11036,7 @@ def new_cpara(request, id):
 
 # Update cpara edit functionality
 @validate_ovc([], 1)
-def edit_cpara(request, id):
-    person_id = OVCCareCpara.objects.filter(event=id).first().person_id
-    child = RegPerson.objects.get(id=person_id)
-    creg = OVCRegistration.objects.get(person_id=person_id, is_void=False)
-    care_giver_id = creg.caretaker_id
-    care_giver = RegPerson.objects.get(id=care_giver_id)
-    household = OVCHHMembers.objects.filter(
-        is_void=False, person_id=care_giver_id).first()
-    hhid = household.house_hold_id
-    house_hold = OVCHouseHold.objects.get(id=hhid)
-    hhmqs = OVCHHMembers.objects.filter(
-        is_void=False, house_hold_id=hhid).order_by("-hh_head")
-    hhmembers2 = hhmqs.exclude(person_id=person_id)
-    hhmembers = hhmembers2.exclude(person=care_giver_id)
+def edit_cpara(request, id):    
     if request.method == 'POST':
         
         data = request.POST
@@ -11250,8 +11208,8 @@ def edit_cpara(request, id):
         guardian_person=child, is_void=False, date_delinked=None)
     # child = RegPerson.objects.get(id=id)
     ovc_id = int(person_id)
-    '''
     creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
+
     
     # Get house hold
     hhold = OVCHHMembers.objects.get(is_void=False, person_id=person_id)
@@ -11259,7 +11217,7 @@ def edit_cpara(request, id):
     hhid = hhold.house_hold_id
     hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold_id=hhid).order_by("-hh_head")
     hhmembers2 = hhmqs.exclude(person_id=person_id)
-    '''
+    
     # Get child geo
     child_geos = RegPersonsGeo.objects.select_related().filter(
         person=person_id, is_void=False, date_delinked=None)

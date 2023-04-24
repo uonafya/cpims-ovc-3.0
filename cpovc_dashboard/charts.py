@@ -19,7 +19,8 @@ def combo_chart(request, params, data):
                             align: 'left'
                         },
                         subtitle: {
-                            text: ''
+                            text: '{subtitle}',
+                            align: 'left'
                         },
                         xAxis: [{
                             categories: {categories},
@@ -52,7 +53,8 @@ def combo_chart(request, params, data):
                                 }
                             },
                             opposite: true,
-                            max: 100
+                            max: 100,
+                            min: 10
                         }],
                         tooltip: {
                             shared: true
@@ -114,6 +116,7 @@ def combo_chart(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         result = result.replace('{categories}', categories)
     except Exception as e:
         print('error with combo data - %s' % (str(e)))
@@ -138,7 +141,8 @@ def bar_chart(request, params, data):
                             align: 'left'
                         },
                         subtitle: {
-                            text: ''
+                            text: '{subtitle}',
+                            align: 'left'
                         },
                         xAxis: {
                             categories: {categories},
@@ -210,6 +214,7 @@ def bar_chart(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         result = result.replace('{categories}', categories)
     except Exception as e:
         print('error with kpi data - %s' % (str(e)))
@@ -232,6 +237,10 @@ def bar_chart_stacked(request, params, data):
                         },
                         title: {
                             text: '{title}',
+                            align: 'left'
+                        },
+                        subtitle: {
+                            text: '{subtitle}',
                             align: 'left'
                         },
                         subtitle: {
@@ -303,6 +312,7 @@ def bar_chart_stacked(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         result = result.replace('{categories}', categories)
     except Exception as e:
         print('error with kpi data - %s' % (str(e)))
@@ -336,6 +346,10 @@ def column_chart(request, params, data):
                         },
                         title: {
                             text: '{title}',
+                            align: 'left'
+                        },
+                        subtitle: {
+                            text: '{subtitle}',
                             align: 'left'
                         },
                         xAxis: {
@@ -429,6 +443,7 @@ def column_chart(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         result = result.replace('{categories}', categories)
     except Exception as e:
         print('error with column chart - %s' % (str(e)))
@@ -450,6 +465,10 @@ def column_chart_2(request, params, data):
                         },
                         title: {
                             text: '{title}',
+                            align: 'left'
+                        },
+                        subtitle: {
+                            text: '{subtitle}',
                             align: 'left'
                         },
                         xAxis: {
@@ -530,6 +549,7 @@ def column_chart_2(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         result = result.replace('{categories}', categories)
     except Exception as e:
         print('error with column chart - %s' % (str(e)))
@@ -552,6 +572,10 @@ def column_pie_chart(request, params, data):
                         },
                         title: {
                             text: '{title}',
+                            align: 'left'
+                        },
+                        subtitle: {
+                            text: '{subtitle}',
                             align: 'left'
                         },
                         xAxis: {
@@ -623,6 +647,7 @@ def column_pie_chart(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         result = result.replace('{categories}', categories)
     except Exception as e:
         print('error with column chart - %s' % (str(e)))
@@ -667,6 +692,10 @@ def population_pyramid_chart(request, params, data):
                         },
                         title: {
                             text: '{title}',
+                            align: 'left'
+                        },
+                        subtitle: {
+                            text: '{subtitle}',
                             align: 'left'
                         },
                         accessibility: {
@@ -766,6 +795,7 @@ def population_pyramid_chart(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         result = result.replace('{categories}', categories)
         result = result.replace('{yMax}', str(yMax))
     except Exception as e:
@@ -1089,6 +1119,10 @@ def stacked_bar_chart(request, params, data):
                             text: '{title}',
                             align: 'left'
                         },
+                        subtitle: {
+                            text: '{subtitle}',
+                            align: 'left'
+                        },
                         xAxis: {
                             categories: {categories},
                             crosshair: false
@@ -1136,6 +1170,7 @@ def stacked_bar_chart(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         # After
         data['items'] = names
         ucolors = get_colors(ucolors, params, data)
@@ -1168,6 +1203,10 @@ def stacked_column_chart(request, params, data):
                         },
                         title: {
                             text: '{title}',
+                            align: 'left'
+                        },
+                        subtitle: {
+                            text: '{subtitle}',
                             align: 'left'
                         },
                         xAxis: {
@@ -1210,12 +1249,13 @@ def stacked_column_chart(request, params, data):
                     });
                 });
             </script>'''
+        '''
         art, nart = 0, 0
         for dt in data['series']:
             if dt['name'] == 'ART':
-                art = dt['data'][4]
+                art = dt['data'][4] if len(dt['data']) >= 5 else 0
             if dt['name'] == 'NART':
-                nart = dt['data'][4]
+                nart = dt['data'][4] if len(dt['data']) >= 5 else 0
         ddts = {'type': 'pie', 'name': 'ART Status',
                 'data': [{'name': 'On ART', 'y': art, 'color': '#fee0d2'},
                          {'name': 'Not on ART', 'y': nart,
@@ -1226,6 +1266,7 @@ def stacked_column_chart(request, params, data):
                 'dataLabels': {'enabled': 'false'}}
         if params['cont'] in ['2B', '5B', '7B']:
             data['series'].append(ddts)
+        '''
         stacking = params['stacking'] if 'stacking' in params else 'normal'
         result = str(html).replace('{mdata}', data['mdata'])
         result = result.replace('{categories}', str(data['categories']))
@@ -1238,6 +1279,7 @@ def stacked_column_chart(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         result = result.replace('{categories}', categories)
         result = result.replace('{stacking}', stacking)
     except Exception as e:
@@ -1260,6 +1302,10 @@ def column_compare_chart(request, params, data):
                         },
                         title: {
                             text: '{title}',
+                            align: 'left'
+                        },
+                        subtitle: {
+                            text: '{subtitle}',
                             align: 'left'
                         },
                         xAxis: {
@@ -1317,6 +1363,7 @@ def column_compare_chart(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
     except Exception as e:
         print('error with kpi data - %s' % (str(e)))
         raise e
@@ -1345,7 +1392,8 @@ def pie_chart(request, params, data):
                             align: 'left'
                         },
                         subtitle: {
-                            text: 'OVC Population : {population}'
+                            text: 'OVC Population : {population}',
+                            align: 'left'
                         },
                         tooltip: {
                             pointFormat: '{series.name}: {point.y} <br><b>{point.percentage:.1f}%</b>'
@@ -1396,6 +1444,7 @@ def pie_chart(request, params, data):
         result = result.replace('{population}', str(pops))
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         result = result.replace('{categories}', categories)
     except Exception as e:
         print('error with kpi data - %s' % (str(e)))
@@ -1418,6 +1467,10 @@ def basic_bar_chart(request, params, data):
                         },
                         title: {
                             text: '{title}',
+                            align: 'left'
+                        },
+                        subtitle: {
+                            text: '{subtitle}',
                             align: 'left'
                         },
                         xAxis: {
@@ -1469,6 +1522,7 @@ def basic_bar_chart(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         result = result.replace('{categories}', categories)
         result = result.replace('{stacking}', stacking)
         result = result.replace('{yLabel}', yLabel)
@@ -1518,7 +1572,8 @@ def scatter_chart(request, params, data):
                             align: 'left'
                         },
                         subtitle: {
-                            text: ''
+                            text: '{subtitle}',
+                            align: 'left'
                         },
                         xAxis: {
                             title: {
@@ -1578,6 +1633,7 @@ def scatter_chart(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         result = result.replace('{categories}', categories)
         result = result.replace('{stacking}', stacking)
     except Exception as e:
@@ -1601,7 +1657,8 @@ def line_chart(request, params, data):
                         },
 
                         subtitle: {
-                            text: ''
+                            text: '{subtitle}',
+                            align: 'left'
                         },
 
                         yAxis: {
@@ -1685,6 +1742,7 @@ def line_chart(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         result = result.replace('{categories}', categories)
         result = result.replace('{stacking}', stacking)
     except Exception as e:
@@ -1708,6 +1766,10 @@ def column_category_chart(request, params, data):
                         },
                         title: {
                             text: '{title}',
+                            align: 'left'
+                        },
+                        subtitle: {
+                            text: '{subtitle}',
                             align: 'left'
                         },
                         xAxis: {
@@ -1769,6 +1831,7 @@ def column_category_chart(request, params, data):
         result = result.replace('{fdata}', data['fdata'])
         result = result.replace('{cont}', params['cont'])
         result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
         result = result.replace('{categories}', categories)
         result = result.replace('{stacking}', stacking)
     except Exception as e:

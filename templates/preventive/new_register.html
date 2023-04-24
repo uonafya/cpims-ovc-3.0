@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load app_filters %}
 {% load static %}
-{% block page_title %} OVC Care - Preventive Attendace register {% endblock %}
+{% block page_title %} OVC Care - Preventive Attendace registers {% endblock %}
 
 {% load crispy_forms_tags %}
 
@@ -16,7 +17,7 @@
 </ol>
 <!-- end breadcrumb -->
 <!-- begin page-header -->
-<h1 class="page-header"><i class="fa fa-child"></i> SINOVUYO Attendance Register <small>Home</small></h1>
+<h1 class="page-header"><i class="fa fa-child"></i> {{ ebi_name }} - Attendance Register - <small>Home</small></h1>
 
 <!-- end page-header -->
 {% if messages %}
@@ -52,7 +53,7 @@
                     <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
                     <a href="#" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
                 </div>                      
-                <h4 class="panel-title">{{ ovc.first_name }} {{ ovc.surname }} | {{ ovc.sex_id }} | {{ ovc.age }}</h4>
+                <h4 class="panel-title">{{ ovc.first_name }} {{ ovc.surname }} | {{ ovc.sex_id|gen_value:vals }} | {{ ovc.age }}</h4>
             </div>
             <!-- start panel body -->
             <div class="panel-body">
@@ -63,20 +64,22 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th width="10%"></th>
+                            <th width="5%"></th>
                             <th width="25%">Session No.</th>
                             <th width="45%">Date Attended</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for sess in sessions %}
                         <tr id="ar_{{ sess.id }}">
                             <td>
-                                <input type="checkbox" class="check_session" name="session_id" value="{{ sess.id }}" />
-                                <input name="session_id_check" value="SESSION{{ sess.id }}" type ="hidden">
+                                <input type="checkbox" class="check_session" name="session_id" value="{{ sess.id }}" {% if sess.event_date %} checked {% endif %} />
+                                <input name="session_id_check" value="SESS{{ sess.id }}" type ="hidden">
+                                <input name="event_id_sess{{ sess.id }}" value="{{ sess.event_id }}" type ="hidden">
                             </td>
-                            <td>S {{ sess.id }}</td>
-                            <td><input class="form-control date_field" type="text" name="date_attended"></td>
+                            <td align="left">SESS{{ sess.id }}</td>
+                            <td><input class="form-control date_field" type="text" name="date_attended_SESS{{ sess.id }}" value="{{ sess.event_date }}"></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -86,9 +89,10 @@
                     <table class="table">
                     <thead>
                         <tr>
-                            <th width="10%"></th>
+                            <th width="5%"></th>
                             <th width="25%">Make Up.</th>
                             <th width="45%">Date Attended</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -96,10 +100,11 @@
                         <tr id="mk_{{ sess.id }}">
                             <td>
                                 <input type="checkbox" class="check_make_up" name="make_up_id" value="{{ sess.id }}" />
-                                <input name="make_up_id_check" value="MAKE_UP{{ sess.id }}" type ="hidden">
+                                <input name="make_up_id_check" value="MKPS{{ sess.id }}" type ="hidden">
+                                <input name="event_id_mkps{{ sess.id }}" value="{{ sess.event_id }}" type ="hidden">
                             </td>
-                            <td>S {{ sess.id }}</td>
-                            <td><input class="form-control date_field" type="text" name="date_attended"></td>
+                            <td align="left">MKPS{{ sess.id }}</td>
+                            <td><input class="form-control date_field" type="text" name="date_attended_MKPS{{ sess.id }}" value="{{ sess.event_date }}"></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -127,6 +132,8 @@
                 </div>
                 </form>
             </div>
+            <a href="{% url 'view_pfs' id=creg.person_id %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: March 2023</div>
             <!-- end panel body -->
         </div>
         <!-- end panel -->  

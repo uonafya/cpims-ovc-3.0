@@ -144,7 +144,7 @@ order by dcount desc
 QUERIES['2D'] = '''
 select count(distinct(cpims_ovc_id)) as dcount,
 gender as sex_id, schoollevel as school_level
-from vw_cpims_dash_caseload where exit_status='ACTIVE' {cbos} {areas}
+from vw_cpims_dash_caseload {ocbos} {oareas}
 group by gender, schoollevel
 '''
 
@@ -159,7 +159,7 @@ when ovchivstatus='HIV Test Not Required' THEN 'HIV Test not Required'
 when ovchivstatus='HIV Referred For Testing' THEN 'HIV Status Unknown'
 when ovchivstatus='HEI NOT KNOWN' THEN 'HEI Not Known'
 ELSE 'Not Known' END AS hivstat
-from vw_cpims_dash_caseload where exit_status='ACTIVE' {cbos} {areas}
+from vw_cpims_dash_caseload {ocbos} {oareas}
 group by gender, ovchivstatus order by dcount DESC
 '''
 
@@ -207,57 +207,52 @@ order by dcount desc
 
 QUERIES['2I'] = '''
 select count(distinct(cpims_ovc_id)) as dcount, eligibility, 'SMAL' as sex_id
-from vw_cpims_dash_caseload where exit_status='ACTIVE' {cbos} {areas}
+from vw_cpims_dash_caseload {ocbos} {oareas}
 group by eligibility
 order by dcount desc
 '''
 
 QUERIES['2J'] = '''
 select count(distinct(cpims_ovc_id)) as dcount, agency, 'SMAL' as sex_id
-from vw_cpims_dash_caseload where exit_status='ACTIVE' {cbos} {areas}
+from vw_cpims_dash_caseload {ocbos} {oareas}
 group by agency
 '''
 
 QUERIES['2K'] = '''
 select count(distinct(cpims_ovc_id)) as dcount,
-'SMAL' as sex_id, schoollevel from vw_cpims_dash_caseload where
-exit_status='ACTIVE' AND schoollevel <> 'Not in School' {cbos} {areas}
+'SMAL' as sex_id, schoollevel from
+vw_cpims_dash_caseload where schoollevel <> 'Not in School' {cbos} {areas}
 group by schoollevel
 '''
 
 QUERIES['2L'] = '''
 select count(distinct(cpims_ovc_id)) as dcount, agency, schoollevel
-from vw_cpims_dash_caseload where exit_status='ACTIVE' AND
-schoollevel <> 'Not in School' {cbos} {areas}
+from vw_cpims_dash_caseload where schoollevel <> 'Not in School' {cbos} {areas}
 group by schoollevel, agency
 '''
 
 QUERIES['2M'] = '''
 select count(distinct(cpims_ovc_id)) as dcount, gender as sex_id from
-vw_cpims_dash_caseload where exit_status='ACTIVE' and
-schoollevel <> 'Not in School' {cbos} {areas}
+vw_cpims_dash_caseload where schoollevel <> 'Not in School' {cbos} {areas}
 group by gender
 '''
 
 QUERIES['2N'] = '''
 select count(distinct(cpims_ovc_id)) as dcount, gender as sex_id, schoollevel
-from vw_cpims_dash_caseload where exit_status='ACTIVE' AND
-schoollevel <> 'Not in School' {cbos} {areas}
+from vw_cpims_dash_caseload where schoollevel <> 'Not in School' {cbos} {areas}
 group by gender, schoollevel
 '''
 
 QUERIES['2P'] = '''
 select count(distinct(cpims_ovc_id)) as dcount, schoollevel, mechanism, agency
-from vw_cpims_dash_caseload where exit_status='ACTIVE' AND
-schoollevel <> 'Not in School' {cbos}
+from vw_cpims_dash_caseload where schoollevel <> 'Not in School' {cbos}
 group by schoollevel, mechanism, agency
 order by agency, mechanism
 '''
 
 QUERIES['2Q'] = '''
 select count(distinct(cpims_ovc_id)) as dcount, agerange, gender as sex_id
-from vw_cpims_dash_caseload where exit_status='ACTIVE' AND
-schoollevel='Not in School' {cbos} {areas}
+from vw_cpims_dash_caseload where schoollevel='Not in School' {cbos} {areas}
 group by agerange, gender
 '''
 
@@ -265,7 +260,7 @@ QUERIES['2R'] = '''
 select count(distinct(cpims_ovc_id)) as dcount, agerange,
 CASE schoollevel WHEN 'Not in School' THEN 'a.Not in School'
 ELSE schoollevel END AS schoollevel
-from vw_cpims_dash_caseload where exit_status='ACTIVE' {cbos} {areas}
+from vw_cpims_dash_caseload {ocbos} {oareas}
 group by agerange, schoollevel
 order by agerange desc, schoollevel asc
 '''
@@ -325,7 +320,7 @@ from vw_cpims_dash_graduated {ocbos} group by mechanism, agency
 UNION ALL
 '''
 
-QUERIES['3B-0'] = '''
+QUERIES['3B'] = '''
 select sum(count) as dcount, 'OVC_SERV' AS mechanism,
 'OVC_SERV_FY' AS agency FROM (
 select sum(served) as count, mechanism, agency
@@ -335,8 +330,8 @@ select sum(graduated) as count, mechanism, agency
 from vw_cpims_dash_graduated {ocbos} group by mechanism, agency
 ) srv
 UNION ALL
-select sum(count) as dcount, 'OVC_SERV 18-20' AS mechanism,
-'OVC < 18 & OVC 18-20' AS agency FROM (
+select sum(count) as dcount, 'OVC_SERV - >18' AS mechanism,
+'OVC_SERV - >18 & <18' AS agency FROM (
 select count(distinct(person_id)) as count
 from vw_Active_Beneficiary_APR22 where agerange = 'f.[18-20yrs]' {cbos}
 UNION
@@ -345,7 +340,7 @@ from vw_cpims_dash_graduated where agerange = 'f.[18-20yrs]' {cbos}
 ) srv
 UNION ALL
 select sum(count) as dcount, 'OVC_SERV - <18' AS mechanism,
-'OVC < 18 & OVC 18-20' AS agency FROM (
+'OVC_SERV - >18 & <18' AS agency FROM (
 select count(distinct(person_id)) as count
 from vw_Active_Beneficiary_APR22 where agerange <> 'f.[18-20yrs]' {cbos}
 UNION
@@ -364,46 +359,6 @@ group by ovchivstatus
 UNION ALL
 select count(distinct(person_id)) as dcount,
 artstatus as mechanism, 'ART Status' as agency
-from vw_cpims_dash_hivstat where hivinfo ='KNOWN HIV Info'
-and ovchivstatus='POSITIVE' {cbos} group by artstatus
-'''
-
-QUERIES['3B'] = '''
-select sum(count) as dcount, 'OVC_SERV' AS mechanism,
-'OVC_SERV_FY' AS agency FROM (
-select count(distinct(person_id)) as count, mechanism, agency
-from vw_Active_Beneficiary_APR22 {ocbos}
-group by mechanism, agency
-UNION
-select count(distinct(person_id)) as count, mechanism, agency
-from vw_cpims_dash_graduated {ocbos} group by mechanism, agency
-) srv
-UNION ALL
-select sum(count) as dcount, 'OVC_SERV 18-20' AS mechanism,
-'OVC < 18 & OVC 18-20' AS agency FROM (
-select count(distinct(person_id)) as count
-from vw_Active_Beneficiary_APR22 where agerange = 'f.[18-20yrs]' {cbos}
-UNION
-select count(distinct(person_id)) as count
-from vw_cpims_dash_graduated where agerange = 'f.[18-20yrs]' {cbos}
-) srv
-UNION ALL
-select sum(count) as dcount, 'OVC_SERV < 18' AS mechanism,
-'OVC < 18 & OVC 18-20' AS agency FROM (
-select count(distinct(person_id)) as count
-from vw_Active_Beneficiary_APR22 where agerange <> 'f.[18-20yrs]' {cbos}
-UNION
-select count(distinct(person_id)) as count
-from vw_cpims_dash_graduated where agerange <> 'f.[18-20yrs]' {cbos}
-) srv
-UNION ALL
-select count(distinct(person_id)) as dcount, ovchivstatus as mechanism,
-'HIV Status' as agency
-from vw_cpims_dash_hivstat where hivinfo ='KNOWN HIV Info' {cbos}
-group by ovchivstatus
-UNION ALL
-select count(distinct(person_id)) as dcount, artstatus as mechanism,
-'ART Status' as agency
 from vw_cpims_dash_hivstat where hivinfo ='KNOWN HIV Info'
 and ovchivstatus='POSITIVE' {cbos} group by artstatus
 '''
@@ -441,15 +396,16 @@ group by ovchivstatus
 '''
 
 QUERIES['3D'] = '''
-
 select sum(x.cnt) as dcount, 'SMAL' as sex_id,
 'OVC_SERV' as hivstat from
 (
-select count(distinct(person_id)) as cnt
-from vw_Active_Beneficiary_APR22 where agerange <> 'f.[18-20yrs]' {cbos}
-UNION
-select count(distinct(person_id)) as cnt
-from vw_cpims_dash_graduated where agerange <> 'f.[18-20yrs]' {cbos}
+Select count(distinct(cpims_ovc_id)) as cnt
+from vw_cpims_active_beneficiary
+WHERE age < 18 {cbos}
+UNION ALL
+Select count(distinct(cpims_ovc_id)) as cnt
+from vw_cpims_benchmark_achieved_v1 where age < 18 AND (current_date - date_of_event) <= 400
+AND cpara_score = 17 {cbos}
 ) x
 UNION
 Select count(distinct(cpims_ovc_id)) AS dcount,
@@ -464,15 +420,15 @@ ELSE 'Others' END AS hivstat
 from vw_cpims_registration where age < 18 AND cpims_ovc_id in
 (select distinct(x.cpims_ovc_id) from
 (
-select distinct(person_id) as cpims_ovc_id
-from vw_Active_Beneficiary_APR22 where agerange <> 'f.[18-20yrs]' {cbos}
-UNION
-select distinct(person_id) as cpims_ovc_id
-from vw_cpims_dash_graduated where agerange <> 'f.[18-20yrs]' {cbos}
+Select distinct(cpims_ovc_id)
+from vw_cpims_active_beneficiary {ocbos}
+UNION ALL
+Select distinct(cpims_ovc_id)
+from vw_cpims_benchmark_achieved_v1 where (current_date - date_of_event) <= 400
+AND cpara_score = 17 {cbos}
 ) x)
 and exit_status='ACTIVE'
 group by ovchivstatus
-
 '''
 
 QUERIES['3E'] = '''
@@ -498,16 +454,16 @@ UNION
 Select count(distinct(cpims_ovc_id)) AS dcount,
 'SMAL' as sex_id, 'Suppressed' as hivstat
 from vw_cpims_dash_viral_load WHERE
-(viral_load < 1000 or viral_load is null) AND vl_period_validity='Valid'  {cbos}
+(viral_load < 1000 or viral_load is null) {cbos}
 UNION
 Select count(distinct(cpims_ovc_id)) AS dcount,
 'SMAL' as sex_id, 'Not Suppressed' as hivstat
-from vw_cpims_dash_viral_load WHERE viral_load > 999 AND vl_period_validity='Valid'  {cbos}
+from vw_cpims_dash_viral_load WHERE viral_load > 999 {cbos}
 ) x
 order by dcount desc
 '''
 
-QUERIES['3F-0'] = '''
+QUERIES['3F'] = '''
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 'Male' as sex_id, 'Known HIV Status' as hivstat
 from vw_cpims_registration where exit_status='ACTIVE' {cbos}
@@ -551,62 +507,16 @@ where current_date - vl.most_current_vl_date <= 400
 and v.viral_load < 1001 {vcbos}
 '''
 
-QUERIES['3F'] = '''
-SELECT count(distinct(cpims_ovc_id)) as dcount,
-'Male' as sex_id, 'Known HIV Status' as hivstat
-from vw_cpims_registration_fy22 where exit_status='ACTIVE' {cbos}
-UNION
-Select count(distinct(cpims_ovc_id)) AS dcount,
-'Male' as sex_id, 'On ART' as hivstat
-from vw_cpims_registration_fy22 where exit_status='ACTIVE'
-and ovchivstatus='POSITIVE'  {cbos}
-UNION
-Select count(distinct(v.cpims_ovc_id)) AS dcount,
-'Male' as sex_id, 'Suppression' as hivstat
-from vw_cpims_dash_viral_load v
-WHERE v.vl_period_validity='Valid' AND
-(viral_load < 1000 or viral_load is null) {vcbos}
-UNION
-Select count(distinct(cpims_ovc_id)) AS dcount,
-'Female' as sex_id, 'Known HIV Status' as hivstat
-from vw_cpims_registration_fy22 where exit_status='ACTIVE'
-and (ovchivstatus='POSITIVE' or ovchivstatus='NEGATIVE'
-or ovchivstatus='NOT KNOWN' or ovchivstatus='HIV Test Not Required'
-or ovchivstatus='HIV Referred For Testing') {cbos}
-UNION
-Select count(distinct(cpims_ovc_id)) as dcount,
-'Female' as sex_id, 'On ART' as hivstat
-from vw_cpims_registration_fy22 where exit_status='ACTIVE'
-and ovchivstatus='POSITIVE' AND artstatus='ART' {cbos}
-UNION
-Select count(distinct(v.cpims_ovc_id)) AS dcount,
-'Female' as sex_id, 'Suppression' as hivstat
-from vw_cpims_dash_viral_load v
-WHERE v.vl_period_validity='Valid' AND
-(viral_load < 1000 or viral_load is null) {vcbos}
-'''
-
 QUERIES['3G'] = '''
 Select count(distinct(cpims_ovc_id)) as dcount, gender as sex_id, agerange
-from vw_cpims_viral_load where exit_status='ACTIVE' AND
-(current_date - date_of_event) < 401
+from vw_cpims_viral_load where (current_date - date_of_event) < 401
 and viral_load > 1000 {cbos} group by gender, agerange
 '''
 
 QUERIES['3H'] = '''
 select count(distinct(cpims_ovc_id)) as dcount,
 gender as sex_id, agerange
-from vw_cpims_dash_caseload where exit_status='ACTIVE' AND
-ovchivstatus='POSITIVE' {cbos}
-group by gender, agerange
-'''
-
-QUERIES['3I'] = '''
-select count(distinct(cpims_ovc_id)) as dcount,
-gender as sex_id, agerange
-from vw_cpims_dash_caseload
-where ovchivstatus='POSITIVE' AND exit_status='ACTIVE'
-AND (current_date - registration_date) < 366 {cbos}
+from vw_cpims_dash_caseload where ovchivstatus='POSITIVE' {cbos}
 group by gender, agerange
 '''
 
@@ -614,7 +524,7 @@ group by gender, agerange
 
 QUERIES['4A'] = '''
 select count(distinct(cpims_ovc_id)) as dcount,
-'SMAL' as sex_id, 'Eligible for reporting' as services
+'SMAL' as sex_id, 'Case Load' as services
 from vw_cpims_dash_caseload {ocbos}
 UNION
 SELECT count(distinct(cpims_ovc_id)) as dcount,
@@ -638,8 +548,6 @@ Select count(distinct(person_id)) as dcount,
 'SMAL' as sex_id, 'Active Beneficiary' as services
 from vw_active_beneficiary_apr22 {ocbos}
 UNION
-
-
 select sum(x.cnt) as dcount, 'SMAL' as sex_id,
 'OVC_SERV' as hivstat from
 (
@@ -647,12 +555,11 @@ Select count(distinct(person_id)) as cnt,
 'SMAL' as sex_id from vw_active_beneficiary_apr22 {ocbos}
 group by gender
 UNION ALL
-select count(distinct(person_id)) as cnt,  'SMAL' as sex_id
- from vw_cpims_dash_graduated {ocbos}
-
+Select count(distinct(cpims_ovc_id)), 'SMAL' as sex_id
+from vw_cpims_benchmark_achieved_v1 where
+('2022-09-30' - date_of_event) <= 400 AND date_of_event < '2022-09-30'
+AND cpara_score = 17 {cbos} group by gender
 ) x
-
-
 UNION
 Select count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, 'Exit without Graduation' as services
@@ -674,7 +581,7 @@ from vw_cpims_cpara_v1 where (current_date - date_of_event) <= 400 {cbos}
 UNION
 Select count(distinct(household)) as dcount,
 'CPARA' as services, 'SMAL' as sex_id
-from vw_cpims_cpara where (current_date - date_of_event) <= 457 {cbos}
+from vw_cpims_cpara where (current_date - date_of_event) <= 400 {cbos}
 )cp
 group by cp.services, cp.sex_id
 '''
@@ -687,17 +594,9 @@ order by dcount desc
 '''
 
 QUERIES['4D'] = '''
-select sum(x.cnt) as dcount, 'SMAL' as sex_id, 
-'OVC_SERV_Comprehensive' as services from
-(
-Select count(distinct(person_id)) as cnt,
-'SMAL' as sex_id from vw_active_beneficiary_apr22 {ocbos}
-group by gender
-UNION ALL
-select count(distinct(person_id)) as cnt,  'SMAL' as sex_id
- from vw_cpims_dash_graduated {ocbos}
-
-) x
+SELECT count(distinct(cpims_ovc_id)) as dcount,
+'SMAL' as sex_id, 'OVC Comprehensive' as services
+from vw_cpims_dash_caseload where exit_status='ACTIVE' {cbos}
 '''
 
 QUERIES['4E'] = '''
@@ -761,7 +660,7 @@ order by domain asc, dcount desc
 
 QUERIES['5A'] = '''
 SELECT count(distinct(cpims_ovc_id)) as dcount,
-'SMAL' as sex_id, 'Current Case load (ACTIVE)' as services
+'SMAL' as sex_id, 'Active' as services
 from vw_cpims_registration_fy22 where exit_status='ACTIVE' {cbos}
 UNION
 Select count(distinct(cpims_ovc_id)) as dcount,
@@ -773,15 +672,14 @@ QUERIES['5B'] = '''
 Select count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, graduationpath as services
 from vw_cpims_benchmark_achieved_v1
-where exit_status='ACTIVE' and (current_date - date_of_event) <= 400 {cbos}
+where (current_date - date_of_event) <= 400 {cbos}
 group by graduationpath
 '''
 
 QUERIES['5C'] = '''
-select count(distinct(cpims_ovc_id)) as dcount,
+select count(distinct(household_id)) as dcount,
 graduation_pathway, 'SMAL' as sex_id
-from vw_cpims_benchmark
-where exit_status='ACTIVE' AND date_of_event > '2022-03-31' {cbos}
+from vw_cpims_benchmark where date_of_event > '2022-03-31' {cbos}
 group by graduation_pathway
 '''
 
@@ -793,45 +691,36 @@ from vw_cpims_cpara_final where (current_date - date_of_event) <= 400 {cbos}
 
 QUERIES['5E'] = '''
 select count(distinct(household)) as dcount, agency, 'SMAL' as sex_id
-from vw_cpims_dash_caseload  where exit_status='ACTIVE' {cbos} group by agency
+from vw_cpims_dash_caseload {ocbos} group by agency
 '''
 
 QUERIES['5F'] = '''
 select * from (
 select count(distinct(household)) as dcount, agency,
 'HH without case plans' as services from vw_cpims_dash_caseload
-where exit_status='ACTIVE' AND agency is not null and not exists
+where agency is not null and not exists
 (select household_id from vw_cpims_dash_case_plan where
 vw_cpims_dash_caseload.household = vw_cpims_dash_case_plan.household_id) {cbos}
 group by agency
 UNION
 select count(distinct(household_id)) as dcount, agency,
 'HH with case plans' as services
-from vw_cpims_dash_case_plan
-where agency is not null {cbos} group by agency
+from vw_cpims_dash_case_plan where agency is not null {cbos} group by agency
 ) y order by dcount asc
 '''
 
 QUERIES['5G'] = '''
-select count(distinct(person_id)) as dcount, mechanism, agency
+select count(distinct(household_id)) as dcount, mechanism, agency
 from vw_cpims_dash_case_plan where agency is not null {cbos}
 group by mechanism, agency
 '''
 
-QUERIES['5H-0'] = '''
-Select count(distinct(cpims_ovc_id)) as dcount, 'SMAL' as sex_id,
-graduationpath as services
+QUERIES['5H'] = '''
+Select count(distinct(cpims_ovc_id)) as dcount,
+graduationpath as services, agency
 from vw_cpims_benchmark_achieved_v1
 where (current_date - date_of_event) <= 400 {cbos}
-group by graduationpath
-'''
-
-QUERIES['5H'] = '''
-select count(distinct(household_id)) as dcount,
-graduation_pathway, 'SMAL' as sex_id
-from vw_cpims_benchmark
-where exit_status='ACTIVE' AND date_of_event > '2022-03-31' {cbos}
-group by graduation_pathway
+group by agency, graduationpath
 '''
 
 QUERIES['5I'] = '''
@@ -973,7 +862,7 @@ group by benchmark_9
 '''
 
 QUERIES['5K'] = '''
-Select count(distinct(household_id)) as dcount,
+Select count(distinct(cpims_ovc_id)) as dcount,
  cpara_score as services, 'SMAL' as sex_id
 from vw_cpims_benchmark
 where (current_date - date_of_event) <= 400 {cbos}
@@ -981,7 +870,7 @@ group by cpara_score order by cpara_score asc
 '''
 
 QUERIES['5L'] = '''
-Select count(distinct(household)) as dcount,
+Select count(distinct(cpims_ovc_id)) as dcount,
  cpara_score as benchmark_total_scores, 'SMAL' as sex_id
 from vw_cpims_benchmark_achieved_v1
 where (current_date - date_of_event) <= 400 {cbos}
@@ -1011,7 +900,7 @@ WHERE (vw_cpims_dash_caseload.exit_reason <> 'Transferred to PEPFAR partner' AND
 OR vw_cpims_dash_caseload.exit_reason <> 'Transferred to Non-PEPFAR partner' AND exit_status='EXITED') {cbos}
 '''
 
-QUERIES['6B-0'] = '''
+QUERIES['6B'] = '''
 select sum(count) as dcount, 'OVC_SERV' AS mechanism,
 'OVC_SERV_FY' AS agency FROM (
 select sum(served) as count, mechanism, agency
@@ -1053,53 +942,13 @@ from vw_cpims_dash_hivstat where hivinfo ='KNOWN HIV Info'
 and ovchivstatus='POSITIVE' {cbos} group by artstatus
 '''
 
-QUERIES['6B'] = '''
-select sum(count) as dcount, 'OVC_SERV' AS mechanism,
-'OVC_SERV_FY' AS agency FROM (
-select count(distinct(person_id)) as count, mechanism, agency
-from vw_Active_Beneficiary_APR22 {ocbos}
-group by mechanism, agency
-UNION
-select count(distinct(person_id)) as count, mechanism, agency
-from vw_cpims_dash_graduated {ocbos} group by mechanism, agency
-) srv
-UNION ALL
-select sum(count) as dcount, 'OVC_SERV 18-20' AS mechanism,
-'OVC < 18 & OVC 18-20' AS agency FROM (
-select count(distinct(person_id)) as count
-from vw_Active_Beneficiary_APR22 where agerange = 'f.[18-20yrs]' {cbos}
-UNION
-select count(distinct(person_id)) as count
-from vw_cpims_dash_graduated where agerange = 'f.[18-20yrs]' {cbos}
-) srv
-UNION ALL
-select sum(count) as dcount, 'OVC_SERV < 18' AS mechanism,
-'OVC < 18 & OVC 18-20' AS agency FROM (
-select count(distinct(person_id)) as count
-from vw_Active_Beneficiary_APR22 where agerange <> 'f.[18-20yrs]' {cbos}
-UNION
-select count(distinct(person_id)) as count
-from vw_cpims_dash_graduated where agerange <> 'f.[18-20yrs]' {cbos}
-) srv
-UNION ALL
-select count(distinct(person_id)) as dcount, ovchivstatus as mechanism,
-'HIV Status' as agency
-from vw_cpims_dash_hivstat where hivinfo ='KNOWN HIV Info' {cbos}
-group by ovchivstatus
-UNION ALL
-select count(distinct(person_id)) as dcount, artstatus as mechanism,
-'ART Status' as agency
-from vw_cpims_dash_hivstat where hivinfo ='KNOWN HIV Info'
-and ovchivstatus='POSITIVE' {cbos} group by artstatus
-'''
-
 QUERIES['6C'] = '''
 select sum(count) as dcount, gender as sex_id, agerange FROM (
-select count(distinct(person_id)) as count, gender, agerange
+select sum(served) as count, gender, agerange
 from vw_Active_Beneficiary_APR22 where agerange <> 'f.[18-20yrs]' {cbos}
 group by gender, agerange
 UNION
-select count(distinct(person_id)) as count, gender, agerange
+select sum(graduated) as count, gender, agerange
 from vw_cpims_dash_graduated where agerange <> 'f.[18-20yrs]' {cbos}
 group by gender, agerange
 ) srv
@@ -1107,17 +956,17 @@ group by gender, agerange
 '''
 
 QUERIES['6D'] = '''
-select count(distinct(cpims_ovc_id)) as dcount, agency, 'SMAL' as sex_id
+select sum(not_served) as dcount, agency, 'SMAL' as sex_id
 from vw_cpims_dash_not_served {ocbos} group by agency
 order by dcount desc
 '''
 
 QUERIES['6E'] = '''
 select sum(dcount) as dcount, agency, 'SMAL' as sex_id from (
-select count(distinct(cpims_ovc_id)) as dcount, agency
+select sum(not_served) as dcount, agency
 from vw_cpims_dash_not_served {ocbos} group by agency
 UNION ALL
-select count(distinct(cpims_ovc_id)) as dcount, agency
+select sum(attrition) as dcount, agency
 from vw_cpims_dash_attrition {ocbos} group by agency
 ) x
 group by agency
@@ -1125,8 +974,9 @@ order by dcount desc
 '''
 
 QUERIES['6F'] = '''
-select count(distinct(cpims_ovc_id)) as dcount, mechanism, agency
-from vw_cpims_dash_not_served {ocbos} group by mechanism, agency
+select sum(attrition) as dcount, exit_reason, agency, 'SMAL' as sex_id
+from vw_cpims_dash_attrition {ocbos} group by exit_reason, agency
+order by dcount desc
 '''
 
 QUERIES['6G'] = '''
@@ -1241,41 +1091,51 @@ OR vw_cpims_dash_caseload.exit_reason <> 'Transferred to Non-PEPFAR partner'  AN
 '''
 
 QUERIES['7D'] = '''
-
 Select count(distinct(cpims_ovc_id)) AS dcount,
 'SMAL' as sex_id, 'Positive' as hivstat
-from vw_cpims_registration_fy22 where exit_status='ACTIVE'
+from vw_cpims_registration where exit_status='ACTIVE'
 and ovchivstatus='POSITIVE' {cbos}
 UNION
 Select count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, 'On ART' as hivstat
-from vw_cpims_registration_fy22 where exit_status='ACTIVE'
+from vw_cpims_registration where exit_status='ACTIVE'
 and ovchivstatus='POSITIVE' AND artstatus='ART' {cbos}
 UNION
 Select count(distinct(cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, 'VL Accessed' as hivstat
-from vw_cpims_dash_viral_load 
-WHERE exit_status='ACTIVE'
-and ovchivstatus='POSITIVE' AND artstatus='ART' {ocbos}
+from vw_cpims_viral_load {ocbos}
 UNION
-
 Select count(distinct(v.cpims_ovc_id)) as dcount,
 'SMAL' as sex_id, 'Valid VL' as hivstat
-from vw_cpims_dash_viral_load v
-where  v.vl_period_validity='Valid' {vcbos}
+from vw_cpims_viral_load v
+inner join (
+select cpims_ovc_id, max(date_of_event) as most_current_vl_date
+from vw_cpims_viral_load
+group by cpims_ovc_id ) vl on v.cpims_ovc_id = vl.cpims_ovc_id
+and v.date_of_event=vl.most_current_vl_date
+where current_date - vl.most_current_vl_date <= 400 {vcbos}
 UNION
-
 Select count(distinct(v.cpims_ovc_id)) AS dcount,
 'SMAL' as sex_id, 'Suppressed' as hivstat
-from vw_cpims_dash_viral_load v
-WHERE v.vl_period_validity='Valid' AND (viral_load < 1000 or viral_load is null) {vcbos}
+from vw_cpims_viral_load v
+inner join (
+select cpims_ovc_id, max(date_of_event) as most_current_vl_date
+from vw_cpims_viral_load
+group by cpims_ovc_id ) vl on v.cpims_ovc_id = vl.cpims_ovc_id
+and v.date_of_event=vl.most_current_vl_date
+where current_date - vl.most_current_vl_date <= 400
+and v.viral_load < 1001 {vcbos}
 UNION
-
 Select count(distinct(v.cpims_ovc_id)) AS dcount,
 'SMAL' as sex_id, 'Not Suppressed' as hivstat
-from vw_cpims_dash_viral_load v
-WHERE v.vl_period_validity='Valid' AND viral_load >999 {vcbos}
-
+from vw_cpims_viral_load v
+inner join (
+select cpims_ovc_id, max(date_of_event) as most_current_vl_date
+from vw_cpims_viral_load
+group by cpims_ovc_id ) vl on v.cpims_ovc_id=vl.cpims_ovc_id
+and v.date_of_event=vl.most_current_vl_date
+where current_date - vl.most_current_vl_date <=400
+and v.viral_load > 1000 {vcbos}
 '''
 
 QUERIES['7C'] = '''
@@ -1313,7 +1173,7 @@ and exit_status='ACTIVE' {cbos}
 group by ovchivstatus
 '''
 
-QUERIES['7B_0'] = '''
+QUERIES['7B'] = '''
 select sum(count) as dcount, 'OVC_SERV' AS mechanism,
 'OVC_SERV_FY' AS agency FROM (
 select sum(served) as count, mechanism, agency
@@ -1356,143 +1216,48 @@ from vw_cpims_dash_hivstat where hivinfo ='KNOWN HIV Info'
 and ovchivstatus='POSITIVE' {cbos} group by artstatus
 '''
 
-
-
-QUERIES['7B_1'] = '''
-select sum(count) as dcount, 'OVC_SERV' AS mechanism,
-'OVC_SERV_FY' AS agency FROM (
-select count(distinct(person_id)) as count, mechanism, agency
-from vw_Active_Beneficiary_APR22 {ocbos}
-group by mechanism, agency
-UNION
-select count(distinct(person_id)) as count, mechanism, agency
-from vw_cpims_dash_graduated {ocbos} group by mechanism, agency
-) srv
-
-UNION ALL
-select sum(count) as dcount, 'OVC_SERV - >18' AS mechanism,
-'OVC_SERV - >18 & <18' AS agency FROM (
-select count(distinct(person_id)) as count
-from vw_Active_Beneficiary_APR22 where agerange = 'f.[18-20yrs]' {cbos}
-UNION
-select count(distinct(person_id)) as count
-from vw_cpims_dash_graduated where agerange = 'f.[18-20yrs]' {cbos}
-) srv
-
-UNION ALL
-select sum(count) as dcount, 'OVC_SERV - <18' AS mechanism,
-'OVC_SERV - >18 & <18' AS agency FROM (
-select count(distinct(person_id)) as count
-from vw_Active_Beneficiary_APR22 where agerange <> 'f.[18-20yrs]' {cbos}
-UNION
-select count(distinct(person_id)) as count
-from vw_cpims_dash_graduated where agerange <> 'f.[18-20yrs]' {cbos}
-) srv
-UNION ALL
-select count(distinct(person_id)) as dcount, hivinfo AS mechanism, 'HIV Info' as agency
-from vw_cpims_dash_hivstat {ocbos} group by hivinfo
-UNION ALL
-
-select sum(dcount) as dcount, mechanism, agency FROM (
-select count(distinct(person_id)) as dcount, 
-CASE
-WHEN vw_cpims_dash_hivstat.ovchivstatus='HEI NOT KNOWN' THEN 'NOT KNOWN'
-WHEN vw_cpims_dash_hivstat.ovchivstatus='NOT KNOWN' THEN 'NOT KNOWN'
-WHEN vw_cpims_dash_hivstat.ovchivstatus='NULL' THEN 'NOT KNOWN'
-WHEN vw_cpims_dash_hivstat.ovchivstatus='HIV Test Not Required' THEN 'HIV Test Not Required'
-WHEN vw_cpims_dash_hivstat.ovchivstatus='NEGATIVE' THEN 'NEGATIVE'
-WHEN vw_cpims_dash_hivstat.ovchivstatus='POSITIVE' THEN 'POSITIVE'
-END AS mechanism,
-'HIV Status' as agency
-from vw_cpims_dash_hivstat where hivinfo ='KNOWN HIV Info' AND agerange <> 'f.[18-20yrs]' OR agerange <> 'g.[21+yrs]' {cbos}
-group by ovchivstatus
-)srv group by  mechanism, agency
-
-UNION ALL
-select count(distinct(person_id)) as dcount, artstatus as mechanism, 'ART Status' as agency
-from vw_cpims_dash_hivstat where hivinfo ='KNOWN HIV Info'
-and ovchivstatus='POSITIVE' {cbos} group by artstatus
-'''
-
-'''
-UNION ALL
-select count(distinct(person_id)) as dcount, hivinfo AS mechanism, 'HIV Info' as agency
-from vw_cpims_dash_hivstat where  agerange = 'a.[<1yrs]' OR agerange = 'b.[1-4yrs]' OR agerange='c.[5-9yrs]' 
-OR agerange='d.[10-14yrs]' OR agerange= 'e.[15-17yrs]' group by hivinfo
-'''
-
-
-QUERIES['7B'] = '''
-select sum(count) as dcount, 'OVC_SERV < 18' AS mechanism,
-'OVC < 18 & OVC 18-20' AS agency FROM (
-select count(distinct(person_id)) as count
-from vw_Active_Beneficiary_APR22 where agerange <> 'f.[18-20yrs]' {cbos}
-UNION
-select count(distinct(person_id)) as count
-from vw_cpims_dash_graduated where agerange <> 'f.[18-20yrs]' {cbos}
-) srv
-
-UNION ALL
-select sum(dcount) as dcount, mechanism, agency FROM (
-select count(distinct(person_id)) as dcount, 
-CASE
-WHEN vw_cpims_dash_hivstat.ovchivstatus='HEI NOT KNOWN' THEN 'NOT KNOWN'
-WHEN vw_cpims_dash_hivstat.ovchivstatus='NOT KNOWN' THEN 'NOT KNOWN'
-WHEN vw_cpims_dash_hivstat.ovchivstatus='NULL' THEN 'NOT KNOWN'
-WHEN vw_cpims_dash_hivstat.ovchivstatus='HIV Test Not Required' THEN 'HIV Test Not Required'
-WHEN vw_cpims_dash_hivstat.ovchivstatus='NEGATIVE' THEN 'NEGATIVE'
-WHEN vw_cpims_dash_hivstat.ovchivstatus='POSITIVE' THEN 'POSITIVE'
-END AS mechanism,
-'HIV Status' as agency
-from vw_cpims_dash_hivstat where hivinfo ='KNOWN HIV Info' 
-AND agerange = 'a.[<1yrs]' OR agerange = 'b.[1-4yrs]' OR agerange='c.[5-9yrs]' 
-OR agerange='d.[10-14yrs]' OR agerange= 'e.[15-17yrs]' {cbos}
-group by ovchivstatus
-)srv group by  mechanism, agency
-
-UNION ALL
-select count(distinct(person_id)) as dcount, artstatus as mechanism, 'ART Status' as agency
-from vw_cpims_dash_hivstat where hivinfo ='KNOWN HIV Info'
-and ovchivstatus='POSITIVE' 
-AND (agerange = 'a.[<1yrs]' OR agerange = 'b.[1-4yrs]' OR agerange='c.[5-9yrs]'
-OR agerange='d.[10-14yrs]' OR agerange= 'e.[15-17yrs]') {cbos}
-group by artstatus
-'''
-
-
 QUERIES['7E'] = '''
 SELECT count(distinct(cpims_ovc_id)) as dcount,
 'Male' as sex_id, 'Known HIV Status' as hivstat
-from vw_cpims_registration_fy22 where exit_status='ACTIVE' {cbos}
+from vw_cpims_registration where exit_status='ACTIVE' {cbos}
 UNION
 Select count(distinct(cpims_ovc_id)) AS dcount,
 'Male' as sex_id, 'On ART' as hivstat
-from vw_cpims_registration_fy22 where exit_status='ACTIVE'
-and ovchivstatus='POSITIVE'  {cbos}
+from vw_cpims_registration where exit_status='ACTIVE'
+and ovchivstatus='POSITIVE' {cbos}
 UNION
-Select count(distinct(v.cpims_ovc_id)) AS dcount,
+Select count(distinct(v.cpims_ovc_id)) as dcount,
 'Male' as sex_id, 'Suppression' as hivstat
-from vw_cpims_dash_viral_load v
-WHERE v.vl_period_validity='Valid' AND
-(viral_load < 1000 or viral_load is null) {vcbos}
+from vw_cpims_viral_load v
+inner join (
+select cpims_ovc_id, max(date_of_event) as most_current_vl_date
+from vw_cpims_viral_load
+group by cpims_ovc_id ) vl on v.cpims_ovc_id = vl.cpims_ovc_id
+and v.date_of_event=vl.most_current_vl_date
+where current_date - vl.most_current_vl_date <= 400 {vcbos}
 UNION
 Select count(distinct(cpims_ovc_id)) AS dcount,
 'Female' as sex_id, 'Known HIV Status' as hivstat
-from vw_cpims_registration_fy22 where exit_status='ACTIVE'
+from vw_cpims_registration where exit_status='ACTIVE'
 and (ovchivstatus='POSITIVE' or ovchivstatus='NEGATIVE'
 or ovchivstatus='NOT KNOWN' or ovchivstatus='HIV Test Not Required'
 or ovchivstatus='HIV Referred For Testing') {cbos}
 UNION
 Select count(distinct(cpims_ovc_id)) as dcount,
 'Female' as sex_id, 'On ART' as hivstat
-from vw_cpims_registration_fy22 where exit_status='ACTIVE'
+from vw_cpims_registration where exit_status='ACTIVE'
 and ovchivstatus='POSITIVE' AND artstatus='ART' {cbos}
 UNION
 Select count(distinct(v.cpims_ovc_id)) AS dcount,
 'Female' as sex_id, 'Suppression' as hivstat
-from vw_cpims_dash_viral_load v
-WHERE v.vl_period_validity='Valid' AND
-(viral_load < 1000 or viral_load is null) {vcbos}
+from vw_cpims_viral_load v
+inner join (
+select cpims_ovc_id, max(date_of_event) as most_current_vl_date
+from vw_cpims_viral_load
+group by cpims_ovc_id ) vl on v.cpims_ovc_id = vl.cpims_ovc_id
+and v.date_of_event=vl.most_current_vl_date
+where current_date - vl.most_current_vl_date <= 400
+and v.viral_load < 1001 {vcbos}
 '''
 
 

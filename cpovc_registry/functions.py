@@ -2259,8 +2259,7 @@ def save_person_extids(identifier_types, person_id):
             location, created = RegPersonsExternalIds.objects.update_or_create(
                 person_id=person_id, identifier_type_id=identifier_type,
                 is_void=False,
-                defaults={'person_id': person_id, 'identifier': identifier,
-                          'identifier_type_id': identifier_type,
+                defaults={'identifier': identifier,
                           'is_void': False}, )
     except Exception as e:
         raise e

@@ -15,8 +15,6 @@ from cpovc_access.views import open_terms
 from cpovc_reports.queries import QUERIES
 from cpovc_reports.functions import run_sql_data, get_variables
 
-from cpovc_main.functions import get_dict
-
 MEDIA_ROOT = settings.MEDIA_ROOT
 
 
@@ -127,16 +125,13 @@ def settings_schools(request):
     """Method to do pivot reports."""
     # mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime
     try:
-        vals = get_dict(field_name=['school_level_id'])
         if request.method == 'POST':
             search_param = str(request.POST.get('school'))
             schools = OVCSchool.objects.filter(
                 school_name__icontains=search_param)
         else:
             schools = OVCSchool.objects.all().order_by('-id')[:1000]
-        return render(
-            request, 'settings/schools.html',
-            {'schools': schools, 'vals': vals})
+        return render(request, 'settings/schools.html', {'schools': schools})
     except Exception as e:
         raise e
     else:

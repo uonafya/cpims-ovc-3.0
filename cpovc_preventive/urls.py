@@ -24,10 +24,19 @@ urlpatterns = [
         'register/edit/(?P<id>\d+)/(?P<btn_event_type>\w+)/(?P<btn_event_pk>.+)/',
         views.edit_preventive_event_entry,
         name='edit_preventive_event_entry'),
-    # Version 2 Thinking
+    # Version 2
     path(
         'register/v2/new/<int:id>/',
         views.new_register_v2, name='new_register'),
+    path(
+        'service-teen/v2/new/<int:id>/',
+        views.new_service_v2, name='new_service'),
+    path(
+        'service-caregiver/v2/new/<int:id>/',
+        views.new_service_caregiver_v2, name='new_service_caregiver'),
+    # Common delete for all events
+    path('delete/',
+         views.delete_evaluation, name='delete_evaluation'),
 
     # SINOVUYO
     # Pre and Post evaluations - Caregiver
@@ -35,8 +44,7 @@ urlpatterns = [
          views.new_sinovuyo_evaluation, name='new_sinovuyo_evaluation'),
     path('sinovuyo-caregiver/edit/<uuid:event_id>/',
          views.edit_sinovuyo_evaluation, name='edit_sinovuyo_evaluation'),
-    path('sinovuyo-caregiver/delete/',
-         views.delete_sinovuyo_evaluation, name='delete_sinovuyo_evaluation'),
+
     # Pre and Post evaluations - Teen
     path('sinovuyo-teen/new/<int:id>/',
          views.new_sinovuyo_evaluation_teen,

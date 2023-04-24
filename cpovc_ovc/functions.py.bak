@@ -237,19 +237,14 @@ def search_master(request):
         return results
 
 
-def get_hh_members(ovc_id, hh_id=None):
+def get_hh_members(ovc_id):
     """Method to get child chv details."""
     try:
-        if hh_id:
-            ovc_detail = get_list_or_404(
-                OVCHHMembers, person_id=ovc_id,
-                house_hold_id=hh_id, is_void=False)
-        else:
-            ovc_detail = get_list_or_404(
-                OVCHHMembers, person_id=ovc_id, is_void=False)
+        ovc_detail = get_object_or_404(
+            OVCHHMembers, person_id=ovc_id, is_void=False)
     except Exception as e:
         print('error getting ovc hh members - %s' % (str(e)))
-        return []
+        return {}
     else:
         return ovc_detail
 
@@ -285,14 +280,11 @@ def ovc_registration(request, ovc_id, edit=0):
 
         bcert_no = request.POST.get('bcert_no')
         ncpwd_no = request.POST.get('ncpwd_no')
-        dreams_id = request.POST.get('dreams_id')
         ext_ids = {}
         if bcert_no:
             ext_ids['ISOV'] = bcert_no
         if ncpwd_no:
             ext_ids['IPWD'] = ncpwd_no
-        if dreams_id:
-            ext_ids['IDRM'] = dreams_id
         if ext_ids:
             save_person_extids(ext_ids, ovc_id)
 
@@ -407,13 +399,6 @@ def ovc_registration(request, ovc_id, edit=0):
                 hhealth.save(update_fields=["is_void"])
             except Exception:
                 print('No existing linkage details')
-            # Delete viral load - Feb 2023
-            try:
-                vls = get_object_or_404(OVCViralload, person_id=ovc_id)
-                vls.is_void = True
-                vls.save(update_fields=["is_void"])
-            except Exception:
-                print('No Viral load data available')
         # Update School details
         if school_level != 'SLNS':
             school_id = request.POST.get('school_id')
@@ -487,7 +472,7 @@ def ovc_registration(request, ovc_id, edit=0):
                 if oid == hh_m:
                     hh_hiv, hh_alive, hh_death = hiv_status, 'AYES', None
 
-                membership = get_hh_members(hh_m, hh_id)
+                membership = get_hh_members(hh_m)
                 print('membership', membership)
                 if not membership:
                     OVCHHMembers(
@@ -520,9 +505,9 @@ def ovc_registration(request, ovc_id, edit=0):
                 if oid == hh_m:
                     hh_hiv, hh_alive, hh_death = hiv_status, 'AYES', None
                 hhm, created = OVCHHMembers.objects.update_or_create(
-                    person_id=hh_m, house_hold_id=hhid, is_void=False,
+                    person_id=hh_m, house_hold_id=hhid,
                     defaults={'person_id': hh_m, 'hh_head': hh_head,
-                              'member_type': member_type,
+                              'member_type': member_type, 'is_void': False,
                               'death_cause': hh_death,
                               'member_alive': hh_alive,
                               'date_linked': todate, 'hiv_status': hh_hiv},)
@@ -682,23 +667,12 @@ def perform_exit(request):
         # Today's date
         days_diff = get_days_difference(exit_date)
         month_exit = exit_date.month
-        ovc_details = OVCRegistration.objects.get(person_id=ovcid)
-        db_exit_date = ovc_details.exit_date
-        ui_exit_date_str = str(exit_date.date())
-        db_exit_date_str = str(db_exit_date) if db_exit_date else ''
-        exit_check = True if ui_exit_date_str != db_exit_date_str else False
         print('Days diff, month', days_diff, month_exit)
-        allow_exit = True
-        if days_diff > 90:
-            allow_exit = False
-            msg = 'Exit not allowed after 90 days'
-        elif days_diff < 0:
-            allow_exit = False
-            msg = 'Exit not allowed in future dates'
-        elif exit_check and db_exit_date_str:
-            allow_exit = False
-            msg = 'Change of exit dates not allowed'
-        if allow_exit or request.user.is_superuser:
+        if days_diff > 28 or month_exit in [3, 4, 9, 10]:
+            msg = 'Exit not allowed after 28 days or '
+            msg += 'in Mar, Apr, Sept and Oct'
+        else:
+            ovc_details = OVCRegistration.objects.get(person_id=ovcid)
             ovc_details.exit_date = exit_date
             ovc_details.exit_reason = exit_reason
             if exit_org_name:
@@ -866,4 +840,3 @@ def dates_difference(event_date, from_date=None):
 
 class PersonObj(object):
     pass
-

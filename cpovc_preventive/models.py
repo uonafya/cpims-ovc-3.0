@@ -121,8 +121,9 @@ class OVCPreventiveService(models.Model):
     ebi_service_client = models.CharField(
         max_length=10, null=True)  # caregiver/OVC
     # service referred. Add ebi services to list general
-    ebi_service_reffered = models.CharField(max_length=4, null=True)
-    ebi_service_completed = models.CharField(max_length=4, null=True)
+    ebi_service_reffered = models.CharField(max_length=8, null=True)
+    ebi_service_completed = models.CharField(max_length=8, null=True)
+    ebi_service_other = models.CharField(max_length=50, null=True)
     place_of_ebi_service = models.ForeignKey(
         'cpovc_registry.RegPersonsGeo', on_delete=models.CASCADE,
         related_name='ebi_service_place', null=True)
