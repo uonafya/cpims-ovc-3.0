@@ -559,7 +559,7 @@ function deleteEvaluation(event_id) {
     var csrftoken = $.cookie('csrftoken');
     $.ajax({
         type: 'POST',
-        url: "{% url 'delete_sinovuyo_evaluation' %}",
+        url: "{% url 'delete_evaluation' %}",
         
         data: {'event_id': event_id, 'csrfmiddlewaretoken': csrftoken },
         dataType: 'json',

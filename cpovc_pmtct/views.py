@@ -78,7 +78,7 @@ def new_pmtct(request, id):
         sex = child.sex_id
         age = child.years
         fname = child.first_name
-        if sex == 'SMAL' or age < -5:
+        if age < 0:
             msg = "%s - Does not qualify to PMTCT-OVC Program" % (fname)
             messages.error(request, msg)
             url = reverse('pmtct_home')
@@ -317,6 +317,7 @@ def view_pmtct(request, id):
 
 
 def new_pregnantwomen(request, id):
+
     person = RegPerson.objects.get(pk=int(id))
     if request.method == 'POST':
         data = request.POST
@@ -449,7 +450,7 @@ def edit_pregnantwomen(request, id):
                     event=id
                 )
                 form = PREGNANT_WOMEN_ADOLESCENT()
-                return render(request, 'pmtct/edit_pregnantwomen.html',
+                return render(request, 'forms/edit_pregnantwomen.html',
                               {
                                   'form': form,
                                   # 'init_data': init_data,
@@ -545,11 +546,10 @@ def new_hei_tracker(request, id):
     except Exception as e:
         print('New HEI error', str(e))
         msg = 'Error getting household identifier: (%s)' % (str(e))
-        # messages.add_message(request, messages.ERROR, msg)
+        messages.add_message(request, messages.ERROR, msg)
         # return HttpResponseRedirect(reverse('forms_registry'))
 
         # get relations
-    person = RegPerson.objects.get(pk=int(id))
     guardians = RegPersonsGuardians.objects.select_related().filter(
         child_person=id, is_void=False, date_delinked=None)
     siblings = RegPersonsSiblings.objects.select_related().filter(
@@ -595,12 +595,12 @@ def new_hei_tracker(request, id):
 
     form = OVCHEITrackerForm(initial={'household_id': household_id})
     return render(request,
-                  'pmtct/new_hei_tracker.html',
+                  'forms/new_hei_tracker.html',
                   {
                       'form': form,
                       'init_data': init_data,
                       'vals': vals,
-                      'person': person,
+                      'person': id,
                       'guardians': guardians,
                       'siblings': siblings,
                       'osiblings': osiblings,
@@ -788,7 +788,7 @@ def edit_heitracker(request, id):
 
         form = OVCHEITrackerForm(data=hei)
         return render(
-            request, 'pmtct/edit_hei_tracker.html',
+            request, 'forms/edit_hei_tracker.html',
             {'form': form, 'status': 200})
 
     except Exception as e:

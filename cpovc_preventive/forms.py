@@ -64,6 +64,12 @@ class OVCPreventiveRegistrationForm(forms.Form):
             attrs={'class': 'form-control',
                    'id': 'cbo_id'}))
 
+    cbo = forms.ChoiceField(
+        choices=(),
+        widget=forms.Select(
+            attrs={'class': 'form-control',
+                   'id': 'cbo'}))
+
     intervention = forms.ChoiceField(
         choices=intervention_list,
         required=True,

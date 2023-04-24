@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block page_title %} OVC Care (Preventive) - View Child details {% endblock %}
-
 {% load app_filters %}
+{% block page_title %} OVC Care (Preventive) - View Child details {% endblock %}
 
 {% block style_code %}
 <link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
@@ -70,10 +69,11 @@
                 <td>
                     <a href="{% url 'preventiveattendanceregister' id=child.id %}">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">N</span>
+                    <span class="badge pull-right"> {% if summary.EBI > 0 %} {{ summary.EBI }} {% else %} N {% endif %}</span>
                     <div class="m-t-4">Attendance Register</div></a>
                 </td>
             </tr>
+            <!--
             <tr>
                 <td>
                     <a href="#">
@@ -82,14 +82,32 @@
                     <div class="m-t-4">Services and Referrals</div></a>
                 </td>
             </tr>
+            -->
             <tr>
                 <td>
-                    <a href="#">
+                    <a href="{% url 'new_register' id=child.id %}">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">N</span>
+                    <span class="badge pull-right"> {% if summary.EBI > 0 %} {{ summary.EBI }} {% else %} N {% endif %}</span>
                     <div class="m-t-4">Attendance Register (V2)</div></a>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <a href="{% url 'new_service' id=child.id %}">
+                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
+                    <span class="badge pull-right">{% if summary.CLOVC > 0 %} {{ summary.CLOVC }} {% else %} N {% endif %}</span>
+                    <div class="m-t-4">Services and Referrals - Teen (V2)</div></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{% url 'new_service_caregiver' id=child.id %}">
+                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
+                    <span class="badge pull-right">{% if summary.CLCGV > 0 %} {{ summary.CLCGV }} {% else %} N {% endif %}</span>
+                    <div class="m-t-4">Services and Referrals - Caregiver (V2)</div></a>
+                </td>
+            </tr>
+            {% if creg.intervention == 'PFSSIN' %}
             <tr>
                 <td><div class="m-b-10 m-t-10 text-inverse f-s-12"><b>SINOVUYO Forms</b></div></td>
             </tr>
@@ -97,7 +115,7 @@
                 <td>
                     <a href="{% url 'new_sinovuyo_evaluation' id=child.id %}">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">N</span>
+                    <span class="badge pull-right">{% if summary.SINO_CG > 0 %} {{ summary.SINO_CG }} {% else %} N {% endif %}</span>
                     <div class="m-t-4">Caregiver Pre/Post Assessment</div></a>
                 </td>
             </tr>
@@ -105,10 +123,11 @@
                 <td>
                     <a href="{% url 'new_sinovuyo_evaluation_teen' id=child.id %}">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">N</span>
+                    <span class="badge pull-right">{% if summary.SINO_TN > 0 %} {{ summary.SINO_TN }} {% else %} N {% endif %}</span>
                     <div class="m-t-4">Teen Pre/Post Assessment</div></a>
                 </td>
             </tr>
+            {% elif creg.intervention == 'PFSFMP' %}
             <tr>
                 <td><div class="m-b-10 m-t-10 text-inverse f-s-12"><b>FMP Forms</b></div></td>
             </tr>
@@ -116,10 +135,11 @@
                 <td>
                     <a href="{% url 'new_fmp_evaluation' id=child.id %}">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">N</span>
+                    <span class="badge pull-right">{% if summary.FMP_CG > 0 %} {{ summary.FMP_CG }} {% else %} N {% endif %}</span>
                     <div class="m-t-4">Caregiver Pre/Post Assessment</div></a>
                 </td>
             </tr>
+            {% elif creg.intervention == 'PFHCBF' %}
             <tr>
                 <td><div class="m-b-10 m-t-10 text-inverse f-s-12"><b>HCBF Forms</b></div></td>
             </tr>
@@ -127,10 +147,11 @@
                 <td>
                     <a href="{% url 'new_hcbf_evaluation' id=child.id %}">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">N</span>
+                    <span class="badge pull-right">{% if summary.HCBF_TN > 0 %} {{ summary.HCBF_TN }} {% else %} N {% endif %}</span>
                     <div class="m-t-4">Adolescents Pre/Post Assessment</div></a>
                 </td>
             </tr>
+            {% elif creg.intervention == 'PFCBIM' %}
             <tr>
                 <td><div class="m-b-10 m-t-10 text-inverse f-s-12"><b>CBIM Forms</b></div></td>
             </tr>
@@ -138,10 +159,11 @@
                 <td>
                     <a href="{% url 'new_cbim_evaluation' id=child.id %}">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
-                    <span class="badge pull-right">N</span>
+                    <span class="badge pull-right">{% if summary.CBIM_TN > 0 %} {{ summary.CBIM_TN }} {% else %} N {% endif %}</span>
                     <div class="m-t-4">Adolescents Pre/Post Assessment</div></a>
                 </td>
             </tr>
+            {% endif %}
         </table>
 
     </div>
@@ -201,6 +223,10 @@
                             <td class="field">Program</td>
                             <td>{{ creg.intervention|gen_value:vals }}</td>
                         </tr>
+                        <tr>
+                            <td class="field">Datetime created</td>
+                            <td colspan="3">{{ creg.timestamp_created }}</td>
+                        </tr>
                     </tbody>
                 </table>
                  <fieldset>
@@ -234,56 +260,40 @@
                 <!-- begin row -->
                  <div class="row">
                     <div class="col-md-12">
-                        {% if hhmembers %}
+                        {% if guardians %}
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>ID Number</th>
                                     <th>First Name</th>
                                     <th>Surname</th>
                                     <th>Age</th>
                                     <th>Type</th>
                                     <th>Telephone</th>
-                                    <th>Alive</th>
-                                    <th>Enrolled</th>
+                                    <th>Attached</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for hhmember in hhmembers %}
-                                <tr>                                    
-                                    <td>{{ forloop.counter }}</td>
-                                    <td>{% if hhmember.member_type == 'CCGV' or hhmember.member_type == 'CGPF'  %}
-                                        
-                                            <a href="{% url 'view_person' id=hhmember.person_id%}" role="button">{{ hhmember.person.first_name }}</a>
-                                        {% else %}
-                                        <a href="{% url 'ovc_view' hhmember.person_id%}" role="button">{{ hhmember.person.first_name }}</a>
-
-                                        {% endif %}
-                                    </td>
-
-                                    <td>{{ hhmember.person.surname }}</td>
-                                    <td>{{ hhmember.person.years }}</td>
-                                    <td>
-                                    {% if hhmember.member_type == 'TBVC' %}
-                                       Sibling
-                                    {% elif hhmember.member_type == 'TOVC' %}
-                                       Enrolled OVC
-                                    {% else %}
-                                       Parent/Guardian
-                                    {% endif %}
-                                    </td>
-                                    <td>{{ hhmember.person.des_phone_number }}</td>
-                                    <td>
-                                        {% if hhmember.member_alive == 'AYES' %}
-                                    Yes
-                                {% else %}
-                                    No
-                                {% endif %}
-                                    </td>
-                                    <td>                               
-                                    </td>
-                                </tr>
-                                {% endfor %}
+                                {% for guardian in guardians %}
+                            {% with y=guardian.guardian_person.id|stringformat:"s" %}
+                            <tr>
+                                <td><input type="hidden" name="hh_member" value="{{ guardian.guardian_person.id }}">
+                                {% with x=y|add:"_INTL"|gen_value:extids %}
+                                {{ x }}
+                                <input type="hidden" name="cg_{{ guardian.guardian_person.id }}" value="{{ x }}">
+                                </td>
+                                <td>{{ guardian.guardian_person.first_name }}</td>
+                                <td>{{ guardian.guardian_person.surname }}</td>
+                                <td>{{ guardian.guardian_person.years }}</td>
+                                <td>{{ guardian.relationship|gen_value:vals }}
+                                <input type="hidden" name="hhr_{{ guardian.guardian_person.id }}" value="{{ guardian.relationship }}">
+                                </td>
+                                <td>{{ guardian.guardian_person.des_phone_number }}</td>
+                                <td>{% if creg.caregiver.id == guardian.guardian_person.id %} Yes {% else %} No {% endif %}</td>                       
+                                {% endwith %}
+                            </tr>
+                            {% endwith %}
+                            {% endfor %}
                             </tbody>
                         </table>
                         {% else %}

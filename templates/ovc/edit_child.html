@@ -176,31 +176,7 @@
                       </div>
                     </div>
                     <!-- end col-4 -->
-                </div>
-                {% if child.years > 9 and child.sex_id == 'SFEM' %}
-                <hr/>
-                <!-- begin row -->
-                <div class="row">
-                     <!-- begin col-1 -->
-                    <div class="col-md-1">
-                    <div class="form-group">
-                        <label class="text-bold">Enrolled in DREAMS?</label>
-                        {{ form.is_dreams_enrolled }}
-                      </div>
                     </div>
-                    <!-- end col-1 -->
-                    <!-- begin col-3 -->
-                    <div class="col-md-3" id="exit_reason_div">
-                    <div class="form-group">
-                        <label class="text-bold">DREAMS ID</label>
-                        <div><br>
-                        {{ form.dreams_id }}
-                        </div>
-                      </div>
-                    </div>
-                    <!-- end col-4 -->
-                </div>
-                {% endif %}
             </fieldset>
         </div>
         <div class="primary1">
@@ -324,7 +300,7 @@
                     </div>
                     <div class="col-md-1" id="school_id_div">
                     <div class="form-group">
-                        <label class="text-bold">ID (Auto)</label>
+                        <label class="text-bold">ID</label>
                         {{ form.school_id }}
                       </div>
                     </div>
@@ -334,17 +310,6 @@
                     <div class="form-group" id="admission_type_div">
                         <label class="text-bold">Boarding / Day</label>
                         {{ form.admission_type }}
-                      </div>
-                    </div>
-                    <!-- end col-2 -->
-                </div>
-
-                <div class="row">
-                    <!-- begin col-2 -->
-                    <div class="col-md-2">
-                    <div class="form-group" id="nemis_id_div">
-                        <label class="text-bold">NEMIS No.</label>
-                        {{ form.nemis_id }}
                       </div>
                     </div>
                     <!-- end col-2 -->
@@ -708,6 +673,8 @@
                             {% endfor %}
                         </thead>
                     </table>
+                <hr>
+                    <b>EID Key:</b> -995/-996: Empty results; -997: Collect new sample; -998: Invalid results; -999: Failed Test; 0: LDL
                 </div>
                 <div class="modal-footer">
                     <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
@@ -989,9 +956,6 @@
     disable_fields(ccond, 'bcert_no');
     var dcond = $('#disb').is(":checked");
     disable_fields(dcond, 'ncpwd_no');
-    // DREAMS
-    var drcond = $('#is_dreams_enrolled').is(":checked");
-    disable_fields(drcond, 'dreams_id');
     $('#is_exited').live('change', function() {
         var is_exit = $('#is_exited').is(":checked");
         disable_fields(is_exit, 'exit_reason');
@@ -1004,11 +968,6 @@
     $('#disb').live('change', function() {
         var cond = $('#disb').is(":checked");
         disable_fields(cond, 'ncpwd_no');
-    });
-    //DREAMS
-    $('#is_dreams_enrolled').live('change', function() {
-        var drcond = $('#is_dreams_enrolled').is(":checked");
-        disable_fields(drcond, 'dreams_id');
     });
     $('#exit_org_div').hide();
     var cond = $('#ovc_exit_reason').val();
@@ -1158,7 +1117,6 @@
             $('#school_id_div').hide();
             $('#school_class_div').hide();
             $('#admission_type_div').hide();
-            $('#nemis_id_div').hide();
             $('#school_name').attr("data-parsley-required", "false");
             $('#school_id').attr("data-parsley-required", "false");
             $('#school_class').attr("data-parsley-required", "false");
@@ -1168,7 +1126,6 @@
             $('#school_id_div').show();
             $('#school_class_div').show();
             $('#admission_type_div').show();
-            $('#nemis_id_div').show();
             $('#school_name').attr("data-parsley-required", "true");
             $('#school_id').attr("data-parsley-required", "true");
             $('#school_class').attr("data-parsley-required", "true");

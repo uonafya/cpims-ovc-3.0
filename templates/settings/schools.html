@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load app_filters %}
 {% load static %}
 {% block page_title %} Schools {% endblock %}
 
@@ -68,9 +67,9 @@
                       {% for school in schools %}
                       <tr>
                           <td>{{ school.id }}</td>
-                          <td>{{ school.school_level|gen_value:vals }}</td>
+                          <td>{{ school.school_level }}</td>
                           <td>{{ school.school_name }}</td>
-                          <td>{{ school.id }}</td>
+                          <td>{{ school.id }}-XXXX</td>
                           <td>{{ school.sub_county }}</td>
                       </tr>
                       {% endfor %}

@@ -97,8 +97,21 @@ def ovc_register(request, id):
         # Details
         child = RegPerson.objects.get(is_void=False, id=id)
         # Get guardians
+        # Get guardians - Not working
+        '''
         guardians = RegPersonsGuardians.objects.filter(
             is_void=False, child_person_id=child.id)
+        print('Guardians', guardians)
+        '''
+        # Reverse relationship
+        osiblings = RegPersonsSiblings.objects.select_related().filter(
+            sibling_person_id=ovc_id, is_void=False,
+            date_delinked=None)
+        # .exclude(sibling_person_id=id)
+        child_ids = [gd.child_person_id for gd in osiblings]
+        child_ids.append(ovc_id)
+        guardians = RegPersonsGuardians.objects.select_related().filter(
+            child_person_id__in=child_ids, is_void=False, date_delinked=None)
         # Get siblings
         siblings = RegPersonsSiblings.objects.filter(
             is_void=False, child_person_id=child.id)
@@ -145,8 +158,6 @@ def ovc_register(request, id):
                 guids=pids, initial=initial)
         # Check users changing ids in urls
         ovc_detail = get_hh_members(ovc_id)
-        hhmembers = OVCHHMembers.objects.filter(
-            person_id=ovc_id).order_by('-date_linked')
         if ovc_detail:
             msg = "OVC already registered. Visit edit page."
             messages.error(request, msg)
@@ -173,7 +184,7 @@ def ovc_register(request, id):
                       {'form': form, 'status': 200, 'child': child,
                        'guardians': guardians, 'siblings': siblings,
                        'vals': vals, 'extids': gparams, 'ovc': ovc,
-                       'levels': levels, 'hhmembers': hhmembers})
+                       'levels': levels})
     except Exception as e:
         print("error with OVC registration - %s" % (str(e)))
         raise e
@@ -230,7 +241,6 @@ def ovc_edit(request, id):
             obj = {}
             obj['viral_date'] = vl.viral_date
             obj['viral_load'] = vl.viral_load
-
             if vl.viral_date:
                 delta = get_days_difference(vl.viral_date)
                 if (delta) < 183:
@@ -278,7 +288,7 @@ def ovc_edit(request, id):
         guids.append(child.id)
         pids = {'guids': guids, 'chids': chids}
         extids = RegPersonsExternalIds.objects.filter(
-            person_id__in=guids)
+            person_id__in=guids, is_void=False)
         for extid in extids:
             if extid.person_id == child.id:
                 params[extid.identifier_type_id] = extid.identifier
@@ -308,7 +318,6 @@ def ovc_edit(request, id):
                 school = school.school.school_name
         bcert_no = params['ISOV'] if 'ISOV' in params else ''
         ncpwd_no = params['IPWD'] if 'IPWD' in params else ''
-        dreams_id = params['IDRM'] if 'IDRM' in params else ''
         # Eligibility
         criterias = OVCEligibility.objects.filter(
             is_void=False, person_id=child.id).values_list(
@@ -316,14 +325,12 @@ def ovc_edit(request, id):
         if reg_date:
             date_reg = reg_date.strftime('%d-%b-%Y')
         exit_date = None
-        print('we are here finally', creg.exit_date)
         if creg.exit_date:
             exit_date = creg.exit_date.strftime('%d-%b-%Y')
-        drms = 'on' if dreams_id else ''
 
         all_values = {'reg_date': date_reg, 'cbo_uid': creg.org_unique_id,
                       'cbo_uid_check': creg.org_unique_id,
-                      'has_bcert': bcert, 'disb': disb, 'dreams_id': dreams_id,
+                      'has_bcert': bcert, 'disb': disb,
                       'bcert_no': bcert_no, 'ncpwd_no': ncpwd_no,
                       'immunization': creg.immunization_status,
                       'school_level': creg.school_level, 'facility': facility,
@@ -335,7 +342,7 @@ def ovc_edit(request, id):
                       'eligibility': list(criterias), 'is_exited': exited,
                       'exit_reason': creg.exit_reason,
                       'ovc_exit_reason': creg.exit_reason,
-                      'exit_date': exit_date, 'is_dreams_enrolled': drms,
+                      'exit_date': exit_date,
                       'exit_org_name': exit_org_name}
         form = OVCRegistrationForm(guids=pids, data=all_values)
         for hhm in hhms:
@@ -375,7 +382,7 @@ def ovc_edit(request, id):
                        'ctaker': ctaker, 'vloads': vlist, 'mydate': date_langu,
                        'hiv_data': hiv_data})
     except Exception as e:
-        print("error with OVC edit - %s" % (str(e)))
+        print("error with OVC viewing - %s" % (str(e)))
         # raise e
         msg = "Error occured during ovc edit"
         messages.error(request, msg)
@@ -577,6 +584,7 @@ def ovc_view(request, id):
         ovc_id = int(id)
         child = RegPerson.objects.get(is_void=False, id=ovc_id)
         creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
+        caregiver_id = creg.caretaker_id
         days = 0
         if not creg.is_active and creg.exit_date:
             edate = creg.exit_date
@@ -594,7 +602,7 @@ def ovc_view(request, id):
             guids.append(guardian.guardian_person_id)
         guids.append(child.id)
         extids = RegPersonsExternalIds.objects.filter(
-            person_id__in=guids)
+            person_id__in=guids, is_void=False)
         for extid in extids:
             if extid.person_id == child.id:
                 params[extid.identifier_type_id] = extid.identifier
@@ -660,8 +668,7 @@ def ovc_view(request, id):
         criterias = OVCEligibility.objects.filter(
             is_void=False, person_id=child.id)
         try:
-            care_giver = RegPerson.objects.get(
-                id=OVCRegistration.objects.get(person=child).caretaker_id)
+            care_giver = RegPerson.objects.get(id=caregiver_id)
         except RegPerson.DoesNotExist:
             care_giver = None
             print('Caregiver does not exist for child: %s' % child.id)

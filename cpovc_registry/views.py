@@ -1188,11 +1188,11 @@ def edit_person(request, id):
                 msg = 'Update of ({}) to dead was successful.'.format(
                     first_name)
             elif edit_type == 3:
-                delete_person(id)
+                # delete_person(id)
                 if ovc:
                     ovc.is_void = True
-                    ovc.save(update_fields=["is_void"])
-                msg = 'Person ({}) deleted successfully.'.format(first_name)
+                    #ovc.save(update_fields=["is_void"])
+                msg = 'Person ({}) NOT deleted. Disabled.'.format(first_name)
 
             # Perform audit trail here for all
             if edit_type:

@@ -9,7 +9,8 @@ from cpovc_main.functions import convert_date
 from cpovc_ovc.functions import get_first_household
 
 from .models import (
-    OVCPreventiveEbi, OVCPreventiveEvents, OVCPreventiveEvaluation)
+    OVCPreventiveEbi, OVCPreventiveEvents, OVCPreventiveEvaluation,
+    OVCPreventiveService)
 
 
 def save_school(request, person_id, school_level='SLNS'):
@@ -196,6 +197,34 @@ def save_evaluation(
                 caregiver_id=caregiver_id,
                 question_number=qstn,
                 question_answer=answer).save()
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+def save_ebi_service(
+        request, person_id, cbo_id, event_id, client_type,
+        service_date, session_number, service_id, service_type,
+        service_other=None):
+    """Method to save EBI service."""
+    try:
+        ebi_place = RegPersonsGeo.objects.filter(
+            person_id=person_id, is_void=False).first()
+        ebi_place_id = ebi_place.pk
+        service_col_name = 'ebi_service_completed'
+        if service_type == 'R':
+            service_col_name = 'ebi_service_reffered'
+        ebi_service, created = OVCPreventiveService.objects.update_or_create(
+            person_id=person_id, domain='SERVICE',
+            ebi_provider_id=cbo_id, event_id=event_id,
+            ebi_service_provided=session_number,
+            ebi_service_client=client_type,
+            defaults={service_col_name: service_id,
+                      'place_of_ebi_service_id': ebi_place_id,
+                      'date_of_encounter_event': service_date,
+                      'ebi_service_other': service_other, 'is_void': False
+                      })
     except Exception as e:
         raise e
     else:

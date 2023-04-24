@@ -5,8 +5,8 @@ from cpovc_main.functions import get_org_units_list
 from cpovc_reports.functions import get_clusters
 
 lists_vars = (('', 'Select Report'), (1, 'Master List'),
-              (2, 'Assessment List'), (3, 'Priorities List'),
-              (4, 'Services List'))
+               (2, 'Assessment List'), (3, 'Priorities List'),
+               (4, 'Services List'))
 
 
 class SettingsForm(forms.Form):
@@ -24,21 +24,22 @@ class SettingsForm(forms.Form):
 
         org_unit = forms.ChoiceField(
             choices=org_units,
-            required=False,
+            initial='',
             widget=forms.Select(
                 attrs={'class': 'form-control',
                        'data-parsley-required': 'false',
                        'autofocus': 'true'}))
         self.fields['org_unit'] = org_unit
 
+
         cluster = forms.ChoiceField(
             choices=cluster_list,
-            required=False,
             widget=forms.Select(
                 attrs={'class': 'form-control',
                        'data-parsley-required': 'false',
                        'autofocus': 'true'}))
         self.fields['cluster'] = cluster
+
 
     raw_data = forms.ChoiceField(
         choices=lists_vars,

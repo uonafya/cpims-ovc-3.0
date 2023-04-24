@@ -1306,7 +1306,7 @@ print(blu.sing("'Happy'"))
                                                             <tr>
                                                                 <th>Child Name</th>
                                                                 <th>OVC CPIMS ID</th>
-                                                                 <th>6.3 Have you been exposed to violence, abuse (sexual, physical or emotional), neglect, or exploitation in the last six months? </th>
+                                                                 <th>6.3 Have you been exposed to violence, abuse (sexual, physical or emotional), neglect, or exploitation in the last six months?</th>
                                                              
                                                                 </tr>
                                                             </thead>
@@ -1327,14 +1327,14 @@ print(blu.sing("'Happy'"))
                                                                         <div class="radio-inline">
                                                                             <label class="radio-inline">
                                                                 
-                                                                                <input type="radio" value="AYES" name="{{ child.id }}_CP27q" {% if sibling.person.id|stringformat:'s'|add:'_CP27q' in ind_cpara_data %} checked="" {% endif %}>
+                                                                                <input type="radio" value="AYES" name="{{ child.id }}_CP27q2">
                                                                                     Yes
                                                 
                                                                             </label>
                                                                             <br>
                                                                             <label class="radio-inline">
                                                                         
-                                                                                <input type="radio" value="ANNO" name="{{ child.id }}_CP27q" {% if sibling.person.id|stringformat:'s'|add:'_CP27q' not  in ind_cpara_data %} checked="" {% endif %}>
+                                                                                <input type="radio" value="ANNO" name="{{ child.id }}_CP27q2" >
                                                                                     No
                                                                                 
                                                                             </label>
@@ -1351,7 +1351,7 @@ print(blu.sing("'Happy'"))
                                                                 {% endif %}
                                                                 {% if hhmembers %}
                                                                     {% for sibling in hhmembers %}
-                                                                        {% if sibling.person.years > 10 and sibling.person.years < 18 %}
+                                                                        {% if sibling.person.years > 10 %}
                                                                         <tr class="row13">
                                                                             <td>
                                                                                 <a href="{% url 'view_person' id=sibling.person.id %}">{{ sibling.person.first_name }} {{ sibling.person.surname }} {{ sibling.person.last_name }}</a>
@@ -1363,14 +1363,14 @@ print(blu.sing("'Happy'"))
                                                                                 <div class="radio-inline">
                                                                                     <label class="radio-inline">
                                                                         
-                                                                                        <input type="radio" value="AYES" name="{{ sibling.person.id }}_CP27q">
+                                                                                        <input type="radio" value="AYES" name="{{ sibling.person.id }}_CP27q2">
                                                                                             Yes
                                                         
                                                                                     </label>
                                                                                     <br>
                                                                                     <label class="radio-inline">
                                                                                 
-                                                                                        <input type="radio" value="ANNO" name="{{ sibling.person.id }}_CP27q" >
+                                                                                        <input type="radio" value="ANNO" name="{{ sibling.person.id }}_CP27q2" >
                                                                                             No
                                                                                         
                                                                                     </label>
@@ -2056,4 +2056,3 @@ jQuery(document).ready(function()
     
         
 {% endblock %}
-
