@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render
 
 from rest_framework import viewsets,status,mixins
@@ -10,9 +12,8 @@ from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.response import Response
 from django.db.models import Count
 
-
-
-
+from cpovc_auth.models import *
+from cpovc_main.functions import *
 # models
 from cpovc_registry.models import (
     OVCCheckin,
@@ -113,6 +114,8 @@ from cpovc_forms.models  import (
 
 # Create your views here.
 from cpims_api.serializers import *
+from notifications.views import JsonResponse
+
 
 class RegOrgUnitViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
@@ -736,28 +739,40 @@ class MobileDashboardViewSet(viewsets.ViewSet):
             serializer = DashboardSerializer(dash)
             return Response(serializer.data)
 
-
 class CombinedDataViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication,)
-    queryset = RegPerson.objects.filter(is_void=False)
+    queryset = OVCRegistration.objects.filter(is_void=False)
 
     def get_queryset(self):
         return self.queryset
 
+    def usersubcounty_lookup(request):
+        # For JSON lookup stuff on Case Geo Locs pages
+        try:
+            if request.method == 'POST':
+                user_id = request.POST.get('user_id')
+                jsonSubcountyResults = []
+                subcounty_ids = []
 
+                user_geolocs = CPOVCUserRoleGeoOrg.objects.filter(
+                    user_id=int(user_id))
+                if user_geolocs:
+                    # If User Is Attached (Not National Coverage)
+                    for user_geoloc in user_geolocs:
+                        if user_geoloc.area:
+                            subcounty_ids.append(int(user_geoloc.area.area_id))
+                else:
+                    # National Coverage
+                    user_nationalgeolocs = SetupGeography.objects.filter(
+                        area_type_id='GDIS')
+                    for user_geoloc in user_nationalgeolocs:
+                        subcounty_ids.append(int(user_geoloc.area_id))
 
-    def list(self, request):
-        person = RegPerson.objects.values(
-          'id', 'designation','first_name', 'other_names','surname', 'email',
-          'des_phone_number', 'date_of_birth', 'date_of_death','sex_id')
-        dataset={
-            'persons':person
-        }
-
-
-
-
-        serializer = CombinedDataSerializer(dataset)
-        return Response(serializer.data)
+                for subcounty_id in subcounty_ids:
+                    jsonSubcountyResults.append({'area_id': subcounty_id,
+                                                 'area_name': translate_geo(subcounty_id)})
+        except Exception as e:
+            raise e
+        return JsonResponse(jsonSubcountyResults, content_type='application/json',
+                            safe=False)
 
 
