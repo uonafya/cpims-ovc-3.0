@@ -113,19 +113,16 @@
                             </div>
                             <table id="" class="table ">
                                 <tbody>
-
                                         <tr>
                                             <td width="60%">   1. Age</td>
                                             <td>
-                                                <div class="form-group m-r-10">
-
-                                                </div>
+                                                <div class="form-group m-r-10"> {{ ovc.person.age }} </div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>   2. Gender</td>
                                             <td>
-                                                <div class="form-group m-r-10">
+                                                <div class="form-group m-r-10"> {{ ovc.person.sex_id|gen_value:vals }}
 
                                                 </div>
                                             </td>
@@ -554,6 +551,7 @@
 
 
     <!-- List of fomrs start -->
+    {% if edit == 0 %}
 
                     <div class="panel panel-inverse">
                         <div class="table-responsive">
@@ -695,6 +693,7 @@
         </div>
     </div>
     <!--list of forms end -->
+    {% endif %}
 
             </div>
         </div>

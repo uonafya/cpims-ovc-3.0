@@ -6,10 +6,11 @@ class OVCPreventiveRegistrationAdmin(admin.ModelAdmin):
     """PMTCT Registration."""
 
     search_fields = ['person']
-    list_display = ['registration_date', 'person_id', 'person', 'is_void', ]
+    list_display = ['registration_date', 'intervention', 'person_id',
+                    'person', 'is_void', ]
 
     readonly_fields = ['person']
-    list_filter = ['is_void']
+    list_filter = ['intervention', 'is_void']
 
 
 admin.site.register(OVCPreventiveRegistration, OVCPreventiveRegistrationAdmin)

@@ -302,12 +302,15 @@ def ovc_registration(request, ovc_id, edit=0):
         org_uid_check = request.POST.get('cbo_uid_check')
         caretaker = request.POST.get('caretaker')
         school_level = request.POST.get('school_level')
-        is_exited = request.POST.get('is_exited')
-        exit_reason = request.POST.get('exit_reason')
+        # is_exited = request.POST.get('is_exited')
+        # exit_reason = request.POST.get('exit_reason')
         criterias = request.POST.getlist('eligibility')
         current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-        exit_date = request.POST.get('exit_date')
         ovc_detail = get_object_or_404(OVCRegistration, person_id=ovc_id)
+        is_active = ovc_detail.is_active
+        exit_reason = ovc_detail.exit_reason
+        # is_exited = False if ovc_detail.is_active else True
+        exit_date = request.POST.get('exit_date')
         # HIV status update only if unknown
         ovc_dob = ovc_detail.person.date_of_birth
         if edit == 0:
@@ -336,7 +339,7 @@ def ovc_registration(request, ovc_id, edit=0):
             edit_hiv = True
         if edit_hiv:
             ovc_detail.hiv_status = nhiv_status
-        is_active = False if is_exited else True
+        # is_active = False if is_exited else True
         ovc_detail.has_bcert = has_bcert
         ovc_detail.is_disabled = is_disabled
         ovc_detail.immunization_status = str(immmune)

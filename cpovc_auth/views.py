@@ -426,12 +426,11 @@ def roles_edit(request, user_id):
         raise e
 
 
-def reset_confirm(request, uidb36=None, token=None):
+def reset_confirm(request, uidb64=None, token=None):
     """Method for confirm password reset."""
-    # return password_reset_confirm(
     return render(
         request, template_name='registration/password_reset_confirm.html',
-        uidb36=uidb36, token=token, post_reset_redirect=reverse(log_in))
+        uidb36=uidb64, token=token, post_reset_redirect=reverse(log_in))
 
 
 def reset(request):
@@ -452,7 +451,7 @@ def password_reset(
         password_reset_form=PasswordResetForm,
         token_generator=default_token_generator,
         post_reset_redirect=None,
-        from_email=None,
+        from_email='CPIMS Kenya <cpimskenya@gmail.com>',
         current_app=None,
         extra_context=None,
         html_email_template_name=None):
@@ -463,6 +462,7 @@ def password_reset(
         post_reset_redirect = resolve_url(post_reset_redirect)
     if request.method == "POST":
         form = password_reset_form(request.POST)
+        print('Form check', form.is_valid())
         if form.is_valid():
             opts = {
                 'use_https': request.is_secure(),
@@ -477,6 +477,10 @@ def password_reset(
                 opts = dict(opts, domain_override=request.get_host())
             form.save(**opts)
             return HttpResponseRedirect(post_reset_redirect)
+        else:
+            # print(form.errors)
+            messages.add_message(request, messages.ERROR, form.errors)
+            return HttpResponseRedirect('/accounts/password/reset/')
     else:
         form = password_reset_form()
     context = {

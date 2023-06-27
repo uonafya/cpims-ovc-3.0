@@ -785,23 +785,39 @@ function age_filter(){
         })
 
         // Section 3 Question 3b validation
+        
+        // Default behaviour
         $('input[name=HIV_RS_23]').attr("disabled",true);
+        var HRS_23 = $('input[name="HIV_RS_18B"]:checked').val();
+        handle_positives(HRS_23);
+
+        // Click behaviour
         $("input[type='radio'][name='HIV_RS_18B']").click(function() {
             var value = $(this).val();
+            handle_positives(value);                   
+        });
+
+        function handle_positives(value){
             if(value=='1') {
                 $('input[name=HIV_RS_23], input[name=HIV_RS_24]').attr("disabled",false);
                 $('input[name=HIV_RS_21], input[name=HIV_RS_22]').attr("disabled",false);
-                $('input[name=facility_field]').attr('disabled',false)
-                
+                $('input[name=facility_field]').attr('disabled',false);
                 HIV_RS_23=true;
-            }
-            else {
+
+                // Make mandatory
+                $('input[name="HIV_RS_21"], input[name="HIV_RS_22"]').attr("required", true);
+                $('input[name="HIV_RS_23"], input[name="HIV_RS_24"]').attr("required", true);
+            }else {
                 $('input[name=HIV_RS_23], input[name=HIV_RS_24]').attr("disabled",true);
                 $('input[name=HIV_RS_21], input[name=HIV_RS_22]').attr("disabled",true);
-                $('input[name=facility_field]').attr('disabled',true)
+                $('input[name=facility_field]').attr('disabled',true);
                 HIV_RS_23=true;
-            }       
-        });
+
+                // Make not mandatory
+                $('input[name="HIV_RS_21"], input[name="HIV_RS_22"]').removeAttr('required');
+                $('input[name="HIV_RS_23"], input[name="HIV_RS_24"]').removeAttr('required');
+            }
+        }
 
         $("input[type='radio'][name='HIV_RS_21']").click(function() {
             var value = $(this).val();

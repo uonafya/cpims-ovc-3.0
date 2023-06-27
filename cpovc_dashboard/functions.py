@@ -15,7 +15,7 @@ from .charts import (
     population_pyramid_chart, sparkline_chart, stacked_bar_chart,
     stacked_column_chart, column_chart_2, column_compare_chart,
     pie_chart, basic_bar_chart, table_chart, scatter_chart,
-    column_category_chart)
+    column_category_chart, column_comparison_chart)
 
 from .models import IPInfo
 from cpovc_ovc.models import OVCRegistration
@@ -139,6 +139,7 @@ def get_chart_data(request, rid, county_id, const_id,
         defaults = ctts['defaults'] if 'defaults' in ctts else []
         yLabel = ctts['yLabel'] if 'yLabel' in ctts else '# of OVC'
         stacking = ctts['stacking'] if 'stacking' in ctts else 'percent'
+        nvalue = ctts['n'] if 'n' in ctts else None
         params['xAxis'] = xAxis
         params['yAxis'] = yAxis
         params['yLabel'] = yLabel
@@ -149,8 +150,14 @@ def get_chart_data(request, rid, county_id, const_id,
         params['stacking'] = stacking
         params['title'] = '%s : %s' % (rid, ctts['ctitle'])
         sub_title = pctts['desc'] if 'desc' in pctts else ''
-        print('sub title', sub_title)
-        params['subtitle'] = ''
+        nsum = 0
+        for dt in data['raw']:
+            dct = dt['dcount']
+            nsum += dct
+        params['subtitle'] = 'N(%s)' % (f'{nsum:,}') if nvalue else ''
+        f_caption = sub_title.replace('\n', '').replace("'", "\'")
+        caption = f_caption if len(sub_title) > 10 else ctts['ctitle']
+        params['caption'] = '<b>Description: </b>%s' % caption
         # html.escape(sub_title)
         if ctts['ctype'] == 'bar':
             resp = bar_chart(request, params, data)
@@ -180,6 +187,8 @@ def get_chart_data(request, rid, county_id, const_id,
             resp = column_category_chart(request, params, data)
         elif ctts['ctype'] == 'table':
             resp = table_chart(request, params, data)
+        elif ctts['ctype'] == 'column_comparison':
+            resp = column_comparison_chart(request, params, data)
         else:
             resp = column_chart(request, params, data)
     except Exception as e:
@@ -373,7 +382,7 @@ def format_data(rid, datas, items, itd='agerange'):
                     elif data['sex_id'] in females:
                         fdata[i] = str(int(data['dcount']))
         rdata['mdata'] = ','.join(mdata)
-        if rid in ['3F', '7E']:
+        if rid in ['3F', '8B']:
             fdata = format_percentage(rid, mdata, fdata)
         rdata['fdata'] = ','.join(fdata)
         # print(data)
@@ -392,7 +401,7 @@ def format_percentage(rid, adata, bdata):
             d_data = float(int(adata[i]))
             n_data = float(int(bdata[i]))
             p_data = (n_data / d_data) * 100 if d_data > 0 else 0
-            print('Newton', d_data, n_data, p_data)
+            # print('Newton', d_data, n_data, p_data)
             fdata[i] = str(round(p_data, 1))
     except Exception:
         return bdata
@@ -420,7 +429,7 @@ def format_other_data(datas, items=[], itd='services'):
                 elif data['sex_id'] in females:
                     all_data[sname]['fdata'] = str(int(data['dcount']))
         # Now format the dict to array for charting
-        print('all data', all_data)
+        # print('all data', all_data)
         for adata in all_data:
             items.append(str(adata))
             mdata.append(all_data[adata]['mdata'])

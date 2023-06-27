@@ -577,6 +577,7 @@ class OVCSinovuyoTeenAssessmentForm(forms.Form):
     CHOICES_TYPE_ASSESSMENT = get_list("evaluation_type_id")
     CHOICES_READ = get_list('literacy_lvl_id', "Please select")
     CHOICES_EDUCATION = get_list("school_level_id")
+    CHOICES_SCHOOL_TYPE = get_list("school_type_id", "Please Select")
     YES_NO_CHOICES = get_list('yesno_id')
     CHOICES_INCOME = get_list("employed_id", "Please select")
     CHOICES_RELATIONSHIP = get_list(
@@ -615,6 +616,32 @@ class OVCSinovuyoTeenAssessmentForm(forms.Form):
         choices=YES_NO_CHOICES,
         widget=forms.RadioSelect(
         ))
+
+    SINO_TNQ04A = forms.ChoiceField(
+        choices=CHOICES_EDUCATION,
+        widget=forms.RadioSelect(
+        ))
+
+    SINO_TNQ04B = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        }))
+
+    SINO_TNQ04C = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        }))
+
+    SINO_TNQ04D = forms.ChoiceField(
+        required=False,
+        choices=CHOICES_SCHOOL_TYPE,
+        widget=forms.Select(
+            attrs={
+                'intial': 'Please select',
+                'class': 'form-control'
+            }))
 
     SINO_TNQ06 = forms.ChoiceField(
         choices=CHOICES_BIOLOGICAL_MOTHER,
