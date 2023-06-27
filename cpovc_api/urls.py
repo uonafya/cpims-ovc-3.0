@@ -1,21 +1,31 @@
-"""API urls."""
-from django.urls import include, path, re_path
-from rest_framework import routers
+"""Mobile App API URLS."""
+from django.urls import path, re_path
+from rest_framework_simplejwt import views as jwt_views
+
 from . import views
 
-router = routers.DefaultRouter()
-# router.register(r'users', UserViewSet)
-router.register(r'country', views.CountryViewSet, basename='Country')
-# Wire up our API using automatic URL routing.
 urlpatterns = [
-    re_path(r'^', include(router.urls)),
-    path('settings/', views.SettingsViewSet.as_view()),
-    path('geo/', views.GeoViewSet.as_view()),
-    path('ou/', views.OrgUnitViewSet.as_view()),
-    path('school/', views.SchoolViewSet.as_view()),
-    path('health_facility/', views.HealthFacilityViewSet.as_view()),
-    path('crs-old/', views.BasicCRSView.as_view()),
-    path('crs/', views.basic_crs),
-    path('lookup/', views.get_settings, name='settings_lookup'),
-    path('dreams/', views.dreams),
+    path('', views.api_home, name='api_home'),
+    # Authentication
+    path(
+        'token/', jwt_views.TokenObtainPairView.as_view(),
+        name='token_obtain_pair'),
+    path(
+        'token/refresh/', jwt_views.TokenRefreshView.as_view(),
+        name='token_refresh'),
+    # Setttings
+    path('settings/', views.settings, name='api_settings'),
+
+    # Dashboards
+    path('dashboard/', views.dashboard, name='api_dashboard'),
+
+    # My caseload / data - By CHV or IP/LIP
+    path('caseload/', views.caseload, name='api_caseload'),
+    path('registrations/', views.registration, name='api_reglist'),
+
+    # Forms data - GET / POST
+    re_path(r"^form/(?P<form_id>[0-9A-Z]{3})/$", views.form_data),
+
+    # DREAMS
+    path('dreams/', views.dreams, name='dreams'),
 ]

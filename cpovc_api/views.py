@@ -1,400 +1,286 @@
-import uuid
-from decimal import Decimal
+from datetime import datetime
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from django.shortcuts import get_object_or_404
-from .serializers import (
-    UserSerializer, OrgUnitSerializer, SettingsSerializer, GeoSerializer,
-    CRSSerializer, CountrySerializer, CRSPersonserializer,
-    CRSCategorySerializer, SchoolSerializer, FacilitySerializer)
-from cpovc_auth.models import AppUser
-from cpovc_registry.models import RegOrgUnit
-from cpovc_main.models import SetupList, SetupGeography
-from cpovc_forms.models import OVCBasicCRS, OVCBasicCategory, OVCBasicPerson
-from cpovc_main.country import COUNTRIES as CLISTS
+from cpovc_ovc.models import OVCRegistration, OVCHealth
+from cpovc_registry.models import RegPersonsGeo, RegPersonsExternalIds
+from cpovc_forms.models import OVCCareEvents, OVCCareServices
 
-from cpovc_ovc.models import OVCFacility, OVCSchool, OVCRegistration, OVCHealth
-from . import Country
+from cpovc_main.functions import get_dict
+from cpovc_main.models import SetupList
+from .functions import (
+    dcs_dashboard, get_attached_orgs, get_vals, save_form, validate_ovc)
+
+from cpovc_dashboard.parameters import PARAMS
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    """API endpoint that allows users to be viewed or edited."""
-
-    queryset = AppUser.objects.all().order_by('-last_login')[:10]
-    serializer_class = UserSerializer
-
-
-class CountryViewSet(viewsets.ViewSet):
-    # Required for the Browsable API renderer to have a nice form.
-    permission_classes = []
-    serializer_class = CountrySerializer
-
-    def list(self, request):
-        countries = {}
-        cnt = 0
-        for ccode in CLISTS:
-            cnt += 1
-            print(ccode)
-            cname = CLISTS[ccode].encode()
-            countries[cnt] = Country(id=cnt, code=ccode, name=cname)
-        serializer = CountrySerializer(
-            instance=countries.values(), many=True)
-        return Response(serializer.data)
-
-
-class SettingsViewSet(generics.ListAPIView):
-    permission_classes = []
-    serializer_class = SettingsSerializer
-
-    def get_queryset(self):
-        """
-        Optionally restricts the returned values to a given prameter.
-        """
-        queryset = SetupList.objects.all()
-        field_name = self.request.query_params.get(
-            'field_name', 'case_category_id')
-        if field_name is not None:
-            queryset = queryset.filter(field_name=field_name)
-        return queryset
-
-
-class GeoViewSet(generics.ListAPIView):
-    permission_classes = []
-    serializer_class = GeoSerializer
-
-    def get_queryset(self):
-        """
-        Optionally restricts the returned values to a given prameter.
-        """
-        queryset = SetupGeography.objects.all()
-        field_name = self.request.query_params.get('area_type_id', None)
-        parent_id = self.request.query_params.get('parent_area_id', None)
-        if field_name is not None:
-            queryset = queryset.filter(area_type_id=field_name)
-        if parent_id is not None:
-            queryset = queryset.filter(parent_area_id=parent_id)
-        return queryset
-
-
-class OrgUnitViewSet(generics.ListAPIView):
-    permission_classes = []
-    serializer_class = OrgUnitSerializer
-
-    def get_queryset(self):
-        """
-        Optionally restricts the returned values to a given prameter.
-        """
-        queryset = RegOrgUnit.objects.filter(
-            is_void=False).order_by('org_unit_name')
-        unit_type_id = self.request.query_params.get('org_unit_type_id', None)
-        parent_id = self.request.query_params.get('parent_org_unit_id', None)
-        if unit_type_id is not None:
-            queryset = queryset.filter(org_unit_type_id=unit_type_id)
-        if parent_id is not None:
-            queryset = queryset.filter(parent_org_unit_id=parent_id)
-        return queryset
-
-
-class SchoolViewSet(generics.ListAPIView):
-    permission_classes = []
-    serializer_class = SchoolSerializer
-
-    def get_queryset(self):
-        """
-        Optionally restricts the returned values to a given prameter.
-        """
-        queryset = OVCSchool.objects.filter(
-            is_void=False).order_by('school_name')
-        unit_id = self.request.query_params.get('id', None)
-        unit_level = self.request.query_params.get('school_level', None)
-        start = int(self.request.query_params.get('start', 0))
-        limit = int(self.request.query_params.get('limit', 1000))
-        if unit_id is not None:
-            queryset = queryset.filter(id=unit_id)
-        if unit_level is not None:
-            queryset = queryset.filter(school_level=unit_level)
-        return queryset[start:limit]
-
-
-class HealthFacilityViewSet(generics.ListAPIView):
-    permission_classes = []
-    serializer_class = FacilitySerializer
-
-    def get_queryset(self):
-        """
-        Optionally restricts the returned values to a given prameter.
-        """
-        queryset = OVCFacility.objects.filter(
-            is_void=False).order_by('facility_name')
-        unit_id = self.request.query_params.get('id', None)
-        unit_code = self.request.query_params.get('facility_code', None)
-        start = int(self.request.query_params.get('start', 0))
-        limit = int(self.request.query_params.get('limit', 1000))
-        if unit_id is not None:
-            queryset = queryset.filter(id=unit_id)
-        if unit_code is not None:
-            queryset = queryset.filter(facility_code=unit_code)
-        return queryset[start:limit]
-
-
-class BasicCRSView(generics.ListAPIView):
-    # queryset = OVCBasicCRS.objects.all()
-    serializer_class = CRSSerializer
-
-    def create(self, serializer):
-        author = get_object_or_404(
-            AppUser, id=self.request.data.get('author_id'))
-        return serializer.save(author=author)
-
-    def get(self, request, *args, **kwargs):
-        # return self.list(request, *args, **kwargs)
-        return Response({'message': "Listing not available"})
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-
-@api_view(['GET', 'POST'])
-def basic_crs(request):
+def api_home(request):
+    """ Method for home."""
     try:
-        print(request.method)
-        if request.method == 'GET':
-            account_id = request.user.id
-            queryset = OVCBasicCRS.objects.filter(account=account_id)
-            case_id = request.query_params.get('case_id')
-            if case_id:
-                queryset = queryset.filter(case_id=case_id)
-            if queryset:
-                cases = list(queryset.values())[0]
-                qs = OVCBasicCategory.objects.filter(case_id=case_id)
-                ps = OVCBasicPerson.objects.filter(case_id=case_id)
-                categories = list(qs.values())
-                persons = list(ps.values())
-                cases['categories'] = []
-                cases['caregivers'] = []
-                cases['perpetrators'] = []
-                cases['children'] = []
-                cases['reporters'] = []
-                del cases['is_void']
-                for category in categories:
-                    del category['category_id']
-                    del category['is_void']
-                    cases['categories'].append(category)
-                for person in persons:
-                    del person['case_id']
-                    del person['person_id']
-                    del person['is_void']
-                    ptype = person['person_type']
-                    if ptype == 'PTPD':
-                        cases['perpetrators'].append(person)
-                    if ptype == 'PTCG':
-                        cases['caregivers'].append(person)
-                    if ptype == 'PTCH':
-                        cases['children'].append(person)
-                    if ptype == 'PTRD':
-                        cases['reporters'].append(person)
-                return Response(cases)
-            else:
-                return Response({'details': 'Case Does not Exist'})
-        # Insert a new record for CRS
-        elif request.method == 'POST':
-            # print (request.user.username)
-            case_uid = uuid.uuid1()
-            account_id = request.user.id
-            perpetrators = request.data.get('perpetrators')
-            perpetrator = request.data.get('perpetrator')
-            caregivers = request.data.get('caregivers')
-            reporter = request.data.get('reporter')
-            reporter_tel = request.data.get('reporter_telephone')
-            lon = request.data.get('longitude')
-            lat = request.data.get('latitude')
-            hes = request.data.get('hh_economic_status')
-            risk_level = request.data.get('risk_level')
-            physical_condition = request.data.get('physical_condition')
-            family_statuses = request.data.get('family_status')
-            case_id = request.data.get('case_id', case_uid)
-            print('lon', lon, 'lat', lat)
-            print('-*-' * 50)
-            print(request.data)
-            print('-*-' * 50)
-            print(request.META)
-            print('-*-' * 50)
-            family_status = family_statuses.split(
-                ',')[0] if family_statuses else ''
-            data = {'case_category': request.data.get('case_category'),
-                    'county': request.data.get('county'),
-                    'constituency': request.data.get('constituency'),
-                    'child_dob': request.data.get('child_dob'),
-                    'perpetrator': perpetrator,
-                    'case_landmark': request.data.get('case_landmark'),
-                    'case_narration': request.data.get('case_narration'),
-                    'child_sex': request.data.get('child_sex'),
-                    'reporter_telephone': reporter_tel,
-                    'case_reporter': request.data.get('case_reporter'),
-                    'organization_unit': request.data.get('organization_unit'),
-                    'hh_economic_status': hes,
-                    'family_status': family_status,
-                    'mental_condition': request.data.get('mental_condition'),
-                    'physical_condition': physical_condition,
-                    'other_condition': request.data.get('other_condition'),
-                    'case_date': request.data.get('case_date'),
-                    'case_params': str(request.data), 'case_id': case_id,
-                    'account': account_id, "risk_level": risk_level
-                    }
-            if lon and lat:
-                data["longitude"] = round(Decimal(float(lon)), 7)
-                data["latitude"] = round(Decimal(float(lat)), 7)
-            print(data)
-            case_data = OVCBasicCRS(case_id=case_id)
-            if case_data:
-                serializer = CRSSerializer(case_data, data=data)
-            else:
-                serializer = CRSSerializer(data=data)
-            if serializer.is_valid():
-                serializer.save()
-                case_id = serializer.data['case_id']
-                case_details = request.data.get('case_details')
-                for case in case_details:
-                    category = case['category']
-                    sub_category = None
-                    if 'sub_category' in case:
-                        sub_category = case['sub_category']
-                    print('CASE', category, case)
-                    cat_data = {'case': case_id, 'case_category': category,
-                                'case_date_event': case['date_of_event'],
-                                'case_nature': case['nature_of_event'],
-                                'case_place_of_event': case['place_of_event'],
-                                'case_sub_category': sub_category}
-                    cserializer = CRSCategorySerializer(data=cat_data)
-                    if cserializer.is_valid():
-                        cserializer.save()
-                    else:
-                        print(cserializer.errors)
-                if perpetrator == 'PKNW':
-                    for data in perpetrators:
-                        save_person(case_id, 'PTPD', data)
-                if caregivers:
-                    for data in caregivers:
-                        save_person(case_id, 'PTCG', data)
-                if reporter != 'CRSF':
-                    save_person(case_id, 'PTRD', request.data)
-                # Child details
-                save_person(case_id, 'PTCH', request.data)
-                print('CASE OK', serializer.data)
-                return Response(serializer.data,
-                                status=status.HTTP_201_CREATED)
-            else:
-                print('CASE ERROR', serializer.errors)
-                return Response(serializer.errors,
-                                status=status.HTTP_400_BAD_REQUEST)
+        Response = {"status": 0, "message": "Method NOT Allowed"}
+        return JsonResponse(
+            Response, content_type='application/json', safe=False)
     except Exception as e:
-        print('Error submitting API Case - %s' % str(e))
-        return Response({'details': 'Error saving Case details'})
-
-
-@csrf_exempt
-def basic_mobi_crs(request):
-    """Method for Mobile devices."""
-    try:
-        print(request.POST)
-        results = {'results': 'This is good'}
-        return JsonResponse(results, content_type='application/json',
-                            safe=False)
-    except Exception as e:
-        results = {'results': 'There was an error - %s' % str(e)}
-        print(results)
-        return JsonResponse(results, content_type='application/json',
-                            safe=False)
-
-
-def save_person(case_id, person_type, req_data):
-    try:
-        if person_type == 'PTCH':
-            data = {'first_name': req_data.get('child_first_name')}
-            data['surname'] = req_data.get('child_surname')
-            data['other_names'] = req_data.get('child_other_names')
-            data['dob'] = req_data.get('child_dob')
-            data['sex'] = req_data.get('child_sex')
-            data['relationship'] = 'TBVC'
-        elif person_type == 'PTRD':
-            data = {'first_name': req_data.get('reporter_first_name')}
-            data['surname'] = req_data.get('reporter_surname')
-            data['other_names'] = req_data.get('reporter_other_names')
-            data['dob'] = req_data.get('reporter_dob')
-            data['sex'] = req_data.get('reporter_sex')
-            data['relationship'] = req_data.get('relation')
-        else:
-            data = req_data
-        data['person_type'] = person_type
-        data['case'] = case_id
-        # print data
-        serializer = CRSPersonserializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-        else:
-            print(person_type, serializer.errors)
-    except Exception as e:
-        print('Error saving data - %s' % str(e))
+        raise e
+    else:
         pass
 
 
-def get_settings(request, param=''):
-    """Method to get settings."""
+@api_view(['GET', 'POST'])
+def dashboard(request):
+    """Method to handle DREAMS."""
     try:
-        param_id = request.POST.get('domain', None)
-        # case_id = request.POST.get('case_id')
-        results = {}
-        itm = {'item_id': '', 'item_name': 'Please Select'}
-        goals, gaps, services = [itm], [itm], [itm]
-        if param_id:
-            itms = SetupList.objects.filter(item_id=param_id)
-            field_name = itms[0].field_name
-            field_sub_cat = itms[0].item_sub_category
-            print('field name', field_name, field_sub_cat)
-            goals_id = '%s_goal' % (field_sub_cat)
-            gaps_id = '%s_gap' % (field_sub_cat)
-            services_id = '%s_service' % (field_sub_cat)
-            itms_id = [goals_id, gaps_id, services_id]
-            items = SetupList.objects.filter(field_name__in=itms_id)
-            for item in items:
-                item_id = item.item_id
-                item_name = item.item_description
-                item_field = item.field_name
-                itm_dict = {'item_id': item_id, 'item_name': item_name}
-                if item_field == goals_id:
-                    goals.append(itm_dict)
-                if item_field == gaps_id:
-                    gaps.append(itm_dict)
-                if item_field == services_id:
-                    goals.append(itm_dict)
-        results['goals'] = goals
-        results['gaps'] = gaps
-        results['services'] = services
-    except Exception:
-        return JsonResponse([], content_type='application/json',
-                            safe=False)
+        user_orgs = get_attached_orgs(request)
+        print(user_orgs)
+        results = dcs_dashboard(request, user_orgs)
+        results['org_unit'] = user_orgs['ou_name']
+        results['org_unit_id'] = user_orgs['ou_id']
+        '''
+        results = {"active": 132294, "ever_registered": 307005,
+                   "caregivers": 171142, "workforce": 487,
+                   "other_org_units": 36, "households": 154,
+                   "org_unit": "USAID 4TheChild", "org_unit_id": 7226}
+        '''
+        msg = 'Partner details Found'
+        if request.method == 'GET':
+            user_id = request.query_params.get('user_id')
+            print(user_id)
+        results['details'] = msg
+    except Exception as e:
+        msg = 'Error getting Partner details - %s' % (str(e))
+        return Response({'details': msg})
     else:
-        return JsonResponse(results, content_type='application/json',
-                            safe=False)
+        return Response(results)
+
+
+'''
+cbo_id
+cbo
+ward_id
+ward
+consituency_id
+constituency
+countyid
+county
+
+cpims_ovc_id
+ovc_names
+gender
+dob
+date_of_birth
+age
+age_at_reg
+agerange
+birthcert
+bcertnumber
+ovcdisability
+ncpwdnumber
+
+ovchivstatus
+artstatus
+
+facility_id
+facility
+facility_mfl_code
+date_of_linkage
+ccc_number
+duration_on_art
+viral_load
+date_of_event
+suppression
+
+chv_id
+chv_names
+
+caregiver_id
+caregiver_names
+caregiver_dob
+caregiver_age
+phone
+caregiver_relation
+caregiver_gender
+caregiver_nationalid
+caregiverhivstatus
+household
+caregiver_type
+
+father_alive
+mother_alive
+
+schoollevel
+school_id
+school_name
+class
+
+registration_date
+duration_in_program
+immunization
+eligibility
+
+exit_status
+exit_date
+exit_reason
+'''
+
+
+@api_view(['GET', 'POST'])
+def caseload(request):
+    """Method to handle DREAMS."""
+    try:
+        results = []
+        eligibity = []
+        ovcs = OVCRegistration.objects.filter(is_void=False)[:200]
+        check_fields = ['sex_id', 'hiv_status_id', 'exit_reason_id',
+                        'immunization_status_id']
+        vals = get_dict(field_name=check_fields)
+        for ovc in ovcs:
+            ovc_id = ovc.person_id
+            dob = str(ovc.person.date_of_birth)
+            reg_date = str(ovc.registration_date)
+            onames = ovc.person.other_names
+            ovc_sex = get_vals(ovc.person.sex_id, vals)
+            hiv_status = get_vals(ovc.hiv_status, vals)
+            art_status = get_vals(ovc.art_status, vals)
+            #
+            imm_status = ovc.immunization_status
+            immunization_status = get_vals(
+                imm_status, vals) if imm_status != 'None' else None
+            # Exit
+            exit_status = 'ACTIVE' if ovc.is_active else 'EXITED'
+            exit_date = str(ovc.exit_date) if ovc.exit_date else ovc.exit_date
+            exit_reason = get_vals(ovc.exit_reason, vals)
+            name = '%s %s%s' % (ovc.person.first_name,
+                                ovc.person.surname,
+                                ' %s' % onames if onames else '')
+            child = {"cbo_id": ovc.child_cbo_id,
+                     "cbo": ovc.child_cbo.org_unit_name,
+                     "cpims_ovc_id": ovc_id, "ovc_names": name,
+                     "sex": ovc_sex, "ovchivstatus": hiv_status,
+                     "artstatus": art_status, "eligibility": eligibity,
+                     "date_of_birth": dob, 'registration_date': reg_date,
+                     "immunization": immunization_status,
+                     "exit_status": exit_status, "exit_date": exit_date,
+                     "exit_reason": exit_reason
+                     }
+            if ovc.hiv_status in ['HSTP', 'HHEI']:
+                ovc_health = OVCHealth.objects.filter(
+                    person_id=ovc_id, is_void=False)
+                if ovc_health:
+                    for health in ovc_health:
+                        facility_name = health.facility.facility_name
+                        child['ccc_number'] = health.ccc_number
+                        child['date_of_linkage'] = health.date_linked
+                        child['facility_name'] = facility_name
+            results.append(child)
+        msg = 'Partner OVC details Found'
+        if request.method == 'GET':
+            org_unit_id = request.query_params.get('org_unit_id')
+            print(org_unit_id)
+        # results['details'] = msg
+    except Exception as e:
+        msg = 'Error getting Partner details - %s' % (str(e))
+        print(msg)
+        return Response([])
+    else:
+        return Response(results)
+
+
+@api_view(['GET', 'POST'])
+def registration(request):
+    try:
+        return caseload(request)
+    except Exception as e:
+        raise e
+
+
+@api_view(['GET', 'POST'])
+def settings(request):
+    try:
+        results = []
+        field_name = request.query_params.get(
+            'field_name', 'case_category_id')
+        if field_name is not None:
+            results = SetupList.objects.filter(
+                field_name=field_name, is_void=False).values(
+                'item_id', 'item_description',
+                'item_sub_category', 'the_order')
+    except Exception:
+        return Response([])
+    else:
+        return Response(results)
+
+
+@api_view(['GET', 'POST'])
+def form_data(request, form_id):
+    """Method to handle Forms ID."""
+    try:
+        results = {}
+        if request.method == 'GET':
+            msg = 'OVC Form details Found'
+            ovc_cpims_id = request.query_params.get('ovc_cpims_id')
+            results = {"cpims_id": ovc_cpims_id, "name": "Test child",
+                       "date_of_birth": "2020-01-01"}
+        elif request.method == 'POST':
+            person_id = request.data.get('ovc_cpims_id')
+            event_date = request.data.get('date_of_event')
+            services = request.data.get('services')
+            print('ALL Data', person_id, event_date, form_id, request.data)
+            ovc_access = validate_ovc(request, person_id)
+            if ovc_access:
+                msg = save_form(
+                    request, person_id, event_date, form_id, services)
+            else:
+                msg = "You do not have access to this OVC by IP / LIP"
+        results['details'] = msg
+    except Exception as e:
+        msg = 'Error getting Partner details - %s' % (str(e))
+        return Response([])
+    else:
+        return Response(results)
 
 
 @api_view(['GET', 'POST'])
 def dreams(request):
-    """Method to handle DREAMS."""
+    """DREAMS Query endpoints."""
     try:
         results = {}
+        check_fields = ['olmis_education_service_id', 'olmis_pss_service_id',
+                        'olmis_hes_service_id', 'olmis_health_service_id',
+                        'olmis_protection_service_id']
         if request.method == 'GET':
             ovc_id = request.query_params.get('cpims_id')
+            dreams_id = request.query_params.get('dreams_id')
+            nupi_no = request.query_params.get('nupi_no')
+            nemis_no = request.query_params.get('nemis_no')
+            bcert_no = request.query_params.get('birth_cert_no')
+            bnoti_no = request.query_params.get('birth_notification_no')
             print('ID', ovc_id)
-            qs = OVCRegistration.objects.filter(
-                person_id=ovc_id, is_void=False)
+            qs = None
+            if ovc_id:
+                qtype = 'CPIMS ID'
+                qs = OVCRegistration.objects.filter(
+                    person_id=ovc_id, is_void=False)
+            elif dreams_id:
+                qtype = 'DREAMS ID'
+                ext_ids = RegPersonsExternalIds.objects.filter(
+                    identifier_type_id='ISOV', identifier=dreams_id,
+                    is_void=False).first()
+                qs = OVCRegistration.objects.filter(
+                    person_id=ext_ids.person_id, is_void=False)
+            elif nupi_no:
+                qtype = 'NUPI Number'
+            elif nemis_no:
+                qtype = 'NEMIS Number'
+            elif bcert_no:
+                qtype = 'Birth Certificate Number'
+            elif bnoti_no:
+                qtype = 'Birth Notification Number'
+            else:
+                qtype = 'Query not Implemented'
             if qs:
                 queryset = qs[0]
-                if queryset.hiv_status == 'HSTP':
+                if queryset.hiv_status in ['HSTP', 'HHEI']:
                     health = OVCHealth.objects.get(
                         person_id=ovc_id, is_void=False)
                     if health:
@@ -402,10 +288,64 @@ def dreams(request):
                         results['ccc_number'] = health.ccc_number
                         results['date_of_linkage'] = health.date_linked
                         results['facility_name'] = facility_name
+                # Primary information
+                results['date_of_birth'] = queryset.person.date_of_birth
                 results['ovc_enrollment_date'] = queryset.registration_date
-                msg = 'OVC details for DREAMS found'
+                # Other identifiers
+                results['nemis_no'] = None
+                results['nupi_no'] = None
+                # Geo locations
+                geos = RegPersonsGeo.objects.filter(
+                    person_id=ovc_id, is_void=False)
+                ward_id, ward_name = None, None
+                const_id, const_name = None, None
+                county_id, county_name = None, None
+                for geo in geos:
+                    if geo.area.area_type_id == 'GWRD':
+                        ward_id = geo.area.area_code
+                        ward_name = geo.area.area_name
+                    if geo.area.area_type_id == 'GDIS':
+                        const_id = geo.area.area_code
+                        const_name = geo.area.area_name
+                        county_id = geo.area.parent_area_id
+                if county_id:
+                    county_id = str(county_id).zfill(3)
+                    county_name = PARAMS[county_id]
+                results['county'] = {'code': county_id, 'name': county_name}
+                results['constituency'] = {'code': const_id,
+                                           'name': const_name}
+                results['ward'] = {'code': ward_id, 'name': ward_name}
+                # Services
+                today = datetime.now()
+                year = today.strftime('%Y')
+                month = today.strftime('%m')
+                yr_padd = 1
+                if int(month) < 9:
+                    yr_padd = 2
+                year = int(year) - yr_padd
+                start_date = '%s-09-01' % (year)
+                # print(year, month, start_date)
+                services = []
+                vals = get_dict(field_name=check_fields)
+                ovc_care_events = OVCCareEvents.objects.filter(
+                    person_id=ovc_id, date_of_event__gte=start_date,
+                    event_type_id='FSAM',
+                    is_void=False).order_by('-date_of_event')
+                for ovc_event in ovc_care_events:
+                    event_id = ovc_event.pk
+                    service_date = ovc_event.date_of_event
+                    ovccare_services = OVCCareServices.objects.filter(
+                        event_id=event_id, is_void=False)
+                    for ovccare_service in ovccare_services:
+                        service_code = ovccare_service.service_provided
+                        service_name = get_vals(service_code, vals)
+                        servs = {'date': service_date, 'code': service_code,
+                                 'name': service_name}
+                        services.append(servs)
+                results['services'] = services
+                msg = 'OVC details for DREAMS found using %s' % (qtype)
             else:
-                msg = 'OVC details for DREAMS Not found'
+                msg = 'OVC details for DREAMS Not found using %s' % (qtype)
         else:
             msg = 'Method not Implemented'
         results['details'] = msg

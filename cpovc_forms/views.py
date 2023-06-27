@@ -10113,7 +10113,7 @@ def new_hivscreeningtool(request, id):
                 url = reverse('ovc_view', kwargs={'id': id})
                 return HttpResponseRedirect(url)
         except Exception as e:
-            from django.db import connection
+            # from django.db import connection
             msg = "failed to save data", e
             messages.add_message(request, messages.ERROR, msg)
         url = reverse('ovc_view', kwargs={'id': id})
@@ -10661,9 +10661,12 @@ def new_cpara(request, id):
     child = RegPerson.objects.get(id=ovc_id)
     creg = OVCRegistration.objects.get(person_id=ovc_id, is_void=False)
     care_giver_id = creg.caretaker_id
+    print('CG', care_giver_id)
     care_giver = RegPerson.objects.get(id=care_giver_id)
+    print('CG ID', care_giver)
     household = OVCHHMembers.objects.filter(
         is_void=False, person_id=care_giver_id).first()
+    print('HH', household)
     hhid = household.house_hold_id
     house_hold = OVCHouseHold.objects.get(id=hhid)
     hhmqs = OVCHHMembers.objects.filter(

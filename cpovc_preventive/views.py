@@ -1174,7 +1174,7 @@ def new_sinovuyo_evaluation(request, id):
             return HttpResponseRedirect(url)
         else:
             check_fields = ['school_level_id', 'literacy_lvl_id', 'yesno_id',
-                            'evaluation_type_id', 'employed_id',
+                            'evaluation_type_id', 'employed_id', 'sex_id',
                             'my_behaviour_id', 'dsp_times_id', 'often_id',
                             'relationship_caregiver_id', 'father_mortality_id',
                             'mother_mortality_id', 'under_care_id',
@@ -1193,7 +1193,7 @@ def new_sinovuyo_evaluation(request, id):
         return render(
             request, 'preventive/sinovuyo/new_caregiver_evaluation.html',
             {'form': form, 'care_giver': care_giver, 'events': events,
-             'vals': vals, 'ovc': ovc})
+             'vals': vals, 'ovc': ovc, 'vals': vals, 'edit': 0})
     except Exception as e:
         raise e
     else:
@@ -1209,6 +1209,7 @@ def edit_sinovuyo_evaluation(request, event_id):
         ovc_id = event.person_id
         ovc = OVCPreventiveRegistration.objects.get(person_id=ovc_id)
         now = timezone.now()
+        event_pref = 'SINO_CG'
         if request.method == 'POST':
             assessment_type = request.POST.get('type_of_assessment')
             date_of_assessment = request.POST.get('date_of_assessment')
@@ -1216,7 +1217,7 @@ def edit_sinovuyo_evaluation(request, event_id):
             datasets = {}
             # Update events table first
             ass_type = 'A' if assessment_type == 'EPRE' else 'B'
-            event_type_id = 'SINO_CG_%s' % (ass_type)
+            event_type_id = '%s_%s' % (event_pref, ass_type)
             event.date_of_event = assessment_date
             event.event_type_id = event_type_id
             event.save(update_fields=['date_of_event', 'event_type_id'])
@@ -1242,12 +1243,14 @@ def edit_sinovuyo_evaluation(request, event_id):
         for ans in answers:
             qtn_code = ans.question_number
             qtn_answer = ans.question_answer
-            if qtn_code.startswith('SINO_CG'):
+            if qtn_code.startswith(event_pref):
                 initial[qtn_code] = qtn_answer
         form = OVCSinovuyoCaregiverAssessmentForm(initial=initial)
+        check_fields = ['sex_id']
+        vals = get_dict(field_name=check_fields)
         return render(
             request, 'preventive/sinovuyo/new_caregiver_evaluation.html',
-            {'form': form, 'ovc': ovc})
+            {'form': form, 'ovc': ovc, 'vals': vals, 'edit': 1})
     except Exception as e:
         raise e
     else:
@@ -1321,7 +1324,7 @@ def new_sinovuyo_evaluation_teen(request, id):
             return HttpResponseRedirect(url)
         else:
             check_fields = ['school_level_id', 'literacy_lvl_id', 'yesno_id',
-                            'evaluation_type_id', 'employed_id',
+                            'evaluation_type_id', 'employed_id', 'sex_id',
                             'my_behaviour_id', 'dsp_times_id', 'often_id',
                             'relationship_caregiver_id', 'father_mortality_id',
                             'mother_mortality_id', 'under_care_id',
@@ -1340,7 +1343,7 @@ def new_sinovuyo_evaluation_teen(request, id):
         return render(
             request, 'preventive/sinovuyo/new_teen_evaluation.html',
             {'form': form, 'care_giver': care_giver, 'events': events,
-             'vals': vals, 'ovc': ovc})
+             'vals': vals, 'ovc': ovc, 'vals': vals, 'edit': 0})
     except Exception as e:
         raise e
     else:
@@ -1353,6 +1356,7 @@ def edit_sinovuyo_evaluation_teen(request, event_id):
     try:
         event = OVCPreventiveEvents.objects.get(pk=event_id)
         answers = OVCPreventiveEvaluation.objects.filter(event_id=event_id)
+        print('ANS', answers)
         ovc_id = event.person_id
         ovc = OVCPreventiveRegistration.objects.get(person_id=ovc_id)
         event_pref = 'SINO_TN'
@@ -1390,12 +1394,15 @@ def edit_sinovuyo_evaluation_teen(request, event_id):
         for ans in answers:
             qtn_code = ans.question_number
             qtn_answer = ans.question_answer
+            print(qtn_code, qtn_answer)
             if qtn_code.startswith(event_pref):
                 initial[qtn_code] = qtn_answer
         form = OVCSinovuyoTeenAssessmentForm(initial=initial)
+        check_fields = ['sex_id']
+        vals = get_dict(field_name=check_fields)
         return render(
             request, 'preventive/sinovuyo/new_teen_evaluation.html',
-            {'form': form, 'ovc': ovc})
+            {'form': form, 'ovc': ovc, 'vals': vals, 'edit': 1})
     except Exception as e:
         raise e
     else:

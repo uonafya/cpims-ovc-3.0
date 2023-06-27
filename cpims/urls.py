@@ -28,8 +28,10 @@ from cpovc_access.forms import StrictPasswordChangeForm
 # New changes
 from cpovc_preventive import urls as preventive_urls
 from cpovc_pmtct import urls as pmtct_urls
-#from notifications import urls as noti_urls
+# from notifications import urls as noti_urls
 # from simple_forums import urls as forum_urls
+from cpovc_api import urls as api_urls
+from cpovc_dashboards import urls as dashboards_urls
 
 
 urlpatterns = [
@@ -80,27 +82,8 @@ urlpatterns = [
     path('settings/', include(settings_urls)),
     path('data_cleanup/', include(data_cleanup_urls)),
     # Accounts management
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/login/', cpovc_auth.views.log_in, name='acclogin'),
-    path(
-        'accounts/password/reset/', password_reset,
-        {'template_name': 'registration/password_reset.html'},
-        name='password_reset'),
-    re_path(
-        r'^accounts/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
-        cpovc_auth.views.reset_confirm, name='password_reset_confirm'),
-    path('reset/', cpovc_auth.views.reset, name='reset'),
-    path(
-        'accounts/password/change/', auth_views.PasswordChangeView.as_view(),
-        {'post_change_redirect': '/accounts/password/change/done/',
-         'template_name': 'registration/password_change.html',
-         'password_change_form': StrictPasswordChangeForm},
-        name='password_change'),
-    path(
-        'accounts/password/change/done/',
-        auth_views.PasswordResetDoneView.as_view(),
-        {'template_name': 'registration/password_change_done.html'}),
-    # Override
+    path('accounts/', include(cpovc_auth.urls)),
+    # Override Login and Logout not to use the /accounts/*
     path('login/', cpovc_auth.views.log_in, name='login'),
     path('logout/', cpovc_auth.views.log_out, name='logout'),
     re_path(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt',
@@ -123,12 +106,16 @@ urlpatterns = [
         name='perform_dash'),
     path('d/glossary/', dash_views.ovc_dashboard_help, name='dash_help'),
     path('api/v2/', include(dashboard_api_urls)),
+    # Dashboards V2
+    path('dashboards/', include(dashboards_urls)),
     # Preventive and Family Support
     path('ovc-care/preventive/', include(preventive_urls)),
     path('ovc-care/pmtct/', include(pmtct_urls)),
     # Notifications
-    #path('notifications/', include(noti_urls, namespace='notifications')),
+    # path('notifications/', include(noti_urls, namespace='notifications')),
     # path('forums/', include(forum_urls)),
+    # API
+    path('api/', include(api_urls)),
 ]
 
 handler400 = 'cpims.views.handler_400'

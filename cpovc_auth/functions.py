@@ -167,7 +167,8 @@ def get_attached_units(user):
             allous = ','.join(all_ous)
             vals = {'perms': orgs, 'primary_ou': reg_pri,
                     'attached_ou': allous, 'perms_ou': allroles,
-                    'reg_ovc': reg_ovc, 'primary_name': reg_pri_name}
+                    'reg_ovc': reg_ovc, 'primary_name': reg_pri_name,
+                    'attached_ous': all_ous}
             return vals
         else:
             return {}

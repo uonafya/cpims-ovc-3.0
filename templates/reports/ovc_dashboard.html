@@ -32,7 +32,7 @@
     <!-- end #page-loader -->
     
     <!-- begin #page-container -->
-    <div id="page-container" class="fade page-without-sidebar page-header-fixed">
+    <div id="page-container" class="page-container fade page-without-sidebar page-header-fixed page-with-top-menu">
         <!-- begin #header -->
         <div id="header" class="header navbar navbar-default navbar-fixed-top">
             <!-- begin container-fluid -->
@@ -50,7 +50,6 @@
                 
                 <!-- begin header navigation right -->
                 <ul class="nav navbar-nav navbar-right">
-                    <!--
                     <li>
                         <form class="navbar-form full-width">
                             <div class="form-group">
@@ -59,16 +58,7 @@
                             </div>
                         </form>
                     </li>
-                    -->
-                    <li><a href="{% url 'ovc_dashboard' %}" id="main_url"><b>1. Registrations</b></a></li>
-                    <li><a href="{% url 'ovc_registration' %}" id="reg_url">2. OVC Eligible for reporting</a></li>
-                    <li><a href="{% url 'hivstat_dash' %}" id="hivstat_url">3. OVC Served & HIV Information</a></li>
-                    <li><a href="{% url 'services_dash' %}" id="services_url">4. Services</a></li>
-                    <li><a href="{% url 'cm_dash' %}" id="cm_url">5. Case Management</a></li>
-                    <li><a href="{% url 'perform_dash' %}" id="pf_url">6. Performance</a></li>
-                    <li><a href="{% url 'mer_dash' %}" id="mer_url">7. MER Reporting</a></li>
-                    <li><a href="{% url 'epc_dash' %}" id="epd_url">8. Epidemic Control</a></li>
-                    <li><a href="{% url 'dash_help' %}" id="help_url">Glossary</a></li>
+                    
                     <li><a href="#" onclick="printChart(); return false;"><i class="fa fa-print"></i> </a></li>
                     {% if user.is_authenticated %}
                     <li class="dropdown" id="session_status"></li>
@@ -117,7 +107,21 @@
             <!-- end container-fluid -->
         </div>
         <!-- end #header -->
-        
+        <!-- begin #top-menu -->
+        <div id="top-menu" class="top-menu">
+            <!-- begin top-menu nav -->
+            <ul class="nav">
+               <li><a href="{% url 'ovc_dashboard' %}" id="main_url"><b>1. Registrations</b></a></li>
+                    <li><a href="{% url 'ovc_registration' %}" id="reg_url">2. OVC Eligible for reporting</a></li>
+                    <li><a href="{% url 'hivstat_dash' %}" id="hivstat_url">3. OVC Served & HIV Information</a></li>
+                    <li><a href="{% url 'services_dash' %}" id="services_url">4. Services</a></li>
+                    <li><a href="{% url 'cm_dash' %}" id="cm_url">5. Case Management</a></li>
+                    <li><a href="{% url 'perform_dash' %}" id="pf_url">6. Performance</a></li>
+                    <li><a href="{% url 'mer_dash' %}" id="mer_url">7. MER Reporting</a></li>
+                    <li><a href="{% url 'epc_dash' %}" id="epd_url">8. Epidemic Control</a></li>
+                    <li><a href="{% url 'dash_help' %}" id="help_url">Glossary</a></li>
+            </ul>
+        </div>        
         <!-- begin #content -->
         <div id="content" class="content">
             <div class="divHeader">
@@ -162,8 +166,8 @@
             </div>
             <!-- begin breadcrumb -->
             <ol class="breadcrumb pull-right">
-                <li><a href="javascript:;">Home</a></li>
-                <li><a href="javascript:;">Registrations</a></li>
+                <li><a href="/">CPIMS Home</a></li>
+                <li><a href="#">Registrations</a></li>
                 <li class="active" id=ipt></li>
                 <li class="active" id=lpt></li>
             </ol>
@@ -313,47 +317,6 @@
                                     <input type="text" class="form-control" placeholder="Disabled input date" disabled />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">Colors Options </label>
-                                <div class="col-md-2">
-                                    <table class="table">
-                                        <tr>
-                                            <td><input type="radio" name="sel_color" value="1" {% if request.session.sel_color == 1 or not request.session.sel_color %} checked {% endif %}> 1 </td>
-                                        </tr>
-                                            {% for cl in colors.1 %}
-                                            <tr><td bgcolor="{{ cl }}">{{ forloop.counter }} : {{ cl }}</td></tr>
-                                            {% endfor %}
-                                    </table>                                        
-                                </div>
-                                <div class="col-md-2">
-                                    <table class="table">
-                                        <tr>
-                                            <td><input type="radio" name="sel_color" value="2" {% if request.session.sel_color == 2 %} checked {% endif %}> 2 </td>
-                                            {% for cl in colors.2 %}
-                                            <tr><td bgcolor="{{ cl }}">{{ forloop.counter }} : {{ cl }}</td></tr>
-                                            {% endfor %}
-                                        </table>                                        
-                                </div>
-                                <div class="col-md-2">
-                                    <table class="table">
-                                        <tr>
-                                            <td><input type="radio" name="sel_color" value="3" {% if request.session.sel_color == 3 %} checked {% endif %}> 3 </td>
-                                            {% for cl in colors.3 %}
-                                            <tr><td bgcolor="{{ cl }}">{{ forloop.counter }} : {{ cl }}</td></tr>
-                                            {% endfor %}
-                                        </table>                                        
-                                </div>
-                                <div class="col-md-2">
-                                    <table class="table">
-                                        <tr>
-                                            <td><input type="radio" name="sel_color" value="4" {% if request.session.sel_color == 4 %} checked {% endif %}> 4 </td>
-                                            {% for cl in colors.4 %}
-                                            <tr><td bgcolor="{{ cl }}">{{ forloop.counter }} : {{ cl }}</td></tr>
-                                            {% endfor %}
-                                        </table>                                        
-                                </div>
-                                <div class="col-md-1"></div>
-                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -432,7 +395,7 @@
            }
 
 
-           reloadVars();
+           reloadVars(0);
 
            $("#sel-county").change(function(){
                var county_id = $(this).val();
@@ -505,22 +468,54 @@
                 $( "#hashes" ).html('#' + hashes);
             }
 
-            function reloadVars(){
-               var county_id = $( "#sel-county" ).val();
-               var const_id = $( "#sel-constituency" ).val();
-               var ward_id = $( "#sel-ward" ).val();
-               var mid = $( "#sel-funding" ).val();
-               if (mid == '0'){
-                   $( "#sel-ip" ).val('');
-                   $( "#sel-lip" ).val('');
-               }
-               var ip = $( "#sel-ip" ).val();
-               if (ip == '0'){
-                   $( "#sel-lip" ).val('');
-               }
-               var lip = $( "#sel-lip" ).val();
-               var prd = $( "#sel-period" ).val();
-               var yr = $( "#sel-year" ).val();
+            function reloadVars(pid=1){
+                if (pid == 0){
+                   var hashes = window.location.hash.substr(1);
+                   if (hashes == ''){
+                       //Set defaults
+                       hashes = '00/000/000/0/0/0/1/2021';
+                   }
+                   var fields = hashes.split('/');
+                   $('#hashes').html(hashes);
+                   var county_id = fields[0];
+                   var const_id = fields[1];
+                   var ward_id = fields[2];
+                   var mid = fields[3];
+                   var ip = fields[4];
+                   var lip = fields[5];
+                   var prd = fields[6];
+                   var yr = fields[7];
+                   // Set values too
+                   $("#sel-funding").val(mid);
+                   if (mid == '0'){
+                       $( "#sel-ip" ).val('');
+                       $( "#sel-lip" ).val('');
+                    }else{
+                       getIP(mid, ip);
+                    }
+                    if (ip == '0'){
+                        $( "#sel-lip" ).val('');
+                    }else{
+                        getLIP(ip, lip);
+                    }
+                }else{
+                    var county_id = $( "#sel-county" ).val();
+                    var const_id = $( "#sel-constituency" ).val();
+                    var ward_id = $( "#sel-ward" ).val();
+                    var mid = $( "#sel-funding" ).val();
+                    if (mid == '0'){
+                       $( "#sel-ip" ).val('');
+                       $( "#sel-lip" ).val('');
+                    }
+                    var ip = $( "#sel-ip" ).val();
+                    if (ip == '0'){
+                       $( "#sel-lip" ).val('');
+                    }
+                    var lip = $( "#sel-lip" ).val();
+                    var prd = $( "#sel-period" ).val();
+                    var yr = $( "#sel-year" ).val();
+                }
+               
                createPage(county_id, const_id, ward_id, mid, ip, lip, prd, yr);
                // Current selections text for UI
                var county_name = $("#sel-county option:selected").text();
@@ -558,10 +553,15 @@
                     });
                });
                // Change URLS to pick current page selections
-               $("a#main_url").prop("href", "/d/#"+ hashes)
-               $("a#hivstat_url").prop("href", "/d/hivstat/#"+ hashes)
-               $("a#services_url").prop("href", "/d/services/#"+ hashes)
-               $("a#cm_url").prop("href", "/d/cm/#"+ hashes)
+               $("a#main_url").prop("href", "/d/#"+ hashes);
+               $("a#reg_url").prop("href", "/d/registration/#"+ hashes);
+               $("a#hivstat_url").prop("href", "/d/hivstat/#"+ hashes);
+               $("a#services_url").prop("href", "/d/services/#"+ hashes);               
+               $("a#cm_url").prop("href", "/d/cm/#"+ hashes);
+               $("a#pf_url").prop("href", "/d/performance/#"+ hashes);
+               $("a#mer_url").prop("href", "/d/MER/#"+ hashes);
+               $("a#epd_url").prop("href", "/d/epidemic-control/#"+ hashes);
+               $("a#help_url").prop("href", "/d/glossary/#"+ hashes);
             }
 
 

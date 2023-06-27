@@ -149,8 +149,8 @@
             </div>
             <!-- begin breadcrumb -->
             <ol class="breadcrumb pull-right">
-                <li><a href="javascript:;">Home</a></li>
-                <li><a href="javascript:;">HIVSTAT & VL Cascade</a></li>
+                <li><a href="/">CPIMS Home</a></li>
+                <li><a href="#">HIVSTAT & VL Cascade</a></li>
                 <li class="active" id=ipt></li>
                 <li class="active" id=lpt></li>
             </ol>
@@ -233,30 +233,7 @@
                 <div class="col-md-6">            
                     <div class="panel panel-inverse">
                         <div class="panel-body">
-                            <div id="container-3G"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end col-6 -->
-                <!-- begin col-6 -->
-                <div class="col-md-6">            
-                    <div class="panel panel-inverse">
-                        <div class="panel-body">
                             <div id="container-3H"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end col-6 -->
-            </div>
-            <!-- end row -->
-
-            <!-- begin row -->
-            <div class="row">
-                <!-- begin col-6 -->
-                <div class="col-md-6">            
-                    <div class="panel panel-inverse">
-                        <div class="panel-body">
-                            <div id="container-3I"></div>
                         </div>
                     </div>
                 </div>
@@ -272,6 +249,30 @@
                 <!-- end col-6 -->
             </div>
             <!-- end row -->
+
+            <!-- begin row -->
+            <div class="row">
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
+                    <div class="panel panel-inverse">
+                        <div class="panel-body">
+                            <div id="container-3K"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-6 -->
+                <!-- begin col-6 -->
+                <div class="col-md-6">            
+                    <div class="panel panel-inverse">
+                        <div class="panel-body">
+                            <div id="container-3L"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-6 -->
+            </div>
+            <!-- end row -->
+
 
             <!-- begin row -->
             <div class="row">
@@ -329,47 +330,6 @@
                                     <input type="text" class="form-control" placeholder="Disabled input date" disabled />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">Colors Options </label>
-                                <div class="col-md-2">
-                                    <table class="table">
-                                        <tr>
-                                            <td><input type="radio" name="sel_color" value="1" {% if request.session.sel_color == 1 or not request.session.sel_color %} checked {% endif %}> 1 </td>
-                                        </tr>
-                                            {% for cl in colors.1 %}
-                                            <tr><td bgcolor="{{ cl }}">{{ forloop.counter }} : {{ cl }}</td></tr>
-                                            {% endfor %}
-                                    </table>                                        
-                                </div>
-                                <div class="col-md-2">
-                                    <table class="table">
-                                        <tr>
-                                            <td><input type="radio" name="sel_color" value="2" {% if request.session.sel_color == 2 %} checked {% endif %}> 2 </td>
-                                            {% for cl in colors.2 %}
-                                            <tr><td bgcolor="{{ cl }}">{{ forloop.counter }} : {{ cl }}</td></tr>
-                                            {% endfor %}
-                                        </table>                                        
-                                </div>
-                                <div class="col-md-2">
-                                    <table class="table">
-                                        <tr>
-                                            <td><input type="radio" name="sel_color" value="3" {% if request.session.sel_color == 3 %} checked {% endif %}> 3 </td>
-                                            {% for cl in colors.3 %}
-                                            <tr><td bgcolor="{{ cl }}">{{ forloop.counter }} : {{ cl }}</td></tr>
-                                            {% endfor %}
-                                        </table>                                        
-                                </div>
-                                <div class="col-md-2">
-                                    <table class="table">
-                                        <tr>
-                                            <td><input type="radio" name="sel_color" value="4" {% if request.session.sel_color == 4 %} checked {% endif %}> 4 </td>
-                                            {% for cl in colors.4 %}
-                                            <tr><td bgcolor="{{ cl }}">{{ forloop.counter }} : {{ cl }}</td></tr>
-                                            {% endfor %}
-                                        </table>                                        
-                                </div>
-                                <div class="col-md-1"></div>
-                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -422,7 +382,8 @@
            App.init();App.init();
            // $('table').addClass('table');
            // Dynamically load Charts
-           var chartlists = ['3A', '3B', '3C', '3D', '3E', '3F', '3G', '3H', '3I'];
+           var chartlists = ['3A', '3B', '3C', '3D', '3E', '3F',
+                             '3H', '3J', '3K', '3L'];
 
            var colors = ["#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9",
                          "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"];
@@ -454,7 +415,7 @@
            }
 
 
-           reloadVars();
+           reloadVars(0);
 
            $("#sel-county").change(function(){
                var county_id = $(this).val();
@@ -527,22 +488,53 @@
                 $( "#hashes" ).html('#' + hashes);
             }
 
-            function reloadVars(){
-               var county_id = $( "#sel-county" ).val();
-               var const_id = $( "#sel-constituency" ).val();
-               var ward_id = $( "#sel-ward" ).val();
-               var mid = $( "#sel-funding" ).val();
-               if (mid == '0'){
-                   $( "#sel-ip" ).val('');
-                   $( "#sel-lip" ).val('');
-               }
-               var ip = $( "#sel-ip" ).val();
-               if (ip == '0'){
-                   $( "#sel-lip" ).val('');
-               }
-               var lip = $( "#sel-lip" ).val();
-               var prd = $( "#sel-period" ).val();
-               var yr = $( "#sel-year" ).val();
+            function reloadVars(pid=1){
+                if (pid == 0){
+                   var hashes = window.location.hash.substr(1);
+                   if (hashes == ''){
+                       //Set defaults
+                       hashes = '00/000/000/0/0/0/1/2021';
+                   }
+                   var fields = hashes.split('/');
+                   $('#hashes').html(hashes);
+                   var county_id = fields[0];
+                   var const_id = fields[1];
+                   var ward_id = fields[2];
+                   var mid = fields[3];
+                   var ip = fields[4];
+                   var lip = fields[5];
+                   var prd = fields[6];
+                   var yr = fields[7];
+                   // Set values too
+                   $("#sel-funding").val(mid);
+                   if (mid == '0'){
+                       $( "#sel-ip" ).val('');
+                       $( "#sel-lip" ).val('');
+                    }else{
+                       getIP(mid, ip);
+                    }
+                    if (ip == '0'){
+                        $( "#sel-lip" ).val('');
+                    }else{
+                        getLIP(ip, lip);
+                    }
+                }else{
+                    var county_id = $( "#sel-county" ).val();
+                    var const_id = $( "#sel-constituency" ).val();
+                    var ward_id = $( "#sel-ward" ).val();
+                    var mid = $( "#sel-funding" ).val();
+                    if (mid == '0'){
+                       $( "#sel-ip" ).val('');
+                       $( "#sel-lip" ).val('');
+                    }
+                    var ip = $( "#sel-ip" ).val();
+                    if (ip == '0'){
+                       $( "#sel-lip" ).val('');
+                    }
+                    var lip = $( "#sel-lip" ).val();
+                    var prd = $( "#sel-period" ).val();
+                    var yr = $( "#sel-year" ).val();
+                }
                createPage(county_id, const_id, ward_id, mid, ip, lip, prd, yr);
                // Current selections text for UI
                var county_name = $("#sel-county option:selected").text();
@@ -580,10 +572,15 @@
                     });
                });
                // Change URLS to pick current page selections
-               $("a#main_url").prop("href", "/d/#"+ hashes)
-               $("a#hivstat_url").prop("href", "/d/hivstat/#"+ hashes)
-               $("a#services_url").prop("href", "/d/services/#"+ hashes)
-               $("a#cm_url").prop("href", "/d/cm/#"+ hashes)
+               $("a#main_url").prop("href", "/d/#"+ hashes);
+               $("a#reg_url").prop("href", "/d/registration/#"+ hashes);
+               $("a#hivstat_url").prop("href", "/d/hivstat/#"+ hashes);
+               $("a#services_url").prop("href", "/d/services/#"+ hashes);               
+               $("a#cm_url").prop("href", "/d/cm/#"+ hashes);
+               $("a#pf_url").prop("href", "/d/performance/#"+ hashes);
+               $("a#mer_url").prop("href", "/d/MER/#"+ hashes);
+               $("a#epd_url").prop("href", "/d/epidemic-control/#"+ hashes);
+               $("a#help_url").prop("href", "/d/glossary/#"+ hashes);
             }
 
 
