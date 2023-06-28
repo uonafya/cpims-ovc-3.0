@@ -146,8 +146,8 @@ class OVCHHMembers(models.Model):
 
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    house_hold = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE,  default=uuid.uuid4)
-    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    house_hold = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE,  default=uuid.uuid4,db_column='house_hold_id')
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE,db_column='person_id')
     hh_head = models.BooleanField(default=False)
     member_type = models.CharField(max_length=4)
     member_alive = models.CharField(max_length=4, default='AYES')

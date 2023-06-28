@@ -31,8 +31,13 @@ from cpovc_dashboard import urls as dashboard_api_urls
 from cpovc_access.forms import StrictPasswordChangeForm
 
 from cpims_api import urls as cpims_api_urls
+from django.conf import settings
+from django.conf.urls.static import static
 
 
+urlpatterns = [
+    # ... your URL patterns
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
 urlpatterns = [

@@ -8,7 +8,6 @@ from datetime import timedelta
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 SECRET_KEY = 'h34yo5l8c8!edb%^b@3j-i^gc$e)fcjnw_9jm4a^%jbq&*41+@'
 
 FORM_RENDERER = 'django.forms.renderers.DjangoTemplates'
@@ -17,10 +16,10 @@ FORM_RENDERER = 'django.forms.renderers.DjangoTemplates'
 ALLOWED_HOSTS = ['*']
 
 cpims_db_host = os.environ.get('CPIMS_HOST') if os.environ.get('CPIMS_HOST') else '127.0.0.1'
-cpims_db_pass = os.environ.get('CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'ayan4411'
+cpims_db_pass = os.environ.get('CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'qwerty@123'
 cpims_db_instance = os.environ.get('CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims'
-cpims_db_port = os.environ.get('CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5433'
-cpims_db_user = os.environ.get('CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'postgres'
+cpims_db_port = os.environ.get('CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5432'
+cpims_db_user = os.environ.get('CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'atieno'
 cpims_debug = eval(os.environ.get('CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else False
 
 DEBUG = cpims_debug
@@ -52,7 +51,7 @@ INSTALLED_APPS = [
      'notifications',
      'cpovc_help',
      'cpims_api',
-    #  'rest_framework.authtoken',
+    'rest_framework.authtoken',
     'rest_framework_swagger'
      
 ]
@@ -72,7 +71,6 @@ INSTALLED_APPS = [
 #     'cpovc_auth.middleware.UserRestrictMiddleware',
 #     # 'cpovc_access.middleware.FailedLoginMiddleware',
 # )
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -100,9 +98,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                 'cpovc_main.context_processors.global_settings',
-                 # forums,
-               # 'simple_forums.context_processors.installed_apps'
+                'cpovc_main.context_processors.global_settings',
             ],
         },
     },
@@ -111,21 +107,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'cpims.wsgi.application'
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': cpims_db_instance,
         'USER': cpims_db_user,
         'PASSWORD': cpims_db_pass,
-        'HOST': 'localhost',
-        'PORT': '5432', },
+        'HOST': cpims_db_host,
+        'PORT': cpims_db_port, },
     'reporting': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': cpims_db_instance,
@@ -134,7 +123,6 @@ DATABASES = {
         'HOST': '41.89.94.104',
         'PORT': cpims_db_port, }
 }
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Africa/Nairobi'
@@ -156,9 +144,9 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
 AUTH_USER_MODEL = 'cpovc_auth.AppUser'
 
 # AUTHENTICATION_BACKENDS = ['cpovc_auth.backends.CPOVCAuthenticationBackend']
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+# AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ALLOW_NATIONAL_ID_LOGIN = True
 
@@ -228,10 +216,8 @@ CACHES = {
 }
 CSRF_FAILURE_VIEW = 'cpims.views.csrf_failure'
 
-OFFLINE_MODE_CAPABILITY_ENABLED = eval(os.environ.get('CAN_WORK_OFFLINE', 'False'))
-
-# import logging configs
-from .logging_config import *
+OFFLINE_MODE_CAPABILITY_ENABLED = eval(
+    os.environ.get('CAN_WORK_OFFLINE', 'True'))
 
 # kmhfl API
 KMHFL_USERNAME = '10004'
@@ -247,47 +233,14 @@ KMHFL_SUBCOUNTY_BASE_URL = ''
 KMHFL_TOKEN_URL = ''
 
 # nascop API
-NASCOP_API_BASE_URL = os.environ.get('NASCOP_API_BASE_URL') if os.environ.get('NASCOP_API_BASE_URL') else ''
-NASCOP_LOGIN_URL = os.environ.get('NASCOP_LOGIN_URL') if os.environ.get('NASCOP_LOGIN_URL') else ''
-NASCOP_EMAIL = os.environ.get('NASCOP_EMAIL') if os.environ.get('NASCOP_EMAIL') else ''
-NASCOP_PASSWORD = os.environ.get('NASCOP_PASSWORD') if os.environ.get('NASCOP_PASSWORD') else ''
+NASCOP_API_BASE_URL = os.environ.get(
+    'NASCOP_API_BASE_URL') if os.environ.get('NASCOP_API_BASE_URL') else ''
+NASCOP_LOGIN_URL = os.environ.get(
+    'NASCOP_LOGIN_URL') if os.environ.get('NASCOP_LOGIN_URL') else ''
+NASCOP_EMAIL = os.environ.get(
+    'NASCOP_EMAIL') if os.environ.get('NASCOP_EMAIL') else ''
+NASCOP_PASSWORD = os.environ.get(
+    'NASCOP_PASSWORD') if os.environ.get('NASCOP_PASSWORD') else ''
 
 
-
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        
-        'rest_framework.permissions.IsAuthenticated',
-        'rest_framework.permissions.IsAdminUser',
-    ]
-}
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
-    "UPDATE_LAST_LOGIN": True,
-
-    "ALGORITHM": "HS256",
-    "SIGNING_KEY": SECRET_KEY,
-    "VERIFYING_KEY": None,
-    "AUDIENCE": None,
-    "ISSUER": None,
-
-    "AUTH_HEADER_TYPES": ("Bearer", ),
-    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
-    "USER_ID_FIELD": "id",
-    "USER_ID_CLAIM": "user_id",
-
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken", ),
-    "TOKEN_TYPE_CLAIM": "token_type",
-
-    "JTI_CLAIM": "jti",
-
-    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
-    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
-    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
-}
+STATIC_ROOT = os.path.join(BASE_DIR, 'assets')

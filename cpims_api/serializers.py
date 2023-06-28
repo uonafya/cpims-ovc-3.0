@@ -767,38 +767,23 @@ class DashboardSerializer(serializers.Serializer):
             } for category in obj['case_cats']
         ]
 
-class CombinedDataSerializer(serializers.Serializer):
-    persons = serializers.ListField(child=serializers.DictField())
-    persons_geo = serializers.ListField(child=serializers.DictField())
-    cpims_id= serializers.ListField(child=serializers.DictField())
-    person_data= serializers.ListField(child=serializers.DictField())
-    checkin_data= serializers.ListField(child=serializers.DictField())
-    household_data= serializers.ListField(child=serializers.DictField())
-    bursary_data= serializers.ListField(child=serializers.DictField())
-    case_record_data= serializers.ListField(child=serializers.DictField())
-    case_geo_data= serializers.ListField(child=serializers.DictField())
-    conomic_status_data= serializers.ListField(child=serializers.DictField())
-    family_status_data= serializers.ListField(child=serializers.DictField())
-    hobbies_data= serializers.ListField(child=serializers.DictField())
-    friends_data= serializers.ListField(child=serializers.DictField())
-    medical_data= serializers.ListField(child=serializers.DictField())
-    medical_subconditions_data= serializers.ListField(child=serializers.DictField())
-    case_category_data= serializers.ListField(child=serializers.DictField())
-    case_sub_category_data= serializers.ListField(child=serializers.DictField())
-    referral_data= serializers.ListField(child=serializers.DictField())
-    needs_data= serializers.ListField(child=serializers.DictField())
-    placement_data= serializers.ListField(child=serializers.DictField())
-    case_events_data= serializers.ListField(child=serializers.DictField())
-    case_event_services_data= serializers.ListField(child=serializers.DictField())
-    case_event_court_data= serializers.ListField(child=serializers.DictField())
-    case_event_summon_data= serializers.ListField(child=serializers.DictField())
-    case_event_closure_data= serializers.ListField(child=serializers.DictField())
-    documents_data= serializers.ListField(child=serializers.DictField())
-    placement_followup_data= serializers.ListField(child=serializers.DictField())
-    discharge_followup_data= serializers.ListField(child=serializers.DictField())
+class OVCSerializer(serializers.Serializer):
+    status = serializers.IntegerField()
+    child = serializers.CharField()
+    params = serializers.DictField()
+    child_hiv_status = serializers.CharField()
+    guardians = serializers.ListField()
+    siblings = serializers.ListField()
+    # vals = serializers.DictField()
+    hhold = serializers.DictField()
+    creg = serializers.DictField()
+    extids = serializers.DictField()
+    health = serializers.DictField()
+    hhmembers = serializers.ListField()
+    school = serializers.DictField()
+    care_giver = serializers.DictField()
+    services = serializers.DictField()
+    allow_edit = serializers.BooleanField()
+    suppression = serializers.CharField()
+    well_being_count = serializers.DictField()
 
-    def create(self, validated_data):
-        pass
-
-    def update(self, instance, validated_data):
-        pass

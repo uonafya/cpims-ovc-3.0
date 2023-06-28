@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage
@@ -13,7 +13,12 @@ from rest_framework.response import Response
 from django.db.models import Count
 
 from cpovc_auth.models import *
+from cpovc_ovc.models import  *
 from cpovc_main.functions import *
+from cpovc_ovc.functions import (
+    ovc_registration, get_hh_members, get_ovcdetails, gen_cbo_id, search_ovc,
+    search_master, get_school, get_health, manage_checkins, ovc_management,
+    get_exit_org)
 # models
 from cpovc_registry.models import (
     OVCCheckin,
@@ -39,8 +44,8 @@ from cpovc_registry.models import (
 )
 from cpovc_ovc.models import (
     OVCHouseHold,
-    OVCRegistration, 
-    OVCViralload, 
+    OVCRegistration,
+    OVCViralload,
     OVCExit
 )
 
@@ -121,23 +126,23 @@ class RegOrgUnitViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegOrgUnit.objects.all()
     serializer_class = RegOrgUnitSerializer
-    
+
 
 class OVCRegistrationViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCRegistration.objects.all()
     serializer_class = OVCRegistrationSerializers
-    
+
 class RegpersonViewSet(viewsets.ModelViewSet):
     permission_classes  = (IsAuthenticated)
     queryset = RegPerson.objects.all()
     serializer_class = RegPersonSerializers
-    
+
 class FacilityListViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = FacilityList.objects.all()
     serializer_class = FacilityListSerializers
-    
+
 class OvcCareServicesViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset =  OVCCareServices.objects.all()
@@ -147,19 +152,19 @@ class OvcViralLoadViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCViralload.objects.all()
     serializer_class = OvcViralLoadSerializers
-    
+
 
 class OVCEducationLevelViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCEducationLevelFollowUp.objects.all()
     serializer_class = OVCEducationLevelFollowUpSerializer
-    
-    
+
+
 class OVCEducationFollowUpViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCEducationFollowUp.objects.all()
     serializer_class = OVCEducationFollowUpSerializers
-    
+
 class OVCExitViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCExit.objects.all()
@@ -169,83 +174,83 @@ class OVCExitViewSet(viewsets.ModelViewSet):
 class OVCCarePriorityViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCCarePriority.objects.all()
-    serializer_class = OVCCarePrioritySerializer  
-    
+    serializer_class = OVCCarePrioritySerializer
+
 class RegOrgUnitContactViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegOrgUnitContact.objects.all()
     serializer_class = RegOrgUnitContactSerializer
-    
+
 class RegOrgUnitExternalIDViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegOrgUnitExternalID.objects.all()
     serializer_class = RegOrgUnitExternalIDSerializer
-    
+
 class RegOrgUnitGeographyViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegOrgUnitGeography.objects.all()
     serializer_class = RegOrgUnitGeographySerializer
-    
+
 class RegPersonViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegPerson.objects.all()
     serializer_class = RegPersonSerializers
-    
+
 class RegBiometricViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegBiometric.objects.all()
     serializer_class = RegBiometricSerializer
-    
+
 class RegPersonsGuardiansViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegPersonsGuardians.objects.all()
     serializer_class = RegPersonsGuardiansSerialzer
-    
+
 class RegPersonsSiblingsViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegPersonsSiblings.objects.all()
     serializer_class = RegPersonsSiblingsSerializer
-    
+
 class RegPersonsTypesViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegPersonsTypes.objects.all()
     serializer_class = RegPersonsTypesSerializer
-    
+
 class RegPersonsGeoViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegPersonsGeo.objects.all()
     serializer_class = RegPersonsGeoSerializer
-    
+
 class RegPersonsExternalIdsViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegPersonsExternalIds.objects.all()
     serializer_class = RegPersonsExternalIdsSerializers
-    
+
 class RegPersonsContactViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegPersonsContact.objects.all()
     serializer_class = RegPersonsContactSerialzer
-    
+
 class RegPersonsOrgUnitsViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegPersonsOrgUnits.objects.all()
     serializer_class = RegPersonsOrgUnitsSerializer
-    
+
 class RegPersonsWorkforceIdsViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegPersonsWorkforceIds.objects.all()
-    serializer_class = RegPersonsWorkforceIdsSerializer    
-    
+    serializer_class = RegPersonsWorkforceIdsSerializer
+
 class RegPersonsBeneficiaryIdsViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegPersonsBeneficiaryIds.objects.all()
     serializer_class = RegPersonsBeneficiaryIdsSerializers
-    
+
 class RegOrgUnitsAuditTrailViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegOrgUnitsAuditTrail.objects.all()
     serializer_class = RegOrgUnitsAuditTrailSerializers
-    
+
 class RegPersonsAuditTrailViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = RegPersonsAuditTrail.objects.all()
@@ -255,33 +260,33 @@ class OVCSiblingViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCSibling.objects.all()
     serializer_class = OVCSiblingSerializer
-    
+
 # no urls here
 class OVCCheckinViewSets(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCCheckin.objects.all()
     serializer_class = OVCCheckinSerializers
-    
+
 class OVCHouseHoldViewSets(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCHouseHold.objects.filter(is_void=False)
     serializer_class = OVCHouseHoldSerializers
-    
+
     def destroy(self, request, *args, **kwargs):
         OVCHouseHold.soft_delete()
         return "Ok"
-     
+
     # def list(self, request):
     #     raise MethodNotAllowed('GET', detail='Method "GET" not allowed without lookup')
-    
+
     # def create(self, request):
     #     raise MethodNotAllowed(method='POST')
-    
+
 class PersonsMasterViewSets(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = PersonsMaster.objects.all()
     serializer_class = PersonsMasterSerializers
-    
+
 class OVCBursaryViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCBursary.objects.all()
@@ -505,12 +510,12 @@ class OVCCareIndividaulCparaViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = OVCCareIndividaulCpara.objects.all()
     serializer_class = OVCCareIndividaulCparaSerializers
-    
+
 class FormsLogViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = FormsLog.objects.all()
     serializer_class = FormsLogSerializers
-    
+
 class FormsAuditTrailViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     queryset = FormsAuditTrail.objects.all()
@@ -525,7 +530,7 @@ class SchoolListViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
     queryset = SchoolList.objects.all()
-    serializer_class = SchoolistSeriallizers 
+    serializer_class = SchoolistSeriallizers
 class SetupGeographyViewSet(viewsets.ModelViewSet):
 
     authentication_classes = (TokenAuthentication,)
@@ -739,40 +744,461 @@ class MobileDashboardViewSet(viewsets.ViewSet):
             serializer = DashboardSerializer(dash)
             return Response(serializer.data)
 
-class CombinedDataViewSet(viewsets.ViewSet):
+
+
+class OVCViewSet(viewsets.ViewSet):
     queryset = OVCRegistration.objects.filter(is_void=False)
 
-    def get_queryset(self):
-        return self.queryset
-
-    def usersubcounty_lookup(request):
-        # For JSON lookup stuff on Case Geo Locs pages
+    def list(self, request, id=None):
         try:
-            if request.method == 'POST':
-                user_id = request.POST.get('user_id')
-                jsonSubcountyResults = []
-                subcounty_ids = []
+            if id is not None:
+                ovc_id = int(id)
+                print(ovc_id)
+                try:
+                    child = RegPerson.objects.get(is_void=False, id=ovc_id)
+                except RegPerson.DoesNotExist:
+                    child=None
+                try:
+                    creg = OVCRegistration.objects.get(is_void=False, person=ovc_id)
+                    print(creg)
+                    days = 0
+                    if not creg.is_active and creg.exit_date:
+                        edate = creg.exit_date
+                        tdate = date.today()
+                        days = (tdate - edate).days
+                    print('exit days', days)
+                    allow_edit = False if days > 90 else True
+                    params = {}
+                    gparams = {}
+                except OVCRegistration.DoesNotExist:
+                    creg=None
+                    params=None
+                    gparams=None
+                # Get guardians
+                try:
+                    guardians = RegPersonsGuardians.objects.filter(
+                        is_void=False, child_person=child.id)
+                    guids = [guardian.guardian_person_id for guardian in guardians]
+                    guids.append(child.id)
+                except RegPersonsGuardians.DoesNotExist:
+                    guardians=None
+                    guids=None
 
-                user_geolocs = CPOVCUserRoleGeoOrg.objects.filter(
-                    user_id=int(user_id))
-                if user_geolocs:
-                    # If User Is Attached (Not National Coverage)
-                    for user_geoloc in user_geolocs:
-                        if user_geoloc.area:
-                            subcounty_ids.append(int(user_geoloc.area.area_id))
-                else:
-                    # National Coverage
-                    user_nationalgeolocs = SetupGeography.objects.filter(
-                        area_type_id='GDIS')
-                    for user_geoloc in user_nationalgeolocs:
-                        subcounty_ids.append(int(user_geoloc.area_id))
+                try:
+                    extids = RegPersonsExternalIds.objects.filter(person__in=guids)
+                    for extid in extids:
+                        if extid.person_id == child.id:
+                            params[extid.identifier_type_id] = extid.identifier
+                        else:
+                            gkey = f"{extid.person_id}_{extid.identifier_type_id}"
+                            gparams[gkey] = extid.identifier
+                    # Health details
+                    health = {}
+                    if creg.hiv_status == 'HSTP':
+                        health = get_health(ovc_id)
+                    # School details
+                    school = {}
+                    if creg.school_level != 'SLNS':
+                        school = get_school(ovc_id)
+                except RegPersonsExternalIds.DoesNotExist:
+                    extid=None
+                    health=None
+                    school=None
+                # Get household
+                try:
+                    hhold = OVCHHMembers.objects.get(is_void=False, person=child.id)
+                    # Get HH members
+                    hhid = hhold.house_hold
+                    hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold=hhid).order_by("-hh_head")
+                    hhmembers = list(hhmqs.exclude(person=child.id))
+                except OVCHHMembers.DoesNotExist:
+                    hhold = None
+                    hhmqs = None
+                    hhmembers = None
+                # Viral load
+                vload = OVCViralload.objects.filter(is_void=False, person=ovc_id).order_by("-viral_date")[:1]
+                vl_sup, v_val, v_dt = 'Missing', None, None
+                if vload:
+                    for vl in vload:
+                        v_val = vl.viral_load
+                        v_dt = vl.viral_date
+                    vl_sup = 'YES' if not v_val or v_val < 1000 else 'NO'
+                # Get siblings
+                siblings = RegPersonsSiblings.objects.filter(is_void=False, child_person=child.id)
+                # Get services
+                servs = {
+                    'FSAM': 'f1a',
+                    'FCSI': 'fcsi',
+                    'FHSA': 'fhva',
+                    'cpr': 'cpr',
+                    'wba': 'wba',
+                    'CPAR': 'CPAR',
+                    'WBG': 'WBG'
+                }
+                services = {key: 0 for key in servs.values()}
+                sqs = OVCCareEvents.objects.filter(Q(person=child.id) | Q(house_hold=hhid))
+                sqs = sqs.filter(is_void=False).values('event_type_id').annotate(total=Count('event_type_id')).order_by(
+                    'total')
+                for serv in sqs:
+                    item = serv['event_type_id']
+                    item_count = serv['total']
+                    if item in servs:
+                        item_key = servs[item]
+                        services[item_key] = item_count
+                # Re-usable values
+                check_fields = [
+                    'relationship_type_id',
+                    'school_level_id',
+                    'hiv_status_id',
+                    'immunization_status_id',
+                    'art_status_id',
+                    'school_type_id',
+                    'class_level_id'
+                ]
+                vals = get_dict(field_name=check_fields)
+                wellbeing_services = {
+                    'wba': services['wba'],
+                    'WBG': services['WBG']
+                }
+                child_hiv_status = OVCRegistration.objects.get(person=id).hiv_status
+                try:
+                    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+                except RegPerson.DoesNotExist:
+                    care_giver = None
+                    print('Caregiver does not exist for child: %s' % child.id)
 
-                for subcounty_id in subcounty_ids:
-                    jsonSubcountyResults.append({'area_id': subcounty_id,
-                                                 'area_name': translate_geo(subcounty_id)})
+                # Rest of the code...
+
+                dataset = {
+                    'status': 200,
+                    'child': child,
+                    'params': params,
+                    'child_hiv_status': child_hiv_status,
+                    'guardians': guardians,
+                    'siblings': siblings,
+                    'hhold': hhold,
+                    'creg': creg,
+                    'extids': gparams,
+                    'health': health,
+                    'hhmembers': hhmembers,
+                    'school': school,
+                    'care_giver': care_giver,
+                    'services': services,
+                    'allow_edit': allow_edit,
+                    'suppression': vl_sup,
+                    'well_being_count': wellbeing_services
+                }
+                # print(f"{dataset} child")
+
+                serializer = OVCSerializer(dataset)
+                print(dataset)
+                return Response(serializer.data)
+            else:
+                covc_ids = RegPerson.objects.filter(is_void=False, designation="COVC").values_list("id", flat=True)
+                dataset_list = []
+                print(covc_ids)
+
+                for covc_id in covc_ids:
+
+                    child = RegPerson.objects.get(is_void=False, id=covc_id)
+                    try:
+                        creg = OVCRegistration.objects.get(is_void=False, person_id=covc_id)
+                        days = 0
+                        if not creg.is_active and creg.exit_date:
+                            edate = creg.exit_date
+                            tdate = date.today()
+                            days = (tdate - edate).days
+                        print('exit days', days)
+                        allow_edit = False if days > 90 else True
+                        params = {}
+                        gparams = {}
+                        # Health details
+                        health = {}
+                        if creg.hiv_status == 'HSTP':
+                            health = get_health(covc_id)
+                        # School details
+                        school = {}
+                        if creg.school_level != 'SLNS':
+                            school = get_school(covc_id)
+                    except OVCRegistration.DoesNotExist:
+                        creg=None
+                        params=None
+                        gparams=None
+                        health=None
+                        school=None
+
+
+                    # Get guardians
+                    try:
+                        guardians = RegPersonsGuardians.objects.filter(
+                            is_void=False, child_person_id=child.id)
+                        guids = [guardian.guardian_person_id for guardian in guardians]
+                        guids.append(child.id)
+                    except RegPersonsGuardians.DoesNotExist:
+                        guardians=None
+                        guids=None
+                    try:
+                        extids = RegPersonsExternalIds.objects.filter(person_id__in=guids)
+                        for extid in extids:
+                            if extid.person_id == child.id:
+                                params[extid.identifier_type_id] = extid.identifier
+                            else:
+                                gkey = f"{extid.person_id}_{extid.identifier_type_id}"
+                                gparams[gkey] = extid.identifier
+                    except RegPersonsExternalIds.DoesNotExist:
+                        extidS=None
+                        gparams[gkey]=None
+
+                    # Get household
+                    try:
+                        hhold = OVCHHMembers.objects.get(is_void=False, person=child.id)
+                        # Get HH members
+                        hhid = hhold.house_hold
+                        hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold=hhid).order_by("-hh_head")
+                        hhmembers = list(hhmqs.exclude(person=child.id))
+                    except OVCHHMembers.DoesNotExist:
+                        hhold=None
+                        hhmqs = None
+                        hhmembers = None
+                        hhid=None
+
+                    # Viral load
+                    try:
+                        vload = OVCViralload.objects.filter(is_void=False, person_id=covc_id).order_by("-viral_date")[
+                                :1]
+                        vl_sup, v_val, v_dt = 'Missing', None, None
+                        if vload:
+                            for vl in vload:
+                                v_val = vl.viral_load
+                                v_dt = vl.viral_date
+                            vl_sup = 'YES' if not v_val or v_val < 1000 else 'NO'
+                    except OVCViralload.DoesNotExist:
+                        vl_sup=None
+                    # Get siblings
+                    try:
+                        siblings = RegPersonsSiblings.objects.filter(is_void=False, child_person_id=child.id)
+                    except RegPersonsSiblings.DoesNotExist:
+                        siblings=None
+                    # Get services
+
+                try:
+                    servs = {
+                        'FSAM': 'f1a',
+                        'FCSI': 'fcsi',
+                        'FHSA': 'fhva',
+                        'cpr': 'cpr',
+                        'wba': 'wba',
+                        'CPAR': 'CPAR',
+                        'WBG': 'WBG'
+                    }
+                    services = {key: 0 for key in servs.values()}
+                    sqs = OVCCareEvents.objects.filter(Q(person=child.id) | Q(house_hold=hhid))
+                    sqs = sqs.filter(is_void=False).values('event_type_id').annotate(
+                        total=Count('event_type_id')).order_by(
+                        'total')
+                    for serv in sqs:
+                        item = serv['event_type_id']
+                        item_count = serv['total']
+                        if item in servs:
+                            item_key = servs[item]
+                            services[item_key] = item_count
+
+                except OVCCareEvents.DoesNotExist:
+                    services=None
+
+                    # Re-usable values
+
+                try:
+
+                    check_fields = [
+                        'relationship_type_id',
+                        'school_level_id',
+                        'hiv_status_id',
+                        'immunization_status_id',
+                        'art_status_id',
+                        'school_type_id',
+                        'class_level_id'
+                    ]
+                    vals = get_dict(field_name=check_fields)
+                    wellbeing_services = {
+                        'wba': services['wba'],
+                        'WBG': services['WBG']
+                    }
+
+                except OVCCareEvents.DoesNotExist:
+                    wellbeing_services=None
+
+
+                try:
+                    child_hiv_status = OVCRegistration.objects.get(person=id).hiv_status
+                except OVCRegistration.DoesNotExist:
+                    child_hiv_status=None
+
+
+                try:
+
+                    care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+                except RegPerson.DoesNotExist:
+                    care_giver = None
+                    print('Caregiver does not exist for child: %s' % child.id)
+
+                # Rest of the code...
+
+                dataset = {
+                    'status': 200,
+                    'child': child,
+                    'params': params,
+                    'child_hiv_status': child_hiv_status,
+                    'guardians': guardians,
+                    'siblings': siblings,
+                    'hhold': hhold,
+                    'creg': creg,
+                    'extids': gparams,
+                    'health': health,
+                    'hhmembers': hhmembers,
+                    'school': school,
+                    'care_giver': care_giver,
+                    'services': services,
+                    'allow_edit': allow_edit,
+                    'suppression': vl_sup,
+                    'well_being_count': wellbeing_services
+                }
+                # print(dataset + "child")
+                dataset_list.append(dataset)
+
+            serializer = OVCSerializer(dataset_list, many=True)
+            print(dataset_list)
+            return Response(serializer.data)
+
         except Exception as e:
-            raise e
-        return JsonResponse(jsonSubcountyResults, content_type='application/json',
-                            safe=False)
+            print("Error retrieving OVC data - %s" % (str(e)))
+            msg = "An error occurred when retrieving OVC data"
+            return Response({'error': msg})
+    def play(self,request,id=None):
+        if id is not None:
+            ovc_id = int(id)
+            print(ovc_id)
+            try:
+                child = RegPerson.objects.get(is_void=False, id=ovc_id)
+            except RegPerson.DoesNotExist:
+                child = None
+
+            creg = OVCRegistration.objects.get(is_void=False, person=ovc_id)
+
+            # Get guardians
+
+            guardians = RegPersonsGuardians.objects.filter(
+                    is_void=False, child_person=child.id)
+
+
+
+            extids = RegPersonsExternalIds.objects.all()
+                for extid in extids:
+                # Health details
+                health = {}
+                if creg.hiv_status == 'HSTP':
+                    health = get_health(ovc_id)
+                # School details
+                school = {}
+                if creg.school_level != 'SLNS':
+                    school = get_school(ovc_id)
+            except RegPersonsExternalIds.DoesNotExist:
+                extid = None
+                health = None
+                school = None
+            # Get household
+            try:
+                hhold = OVCHHMembers.objects.get(is_void=False, person=child.id)
+                # Get HH members
+                hhid = hhold.house_hold
+                hhmqs = OVCHHMembers.objects.filter(is_void=False, house_hold=hhid).order_by("-hh_head")
+                hhmembers = list(hhmqs.exclude(person=child.id))
+            except OVCHHMembers.DoesNotExist:
+                hhold = None
+                hhmqs = None
+                hhmembers = None
+            # Viral load
+            vload = OVCViralload.objects.filter(is_void=False, person=ovc_id).order_by("-viral_date")[:1]
+            vl_sup, v_val, v_dt = 'Missing', None, None
+            if vload:
+                for vl in vload:
+                    v_val = vl.viral_load
+                    v_dt = vl.viral_date
+                vl_sup = 'YES' if not v_val or v_val < 1000 else 'NO'
+            # Get siblings
+            siblings = RegPersonsSiblings.objects.filter(is_void=False, child_person=child.id)
+            # Get services
+            servs = {
+                'FSAM': 'f1a',
+                'FCSI': 'fcsi',
+                'FHSA': 'fhva',
+                'cpr': 'cpr',
+                'wba': 'wba',
+                'CPAR': 'CPAR',
+                'WBG': 'WBG'
+            }
+            services = {key: 0 for key in servs.values()}
+            sqs = OVCCareEvents.objects.filter(Q(person=child.id) | Q(house_hold=hhid))
+            sqs = sqs.filter(is_void=False).values('event_type_id').annotate(total=Count('event_type_id')).order_by(
+                'total')
+            for serv in sqs:
+                item = serv['event_type_id']
+                item_count = serv['total']
+                if item in servs:
+                    item_key = servs[item]
+                    services[item_key] = item_count
+            # Re-usable values
+            check_fields = [
+                'relationship_type_id',
+                'school_level_id',
+                'hiv_status_id',
+                'immunization_status_id',
+                'art_status_id',
+                'school_type_id',
+                'class_level_id'
+            ]
+            vals = get_dict(field_name=check_fields)
+            wellbeing_services = {
+                'wba': services['wba'],
+                'WBG': services['WBG']
+            }
+            child_hiv_status = OVCRegistration.objects.get(person=id).hiv_status
+            try:
+                care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
+            except RegPerson.DoesNotExist:
+                care_giver = None
+                print('Caregiver does not exist for child: %s' % child.id)
+
+            # Rest of the code...
+
+            dataset = {
+                'status': 200,
+                'child': child,
+                'params': params,
+                'child_hiv_status': child_hiv_status,
+                'guardians': guardians,
+                'siblings': siblings,
+                'hhold': hhold,
+                'creg': creg,
+                'extids': gparams,
+                'health': health,
+                'hhmembers': hhmembers,
+                'school': school,
+                'care_giver': care_giver,
+                'services': services,
+                'allow_edit': allow_edit,
+                'suppression': vl_sup,
+                'well_being_count': wellbeing_services
+            }
+            # print(f"{dataset} child")
+
+            serializer = OVCSerializer(dataset)
+            print(dataset)
+            return Response(serializer.data)
+
+
+
+
+
 
 

@@ -111,10 +111,10 @@ router.register('reg_org_unit', views.RegOrgUnitViewSet)
 # #dash
 router.register('dashboard', views.MobileDashboardViewSet, basename="dashboard")
 #dataset
-router.register('dataset', views.CombinedDataViewSet, basename='dataset')
+router.register('dataset', views.OVCViewSet, basename="dataset")
 
 urlpatterns = [
-    path('', include(router.urls)),    
+    path('', include(router.urls)),
     path('token-auth', obtain_auth_token, name='api_token_auth'),
     path('api_schema', get_schema_view(title='CPIMS API', description='Guide for the CPIMS REST API schema'), name='api_schema'),
     path('api_docs', TemplateView.as_view(template_name='swagger-ui.html',
@@ -123,6 +123,7 @@ urlpatterns = [
         template_name='swagger-ui.html',
         extra_context={'schema_url':'api_schema'}
         ), name='swagger-ui'),
+
 ]
 
 
