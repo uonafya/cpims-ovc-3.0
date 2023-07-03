@@ -15,7 +15,7 @@ from cpovc_registry import urls as registry_urls
 from cpovc_forms import urls as forms_urls
 from cpovc_reports import urls as reports_urls
 from cpovc_gis import urls as gis_urls
-# from cpovc_api import urls as api_urls
+from cpovc_hes import urls as hes_urls
 from cpovc_ovc import urls as ovc_urls
 from cpovc_settings import urls as settings_urls
 from data_cleanup import urls as data_cleanup_urls
@@ -45,7 +45,7 @@ urlpatterns = [
     path('forms/', include(forms_urls)),
     path('reports/', include(reports_urls)),
     path('gis/', include(gis_urls)),
-    # path('api/', include(api_urls)),
+    path('hes/', include(hes_urls)),
     path('ovc-care/', include(ovc_urls)),
     path('settings/', include(settings_urls)),
     path('data_cleanup/', include(data_cleanup_urls)),
