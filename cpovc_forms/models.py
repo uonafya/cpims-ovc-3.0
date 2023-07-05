@@ -7,6 +7,7 @@ from cpovc_main.models import (SchoolList, SetupLocation)
 from cpovc_ovc.models import (OVCHouseHold, OVCFacility, OVCRegistration)
 
 
+
 class OVCBursary(models.Model):
     bursary_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     bursary_type = models.CharField(max_length=4, null=True)
@@ -1763,3 +1764,22 @@ class OVCProgramRegistration(models.Model):
 
     def __str__(self):
         return '%s : %s' % (self.prog_id, self.person)
+
+class OVCHivStatusUpdate(models.Model):
+    hiv_status_id = models.AutoField(primary_key=True)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    hiv_status = models.CharField(null=True, max_length=10)
+    source = models.CharField(null=True, max_length=10)
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    event = models.ForeignKey(OVCCareEvents, on_delete=models.CASCADE)
+    is_void = models.BooleanField(default=False)
+    date_of_event = models.DateField()
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ovc_hiv_status_update'
+
+    def __unicode__(self):
+        return str(self.hiv_status_id)
+
