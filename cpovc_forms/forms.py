@@ -6145,13 +6145,20 @@ class HIV_SCREENING_FORM(forms.Form):
     }))
 
     HIV_RS_02 = forms.ChoiceField(
-        choices =hiv_status_list ,
-        widget = forms.RadioSelect(
-        # renderer=RadioCustomRenderer,
-        attrs={
-        # 'data-parsley-required': 'true',
-        # 'data-parsley-errors-container': "#errorfield"
-    }))
+        choices=(('AYES', 'HIV_Positive'), ('ANNO', 'HIV_Negative'),),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+    HIV_RS_25 = forms.ChoiceField(
+        choices=hiv_status_list,
+        required=True,
+        widget=forms.Select(
+            attrs={'class': 'form-control',
+                   'data-parsley-required': "true",
+                   'id': 'hiv_status'}))
 
     HIV_RS_03 = forms.ChoiceField(
         choices = YESNO_CHOICES,
@@ -6162,7 +6169,7 @@ class HIV_SCREENING_FORM(forms.Form):
         # 'data-parsley-errors-container': "#errorfield"
     }))
     HIV_RS_03A=forms.ChoiceField(
-        choices=hiv_status_list,
+        choices = (('AYES', 'HIV_Positive'),('ANNO', 'HIV_Negative'),),
         widget = forms.RadioSelect(
         # renderer=RadioCustomRenderer,
         attrs={
@@ -6334,7 +6341,7 @@ class HIV_SCREENING_FORM(forms.Form):
                )
 
     HIV_RS_18B = forms.ChoiceField(
-        choices = hiv_status_list,
+        choices = (('AYES', 'HIV_Positive'),('ANNO', 'HIV_Negative'),),
         widget = forms.RadioSelect(
         # renderer=RadioCustomRenderer,
         attrs={

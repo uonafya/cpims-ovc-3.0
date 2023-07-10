@@ -22,9 +22,12 @@ def new_hes(request):
             print(data)
             CPOVC_HES(
                 employment_status=data.get('employment_status'),
+                type_of_employment=data.get('type_of_employment'),
                 health_scheme=data.get('health_scheme'),
+                health_scheme_type=data.get('health_scheme_type'),
                 kitchen_garden=data.get('kitchen_garden'),
                 social_safety_nets=data.get('social_safety_nets'),
+                social_safety_nets_type=data.get('social_safety_nets_type'),
                 linkage_to_vsls=data.get('linkage_to_vsls'),
                 vsla=data.get('vsla'),
                 date_of_linkage_to_vsla=convert_date(data.get('date_linkage')),
@@ -34,6 +37,7 @@ def new_hes(request):
                 loan_taken_amount=data.get('loan_taken_amount'),
                 date_loan_taken=convert_date(data.get('date_loan_taken')),
                 loan_utilization=data.get('loan_utilization'),
+                startup=data.get('startup'),
                 type_of_startup=data.get('type_of_startup'),
                 date_startup_received=convert_date(data.get('date_startup_received')),
                 emergency_cash_transfer=data.get('emergency_cash_transfer'),

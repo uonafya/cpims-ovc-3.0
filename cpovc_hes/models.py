@@ -11,11 +11,22 @@ class CPOVC_HES(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     employment_status = models.CharField(
         max_length=50,
+        blank=True,
+        null=True
+    )
+    type_of_employment=models.CharField(
+        max_length=50,
 
         blank=True,
         null=True
     )
-    health_scheme = models.CharField(
+    health_scheme=models.CharField(
+        max_length=50,
+
+        blank=True,
+        null=True
+    )
+    health_scheme_type = models.CharField(
         max_length=50,
 
         blank=True,
@@ -28,6 +39,12 @@ class CPOVC_HES(models.Model):
         null=True
     )
     social_safety_nets = models.CharField(
+        max_length=50,
+
+        blank=True,
+        null=True
+    )
+    social_safety_nets_type = models.CharField(
         max_length=50,
 
         blank=True,
@@ -72,6 +89,7 @@ class CPOVC_HES(models.Model):
     )
     date_loan_taken = models.DateField(blank=True, null=True)
     loan_utilization = models.CharField(max_length=100, blank=True, null=True)
+    startup = models.CharField(max_length=100, blank=True, null=True)
     type_of_startup = models.CharField(max_length=100, blank=True, null=True)
     date_startup_received = models.DateField(blank=True, null=True)
     emergency_cash_transfer = models.CharField(

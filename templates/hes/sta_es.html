@@ -65,7 +65,7 @@
             </div>
         <div style="overflow-x: auto; min-height: 300px;">
             <div class="panel-body">
-                <form class="form-horizontal form-bordered" action="{% url 'new_hes' %}" method="POST" data-parsley-validate="true"
+                <form class="form-horizontal form-bordered hes" action="{% url 'new_hes' %}" method="POST" data-parsley-validate="true"
                     name="form-wizard-hhva" id="new_hhva">
                     {% csrf_token %}
                     <div id="wizard-hhva">
@@ -109,13 +109,25 @@
                                             <div class="row"> </div>
                                             <div class="row">
                                                  <div class="form-group  ">
-                                                    <label class="control-label col-md-4 col-sm-4" >Employement Status:</label>
-                                                    <div class="col-md-6 col-sm-6">
+                                                    <label class="control-label col-md-4 col-sm-4 " >Employement Status:</label>
+                                                    <div class="col-md-6 col-sm-6 employment_status" id="employment-status">
                                                         {{ form.employment_status}}
                                                     </div>
                                                  </div>
-                                                     <div  class="form-group ">
-                                                    <label class="control-label col-md-4 col-sm-4" > Health Scheme: <span class="asteriskField">*</span> </label>
+                                                <div class="form-group employment-type " id="employment-type"  >
+                                                    <label class="control-label col-md-4 col-sm-4" >Type of Employement :</label>
+                                                    <div class="col-md-6 col-sm-6" >
+                                                        {{ form.type_of_employment}}
+                                                    </div>
+                                                 </div>
+                                                <div  class="form-group ">
+                                                    <label class="control-label col-md-4 col-sm-4 have_health_scheme" id="have_health_scheme" > Have Health Scheme? <span class="asteriskField">*</span> </label>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        {{ form.have_health_scheme }}
+                                                    </div>
+                                                </div>
+                                                     <div  class="form-group health_scheme" id="health_scheme">
+                                                    <label class="control-label col-md-4 col-sm-4" > Type Health Scheme: <span class="asteriskField">*</span> </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.health_scheme }}
                                                     </div>
@@ -126,10 +138,16 @@
                                                         {{ form.kitchen_garden }}
                                                     </div>
                                                 </div>
-                                                     <div  class="form-group ">
-                                                    <label class="control-label col-md-4 col-sm-4" > Social Safety Nets: <span class="asteriskField">*</span> </label>
-                                                    <div class="col-md-6 col-sm-6">
+                                                <div  class="form-group ">
+                                                    <label class="control-label col-md-4 col-sm-4" > Have Social Safety Nets? <span class="asteriskField">*</span> </label>
+                                                    <div class="col-md-6 col-sm-6" id="social_safety_nets">
                                                         {{ form.social_safety_nets }}
+                                                    </div>
+                                                     </div>
+                                                     <div  class="form-group social_safety_nets" id="social_safety_nets_type">
+                                                    <label class="control-label col-md-4 col-sm-4" > Social Safety Nets Type: <span class="asteriskField">*</span> </label>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        {{ form.social_safety_nets_type }}
                                                     </div>
                                                      </div>
 
@@ -137,19 +155,20 @@
 
 
                                                 <div  class="form-group ">
-                                                    <label class="control-label col-md-4 col-sm-4" > Linkage to VSLS <span class="asteriskField">*</span> </label>
-                                                    <div class="col-md-6 col-sm-6">
+                                                    <label class="control-label col-md-4 col-sm-4" > Linkage to VSLA <span class="asteriskField">*</span> </label>
+                                                    <div class="col-md-6 col-sm-6" id="linkage_to_vsla" >
                                                         {{ form.linkage_to_vsls }}
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group  ">
+                                                <div class="form-group vsla_name " id="vsla_name">
                                                     <label class="control-label col-md-4 col-sm-4" >VSLA Name</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.vsla_name}}
                                                     </div>
+                                                </div>
 
-                                                <div  class="form-group " >
+                                                <div  class="form-group date_of_linkage_vsla" id="date_of_linkage_vsla" >
                                                     <label class="control-label col-md-4 col-sm-4" >Date of Linkage to VSLA <br></label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.date_linkage }}
@@ -168,13 +187,13 @@
                                                         {{ form.average_cumulative_saving }}
                                                     </div>
                                                 </div>
-                                                <div  class="form-group ">
+                                                <div  class="form-group loan_taken " >
                                                     <label class="control-label col-md-4 col-sm-4" >Loan Taken </label>
-                                                    <div class="col-md-6 col-sm-6">
+                                                    <div class="col-md-6 col-sm-6" id="loan_taken">
                                                         {{ form.loan_taken }}
                                                     </div>
                                                 </div>
-                                                 <div  class="form-group ">
+                                                 <div  class="form-group " id="loan_amount">
                                                     <label class="control-label col-md-4 col-sm-4" > Loan taken Amount </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.loan_taken_amount }}
@@ -182,32 +201,38 @@
                                                 </div>
 
 
-                                                <div  class="form-group ">
+                                                <div  class="form-group " id="date_loan_taken">
                                                     <label class="control-label col-md-4 col-sm-4" >Date Loan Taken </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.date_loan_taken }}
                                                     </div>
                                                 </div>
-                                                 <div  class="form-group ">
+                                                 <div  class="form-group " id="loan_utilization">
                                                     <label class="control-label col-md-4 col-sm-4" > Loan Utilization </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.loan_utilization }}
                                                     </div>
                                                 </div>
-                                                 <div  class="form-group ">
+                                                <div  class="form-group ">
+                                                    <label class="control-label col-md-4 col-sm-4" > Startup? </label>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        {{ form.startup }}
+                                                    </div>
+                                                </div>
+                                                 <div  class="form-group " id="type_of_startup">
                                                     <label class="control-label col-md-4 col-sm-4" > Type of Startup </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.type_of_startup }}
                                                     </div>
                                                 </div>
-                                                 <div  class="form-group ">
+                                                 <div  class="form-group "  id="date_startup_received">
                                                     <label class="control-label col-md-4 col-sm-4" > Date startup received </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.date_startup_received }}
                                                     </div>
                                                 </div>
                                             </div>
-                                                     </div>
+
                                             <!-- end row -->
                                         </fieldset>
                                     </div>
@@ -226,16 +251,16 @@
                                                 <div  class="form-group ">
                                                     <label class="control-label col-md-4 col-sm-4" > Emergency cash transfer (ECT): </label>
                                                     <div class="col-md-6 col-sm-6">
-                                                        {{ form.emergency_cash_transfer }}
+                                                        {{ form.emergency_cash_transfer}}
                                                     </div>
                                                 </div>
-                                                <div  class="form-group ">
+                                                <div  class="form-group " id="ect_amount">
                                                     <label class="control-label col-md-4 col-sm-4" > Amount received ECT: </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.amount_received_ect }}
                                                     </div>
                                                 </div>
-                                                <div  class="form-group ">
+                                                <div  class="form-group " id="ect_use">
                                                     <label class="control-label col-md-4 col-sm-4" > Use of ECT: </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.use_of_ect }}
@@ -285,15 +310,15 @@
                                                         {{ form.received_business_grant}}
                                                     </div>
                                                 </div>
-                                                <div  class="form-group ">
+                                                <div  class="form-group " id="amount_of_money_received">
                                                     <label class="control-label col-md-4 col-sm-4" >Amount of Money received: </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.amount_of_money_received}}
                                                     </div>
                                                 </div>
-                                                <div  class="form-group ">
+                                                <div  class="form-group " id="linked_to_value_chain">
                                                     <label class="control-label col-md-4 col-sm-4" >Linked to  Value chain Activities: </label>
-                                                    <div class="col-md-6 col-sm-6">
+                                                    <div class="col-md-6 col-sm-6" >
                                                         {{ form.linked_to_value_chain_activities_asset_growth}}
                                                     </div>
                                                 </div>
@@ -328,25 +353,25 @@
                                                         {{ form.linked_to_source_finance }}
                                                     </div>
                                                 </div>
-                                                <div  class="form-group ">
+                                                <div  class="form-group " id="type_of_financial_institution">
                                                     <label class="control-label col-md-4 col-sm-4" > Type of financial institution :</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.type_of_financial_institution }}
                                                     </div>
                                                 </div>
-                                                <div  class="form-group ">
+                                                <div  class="form-group " >
                                                     <label class="control-label col-md-4 col-sm-4" > Loan taken: </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.loan_taken_income_growth }}
                                                     </div>
                                                 </div>
-                                                <div  class="form-group ">
+                                                <div  class="form-group " id="date_loan_taken_income_growth">
                                                     <label class="control-label col-md-4 col-sm-4" >Date of loan taken  : </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.date_loan_taken_income_growth}}
                                                     </div>
                                                 </div>
-                                                <div  class="form-group ">
+                                                <div  class="form-group " id="linked_to_value_chain_activities_income_growth">
                                                     <label class="control-label col-md-4 col-sm-4" >Linked to  Value chain Activities : </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.linked_to_value_chain_activities_income_growth}}
@@ -433,11 +458,145 @@
     };
 </script>
 
+
 <script>
 
 
 
     jQuery(document).ready(function () {
+        $('#employment-type').hide();
+        $('#health_scheme').hide();
+        $('#social_safety_nets_type').hide();
+        $('#vsla_name').hide();
+        $('#date_of_linkage_vsla').hide();
+        $('#loan_amount').hide();
+        $('#loan_utilization').hide();
+        $('#date_loan_taken').hide();
+        $('#type_of_startup').hide();
+        $('#date_startup_received').hide();
+        $('#ect_use').hide();
+        $('#ect_amount').hide();
+        $('#amount_of_money_received').hide();
+        $('#type_of_financial_institution').hide();
+        $('#date_loan_taken_income_growth').hide();
+
+
+
+
+
+
+
+
+
+    $('select').on('change', function () {
+      var selectedValue = $(this).val();
+      if (selectedValue === 'Employed') {
+        $('#employment-type').show();
+      } else {
+        $('#employment-type').hide();
+      }
+    });
+
+
+      $("input[name='have_health_scheme']").on('change', function () {
+            var ival = $("input[name='have_health_scheme']:checked").val();
+            if (ival == 'AYES') {
+                $('#health_scheme').show();
+
+            } else {
+               $ ('#health_scheme').hide();
+
+            }
+        });
+       $("input[name='social_safety_nets']").on('change', function () {
+            var ival = $("input[name='social_safety_nets']:checked").val();
+            if (ival == 'AYES') {
+                $('#social_safety_nets_type').show();
+
+            } else {
+               $('#social_safety_nets_type').hide();
+
+            }
+        });
+       $("input[name='linkage_to_vsls']").on('change', function () {
+            var ival = $("input[name='linkage_to_vsls']:checked").val();
+            if (ival == 'AYES') {
+                 $('#vsla_name').show();
+                 $('#date_of_linkage_vsla').show();
+            } else {
+               $('#vsla_name').hide();
+               $('#date_of_linkage_vsla').hide();
+
+            }
+        });
+       $("input[name='loan_taken']").on('change', function () {
+            var ival = $("input[name='loan_taken']:checked").val();
+            if (ival == 'AYES') {
+                 $('#loan_amount').show();
+                 $('#loan_utilization').show();
+                 $('#date_loan_taken').show();
+            } else {
+               $('#loan_amount').hide();
+               $('#loan_utilization').hide();
+               $('#date_loan_taken').hide();
+                    }
+        });
+          $("input[name='startup']").on('change', function () {
+            var ival = $("input[name='startup']:checked").val();
+            if (ival == 'AYES') {
+                $('#type_of_startup').show();
+                $('#date_startup_received').show();
+            } else {
+               $('#type_of_startup').hide();
+               $('#date_startup_received').hide();
+                    }
+        });
+          $("input[name='emergency_cash_transfer']").on('change', function () {
+            var ival = $("input[name='emergency_cash_transfer']:checked").val();
+            if (ival == 'AYES') {
+
+                $('#ect_use').show();
+                $('#ect_amount').show();
+            } else {
+
+                $('#ect_use').hide();
+                $('#ect_amount').hide();
+
+            }
+        });
+        $("input[name='received_business_grant']").on('change', function () {
+            var ival = $("input[name='received_business_grant']:checked").val();
+            if (ival == 'AYES') {
+
+                $('#amount_of_money_received').show();
+            } else {
+
+                $('#amount_of_money_received').hide();
+
+            }
+        });
+        $("input[name='linked_to_source_finance']").on('change', function () {
+            var ival = $("input[name='linked_to_source_finance']:checked").val();
+            if (ival == 'AYES') {
+
+                $('#type_of_financial_institution').show();
+            } else {
+
+                $('#type_of_financial_institution').hide();
+
+            }
+        });
+        $("input[name='loan_taken_income_growth']").on('change', function () {
+            var ival = $("input[name='loan_taken_income_growth']:checked").val();
+            if (ival == 'AYES') {
+
+                $('#date_loan_taken_income_growth').show();
+            } else {
+
+                $('#date_loan_taken_income_growth').hide();
+
+            }
+        });
         //multi selects
         $('#WB_AD_SCH_12_2').multiselect({
             selectAllValue: 'multiselect-all',
@@ -452,21 +611,6 @@
 
         $('#WB_AD_SCH_8_2').attr("disabled", 'disabled');
         $('#WB_AD_SCH_8_2').prop("disabled", true);
-        // $('#WB_AD_SCH_8_2').addClass('hidden');
-
-        // function radioDecision(radioID,desiredValue,desiredFunc,desiredFuncParas) {
-        //     // console.log('radioDecision:->  rID:'+radioID+'desVal:'+desiredValue+'desFunc:'+desiredFunc+'desPars:'+desiredFuncParas);
-        //     var ival = $("input[name='"+radioID+"']:checked").val();
-        //     if(ival == desiredValue){
-        //         if(desiredFuncParas.length>1){
-        //             $.each(desiredFuncParas, function (pindx, fparas) {
-        //                 desiredFunc(fparas);    
-        //             })
-        //         }else{
-        //             desiredFunc(desiredFuncParas);
-        //         }
-        //     }
-        // }
 
         $("input[name='WB_AD_SCH_8_1']").on('change', function () {
             var ival = $("input[name='WB_AD_SCH_8_1']:checked").val();
@@ -499,7 +643,7 @@
 
             } else {
                 unhideQn('WB_AD_HEL_17_3');
-            }   
+            }
         });
         $("input[name='WB_AD_HEL_18_1']").on('change', function () {
             var ival = $("input[name='WB_AD_HEL_18_1']:checked").val();
@@ -508,7 +652,7 @@
 
             } else {
                 unhideQn('WB_AD_HEL_18_2');
-            }   
+            }
         });
         $("input[name='WB_AD_HEL_19_1']").on('change', function () {
             var ival = $("input[name='WB_AD_HEL_19_1']:checked").val();
@@ -517,7 +661,7 @@
 
             } else {
                 unhideQn('WB_AD_HEL_19_2');
-            }   
+            }
         });
         $("input[name='WB_AD_HEL_20_1']").on('change', function () {
             var ival = $("input[name='WB_AD_HEL_20_1']:checked").val();
@@ -529,7 +673,7 @@
                 hideQn('id_WB_AD_HEL_20_4_1');
                 hideQn('id_WB_AD_HEL_20_4_2');
                 hideQn('id_WB_AD_HEL_20_4_3');
-                
+
 
             } else {
                 unhideQn('WB_AD_HEL_20_2');
@@ -539,7 +683,7 @@
                 unhideQn('id_WB_AD_HEL_20_4_1');
                 unhideQn('id_WB_AD_HEL_20_4_2');
                 unhideQn('id_WB_AD_HEL_20_4_3');
-            }   
+            }
         });
         $("input[name='WB_AD_HEL_20_3']").on('change', function () {
             var ival = $("input[name='WB_AD_HEL_20_3']:checked").val();
@@ -548,18 +692,18 @@
                 hideQn('id_WB_AD_HEL_20_4_1');
                 hideQn('id_WB_AD_HEL_20_4_2');
                 hideQn('id_WB_AD_HEL_20_4_3');
-                
+
 
             } else {
                 unhideQn('id_WB_AD_HEL_20_4_0');
                 unhideQn('id_WB_AD_HEL_20_4_1');
                 unhideQn('id_WB_AD_HEL_20_4_2');
                 unhideQn('id_WB_AD_HEL_20_4_3');
-            }   
+            }
         });
-        
 
-        
+
+
         $("input[name='WB_AD_STA_13_1']").on('change', function () {
             var ival = $("input[name='WB_AD_STA_13_1']:checked").val();
             if (ival == 'ANNO') {
@@ -572,7 +716,7 @@
                 unhideQn('id_WB_AD_STA_13_2_0');
                 unhideQn('id_WB_AD_STA_13_2_1');
                 unhideQn('id_WB_AD_STA_13_2_2');
-                
+
             }
         });
 
@@ -581,7 +725,7 @@
             if (ival == 'ANNO') {
                 hideQn('id_WB_AD_STA_13_2_0');
                 hideQn('id_WB_AD_STA_13_2_1');
-                hideQn('id_WB_AD_STA_13_2_2');   
+                hideQn('id_WB_AD_STA_13_2_2');
                 hideQn('id_WB_AD_STA_13_2_3');
             } else {
                 unhideQn('id_WB_AD_STA_13_2_0');
@@ -596,7 +740,7 @@
                 hideQn('WB_AD_HEL_16_2');
             } else {
                 unhideQn('WB_AD_HEL_16_2');
-              
+
             }
         });
 
@@ -609,7 +753,7 @@
             } else {
                 unhideQn('id_WB_AD_HEL_22_2_0');
                 unhideQn('id_WB_AD_HEL_22_2_1');
-              
+
             }
         });
         $("input[name='WB_AD_HEL_22_1']").on('change', function () {
@@ -649,7 +793,7 @@
                 hideQn('WB_AD_HEL_16_4');
             } else {
                 unhideQn('WB_AD_HEL_16_4');
-              
+
             }
         });
 
@@ -659,7 +803,7 @@
                 hideQn('WB_AD_HEL_17_5');
             } else {
                 unhideQn('WB_AD_HEL_17_5');
-              
+
             }
         });
 
@@ -703,7 +847,7 @@
                 unhideQn('id_WB_AD_SAF_32_6_1_2');
                 unhideQn('WB_AD_SAF_32_6_2');
 
-              
+
             }
         });
         $("input[name='WB_AD_SAF_32_4']").on('change', function () {
@@ -724,7 +868,7 @@
             if (ival == 'ANNO'|| ival == 'AREFUSE' ) {
                 hideQn('WB_AD_SAF_33_2');
             } else {
-                unhideQn('WB_AD_SAF_33_2'); 
+                unhideQn('WB_AD_SAF_33_2');
             }
         });
         $("input[name='WB_AD_SAF_32_5']").on('change', function () {
@@ -741,7 +885,7 @@
                 unhideQn('WB_AD_SAF_32_6_2');
             }
         });
-        
+
 
 
         $('html,body').scrollTop(0);

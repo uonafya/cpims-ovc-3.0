@@ -2,7 +2,8 @@ from django import forms
 from cpovc_main.functions import *
 
 EMPLOYMENT_STATUS = (('Employed', 'Employed'), ('Unemployed', 'Unemployed'),
-                    ('Unemployed', 'Unemployed'))
+                    )
+EMPLOYMENT_TYPE = (('Casual', 'Casual'), ('Business', 'Business'))
 
 HEALTH_SCHEME=(('County Health Scheme', 'County Health Scheme'), ('NHIF', 'NHIF'),
                  ('Universal Health Coverage', 'Universal Health Coverage'))
@@ -16,6 +17,7 @@ TYPE_OF_ASSETS=( ('Business Asset','Business Asset'),('Agriculture assets ','Agr
 USE_OF_ECT=( ('Transport to facility','Transport to facility'),(' Food','Food'),(' Medication','Medication'),(' Setting up a business','Setting up a business'),(' NHIF ','NHIF '))
 LOAN_UTILIZATION=( ('Business ','Business'),(' School Fees','School Fees'),('Food','Food'),(' None','None'))
 YESNO_CHOICES=get_list('yesno_id')
+
 class HesForm(forms.Form):
     employment_status = forms.ChoiceField(label="Employment Status",
                                           choices=EMPLOYMENT_STATUS,
@@ -27,6 +29,20 @@ class HesForm(forms.Form):
 
                                               }
                                           ))
+    type_of_employment = forms.ChoiceField(label="Employment Status",
+                                          choices= EMPLOYMENT_TYPE,
+                                          required=False,
+                                          widget=forms.Select(
+                                              attrs={
+                                                  "placeholder": ("Employment status"),
+                                                  "class": "form-control",
+
+                                              }
+                                          ))
+
+    have_health_scheme = forms.ChoiceField(label='Have health scheme?',
+                                                choices=YESNO_CHOICES,
+                                                widget=forms.RadioSelect)
 
     health_scheme = forms.ChoiceField(label="Health Scheme",
                                       choices=HEALTH_SCHEME,
@@ -41,14 +57,18 @@ class HesForm(forms.Form):
                                             choices=YESNO_CHOICES,
                                         widget=forms.RadioSelect)
     social_safety_nets = forms.ChoiceField(label="Social Safety Nets",
-                                            choices=SAFETY_NETS,
-                                            widget=forms.Select(
-                                                attrs={
-                                                    "placeholder": ("Health scheme"),
-                                                    "class": "form-control",
+                                            choices=YESNO_CHOICES,
+                                            widget=forms.RadioSelect)
+    social_safety_nets_type = forms.ChoiceField(label="Social Safety Nets",
+                                           choices=SAFETY_NETS,
+                                           widget=forms.Select(
+                                               attrs={
+                                                   "placeholder": ("Health scheme"),
+                                                   "class": "form-control",
 
-                                                }
-                                            ))
+                                               }
+                                           ))
+
     linkage_to_vsls = forms.ChoiceField(label="Linkage to VSLS",
                                         choices=YESNO_CHOICES,
                                          widget=forms.RadioSelect)
@@ -110,11 +130,16 @@ class HesForm(forms.Form):
 
 
                                                   }))
-    type_of_startup = forms.CharField(label='Type of Startup',
-                                      widget=forms.TextInput(
-                                          attrs={'class': 'form-control',
+    startup = forms.ChoiceField(label='Start Up',
+                                   choices=YESNO_CHOICES,
+                                   widget=forms.RadioSelect)
 
-                                                 }))
+    type_of_startup = forms.ChoiceField(label='Type of Startup',
+                                        choices=SECTOR,
+                                        widget=forms.Select(
+                                            attrs={'class': 'form-control',
+
+                                                   }))
     date_startup_received = forms.DateField(label='Date Startup Received',
                                             widget=forms.TextInput(
                                                 attrs={

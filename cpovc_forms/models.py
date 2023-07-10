@@ -1133,7 +1133,7 @@ class OVCHIVRiskScreening(models.Model):
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
 
     test_done_when = models.BooleanField(null=True)
-    test_donewhen_result = models.BooleanField(null=True)
+    test_donewhen_result = models.CharField(null=True, max_length=10)
     caregiver_know_status = models.BooleanField(null=True)
     caregiver_knowledge_yes = models.CharField(max_length=50, null=True)
     parent_PLWH = models.BooleanField(null=True)

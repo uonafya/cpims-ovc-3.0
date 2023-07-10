@@ -10041,7 +10041,7 @@ def new_hivscreeningtool(request, id):
                 ovcscreeningtool = OVCHIVRiskScreening.objects.create(
                     person = RegPerson.objects.get(pk=int(id)),
                     test_done_when = data_to_save.get('HIV_RS_03'),
-                    test_donewhen_result = data_to_save.get(''),
+                    test_donewhen_result = data_to_save.get('HIV_RS_25'),
                     caregiver_know_status = data_to_save.get('HIV_RS_01'),
                     caregiver_knowledge_yes = data_to_save.get('HIV_RS_02'),
                     parent_PLWH = data_to_save.get('HIV_RS_04'),
@@ -10076,13 +10076,13 @@ def new_hivscreeningtool(request, id):
                 current_hiv_status = ovc_registration.hiv_status
 
                 if current_hiv_status != ovcscreeningtool.test_donewhen_result:
-                    ovc_registration.hiv_status = data_to_save.get('HIV_RS_03')
+                    ovc_registration.hiv_status = data_to_save.get('HIV_RS_25')
                     ovc_registration.save()
 
 
                 with transaction.atomic():
                     ovc_hiv_status_update = OVCHivStatusUpdate.objects.create(
-                        hiv_status=data_to_save.get('HIV_RS_03'),
+                        hiv_status=data_to_save.get('HIV_RS_25'),
                         source='Screened',
                         is_void=False,
                         date_of_event=timezone.now().date(),
