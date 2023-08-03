@@ -23,6 +23,7 @@ chief_list = (('CHIF', 'Chief'), ('SCHF', 'Sub-Chief'))
 bank_list = (('', 'Please Select'), ('1', 'Equity Bank'))
 
 # -------------------------------- CPIMS-------------------------------------
+hiv_status_list = get_list('hiv_status_id')
 person_type_list = get_list('person_type_id', 'Please Select')
 psearch_criteria_list = get_list('psearch_criteria_type_id', 'Select Criteria')
 povcsearch_criteria_list = get_list(
@@ -6144,13 +6145,20 @@ class HIV_SCREENING_FORM(forms.Form):
     }))
 
     HIV_RS_02 = forms.ChoiceField(
-        choices = (('AYES', 'HIV_Positive'),('ANNO', 'HIV_Negative'),),
-        widget = forms.RadioSelect(
-        # renderer=RadioCustomRenderer,
-        attrs={
-        # 'data-parsley-required': 'true',
-        # 'data-parsley-errors-container': "#errorfield"
-    }))
+        choices=(('AYES', 'HIV_Positive'), ('ANNO', 'HIV_Negative'),),
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={
+                # 'data-parsley-required': 'true',
+                # 'data-parsley-errors-container': "#errorfield"
+            }))
+    HIV_RS_25 = forms.ChoiceField(
+        choices=hiv_status_list,
+        required=True,
+        widget=forms.Select(
+            attrs={'class': 'form-control',
+                   'data-parsley-required': "true",
+                   'id': 'hiv_status'}))
 
     HIV_RS_03 = forms.ChoiceField(
         choices = YESNO_CHOICES,
@@ -6333,7 +6341,7 @@ class HIV_SCREENING_FORM(forms.Form):
                )
 
     HIV_RS_18B = forms.ChoiceField(
-        choices = (('1', 'HIV_Positive'), ('2', 'HIV_NEGATIVE'), ('3', 'HIV_UNKOWN/UNDISCLOSED')),
+        choices = (('AYES', 'HIV_Positive'),('ANNO', 'HIV_Negative'),),
         widget = forms.RadioSelect(
         # renderer=RadioCustomRenderer,
         attrs={
