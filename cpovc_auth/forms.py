@@ -101,6 +101,8 @@ class LoginForm(forms.Form):
         attrs={'placeholder': _('Password'),
                'class': 'form-control input-lg',
                'data-parsley-required': "true",
+               'data-placement': "after",
+               'data-toggle': "password",
                'data-parsley-error-message': "Please enter your password.",
                'autofocus': 'true'}),
         error_messages={'required': 'Please enter your password.',

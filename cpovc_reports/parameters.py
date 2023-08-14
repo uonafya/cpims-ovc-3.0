@@ -74,6 +74,7 @@ ORPTS[36] = 'Active beneficiary'
 ORPTS[37] = 'Benchmarks ver. 1'
 ORPTS[38] = 'Graduation'
 ORPTS[39] = 'HEI'
+ORPTS[40] = 'CaseLoad'
 # Other
 ORPTS[51] = 'DATIM'
 ORPTS[52] = 'PEPFAR'

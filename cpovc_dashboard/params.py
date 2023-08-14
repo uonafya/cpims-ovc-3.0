@@ -348,6 +348,21 @@ CHART['3H']['calc'] = '''
 A count of CALHIV from current OVC caseload disaggregated by age cohorts
 '''
 
+CHART['3K'] = {}
+CHART['3K']['desc'] = '''
+Total number of newly enrolled OVC CLHIVs during the reporting period.
+'''
+CHART['3K']['calc'] = '''
+'''
+
+CHART['3L'] = {}
+CHART['3L']['desc'] = '''
+Total number of newly enrolled and served OVC CLHIVs (Newly enrolled CLHIVs
+ who are part of OVC_SERV Comprehensive) during the reporting period"
+'''
+CHART['3L']['calc'] = '''
+'''
+
 
 # =============== Services Reporting Charts ===============================
 
@@ -375,53 +390,54 @@ CHART['4B']['calc'] = '''
 '''
 
 # - Services by domain
-CHART['4C'] = {}
-CHART['4C']['desc'] = '''
-Services provided to OVC eligible for reporting categorized by gender and domains (Healthy, Safe, Stable, Schooled)
+CHART['4D'] = {}
+CHART['4D']['desc'] = '''
+Services provided to OVC for reporting categorized by gender and domains (Healthy, Safe, Stable, Schooled)
 '''
-CHART['4C']['calc'] = '''
-A count of Services provided to OVC eligible for reporting categorized by gender and domain (Healthy, Safe, Stable, Schooled)
+CHART['4D']['calc'] = '''
+A count of Services provided to OVC for reporting categorized by gender and domain (Healthy, Safe, Stable, Schooled)
 NB: Include both form 1A and Form 1B Services that are trickle down
 An OVC is counted only once per domain regardless of number services they received within a domain
 
 '''
 
 # Beneficiary categories
-CHART['4D'] = {}
-CHART['4D']['desc'] = '''
+CHART['4F'] = {}
+CHART['4F']['desc'] = '''
 Total number of OVC provided with services under the OVC_SERV indicator disaggregated by Comprehensive, DREAMS and Preventive
 NB: Take note when counting the DREAMS beneficiaries to ensure they are not already enrolled in Comprehensive program
 
 '''
-CHART['4D']['calc'] = '''
+CHART['4F']['calc'] = '''
 Count of all OVC provided with services during the reporting period under the OVC_SERV indicator disaggregated by Comprehensive, DREAMS and Preventive
 '''
 
 # - Specific services
-CHART['4E'] = {}
-CHART['4E']['desc'] = '''
-Top 35 unique services provided to OVC based on frequency in the reporting period
+CHART['4G'] = {}
+CHART['4G']['desc'] = '''
+Top 10 unique services provided to OVC based on frequency in the reporting period
 '''
-CHART['4E']['calc'] = '''
-A count of Top 35 unique services provided to OVC based on frequency in the reporting period
+CHART['4G']['calc'] = '''
+A count of Top 15 unique services provided to OVC based on frequency in the reporting period
 '''
 
 # - Services by Domain - ALL
-CHART['4F'] = {}
-CHART['4F']['desc'] = '''
+CHART['4E'] = {}
+CHART['4E']['desc'] = '''
+Comprehensive Services provided to OVCs by domain by sex
 '''
-CHART['4F']['calc'] = '''
+CHART['4E']['calc'] = '''
 '''
 
 # - Services by Domain - Agency
-CHART['4G'] = {}
-CHART['4G']['desc'] = '''
+CHART['4C'] = {}
+CHART['4C']['desc'] = '''
 Number of unique services per HH provided to OVC by LIPs or Ips categorized by the different domains 
-(Healthy, Safe, Stable, Schooled) and sex
+(Healthy, Safe, Stable, Schooled)
 '''
-CHART['4G']['calc'] = '''
+CHART['4C']['calc'] = '''
 Count of unique services per HH provided to OVC by LIPs or IPs categorized by the different domains 
-(Healthy, Safe, Stable, Schooled) and sex
+(Healthy, Safe, Stable, Schooled)
 '''
 
 # - Services by Domain - IP
@@ -455,51 +471,52 @@ CHART['5A']['calc'] = '''
 Number of OVC with a case plan developed or updated in the last 12 months
 '''
 
+
 # - Graduation pathways - Old
-CHART['5B'] = {}
-CHART['5B']['desc'] = '''
+CHART['5B-0'] = {}
+CHART['5B-0']['desc'] = '''
 Number of OVCs with CPARA assessment in the last 12 months relative 
 to the reporting period disaggregated by graduation pathways
 '''
-CHART['5B']['calc'] = '''
+CHART['5B-0']['calc'] = '''
 Count of All OVC that were or are in the Program during the reporting period who have been done 
 for CPARA assessment and are currently actively participating in to
 '''
 
 # - Graduation pathways
-CHART['5C'] = {}
-CHART['5C']['desc'] = '''
+CHART['5B'] = {}
+CHART['5B']['desc'] = '''
 Number of OVCs categorized by graduation pathways based on CPARA (Highly Vulnerable, Low Vulnerability, 
 Medium Vulnerability, Ready For Graduation)
 '''
-CHART['5C']['calc'] = '''
+CHART['5B']['calc'] = '''
 All HH with CPARA are categorized by pathways
 '''
 
 # -- Case Management - HH
-CHART['5D'] = {}
-CHART['5D']['desc'] = '''
+CHART['5C'] = {}
+CHART['5C']['desc'] = '''
 Number of HH with current CPARA both V1 and revised CPARA too
 '''
-CHART['5D']['calc'] = '''
+CHART['5C']['calc'] = '''
 Number of HH with current CPARA both V1 and revised CPARA tool
 '''
 
 # - Services reporting
-CHART['5E'] = {}
-CHART['5E']['desc'] = '''
+CHART['5D'] = {}
+CHART['5D']['desc'] = '''
 Number of HHs from the current caseload disaggregated by funding agency
 '''
-CHART['5E']['calc'] = '''
+CHART['5D']['calc'] = '''
 A count of all HHs from the current caseload disaggregated by funding agency
 '''
 
 # - Case plans - HH by Agency
-CHART['5F'] = {}
-CHART['5F']['desc'] = '''
+CHART['5E'] = {}
+CHART['5E']['desc'] = '''
 Count all HHs from the current caseload with a case plan during the reporting period
 '''
-CHART['5F']['calc'] = '''
+CHART['5E']['calc'] = '''
 Number of HH with case plans and without case plans should aggregate with number of active HH presented in 4E (OVC not HH)
 '''
 
@@ -513,44 +530,44 @@ Count all OVC with a caseplan during the reporting period
 '''
 
 # - OVC HH along Graduation pathway
-CHART['5H'] = {}
-CHART['5H']['desc'] = '''
+CHART['5F'] = {}
+CHART['5F']['desc'] = '''
 '''
-CHART['5H']['calc'] = '''
+CHART['5F']['calc'] = '''
 '''
 
 # - Benchmarks Version 1
-CHART['5I'] = {}
-CHART['5I']['desc'] = '''
+CHART['5I-0'] = {}
+CHART['5I-0']['desc'] = '''
 Number of HH achieving individual CPARA benchmarks
 '''
-CHART['5I']['calc'] = '''
+CHART['5I-0']['calc'] = '''
 Count of HH with CPARA 1(From current OVC caseload) during the reporting period.)
 '''
 
 # - Benchmarks Version 1
-CHART['5J'] = {}
-CHART['5J']['desc'] = '''
+CHART['5H'] = {}
+CHART['5H']['desc'] = '''
 Frequency of HHs achieving each of the individual benchmark based on CPARA
 '''
-CHART['5J']['calc'] = '''
+CHART['5H']['calc'] = '''
 Count of  HH with CPARA 1(From current OVC caseload) during the reporting period.
 '''
 
 # - Benchmarks Total scores
-CHART['5K'] = {}
-CHART['5K']['desc'] = '''
+CHART['5I'] = {}
+CHART['5I']['desc'] = '''
 Frequency of HHs by benchmark scores based on CPARA (current score 9)
 '''
-CHART['5K']['calc'] = '''
+CHART['5I']['calc'] = '''
 '''
 
 # - Benchmarks Total scores Version 1
-CHART['5L'] = {}
-CHART['5L']['desc'] = '''
+CHART['5L-0'] = {}
+CHART['5L-0']['desc'] = '''
 Frequency of HHs by benchmark scores based on CPARA version 1 (CPARA v1 score 17 benchmarks)
 '''
-CHART['5L']['calc'] = '''
+CHART['5L-0']['calc'] = '''
 Current HH with CPARA (current caseload
 '''
 
@@ -606,6 +623,9 @@ CHART['5T']['calc'] = '''
 
 CHART['6A'] = {}
 CHART['6A']['desc'] = '''
+Proportion of OVC categorized under each of the Program status
+ (Caseload / Graduated / Attrition / Transfers to PEPFAR and Non PEPFAR).
+ Non PEPFAR includes transfer to GOK/DCS.
 '''
 CHART['6A']['calc'] = '''
 '''
@@ -637,7 +657,7 @@ Count all those served only once and those not served at all during the period
 # Exit without graduation - Agency, IP, County
 CHART['6E'] = {}
 CHART['6E']['desc'] = '''
-Number of OVC classified as exit without graduation based on service provision and attrition by agency
+Percentage of OVC classified as exit without graduation based on service provision and attrition by agency
 '''
 CHART['6E']['calc'] = '''
 Count all those served only once and those not served at all during the period for both those who were 
@@ -684,7 +704,9 @@ re-located,died, or the child has aged-out of the program without the household 
 # - Caseload by Agency - New 29-Aug-2022
 CHART['7A'] = {}
 CHART['7A']['desc'] = '''
-Proportion of OVC categorized under each of the Program status (Active/Exits/Transfers
+Proportion of OVC categorized under each of the Program status
+ (Caseload / Graduated / Attrition / Transfers to PEPFAR and Non PEPFAR).
+ Non PEPFAR includes transfer to GOK/DCS.
 '''
 CHART['7A']['calc'] = '''
 '''

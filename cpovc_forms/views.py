@@ -1,7 +1,6 @@
 from distutils.log import error
 import re
 
-from django.db import transaction
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
@@ -15,7 +14,6 @@ import json
 import random
 import ast
 import uuid
-import logging
 import time
 from psycopg2 import DatabaseError
 from reportlab.pdfgen import canvas
@@ -50,7 +48,7 @@ from .models import (
     OVCExplanations, OVCCareF1B, OVCCareBenchmarkScore, OVCMonitoring,
     OVCHouseholdDemographics, OVCHivStatus, OVCHIVManagement,
     OVCHIVRiskScreening, OVCSubPopulation, OVCCareIndividaulCpara,
-    OVCBenchmarkMonitoring, OVCCareTransfer, OVCCareCaseExit, OVCFriends,OVCHivStatusUpdate)
+    OVCBenchmarkMonitoring, OVCCareTransfer, OVCCareCaseExit, OVCFriends)
 
 from cpovc_pmtct.models import OVCPMTCTRegistration
 
@@ -88,7 +86,7 @@ from .helpers.events import save_event
 from cpovc_preventive.models import OVCPreventiveEvents
 from cpovc_auth.decorators import validate_ovc
 
-logger = logging.getLogger(__name__)
+
 def validate_serialnumber(user_id, subcounty, serial_number):
     try:
         serial_number_exists = OVCCaseRecord.objects.filter(
@@ -9915,9 +9913,6 @@ def hiv_status(request):
         return HttpResponseRedirect(reverse(forms_home))
 
 
-
-
-
 @login_required
 @validate_ovc([], 1)
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -10050,13 +10045,12 @@ def new_hivscreeningtool(request, id):
                 for skip in skipped:
                     data_to_save[skip] = False
 
-
                 print(data_to_save)
                 # breakpoint()
                 ovcscreeningtool = OVCHIVRiskScreening.objects.create(
                     person = RegPerson.objects.get(pk=int(id)),
                     test_done_when = data_to_save.get('HIV_RS_03'),
-                    test_donewhen_result = data_to_save.get('HIV_RS_25'),
+                    test_donewhen_result = data_to_save.get(''),
                     caregiver_know_status = data_to_save.get('HIV_RS_01'),
                     caregiver_knowledge_yes = data_to_save.get('HIV_RS_02'),
                     parent_PLWH = data_to_save.get('HIV_RS_04'),
@@ -10087,33 +10081,12 @@ def new_hivscreeningtool(request, id):
                     date_of_event = data_to_save.get('HIV_RA_1A'),
                     timestamp_created = timezone.now(),
                 )
-                ovc_registration = OVCRegistration.objects.get(person_id=id)
-                current_hiv_status = ovc_registration.hiv_status
-
-                if current_hiv_status != ovcscreeningtool.test_donewhen_result:
-                    ovc_registration.hiv_status = data_to_save.get('HIV_RS_25')
-                    ovc_registration.save()
-
-
-                with transaction.atomic():
-                    ovc_hiv_status_update = OVCHivStatusUpdate.objects.create(
-                        hiv_status=data_to_save.get('HIV_RS_25'),
-                        source='Screened',
-                        is_void=False,
-                        date_of_event=timezone.now().date(),
-                        timestamp_created=timezone.now(),
-                        timestamp_updated=timezone.now(),
-                        event=ovccareevent,
-                        person=RegPerson.objects.get(pk=int(id)),
-                        user=request.user
-                    )
-
                 msg = 'HIV risk screening saved successful'
                 messages.add_message(request, messages.INFO, msg)
                 url = reverse('ovc_view', kwargs={'id': id})
                 return HttpResponseRedirect(url)
         except Exception as e:
-            # from django.db import connection
+            from django.db import connection
             msg = "failed to save data", e
             messages.add_message(request, messages.ERROR, msg)
         url = reverse('ovc_view', kwargs={'id': id})
@@ -10661,12 +10634,9 @@ def new_cpara(request, id):
     child = RegPerson.objects.get(id=ovc_id)
     creg = OVCRegistration.objects.get(person_id=ovc_id, is_void=False)
     care_giver_id = creg.caretaker_id
-    print('CG', care_giver_id)
     care_giver = RegPerson.objects.get(id=care_giver_id)
-    print('CG ID', care_giver)
     household = OVCHHMembers.objects.filter(
         is_void=False, person_id=care_giver_id).first()
-    print('HH', household)
     hhid = household.house_hold_id
     house_hold = OVCHouseHold.objects.get(id=hhid)
     hhmqs = OVCHHMembers.objects.filter(

@@ -77,9 +77,8 @@ class CaseLoad(forms.Form):
         today = datetime.date.today()
         year = today.strftime('%Y')
         mwezi = today.strftime('%m')
-        mwaka = (int(year) + 1) if int(mwezi) > 9 else int(year)
-        years = [(yr + 1, '%s/%s (FY%s)' % (yr, yr + 1, str(yr + 1)[-2:]))
-                 for yr in range(2021, mwaka)]
+        mwaka = (int(year) + 2) if int(mwezi) > 9 else int(year) + 1
+        years = [(yr, 'FY%s' % (yr)) for yr in range(2022, mwaka)]
         year_tuple = tuple(years)
 
         sel_year = forms.ChoiceField(

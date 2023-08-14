@@ -15,22 +15,21 @@ from cpovc_registry import urls as registry_urls
 from cpovc_forms import urls as forms_urls
 from cpovc_reports import urls as reports_urls
 from cpovc_gis import urls as gis_urls
-from cpovc_hes import urls as hes_urls
+# from cpovc_api import urls as api_urls
 from cpovc_ovc import urls as ovc_urls
 from cpovc_settings import urls as settings_urls
+# New
+from cpovc_hes import urls as hes_urls
 from data_cleanup import urls as data_cleanup_urls
 from cpovc_offline_mode import urls as offline_mode_urls
 from django.contrib.auth import views as auth_views
-from cpovc_auth.views import password_reset
 from django.views.generic import TemplateView
 from cpovc_dashboard import urls as dashboard_api_urls
-from cpovc_access.forms import StrictPasswordChangeForm
 # New changes
 from cpovc_preventive import urls as preventive_urls
 from cpovc_pmtct import urls as pmtct_urls
 # from notifications import urls as noti_urls
 # from simple_forums import urls as forum_urls
-from cpovc_api import urls as api_urls
 from cpovc_dashboards import urls as dashboards_urls
 
 
@@ -77,15 +76,21 @@ urlpatterns = [
     path('forms/', include(forms_urls)),
     path('reports/', include(reports_urls)),
     path('gis/', include(gis_urls)),
-    path('hes/', include(hes_urls)),
+    # path('api/', include(api_urls)),
     path('ovc-care/', include(ovc_urls)),
     path('settings/', include(settings_urls)),
     path('data_cleanup/', include(data_cleanup_urls)),
+    path('hes/', include(hes_urls)),
     # Accounts management
     path('accounts/', include(cpovc_auth.urls)),
-    # Override Login and Logout not to use the /accounts/*
+    # Override
     path('login/', cpovc_auth.views.log_in, name='login'),
     path('logout/', cpovc_auth.views.log_out, name='logout'),
+    path('password-reset-complete/',
+         auth_views.PasswordResetCompleteView.as_view(
+             template_name='registration/password_reset_complete.html'
+         ),
+         name='password_reset_complete'),
     re_path(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt',
                                                    content_type='text/plain')),
     path('offline_mode/', include(offline_mode_urls)),
@@ -114,8 +119,6 @@ urlpatterns = [
     # Notifications
     # path('notifications/', include(noti_urls, namespace='notifications')),
     # path('forums/', include(forum_urls)),
-    # API
-    path('api/', include(api_urls)),
 ]
 
 handler400 = 'cpims.views.handler_400'
