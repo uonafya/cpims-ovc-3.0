@@ -1,0 +1,136 @@
+/*   
+Name: OVC dashboards templates
+Version: 1.0.0
+Author: HealthIT
+Website: childprotection.go.ke
+*/
+
+#container {
+    height: 400px; 
+}
+.cont {
+    min-height: 400px; 
+}
+
+.highcharts-figure, .highcharts-data-table table {
+    min-width: 310px; 
+    max-width: 800px;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #EBEBEB;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    min-width: 500px;
+}
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+    padding: 0.5em;
+}
+.highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+.page_loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #89cff0; /* Baby Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.alert {
+    padding:8px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+@media screen {
+  div.divHeader {
+    display: none;
+  }
+}
+@media print {
+    body {
+        margin: 0;
+        color: #000;
+        background-color: #fff;
+    }
+    div.divHeader {
+        text-align: left;
+        font-size: 16px;
+        top: 0;
+    }
+    div.divHeader p {
+        text-align: left;
+        font-size: 24px;
+        top: 0;
+    }        
+    .cont {
+        width: 100%;
+        height: 50%;
+        overflow: hidden;
+    }
+    .highcharts-container {
+        width: 100% !important;
+    }
+    .foot, .breadcrumb, #hashes, #filters{
+        display: none;
+    }
+    .highcharts-a11y-proxy-button{
+        display: none;
+    }
+}
+#result {
+    text-align: right;
+    color: gray;
+    min-height: 2em;
+}
+#table-sparkline {
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+th {
+    font-weight: bold;
+    text-align: left;
+}
+td, th {
+    padding: 5px;
+    border-bottom: 1px solid silver;
+    height: 20px;
+}
+
+thead th {
+    border-top: 2px solid gray;
+    border-bottom: 2px solid gray;
+}
+.highcharts-tooltip>span {
+    background: white;
+    border: 1px solid silver;
+    border-radius: 3px;
+    box-shadow: 1px 1px 2px #888;
+    padding: 8px;
+}
+dd {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 5px;
+}

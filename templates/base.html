@@ -77,7 +77,7 @@
 						<ul class="dropdown-menu animated fadeInLeft">
 							<li class="arrow"></li>
 							<li><a href="{% url 'view_person' id=request.user.reg_person_id %}">View My Profile</a></li>
-<!--							<li><a href="{% url 'password_change' %}">Change Password</a></li>-->
+                            <li><a href="{% url 'password_change' %}">Change Password</a></li>
 							<li><a href="#"><span class="badge badge-danger pull-right">2</span> Messages</a></li>
 							<li class="divider"></li>
 							<li><a href="{% url 'cluster' %}">Clusters</a></li>
@@ -170,7 +170,7 @@
 			{% endif %}
 		</div>
 		<!-- end #content -->
-		<div id="footer" class="footer"> {{ status }} &nbsp; &copy; {% now "Y" %}. All Rights Reserved. Version: 3.0.0
+		<div id="footer" class="footer"> &nbsp; &copy; {% now "Y" %}. All Rights Reserved. Version: 3.1.0
         <span class="promo"><img src="{% static 'img/logo_private.png' %}" height="60"></span>
 		</div>
         <div class="modal fade" id="modal-session">

@@ -318,6 +318,11 @@ def ovc_edit(request, id):
                 school = school.school.school_name
         bcert_no = params['ISOV'] if 'ISOV' in params else ''
         ncpwd_no = params['IPWD'] if 'IPWD' in params else ''
+        # Additional Identifiers
+        nemis_id = params['INEM'] if 'INEM' in params else ''
+        nupi_id = params['INUPI'] if 'INUPI' in params else ''
+        dreams_id = params['IDRM'] if 'IDRM' in params else ''
+        drms = 'on' if dreams_id else ''
         # Eligibility
         criterias = OVCEligibility.objects.filter(
             is_void=False, person_id=child.id).values_list(
@@ -342,8 +347,10 @@ def ovc_edit(request, id):
                       'eligibility': list(criterias), 'is_exited': exited,
                       'exit_reason': creg.exit_reason,
                       'ovc_exit_reason': creg.exit_reason,
-                      'exit_date': exit_date,
-                      'exit_org_name': exit_org_name}
+                      'exit_date': exit_date, 'dreams_id': dreams_id,
+                      'exit_org_name': exit_org_name,
+                      'is_dreams_enrolled': drms, 'nupi_id': nupi_id,
+                      'nemis_id': nemis_id}
         form = OVCRegistrationForm(guids=pids, data=all_values)
         for hhm in hhms:
             status_id = 'status_%s' % (hhm.person_id)
@@ -380,7 +387,7 @@ def ovc_edit(request, id):
                        'hhmembers': hhmembers, 'levels': levels,
                        'sch_class': sch_class, 'siblings': siblings,
                        'ctaker': ctaker, 'vloads': vlist, 'mydate': date_langu,
-                       'hiv_data': hiv_data})
+                       'hiv_data': hiv_data, 'creg': creg})
     except Exception as e:
         print("error with OVC viewing - %s" % (str(e)))
         # raise e

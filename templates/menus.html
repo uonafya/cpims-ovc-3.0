@@ -36,8 +36,8 @@
 			<li class="online_mode"><a href="{% url 'ovc_home' %}">OVC Care (Comp)</a></li>
 		        <li class="online_mode"><a href="{% url 'pfs_home' %}">OVC Care (Preventive)</a></li>
 			<li class="online_mode"><a href="{% url 'pmtct_home' %}">PMTCT</a></li>
-            <li class="online_mode"><a href="{% url 'new_hes' %}">HES</a></li>
 			<li class="online_mode"><a href="#">DREAMS</a></li>
+			<li class="online_mode"><a href="{% url 'hes_home' %}">HES (Family Support)</a></li>
 			<li><a href="#ovc_home" class="btn_ovc_home_offline">OVC Care Offline</a></li>
 		</ul>
 
@@ -113,6 +113,7 @@
                     <li><a href="{% url 'reports_ovc' id=28 %}">HIV Risk Screening</a></li>
                     <li><a href="{% url 'reports_ovc' id=29 %}">HIV Management</a></li>
                     <li><a href="{% url 'reports_ovc' id=30 %}">Case Transfer</a></li>
+                    <li><a href="{% url 'reports_ovc' id=40 %}">Caseload</a></li>
                     <li><a href="/reports/ovc/">ALL Reports</a></li>
 				</ul>
 			</li>
@@ -209,9 +210,9 @@
     <!-- end sidebar minify button -->
 
     <li><a href="{% url 'ovc_dashboard' %}">
-    	<i class="fa fa-bar-chart"></i> <span>OVC Dashboards (Current)</span></a>
+    	<i class="fa fa-bar-chart"></i> <span>OVC Dashboards</span></a>
     </li>
-    <li><a href="{% url 'ovc_dashboard_v2' %}">
-    	<i class="fa fa-bar-chart"></i> <span>OVC Dashboards (SAPR / APR)</span></a>
+     <li><a href="{% url 'ovc_dashboard_v2' %}">
+    	<i class="fa fa-bar-chart"></i> <span>OVC Dashboards (Archive)</span></a>
     </li>
 </ul>

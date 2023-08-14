@@ -59,7 +59,7 @@ ip_vars = get_ip()
 
 lip_vars = (('', 'All LIPs'),)
 
-period_vars = (('1', 'APR'), ('2', 'SAPR'), )
+period_vars = (('1', 'SAPR'), ('2', 'APR'), )
 
 fy_vars = (('21', 'FY21'), ('22', 'FY22'), )
 
@@ -77,8 +77,8 @@ class CaseLoad(forms.Form):
         today = datetime.date.today()
         year = today.strftime('%Y')
         mwezi = today.strftime('%m')
-        mwaka = (int(year) + 1) if int(mwezi) > 9 else int(year)
-        years = [(yr, '%s/%s' % (yr, yr + 1)) for yr in range(2020, mwaka)]
+        mwaka = (int(year) + 2) if int(mwezi) > 9 else int(year) + 1
+        years = [(yr, 'FY%s' % (yr)) for yr in range(2022, mwaka)]
         year_tuple = tuple(years)
 
         sel_year = forms.ChoiceField(

@@ -1,26 +1,29 @@
-
-from django.utils import timezone
-import datetime
 import uuid
-
-
 from django.db import models
+from django.utils import timezone
+from cpovc_registry.models import RegPerson, RegOrgUnit
+
+from cpovc_auth.models import AppUser
 
 
 class CPOVC_HES(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    hes_id = models.UUIDField(
+        primary_key=True, default=uuid.uuid1, editable=False)
+
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    cbo = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
     employment_status = models.CharField(
         max_length=50,
         blank=True,
         null=True
     )
-    type_of_employment=models.CharField(
+    type_of_employment = models.CharField(
         max_length=50,
 
         blank=True,
         null=True
     )
-    health_scheme=models.CharField(
+    health_scheme = models.CharField(
         max_length=50,
 
         blank=True,
@@ -130,11 +133,16 @@ class CPOVC_HES(models.Model):
         blank=True,
         null=True
     )
-    business_type_started = models.CharField(max_length=100, blank=True, null=True)
-    linked_to_value_chain_activities_asset_growth = models.CharField(max_length=100, blank=True, null=True)
-    sector_of_asset_growth = models.CharField(max_length=100, blank=True, null=True)
-    linked_to_source_finance = models.CharField(max_length=100, blank=True, null=True)
-    type_of_financial_institution = models.CharField(max_length=100, blank=True, null=True)
+    business_type_started = models.CharField(
+        max_length=100, blank=True, null=True)
+    linked_to_value_chain_activities_asset_growth = models.CharField(
+        max_length=100, blank=True, null=True)
+    sector_of_asset_growth = models.CharField(
+        max_length=100, blank=True, null=True)
+    linked_to_source_finance = models.CharField(
+        max_length=100, blank=True, null=True)
+    type_of_financial_institution = models.CharField(
+        max_length=100, blank=True, null=True)
     loan_taken_income_growth = models.CharField(
         max_length=50,
 
@@ -142,20 +150,20 @@ class CPOVC_HES(models.Model):
         null=True
     )
     date_loan_taken_income_growth = models.DateField(blank=True, null=True)
-    linked_to_value_chain_activities_income_growth= models.CharField(max_length=100, blank=True, null=True)
-    sector_of_income_growth = models.CharField(max_length=100, blank=True, null=True)
+    linked_to_value_chain_activities_income_growth = models.CharField(
+        max_length=100, blank=True, null=True)
+    sector_of_income_growth = models.CharField(
+        max_length=100, blank=True, null=True)
+
+    created_by = models.ForeignKey(
+        AppUser, on_delete=models.CASCADE, null=True)
+    created_at = models.DateField(default=timezone.now)
+    is_void = models.BooleanField(default=False)
+
     class Meta:
-        db_table = 'cpovc_hes'
-        verbose_name = "CPOVS_HES"
-        verbose_name_plural = "CPOVS_HES"
-        app_label = "cpovc_hes"
+        db_table = 'cpovc_hes_registration'
+        verbose_name = "HouseHold Economic Strengthening"
+        verbose_name_plural = "HouseHold Economic Strengthening"
 
-
-
-
-
-
-
-
-
-
+    def __str__(self):
+        return self.hes_id
