@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load app_filters %}
 {% load static %}
-{% block page_title %} HES Form {% endblock %}
+{% block page_title %} Edit HES Form {% endblock %}
 {% block style_code %}
 <link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
 <link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
@@ -65,10 +65,10 @@
             </div>
         <div style="overflow-x: auto; min-height: 300px;">
             <div class="panel-body">
-                <form class="form-horizontal form-bordered hes" action="{% url 'new_hes' %}" method="POST" data-parsley-validate="true"
-                    name="form-wizard-hhva" id="new_hhva">
+               <form class="form-horizontal form-bordered hes" action="." method="POST" data-parsley-validate="true"
+                    name="edit_hes" id="edit_hes">
                     {% csrf_token %}
-                    <div id="wizard-hhva">
+                    <div id="wizard-hes">
                         <ol>
 
                             <li>
@@ -442,6 +442,9 @@
         </script> -->
 
 <script type="text/javascript">
+    $('#event_date').datepicker({ endDate: '0y', format: 'dd-M-yyyy' });
+
+    $("#wizard-hes").bwizard();
     window.onload = function () {
         var x = document.getElementById("id_WB_AD_SCH_8_1_1");
         var y = document.getElementById("WB_AD_SCH_8_2");

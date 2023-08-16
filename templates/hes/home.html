@@ -71,25 +71,28 @@
                 <hr>
                 <table class="table" id="data-table">
                     <thead>
-                        <tr><th>#</th><th>CPIMS ID</th><th>Names</th><th>Case ID</th><th>Case Date</th><th></th></tr>
+                        <tr><th>#</th><th>CPIMS ID</th><th>Names</th><th>Organization Unit Name</th><th>HES ID</th><th></th></tr>
                     </thead>
-                {% for case in cases %}
+                {% for combined_record in combined_data %}
                    <tr>
                        <td>{{ forloop.counter }}</td>
-                       <td>{{ case.id }}</td>
-                       <td>{{ case.first_name }} {{ case.surname }}</td>
-                       <td>{{ case.case_serial }}</td>
-                       <td>{{ case.case_date }}</td>
+                       <td>{{ combined_record.person_record.id }}</td>
+                       <td>{{combined_record.person_record.first_name }} {{ person_record.surname }}</td>
+
+                       <td>{{combined_record.hes_data.org_unit_name }}</td>
+                       <td>{{ combined_record.hes_data.id }}</td>
                        <td>
-                            {% if case.case_level == 1 %}
-                                <a href="{% url 'view_hes' case.id %}" class="btn  btn-sm btn-primary m-r-5">View Case</a>
+                            {% if combined_record.hes_data.id %}
+                                <a href="{% url 'view_hes' combined_record.hes_data.id %}" class="btn  btn-sm btn-primary m-r-5">View HES</a>
+                                <a href="{% url 'view_hes' combined_record.hes_data.id %}" class="btn  btn-sm btn-primary m-r-5">Edit HES</a>
                             {% else %}
-                                <a href="{% url 'new_hes' case.id %}" class="btn  btn-sm btn-primary m-r-5">Enroll </a>
+                                <a href="{% url 'new_hes' combined_record.person_record.id %}" class="btn  btn-sm btn-primary m-r-5">Enroll </a>
                             {% endif %}
                         </td>
                    </tr>
                     
                 {% endfor %}
+
                 </table>
             </div>
             <!-- end panel body -->

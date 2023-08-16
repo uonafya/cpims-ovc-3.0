@@ -7,9 +7,6 @@ from cpovc_auth.models import AppUser
 
 
 class CPOVC_HES(models.Model):
-    hes_id = models.UUIDField(
-        primary_key=True, default=uuid.uuid1, editable=False)
-
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     cbo = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
     employment_status = models.CharField(
@@ -166,4 +163,4 @@ class CPOVC_HES(models.Model):
         verbose_name_plural = "HouseHold Economic Strengthening"
 
     def __str__(self):
-        return self.hes_id
+        return str(self.id)
