@@ -194,9 +194,10 @@ class HesForm(forms.Form):
 
                                                              }))
     business_type_started = forms.CharField(label='Business Type Started',
-
-                                            widget=forms.CheckboxInput(
-                                                attrs={'class': 'form-control', 'id': 'is_self_reporter'}))
+                                            widget=forms.TextInput(
+                                                attrs={'placeholder': ('business type'),
+                                                       'class': 'form-control',
+                                                       }))
     linked_to_value_chain_activities_asset_growth = forms.ChoiceField(label='Linked to',
                                                                       choices=YESNO_CHOICES,
                                                                       widget=forms.RadioSelect)

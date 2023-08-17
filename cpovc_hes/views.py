@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
+from cpovc_auth.models import AppUser
 from cpovc_main.functions import convert_date
 from cpovc_forms.forms import OVCSearchForm
 from cpovc_preventive.functions import get_person_org_unit
@@ -56,6 +57,8 @@ def new_hes(request, id):
     reg_person_id = int(id)
     org_unit_id = get_person_org_unit(request, reg_person_id)
     cbo_id = org_unit_id if org_unit_id else None
+    user_id = request.user.id
+    created_by_user = AppUser.objects.get(id=user_id)
 
     try:
         if(request.method == "POST"):
@@ -103,11 +106,12 @@ def new_hes(request, id):
                 type_of_financial_institution=data.get(
                     'type_of_financial_institution'),
                 loan_taken_income_growth=data.get('loan_taken_income_growth'),
-                date_loan_taken_income_growth=data.get(
-                    'date_loan_taken_income_growth'),
+                date_loan_taken_income_growth=convert_date(data.get(
+                    'date_loan_taken_income_growth')),
                 linked_to_value_chain_activities_income_growth=data.get(
                     'linked_to_value_chain_activities_income_growth'),
                 sector_of_income_growth=data.get('sector_of_income_growth'),
+                created_by=created_by_user
             ).save()
 
 
@@ -166,6 +170,7 @@ def view_hes(request, id):
                 'date_loan_taken_income_growth': hes_instance.date_loan_taken_income_growth,
                 'linked_to_value_chain_activities_income_growth': hes_instance.linked_to_value_chain_activities_income_growth,
                 'sector_of_income_growth': hes_instance.sector_of_income_growth,
+                'created_by': hes_instance.created_by,
             }
 
             form = HesForm(initial=data)
@@ -266,7 +271,7 @@ def edit_hes(request, id):
             'form': form,
             'person_details': person_details,
             'org_unit_name': org_unit_name,
-            'allow_edit': True,  # Set this to True or False based on your logic
+            'allow_edit': True,
         }
 
         if request.method == "POST":
