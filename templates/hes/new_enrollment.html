@@ -99,7 +99,7 @@
                                         <fieldset>
                                             <legend class="pull-left width-full">HES Options</legend>
                                                  <div class="form-group  ">
-                                                    <label class="control-label col-md-4 col-sm-4 " >Employement Status:</label>
+                                                    <label class="control-label col-md-4 col-sm-4 " >Employement Status: <span class="asteriskField">*</span></label>
                                                     <div class="col-md-6 col-sm-6 employment_status" id="employment-status">
                                                         {{ form.employment_status}}
                                                     </div>
@@ -117,7 +117,7 @@
                                                     </div>
                                                 </div>
                                                      <div  class="form-group health_scheme" id="health_scheme">
-                                                    <label class="control-label col-md-4 col-sm-4" > Type Health Scheme: <span class="asteriskField">*</span> </label>
+                                                    <label class="control-label col-md-4 col-sm-4" > Type Health Scheme:  </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.health_scheme }}
                                                     </div>
@@ -135,7 +135,7 @@
                                                     </div>
                                                      </div>
                                                      <div  class="form-group social_safety_nets" id="social_safety_nets_type">
-                                                    <label class="control-label col-md-4 col-sm-4" > Social Safety Nets Type: <span class="asteriskField">*</span> </label>
+                                                    <label class="control-label col-md-4 col-sm-4" > Social Safety Nets Type:  </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.social_safety_nets_type }}
                                                     </div>
@@ -175,7 +175,7 @@
                                                     </div>
                                                 </div>
                                                 <div  class="form-group loan_taken " >
-                                                    <label class="control-label col-md-4 col-sm-4" >Loan Taken </label>
+                                                    <label class="control-label col-md-4 col-sm-4" >Loan Taken: <span class="asteriskField">*</span> </label>
                                                     <div class="col-md-6 col-sm-6" id="loan_taken">
                                                         {{ form.loan_taken }}
                                                     </div>
@@ -201,7 +201,7 @@
                                                     </div>
                                                 </div>
                                                 <div  class="form-group ">
-                                                    <label class="control-label col-md-4 col-sm-4" > Startup? </label>
+                                                    <label class="control-label col-md-4 col-sm-4" > Startup?<span class="asteriskField">*</span> </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.startup }}
                                                     </div>
@@ -226,7 +226,7 @@
                                         <fieldset>
                                             <legend class="pull-left width-full">Consumption support</legend>
                                                 <div  class="form-group ">
-                                                    <label class="control-label col-md-4 col-sm-4" > Emergency cash transfer (ECT): </label>
+                                                    <label class="control-label col-md-4 col-sm-4" > Emergency cash transfer (ECT):<span class="asteriskField">*</span> </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.emergency_cash_transfer}}
                                                     </div>
@@ -253,7 +253,7 @@
                                             <!-- begin row -->
                                             <div class="row">
                                                  <div  class="form-group ">
-                                                    <label class="control-label col-md-4 col-sm-4" > Received start up Kit : </label>
+                                                    <label class="control-label col-md-4 col-sm-4" > Received start up Kit :<span class="asteriskField">*</span> </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.received_startup_kit }}
                                                     </div>
@@ -271,7 +271,7 @@
                                                     </div>
                                                 </div>
                                                 <div  class="form-group ">
-                                                    <label class="control-label col-md-4 col-sm-4" >Received business grant: </label>
+                                                    <label class="control-label col-md-4 col-sm-4" >Received business grant:<span class="asteriskField">*</span> </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.received_business_grant}}
                                                     </div>
@@ -312,7 +312,7 @@
                                             <!-- begin row -->
                                             <div class="row">
                                                  <div  class="form-group ">
-                                                    <label class="control-label col-md-4 col-sm-4" > Linked to Source of finance : </label>
+                                                    <label class="control-label col-md-4 col-sm-4" > Linked to Source of finance : <span class="asteriskField">*</span><span class="asteriskField">*</span> </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.linked_to_source_finance }}
                                                     </div>
@@ -445,7 +445,8 @@ jQuery(document).ready(function () {
     $('select').on('change', function () {
       var selectedValue = $(this).val();
       if (selectedValue === 'Employed') {
-        $('#employment-type').show();
+        $('#employment-type').prop('required', true).show();
+
       } else {
         $('#employment-type').hide();
       }
@@ -455,7 +456,7 @@ jQuery(document).ready(function () {
       $("input[name='have_health_scheme']").on('change', function () {
             var ival = $("input[name='have_health_scheme']:checked").val();
             if (ival == 'AYES') {
-                $('#health_scheme').show();
+                $('#health_scheme').prop('required', true).show();
 
             } else {
                $ ('#health_scheme').hide();
@@ -465,7 +466,7 @@ jQuery(document).ready(function () {
        $("input[name='social_safety_nets']").on('change', function () {
             var ival = $("input[name='social_safety_nets']:checked").val();
             if (ival == 'AYES') {
-                $('#social_safety_nets_type').show();
+                $('#social_safety_nets_type').prop('required', true).show();
 
             } else {
                $('#social_safety_nets_type').hide();
@@ -475,8 +476,8 @@ jQuery(document).ready(function () {
        $("input[name='linkage_to_vsls']").on('change', function () {
             var ival = $("input[name='linkage_to_vsls']:checked").val();
             if (ival == 'AYES') {
-                 $('#vsla_name').show();
-                 $('#date_of_linkage_vsla').show();
+                 $('#vsla_name').prop('required', true).show();
+                 $('#date_of_linkage_vsla').prop('required', true).show();
             } else {
                $('#vsla_name').hide();
                $('#date_of_linkage_vsla').hide();
@@ -486,9 +487,9 @@ jQuery(document).ready(function () {
        $("input[name='loan_taken']").on('change', function () {
             var ival = $("input[name='loan_taken']:checked").val();
             if (ival == 'AYES') {
-                 $('#loan_amount').show();
-                 $('#loan_utilization').show();
-                 $('#date_loan_taken').show();
+                 $('#loan_amount').prop('required', true).show();
+                 $('#loan_utilization').prop('required', true).show();
+                 $('#date_loan_taken').prop('required', true).show();
             } else {
                $('#loan_amount').hide();
                $('#loan_utilization').hide();
@@ -498,8 +499,8 @@ jQuery(document).ready(function () {
           $("input[name='startup']").on('change', function () {
             var ival = $("input[name='startup']:checked").val();
             if (ival == 'AYES') {
-                $('#type_of_startup').show();
-                $('#date_startup_received').show();
+                $('#type_of_startup').prop('required', true).show();
+                $('#date_startup_received').prop('required', true).show();
             } else {
                $('#type_of_startup').hide();
                $('#date_startup_received').hide();
@@ -509,8 +510,8 @@ jQuery(document).ready(function () {
             var ival = $("input[name='emergency_cash_transfer']:checked").val();
             if (ival == 'AYES') {
 
-                $('#ect_use').show();
-                $('#ect_amount').show();
+                $('#ect_use').prop('required', true).show();
+                $('#ect_amount').prop('required', true).show();
             } else {
 
                 $('#ect_use').hide();
@@ -522,7 +523,7 @@ jQuery(document).ready(function () {
             var ival = $("input[name='received_business_grant']:checked").val();
             if (ival == 'AYES') {
 
-                $('#amount_of_money_received').show();
+                $('#amount_of_money_received').prop('required', true).show();
             } else {
 
                 $('#amount_of_money_received').hide();
@@ -533,7 +534,7 @@ jQuery(document).ready(function () {
             var ival = $("input[name='linked_to_source_finance']:checked").val();
             if (ival == 'AYES') {
 
-                $('#type_of_financial_institution').show();
+                $('#type_of_financial_institution').prop('required', true).show();
             } else {
 
                 $('#type_of_financial_institution').hide();
@@ -544,7 +545,7 @@ jQuery(document).ready(function () {
             var ival = $("input[name='loan_taken_income_growth']:checked").val();
             if (ival == 'AYES') {
 
-                $('#date_loan_taken_income_growth').show();
+                $('#date_loan_taken_income_growth').prop('required', true).show();
             } else {
 
                 $('#date_loan_taken_income_growth').hide();
