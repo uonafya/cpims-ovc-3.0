@@ -140,7 +140,7 @@ def bar_chart(request, params, data):
                             }
                         },
                         tooltip: {
-                            valueSuffix: ' OVC/HH'
+                            valueSuffix: ''
                         },
                         plotOptions: {
                             series: {
@@ -171,7 +171,7 @@ def bar_chart(request, params, data):
                         },
                         colors: {colors},
                         series: [{                        
-                            name: '# OVC / HH',
+                            name: '{yLabel}',
                             data: [{mdata}]
                         }]
                     });
@@ -219,7 +219,7 @@ def bar_chart_stacked(request, params, data):
                         },
                         subtitle: {
                             text: '{subtitle}',
-                            align: 'left'
+                            align: 'right'
                         },
                         caption: {
                             text: '{caption}'
@@ -392,6 +392,10 @@ def column_chart(request, params, data):
             </script>'''
         sel_color = request.session.get('sel_color', 0)
         ucolors = colors[sel_color] if sel_color else colors[1]
+        # Labels
+        yLabel = '# of OVC'
+        if params['yLabel']:
+            yLabel = params['yLabel']
         if not params['has_sex']:
             # del ucolors[0:2]
             ucolors = colors[sel_color + 10] if sel_color else colors[11]
@@ -400,7 +404,7 @@ def column_chart(request, params, data):
             xtras = "+ '<br/>' + Highcharts.numberFormat(this.percentage, 0, '', ',') + '%'"
             slabels = 'true'
         else:
-            series = "{name: '# OVC', data: [{mdata}] }"
+            series = "{name: '" + yLabel + "', data: [{mdata}] }"
             xtras = ""
             slabels = 'false'
         # Colours
@@ -410,10 +414,7 @@ def column_chart(request, params, data):
         ucolors = get_colors(ucolors, params, data)
         legend = 'true' if params['legend'] else 'false'
         colorp = 'false' if params['legend'] else 'true'
-        # Labels
-        yLabel = '# of OVC'
-        if params['yLabel']:
-            yLabel = params['yLabel']
+        #
         result = str(html).replace('{series}', series)
         result = result.replace('{colors}', str(ucolors))
         result = result.replace('{legend}', legend)
@@ -1226,7 +1227,7 @@ def stacked_column_chart(request, params, data):
                         yAxis: {
                             min: 0,
                             title: {
-                                text: '# of OVC'
+                                text: '% of OVC'
                             },
                             labels: {
                                 useHTML:true, step: 1
@@ -1786,7 +1787,7 @@ def line_chart(request, params, data):
         return result
 
 
-def column_category_chart(request, params, data):
+def bar_category_chart(request, params, data):
     """Method to get bar chart."""
     try:
         # print('Remove sparklines', params, data)
@@ -2040,3 +2041,129 @@ def get_colors(ucolors, params, data, level=0):
         return ucolors
     else:
         return ncolors
+
+
+def column_category_chart(request, params, data):
+    """Method to get bar chart."""
+    try:
+        # print('Remove sparklines', params, data)
+        categories = str(data['items'])
+        html = '''
+                <script>
+                $(document).ready(function() {
+                    Highcharts.chart('container-{cont}', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: '{title}',
+                            align: 'left'
+                        },
+                        subtitle: {
+                            text: '{subtitle}',
+                            align: 'left'
+                        },
+                        caption: {
+                            text: '{caption}'
+                        },
+                        colors: {colors},
+                        series: {series},
+                        xAxis: {
+                            categories: {categories}
+                        },
+                        yAxis: {
+                            title: {
+                                text: '# of OVC'
+                            },
+                            labels: {
+                                overflow: 'justify'
+                            }
+                        },
+                        dataLabels: {
+                            enabled: true
+                        },
+                        plotOptions: {
+                            bar: {
+                                dataLabels: {
+                                    enabled: true
+                                },
+                                pointWidth: 15
+                            }
+                        },
+                    });
+
+                });
+            </script>'''
+        ags = {}
+        cats, categories = [], {}
+        ips = []
+        dpps_dict = {}
+        for dt in data['raw']:
+            itm = dt['agency']
+            dtm = dt['mechanism']
+            itv = dt['schoollevel']
+            dct = dt['dcount']
+            if dtm not in ips:
+                ips.append(dtm)
+                dpps_dict[dtm] = dct
+                itvs = {itv: dct}
+                if itm not in ags:
+                    ags[itm] = {'count': 1, 'items': {dtm: itvs}}
+                else:
+                    ags[itm]['count'] += 1
+                    ags[itm]['items'][dtm] = itvs
+            else:
+                dpps_dict[dtm] = dpps_dict[dtm] + dct
+                if itv not in ags[itm]['items'][dtm]:
+                    ags[itm]['items'][dtm][itv] = dct
+            # Generate categories
+            if itm not in categories:
+                categories[itm] = [dtm]
+            else:
+                if dtm not in categories[itm]:
+                    categories[itm].append(dtm)
+        fvals = {}
+        pcolors = params['colors']
+        dfts = params['defaults']
+
+        cnt = 0
+        for dft in dfts:
+            for pg in ags:
+                itms = ags[pg]['items']
+                for fg in itms:
+                    ips = itms[fg]
+                    for sl in ips:
+                        ag = ips[sl]
+                        if dft == sl:
+                            if dft not in fvals:
+                                fvals[dft] = [ag]
+                            else:
+                                fvals[dft].append(ag)
+                            cnt += 1
+        fsrs = []
+        for dft in dfts:
+            if dft in fvals:
+                itm = {'name': dft, 'data': fvals[dft]}
+                fsrs.append(itm)
+
+        # Categories
+        for cat in categories:
+            itm = {'name': cat, 'categories': categories[cat]}
+            cats.append(itm)
+
+        result = str(html).replace('{mdata}', data['mdata'])
+        result = result.replace('{colors}', str(pcolors))
+        result = result.replace('{categories}', str(cats))
+        result = result.replace('{series}', str(fsrs))
+        # result = result.replace('{series}', str(data['series']))
+        result = result.replace('{fdata}', data['fdata'])
+        result = result.replace('{cont}', params['cont'])
+        result = result.replace('{title}', params['title'])
+        result = result.replace('{subtitle}', params['subtitle'])
+        result = result.replace('{caption}', params['caption'])
+        result = result.replace('{categories}', str(cats))
+    except Exception as e:
+        print('error with grouped column chart data - %s' % (str(e)))
+        raise e
+    else:
+        return result

@@ -17,11 +17,10 @@
     <link href="{% static 'plugins/jquery-ui/themes/base/minified/jquery-ui.min.css' %}" rel="stylesheet" />
     <link href="{% static 'plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/style-responsive.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/theme/default.css' %}" rel="stylesheet" id="theme" />
-    <link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
-    <link href="{% static 'css/dashboards.css' %}" rel="stylesheet">
+    <link href="{% static 'dashboards/css/style.css' %}" rel="stylesheet" />
+    <link href="{% static 'dashboards/css/style-responsive.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'dashboards/css/theme/default.css' %}" rel="stylesheet" id="theme" />
+    <link href="{% static 'dashboards/css/dashboards.css' %}" rel="stylesheet">
     <!-- ================== END BASE CSS STYLE ================== -->
     <script src="{% static 'plugins/pace/pace.min.js' %}"></script>
 
@@ -39,8 +38,8 @@
             <div class="container-fluid">
                 <!-- begin mobile sidebar expand / collapse button -->
                 <div class="navbar-header">
-                    <a href="/" class="navbar-brand"><span class="navbar-logo"></span> CPIMS OVC dashboard</a>
-                    <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+                    <a href="/" class="navbar-brand"><span class="navbar-logo"></span>OVC dashboards</a>
+                    <button type="button" class="navbar-toggle" data-click="top-menu-toggled">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -111,24 +110,25 @@
         <div id="top-menu" class="top-menu">
             <!-- begin top-menu nav -->
             <ul class="nav">
-               <li><a href="{% url 'ovc_dashboard' %}" id="main_url"><b>1. Registrations</b></a></li>
-                    <li><a href="{% url 'ovc_registration' %}" id="reg_url">2. OVC Eligible for reporting</a></li>
-                    <li><a href="{% url 'hivstat_dash' %}" id="hivstat_url">3. OVC Served & HIV Information</a></li>
-                    <li><a href="{% url 'services_dash' %}" id="services_url">4. Services</a></li>
-                    <li><a href="{% url 'cm_dash' %}" id="cm_url">5. Case Management</a></li>
-                    <li><a href="{% url 'perform_dash' %}" id="pf_url">6. Performance</a></li>
-                    <li><a href="{% url 'mer_dash' %}" id="mer_url">7. MER Reporting</a></li>
-                    <li><a href="{% url 'epc_dash' %}" id="epd_url">8. Epidemic Control</a></li>
-                    <li><a href="{% url 'dash_help' %}" id="help_url">Glossary</a></li>
+                <li class="active"><a href="{% url 'ovc_dashboard' %}" id="main_url">1. Registrations</a></li>
+                <li><a href="{% url 'ovc_registration' %}" id="reg_url">2. OVC Eligible for reporting</a></li>
+                <li><a href="{% url 'hivstat_dash' %}" id="hivstat_url">3. OVC Served & HIV Information</a></li>
+                <li><a href="{% url 'services_dash' %}" id="services_url">4. Services</a></li>
+                <li><a href="{% url 'cm_dash' %}" id="cm_url">5. Case Management</a></li>
+                <li><a href="{% url 'perform_dash' %}" id="pf_url">6. Performance</a></li>
+                <li><a href="{% url 'mer_dash' %}" id="mer_url">7. MER Reporting</a></li>
+                <li><a href="{% url 'epc_dash' %}" id="epd_url">8. Epidemic Control</a></li>
+                <li><a href="{% url 'dash_help' %}" id="help_url">Glossary</a></li>
+                <li class="menu-control menu-control-left">
+                    <a href="#" data-click="prev-menu"><i class="fa fa-angle-left"></i></a>
+                </li>
+                <li class="menu-control menu-control-right">
+                    <a href="#" data-click="next-menu"><i class="fa fa-angle-right"></i></a>
+                </li>
             </ul>
         </div>        
         <!-- begin #content -->
         <div id="content" class="content">
-            <div class="divHeader">
-                <b><p>CPIMS OVC Registrations Report </p></b>
-                <hr><b>IP: </b><span id="prip"></span>; &nbsp; 
-                <b>LIP: </b><span id="prlip"></span>
-            </div>
             <!-- Filters -->
             <div class="panel panel-default">
                 <div class="panel-body p-5">
@@ -136,7 +136,7 @@
                         <input type="hidden" name="csrfmiddlewaretoken" value="uX3atezvGwuWEUJekjL3Net8LytDjilegIjR0eyTZ0lpyXxsWda8ycCIff71toXu">
                         <input type="hidden" name="cur_year" id="cur_year" value="2021">
                         <div class="row" id="filters">
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                 {{ form.sel_county }}
                             </div>
 
@@ -158,7 +158,10 @@
                                 {{ form.sel_lip }}
                             </div>
                             <div class="col-md-1">
-                                <a href="#modal-dialog" data-toggle="modal" title="Click for Date Filters" class="btn btn-sm btn-inverse"><i class="fa fa-filter"></i> Filter </a>
+                                {{ form.sel_period }}
+                            </div>
+                            <div class="col-md-1">
+                                {{ form.sel_year }}
                             </div>
                         </div>
                     </form>
@@ -296,13 +299,13 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Reporting Period</label>
                                 <div class="col-md-9">
-                                    {{ form.sel_period }}
+                                    
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Financial Year</label>
                                 <div class="col-md-9">
-                                    {{ form.sel_year }}
+                                    
                                 </div>
                             </div>
                             <div class="form-group">
@@ -352,7 +355,7 @@
     <!-- ================== END BASE JS ================== -->
     
     <!-- ================== BEGIN PAGE LEVEL JS ================== -->
-    <script src="{% static 'js/apps.js' %}"></script>
+    <script src="{% static 'dashboards/js/apps.js' %}"></script>
     <!-- ================== END PAGE LEVEL JS ================== -->
     
     <script>
@@ -365,6 +368,9 @@
         $(document).ready(function() {
             App.init();
 
+            //$('#sel-period').attr('disabled', true);
+            $('#sel-year').attr('disabled', true);
+
            // Dynamically load Charts
            var chartlists = ['1A', '1B', '1C', '1D', '1E', '1F', '1G'];
            var hashes = window.location.hash.substr(1);
@@ -373,15 +379,22 @@
            var cn = fields[0];
            var con = fields[1];
            var wd = fields[2];
-           var mid = fields[2];
-           var ipv = fields[3];
-           var lipv = fields[4];
+           var mid = fields[3];
+           var ipv = fields[4];
+           var lipv = fields[5];
+           var prid = fields[6];
+           var fyid = fields[7];
+
+
            $( "#sel-county" ).val(cn);
            $( "#sel-ip" ).val(ipv);
            var ipv_id = parseInt(ipv);
            var cn_id = parseInt(cn);
            var con_id = parseInt(con);
            var wid = parseInt(wd);
+           // The periods
+           var pid = parseInt(prid);
+           var fy = parseInt(fyid);
            if (ipv_id > 0){ 
              getLIP(ipv_id, lipv);
            }
@@ -473,7 +486,7 @@
                    var hashes = window.location.hash.substr(1);
                    if (hashes == ''){
                        //Set defaults
-                       hashes = '00/000/000/0/0/0/1/2021';
+                       hashes = '00/000/000/0/0/0/1/2023';
                    }
                    var fields = hashes.split('/');
                    $('#hashes').html(hashes);
@@ -487,6 +500,8 @@
                    var yr = fields[7];
                    // Set values too
                    $("#sel-funding").val(mid);
+                   $("#sel-period").val(prd);
+                   $("#sel-year").val(yr);
                    if (mid == '0'){
                        $( "#sel-ip" ).val('');
                        $( "#sel-lip" ).val('');

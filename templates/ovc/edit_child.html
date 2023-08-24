@@ -122,7 +122,7 @@
                     </div>
                     <!-- end col-2 -->
                     <!-- begin col-1 -->
-                    <div class="col-md-1">
+                    <div class="col-md-2">
                     <div class="form-group">
                         <label class="text-bold">Is the child Disabled?</label>
                         {{ form.disb }}
@@ -130,7 +130,7 @@
                     </div>
                     <!-- end col-2 -->
                     <!-- begin col-2 -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                     <div class="form-group">
                         <label class="text-bold">PWD Registration No.</label>
                         {{ form.ncpwd_no }}
@@ -152,38 +152,96 @@
                     <!-- begin col-2 -->
                     <div class="col-md-3">
                     <div class="form-group">
-                        <label class="text-bold">CBO Child ID</label>
+                        <label class="text-bold">CBO assigned Child ID</label>
                         {{ form.cbo_uid }}
                         {{ form.cbo_uid_check }}
                       </div>
                     </div>
                     <!-- end col-2 -->
                      <!-- begin col-1 -->
-                    <div class="col-md-1">
+                    <div class="col-md-2">
                     <div class="form-group">
-                        <label class="text-bold">Exit</label>
+                        <label class="text-bold">Exited from Program</label>
                         {{ form.is_exited }}
                       </div>
                     </div>
                     <!-- end col-1 -->
                     <!-- begin col-4 -->
-                    <div class="col-md-4" id="exit_reason_div">
+                    <div class="col-md-3" id="exit_reason_div">
                     <div class="form-group">
                         <label class="text-bold">Exit reason</label>
-                        <div><br>
+                        <div>
                         {{ form.exit_reason.value|default_if_none:"N/A"|gen_value:vals }}
                         </div>
                       </div>
                     </div>
-                    <!-- end col-4 -->
+                    <!-- end col-4  -->
                     </div>
+                    <hr/>
+                    <!-- begin row -->
+                    <div class="row">
+                        <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="text-bold">NEMIS Number</label>
+                            {{ form.nemis_id }}
+                          </div>
+                        </div>
+                        <!-- end col-4 -->
+                        <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="text-bold">Birth Notification Number</label>
+                            {{ form.birth_not_id }}
+                          </div>
+                        </div>
+                        <!-- end col-3 -->
+                        {% if child.years > 9 and child.sex_id == 'SFEM' %}
+                         <!-- begin col-1 -->
+                        <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="text-bold">Enrolled in DREAMS?</label>
+                            <div>
+                            {{ form.is_dreams_enrolled }}
+                            </div>
+                          </div>
+                        </div>
+                        <!-- end col-1 -->
+                        <!-- begin col-3 -->
+                        <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="text-bold">DREAMS ID</label>
+                            <div>
+                            {{ form.dreams_id }}
+                            </div>
+                          </div>
+                        </div>
+                        <!-- end col-4 -->
+                        {% endif %}
+                    </div>
+                    
+
+                    {% if creg.hiv_status == 'HSTP' %}
+                    <hr/>
+                    <!-- begin row  -->
+                    <div class="row">
+                        <!-- begin col-4 -->
+                        <div class="col-md-4" id="exit_reason_div">
+                        <div class="form-group">
+                            <label class="text-bold">NUPI Number</label>
+                            <div><br>
+                            {{ form.nupi_id }}
+                            </div>
+                          </div>
+                        </div>
+                        <!-- end col-4 -->
+                    </div>
+                    {% endif %}
             </fieldset>
         </div>
         <div class="primary1">
             <fieldset>
                 <legend class="pull-left width-full">Health details</legend>
                 <!-- begin row -->
-                 {% if  not child.years > 5 %}
+                 {% if not child.years > 5 %}
                  <div class="row">
                     <!-- begin col-2 -->
                     <div class="col-md-3">
@@ -852,9 +910,6 @@
         // alert(hiv_statuss);
         var csrftoken = $.cookie('csrftoken');
         var child="{{child.id}}";
-        console.log('abdiiii ' +date_of_testing);
-        console.log('Moha ' +hiv_statuss);
-        console.log('WEWEW ' +child);
 
         var csrftoken = $.cookie('csrftoken');
         var values = {
@@ -976,6 +1031,14 @@
         var cond = $('#ovc_exit_reason').val();
         handle_exit_org(cond);
     });
+    // DREAMS
+    var drcond = $('#is_dreams_enrolled').is(":checked");
+    disable_fields(drcond, 'dreams_id');
+    $('#is_dreams_enrolled').live('change', function() {
+        var drcond = $('#is_dreams_enrolled').is(":checked");
+        disable_fields(drcond, 'dreams_id');
+    });
+
     $('#caretaker').val('{{ child.caretaker }}');
     var hstatus = $('#hiv_status').val();
     var hlevel = $('#school_level').val();
@@ -1084,6 +1147,7 @@
            $('#exit_org_name').attr("data-parsley-required", "false");
         }
     }
+
     function handle_hstatus(hstatus){
         if ((hstatus == 'HSTP') || (hstatus == 'HHEI')){
             $('#facility_div').show();

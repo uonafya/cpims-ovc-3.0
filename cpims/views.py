@@ -209,7 +209,7 @@ def get_dashboard(request):
             return value
         else:
             print(('Set new Dashboard - %s' % (user_key)))
-        dash = dashboard()
+        dash = dashboard(request)
         start_date = datetime.now() - timedelta(days=21)
         summary = {}
         summary['org_units'] = '{:,}'.format(dash['org_units'])
@@ -227,10 +227,11 @@ def get_dashboard(request):
         ovc['children'] = '{:,}'.format(odash['children'])
         ovc['children_all'] = '{:,}'.format(odash['children_all'])
         ovc['guardians'] = '{:,}'.format(odash['guardian'])
+        ovc['guardians_all'] = '{:,}'.format(odash['guardian_all'])
         ovc['workforce'] = '{:,}'.format(odash['workforce_members'])
         ovc['cases'] = '{:,}'.format(odash['case_records'])
         ovc['pending'] = '{:08}'.format(odash['pending_cases'])
-        ovc['household'] = 0
+        ovc['household'] = '{:,}'.format(odash['household'])
         ovc['hiv_status'] = odash['hiv_status']
         ovc['domain_hiv_status'] = odash['domain_hiv_status']
         child_regs = odash['child_regs']

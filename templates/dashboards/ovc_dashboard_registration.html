@@ -17,15 +17,24 @@
     <link href="{% static 'plugins/jquery-ui/themes/base/minified/jquery-ui.min.css' %}" rel="stylesheet" />
     <link href="{% static 'plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/style-responsive.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/theme/default.css' %}" rel="stylesheet" id="theme" />
-    <link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
-    <link href="{% static 'css/dashboards.css' %}" rel="stylesheet">
-    
+    <link href="{% static 'dashboards/css/style.css' %}" rel="stylesheet" />
+    <link href="{% static 'dashboards/css/style-responsive.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'dashboards/css/theme/default.css' %}" rel="stylesheet" id="theme" />
+    <link href="{% static 'dashboards/css/dashboards.css' %}" rel="stylesheet">
+    <style>
+        .top-menu {
+          background: #2d353c;
+          height: 40px;
+          position: fixed;
+          top: 54px;
+          left: 0;
+          right: 0;
+          z-index: 1015;
+          border-bottom: 4px solid #2ca25f;
+        }
+    </style>
     <!-- ================== END BASE CSS STYLE ================== -->
     <script src="{% static 'plugins/pace/pace.min.js' %}"></script>
-
 </head>
 <body>
     <!-- begin #page-loader -->
@@ -33,7 +42,7 @@
     <!-- end #page-loader -->
     
     <!-- begin #page-container -->
-    <div id="page-container" class="fade page-without-sidebar page-header-fixed">
+    <div id="page-container" class="page-container fade page-without-sidebar page-header-fixed page-with-top-menu">
         <!-- begin #header -->
         <div id="header" class="header navbar navbar-default navbar-fixed-top">
             <!-- begin container-fluid -->
@@ -51,26 +60,8 @@
                 
                 <!-- begin header navigation right -->
                 <ul class="nav navbar-nav navbar-right">
-                    <!--
-                    <li>
-                        <form class="navbar-form full-width">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Enter keyword" />
-                                <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
-                            </div>
-                        </form>
-                    </li>
-                    -->
-                    <li><a href="{% url 'ovc_dashboard' %}" id="main_url">1. Registrations</a></li>
-                    <li><a href="{% url 'ovc_registration' %}" id="reg_url"><b>2. OVC Eligible for reporting</b></a></li>
-                    <li><a href="{% url 'hivstat_dash' %}" id="hivstat_url">3. OVC Served & HIV Information</a></li>
-                    <li><a href="{% url 'services_dash' %}" id="services_url">4. Services</a></li>
-                    <li><a href="{% url 'cm_dash' %}" id="cm_url">5. Case Management</a></li>
-                    <li><a href="{% url 'perform_dash' %}" id="pf_url">6. Performance</a></li>
-                    <li><a href="{% url 'mer_dash' %}" id="mer_url">7. MER Reporting</a></li>
-                    <li><a href="{% url 'epc_dash' %}" id="epd_url">8. Epidemic Control</a></li>
-                    <li><a href="{% url 'dash_help' %}" id="help_url">Glossary</a></li>
-                    <li><a href="#" title="Click to Print Page" onclick="printChart(); return false;"><i class="fa fa-print"></i> </a></li>
+
+                    <li><a href="#" onclick="printChart(); return false;"><i class="fa fa-print"></i> </a></li>
                     {% if user.is_authenticated %}
                     <li class="dropdown" id="session_status"></li>
                     <li class="dropdown navbar-user">
@@ -118,6 +109,27 @@
             <!-- end container-fluid -->
         </div>
         <!-- end #header -->
+        <!-- begin #top-menu -->
+        <div id="top-menu" class="top-menu">
+            <!-- begin top-menu nav -->
+            <ul class="nav">
+                <li><a href="{% url 'ovc_dashboard_v2' %}" id="main_url">1. Registrations</a></li>
+                <li class="active"><a href="{% url 'ovc_registration' %}" id="reg_url">2. OVC Eligible for reporting</a></li>
+                <li><a href="{% url 'hivstat_dash' %}" id="hivstat_url">3. OVC Served & HIV Information</a></li>
+                <li><a href="{% url 'services_dash' %}" id="services_url">4. Services</a></li>
+                <li><a href="{% url 'cm_dash' %}" id="cm_url">5. Case Management</a></li>
+                <li><a href="{% url 'perform_dash' %}" id="pf_url">6. Performance</a></li>
+                <li><a href="{% url 'mer_dash' %}" id="mer_url">7. MER Reporting</a></li>
+                <li><a href="{% url 'epc_dash' %}" id="epd_url">8. Epidemic Control</a></li>
+                <li><a href="{% url 'dash_help' %}" id="help_url">Glossary</a></li>
+                <li class="menu-control menu-control-left">
+                    <a href="#" data-click="prev-menu"><i class="fa fa-angle-left"></i></a>
+                </li>
+                <li class="menu-control menu-control-right">
+                    <a href="#" data-click="next-menu"><i class="fa fa-angle-right"></i></a>
+                </li>
+            </ul>
+        </div>
         
         <!-- begin #content -->
         <div id="content" class="content">
@@ -133,7 +145,7 @@
                         <input type="hidden" name="csrfmiddlewaretoken" value="uX3atezvGwuWEUJekjL3Net8LytDjilegIjR0eyTZ0lpyXxsWda8ycCIff71toXu">
                         <input type="hidden" name="cur_year" id="cur_year" value="2021">
                         <div class="row" id="filters">
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                 {{ form.sel_county }}
                             </div>
 
@@ -155,7 +167,10 @@
                                 {{ form.sel_lip }}
                             </div>
                             <div class="col-md-1">
-                                <a href="#modal-dialog" data-toggle="modal" title="Click for Date Filters" class="btn btn-sm btn-inverse"><i class="fa fa-filter"></i> Filter </a>
+                                {{ form.sel_period }}
+                            </div>
+                            <div class="col-md-1">
+                                {{ form.sel_year }}
                             </div>
                         </div>
                     </form>
@@ -394,53 +409,7 @@
             </p>
         </div>
         <!-- end #content -->
-        <!-- #modal-dialog -->
-        <div class="modal fade" id="modal-dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title">Other Filters &amp; Settings</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" name="dash-settings" id="dash-settings">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">Reporting Period</label>
-                                <div class="col-md-9">
-                                    {{ form.sel_period }}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">Financial Year</label>
-                                <div class="col-md-9">
-                                    {{ form.sel_year }}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">Date From</label>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" placeholder="Disabled input date" disabled />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">Date To</label>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" placeholder="Disabled input date" disabled />
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
-                        <button class="btn btn-sm btn-success" type="button" id="fsettings">Apply Filters &amp; Settings</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- #modal-dialog -->        
-        
-        
+    
         <!-- begin scroll to top btn -->
         <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
         <!-- end scroll to top btn -->
@@ -601,6 +570,8 @@
                    var yr = fields[7];
                    // Set values too
                    $("#sel-funding").val(mid);
+                   $("#sel-period").val(prd);
+                   $("#sel-year").val(yr);
                    if (mid == '0'){
                        $( "#sel-ip" ).val('');
                        $( "#sel-lip" ).val('');
