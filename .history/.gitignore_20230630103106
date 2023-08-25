@@ -1,0 +1,8 @@
+*.pyc
+migrations
+reports
+cpims/settings.py
+.pyc
+__pycache__
+
+
