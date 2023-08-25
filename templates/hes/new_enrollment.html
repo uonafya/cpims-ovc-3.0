@@ -137,7 +137,7 @@
                                                      <div  class="form-group social_safety_nets" id="social_safety_nets_type">
                                                     <label class="control-label col-md-4 col-sm-4" > Social Safety Nets Type:  </label>
                                                     <div class="col-md-6 col-sm-6">
-                                                        {{ form.social_safety_nets_type }}
+                                                        {{ form.social_safety_nets_type}}
                                                     </div>
                                                      </div>
 
@@ -368,7 +368,7 @@
 
                 </form>
             </div>
-            <div class="badge pull-right m-4">Revised: Feb 23rd 2019</div>
+            <div class="badge pull-right m-4">Revised: </div>
         </div>
         </div>
         <!-- end panel -->
@@ -401,6 +401,37 @@ $(document).ready(function() {
 });
 
 </script>
+    <script>
+    var wizardSections = $('.wizard-section');
+    var currentSectionIndex = 0;
+
+    function validateCurrentSection() {
+        var fields = wizardSections.eq(currentSectionIndex).find('input[required]');
+        var isValid = true;
+
+        fields.each(function() {
+            if ($(this).val() === '') {
+                isValid = false;
+                return false; // Exit the loop early
+            }
+        });
+
+        return isValid;
+    }
+
+    $('.next-button').on('click', function() {
+        if (validateCurrentSection()) {
+            if (currentSectionIndex < wizardSections.length - 1) {
+                wizardSections.eq(currentSectionIndex).hide();
+                currentSectionIndex++;
+                wizardSections.eq(currentSectionIndex).show();
+            }
+        } else {
+            alert('Please fill in all required fields before proceeding.');
+        }
+    });
+});
+    </script>
 
 
 
@@ -442,15 +473,16 @@ jQuery(document).ready(function () {
     $('#date_loan_taken_income_growth').hide();
 
 
-    $('select').on('change', function () {
-      var selectedValue = $(this).val();
-      if (selectedValue === 'Employed') {
-        $('#employment-type').prop('required', true).show();
-
-      } else {
+  $('select').on('change', function () {
+    var selectedValue = $(this).val();
+    if (selectedValue === 'Employed') {
+        $('#employment-type').prop('required', true);
+        $('#employment-type').show();
+    } else {
+        $('#employment-type').prop('required', false); // Not required when hidden
         $('#employment-type').hide();
-      }
-    });
+    }
+});
 
 
       $("input[name='have_health_scheme']").on('change', function () {

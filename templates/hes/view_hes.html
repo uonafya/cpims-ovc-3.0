@@ -136,9 +136,9 @@
                              <td class="field">Employment Type:</td>
                              <td>{{ hes_details.type_of_employment }}</td>
                              <td class="field">Have Health Scheme</td>
-                             <td>{{ hes_details.health_scheme }}</td>
+                             <td>{{ hes_details.have_health_scheme }}</td>
                              <td class="field">Type Health Scheme:</td>
-                             <td>{{ hes_details.health_scheme_type }}</td>
+                             <td>{{ hes_details.health_scheme }}</td>
                          </tr>
 
                          <tr>
@@ -306,8 +306,8 @@
 
                      <a href="{% url 'edit_hes' id=hes_details.id %}"><button type="button" class="btn btn-primary"> <i class="fa fa-child"></i> Edit HES</button></a>
 
-                     <a href="{% url 'edit_hes' id=hes_details.id %}">
-                         <button type="button" class="btn btn-primary"> <i class="fa fa-users"></i> Manage HES </button>
+                     <a href="{% url 'delete_hes' id=hes_details.id %}">
+                         <button type="button" class="btn btn-sm btn-danger m-r-5" onclick= "confirmDelete({{ hes_details.id }})" > <i class="fa fa-trash"></i>&nbsp;Delete</button></a>
                      </a>
                  {% endif %}
              </div>
@@ -438,6 +438,13 @@
              });
     });
 
+</script>
+    <script>
+function confirmDelete(hesId) {
+    if (confirm('Are you sure you want to delete this record?')) {
+        window.location.href = "{% url 'delete_hes' id=0 %}".replace('0', hesId);
+    }
+}
 </script>
 
 {% endblock %}

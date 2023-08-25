@@ -1,26 +1,19 @@
 from django import forms
 from cpovc_main.functions import get_list
 
-EMPLOYMENT_STATUS = (('Employed', 'Employed'), ('Unemployed', 'Unemployed'),
-                     )
-EMPLOYMENT_TYPE = (('Casual', 'Casual'), ('Business', 'Business'))
+EMPLOYMENT_STATUS = get_list('employment_id','Please Select')
 
-HEALTH_SCHEME = (('County Health Scheme', 'County Health Scheme'), ('NHIF', 'NHIF'),
-                 ('Universal Health Coverage', 'Universal Health Coverage'))
+EMPLOYMENT_TYPE = get_list('employment_type_id','Please Select')
 
-SAFETY_NETS = (('None', 'None'), ('CT OVC', 'CT OVC'),
-               ('CT Elderly', 'CT Elderly'), ('CT Disability', 'CT Disability'))
-SECTOR = (('Agriculture', 'Agriculture'),
-          (' Non Agriculture', 'Non Agriculture'))
+HEALTH_SCHEME = get_list('health_scheme_id','Please Select')
 
-FINANCIAL_INSTITUTION_TYPE = (
-    ('Bank ', 'Bank'), (' MFI', 'MFI'), (' SACCO', 'SACCO'), (' VSLA', 'VSLA'))
-TYPE_OF_ASSETS = (('Business Asset', 'Business Asset'),
-                  ('Agriculture assets ', 'Agriculture assets '))
-USE_OF_ECT = (('Transport to facility', 'Transport to facility'), (' Food', 'Food'), (' Medication',
-                                                                                      'Medication'), (' Setting up a business', 'Setting up a business'), (' NHIF ', 'NHIF '))
-LOAN_UTILIZATION = (('Business ', 'Business'), (' School Fees',
-                                                'School Fees'), ('Food', 'Food'), (' None', 'None'))
+SAFETY_NETS =get_list ( 'safety_net_id','Please Select')
+SECTOR = get_list('sector_id','Please Select')
+
+FINANCIAL_INSTITUTION_TYPE = get_list('financial_institution_id','Please Select')
+TYPE_OF_ASSETS = get_list('asset_type_id','Please Select')
+USE_OF_ECT = get_list('use_of_ect_id','Please Select')
+LOAN_UTILIZATION = get_list('loan_utilization_id','Please Select')
 YESNO_CHOICES = get_list('yesno_id')
 
 
@@ -53,6 +46,7 @@ class HesForm(forms.Form):
                                            widget=forms.RadioSelect(
                                                attrs={
                                                    "data_parsley_required": "true",
+
                                                }
                                            ))
 
@@ -61,9 +55,9 @@ class HesForm(forms.Form):
                                       choices=HEALTH_SCHEME,
                                       widget=forms.Select(
                                           attrs={
-                                              "placeholder": ("Health scheme"),
                                               "class": "form-control",
-                                              "id": "institution_type",
+                                              "class": "form-control",
+
                                           }
                                       ))
     kitchen_garden = forms.ChoiceField(label="Kitchen Garden",
@@ -72,6 +66,7 @@ class HesForm(forms.Form):
                                        widget=forms.RadioSelect(
                                                attrs={
                                                    "data_parsley_required": "true",
+
                                                }
                                            ))
     social_safety_nets = forms.ChoiceField(label="Social Safety Nets",
@@ -80,6 +75,7 @@ class HesForm(forms.Form):
                                            widget=forms.RadioSelect(
                                                attrs={
                                                    "data_parsley_required": "true",
+
                                                }
                                            ))
     social_safety_nets_type = forms.ChoiceField(label="Social Safety Nets",
@@ -99,6 +95,7 @@ class HesForm(forms.Form):
                                         widget=forms.RadioSelect(
                                                attrs={
                                                    "data_parsley_required": "true",
+
                                                }
                                            ))
     vsla_name = forms.CharField(label="VSLA",
