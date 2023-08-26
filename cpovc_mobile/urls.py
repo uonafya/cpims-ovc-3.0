@@ -10,4 +10,5 @@ urlpatterns = [
     path('', views.mobile_home, name='mobile_view'),
     path('approvedata/', views.mobiledataapproval, name='approvedata'),
     path('fetch_child/', views.fetchChildren, name='fetch_child'),
+    path('fetch_data/', views.fetchData, name='fetch_data'),
 ]

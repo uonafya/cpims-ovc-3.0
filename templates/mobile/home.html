@@ -60,8 +60,8 @@
 <!-- end breadcrumb -->
 <!-- begin page-header -->
 <h1 class="page-header" id="phead">
-{% if request.session.ou_primary_name %}
-{{ request.session.ou_primary_name }}
+{% if lip_name %}
+{{ lip_name }}
 {% else %} 
 National
 {% endif %} - Mobile Data approval 
@@ -79,7 +79,7 @@ National
             <select multiple="multiple" id="my-select" name="my-select">
                 <option value='elem_1' selected disabled>Select a a CHV (s)</option>
                 {% for chv in chvs %}
-                    <option value='{{ chv.cpimsid }}'>{{ chv.name }}</option>
+                    <option value='{{ chv.cpims_chv_id }}'>{{ chv.name }}</option>
                 {% endfor %}
             </select>
         </div>        
@@ -87,9 +87,9 @@ National
             <label>Form Name</label><br>
             <select id="my-select2" name="my-select">
                 <option value='form1a'>Form 1 A</option>
-                <option value='formab'>Form 1 B</option>
+                <option value='form1b'>Form 1 B</option>
                 <option value='cpt'>Case Plan template</option>
-                <option value='cpara'>CPARA</option>
+                <option value='cpr'>CPARA</option>
             </select>
         </div>
         <div class="col-md-3">
@@ -99,7 +99,10 @@ National
                
             </select>
         </div>
-        <div class="col-md-1"></div>
+        <div class="col-md-1">
+            <label></label><br>
+            <input onclick="fetchDataApp()" id="btnFilter" class="btn btn-warning m-5" type="button" value="Filter" />
+        </div>
     </div>
 
 
@@ -238,7 +241,17 @@ National
     <script src="{% static 'js/buttons.html5.min.js' %}"></script>
 	<script>
 		$(document).ready(function() {
-            $("#my-select, #my-select1, #my-select2").multiselect()
+            $("#my-select, #my-select1, #my-select2").multiselect(
+                {
+                    selectAllValue: 'multiselect-all',
+                    includeSelectAllOption: true,
+                    enableCaseInsensitiveFiltering: true,
+                    numberDisplayed: 1,
+                    maxHeight: 300,
+                    buttonWidth: '100%',
+                    buttonClass: 'btn btn-white'
+                }
+            )
             var dataTab = $("#Dataapproval").DataTable({
                 filter: false
             })
@@ -283,6 +296,33 @@ National
                 return response
         }
 
+        // API comm to backend
+
+        var respStatus = null;
+        function apicall(urls, dataP, method){
+            var response = new Object()
+            $.ajax({
+                type: method,
+                url:  urls,
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                // contentType: "Application/json", ---> Do not use this
+                dataType: "json",
+                data: dataP,
+            })
+            .fail(function(message){
+                console.error({error_submit: message})
+                response = {... message}
+                respStatus = 'error'
+            })
+            .done(function(data){
+                console.log({success_post: data})
+                response = {... data}
+                respStatus = 'success'
+            })
+            console.log({response})
+            return response
+        }
+
         function consolidatePost(btnID, approval_type){
             //$("#"+btnID).click(function(){
                 checked = []
@@ -298,43 +338,147 @@ National
                 if(checked.length >0){
 
                     datachecked = {
-                        "dict": checked,
+                        "data": checked,
                         "type": approval_type
                     }
                     jsondatachecked = JSON.stringify(datachecked)
-                    console.log({checked,datachecked,jsondatachecked})    
-                    url = "/mobile/approvedata/"
-                    var resp = postData(url, jsondatachecked)
+                    console.log({checked,datachecked})    
+                    url = '{% url 'approvedata' %}'
+                    // var resp = postData(url, jsondatachecked)
+                    var resp = apicall(url, datachecked , "POST")
                     console.log({resp})
 
-                    // if(resp.status === 'success'){
+                    if(respStatus === 'success'){
                         checked.forEach((check) => {
                             var rowtr = $("#Dataapproval").DataTable().row("#"+check+"_tr").remove().draw();
                             console.log({check, rowtr})
                         })
                         $("#selectAl")[0].checked = false
-                    // }
+                    }
 
                     var msg = "Data "+ approval_type +" successful"
-                    $("#msg").removeClass('alert alert-danger hidden')
-                    $("#msg").addClass('alert alert-primary')
-                    $("#msg").html(msg)
-                    setTimeout(function() {
-                        $('#msg').addClass('hidden')
-                    }, 4000);
+                    sendFeedback(msg, "primary")
+                    
                 }else {
                     var msg = "No record has been selected"
-                    $("#msg").removeClass('alert alert-primary, hidden')
-                    $("#msg").addClass('alert alert-danger')
-                    $("#msg").html(msg)
-                    setTimeout(function() {
-                        $('#msg').addClass('hidden')
-                    }, 4000);
+                    sendFeedback(msg, "danger")
+                    
                 }
                     
             //})
         }
 
+    // CHV's change -- fetching children
+    $("#my-select").change(function(){
+        var chv_selected =  {"data": $(this).val()}
+        console.log(chv_selected)
+
+        if(chv_selected.data.length > 0){
+            $('#my-select').css('border', '1px solid black');
+            $("#my-select1").html("")
+            $("#my-select1").append("<option value='' selected disabled>Select a child(rens)</option>")
+            urls = '{% url 'fetch_child' %}'
+            // var get_children = apicall(urls, chv_selected, "POST")
+            $.ajax({
+                type: "POST",
+                url:  urls,
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                // contentType: "Application/json", ---> Do not use this
+                dataType: "json",
+                data: chv_selected,
+            })
+            .fail(function(message){
+                console.error({error_submit: message})
+            })
+            .done(function(data){
+                console.log({success_post: data})
+
+                var multiselect_data = [];
+                multiselect_data.push({label: 'Please Select', value: ''});
+                var multiselect_dict = {};
+                data.map((child) => {
+                    var multiselect_dict = { label: child.name, value: child.cpims_ovc_id };
+                    multiselect_data.push(multiselect_dict);
+                  });
+
+                  
+
+                    //add multi-select data
+		            $('#my-select1').multiselect('destroy');
+		            $('#my-select1').multiselect({
+			                selectAllValue: 'multiselect-all',
+			                enableCaseInsensitiveFiltering: true,
+			                numberDisplayed: 1,
+			                maxHeight: 300,
+			                buttonWidth: '100%',
+			                buttonClass: 'btn btn-white',
+			                nonSelectedText: 'Please Select'
+			            });
+		            $('#my-select1').empty();
+		            $('#my-select1').multiselect('dataprovider', multiselect_data);
+
+            })
+        }else{
+            $('#my-select').css('border', '1px solid red');
+        }
+            
+        })
+
+
+        function fetchDataApp(){
+            chvs = $("#my-select").val()
+            form = $("#my-select2").val()
+            child = $("#my-select1").val()
+
+            console.log({chvs, form, child})
+            if(chvs.length>0 && form != "" && ( child != null)){
+                data_fetch = {
+                    "chvs": chvs,
+                    "form": form,
+                    "child": child
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url:  '{% url 'fetch_data' %}',
+                    headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                    // contentType: "Application/json", ---> Do not use this
+                    dataType: "json",
+                    data: data_fetch,
+                })
+                .fail(function(message){
+                    console.error({error_submit: message})
+                    response = {... message}
+                    respStatus = 'error'
+                })
+                .done(function(data){
+                    console.log({success_post: data})
+                    response = {... data}
+                    respStatus = 'success'
+                })
+
+            }else{
+                var msg = ""
+                if(chvs.length===0 && child.length===0){
+                    msg = "CHV and Child not selected"
+                }if(chvs.length===0){
+                    msg = "CHV not selected"
+                }if(child=== null){
+                    msg = "Child not selected"
+                }
+                sendFeedback(msg, "danger")
+            }
+        }
+
+        // to output messages to the front end 
+        function sendFeedback(msg, class_type){
+            $("#msg").removeClass()
+                    $("#msg").addClass('alert alert-'+class_type+'')
+                    $("#msg").html(msg)
+                    setTimeout(function() {
+                        $('#msg').addClass('hidden')
+                    }, 4000);
+        }
         
 
 
