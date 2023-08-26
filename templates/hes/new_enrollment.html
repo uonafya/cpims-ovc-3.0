@@ -475,9 +475,10 @@ jQuery(document).ready(function () {
 
   $('select').on('change', function () {
     var selectedValue = $(this).val();
-    if (selectedValue === 'Employed') {
-        $('#employment-type').prop('required', true);
+    if (selectedValue === 'EMP') {
         $('#employment-type').show();
+        $('#employment-type').prop('required', true);
+
     } else {
         $('#employment-type').prop('required', false); // Not required when hidden
         $('#employment-type').hide();

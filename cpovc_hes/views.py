@@ -19,11 +19,10 @@ from .models import CPOVC_HES
 def hes_home(request):
     try:
         form = OVCSearchForm(data=request.GET)
-
         search_string = request.GET.get('search_name')
         pids = get_person_ids(request, search_string)
 
-        person_records = RegPerson.objects.filter(is_void=False, id__in=pids)
+        person_records = RegPerson.objects.filter(is_void=False, id__in=pids, designation='CCGV')  # Filter by designation
 
         hes_data = {}
         hes_records = CPOVC_HES.objects.filter(is_void=False, person_id__in=pids)
@@ -64,6 +63,11 @@ def new_hes(request, id):
     try:
         if request.method == "POST":
             data = request.POST
+
+            def get_date(key):
+                date_str = data.get(key)
+                return convert_date(date_str) if date_str else None
+
             new_hes_instance = CPOVC_HES(
                 person_id=RegPerson.objects.filter(is_void=False, id=reg_person_id).values_list('id', flat=True).first(),
                 cbo_id=cbo_id,
@@ -76,16 +80,16 @@ def new_hes(request, id):
                 social_safety_nets_type=data.get('social_safety_nets_type'),
                 linkage_to_vsls=data.get('linkage_to_vsls'),
                 vsla=data.get('vsla_name'),
-                date_of_linkage_to_vsla=convert_date(data.get('date_linkage')),
+                date_of_linkage_to_vsla=get_date('date_linkage'),
                 monthly_saving_average=data.get('monthly_saving'),
                 average_cumulative_saving=data.get('average_cumulative_saving'),
                 loan_taken=data.get('loan_taken'),
                 loan_taken_amount=data.get('loan_taken_amount'),
-                date_loan_taken=convert_date(data.get('date_loan_taken')),
+                date_loan_taken=get_date('date_loan_taken'),
                 loan_utilization=data.get('loan_utilization'),
                 startup=data.get('startup'),
                 type_of_startup=data.get('type_of_startup'),
-                date_startup_received=convert_date(data.get('date_startup_received')),
+                date_startup_received=get_date('date_startup_received'),
                 emergency_cash_transfer=data.get('emergency_cash_transfer'),
                 amount_received_ect=data.get('amount_received_ect'),
                 use_of_ect=data.get('use_of_ect'),
@@ -100,7 +104,7 @@ def new_hes(request, id):
                 linked_to_source_finance=data.get('linked_to_source_finance'),
                 type_of_financial_institution=data.get('type_of_financial_institution'),
                 loan_taken_income_growth=data.get('loan_taken_income_growth'),
-                date_loan_taken_income_growth=convert_date(data.get('date_loan_taken_income_growth')),
+                date_loan_taken_income_growth=get_date('date_loan_taken_income_growth'),
                 linked_to_value_chain_activities_income_growth=data.get('linked_to_value_chain_activities_income_growth'),
                 sector_of_income_growth=data.get('sector_of_income_growth'),
                 created_by=created_by_user
@@ -118,7 +122,6 @@ def new_hes(request, id):
 
     except Exception as e:
         raise e
-
 
 def view_hes(request, id):
     try:
