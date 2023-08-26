@@ -15,11 +15,12 @@ from cpovc_registry import urls as registry_urls
 from cpovc_forms import urls as forms_urls
 from cpovc_reports import urls as reports_urls
 from cpovc_gis import urls as gis_urls
-# from cpovc_api import urls as api_urls
+from cpovc_api import urls as api_urls
 from cpovc_ovc import urls as ovc_urls
 from cpovc_settings import urls as settings_urls
 # New
 from cpovc_hes import urls as hes_urls
+from cpovc_mobile import urls as mobile_urls
 from data_cleanup import urls as data_cleanup_urls
 from cpovc_offline_mode import urls as offline_mode_urls
 from django.contrib.auth import views as auth_views
@@ -77,11 +78,12 @@ urlpatterns = [
     path('forms/', include(forms_urls)),
     path('reports/', include(reports_urls)),
     path('gis/', include(gis_urls)),
-    # path('api/', include(api_urls)),
+    path('api/', include(api_urls)),
     path('ovc-care/', include(ovc_urls)),
     path('settings/', include(settings_urls)),
     path('data_cleanup/', include(data_cleanup_urls)),
     path('hes/', include(hes_urls)),
+    path('mobile/',include(mobile_urls)),
     # Accounts management
     path('accounts/', include(cpovc_auth.urls)),
     # Override
