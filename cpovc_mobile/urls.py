@@ -32,5 +32,11 @@ urlpatterns = [
     # Fetch all records /with query parameter
     path('unaccepted_records/', views.unaccepted_records, name='fetch-unaccepted-data'),
     
-
+  
+    # front end validation urls
+    path('', views.mobile_home, name='mobile_view'),
+    path('approvedata/', views.mobiledataapproval, name='approvedata'),
+    path('fetch_child/', views.fetchChildren, name='fetch_child'),
+    path('fetch_data/', views.fetchData, name='fetch_data'),
 ]
+

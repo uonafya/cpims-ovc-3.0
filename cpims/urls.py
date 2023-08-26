@@ -32,6 +32,7 @@ from cpovc_pmtct import urls as pmtct_urls
 # from notifications import urls as noti_urls
 # from simple_forums import urls as forum_urls
 from cpovc_dashboards import urls as dashboards_urls
+from cpovc_mobile import urls as mobile_urls
 
 
 urlpatterns = [
@@ -118,6 +119,7 @@ urlpatterns = [
     # Preventive and Family Support
     path('ovc-care/preventive/', include(preventive_urls)),
     path('ovc-care/pmtct/', include(pmtct_urls)),
+    path('mobile/', include(mobile_urls)),
     # Notifications
     # path('notifications/', include(noti_urls, namespace='notifications')),
     # path('forums/', include(forum_urls)),

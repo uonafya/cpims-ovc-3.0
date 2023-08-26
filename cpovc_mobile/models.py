@@ -1,4 +1,5 @@
 from django.db import models
+
 from enum import Enum, auto
 import uuid
 
@@ -85,5 +86,4 @@ class CasePlanTemplateService(models.Model):
 
     class Meta:
         db_table = 'case_plan_mobile_attributes'
-
 

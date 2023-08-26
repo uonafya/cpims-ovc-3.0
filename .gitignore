@@ -5,3 +5,7 @@ cpims/settings.py
 .pyc
 __pycache__
 venv
+
+.history
+.history/*
+
