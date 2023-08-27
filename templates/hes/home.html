@@ -71,6 +71,7 @@
                 <hr>
                 <table class="table" id="data-table">
                     <thead>
+
                         <tr><th>#</th><th>CPIMS ID</th><th>Names</th><th>Organization Unit Name</th><th>HES ID</th><th></th></tr>
                     </thead>
                 {% for combined_record in combined_data %}
@@ -87,6 +88,7 @@
                                 <a href="{% url 'view_hes' combined_record.hes_data.id %}" class="btn  btn-sm btn-primary m-r-5">Edit HES</a>
                             {% else %}
                                 <a href="{% url 'new_hes' combined_record.person_record.id %}" class="btn  btn-sm btn-primary m-r-5">Enroll </a>
+
                             {% endif %}
                         </td>
                    </tr>

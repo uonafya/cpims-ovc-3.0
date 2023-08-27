@@ -99,12 +99,14 @@
                                         <fieldset>
                                             <legend class="pull-left width-full">HES Options</legend>
                                                  <div class="form-group  ">
+
                                                     <label class="control-label col-md-4 col-sm-4 " >Employement Status: <span class="asteriskField">*</span></label>
+
                                                     <div class="col-md-6 col-sm-6 employment_status" id="employment-status">
                                                         {{ form.employment_status}}
                                                     </div>
                                                  </div>
-                                                <div class="form-group employment-type " id="employment-type" data-parsley-required="false"  >
+                                                <div class="form-group employment-type " id="employment-type"  >
                                                     <label class="control-label col-md-4 col-sm-4" >Type of Employement :</label>
                                                     <div class="col-md-6 col-sm-6" >
                                                         {{ form.type_of_employment}}
@@ -117,7 +119,9 @@
                                                     </div>
                                                 </div>
                                                      <div  class="form-group health_scheme" id="health_scheme">
+
                                                     <label class="control-label col-md-4 col-sm-4" > Type Health Scheme:  </label>
+
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.health_scheme }}
                                                     </div>
@@ -135,9 +139,11 @@
                                                     </div>
                                                      </div>
                                                      <div  class="form-group social_safety_nets" id="social_safety_nets_type">
+
                                                     <label class="control-label col-md-4 col-sm-4" > Social Safety Nets Type:  </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.social_safety_nets_type}}
+
                                                     </div>
                                                      </div>
 
@@ -175,7 +181,9 @@
                                                     </div>
                                                 </div>
                                                 <div  class="form-group loan_taken " >
+
                                                     <label class="control-label col-md-4 col-sm-4" >Loan Taken: <span class="asteriskField">*</span> </label>
+
                                                     <div class="col-md-6 col-sm-6" id="loan_taken">
                                                         {{ form.loan_taken }}
                                                     </div>
@@ -201,7 +209,9 @@
                                                     </div>
                                                 </div>
                                                 <div  class="form-group ">
+
                                                     <label class="control-label col-md-4 col-sm-4" > Startup?<span class="asteriskField">*</span> </label>
+
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.startup }}
                                                     </div>
@@ -226,7 +236,9 @@
                                         <fieldset>
                                             <legend class="pull-left width-full">Consumption support</legend>
                                                 <div  class="form-group ">
+
                                                     <label class="control-label col-md-4 col-sm-4" > Emergency cash transfer (ECT):<span class="asteriskField">*</span> </label>
+=
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.emergency_cash_transfer}}
                                                     </div>
@@ -253,7 +265,9 @@
                                             <!-- begin row -->
                                             <div class="row">
                                                  <div  class="form-group ">
+
                                                     <label class="control-label col-md-4 col-sm-4" > Received start up Kit :<span class="asteriskField">*</span> </label>
+
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.received_startup_kit }}
                                                     </div>
@@ -271,7 +285,9 @@
                                                     </div>
                                                 </div>
                                                 <div  class="form-group ">
+
                                                     <label class="control-label col-md-4 col-sm-4" >Received business grant:<span class="asteriskField">*</span> </label>
+
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.received_business_grant}}
                                                     </div>
@@ -282,6 +298,7 @@
                                                         {{ form.amount_of_money_received}}
                                                     </div>
                                                 </div>
+
                                                 <div  class="form-group " id="business_type">
                                                     <label class="control-label col-md-4 col-sm-4" >Business type started : </label>
                                                     <div class="col-md-6 col-sm-6" >
@@ -312,7 +329,9 @@
                                             <!-- begin row -->
                                             <div class="row">
                                                  <div  class="form-group ">
+
                                                     <label class="control-label col-md-4 col-sm-4" > Linked to Source of finance : <span class="asteriskField">*</span><span class="asteriskField">*</span> </label>
+
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.linked_to_source_finance }}
                                                     </div>
@@ -368,7 +387,9 @@
 
                 </form>
             </div>
+
             <div class="badge pull-right m-4">Revised: </div>
+
         </div>
         </div>
         <!-- end panel -->
@@ -401,6 +422,7 @@ $(document).ready(function() {
 });
 
 </script>
+
     <script>
     var wizardSections = $('.wizard-section');
     var currentSectionIndex = 0;
@@ -456,8 +478,6 @@ $(document).ready(function() {
 <script>
 
 jQuery(document).ready(function () {
-    var parsleyInstance = $('#form_new_hes').parsley();
-
     $('#employment-type').hide();
     $('#health_scheme').hide();
     $('#social_safety_nets_type').hide();
@@ -475,32 +495,27 @@ jQuery(document).ready(function () {
     $('#date_loan_taken_income_growth').hide();
 
 
-$(document).ready(function() {
-    $('select').on('change', function () {
-        var selectedValue = $(this).val();
-        var $employmentTypeField = $('#employment-type');
-        var parsleyInstance = $('#form_new_hes').parsley();
 
-        if (selectedValue === 'EMP') {
-            $employmentTypeField.show();
-            $employmentTypeField.attr("required", true);
-        } else {
+  $('select').on('change', function () {
+    var selectedValue = $(this).val();
+    if (selectedValue === 'EMP') {
+        $('#employment-type').show();
+        $('#employment-type').prop('required', true);
 
-        }
-
-
-        parsleyInstance.validate();
-    });
-
-
+    } else {
+        $('#employment-type').prop('required', false); // Not required when hidden
+        $('#employment-type').hide();
+    }
+});
 
 
 
       $("input[name='have_health_scheme']").on('change', function () {
             var ival = $("input[name='have_health_scheme']:checked").val();
             if (ival == 'AYES') {
-                $('#health_scheme').show();
-                $('#health_scheme').attr("data-parsley-required", "true")
+
+                $('#health_scheme').prop('required', true).show();
+
 
             } else {
                $ ('#health_scheme').hide();
@@ -510,8 +525,9 @@ $(document).ready(function() {
        $("input[name='social_safety_nets']").on('change', function () {
             var ival = $("input[name='social_safety_nets']:checked").val();
             if (ival == 'AYES') {
-                $('#social_safety_nets_type').show();
-                $('#social_safety_nets_type').attr("data-parsley-required", "true")
+
+                $('#social_safety_nets_type').prop('required', true).show();
+
 
             } else {
                $('#social_safety_nets_type').hide();
@@ -521,10 +537,10 @@ $(document).ready(function() {
        $("input[name='linkage_to_vsls']").on('change', function () {
             var ival = $("input[name='linkage_to_vsls']:checked").val();
             if (ival == 'AYES') {
-                 $('#vsla_name').show();
-                 $('#vsla_name').attr("data-parsley-required", "true")
-                 $('#date_of_linkage_vsla').show();
-                 $('#date_of_linkage_vsla').attr("data-parsley-required", "true")
+
+                 $('#vsla_name').prop('required', true).show();
+                 $('#date_of_linkage_vsla').prop('required', true).show();
+
             } else {
                $('#vsla_name').hide();
                $('#date_of_linkage_vsla').hide();
@@ -534,12 +550,11 @@ $(document).ready(function() {
        $("input[name='loan_taken']").on('change', function () {
             var ival = $("input[name='loan_taken']:checked").val();
             if (ival == 'AYES') {
-                 $('#loan_amount').show();
-                 $('#loan_amount').attr("data-parsley-required", "true")
-                 $('#loan_utilization').show();
-                 $('#loan_utilization').attr("data-parsley-required", "true")
-                 $('#date_loan_taken').show();
-                 $('#date_loan_taken').attr("data-parsley-required", "true")
+
+                 $('#loan_amount').prop('required', true).show();
+                 $('#loan_utilization').prop('required', true).show();
+                 $('#date_loan_taken').prop('required', true).show();
+
             } else {
                $('#loan_amount').hide();
                $('#loan_utilization').hide();
@@ -549,10 +564,10 @@ $(document).ready(function() {
           $("input[name='startup']").on('change', function () {
             var ival = $("input[name='startup']:checked").val();
             if (ival == 'AYES') {
-                $('#type_of_startup').show();
-                $('#type_of_startup').attr("data-parsley-required", "true")
-                $('#date_startup_received').show();
-                $('#date_startup_received').attr("data-parsley-required", "true")
+
+                $('#type_of_startup').prop('required', true).show();
+                $('#date_startup_received').prop('required', true).show();
+
             } else {
                $('#type_of_startup').hide();
                $('#date_startup_received').hide();
@@ -562,10 +577,10 @@ $(document).ready(function() {
             var ival = $("input[name='emergency_cash_transfer']:checked").val();
             if (ival == 'AYES') {
 
-                $('#ect_use').show();
-                $('#ect_use').attr("data-parsley-required", "true")
-                $('#ect_amount').show();
-                $('#ect_amount').attr("data-parsley-required", "true")
+
+                $('#ect_use').prop('required', true).show();
+                $('#ect_amount').prop('required', true).show();
+
             } else {
 
                 $('#ect_use').hide();
@@ -577,8 +592,9 @@ $(document).ready(function() {
             var ival = $("input[name='received_business_grant']:checked").val();
             if (ival == 'AYES') {
 
-                $('#amount_of_money_received').show();
-                $('#amount_of_money_received').attr("data-parsley-required", "true")
+
+                $('#amount_of_money_received').prop('required', true).show();
+
             } else {
 
                 $('#amount_of_money_received').hide();
@@ -589,8 +605,9 @@ $(document).ready(function() {
             var ival = $("input[name='linked_to_source_finance']:checked").val();
             if (ival == 'AYES') {
 
-                $('#type_of_financial_institution').show();
-                $('#type_of_financial_institution').attr("data-parsley-required", "true")
+
+                $('#type_of_financial_institution').prop('required', true).show();
+
             } else {
 
                 $('#type_of_financial_institution').hide();
@@ -601,14 +618,14 @@ $(document).ready(function() {
             var ival = $("input[name='loan_taken_income_growth']:checked").val();
             if (ival == 'AYES') {
 
-                $('#date_loan_taken_income_growth').show();
-                $('#date_loan_taken_income_growth').attr("data-parsley-required", "true")
+
+                $('#date_loan_taken_income_growth').prop('required', true).show();
+
             } else {
 
                 $('#date_loan_taken_income_growth').hide();
 
             }
-        });
         });
         //multi selects
         $('#WB_AD_SCH_12_2').multiselect({
@@ -905,10 +922,35 @@ $(document).ready(function() {
         FormWizardValidation.init();
     });
 
-
-
+    function hideQn(qnID) {
+        // $('#' + qnID).addClass('hidden');
+        $('#' + qnID).attr("disabled", 'disabled');
+        // check if multiselect
+        var ms_attr = $('#' + qnID).attr('multiple');
+        if (typeof ms_attr !== typeof undefined && ms_attr !== false) {
+            $('#' + qnID).multiselect('disable');
+        }
+        // endCheck
+        $('#' + qnID).prop("disabled", true);
+        $('#' + qnID).removeAttr('required');
+    }
+    function unhideQn(qnID) {
+        // $('#' + qnID).removeClass('hidden');
+        // check if multiselect
+        var ms_attr = $('#' + qnID).attr('multiple');
+        if (typeof ms_attr !== typeof undefined && ms_attr !== false) {
+            $('#' + qnID).multiselect('enable');
+        }
+        // endCheck
+        $('#' + qnID).removeAttr('disabled');
+        $('#' + qnID).attr('required');
+    }
 </script>
 
-
+<script>
+    $( function() {
+      $( "#WB_AD_GEN_4_1" ).datepicker({ format: 'yyyy-mm-dd' }).val();
+    } );
+    </script>
 
 {% endblock %}

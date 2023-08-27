@@ -14,6 +14,7 @@ FINANCIAL_INSTITUTION_TYPE = get_list('financial_institution_id','Please Select'
 TYPE_OF_ASSETS = get_list('asset_type_id','Please Select')
 USE_OF_ECT = get_list('use_of_ect_id','Please Select')
 LOAN_UTILIZATION = get_list('loan_utilization_id','Please Select')
+
 YESNO_CHOICES = get_list('yesno_id')
 
 
@@ -41,6 +42,7 @@ class HesForm(forms.Form):
                                            ))
 
     have_health_scheme = forms.ChoiceField(label='Have health scheme?',
+
                                            required=True,
                                            choices=YESNO_CHOICES,
                                            widget=forms.RadioSelect(
@@ -49,6 +51,7 @@ class HesForm(forms.Form):
 
                                                }
                                            ))
+=
 
     health_scheme = forms.ChoiceField(label="Health Scheme",
                                       required=False,
@@ -61,6 +64,7 @@ class HesForm(forms.Form):
                                           }
                                       ))
     kitchen_garden = forms.ChoiceField(label="Kitchen Garden",
+
                                        required=True,
                                        choices=YESNO_CHOICES,
                                        widget=forms.RadioSelect(
@@ -86,12 +90,14 @@ class HesForm(forms.Form):
                                                         "placeholder": ("Health scheme"),
                                                         "class": "form-control",
 
+
                                                     }
                                                 ))
 
     linkage_to_vsls = forms.ChoiceField(label="Linkage to VSLS",
                                         required=True,
                                         choices=YESNO_CHOICES,
+
                                         widget=forms.RadioSelect(
                                                attrs={
                                                    "data_parsley_required": "true",
@@ -100,6 +106,7 @@ class HesForm(forms.Form):
                                            ))
     vsla_name = forms.CharField(label="VSLA",
                                 required=False,
+
                                 widget=forms.TextInput(
                                     attrs={'placeholder': ('VSLA'),
                                            'class': 'form-control',
@@ -135,11 +142,13 @@ class HesForm(forms.Form):
     loan_taken = forms.ChoiceField(label='Loan Taken',
                                    required=True,
                                    choices=YESNO_CHOICES,
+
                                    widget=forms.RadioSelect(
                                                attrs={
                                                    "data_parsley_required": "true",
                                                }
                                            ))
+
     loan_taken_amount = forms.DecimalField(label='Loan Taken Amount',
                                            required=False,
                                            widget=forms.TextInput(
@@ -167,6 +176,7 @@ class HesForm(forms.Form):
 
                                                     }))
     startup = forms.ChoiceField(label='Start Up',
+
                                 required=True,
                                 choices=YESNO_CHOICES,
                                 widget=forms.RadioSelect(
@@ -174,6 +184,7 @@ class HesForm(forms.Form):
                                                    "data_parsley_required": "true",
                                                }
                                            ))
+
 
     type_of_startup = forms.ChoiceField(label='Type of Startup',
                                         required=False,
@@ -196,6 +207,7 @@ class HesForm(forms.Form):
     emergency_cash_transfer = forms.ChoiceField(label='Emergency Cash Transfer (ECT)',
                                                 required=True,
                                                 choices=YESNO_CHOICES,
+
                                                 widget=forms.RadioSelect
                                                     (
                                                     attrs={
@@ -203,13 +215,16 @@ class HesForm(forms.Form):
                                                     }
                                                 )
                                                 )
+
     amount_received_ect = forms.DecimalField(label='Amount received ECT',
                                              required=False,
                                              widget=forms.TextInput(
                                                  attrs={'placeholder': ('Amount(Ksh)'),
                                                         'class': 'form-control'}))
     use_of_ect = forms.ChoiceField(label='Use of ECT',
+
                                    required=False,
+
                                    choices=USE_OF_ECT,
                                    widget=forms.Select(
                                        attrs={'class': 'form-control',
@@ -219,11 +234,13 @@ class HesForm(forms.Form):
     received_startup_kit = forms.ChoiceField(label='Received Start-up Kit',
                                              required=True,
                                              choices=YESNO_CHOICES,
+
                                              widget=forms.RadioSelect(
                                                attrs={
                                                    "data_parsley_required": "true",
                                                }
                                            ))
+
     type_of_asset = forms.ChoiceField(label='Type of Asset',
                                       required=False,
                                       choices=TYPE_OF_ASSETS,
@@ -240,11 +257,13 @@ class HesForm(forms.Form):
     received_business_grant = forms.ChoiceField(label='Received Business Grant',
                                                 required=True,
                                                 choices=YESNO_CHOICES,
+
                                                 widget=forms.RadioSelect(
                                                attrs={
                                                    "data_parsley_required": "true",
                                                }
                                            ))
+
     amount_of_money_received = forms.DecimalField(label='Amount of Money Received',
                                                   required=False,
                                                   widget=forms.TextInput(
@@ -258,6 +277,7 @@ class HesForm(forms.Form):
                                                        'class': 'form-control',
                                                        }))
     linked_to_value_chain_activities_asset_growth = forms.ChoiceField(label='Linked to',
+
                                                                       required=True,
                                                                       choices=YESNO_CHOICES,
                                                                       widget=forms.RadioSelect(
@@ -265,6 +285,7 @@ class HesForm(forms.Form):
                                                    "data_parsley_required": "true",
                                                }
                                            ))
+
     sector_of_asset_growth = forms.ChoiceField(label='Sector',
                                                required=False,
                                                choices=SECTOR,
@@ -275,6 +296,7 @@ class HesForm(forms.Form):
     linked_to_source_finance = forms.ChoiceField(label='Linked to Source of Finance',
                                                  required=True,
                                                  choices=YESNO_CHOICES,
+
                                                  widget=forms.RadioSelect(
                                                attrs={
                                                    "data_parsley_required": "true",
@@ -283,6 +305,7 @@ class HesForm(forms.Form):
 
     type_of_financial_institution = forms.ChoiceField(label='Type of Financial Institution',
                                                       required=False,
+
                                                       choices=FINANCIAL_INSTITUTION_TYPE,
                                                       widget=forms.Select(
                                                           attrs={'class': 'form-control',
@@ -297,12 +320,14 @@ class HesForm(forms.Form):
                                                }
                                            ))
     date_loan_taken_income_growth = forms.DateField(label='Date of Loan Taken',
+
                                                     required=False,
-                                                    widget=forms.TextInput(
+                                   widget=forms.TextInput(
                                                         attrs={
                                                             "placeholder": ("Date Start Up Received"),
                                                             "class": "form-control",
                                                             "id": "admission_date",
+
                                                             "data_parsley_group": "group0",
                                                         }
                                                     )
