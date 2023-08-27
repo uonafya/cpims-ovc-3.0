@@ -1,4 +1,4 @@
-
+from django.contrib import messages
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -9,11 +9,12 @@ from cpovc_forms.forms import OVCSearchForm
 from cpovc_preventive.functions import get_person_org_unit
 from cpovc_registry.models import RegPerson, RegOrgUnit
 from cpovc_forms.functions import get_person_ids
-from django.contrib import messages
-import pdb
+from datetime import datetime
+
 
 from .forms import HesForm
 from .models import CPOVC_HES
+from decimal import Decimal
 
 
 def hes_home(request):
@@ -68,6 +69,10 @@ def new_hes(request, id):
                 date_str = data.get(key)
                 return convert_date(date_str) if date_str else None
 
+            def get_decimal(key):
+                decimal_str = data.get(key)
+                return Decimal(decimal_str) if decimal_str else None
+
             new_hes_instance = CPOVC_HES(
                 person_id=RegPerson.objects.filter(is_void=False, id=reg_person_id).values_list('id', flat=True).first(),
                 cbo_id=cbo_id,
@@ -81,23 +86,23 @@ def new_hes(request, id):
                 linkage_to_vsls=data.get('linkage_to_vsls'),
                 vsla=data.get('vsla_name'),
                 date_of_linkage_to_vsla=get_date('date_linkage'),
-                monthly_saving_average=data.get('monthly_saving'),
-                average_cumulative_saving=data.get('average_cumulative_saving'),
+                monthly_saving_average=get_decimal('monthly_saving'),
+                average_cumulative_saving=get_decimal('average_cumulative_saving'),
                 loan_taken=data.get('loan_taken'),
-                loan_taken_amount=data.get('loan_taken_amount'),
+                loan_taken_amount=get_decimal('loan_taken_amount'),
                 date_loan_taken=get_date('date_loan_taken'),
                 loan_utilization=data.get('loan_utilization'),
                 startup=data.get('startup'),
                 type_of_startup=data.get('type_of_startup'),
                 date_startup_received=get_date('date_startup_received'),
                 emergency_cash_transfer=data.get('emergency_cash_transfer'),
-                amount_received_ect=data.get('amount_received_ect'),
+                amount_received_ect=get_decimal('amount_received_ect'),
                 use_of_ect=data.get('use_of_ect'),
                 received_startup_kit=data.get('received_startup_kit'),
                 type_of_asset=data.get('type_of_asset'),
-                average_monthly_income_generated=data.get('average_monthly_income_generated'),
+                average_monthly_income_generated=get_decimal('average_monthly_income_generated'),
                 received_business_grant=data.get('received_business_grant'),
-                amount_of_money_received=data.get('amount_of_money_received'),
+                amount_of_money_received=get_decimal('amount_of_money_received'),
                 business_type_started=data.get('business_type_started'),
                 linked_to_value_chain_activities_asset_growth=data.get('linked_to_value_chain_activities_asset_growth'),
                 sector_of_asset_growth=data.get('sector_of_asset_growth'),
@@ -144,7 +149,7 @@ def view_hes(request, id):
                 'linkage_to_vsls': hes_instance.linkage_to_vsls,
                 'vsla': hes_instance.vsla,
                 'date_of_linkage_to_vsla': hes_instance.date_of_linkage_to_vsla,
-                'monthly_saving_average': hes_instance.monthly_saving_average,
+                'monthly_saving': hes_instance.monthly_saving_average,
                 'average_cumulative_saving': hes_instance.average_cumulative_saving,
                 'loan_taken': hes_instance.loan_taken,
                 'loan_taken_amount': hes_instance.loan_taken_amount,
@@ -279,44 +284,28 @@ def edit_hes(request, id):
             form = HesForm(request.POST)
 
             if form.is_valid():
-                hes_instance.employment_status = request.POST.get('employment_status')
-                hes_instance.type_of_employment = request.POST.get('type_of_employment')
-                hes_instance.have_health_scheme = request.POST.get('have_health_scheme')
-                hes_instance.health_scheme = request.POST.get('health_scheme')
-                hes_instance.kitchen_garden = request.POST.get('kitchen_garden')
-                hes_instance.social_safety_nets = request.POST.get('social_safety_nets')
-                hes_instance.social_safety_nets_type = request.POST.get('social_safety_nets_type')
-                hes_instance.linkage_to_vsls = request.POST.get('linkage_to_vsls')
-                hes_instance.vsla = request.POST.get('vsla')
-                hes_instance.date_of_linkage_to_vsla = request.POST.get('date_linkage')
-                hes_instance.monthly_saving_average = request.POST.get('monthly_saving')
-                hes_instance.average_cumulative_saving = request.POST.get('average_cumulative_saving')
-                hes_instance.loan_taken = request.POST.get('loan_taken')
-                hes_instance.loan_taken_amount = request.POST.get('loan_taken_amount')
-                hes_instance.date_loan_taken = request.POST.get('date_loan_taken')
-                hes_instance.loan_utilization = request.POST.get('loan_utilization')
-                hes_instance.startup = request.POST.get('startup')
-                hes_instance.type_of_startup = request.POST.get('type_of_startup')
-                hes_instance.date_startup_received = request.POST.get('date_startup_received')
-                hes_instance.emergency_cash_transfer = request.POST.get('emergency_cash_transfer')
-                hes_instance.amount_received_ect = request.POST.get('amount_received_ect')
-                hes_instance.use_of_ect = request.POST.get('use_of_ect')
-                hes_instance.received_startup_kit = request.POST.get('received_startup_kit')
-                hes_instance.type_of_asset = request.POST.get('type_of_asset')
-                hes_instance.average_monthly_income_generated = request.POST.get('average_monthly_income_generated')
-                hes_instance.received_business_grant = request.POST.get('received_business_grant')
-                hes_instance.amount_of_money_received = request.POST.get('amount_of_money_received')
-                hes_instance.business_type_started = request.POST.get('business_type_started')
-                hes_instance.linked_to_value_chain_activities_asset_growth = request.POST.get(
-                    'linked_to_value_chain_activities_asset_growth')
-                hes_instance.sector_of_asset_growth = request.POST.get('sector_of_asset_growth')
-                hes_instance.linked_to_source_finance = request.POST.get('linked_to_source_finance')
-                hes_instance.type_of_financial_institution = request.POST.get('type_of_financial_institution')
-                hes_instance.loan_taken_income_growth = request.POST.get('loan_taken_income_growth')
-                hes_instance.date_loan_taken_income_growth = request.POST.get('date_loan_taken_income_growth')
-                hes_instance.linked_to_value_chain_activities_income_growth = request.POST.get(
-                    'linked_to_value_chain_activities_income_growth')
-                hes_instance.sector_of_income_growth = request.POST.get('sector_of_income_growth')
+                updated_hes_data = form.cleaned_data
+
+                # Convert decimal fields
+                decimal_fields = ['monthly_saving', 'average_cumulative_saving', 'loan_taken_amount',
+                                  'amount_received_ect', 'average_monthly_income_generated', 'amount_of_money_received']
+                for field_name in decimal_fields:
+                    if updated_hes_data[field_name] is None:
+                        updated_hes_data[field_name] = Decimal('0')
+
+                # Convert date fields manually
+                date_fields = ['date_linkage', 'date_loan_taken', 'date_startup_received',
+                               'date_loan_taken_income_growth']
+                for field_name in date_fields:
+                    date_value = updated_hes_data[field_name]
+                    if isinstance(date_value, str):
+                        updated_hes_data[field_name] = datetime.strptime(date_value,
+                                                                         '%Y-%m-%d').date() if date_value else None
+                    # Else, it's already a date object, so keep it as it is
+
+                # Update hes_instance fields
+                for field_name, value in updated_hes_data.items():
+                    setattr(hes_instance, field_name, value)
 
                 hes_instance.save()  # Save the updated instance
 
