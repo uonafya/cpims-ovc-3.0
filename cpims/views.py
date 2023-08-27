@@ -198,7 +198,6 @@ def home(request):
 
 def get_dashboard(request):
     """Some default page for the home page / Dashboard."""
-    case_cats = []
     my_dates, my_cvals = [], []
     my_ovals, my_kvals = [], []
     my_dvals = []
@@ -277,7 +276,6 @@ def get_dashboard(request):
             # Case category names
             cnames = get_dict(field_name=['case_category_id'])
             other_case = 0
-        if isinstance(case_cats, list):
             for case_cat in case_cats:
                 cat_id = case_cat['case_category']
                 cat_data = case_cat['unit_count']
@@ -290,8 +288,6 @@ def get_dashboard(request):
                         cat_name, cat_data, colors[cnt])
                     my_dvals.append(my_data)
                 cnt += 1
-        else:
-            my_dvals.append('{label: "No data", data: 0, color: "#fd8d3c"}')
         if not case_cats and not ovc_criterias:
             my_dvals.append('{label: "No data", data: 0, color: "#fd8d3c"}')
         if other_case > 0:
