@@ -2,8 +2,10 @@ import uuid
 from django.db import models
 from django.utils import timezone
 from cpovc_registry.models import RegPerson, RegOrgUnit
-
 from cpovc_auth.models import AppUser
+
+
+
 
 
 class CPOVC_HES(models.Model):
@@ -47,6 +49,7 @@ class CPOVC_HES(models.Model):
     sector_of_income_growth = models.CharField(max_length=100, blank=True, null=True)
 
     created_by = models.ForeignKey(AppUser, on_delete=models.CASCADE, null=True)
+
     created_at = models.DateField(default=timezone.now)
     is_void = models.BooleanField(default=False)
 
@@ -57,3 +60,4 @@ class CPOVC_HES(models.Model):
 
     def __str__(self):
         return str(self.id)
+
