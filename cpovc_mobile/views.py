@@ -676,13 +676,82 @@ def fetchData(request):
         form_sel = request.POST.get('form')
         chv_sel = request.POST.getlist('chvs[]')
         child_sel = request.POST.getlist('child[]')
-        print(f"{form_sel} - {chv_sel} - {child_sel}")
+
+        formdata =[]
+        if (form_sel == 'cpr'):
+
+            events = OVCMobileEvent.objects.filter(ovc_cpims__in=child_sel, is_accepted = 1)
+            form_datas = OVCMobileEventAttribute.objects.filter(event__in=events)
+            dta = {}
+            indx = 0
+            for event in events:
+                indx += 1
+                for form_dta in form_datas.values():
+                    if(event.id == form_dta['event_id']):
+                        dta[form_dta['question_name']] = form_dta['answer_value']
+                        dta['name'] = form_datas[indx].event.ovc_cpims.full_name
+                        dta['date_of_event'] = form_datas[indx].event.date_of_event
+                        dta['id'] = form_datas[indx].event.id
+                        print(form_dta)
+                formdata.append(dta)
+
+            print(f"form_data {formdata}")
+            # print(f"{form_sel} - {chv_sel} - {child_sel} -- {form_data}")
+        elif((form_sel == 'cpt')):
+
+            events = CasePlanTemplateEvent.objects.filter(ovc_cpims__in=child_sel)
+            form_datas = CasePlanTemplateService.objects.filter(event__in=events, is_accepted=1)
+            formdata = []
+            indx = 0
+            for form_dta in form_datas.values():
+                dta = {}
+                # breakpoint()
+                for form_dt in form_dta.keys():
+                    answer = form_dta[form_dt]
+                    dta[form_dt] = answer
+                dta['name'] = form_datas[indx].event.ovc_cpims.full_name
+                dta['date_of_event'] = form_datas[indx].event.date_of_event
+                indx += 1
+                formdata.append(dta)
+                
+        elif((form_sel == 'form1a')):
+
+            events = OVCEvent.objects.filter(ovc_cpims__in=child_sel)
+            form_datas = OVCServices.objects.filter(event__in=events, is_accepted=1)
+            formdata = []
+            indx = 0
+            for form_dta in form_datas.values():
+                dta = {}
+                # breakpoint()
+                for form_dt in form_dta.keys():
+                    answer = form_dta[form_dt]
+                    dta[form_dt] = answer
+                dta['name'] = form_datas[indx].event.ovc_cpims.full_name
+                dta['date_of_event'] = form_datas[indx].event.date_of_event
+                indx += 1
+                formdata.append(dta)
+        elif((form_sel == 'form1b')):
+
+            events = OVCEvent.objects.filter(ovc_cpims__in=child_sel)
+            form_datas = OVCServices.objects.filter(event__in=events, is_accepted=1)
+            formdata = []
+            indx = 0
+            for form_dta in form_datas.values():
+                dta = {}
+                # breakpoint()
+                for form_dt in form_dta.keys():
+                    answer = form_dta[form_dt]
+                    dta[form_dt] = answer
+                dta['name'] = form_datas[indx].event.ovc_cpims.full_name
+                dta['date_of_event'] = form_datas[indx].event.date_of_event
+                indx += 1
+                formdata.append(dta)
    
         response_data = {
             "status": "success",
             "message": "Data received and processed successfully."
             }
-        return JsonResponse(response_data, safe=False)
+        return JsonResponse(formdata, safe=False)
     else:
         return JsonResponse({"error": "Invalid request method."}, safe=False)
     

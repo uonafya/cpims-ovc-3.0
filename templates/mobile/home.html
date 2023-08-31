@@ -118,7 +118,14 @@ National
 				</div>
 				<div class="panel-body">
                     <div class="row">
-                        <div class="col-md-12" id="approvalbuttons">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-6">
+                            <label>Comments</label><br>
+                            <textarea id="app_comments" name="app_comments" rows="3" cols="100">
+                               
+                            </textarea>
+                        </div>
+                        <div class="col-md-4" id="approvalbuttons">
                             <input onclick="consolidatePost(this.id, 'approve')" id="btnApprove" class="btn btn-primary m-5" type="button" value="Approve" />
                             <input onclick="consolidatePost(this.id, 'reject')" id="btnReject" class="btn btn-danger m-5" type="button" value="Reject" />
                         </div>
@@ -144,30 +151,7 @@ National
                                         <td style="width: 90%;">Data</td>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {% for data in formdata %}
-                                    <tr id="{{ data.eav_id }}_tr" >
-                                        <td style="width: 10%;" class="scheck">
-                                            <input id="{{ data.eav_id }}" type="checkbox" name="selectOne">
-                                        </td>
-                                        <td style="width: 90%;" class="">
-                                            <div class="row">
-                                                <div class="col-mod-2">{{ data.entity }}</div>
-                                                <div class="col-mod-2">{{ data.attribute }}</div>
-                                                <div class="col-mod-2">{{ data.value }}</div>
-                                                <div class="col-mod-2">{{ data.value_for }}</div>
-                                                <div class="col-mod-2">{{ data.is_void }}</div>
-                                            </div> <br>
-                                            <div class="row">
-                                                <div class="col-mod-2">{{ data.entity }}</div>
-                                                <div class="col-mod-2">{{ data.attribute }}</div>
-                                                <div class="col-mod-2">{{ data.value }}</div>
-                                                <div class="col-mod-2">{{ data.value_for }}</div>
-                                                <div class="col-mod-2">{{ data.is_void }}</div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    {% endfor %} 
+                                <tbody id="tbody">
                                 </tbody>
                             </table>
                         </div>
@@ -240,6 +224,7 @@ National
     <script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
     <script src="{% static 'js/buttons.html5.min.js' %}"></script>
 	<script>
+        var dataTab;
 		$(document).ready(function() {
             $("#my-select, #my-select1, #my-select2").multiselect(
                 {
@@ -252,18 +237,14 @@ National
                     buttonClass: 'btn btn-white'
                 }
             )
-            var dataTab = $("#Dataapproval").DataTable({
-                filter: false
-            })
+            {% comment %} dataTab = $("#Dataapproval").DataTable({filter: false}) {% endcomment %}
         })            
-</script>
 
-<script>
     var ele=document.getElementsByName('selectOne');
     var allSelector = document.getElementsByName("selectAll")
 
     // select and deselect all
-    $("input[name='selectAll']").click(function(){        
+    $("input[name='selectAll']").click(function(){       
         if (allSelector[0].checked == true){
             for(var i=0; i<ele.length; i++){
                 if(ele[i].type=='checkbox') 
@@ -275,98 +256,100 @@ National
                     ele[i].checked=false;
             }
         }
-        })
-        // POST data function
-        function postData(url, data){
+    })
+    // POST data function
+    function postData(url, data){
 
-            var csrfToken = $("input[name=csrfmiddlewaretoken]").val();      
+        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();      
 
-                $.ajaxSetup({
-                    beforeSend: function(xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", csrfToken);
-                    }
-                });
-                var response = []
-                $.post(url, { data: data }, function(responseap) {
-                    // Handle responseapp from Django backend if needed
-                    response.msg = responseap.message
-                    response.status = responseap.status
-                    //response.push(responseapp)
-                });
-                return response
-        }
-
-        // API comm to backend
-
-        var respStatus = null;
-        function apicall(urls, dataP, method){
-            var response = new Object()
-            $.ajax({
-                type: method,
-                url:  urls,
-                headers: {'X-CSRFToken': '{{ csrf_token }}'},
-                // contentType: "Application/json", ---> Do not use this
-                dataType: "json",
-                data: dataP,
-            })
-            .fail(function(message){
-                console.error({error_submit: message})
-                response = {... message}
-                respStatus = 'error'
-            })
-            .done(function(data){
-                console.log({success_post: data})
-                response = {... data}
-                respStatus = 'success'
-            })
-            console.log({response})
-            return response
-        }
-
-        function consolidatePost(btnID, approval_type){
-            //$("#"+btnID).click(function(){
-                checked = []
-                var selectcedSelectOne = $("input[name=selectOne]")
-                for (j=0; j<selectcedSelectOne.length; j++){
-                    id = selectcedSelectOne[j].id
-                    if ($("input[id="+id+"]").prop('checked')){
-                        selectcedSelectOne
-                        checked.push(selectcedSelectOne[j].id)
-                    }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", csrfToken);
                 }
-                console.log({btnID, approval_type, checked})
-                if(checked.length >0){
+            });
+            var response = []
+            $.post(url, { data: data }, function(responseap) {
+                // Handle responseapp from Django backend if needed
+                response.msg = responseap.message
+                response.status = responseap.status
+                //response.push(responseapp)
+            });
+            return response
+    }
 
-                    datachecked = {
-                        "data": checked,
-                        "type": approval_type
-                    }
-                    jsondatachecked = JSON.stringify(datachecked)
-                    console.log({checked,datachecked})    
-                    url = '{% url 'approvedata' %}'
-                    // var resp = postData(url, jsondatachecked)
-                    var resp = apicall(url, datachecked , "POST")
-                    console.log({resp})
+    // API comm to backend
 
-                    if(respStatus === 'success'){
-                        checked.forEach((check) => {
-                            var rowtr = $("#Dataapproval").DataTable().row("#"+check+"_tr").remove().draw();
-                            console.log({check, rowtr})
-                        })
-                        $("#selectAl")[0].checked = false
-                    }
+    var respStatus = null;
+    function apicall(urls, dataP, method){
+        var response = new Object()
+        $.ajax({
+            type: method,
+            url:  urls,
+            headers: {'X-CSRFToken': '{{ csrf_token }}'},
+            // contentType: "Application/json", ---> Do not use this
+            dataType: "json",
+            data: dataP,
+        })
+        .fail(function(message){
+            console.error({error_submit: message})
+            response = {... message}
+            respStatus = 'error'
+        })
+        .done(function(data){
+            console.log({success_post: data})
+            response = {... data}
+            respStatus = 'success'
+        })
+        console.log({response})
+        return response
+    }
 
+    function consolidatePost(btnID, approval_type){
+        //$("#"+btnID).click(function(){
+            checked = []
+            var selectcedSelectOne = $("input[name=selectOne]")
+            for (j=0; j<selectcedSelectOne.length; j++){
+                id = selectcedSelectOne[j].id
+                if ($("input[id="+id+"]").prop('checked')){
+                    selectcedSelectOne
+                    checked.push(selectcedSelectOne[j].id)
+                }
+            }
+            console.log({btnID, approval_type, checked})
+            if(checked.length >0){
+
+                datachecked = {
+                    "data": checked,
+                    "type": approval_type
+                }
+                jsondatachecked = JSON.stringify(datachecked)
+                console.log({checked,datachecked})    
+                url = '{% url 'approvedata' %}'
+                // var resp = postData(url, jsondatachecked)
+                var resp = apicall(url, datachecked , "POST")
+                console.log({resp})
+
+                //if(respStatus === 'success'){
+                    checked.forEach((check) => {
+                        var rowtr = $("#Dataapproval").DataTable().row("#"+check+"_tr").remove().draw();
+                        console.log({check, rowtr})
+                    })
+                    $("#selectAl")[0].checked = false
                     var msg = "Data "+ approval_type +" successful"
                     sendFeedback(msg, "primary")
                     
-                }else {
-                    var msg = "No record has been selected"
-                    sendFeedback(msg, "danger")
-                    
-                }
-                    
-            //})
-        }
+                //}else {
+                  //  alert("Error removing")
+                // }
+
+            }else {
+                var msg = "No record has been selected"
+                sendFeedback(msg, "danger")
+                
+            }
+                
+        //})
+    }
 
     // CHV's change -- fetching children
     $("#my-select").change(function(){
@@ -394,91 +377,206 @@ National
                 console.log({success_post: data})
 
                 var multiselect_data = [];
-                multiselect_data.push({label: 'Please Select', value: ''});
+                //multiselect_data.push({label: 'Please Select', value: ''});
                 var multiselect_dict = {};
                 data.map((child) => {
                     var multiselect_dict = { label: child.name, value: child.cpims_ovc_id };
                     multiselect_data.push(multiselect_dict);
-                  });
+                    });
 
-                  
+                    
 
                     //add multi-select data
-		            $('#my-select1').multiselect('destroy');
-		            $('#my-select1').multiselect({
-			                selectAllValue: 'multiselect-all',
-			                enableCaseInsensitiveFiltering: true,
-			                numberDisplayed: 1,
-			                maxHeight: 300,
-			                buttonWidth: '100%',
-			                buttonClass: 'btn btn-white',
-			                nonSelectedText: 'Please Select'
-			            });
-		            $('#my-select1').empty();
-		            $('#my-select1').multiselect('dataprovider', multiselect_data);
+                    $('#my-select1').multiselect('destroy');
+                    $('#my-select1').multiselect({
+                            selectAllValue: 'multiselect-all',
+                            enableCaseInsensitiveFiltering: true,
+                            numberDisplayed: 1,
+                            maxHeight: 300,
+                            buttonWidth: '100%',
+                            buttonClass: 'btn btn-white',
+                            nonSelectedText: 'Please Select'
+                        });
+                    $('#my-select1').empty();
+                    $('#my-select1').multiselect('dataprovider', multiselect_data);
 
             })
         }else{
             $('#my-select').css('border', '1px solid red');
         }
-            
-        })
+        
+    })
 
 
-        function fetchDataApp(){
-            chvs = $("#my-select").val()
-            form = $("#my-select2").val()
-            child = $("#my-select1").val()
+    function fetchDataApp(){
+        chvs = $("#my-select").val()
+        form = $("#my-select2").val()
+        child = $("#my-select1").val()
+        comments = $("#app_comments").val()
+        // table = $("#Dataapproval").DataTable()
 
-            console.log({chvs, form, child})
-            if(chvs.length>0 && form != "" && ( child != null)){
-                data_fetch = {
-                    "chvs": chvs,
-                    "form": form,
-                    "child": child
-                }
-
-                $.ajax({
-                    type: "POST",
-                    url:  '{% url 'fetch_data' %}',
-                    headers: {'X-CSRFToken': '{{ csrf_token }}'},
-                    // contentType: "Application/json", ---> Do not use this
-                    dataType: "json",
-                    data: data_fetch,
-                })
-                .fail(function(message){
-                    console.error({error_submit: message})
-                    response = {... message}
-                    respStatus = 'error'
-                })
-                .done(function(data){
-                    console.log({success_post: data})
-                    response = {... data}
-                    respStatus = 'success'
-                })
-
-            }else{
-                var msg = ""
-                if(chvs.length===0 && child.length===0){
-                    msg = "CHV and Child not selected"
-                }if(chvs.length===0){
-                    msg = "CHV not selected"
-                }if(child=== null){
-                    msg = "Child not selected"
-                }
-                sendFeedback(msg, "danger")
+        console.log({chvs, form, child})
+        if(chvs.length>0 && form != "" && ( child != null)){
+            data_fetch = {
+                "chvs": chvs,
+                "form": form,
+                "child": child,
+                "comments": comments
             }
-        }
+            
+            $.ajax({
+                type: "POST",
+                url:  '{% url 'fetch_data' %}',
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                // contentType: "Application/json", ---> Do not use this
+                dataType: "json",
+                data: data_fetch,
+            })
+            .fail(function(message){
+                console.error({error_submit: message})
+                
+            })
+            .done(function(data){
+                console.log({success_post: data})
+                $("#Dataapproval").DataTable().destroy()
+                if(form === 'form1a' ){
+                    var ta_trs = ""
+                    for (dta in data){
+                        console.log({dta, data})
+                        $("#Dataapproval tbody").append(`<tr id="${data[dta].id}_tr" class="datarows">
+                            <td style="width: 10%;" class="scheck">
+                                <input id="${data[dta].id}" type="checkbox" name="selectOne">
+                            </td>
+                            <td style="width: 90%;" class="">
+                                <p>Form: ${form} : Child Name: <b style="color:red;">  ${data[dta].name} </b>| Date of event -${data[dta].date_of_event}</p>
+                                <p>
+                                    
+                                    <div class="col-mod-2"> Domain:    ${data[dta].domain_id} | </div>
+                                    <div class="col-mod-2"> Service:    ${data[dta].service_id} | </div>
+                                    <div class="col-mod-2"> Message:    ${data[dta].message} | </div>
+                  
+                                </p <br>
 
-        // to output messages to the front end 
-        function sendFeedback(msg, class_type){
-            $("#msg").removeClass()
-                    $("#msg").addClass('alert alert-'+class_type+'')
-                    $("#msg").html(msg)
-                    setTimeout(function() {
-                        $('#msg').addClass('hidden')
-                    }, 4000);
+                            </td>
+                            </tr>
+                        `);                   
+                        
+                    }
+                    
+                           
+                }else if(form === 'form1a' ){
+                    var ta_trs = ""
+                    for (dta in data){
+                        console.log({dta, data})
+                        $("#Dataapproval tbody").append(`<tr id="${data[dta].id}_tr" class="datarows">
+                            <td style="width: 10%;" class="scheck">
+                                <input id="${data[dta].id}" type="checkbox" name="selectOne">
+                            </td>
+                            <td style="width: 90%;" class="">
+                                <p>Form: ${form} : Child Name: <b style="color:red;">  ${data[dta].name} </b>| Date of event -${data[dta].date_of_event}</p>
+                                <p>
+                                    <div class="col-mod-2"> Domain:    ${data[dta].domain_id} | </div>
+                                    <div class="col-mod-2"> Service:    ${data[dta].service_id} | </div>
+                                    <div class="col-mod-2"> Message:    ${data[dta].message} | </div>
+                  
+                                </p <br>
+
+                            </td>
+                            </tr>
+                        `);                 
+                        
+                    }
+                }else if(form === 'cpt' ){
+                    var ta_trs = ""
+                    for (dta in data){
+                        console.log({dta, data})
+                        $("#Dataapproval tbody").append(`<tr id="${data[dta].id}_tr" class="datarows">
+                                <td style="width: 10%;" class="scheck">
+                                    <input id="${data[dta].id}" type="checkbox" name="selectOne">
+                                </td>
+                                <td style="width: 90%;" class="">
+                                    <p>Form: ${form} : Child Name: <b style="color:red;">  ${data[dta].name} </b>| Date of event -${data[dta].date_of_event}</p>
+                                    <p>
+                                        <div class="col-mod-2"> Domain:    ${data[dta].domain_id} | </div>
+                                        <div class="col-mod-2"> Service:    ${data[dta].service_id} | </div>
+                                        <div class="col-mod-2"> Goal:    ${data[dta].goal_id} | </div>
+                                        <div class="col-mod-2"> Gap:    ${data[dta].gap_id} | </div>
+                                        <div class="col-mod-2"> Priority:    ${data[dta].priority_id} | </div>
+                                    </p <br>
+                                    <p>
+                                        <div class="col-mod-2"> Responsible:    ${data[dta].responsible_id} | </div>
+                                        <div class="col-mod-2"> Results:    ${data[dta].results_id} | </div>
+                                        <div class="col-mod-2"> Reason:    ${data[dta].reason_id} | </div>
+                                        <div class="col-mod-2"> Completion Date:    ${data[dta].completion_date} | </div>
+                                        <div class="col-mod-2"></div>
+                                    </p
+                                </td>
+                            </tr>
+                        `);                  
+                        
+                    }
+                    
+                                      
+                    
+                }else if(form === 'cpr' ){
+                    var ta_trs = ""
+                    for (dta in data){
+                        console.log({dta, data})
+                        alert('jane')
+                        $("#Dataapproval tbody").append(`<tr id="${data[dta].id}_tr" class="datarows">
+                                <td style="width: 10%;" class="scheck">
+                                    <input id="${data[dta].id}" type="checkbox" name="selectOne">
+                                </td>
+                                <td style="width: 90%;" class="">
+                                    <p> <b>${form}</b> - ${data[dta].name}</p>
+                                    Scores <br>
+                                    <p>
+                                        <div class="col-mod-2"> Benchmark 1:    ${data[dta].b1} | </div>
+                                        <div class="col-mod-2"> Benchmark 2:    ${data[dta].b2} | </div>
+                                        <div class="col-mod-2"> Benchmark 3:    ${data[dta].b3} | </div>
+                                        <div class="col-mod-2"> Benchmark 4:    ${data[dta].b4} | </div>
+                                        <div class="col-mod-2"> Benchmark 5:    ${data[dta].b5} | </div>
+                                    
+                                        <div class="col-mod-2"> Benchmark 6:    ${data[dta].b6} | </div>
+                                        <div class="col-mod-2"> Benchmark 7:    ${data[dta].b7} | </div>
+                                        <div class="col-mod-2"> Benchmark 8:    ${data[dta].b8} | </div>
+                                        <div class="col-mod-2"> Benchmark 9:    ${data[dta].b9} | </div>
+                                        <div class="col-mod-2"></div>
+                                    </p
+                                </td>
+                            </tr>
+                        `);                  
+                        
+                    }
+                    
+                           
+                }
+
+                $("#Dataapproval").DataTable().draw()
+            })
+
+        }else{
+            var msg = ""
+            if(chvs.length===0 && child.length===0){
+                msg = "CHV and Child not selected"
+            }if(chvs.length===0){
+                msg = "CHV not selected"
+            }if(child=== null){
+                msg = "Child not selected"
+            }
+            sendFeedback(msg, "danger")
         }
+    }
+
+    // to output messages to the front end 
+    function sendFeedback(msg, class_type){
+        $("#msg").removeClass()
+                $("#msg").addClass('alert alert-'+class_type+'')
+                $("#msg").html(msg)
+                setTimeout(function() {
+                    $('#msg').addClass('hidden')
+                }, 4000);
+    }
         
 
 
