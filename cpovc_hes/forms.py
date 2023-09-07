@@ -51,7 +51,6 @@ class HesForm(forms.Form):
 
                                                }
                                            ))
-=
 
     health_scheme = forms.ChoiceField(label="Health Scheme",
                                       required=False,

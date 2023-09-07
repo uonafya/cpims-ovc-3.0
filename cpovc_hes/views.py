@@ -23,13 +23,15 @@ def hes_home(request):
         search_string = request.GET.get('search_name')
         pids = get_person_ids(request, search_string)
 
-        person_records = RegPerson.objects.filter(is_void=False, id__in=pids, designation='CCGV')  # Filter by designation
+        person_records = RegPerson.objects.filter(
+            is_void=False, id__in=pids, designation='CCGV')
 
         hes_data = {}
-        hes_records = CPOVC_HES.objects.filter(is_void=False, person_id__in=pids)
+        hes_records = CPOVC_HES.objects.filter(
+            is_void=False, person_id__in=pids)
         for hes_record in hes_records:
             hes_data[hes_record.person_id] = {
-                'id': hes_record.id,
+                'id': hes_record.hes_id,
                 'cbo_id': hes_record.cbo_id
             }
 
@@ -37,13 +39,14 @@ def hes_home(request):
         for person_record in person_records:
             combined_record = {
                 'person_record': person_record,
-                'hes_data': hes_data.get(person_record.id, {})  # Retrieve HES data for the person
+                # Retrieve HES data for the person
+                'hes_data': hes_data.get(person_record.id, {})
             }
             combined_data.append(combined_record)
 
         context = {
             'status': 200,
-            'combined_data': combined_data,  # Pass combined data to the template
+            'combined_data': combined_data,
             'form': form
         }
 
@@ -74,7 +77,9 @@ def new_hes(request, id):
                 return Decimal(decimal_str) if decimal_str else None
 
             new_hes_instance = CPOVC_HES(
-                person_id=RegPerson.objects.filter(is_void=False, id=reg_person_id).values_list('id', flat=True).first(),
+                person_id=RegPerson.objects.filter(
+                    is_void=False,
+                    id=reg_person_id).values_list('id', flat=True).first(),
                 cbo_id=cbo_id,
                 employment_status=data.get('employment_status'),
                 type_of_employment=data.get('type_of_employment'),
@@ -87,7 +92,8 @@ def new_hes(request, id):
                 vsla=data.get('vsla_name'),
                 date_of_linkage_to_vsla=get_date('date_linkage'),
                 monthly_saving_average=get_decimal('monthly_saving'),
-                average_cumulative_saving=get_decimal('average_cumulative_saving'),
+                average_cumulative_saving=get_decimal(
+                    'average_cumulative_saving'),
                 loan_taken=data.get('loan_taken'),
                 loan_taken_amount=get_decimal('loan_taken_amount'),
                 date_loan_taken=get_date('date_loan_taken'),
@@ -100,23 +106,29 @@ def new_hes(request, id):
                 use_of_ect=data.get('use_of_ect'),
                 received_startup_kit=data.get('received_startup_kit'),
                 type_of_asset=data.get('type_of_asset'),
-                average_monthly_income_generated=get_decimal('average_monthly_income_generated'),
+                average_monthly_income_generated=get_decimal(
+                    'average_monthly_income_generated'),
                 received_business_grant=data.get('received_business_grant'),
-                amount_of_money_received=get_decimal('amount_of_money_received'),
+                amount_of_money_received=get_decimal(
+                    'amount_of_money_received'),
                 business_type_started=data.get('business_type_started'),
-                linked_to_value_chain_activities_asset_growth=data.get('linked_to_value_chain_activities_asset_growth'),
+                linked_to_value_chain_activities_asset_growth=data.get(
+                    'linked_to_value_chain_activities_asset_growth'),
                 sector_of_asset_growth=data.get('sector_of_asset_growth'),
                 linked_to_source_finance=data.get('linked_to_source_finance'),
-                type_of_financial_institution=data.get('type_of_financial_institution'),
+                type_of_financial_institution=data.get(
+                    'type_of_financial_institution'),
                 loan_taken_income_growth=data.get('loan_taken_income_growth'),
-                date_loan_taken_income_growth=get_date('date_loan_taken_income_growth'),
-                linked_to_value_chain_activities_income_growth=data.get('linked_to_value_chain_activities_income_growth'),
+                date_loan_taken_income_growth=get_date(
+                    'date_loan_taken_income_growth'),
+                linked_to_value_chain_activities_income_growth=data.get(
+                    'linked_to_value_chain_activities_income_growth'),
                 sector_of_income_growth=data.get('sector_of_income_growth'),
                 created_by=created_by_user
             )
             new_hes_instance.save()
 
-            hes_instance_id = new_hes_instance.id
+            hes_instance_id = new_hes_instance.pk
 
             return redirect('view_hes', id=hes_instance_id)
 
@@ -128,11 +140,14 @@ def new_hes(request, id):
     except Exception as e:
         raise e
 
+
 def view_hes(request, id):
     try:
         hes_id = int(id)
-        hes_instance = CPOVC_HES.objects.filter(id=hes_id, is_void=False).first()
-        person_instance = RegPerson.objects.filter(id=hes_instance.person_id, is_void=False).first()
+        hes_instance = CPOVC_HES.objects.filter(
+            hes_id=hes_id, is_void=False).first()
+        person_instance = RegPerson.objects.filter(
+            id=hes_instance.person_id, is_void=False).first()
 
         if hes_instance:
 
@@ -207,12 +222,13 @@ def view_hes(request, id):
         raise e
 
 
-
 def edit_hes(request, id):
     hes_id = int(id)
     try:
-        hes_instance = CPOVC_HES.objects.filter(id=hes_id, is_void=False).first()
-        person_instance = RegPerson.objects.filter(id=hes_instance.person_id, is_void=False).first()
+        hes_instance = CPOVC_HES.objects.filter(
+            hes_id=hes_id, is_void=False).first()
+        person_instance = RegPerson.objects.filter(
+            id=hes_instance.person_id, is_void=False).first()
 
         if hes_instance:
             data = {
@@ -315,14 +331,12 @@ def edit_hes(request, id):
 
         return render(request, 'hes/edit_hes.html', context)
 
-
     except Exception as e:
         raise e
 
 
 def delete_hes(request, id):
     hes_instance = get_object_or_404(CPOVC_HES, id=id, is_void=False)
-
 
     hes_instance.is_void = True
     hes_instance.save()
@@ -331,7 +345,3 @@ def delete_hes(request, id):
     messages.add_message(request, messages.INFO, msg)
 
     return HttpResponseRedirect(url)
-
-
-
-
