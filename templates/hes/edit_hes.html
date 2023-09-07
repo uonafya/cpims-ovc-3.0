@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load app_filters %}
 {% load static %}
-{% block page_title %} HES Form {% endblock %}
+{% block page_title %} Edit HES Form {% endblock %}
 {% block style_code %}
 <link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
 <link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
@@ -65,10 +65,10 @@
             </div>
         <div style="overflow-x: auto; min-height: 300px;">
             <div class="panel-body">
-                <form class="form-horizontal form-bordered hes" action="{% url 'new_hes' %}" method="POST" data-parsley-validate="true"
-                    name="form-wizard-hhva" id="new_hhva">
+               <form class="form-horizontal form-bordered hes" action="." method="POST" data-parsley-validate="true"
+                    name="edit_hes" id="edit_hes">
                     {% csrf_token %}
-                    <div id="wizard-hhva">
+                    <div id="wizard-hes">
                         <ol>
 
                             <li>
@@ -127,7 +127,7 @@
                                                     </div>
                                                 </div>
                                                      <div  class="form-group health_scheme" id="health_scheme">
-                                                    <label class="control-label col-md-4 col-sm-4" > Type Health Scheme: <span class="asteriskField">*</span> </label>
+                                                    <label class="control-label col-md-4 col-sm-4" > Type Health Scheme: </label>
                                                     <div class="col-md-6 col-sm-6">
                                                         {{ form.health_scheme }}
                                                     </div>
@@ -442,6 +442,9 @@
         </script> -->
 
 <script type="text/javascript">
+    $('#event_date').datepicker({ endDate: '0y', format: 'dd-M-yyyy' });
+
+    $("#wizard-hes").bwizard();
     window.onload = function () {
         var x = document.getElementById("id_WB_AD_SCH_8_1_1");
         var y = document.getElementById("WB_AD_SCH_8_2");
@@ -464,21 +467,21 @@
 
 
     jQuery(document).ready(function () {
-        $('#employment-type').hide();
-        $('#health_scheme').hide();
-        $('#social_safety_nets_type').hide();
-        $('#vsla_name').hide();
-        $('#date_of_linkage_vsla').hide();
-        $('#loan_amount').hide();
-        $('#loan_utilization').hide();
-        $('#date_loan_taken').hide();
-        $('#type_of_startup').hide();
-        $('#date_startup_received').hide();
-        $('#ect_use').hide();
-        $('#ect_amount').hide();
-        $('#amount_of_money_received').hide();
-        $('#type_of_financial_institution').hide();
-        $('#date_loan_taken_income_growth').hide();
+        {#$('#employment-type').hide();#}
+        {#$('#health_scheme').hide();#}
+        {#$('#social_safety_nets_type').hide();#}
+        {#$('#vsla_name').hide();#}
+        {#$('#date_of_linkage_vsla').hide();#}
+        {#$('#loan_amount').hide();#}
+        {#$('#loan_utilization').hide();#}
+        {#$('#date_loan_taken').hide();#}
+        {#$('#type_of_startup').hide();#}
+        {#$('#date_startup_received').hide();#}
+        {#$('#ect_use').hide();#}
+        {#$('#ect_amount').hide();#}
+        {#$('#amount_of_money_received').hide();#}
+        {#$('#type_of_financial_institution').hide();#}
+        {#$('#date_loan_taken_income_growth').hide();#}
 
 
 

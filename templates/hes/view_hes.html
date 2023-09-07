@@ -1,0 +1,481 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page_title %} HES View  details {% endblock %}
+
+{% load app_filters %}
+
+{% block style_code %}
+<link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"
+      xmlns="http://www.w3.org/1999/html"/>
+<link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet" />
+<style type="text/css">
+  table.text-inverse tr{
+    margin: 25px 0 25px 0;
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+  }
+  td.field{
+    text-align: right;
+    font-weight: bold;
+  }
+</style>
+{% endblock %}
+
+{% block primary %}
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+    <li><a href="#">Home</a></li>
+    <li class="active">HES</li>
+</ol>
+<!-- end breadcrumb -->
+<!-- begin page-header -->
+{##}
+{#<h1 class="page-header"><i class="fa fa-child"></i> OVC Care <small>#}
+{#Caregiver details | {{care_giver}}#}
+{#{% if creg.is_active %}#}
+{#<span class="label label-primary">Active</span>#}
+{#{% else %}#}
+{#<span class="label label-danger">Exited {{ creg.exit_date }}</span>#}
+{#{% endif %}#}
+{#</small></h1>#}
+<!-- end page-header -->
+{% if messages %}
+    {% for message in messages %}
+    {% if 'error' in message.tags %}
+        <div id="messages" class="alert alert-danger fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-info fa-2x pull-left"></i>
+    {% else %}
+        <div id="messages" class="alert alert-success fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+    {% endif %}
+        <p>{{ message }}</p>
+    </div>
+   {% endfor %}
+{% endif %}
+    <div id="message" class="alert alert-success fade in" style="display: none">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+
+        <span id="response"></span>
+    </div>
+<!-- begin row -->
+
+
+<div class="row">
+   <!-- begin col-2 -->
+ <div class="m-b-10 text-inverse f-s-12"><b>Available Forms</b></div>
+
+
+
+    <div class="col-md-2">
+
+    </div>
+    <!-- end col-2 -->
+    <!-- begin col-10 -->
+    <div class="col-md-10">
+
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>
+
+                <h4 class="panel-title">HESdetails &nbsp; </h4>
+            </div>
+
+            <!-- start panel body -->
+     <div style="overflow-x: auto; min-height: 300px;">
+         <form action="." method="get" name="hes_view" id="hes_view" data-parsley-validate="true">
+             {% csrf_token %}
+             <input type="hidden" name="ovc_id" id="ovc_id" value="">
+
+             <fieldset>
+                 <legend class="pull-left width-full">Person details</legend>
+                 <!-- begin row -->
+                 <div class="row">
+                     <table width="100%" class="table table-profile">
+                         <tbody>
+                         <tr>
+                             <td class="field">ID</td>
+                             <td >{{ hes_details.person_id }}</td>
+                             <td class="field">First Name</td>
+                             <td>{{person_details.first_name }}</td>
+                             <td class="field">Last Name</td>
+                             <td>{{ person_details.last_name }}</td>
+
+
+                         </tr>
+                         <tr>
+
+                             <td class="field">Date Of Birth</td>
+                             <td >{{ person_details.dob }}</td>
+                             <td class="field">Sex</td>
+                             <td class="field">HIV Status</td>
+                             <td></td>
+                         </tr>
+
+
+
+                         </tbody>
+                     </table>
+                 </div>
+
+             </fieldset>
+            <fieldset>
+                 <legend class="pull-left width-full">HES Options</legend>
+                 <!-- begin row -->
+                 <div class="row">
+                     <table width="100%" class="table table-profile">
+                         <tbody>
+                         <tr>
+                             <td class="field">Employment Status:</td>
+                             <td>{{ hes_details.employment_status }}</td>
+                             <td class="field">Employment Type:</td>
+                             <td>{{ hes_details.type_of_employment }}</td>
+                             <td class="field">Have Health Scheme</td>
+                             <td>{{ hes_details.have_health_scheme }}</td>
+                             <td class="field">Type Health Scheme:</td>
+                             <td>{{ hes_details.health_scheme }}</td>
+                         </tr>
+
+                         <tr>
+                             <td class="field">Kitchen Garden</td>
+                             <td>{{ hes_details.kitchen_garden }}</td>
+                             <td class="field">Have Social Safety Nets</td>
+                             <td>{{ hes_details.social_safety_nets }}</td>
+                             <td class="field">Social Safety Nets Type</td>
+                             <td>{{hes_details.social_safety_nets_types }}</td>
+                         </tr>
+                          <tr>
+                             <td class="field">Linkage to VSLA</td>
+                             <td>{{ hes_details.linkage_to_vsls }}</td>
+                             <td class="field">VSLA Name</td>
+                             <td>{{ hes_details.vsla }}</td>
+                             <td class="field">Date of Linkage to VSLA</td>
+                             <td>{{ hes_details.date_of_linkage_to_vsla }}</td>
+                         </tr>
+                         <tr>
+                             <td class="field">Monthly Saving Average</td>
+                             <td>{{ hes_details.monthly_saving_average  }}</td>
+                             <td class="field">Cumulative Saving</td>
+                             <td>{{ hes_details.average_cumulative_saving  }}</td>
+
+                             <td></td>
+                         </tr>
+                         <tr>
+                             <td class="field">Loan Taken</td>
+                             <td>{{ hes_details.loan_taken }}</td>
+                             <td class="field">Loan taken Amount</td>
+                             <td>{{ hes_details.loan_taken_amount }}</td>
+                             <td class="field">Date Loan Taken</td>
+                             <td>{{ hes_details.date_loan_taken }}</td>
+                             <td class="field"> Loan Utilization</td>
+                             <td>{{ hes_details.loan_utilization }}</td>
+                         </tr>
+                         <tr>
+                             <td class="field">Startup</td>
+                             <td>{{ hes_details.startup }}</td>
+                             <td class="field">Type of Startup</td>
+                             <td>{{ hes_details.type_of_startup }}</td>
+                             <td class="field">Date startup received</td>
+                             <td>{{ hes_details.date_startup_received }}</td>
+
+                         </tr>
+
+
+
+                         </tbody>
+                     </table>
+                 </div>
+             </fieldset>
+
+            <fieldset>
+                 <legend class="pull-left width-full">Consumption support</legend>
+                 <!-- begin row -->
+                 <div class="row">
+                     <table width="100%" class="table table-profile">
+                         <tbody>
+                         <tr>
+                             <td class="field">Emergency cash transfer</td>
+                             <td>{{ hes_details.emergency_cash_transfer }}</td>
+                             <td class="field">Amount received ECT</td>
+                             <td>{{ hes_details.amount_received_ect }}</td>
+                             <td class="field">Use of ECT</td>
+                             <td>{{ hes_details.use_of_ect }}</td>
+                         </tr>
+
+
+
+                         </tbody>
+                     </table>
+                 </div>
+             </fieldset>
+         <fieldset>
+                 <legend class="pull-left width-full">Asset Growth</legend>
+                 <!-- begin row -->
+                 <div class="row">
+                     <table width="100%" class="table table-profile">
+                         <tbody>
+                         <tr>
+                             <td class="field">Received start up Kit:</td>
+                             <td>{{ hes_details.received_startup_kit}}</td>
+                             <td class="field">Type of asset :</td>
+                             <td>{{ hes_details.type_of_asset }}</td>
+                             <td class="field">Avarage monthly income generated:</td>
+                             <td>{{ hes_details.average_monthly_income_generated }}</td>
+                         </tr>
+
+                         <tr>
+                             <td class="field">Avarage monthly income generated</td>
+                             <td>{{ hes_details.received_bussiness_grant }}</td>
+                             <td class="field">Amount of Money received:</td>
+                             <td>{{ hes_details.amount_of_money_received }}</td>
+
+                         </tr>
+                          <tr>
+                              <td class="field">Type of business started</td>
+                             <td>{{hes_details.bussiness_type_started  }}</td>
+                             <td class="field">Linked to Value chain Activities :</td>
+                             <td>{{ hes_details.linked_to_valuechain_activities }}</td>
+                             <td class="field">Sector:</td>
+                             <td>{{ hes_details.sector_of_asset_growth }}</td>
+
+                         </tr>
+                          <tr>
+                              <td class="field">Linked to source of Finance</td>
+                             <td>{{hes_details.average_monthly_income_generated  }}</td>
+                             <td class="field">Linked to Value chain Activities :</td>
+                             <td>{{ hes_details.linked_to_value_chain_activities_asset_growth }}</td>
+                             <td class="field">Sector:</td>
+                             <td>{{ hes_details.sector_of_asset_growth }}</td>
+
+                         </tr>
+
+
+
+                         </tbody>
+                     </table>
+                 </div>
+             </fieldset>
+            <fieldset>
+                 <legend class="pull-left width-full">Income Growth</legend>
+                 <!-- begin row -->
+                 <div class="row">
+                     <table width="100%" class="table table-profile">
+                         <tbody>
+                         <tr>
+                             <td class="field">Linked to Source of finance :</td>
+                             <td>{{ hes_details.linked_to_source_finance }}</td>
+                             <td class="field">Type of financial institution :</td>
+                             <td>{{ hes_details.type_of_financial_institution }}</td>
+
+
+                         </tr>
+
+                         <tr>
+                             <td class="field">Loan taken:</td>
+                             <td>{{ hes_details.loan_taken_income_growth }}</td>
+                             <td class="field">Date of loan taken :</td>
+                             <td>{{ hes_details.loan_taken_income_growth }}</td>
+
+                         </tr>
+                         <tr>
+                             <td class="field">Linked to Value chain Activities :</td>
+                             <td>{{ hes_details.linked_value_chain_activities_income_growth }}</td>
+                             <td class="field">Sector :</td>
+                             <td>{{ hes_details.sector_of_income_growth  }}</td>
+
+                         </tr>
+
+
+                         </tbody>
+                     </table>
+                 </div>
+             </fieldset>
+
+             <hr/>
+
+             <div class="row pull-left" id="form_actions">
+
+                 <a href="{% url 'hes_home'  %}" ><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-arrow-left"></i> &nbsp;<b>Back to search</b>&nbsp; </button></a>
+
+                 {% if allow_edit %}
+
+                     <a href="{% url 'edit_hes' id=hes_details.id %}"><button type="button" class="btn btn-primary"> <i class="fa fa-child"></i> Edit HES</button></a>
+
+                     <a href="#">
+                         <button type="button" class="btn btn-sm btn-danger m-r-5 " onclick="confirmDelete({{ hes_details.id }})" > <i class="fa fa-trash"></i>&nbsp;Delete</button></a>
+                     </a>
+                 {% endif %}
+             </div>
+
+             <!-- end panel body -->
+
+        </form>
+        </div>
+        <!-- end panel -->
+    </div>
+    <!-- end col-12 -->
+</div>
+</div>
+<!-- end row -->
+<!-- #modal-dialog -->
+       <!-- Your existing page content -->
+
+<!-- Modal for Delete Confirmation -->
+        <div id="deleteModal" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete Entry</h4>
+              </div>
+              <div class="modal-body">
+                <p style="color: #ff0000; font-size: 16px;">Delete selected entry?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn" data-dismiss="modal">Yes, delete</button>
+                <button type="button" class="btn btn-default btn-primary" data-dismiss="modal">No, cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      <div class="modal fade" id="modal-checkins">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h4 class="modal-title">My Check ins</h4>
+            </div>
+            <div class="modal-body">
+                <div id="msg"></div>
+                <div class="form-horizontal row">
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <table width="100%" id="mycheckins" class="table table-striped table-bordered"></table>
+                      </div>
+                  </div>
+                </div>  
+            </div>
+            <div class="modal-footer">
+              <a href="#" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- #modal-dialog -->
+{% endblock %}
+
+{% block lazy_javascript_code %}
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+
+<script type="text/javascript">
+
+    $('#checkin').click(function() {
+        $('#message').show();
+        $.ajax({
+               type: "POST",
+               url: "{{ request.get_full_path }}",
+               dataType: "json",
+               data: $("#ovcreg_form").serialize() + "&id=1",
+               success: function(data)
+               {
+                   var status = data.status;
+                   if (status == 0){
+                       $("#message").addClass( "alert alert-success fade in" );
+                       $('#response').html(data.message);
+                    }else{
+                       $("#message").addClass( "alert alert-danger fade in" );
+                       $('#response').html(data.message);
+                    }
+               },
+                error: function(){
+                    $("#message").addClass( "alert alert-danger fade in" );
+                    $('#response').html("Error checking in. Please try again.");
+                }
+             });
+    });
+    $('#checkins').click(function() {
+        $('#modal-checkins').modal('toggle');
+        $('#mycheckins').bootstrapTable({
+            url: '{{ request.get_full_path }}',
+            method: 'get',
+            queryParams: function (p) {
+                return { 'id': 2, 'limit': p.limit, 'offset': p.offset };
+            },
+            columns: [{
+                field: 'ovc_id',
+                title: 'OVC ID'
+            }, {
+                field: 'ovc_name',
+                title: 'OVC Name'
+            }, {
+                field: 'ctime',
+                title: 'Time'
+            }, {
+                field: 'caction',
+                title: 'Action'
+            }, ],
+            search: 'true',
+            sortable: 'true',
+            locale: 'en-US',
+            pagination: 'true',
+            pageNumber: 1,
+            pageSize: 10,
+            showRefresh: true,
+            showToggle: true,
+            singleSelect: true,
+            clickToSelect:true,
+            maintainSelected: true
+        });
+    });
+
+    $("#mycheckins").delegate(".removecheckin", "click", function() {
+        var ovcid = $(this).attr('id');
+        $.ajax({
+               type: "POST",
+               url: "{{ request.get_full_path }}",
+               dataType: "json",
+               data: $("#ovcreg_form").serialize() + "&id=3&ovc_out_id="+ovcid,
+               success: function(data)
+               {
+                   var status = data.status;
+                   if (status == 0){
+                       $("#msg").addClass( "alert alert-success fade in" );
+                       $('#msg').html(data.message);
+                       $("#mycheckins").bootstrapTable('refresh');
+                    }else{
+                       $("#msg").addClass( "alert alert-danger fade in" );
+                       $('#msg').html(data.message);
+                    }
+               },
+                error: function(){
+                    $("#msg").addClass( "alert alert-danger fade in" );
+                    $('#msg').html("Error getting check ins. Please try again.");
+                }
+             });
+    });
+
+</script>
+    <script>
+function confirmDelete(hesId) {
+  // Find the modal element
+  var modal = document.getElementById('deleteModal');
+
+  // Set the onclick event of the "Yes, delete" button
+  var deleteButton = modal.querySelector('.btn-danger');
+  deleteButton.onclick = function () {
+    // Redirect to the delete URL with the hes_id parameter
+    window.location.href = '{% url "delete_hes" id=hes_details.id %}';
+  };
+
+  // Show the modal
+  $('#deleteModal').modal('show');
+}
+</script>
+
+{% endblock %}
