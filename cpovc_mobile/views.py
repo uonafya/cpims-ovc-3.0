@@ -13,11 +13,13 @@ from cpovc_registry.models import RegPersonsOrgUnits, RegOrgUnit, RegPerson
 from cpovc_ovc.models import OVCRegistration
 # ---------------------------------------#
 from enum import Enum, auto
-from rest_framework.decorators import api_view, permission_classes
+from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework import status
-from .models import OVCMobileEvent, OVCMobileEventAttribute,CasePlanTemplateEvent,CasePlanTemplateService,OVCEvent, OVCServices
+
+from .models import OVCMobileEvent, OVCMobileEventAttribute,CasePlanTemplateEvent,CasePlanTemplateService,OVCEvent, OVCServices,OVCMobileEventRejected,OVCEventRejected,OVCMobileEventAttributeRejected,OVCServicesRejected,CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected
 from rest_framework.permissions import IsAuthenticated,AllowAny 
+from rest_framework.decorators import api_view, permission_classes
 from django.db.models import F, CharField, Value
 from django.db.models.functions import Concat
 from django.db.models import OuterRef, Subquery
@@ -34,13 +36,19 @@ class ApprovalStatus(Enum):
 def create_ovc_mobile_cpara_data(request):
     try:
         data = request.data
-        is_accepted = ApprovalStatus.FALSE.value
+        is_accepted = ApprovalStatus.NEUTRAL.value
+         # Check if the user is authenticated
+        if not request.user.is_authenticated:
+            return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        user_id = request.user.id
 
         # Create an instance of OVCMobileEvent
         event = OVCMobileEvent.objects.create(
             ovc_cpims_id=data.get('ovc_cpims_id'),
             date_of_event=data.get('date_of_event'),
             is_accepted=is_accepted,
+            user_id = user_id
         )
 
         # Handle questions
@@ -88,7 +96,7 @@ def create_ovc_mobile_cpara_data(request):
 
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def get_all_ovc_mobile_cpara_data(request):
     try:
         events = OVCMobileEvent.objects.all()
@@ -132,7 +140,7 @@ def get_all_ovc_mobile_cpara_data(request):
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def get_one_ovc_mobile_cpara_data(request, event_id):
     try:
         event = OVCMobileEvent.objects.get(pk=event_id)
@@ -167,13 +175,41 @@ def get_one_ovc_mobile_cpara_data(request, event_id):
 
 
 @api_view(['PATCH'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def update_cpara_is_accepted(request, event_id):
     try:
         event = OVCMobileEvent.objects.get(pk=event_id)
         is_accepted = request.data.get('is_accepted')
+         # Check if the user is authenticated
+        if not request.user.is_authenticated:
+            return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        user_id = request.user.id
+
+        if is_accepted == ApprovalStatus.FALSE.value:
+            # If is_accepted is set to False (3), create corresponding rejected records
+            OVCMobileEventRejected.objects.create(
+                user_id=event.user_id,
+                ovc_cpims_id=event.ovc_cpims_id,
+                date_of_event=event.date_of_event,
+                is_accepted=is_accepted,
+                message=request.data.get('message')  
+            )
+
+            # Copy the event's attributes to rejected attributes
+            attributes = OVCMobileEventAttribute.objects.filter(event=event)
+            for attribute in attributes:
+                OVCMobileEventAttributeRejected.objects.create(
+                    event=event,
+                    ovc_cpims_id_individual=attribute.ovc_cpims_id_individual,
+                    question_name=attribute.question_name,
+                    answer_value=attribute.answer_value
+                )
+
+        # Update the is_accepted field for the original event
         event.is_accepted = is_accepted
         event.save()
+
         return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
     except OVCMobileEvent.DoesNotExist:
         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -182,7 +218,7 @@ def update_cpara_is_accepted(request, event_id):
 
 
 @api_view(['DELETE'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def delete_ovc_mobile_event(request, event_id):
     try:
         event = OVCMobileEvent.objects.get(pk=event_id)
@@ -194,16 +230,21 @@ def delete_ovc_mobile_event(request, event_id):
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 # Views for Form1 A and B
-
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def create_ovc_event(request):
     try:
         data = request.data
+        # Check if the user is authenticated
+        if not request.user.is_authenticated:
+            return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        user_id = request.user.id
 
         event = OVCEvent.objects.create(
             ovc_cpims_id=data.get('ovc_cpims_id'),
             date_of_event=data.get('date_of_event'),
+
         )
 
         services = data.get('services', [])
@@ -212,7 +253,8 @@ def create_ovc_event(request):
                 event=event,
                 domain_id=service_data['domain_id'],
                 service_id=service_data['service_id'],
-                is_accepted=ApprovalStatus.FALSE.value
+                is_accepted=ApprovalStatus.NEUTRAL.value,
+                user_id = user_id
             )
 
         return Response({'message': 'Data stored successfully'}, status=status.HTTP_201_CREATED)
@@ -220,7 +262,7 @@ def create_ovc_event(request):
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def get_all_ovc_events(request):
     try:
         events = OVCEvent.objects.all()
@@ -248,7 +290,7 @@ def get_all_ovc_events(request):
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def get_ovc_event(request, event_id):
     try:
         event = OVCEvent.objects.get(pk=event_id)
@@ -275,13 +317,36 @@ def get_ovc_event(request, event_id):
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PATCH'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def update_is_accepted(request, event_id):
     try:
         event = OVCEvent.objects.get(pk=event_id)
         services = OVCServices.objects.filter(event=event)
 
         is_accepted = request.data.get('is_accepted')
+
+        if is_accepted == ApprovalStatus.FALSE.value:
+            # If is_accepted is set to False (3), create corresponding rejected records
+            OVCEventRejected.objects.create(
+                user_id=event.user_id,
+                ovc_cpims_id=event.ovc_cpims_id,
+                date_of_event=event.date_of_event,
+                id=event.id  # Maintain the same UUID in the rejected model
+            )
+
+            # Copy the services to rejected services
+            for service in services:
+                # Create the corresponding rejected service
+                OVCServicesRejected.objects.create(
+                    event=event,
+                    domain_id=service.domain_id,
+                    service_id=service.service_id,
+                    is_accepted=is_accepted,
+                    message=request.data.get('message'),
+                    id=service.id  # Maintain the same UUID in the rejected model
+                )
+
+        # Update the is_accepted field for the original event's services
         for service in services:
             service.is_accepted = is_accepted
             service.save()
@@ -292,8 +357,9 @@ def update_is_accepted(request, event_id):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['DELETE'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def delete_ovc_event(request, event_id):
     try:
         event = OVCEvent.objects.get(pk=event_id)
@@ -323,15 +389,22 @@ def service_serializer(service):
     }
 
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def create_case_plan_template(request):
     try:
         payload = request.data
+        # Check if the user is authenticated
+        if not request.user.is_authenticated:
+            return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        
+        user_id = request.user.id
 
         # Create a new CasePlanTemplateEvent
         event = CasePlanTemplateEvent.objects.create(
             ovc_cpims_id=payload['ovc_cpims_id'],
-            date_of_event=payload['date_of_event']
+            date_of_event=payload['date_of_event'],
+            user_id = user_id
         )
 
         # Create a record for each service
@@ -348,7 +421,7 @@ def create_case_plan_template(request):
                 results_id=service['results_id'],
                 reason_id=service['reason_id'],
                 completion_date=service['completion_date'],
-                is_accepted=ApprovalStatus.FALSE.value  # Set to NEUTRAL by default
+                is_accepted=ApprovalStatus.NEUTRAL.value  # Set to NEUTRAL by default
             )
 
         return Response({'message': 'Data stored successfully'}, status=status.HTTP_201_CREATED)
@@ -356,7 +429,7 @@ def create_case_plan_template(request):
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def get_all_case_plans(request):
     try:
         events = CasePlanTemplateEvent.objects.all()
@@ -377,7 +450,7 @@ def get_all_case_plans(request):
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def get_one_case_plan(request, event_id):
     try:
         event = CasePlanTemplateEvent.objects.get(id=event_id)
@@ -397,7 +470,7 @@ def get_one_case_plan(request, event_id):
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PATCH'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def update_case_plan_is_accepted(request, event_id):
     try:
         event = CasePlanTemplateEvent.objects.get(id=event_id)
@@ -405,7 +478,38 @@ def update_case_plan_is_accepted(request, event_id):
 
         new_is_accepted = request.data.get('is_accepted')
         if new_is_accepted is not None:
+            # Check if is_accepted is set to False (3)
+            if new_is_accepted == ApprovalStatus.FALSE.value:
+                # Create a corresponding rejected record in CasePlanTemplateEventRejected
+                CasePlanTemplateEventRejected.objects.create(
+                    user_id=event.user_id,
+                    ovc_cpims_id=event.ovc_cpims_id,
+                    date_of_event=event.date_of_event,
+                    id=event.id  # Maintain the same UUID in the rejected model
+                )
+
+                # Copy the services to CasePlanTemplateServiceRejected
+                for service in services:
+                    # Create the corresponding rejected service
+                    CasePlanTemplateServiceRejected.objects.create(
+                        event=event,
+                        domain_id=service.domain_id,
+                        service_id=service.service_id,
+                        goal_id=service.goal_id,
+                        gap_id=service.gap_id,
+                        priority_id=service.priority_id,
+                        responsible_id=service.responsible_id,
+                        results_id=service.results_id,
+                        reason_id=service.reason_id,
+                        completion_date=service.completion_date,
+                        is_accepted=new_is_accepted,
+                        message=request.data.get('message'),
+                        id=service.id  # Maintain the same UUID in the rejected model
+                    )
+
+            # Update the is_accepted field for the original event's services
             services.update(is_accepted=new_is_accepted)
+
             return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
@@ -414,8 +518,9 @@ def update_case_plan_is_accepted(request, event_id):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['DELETE'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def delete_case_plan_event(request, event_id):
     try:
         event = CasePlanTemplateEvent.objects.get(pk=event_id)
@@ -425,30 +530,34 @@ def delete_case_plan_event(request, event_id):
         return Response({'error': 'Entry not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
-    
-#  Fetch all unapproved data
+       
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def get_all_unaccepted_records(request):
     try:
         # Initialize an empty list to store the result data
         data = []
 
-        # Fetch cpara records where is_accepted is FALSE (3)
-        ovc_mobile_events = OVCMobileEvent.objects.filter(is_accepted=3)
+        # Check if the user is authenticated
+        if not request.user.is_authenticated:
+            return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        for event in ovc_mobile_events:
+        user_id = request.user.id
+
+        # Fetch cpara records where is_accepted is FALSE (3) and user_id matches
+        ovc_mobile_events_rejected = OVCMobileEventRejected.objects.filter(is_accepted=3, user_id=user_id)
+
+        for rejected_event in ovc_mobile_events_rejected:
             event_data = {
-                'ovc_cpims_id': event.ovc_cpims_id,
-                'date_of_event': event.date_of_event,
-                'is_accepted': event.is_accepted,
+                'ovc_cpims_id': rejected_event.ovc_cpims_id,
+                'date_of_event': rejected_event.date_of_event,
                 'questions': [],
                 'individual_questions': [],
-                'scores': [],
+                'scores': {},
             }
 
-            attributes = OVCMobileEventAttribute.objects.filter(event=event)
+            # Retrieve attributes related to the rejected event
+            attributes = OVCMobileEventAttributeRejected.objects.filter(event=rejected_event)
 
             for attribute in attributes:
                 attribute_data = {
@@ -461,137 +570,128 @@ def get_all_unaccepted_records(request):
                 elif attribute.question_name.startswith('individual_question_'):
                     event_data['individual_questions'].append(attribute_data)
                 elif attribute.question_name.startswith('score_'):
-                    event_data['scores'].append(attribute_data)
-
-            # Remove prefixes from attribute names
-            event_data['questions'] = [{k.replace('question_', ''): v for k, v in q.items()} for q in event_data['questions']]
-            event_data['individual_questions'] = [{k.replace('individual_question_', ''): v for k, v in iq.items()} for iq in event_data['individual_questions']]
-            event_data['scores'] = [{k.replace('score_', ''): v for k, v in s.items()} for s in event_data['scores']]
+                    key = attribute.question_name.replace('score_', '')
+                    event_data['scores'][key] = attribute_data['answer_value']
 
             data.append(event_data)
 
-        # Fetch Form 1A and B records where is_accepted is FALSE (3)
-        ovc_services = OVCServices.objects.filter(is_accepted=3)
+        # Fetch Form 1A and B records where is_accepted is FALSE (3) and user_id matches
+        ovc_services_rejected = OVCServicesRejected.objects.filter(is_accepted=3, event__user_id=user_id)
 
-        for service in ovc_services:
+        for service_rejected in ovc_services_rejected:
             event_data = {
-                'ovc_cpims_id': service.event.ovc_cpims_id,
-                'date_of_event': service.event.date_of_event,
-                'is_accepted': service.is_accepted,
+                'ovc_cpims_id': service_rejected.event.ovc_cpims_id,
+                'date_of_event': service_rejected.event.date_of_event,
                 'services': {
-                    'domain_id': service.domain_id,
-                    'service_id': service.service_id
-                }
+                    'domain_id': service_rejected.domain_id,
+                    'service_id': service_rejected.service_id,
+                },
             }
             data.append(event_data)
 
-        # Fetch CasePlanTemplate records where is_accepted is FALSE (3)
-        case_plan_services = CasePlanTemplateService.objects.filter(is_accepted=3)
+        # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
+        case_plan_services_rejected = CasePlanTemplateServiceRejected.objects.filter(is_accepted=3, event__user_id=user_id)
 
-        for service in case_plan_services:
+        for service_rejected in case_plan_services_rejected:
             event_data = {
-                'ovc_cpims_id': service.event.ovc_cpims_id,
-                'date_of_event': service.event.date_of_event,
-                'is_accepted': service.is_accepted,
+                'ovc_cpims_id': service_rejected.event.ovc_cpims_id,
+                'date_of_event': service_rejected.event.date_of_event,
                 'services': {
-                    'domain_id': service.domain_id,
-                    'service_id': service.service_id
-                }
+                    'domain_id': service_rejected.domain_id,
+                    'service_id': service_rejected.service_id,
+                },
             }
             data.append(event_data)
 
         return Response(data, status=status.HTTP_200_OK)
+
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-#  Fetch unapproved records using query params
+# Fetch unapproved records using query params
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def unaccepted_records(request):
-    record_type = request.GET.get('record_type')
-    
-    data = []
-    
-    # Check the record and 
-    if record_type == 'F1AB':
-        # Fetch Form 1A and B records where is_accepted is FALSE (3)
-        ovc_services = OVCServices.objects.filter(is_accepted=3)
+    try:
+        record_type = request.GET.get('record_type')
+        data = []
 
-        for service in ovc_services:
-            event_data = {
-                'ovc_cpims_id': service.event.ovc_cpims_id,
-                'message': service.message,
-                'date_of_event': service.event.date_of_event,
-                'is_accepted': service.is_accepted,
-                'services': {
-                    'domain_id': service.domain_id,
-                    'service_id': service.service_id
+        # Check the record and 
+        if record_type == 'F1AB':
+            # Fetch Form 1A and B records where is_accepted is FALSE (3) and user_id matches
+            ovc_services = OVCServicesRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
+
+            for service in ovc_services:
+                event_data = {
+                    'ovc_cpims_id': service.event.ovc_cpims_id,
+                    'message': service.message,
+                    'date_of_event': service.event.date_of_event,
+                    'services': {
+                        'domain_id': service.domain_id,
+                        'service_id': service.service_id
+                    }
                 }
-            }
-            data.append(event_data)
+                data.append(event_data)
         
-    elif record_type == 'cpara':
-        # Fetch cpara records where is_accepted is FALSE (3)
-        ovc_mobile_events = OVCMobileEvent.objects.filter(is_accepted=3)
+        elif record_type == 'cpara':
+            # Fetch cpara records where is_accepted is FALSE (3) and user_id matches
+            ovc_mobile_events = OVCMobileEventRejected.objects.filter(is_accepted=3, user_id=request.user.id)
 
-        for event in ovc_mobile_events:
-            event_data = {
-                'ovc_cpims_id': event.ovc_cpims_id,
-                'message': event.message,
-                'date_of_event': event.date_of_event,
-                'is_accepted': event.is_accepted,
-                'questions': [],
-                'individual_questions': [],
-                'scores': [],
-            }
-
-            attributes = OVCMobileEventAttribute.objects.filter(event=event)
-
-            for attribute in attributes:
-                attribute_data = {
-                    'question_name': attribute.question_name,
-                    'answer_value': attribute.answer_value,
+            for event in ovc_mobile_events:
+                event_data = {
+                    'ovc_cpims_id': event.ovc_cpims_id,
+                    'message': event.message,
+                    'date_of_event': event.date_of_event,
+                    'questions': [],
+                    'individual_questions': [],
+                    'scores': [],
                 }
 
-                if attribute.question_name.startswith('question_'):
-                    event_data['questions'].append(attribute_data)
-                elif attribute.question_name.startswith('individual_question_'):
-                    event_data['individual_questions'].append(attribute_data)
-                elif attribute.question_name.startswith('score_'):
-                    event_data['scores'].append(attribute_data)
+                attributes = OVCMobileEventAttributeRejected.objects.filter(event=event)
 
-            # Remove prefixes from attribute names
-            event_data['questions'] = [{k.replace('question_', ''): v for k, v in q.items()} for q in event_data['questions']]
-            event_data['individual_questions'] = [{k.replace('individual_question_', ''): v for k, v in iq.items()} for iq in event_data['individual_questions']]
-            event_data['scores'] = [{k.replace('score_', ''): v for k, v in s.items()} for s in event_data['scores']]
+                for attribute in attributes:
+                    attribute_data = {
+                        'question_name': attribute.question_name,
+                        'answer_value': attribute.answer_value,
+                    }
 
-            data.append(event_data)
+                    if attribute.question_name.startswith('question_'):
+                        event_data['questions'].append(attribute_data)
+                    elif attribute.question_name.startswith('individual_question_'):
+                        event_data['individual_questions'].append(attribute_data)
+                    elif attribute.question_name.startswith('score_'):
+                        event_data['scores'].append(attribute_data)
+
+                # Remove prefixes from attribute names
+                event_data['questions'] = [{k.replace('question_', ''): v for k, v in q.items()} for q in event_data['questions']]
+                event_data['individual_questions'] = [{k.replace('individual_question_', ''): v for k, v in iq.items()} for iq in event_data['individual_questions']]
+                event_data['scores'] = [{k.replace('score_', ''): v for k, v in s.items()} for s in event_data['scores']]
+
+                data.append(event_data)
         
-    elif record_type == 'caseplan':
+        elif record_type == 'caseplan':
+            # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
+            case_plan_services = CasePlanTemplateServiceRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
 
-                # Fetch CasePlanTemplate records where is_accepted is FALSE (3)
-        case_plan_services = CasePlanTemplateService.objects.filter(is_accepted=3)
-
-        for service in case_plan_services:
-            event_data = {
-                'ovc_cpims_id': service.event.ovc_cpims_id,
-                'date_of_event': service.event.date_of_event,
-                'message': service.message,
-                'is_accepted': service.is_accepted,
-                'services': {
-                    'domain_id': service.domain_id,
-                    'service_id': service.service_id
+            for service in case_plan_services:
+                event_data = {
+                    'ovc_cpims_id': service.event.ovc_cpims_id,
+                    'date_of_event': service.event.date_of_event,
+                    'message': service.message,
+                    'services': {
+                        'domain_id': service.domain_id,
+                        'service_id': service.service_id
+                    }
                 }
-            }
-            data.append(event_data)
+                data.append(event_data)
 
+        else:
+            data = {'message': 'Unknown report type'}
 
-    else:
-
-        data = {'message': 'Unknown report type'}
-
-    return Response(data, status=status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
   
   
