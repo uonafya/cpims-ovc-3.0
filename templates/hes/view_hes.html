@@ -212,7 +212,12 @@
                          </tr>
                          <tr>
                              <td class="field">Loan Taken</td>
-                             <td>{{ hes_details.loan_taken }}</td>
+                             <td>{% if hes_details.loan_taken == 'AYES' %}
+                                Yes
+                            {% elif hes_details.loan_taken == 'ANNO' %}
+                                No
+                            {% endif %}
+                             </td>
                              <td class="field">Loan taken Amount</td>
                              <td>{{ hes_details.loan_taken_amount }}</td>
                              <td class="field">Date Loan Taken</td>
