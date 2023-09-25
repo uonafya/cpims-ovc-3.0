@@ -187,7 +187,7 @@ def update_cpara_is_accepted(request, event_id):
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
         if is_accepted == ApprovalStatus.FALSE.value:
-            # If is_accepted is set to False (3), create corresponding rejected records
+            # If is_accepted is set to False (3), create rejected records
             mobile_event_rejected = OVCMobileEventRejected.objects.create(
                 user_id=event.user_id,
                 ovc_cpims_id=event.ovc_cpims_id,
@@ -197,7 +197,7 @@ def update_cpara_is_accepted(request, event_id):
                 id=event.id   
             )
 
-            # Copy the event's attributes to rejected attributes
+            # Copy attributes to rejected attributes
 
             for attribute in attributes:
                 OVCMobileEventAttributeRejected.objects.create(
@@ -207,7 +207,14 @@ def update_cpara_is_accepted(request, event_id):
                     answer_value=attribute.answer_value
                 )
 
-        # Update the is_accepted field for the original event
+        # If cpara is approved
+        if is_accepted == ApprovalStatus.TRUE.value:
+            pass
+
+
+
+        
+        # Update is_accepted field main event
         for attribute in attributes:
             event.is_accepted = is_accepted
             event.save()
