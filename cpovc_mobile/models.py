@@ -51,7 +51,7 @@ class OVCMobileEventRejected(models.Model):
  # use for CPARA data       
 
 class OVCMobileEventAttributeRejected(models.Model):
-    event = models.ForeignKey(OVCMobileEvent, on_delete=models.CASCADE, to_field='id')
+    event = models.ForeignKey(OVCMobileEventRejected, on_delete=models.CASCADE, to_field='id')
     ovc_cpims_id_individual = models.CharField(max_length=255)
     question_name = models.CharField(max_length=255)
     answer_value = models.CharField(max_length=255)
