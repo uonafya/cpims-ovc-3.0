@@ -32,7 +32,7 @@ class ApprovalStatus(Enum):
 
 # Views for CPARA mobile
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def create_ovc_mobile_cpara_data(request):
     try:
         data = request.data
@@ -48,7 +48,7 @@ def create_ovc_mobile_cpara_data(request):
             ovc_cpims_id=data.get('ovc_cpims_id'),
             date_of_event=data.get('date_of_event'),
             is_accepted=is_accepted,
-            user_id = user_id
+            user_id=user_id
         )
 
         # Handle questions
@@ -68,10 +68,10 @@ def create_ovc_mobile_cpara_data(request):
         for ind_question in individual_questions:
             question_name = f"individual_question_{ind_question['question_code']}"
             answer_value = ind_question['answer_id']
+            individual_ovc_id = ind_question.get('ovc_cpims_id', data.get('ovc_cpims_id'))
             OVCMobileEventAttribute.objects.create(
                 event=event,
-                # Use individual ovc_cpims_id for individual question 
-                ovc_cpims_id_individual=ind_question.get('ovc_cpims_id', data.get('ovc_cpims_id')),  
+                ovc_cpims_id_individual=f"individual_ovc_id_{individual_ovc_id}",  # Add 'individual_ovc_id_' prefix
                 question_name=question_name,
                 answer_value=answer_value
             )
@@ -179,36 +179,38 @@ def get_one_ovc_mobile_cpara_data(request, event_id):
 def update_cpara_is_accepted(request, event_id):
     try:
         event = OVCMobileEvent.objects.get(pk=event_id)
+        attributes = OVCMobileEventAttribute.objects.filter(event=event)
         is_accepted = request.data.get('is_accepted')
+        
          # Check if the user is authenticated
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        user_id = request.user.id
-
         if is_accepted == ApprovalStatus.FALSE.value:
             # If is_accepted is set to False (3), create corresponding rejected records
-            OVCMobileEventRejected.objects.create(
+            mobile_event_rejected = OVCMobileEventRejected.objects.create(
                 user_id=event.user_id,
                 ovc_cpims_id=event.ovc_cpims_id,
                 date_of_event=event.date_of_event,
                 is_accepted=is_accepted,
-                message=request.data.get('message')  
+                message=request.data.get('message'),
+                id=event.id   
             )
 
             # Copy the event's attributes to rejected attributes
-            attributes = OVCMobileEventAttribute.objects.filter(event=event)
+
             for attribute in attributes:
                 OVCMobileEventAttributeRejected.objects.create(
-                    event=event,
+                    event=mobile_event_rejected,
                     ovc_cpims_id_individual=attribute.ovc_cpims_id_individual,
                     question_name=attribute.question_name,
                     answer_value=attribute.answer_value
                 )
 
         # Update the is_accepted field for the original event
-        event.is_accepted = is_accepted
-        event.save()
+        for attribute in attributes:
+            event.is_accepted = is_accepted
+            event.save()
 
         return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
     except OVCMobileEvent.DoesNotExist:
@@ -563,14 +565,32 @@ def get_all_unaccepted_records(request):
                 attribute_data = {
                     'question_name': attribute.question_name,
                     'answer_value': attribute.answer_value,
+                    'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,  # Keep 'ovc_cpims_id_individual' in the attribute data
                 }
 
                 if attribute.question_name.startswith('question_'):
-                    event_data['questions'].append(attribute_data)
+                    # Remove the 'question_' prefix
+                    question_code = attribute.question_name[len('question_'):]
+                    event_data['questions'].append({
+                        'question_code': question_code,
+                        'answer_id': attribute_data['answer_value'],
+                    })
                 elif attribute.question_name.startswith('individual_question_'):
-                    event_data['individual_questions'].append(attribute_data)
+                    # Remove the 'individual_question_' prefix
+                    question_code = attribute.question_name[len('individual_question_'):]
+                    individual_question = {
+                        'question_code': question_code,
+                        'answer_id': attribute_data['answer_value'],
+                    }
+                    # Add 'ovc_cpims_id' for individual questions (use the value from the attribute), removing the prefix
+                    ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
+                    if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
+                        ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
+                    individual_question['ovc_cpims_id'] = ovc_cpims_id_individual
+                    event_data['individual_questions'].append(individual_question)
                 elif attribute.question_name.startswith('score_'):
-                    key = attribute.question_name.replace('score_', '')
+                    # Remove the 'score_' prefix
+                    key = attribute.question_name[len('score_'):]
                     event_data['scores'][key] = attribute_data['answer_value']
 
             data.append(event_data)
@@ -599,6 +619,12 @@ def get_all_unaccepted_records(request):
                 'services': {
                     'domain_id': service_rejected.domain_id,
                     'service_id': service_rejected.service_id,
+                    'goal_id': service_rejected.goal_id,
+                    'priority_id':service_rejected.priority_id,
+                    'responsible_id':service_rejected.responsible_id,
+                    'results_id':service_rejected.results_id,
+                    'reason_id':service_rejected.reason_id,
+                    'completion_date':service_rejected.reason_id
                 },
             }
             data.append(event_data)
