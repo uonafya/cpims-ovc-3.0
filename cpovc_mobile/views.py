@@ -537,7 +537,7 @@ def delete_case_plan_event(request, event_id):
 @permission_classes([IsAuthenticated])
 def get_all_unaccepted_records(request):
     try:
-        # Initialize an empty list to store the result data
+
         data = []
 
         # Check if the user is authenticated
@@ -558,14 +558,14 @@ def get_all_unaccepted_records(request):
                 'scores': {},
             }
 
-            # Retrieve attributes related to the rejected event
+            # Retrieve  related rejected event
             attributes = OVCMobileEventAttributeRejected.objects.filter(event=rejected_event)
 
             for attribute in attributes:
                 attribute_data = {
                     'question_name': attribute.question_name,
                     'answer_value': attribute.answer_value,
-                    'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,  # Keep 'ovc_cpims_id_individual' in the attribute data
+                    'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,  
                 }
 
                 if attribute.question_name.startswith('question_'):
@@ -576,13 +576,13 @@ def get_all_unaccepted_records(request):
                         'answer_id': attribute_data['answer_value'],
                     })
                 elif attribute.question_name.startswith('individual_question_'):
-                    # Remove the 'individual_question_' prefix
+                    # Remove 'individual_question_' prefix
                     question_code = attribute.question_name[len('individual_question_'):]
                     individual_question = {
                         'question_code': question_code,
                         'answer_id': attribute_data['answer_value'],
                     }
-                    # Add 'ovc_cpims_id' for individual questions (use the value from the attribute), removing the prefix
+                    # Aremove the prefixes
                     ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
                     if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
                         ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
