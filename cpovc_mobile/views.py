@@ -24,6 +24,8 @@ from django.db.models import F, CharField, Value
 from django.db.models.functions import Concat
 from django.db.models import OuterRef, Subquery
 
+from cpovc_api.views import form_data
+
 
 class ApprovalStatus(Enum):
     NEUTRAL = auto() # stored as 1 in the DB
@@ -173,6 +175,60 @@ def get_one_ovc_mobile_cpara_data(request, event_id):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+def create_rejected_event(event, attributes, data):
+    is_accepted = data.get('is_accepted')
+    mobile_event_rejected = OVCMobileEventRejected.objects.create(
+        user_id=event.user_id,
+        ovc_cpims_id=event.ovc_cpims_id,
+        date_of_event=event.date_of_event,
+        is_accepted=is_accepted,
+        message=data.get('message'),
+        id=event.id
+    )
+
+    for attribute in attributes:
+        OVCMobileEventAttributeRejected.objects.create(
+            event=mobile_event_rejected,
+            ovc_cpims_id_individual=attribute.ovc_cpims_id_individual,
+            question_name=attribute.question_name,
+            answer_value=attribute.answer_value
+        )
+
+def create_form_payload(attributes, event):
+    form_payload = {
+        'ovc_cpims_id': event.ovc_cpims_id,
+        'date_of_event': event.date_of_event,
+        'questions': [],
+        'individual_questions': [],
+        'scores': {},
+    }
+
+    for attribute in attributes:
+        attribute_data = {
+            'question_name': attribute.question_name,
+            'answer_value': attribute.answer_value,
+        }
+
+        if attribute.question_name.startswith('question_'):
+            question_code = attribute.question_name[len('question_'):]
+            form_payload['questions'].append({
+                'question_code': question_code,
+                'answer_id': attribute_data['answer_value'],
+            })
+        elif attribute.question_name.startswith('individual_question_'):
+            question_code = attribute.question_name[len('individual_question_'):]
+            individual_question = {
+                'question_code': question_code,
+                'answer_id': attribute_data['answer_value'],
+                'ovc_cpims_id': attribute.ovc_cpims_id_individual,
+            }
+            form_payload['individual_questions'].append(individual_question)
+        elif attribute.question_name.startswith('score_'):
+            key = attribute.question_name[len('score_'):]
+            form_payload['scores'][key] = attribute_data['answer_value']
+
+    return form_payload
+
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
@@ -181,40 +237,30 @@ def update_cpara_is_accepted(request, event_id):
         event = OVCMobileEvent.objects.get(pk=event_id)
         attributes = OVCMobileEventAttribute.objects.filter(event=event)
         is_accepted = request.data.get('is_accepted')
-        
-         # Check if the user is authenticated
+
+        # Check if the user is authenticated
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
+        # If is_accepted is false recreate it in the rejected tables
         if is_accepted == ApprovalStatus.FALSE.value:
-            # If is_accepted is set to False (3), create rejected records
-            mobile_event_rejected = OVCMobileEventRejected.objects.create(
-                user_id=event.user_id,
-                ovc_cpims_id=event.ovc_cpims_id,
-                date_of_event=event.date_of_event,
-                is_accepted=is_accepted,
-                message=request.data.get('message'),
-                id=event.id   
-            )
+            create_rejected_event(event, attributes, request.data)
+         
+        # # If is_accepted is true push it to main DB    
+        # elif is_accepted == ApprovalStatus.TRUE.value:
+            
+        #     # create the payload
+        #     form_payload = create_form_payload(attributes, event)
+        #     request.data['form_payload'] = form_payload
 
-            # Copy attributes to rejected attributes
-
-            for attribute in attributes:
-                OVCMobileEventAttributeRejected.objects.create(
-                    event=mobile_event_rejected,
-                    ovc_cpims_id_individual=attribute.ovc_cpims_id_individual,
-                    question_name=attribute.question_name,
-                    answer_value=attribute.answer_value
-                )
-
-        # If cpara is approved
-        if is_accepted == ApprovalStatus.TRUE.value:
-            pass
+        #     form_id = 'CPR'
+            
+        #     print("payload",request)
+        #     response = form_data(request, form_id)
+        #     print("response",response)
 
 
-
-        
-        # Update is_accepted field main event
+        # Update is_accepted field for the main event
         for attribute in attributes:
             event.is_accepted = is_accepted
             event.save()
