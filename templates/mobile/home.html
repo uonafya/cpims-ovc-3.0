@@ -306,15 +306,15 @@ National
 
     function consolidatePost(btnID, approval_type, form){
         //$("#"+btnID).click(function(){
-            checked = []
-            var selectcedSelectOne = $("input[name=selectOne]")
+            checked = [btnID]
+            {% comment %} var selectcedSelectOne = $("input[name=selectOne]")
             for (j=0; j<selectcedSelectOne.length; j++){
                 id = selectcedSelectOne[j].id
                 if ($("input[id="+id+"]").prop('checked')){
                     selectcedSelectOne
                     checked.push(selectcedSelectOne[j].id)
                 }
-            }
+            } {% endcomment %}
             console.log({btnID, approval_type, checked})
             if(checked.length >0){
 
@@ -328,7 +328,10 @@ National
                 console.log({checked,datachecked})    
                 url = '{% url 'approvedata' %}'
                 // var resp = postData(url, jsondatachecked)
-                var resp = apicall(url, datachecked , "POST")
+                // var resp = apicall(url, datachecked , "POST")
+                id_actoniond = `#payload_${btnID}`
+                var payToPost = $(id_actoniond)
+                var resp = apiPost(JSON.stringify(payToPost))
                 console.log({resp})
 
                 //if(respStatus === 'success'){
@@ -336,7 +339,7 @@ National
                         var rowtr = $("#Dataapproval").DataTable().row("#"+check+"_tr").remove().draw();
                         console.log({check, rowtr})
                     })
-                    $("#selectAl")[0].checked = false
+                    
                     var msg = "Data "+ approval_type +" successful"
                     sendFeedback(msg, "primary")
                     
@@ -413,21 +416,16 @@ National
     function fetchDataApp(){
         chvs = $("#my-select").val()
         form = $("#my-select2").val()
-        child = $("#my-select1").val()
+        child = $("#my-select1").val()[0]
         comments = $("#app_comments").val()
         // table = $("#Dataapproval").DataTable()
 
         console.log({chvs, form, child})
         if(chvs.length>0 && form != "" && ( child != null)){
-            data_fetch = {
-                "chvs": chvs,
-                "form": form,
-                "child": child,
-                "comments": comments
-            }
+            
             let s_url
             if (form = 'cpt'){
-                s_url = '{% url 'get-one-cpt-record' 'child' %}'
+                s_url = '{% url 'get-one-cpt-record' 54 %}'
             }else if (form = 'cpr'){
                 s_url = '{% url 'fetch_data' %}'
             }
@@ -439,12 +437,9 @@ National
             }
             
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url:  s_url,
                 headers: {'X-CSRFToken': '{{ csrf_token }}'},
-                // contentType: "Application/json", ---> Do not use this
-                dataType: "json",
-                data: data_fetch,
             })
             .fail(function(message){
                 console.error({error_submit: message})
@@ -506,37 +501,62 @@ National
                 }else if(form === 'cpt' ){
                     var ta_trs = ""
                     for (dta in data){
-                        console.log({dta, data})
-                        $("#Dataapproval tbody").append(`<tr id="${data[dta].id}_tr" class="datarows">
+                        for (serv in data[dta].services ){
+                            console.log({dta, data})
+                            let cpt = data[dta]
+                            let service = cpt.services[serv]
+                            let payload  = JSON.stringify({
+                                "ovc_cpims_id": cpt.ovc_cpims_id,
+                                "date_of_event": cpt.date_of_event,
+                                "services": [
+                                  {
+                                    "domain_id": service.domain_id,
+                                    "service_id": service.service_id,
+                                    "goal_id": service.goal_id,
+                                    "gap_id": service.gap_id,
+                                    "priority_id": service.priority_id,
+                                    "responsible_id": service.responsible_id,
+                                    "results_id": service.results_id,
+                                    "reason_id": service.reason_id,
+                                    "completion_date": service.completion_date,
+                                  }]
+                            })
+                        $("#Dataapproval tbody").append(`<tr id="${service.id}_tr" class="datarows">
                                 <td style="width: 10%;" class="scheck">
-                                    <input id="${data[dta].id}" type="checkbox" name="selectOne">
+                                    {% comment %} <input id="${cpt.event_id}" type="checkbox" name="selectOne"> {% endcomment %}
                                 </td>
                                 <td style="width: 90%;" class="">
-                                    <p>Form: Case Plan Template : Child Name: <b style="color:red;">  ${data[dta].name} </b>| Date of event -${data[dta].date_of_event}</p>
+                                    <p>Form: Case Plan Template : Child OVC ID: <b style="color:red;">  ${cpt.ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
                                     <div class="row">
                                         <div class="col-md-10">
                                             <p>
-                                                 Domain:    ${data[dta].domain_id} |
-                                                 Service:    ${data[dta].service_id} |
-                                                 Goal:    ${data[dta].goal_id} |
-                                                 Gap:    ${data[dta].gap_id} |
-                                                 Priority:    ${data[dta].priority_id} |
+                                                 Domain:    ${service['domain_id']} |
+                                                 Service:    ${service['service_id']} |
+                                                 Goal:    ${service['goal_id']} |
+                                                 Gap:    ${service['gap_id']} |
+                                                 Priority:    ${service['priority_id']} |
                                             
-                                                 Responsible:    ${data[dta].responsible_id} |
-                                                 Results:    ${data[dta].results_id} |
-                                                 Reason:    ${data[dta].reason_id} |
-                                                 Completion Date:    ${data[dta].completion_date} |
+                                                 Responsible:    ${service['responsible_id']} |
+                                                 Results:    ${service['results_id']} |
+                                                 Reason:    ${service['reason_id']} |
+                                                 Completion Date:    ${service['completion_date']} |
                                             
                                             </p>
                                         </div>
                                         <div class="col-md-2" id="approvalbuttons">
-                                            <input onclick="consolidatePost(this.id, 'approve', 'cpt')" id="btnApprove" class="btn btn-primary m-5" type="button" value="Approve" />
-                                            <input onclick="consolidatePost(this.id, 'reject', 'cpt')" id="btnReject" class="btn btn-danger m-5" type="button" value="Reject" />
+                                            <input onclick="consolidatePost(this.id, 'approve', 'cpt')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'cpt')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                        </div>
+                                    </div>
+                                    <div class="row" hidden>
+                                        <div class="col-md-12">
+                                            <p id="payload_${service.id}">"${payload}"<p>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-                        `);                  
+                        `);  
+                        }                
                         
                     }
                     
@@ -595,6 +615,31 @@ National
             }
             sendFeedback(msg, "danger")
         }
+    }
+
+    function apiPost(payload){
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk1ODQ0ODI4LCJpYXQiOjE2OTU4NDEyMjgsImp0aSI6ImRhMjA1MTExYzk3OTQ0YWNiNWRkYzJlNTY1MDdlOTQ5IiwidXNlcl9pZCI6Mzk2Nn0.bXpQysxo717lUmEU3rBDDZinRxygCgg3HboFF7GCgT4");
+        myHeaders.append("X-CSRFToken", "{{ csrf_token }}");
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: payload,
+        redirect: 'follow'
+        };
+
+        fetch("/api/form/CPT/", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            console.log(result)
+            // var msg = "Data "+ approval_type +" successful"
+            var msg = result.details || "Successful"
+                    sendFeedback(msg, "primary")
+        
+        })
+        .catch(error => console.log('error', error));
     }
 
     // to output messages to the front end 
