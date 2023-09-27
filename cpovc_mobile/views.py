@@ -111,7 +111,7 @@ def get_all_ovc_mobile_cpara_data(request):
                 'is_accepted': event.is_accepted,
                 'questions': [],
                 'individual_questions': [],
-                'scores': [],
+                'scores': {},  # Initialize scores as a dictionary
             }
 
             attributes = OVCMobileEventAttribute.objects.filter(event=event)
@@ -120,22 +120,35 @@ def get_all_ovc_mobile_cpara_data(request):
                 attribute_data = {
                     'question_name': attribute.question_name,
                     'answer_value': attribute.answer_value,
+                    'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,
                 }
 
                 if attribute.question_name.startswith('question_'):
-                    event_data['questions'].append(attribute_data)
+                    # Remove the 'question_' prefix
+                    question_code = attribute.question_name[len('question_'):]
+                    event_data['questions'].append({
+                        'question_code': question_code,
+                        'answer_id': attribute_data['answer_value'],
+                    })
                 elif attribute.question_name.startswith('individual_question_'):
-                    event_data['individual_questions'].append(attribute_data)
+                    # Remove 'individual_question_' prefix
+                    question_code = attribute.question_name[len('individual_question_'):]
+                    individual_question = {
+                        'question_code': question_code,
+                        'answer_id': attribute_data['answer_value'],
+                    }
+                    # Remove the prefixes
+                    ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
+                    if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
+                        ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
+                    individual_question['ovc_cpims_id'] = ovc_cpims_id_individual
+                    event_data['individual_questions'].append(individual_question)
                 elif attribute.question_name.startswith('score_'):
-                    event_data['scores'].append(attribute_data)
+                    # Remove the 'score_' prefix
+                    key = attribute.question_name[len('score_'):]
+                    event_data['scores'][key] = attribute_data['answer_value']
 
             data.append(event_data)
-
-        # Remove prefixes from attribute names
-        for event_data in data:
-            event_data['questions'] = [{k.replace('question_', ''): v for k, v in q.items()} for q in event_data['questions']]
-            event_data['individual_questions'] = [{k.replace('individual_question_', ''): v for k, v in iq.items()} for iq in event_data['individual_questions']]
-            event_data['scores'] = [{k.replace('score_', ''): v for k, v in s.items()} for s in event_data['scores']]
 
         return Response(data, status=status.HTTP_200_OK)
     except Exception as e:
@@ -154,22 +167,25 @@ def get_one_ovc_mobile_cpara_data(request, event_id):
             'is_accepted': event.is_accepted
         }
 
+        # Create a new dictionary to store the modified keys and values
+        modified_event_data = {}
+
         for attribute in attributes:
             event_data[attribute.question_name] = attribute.answer_value
 
-        # Remove prefixes from attribute names
-        for key in event_data.keys():
+        # Remove prefixes from attribute names and store in the new dictionary
+        for key, value in event_data.items():
             if key.startswith('question_'):
                 new_key = key.replace('question_', '')
-                event_data[new_key] = event_data.pop(key)
+                modified_event_data[new_key] = value
             elif key.startswith('individual_question_'):
                 new_key = key.replace('individual_question_', '')
-                event_data[new_key] = event_data.pop(key)
+                modified_event_data[new_key] = value
             elif key.startswith('score_'):
                 new_key = key.replace('score_', '')
-                event_data[new_key] = event_data.pop(key)
+                modified_event_data[new_key] = value
 
-        return Response(event_data, status=status.HTTP_200_OK)
+        return Response(modified_event_data, status=status.HTTP_200_OK)
     except OVCMobileEvent.DoesNotExist:
         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
@@ -318,9 +334,14 @@ def create_ovc_event(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_all_ovc_events(request):
+def get_all_ovc_events(request, form_type):
     try:
-        events = OVCEvent.objects.all()
+        if form_type == 'f1A':
+            events = OVCEvent.objects.filter(form_type='f1A')
+        elif form_type == 'f1B':
+            events = OVCEvent.objects.filter(form_type='f1B')
+        else:
+            return Response({'error': 'Enter valid form type: f1A or f1B'}),
         data = []
 
         for event in events:
@@ -346,25 +367,37 @@ def get_all_ovc_events(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_ovc_event(request, event_id):
+def get_ovc_event(request, ovc_id):
     try:
-        event = OVCEvent.objects.get(pk=event_id)
-        services_data = OVCServices.objects.filter(event=event).values(
-            'domain_id', 'service_id', 'is_accepted'
-        )
-        event_data = {
-            'ovc_cpims_id': event.ovc_cpims_id,
-            'date_of_event': event.date_of_event,
-            'services': []
-        }
-
-        for service_data in services_data:
-            event_data['services'].append({
-                'domain_id': service_data['domain_id'],
-                'service_id': service_data['service_id'],
-                'is_accepted': service_data['is_accepted']
+        events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id).order_by('id')
+        services_data = OVCServices.objects.filter(event__in=events).values(
+            'domain_id', 'service_id', 'is_accepted','event_id'
+        ).order_by('-event_id')
+        event_list=[]
+        event_data = []
+        indx = 0
+        for event in events:
+            event_data.append( {
+                'ovc_cpims_id': event.ovc_cpims_id,
+                'date_of_event': event.date_of_event,
+                'event_id': event.id,
+                'services': [{
+                    'event_id': services_data[indx]['event_id'],
+                    'domain_id': services_data[indx]['domain_id'],
+                    'service_id': services_data[indx]['service_id'],
+                    'is_accepted': services_data[indx]['is_accepted']
+            }]
             })
+            indx = indx +1
 
+            # for service_data in services_data:
+            #     event_data['services'].append({
+            #         'domain_id': service_data['domain_id'],
+            #         'service_id': service_data['service_id'],
+            #         'is_accepted': service_data['is_accepted']
+            #     })
+            # event_list.append(event_data)
+        print("fffff",event_list)
         return Response(event_data, status=status.HTTP_200_OK)
     except OVCEvent.DoesNotExist:
         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -506,9 +539,9 @@ def get_all_case_plans(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_one_case_plan(request, event_id):
+def get_one_case_plan(request, ovc_id):
     try:
-        event = CasePlanTemplateEvent.objects.get(id=event_id)
+        event = CasePlanTemplateEvent.objects.get(ovc_cpims_id=ovc_id)
         services = CasePlanTemplateService.objects.filter(event=event)
 
         event_data = {
@@ -773,11 +806,8 @@ def unaccepted_records(request):
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
   
-  
-  
+ 
 # Front end validation login
-
-
 
 @login_required
 def mobile_home(request):
