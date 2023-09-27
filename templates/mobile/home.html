@@ -34,7 +34,7 @@
     }
 
     tr td div {
-        display: inline-block;
+        {% comment %} display: inline-block; {% endcomment %}
     }
     table {
         color: black;
@@ -117,7 +117,7 @@ National
 					<h4 class="panel-title">Forms Approval</h4>
 				</div>
 				<div class="panel-body">
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-md-1"></div>
                         <div class="col-md-6">
                             <label>Comments</label><br>
@@ -128,8 +128,8 @@ National
                         <div class="col-md-4" id="approvalbuttons">
                             <input onclick="consolidatePost(this.id, 'approve')" id="btnApprove" class="btn btn-primary m-5" type="button" value="Approve" />
                             <input onclick="consolidatePost(this.id, 'reject')" id="btnReject" class="btn btn-danger m-5" type="button" value="Reject" />
-                        </div>
-                    </div>
+                        </div> 
+                    </div>   -->
                     <div class="row">
                         <div class="col-md-2">                        
                         </div>
@@ -146,7 +146,7 @@ National
                                 <thead>
                                     <tr>
                                         <td style="width: 10%;">
-                                            <input id="selectAl" type="checkbox" name="selectAll"><label class="m-5"> Select All</label>
+                                            <!-- <input id="selectAl" type="checkbox" name="selectAll"><label class="m-5"> Select All</label> -->
                                         </td>
                                         <td style="width: 90%;">Data</td>
                                     </tr>
@@ -304,7 +304,7 @@ National
         return response
     }
 
-    function consolidatePost(btnID, approval_type){
+    function consolidatePost(btnID, approval_type, form){
         //$("#"+btnID).click(function(){
             checked = []
             var selectcedSelectOne = $("input[name=selectOne]")
@@ -320,7 +320,9 @@ National
 
                 datachecked = {
                     "data": checked,
-                    "type": approval_type
+                    "type": approval_type,
+                    "form": form,
+                    "is_accepted": null
                 }
                 jsondatachecked = JSON.stringify(datachecked)
                 console.log({checked,datachecked})    
@@ -423,10 +425,22 @@ National
                 "child": child,
                 "comments": comments
             }
+            let s_url
+            if (form = 'cpt'){
+                s_url = '{% url 'get-one-cpt-record' 'child' %}'
+            }else if (form = 'cpr'){
+                s_url = '{% url 'fetch_data' %}'
+            }
+            else if (form = 'form1a'){
+                s_url = '{% url 'fetch_data' %}'
+            }
+            else if (form = 'form1b'){
+                s_url = '{% url 'fetch_data' %}'
+            }
             
             $.ajax({
                 type: "POST",
-                url:  '{% url 'fetch_data' %}',
+                url:  s_url,
                 headers: {'X-CSRFToken': '{{ csrf_token }}'},
                 // contentType: "Application/json", ---> Do not use this
                 dataType: "json",
@@ -448,14 +462,17 @@ National
                                 <input id="${data[dta].id}" type="checkbox" name="selectOne">
                             </td>
                             <td style="width: 90%;" class="">
-                                <p>Form: ${form} : Child Name: <b style="color:red;">  ${data[dta].name} </b>| Date of event -${data[dta].date_of_event}</p>
-                                <p>
-                                    
-                                    <div class="col-mod-2"> Domain:    ${data[dta].domain_id} | </div>
-                                    <div class="col-mod-2"> Service:    ${data[dta].service_id} | </div>
-                                    <div class="col-mod-2"> Message:    ${data[dta].message} | </div>
-                  
-                                </p <br>
+                               <div class="row">
+                                <div class="col-md-4">
+                                    Newton
+                                </div>
+                                <div class="col-md-4">
+                                    Boniface
+                                </div>
+                                <div class="col-md-4">
+                                    Jane
+                                </div>
+                               </div>
 
                             </td>
                             </tr>
@@ -464,7 +481,7 @@ National
                     }
                     
                            
-                }else if(form === 'form1a' ){
+                }else if(form === 'form1b' ){
                     var ta_trs = ""
                     for (dta in data){
                         console.log({dta, data})
@@ -473,7 +490,7 @@ National
                                 <input id="${data[dta].id}" type="checkbox" name="selectOne">
                             </td>
                             <td style="width: 90%;" class="">
-                                <p>Form: ${form} : Child Name: <b style="color:red;">  ${data[dta].name} </b>| Date of event -${data[dta].date_of_event}</p>
+                                <p>Form: Form 1B : Child Name: <b style="color:red;">  ${data[dta].name} </b>| Date of event -${data[dta].date_of_event}</p>
                                 <p>
                                     <div class="col-mod-2"> Domain:    ${data[dta].domain_id} | </div>
                                     <div class="col-mod-2"> Service:    ${data[dta].service_id} | </div>
@@ -495,21 +512,28 @@ National
                                     <input id="${data[dta].id}" type="checkbox" name="selectOne">
                                 </td>
                                 <td style="width: 90%;" class="">
-                                    <p>Form: ${form} : Child Name: <b style="color:red;">  ${data[dta].name} </b>| Date of event -${data[dta].date_of_event}</p>
-                                    <p>
-                                        <div class="col-mod-2"> Domain:    ${data[dta].domain_id} | </div>
-                                        <div class="col-mod-2"> Service:    ${data[dta].service_id} | </div>
-                                        <div class="col-mod-2"> Goal:    ${data[dta].goal_id} | </div>
-                                        <div class="col-mod-2"> Gap:    ${data[dta].gap_id} | </div>
-                                        <div class="col-mod-2"> Priority:    ${data[dta].priority_id} | </div>
-                                    </p <br>
-                                    <p>
-                                        <div class="col-mod-2"> Responsible:    ${data[dta].responsible_id} | </div>
-                                        <div class="col-mod-2"> Results:    ${data[dta].results_id} | </div>
-                                        <div class="col-mod-2"> Reason:    ${data[dta].reason_id} | </div>
-                                        <div class="col-mod-2"> Completion Date:    ${data[dta].completion_date} | </div>
-                                        <div class="col-mod-2"></div>
-                                    </p
+                                    <p>Form: Case Plan Template : Child Name: <b style="color:red;">  ${data[dta].name} </b>| Date of event -${data[dta].date_of_event}</p>
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <p>
+                                                 Domain:    ${data[dta].domain_id} |
+                                                 Service:    ${data[dta].service_id} |
+                                                 Goal:    ${data[dta].goal_id} |
+                                                 Gap:    ${data[dta].gap_id} |
+                                                 Priority:    ${data[dta].priority_id} |
+                                            
+                                                 Responsible:    ${data[dta].responsible_id} |
+                                                 Results:    ${data[dta].results_id} |
+                                                 Reason:    ${data[dta].reason_id} |
+                                                 Completion Date:    ${data[dta].completion_date} |
+                                            
+                                            </p>
+                                        </div>
+                                        <div class="col-md-2" id="approvalbuttons">
+                                            <input onclick="consolidatePost(this.id, 'approve', 'cpt')" id="btnApprove" class="btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'cpt')" id="btnReject" class="btn btn-danger m-5" type="button" value="Reject" />
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         `);                  
@@ -522,13 +546,13 @@ National
                     var ta_trs = ""
                     for (dta in data){
                         console.log({dta, data})
-                        alert('jane')
+                        // alert('jane')
                         $("#Dataapproval tbody").append(`<tr id="${data[dta].id}_tr" class="datarows">
                                 <td style="width: 10%;" class="scheck">
                                     <input id="${data[dta].id}" type="checkbox" name="selectOne">
                                 </td>
                                 <td style="width: 90%;" class="">
-                                    <p> <b>${form}</b> - ${data[dta].name}</p>
+                                    <p> <b>CPARA</b> - ${data[dta].name}</p>
                                     Scores <br>
                                     <p>
                                         <div class="col-mod-2"> Benchmark 1:    ${data[dta].b1} | </div>
@@ -541,7 +565,12 @@ National
                                         <div class="col-mod-2"> Benchmark 7:    ${data[dta].b7} | </div>
                                         <div class="col-mod-2"> Benchmark 8:    ${data[dta].b8} | </div>
                                         <div class="col-mod-2"> Benchmark 9:    ${data[dta].b9} | </div>
-                                        <div class="col-mod-2"></div>
+                                        <div class="col-mod-2">
+                                            <div class="col-md-2" id="approvalbuttons">
+                                                <input onclick="consolidatePost(this.id, 'approve', 'cpt', ${data[dta].id})" id="btnApprove" class="btn btn-primary m-5" type="button" value="Approve" />
+                                                <input onclick="consolidatePost(this.id, 'reject', 'cpt', ${data[dta].id})" id="btnReject" class="btn btn-danger m-5" type="button" value="Reject" />
+                                            </div>
+                                        </div>
                                     </p
                                 </td>
                             </tr>

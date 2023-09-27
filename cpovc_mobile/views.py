@@ -22,6 +22,9 @@ from django.db.models import F, CharField, Value
 from django.db.models.functions import Concat
 from django.db.models import OuterRef, Subquery
 
+import requests
+import json
+
 
 class ApprovalStatus(Enum):
     NEUTRAL = auto() # stored as 1 in the DB
@@ -637,7 +640,60 @@ def mobile_home(request):
 def mobiledataapproval(request):
     if request.method == "POST":
         data = request.POST
-        print(f">>>>>approval data{data.getlist('data[]')} {data.get('type')}")
+        if(data):
+            app_type = data.get('type')
+            app_data = data.get('data[]')
+            app_form = data.get('form')
+            print(f">>>>>approval data{app_type} {app_data}, {app_form} {data}")
+
+            if app_form == 'cpr':
+                if app_type == "approve":
+                    pass
+                elif app_type == 'reject':
+                    pass
+            if app_form == 'cpt':
+                if app_type == "approve":
+                    acccepted = CasePlanTemplateService.objects.get(id=app_data)
+                    acce_event = CasePlanTemplateEvent.objects.get(id = acccepted.event_id)
+                    acccepted.is_accepted = 2
+                    acccepted.save()
+                    cpims_id = acce_event.ovc_cpims_id
+                    date_of_event = acce_event.date_of_event
+                    payload = {
+                        "ovc_cpims_id": cpims_id,
+                        "date_of_event": date_of_event,
+                        "services": [
+                            {
+                                "domain_id": acccepted.domain_id,
+                                "service_id": acccepted.service_id,
+                                "goal_id": acccepted.goal_id,
+                                "gap_id": acccepted.gap_id,
+                                "priority_id": acccepted.priority_id,
+                                "responsible_id": acccepted.responsible_id,
+                                "results_id": acccepted.results_id,
+                                "reason_id": acccepted.reason_id,
+                                "completion_date": acccepted.completion_date
+                            }
+                        ]} 
+                    payload = json.dumps(payload,  sort_keys=True, default=str)                   
+                    apiCall(payload, "CPT")
+                    
+                elif app_type == 'reject':
+                    rejected = CasePlanTemplateService.objects.get(id=app_data)
+                    rejected.is_accepted = 3
+                    rejected.save()
+                    
+
+            if app_form == 'form1a':
+                if app_type == "approve":
+                    pass
+                elif app_type == 'reject':
+                    pass
+            if app_form == 'form1b':
+                if app_type == "approve":
+                    pass
+                elif app_type == 'reject':
+                    pass
         # Do something with the data, e.g., save to a database
 
         approval_type = data.get('type')
@@ -672,7 +728,7 @@ def fetchData(request):
     if request.method == "POST":
         data = request.POST
         # Do something with the data, e.g., save to a database
-
+        print(request.POST)
         form_sel = request.POST.get('form')
         chv_sel = request.POST.getlist('chvs[]')
         child_sel = request.POST.getlist('child[]')
@@ -754,4 +810,60 @@ def fetchData(request):
         return JsonResponse(formdata, safe=False)
     else:
         return JsonResponse({"error": "Invalid request method."}, safe=False)
+
+
+def apiCall(payload, form_id):
+    print(">>>>>>>>>")
+    url = "http://127.0.0.1:8000/api/form/CPT/"
+
+    payload = json.dumps(payload)
+    # payload = json.dumps({
+    # "ovc_cpims_id": "54",
+    # "date_of_event": "2023-06-13",
+    # "services": [
+    #     {
+    #     "domain_id": "Justo",
+    #     "service_id": [
+    #         "CPTS2e",
+    #         "CP96SC"
+    #     ],
+    #     "goal_id": "CPTG1sc",
+    #     "gap_id": "CPTG6e",
+    #     "priority_id": "CPTG5p",
+    #     "responsible_id": [
+    #         "CGH",
+    #         "NGO"
+    #     ],
+    #     "results_id": "",
+    #     "reason_id": "",
+    #     "completion_date": "2023-07-13"
+    #     },
+    #     {
+    #     "domain_id": "Mugah",
+    #     "service_id": [
+    #         "CPTS2e",
+    #         "CP96SC"
+    #     ],
+    #     "goal_id": "CPTG1sc",
+    #     "gap_id": "CPTG6e",
+    #     "priority_id": "CPTG5p",
+    #     "responsible_id": [
+    #         "CGH",
+    #         "NGO"
+    #     ],
+    #     "results_id": "",
+    #     "reason_id": "",
+    #     "completion_date": "2023-07-13"
+    #     }
+    # ]
+    # })
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Basic dGVzdDoxMjM0NTZAQWI='
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    print(response.text)
+    print("<<<<<<<<<<<<")
     
