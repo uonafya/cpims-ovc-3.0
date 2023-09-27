@@ -66,6 +66,7 @@ class OVCEvent(models.Model):
     user_id = models.IntegerField()
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
+    form_type = models.CharField(max_length=255)
 
     class Meta:
         db_table = 'f1ab_mobile_event'
@@ -91,6 +92,7 @@ class OVCEventRejected(models.Model):
     user_id = models.IntegerField()
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
+    form_type = models.CharField(max_length=255)
 
     class Meta:
         db_table = 'f1ab_mobile_event_rejected'
