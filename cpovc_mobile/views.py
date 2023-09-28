@@ -156,36 +156,64 @@ def get_all_ovc_mobile_cpara_data(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_one_ovc_mobile_cpara_data(request, event_id):
+def get_one_ovc_mobile_cpara_data(request, ovc_id):
     try:
-        event = OVCMobileEvent.objects.get(pk=event_id)
-        attributes = OVCMobileEventAttribute.objects.filter(event=event)
-        event_data = {
-            'id': event.id,
-            'ovc_cpims_id': event.ovc_cpims_id,
-            'date_of_event': event.date_of_event,
-            'is_accepted': event.is_accepted
-        }
+        data = []
 
-        # Create a new dictionary to store the modified keys and values
-        modified_event_data = {}
+        # Check if the user is authenticated
+        if not request.user.is_authenticated:
+            return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        for attribute in attributes:
-            event_data[attribute.question_name] = attribute.answer_value
+        # Fetch by ovc id
+        events = OVCMobileEvent.objects.filter(ovc_cpims_id=ovc_id)
 
-        # Remove prefixes from attribute names and store in the new dictionary
-        for key, value in event_data.items():
-            if key.startswith('question_'):
-                new_key = key.replace('question_', '')
-                modified_event_data[new_key] = value
-            elif key.startswith('individual_question_'):
-                new_key = key.replace('individual_question_', '')
-                modified_event_data[new_key] = value
-            elif key.startswith('score_'):
-                new_key = key.replace('score_', '')
-                modified_event_data[new_key] = value
+        for event in events:
+            event_data = {
+                'ovc_cpims_id': event.ovc_cpims_id,
+                'date_of_event': event.date_of_event,
+                'questions': [],
+                'individual_questions': [],
+                'scores': {},
+            }
 
-        return Response(modified_event_data, status=status.HTTP_200_OK)
+            # Retrieve  event attributes
+            attributes = OVCMobileEventAttribute.objects.filter(event__in=events)
+
+            for attribute in attributes:
+                attribute_data = {
+                    'question_name': attribute.question_name,
+                    'answer_value': attribute.answer_value,
+                    'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,  
+                }
+
+                if attribute.question_name.startswith('question_'):
+                    # Remove the 'question_' prefix
+                    question_code = attribute.question_name[len('question_'):]
+                    event_data['questions'].append({
+                        'question_code': question_code,
+                        'answer_id': attribute_data['answer_value'],
+                    })
+                elif attribute.question_name.startswith('individual_question_'):
+                    # Remove 'individual_question_' prefix
+                    question_code = attribute.question_name[len('individual_question_'):]
+                    individual_question = {
+                        'question_code': question_code,
+                        'answer_id': attribute_data['answer_value'],
+                    }
+                    # Aremove the prefixes
+                    ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
+                    if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
+                        ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
+                    individual_question['ovc_cpims_id'] = ovc_cpims_id_individual
+                    event_data['individual_questions'].append(individual_question)
+                elif attribute.question_name.startswith('score_'):
+                    # Remove the 'score_' prefix
+                    key = attribute.question_name[len('score_'):]
+                    event_data['scores'][key] = attribute_data['answer_value']
+
+            data.append(event_data)
+
+        return Response(data, status=status.HTTP_200_OK)
     except OVCMobileEvent.DoesNotExist:
         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
