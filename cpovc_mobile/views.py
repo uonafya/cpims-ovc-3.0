@@ -336,9 +336,9 @@ def create_ovc_event(request):
 @permission_classes([IsAuthenticated])
 def get_all_ovc_events(request, form_type):
     try:
-        if form_type == 'f1A':
+        if form_type == 'F1A':
             events = OVCEvent.objects.filter(form_type='f1A')
-        elif form_type == 'f1B':
+        elif form_type == 'F1B':
             events = OVCEvent.objects.filter(form_type='f1B')
         else:
             return Response({'error': 'Enter valid form type: f1A or f1B'}),
@@ -367,42 +367,46 @@ def get_all_ovc_events(request, form_type):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_ovc_event(request, ovc_id):
+def get_ovc_event(request, ovc_id, form_type):
+    # import pdb
+    # pdb.set_trace()
     try:
-        events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id).order_by('id')
-        services_data = OVCServices.objects.filter(event__in=events).values(
-            'domain_id', 'service_id', 'is_accepted','event_id'
-        ).order_by('-event_id')
-        event_list=[]
+        print(ovc_id)
+        print(form_type)
+        if form_type == 'F1A':
+            events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id, form_type=form_type).order_by('id')
+            services_data = OVCServices.objects.filter(event__in=events).values(
+                'domain_id', 'service_id', 'is_accepted', 'event_id'
+            ).order_by('event_id')
+        elif form_type == 'F1B':
+            events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id, form_type=form_type).order_by('id')
+            services_data = OVCServices.objects.filter(event__in=events).values(
+                'domain_id', 'service_id', 'is_accepted', 'event_id'
+            ).order_by('event_id')
+        else:
+            return Response({'error': 'Enter a valid form type: F1A or F1B'})
+
         event_data = []
-        indx = 0
-        for event in events:
-            event_data.append( {
+        for event, service in zip(events, services_data):
+            event_dict = {
                 'ovc_cpims_id': event.ovc_cpims_id,
                 'date_of_event': event.date_of_event,
                 'event_id': event.id,
                 'services': [{
-                    'event_id': services_data[indx]['event_id'],
-                    'domain_id': services_data[indx]['domain_id'],
-                    'service_id': services_data[indx]['service_id'],
-                    'is_accepted': services_data[indx]['is_accepted']
-            }]
-            })
-            indx = indx +1
+                    'event_id': service['event_id'],
+                    'domain_id': service['domain_id'],
+                    'service_id': service['service_id'],
+                    'is_accepted': service['is_accepted']
+                }]
+            }
+            event_data.append(event_dict)
 
-            # for service_data in services_data:
-            #     event_data['services'].append({
-            #         'domain_id': service_data['domain_id'],
-            #         'service_id': service_data['service_id'],
-            #         'is_accepted': service_data['is_accepted']
-            #     })
-            # event_list.append(event_data)
-        print("fffff",event_list)
         return Response(event_data, status=status.HTTP_200_OK)
     except OVCEvent.DoesNotExist:
         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
