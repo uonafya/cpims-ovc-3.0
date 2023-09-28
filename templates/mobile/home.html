@@ -425,14 +425,16 @@ National
             
             let s_url
             if (form = 'cpt'){
-                s_url = '{% url 'get-one-cpt-record' 54 %}'
-            }else if (form = 'cpr'){
+                // s_url = '{% url 'get-one-cpt-record' 54 %}'
+                s_url = `cpt/${child}`
+            }
+            if (form = 'cpr'){
+                s_url = `cpara/${child}`
+            }
+            if (form = 'form1a'){
                 s_url = '{% url 'fetch_data' %}'
             }
-            else if (form = 'form1a'){
-                s_url = '{% url 'fetch_data' %}'
-            }
-            else if (form = 'form1b'){
+            if (form = 'form1b'){
                 s_url = '{% url 'fetch_data' %}'
             }
             
