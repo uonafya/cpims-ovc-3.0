@@ -8,14 +8,14 @@ urlpatterns = [
     #  cpara urls
     path('cpara', views.create_ovc_mobile_cpara_data, name='create-ovc-mobile-data'),
     path('cpara/all/', views.get_all_ovc_mobile_cpara_data, name='get-ovc-mobile-data-list'),
-    re_path(r'^cpara/(?P<event_id>[^/]+)/$', views.get_one_ovc_mobile_cpara_data, name='get-ovc-mobile-data'),
+    re_path(r'^cpara/(?P<ovc_id>[^/]+)/$', views.get_one_ovc_mobile_cpara_data, name='get-ovc-mobile-data'),
     re_path(r'^cpara/update/(?P<event_id>[^/]+)$', views.update_cpara_is_accepted, name='delete-ovc-mobile-event'),
     re_path(r'^cpara/delete/(?P<event_id>[^/]+)$', views.delete_ovc_mobile_event, name='delete-ovc-mobile-event'),
     
     # Form 1A and B urls
     path('form/', views.create_ovc_event, name='create-form-record'),
     path('forms/<str:form_type>/', views.get_all_ovc_events, name='get-all-form-records'),
-    re_path(r'^forms/(?P<ovc_id>[^/]+)/$', views.get_ovc_event, name='get-one-form-record'),
+    re_path(r'^forms/(?P<form_type>[^/]+)/(?P<ovc_id>[^/]+)$', views.get_ovc_event, name='get-one-form-record'),
     re_path(r'^forms/update/(?P<event_id>[^/]+)$', views.update_is_accepted, name='update-one-form-record'),
     re_path(r'^forms/delete/(?P<event_id>[^/]+)$', views.delete_ovc_event, name='delete-one-form-record'),
     
