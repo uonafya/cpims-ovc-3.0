@@ -370,25 +370,25 @@ def get_all_ovc_events(request, form_type):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_ovc_event(request, ovc_id, form_type):
+def get_ovc_event(request,form_type, ovc_id):
+    ovc_id = int(ovc_id)
     # import pdb
     # pdb.set_trace()
     try:
         print(ovc_id)
         print(form_type)
-        if form_type == 'F1A':
+        if form_type:
+            all = OVCEvent.objects.all()
             events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id, form_type=form_type).order_by('id')
             services_data = OVCServices.objects.filter(event__in=events).values(
                 'domain_id', 'service_id', 'is_accepted', 'event_id'
             ).order_by('event_id')
-        elif form_type == 'F1B':
-            events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id, form_type=form_type).order_by('id')
-            services_data = OVCServices.objects.filter(event__in=events).values(
-                'domain_id', 'service_id', 'is_accepted', 'event_id'
-            ).order_by('event_id')
+            # breakpoint()
         else:
             return Response({'error': 'Enter a valid form type: F1A or F1B'})
-
+        print(events)
+        print(services_data)
+        print(all.values()[0])
         event_data = []
         for event, service in zip(events, services_data):
             event_dict = {
@@ -403,7 +403,7 @@ def get_ovc_event(request, ovc_id, form_type):
                 }]
             }
             event_data.append(event_dict)
-
+            print(event_data)
         return Response(event_data, status=status.HTTP_200_OK)
     except OVCEvent.DoesNotExist:
         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
