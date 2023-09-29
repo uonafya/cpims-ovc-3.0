@@ -307,32 +307,28 @@ National
     function consolidatePost(btnID, approval_type, form){
         //$("#"+btnID).click(function(){
             checked = [btnID]
-            {% comment %} var selectcedSelectOne = $("input[name=selectOne]")
-            for (j=0; j<selectcedSelectOne.length; j++){
-                id = selectcedSelectOne[j].id
-                if ($("input[id="+id+"]").prop('checked')){
-                    selectcedSelectOne
-                    checked.push(selectcedSelectOne[j].id)
-                }
-            } {% endcomment %}
-            console.log({btnID, approval_type, checked})
-            if(checked.length >0){
 
-                datachecked = {
-                    "data": checked,
-                    "type": approval_type,
-                    "form": form,
-                    "is_accepted": null
-                }
+            console.log({btnID, approval_type, checked})
+
+            let datachecked = {
+                "type": approval_type,
+                "form": form,
+                "data": btnID
+            }
+            if(checked.length >0 ){
+
                 jsondatachecked = JSON.stringify(datachecked)
                 console.log({checked,datachecked})    
                 url = '{% url 'approvedata' %}'
-                // var resp = postData(url, jsondatachecked)
+                
                 // var resp = apicall(url, datachecked , "POST")
                 id_actoniond = `#payload_${btnID}`
-                var payToPost = $(id_actoniond)
-                var resp = apiPost(JSON.stringify(payToPost))
-                console.log({resp})
+                var payToPost = $(id_actoniond).text()
+                if (approval_type === 'approve'){
+                    var resp = apiPost(JSON.stringify(payToPost), form)
+                    console.log({resp})
+                }
+                postData(url, jsondatachecked)
 
                 //if(respStatus === 'success'){
                     checked.forEach((check) => {
@@ -350,6 +346,7 @@ National
             }else {
                 var msg = "No record has been selected"
                 sendFeedback(msg, "danger")
+                
                 
             }
                 
@@ -463,7 +460,8 @@ National
                                 "date_of_event": cpt.date_of_event,
                                 "services": [
                                   {
-           
+                                    "domain_id": service.domain_id,
+                                    "service_id": service.service_id
                                   }]
                             })
                         $("#Dataapproval tbody").append(`<tr id="${service.id}_tr" class="datarows">
@@ -484,8 +482,8 @@ National
                                             </p>
                                         </div>
                                         <div class="col-md-2" id="approvalbuttons">
-                                            <input onclick="consolidatePost(this.id, 'approve', 'cpt')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
-                                            <input onclick="consolidatePost(this.id, 'reject', 'cpt')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                            <input onclick="consolidatePost(this.id, 'approve', 'F1A')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'F1A')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
                                         </div>
                                     </div>
                                     <div class="row" hidden>
@@ -514,7 +512,8 @@ National
                                 "date_of_event": cpt.date_of_event,
                                 "services": [
                                   {
-                       
+                                    "domain_id": service.domain_id,
+                                    "service_id": service.service_id
                                   }]
                             })
                         $("#Dataapproval tbody").append(`<tr id="${service.id}_tr" class="datarows">
@@ -536,8 +535,8 @@ National
                                             </p>
                                         </div>
                                         <div class="col-md-2" id="approvalbuttons">
-                                            <input onclick="consolidatePost(this.id, 'approve', 'cpt')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
-                                            <input onclick="consolidatePost(this.id, 'reject', 'cpt')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                            <input onclick="consolidatePost(this.id, 'approve', 'F1B')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'F1B')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
                                         </div>
                                     </div>
                                     <div class="row" hidden>
@@ -597,8 +596,8 @@ National
                                             </p>
                                         </div>
                                         <div class="col-md-2" id="approvalbuttons">
-                                            <input onclick="consolidatePost(this.id, 'approve', 'cpt')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
-                                            <input onclick="consolidatePost(this.id, 'reject', 'cpt')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                            <input onclick="consolidatePost(this.id, 'approve', 'CPT')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'CPT')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
                                         </div>
                                     </div>
                                     <div class="row" hidden>
@@ -640,8 +639,8 @@ National
                                         <div class="col-mod-2"> Benchmark 9:    ${data[dta].b9} | </div>
                                         <div class="col-mod-2">
                                             <div class="col-md-2" id="approvalbuttons">
-                                                <input onclick="consolidatePost(this.id, 'approve', 'cpt', ${data[dta].id})" id="btnApprove" class="btn btn-primary m-5" type="button" value="Approve" />
-                                                <input onclick="consolidatePost(this.id, 'reject', 'cpt', ${data[dta].id})" id="btnReject" class="btn btn-danger m-5" type="button" value="Reject" />
+                                                <input onclick="consolidatePost(this.id, 'approve', 'CPR', ${data[dta].id})" id="btnApprove" class="btn btn-primary m-5" type="button" value="Approve" />
+                                                <input onclick="consolidatePost(this.id, 'reject', 'CPR', ${data[dta].id})" id="btnReject" class="btn btn-danger m-5" type="button" value="Reject" />
                                             </div>
                                         </div>
                                     </p
@@ -670,7 +669,7 @@ National
         }
     }
 
-    function apiPost(payload){
+    function apiPost(payload, form_id){
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk1ODQ0ODI4LCJpYXQiOjE2OTU4NDEyMjgsImp0aSI6ImRhMjA1MTExYzk3OTQ0YWNiNWRkYzJlNTY1MDdlOTQ5IiwidXNlcl9pZCI6Mzk2Nn0.bXpQysxo717lUmEU3rBDDZinRxygCgg3HboFF7GCgT4");
@@ -683,7 +682,9 @@ National
         redirect: 'follow'
         };
 
-        fetch("/api/form/CPT/", requestOptions)
+        url = `/api/form/${form_id}/`
+
+        fetch(url, requestOptions)
         .then(response => response.text())
         .then(result => {
             console.log(result)
