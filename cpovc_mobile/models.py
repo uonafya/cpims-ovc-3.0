@@ -100,7 +100,7 @@ class OVCEventRejected(models.Model):
 
 # use for Form1A and B
 class OVCServicesRejected(models.Model):
-    event = models.ForeignKey(OVCEvent, on_delete=models.CASCADE, to_field='id')
+    event = models.ForeignKey(OVCEventRejected, on_delete=models.CASCADE, to_field='id')
     unique_service_id = models.UUIDField(editable=False)
     domain_id = models.CharField(max_length=10)
     service_id = models.CharField(max_length=10)
@@ -160,7 +160,7 @@ class CasePlanTemplateEventRejected(models.Model):
 class CasePlanTemplateServiceRejected(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     message = models.TextField(null=True)
-    event = models.ForeignKey(CasePlanTemplateEvent, on_delete=models.CASCADE)
+    event = models.ForeignKey(CasePlanTemplateEventRejected, on_delete=models.CASCADE)
     domain_id = models.CharField(max_length=255)
     service_id = models.CharField(max_length=255)
     goal_id = models.CharField(max_length=255)
