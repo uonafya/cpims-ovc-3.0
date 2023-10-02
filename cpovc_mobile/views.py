@@ -1,4 +1,5 @@
 from datetime import datetime
+import uuid
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
@@ -333,6 +334,22 @@ def delete_ovc_mobile_event(request, event_id):
 @permission_classes([IsAuthenticated])
 def create_ovc_event(request):
     try:
+ 
+        # Check if the user is authenticated
+        if not request.user.is_authenticated:
+            return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        
+        user_id = request.user.id
+        form_type = request.GET.get('form_type')
+        
+        if form_type == 'F1A':
+            form_type = form_type
+        elif form_type == 'F1B':
+            form_type = form_type
+        else:
+            return Response({'message': 'Invalid form type,(F1A,F1B)'})
+        
         data = request.data
         # Check if the user is authenticated
         if not request.user.is_authenticated:
@@ -343,6 +360,8 @@ def create_ovc_event(request):
         event = OVCEvent.objects.create(
             ovc_cpims_id=data.get('ovc_cpims_id'),
             date_of_event=data.get('date_of_event'),
+            form_type=form_type,
+            user_id=user_id
 
         )
 
@@ -353,7 +372,8 @@ def create_ovc_event(request):
                 domain_id=service_data['domain_id'],
                 service_id=service_data['service_id'],
                 is_accepted=ApprovalStatus.NEUTRAL.value,
-                user_id = user_id
+                unique_service_id=uuid.uuid4()
+
             )
 
         return Response({'message': 'Data stored successfully'}, status=status.HTTP_201_CREATED)
@@ -758,11 +778,11 @@ def get_all_unaccepted_records(request):
 @permission_classes([IsAuthenticated])
 def unaccepted_records(request):
     try:
-        record_type = request.GET.get('record_type')
+        form_type = request.GET.get('form_type')
         data = []
 
         # Check the record and 
-        if record_type == 'F1AB':
+        if form_type == 'F1AB':
             # Fetch Form 1A and B records where is_accepted is FALSE (3) and user_id matches
             ovc_services = OVCServicesRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
 
@@ -778,7 +798,7 @@ def unaccepted_records(request):
                 }
                 data.append(event_data)
         
-        elif record_type == 'cpara':
+        elif form_type == 'cpara':
 
             # Fetch cpara records where is_accepted is FALSE (3) and user_id matches
             events = OVCMobileEventRejected.objects.filter(is_accepted=3, user_id=request.user.id)
@@ -829,7 +849,7 @@ def unaccepted_records(request):
 
                 data.append(event_data)
         
-        elif record_type == 'caseplan':
+        elif form_type == 'caseplan':
             # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
             case_plan_services = CasePlanTemplateServiceRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
 
