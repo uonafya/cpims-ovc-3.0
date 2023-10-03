@@ -286,6 +286,9 @@ def ovc_registration(request, ovc_id, edit=0):
         bcert_no = request.POST.get('bcert_no')
         ncpwd_no = request.POST.get('ncpwd_no')
         dreams_id = request.POST.get('dreams_id')
+        nemis_id = request.POST.get('nemis_id')
+        nupi_id = request.POST.get('nupi_id')
+        birth_not_id = request.POST.get('birth_not_id')
         ext_ids = {}
         if bcert_no:
             ext_ids['ISOV'] = bcert_no
@@ -293,6 +296,12 @@ def ovc_registration(request, ovc_id, edit=0):
             ext_ids['IPWD'] = ncpwd_no
         if dreams_id:
             ext_ids['IDRM'] = dreams_id
+        if nemis_id:
+            ext_ids['INEM'] = nemis_id
+        if nupi_id:
+            ext_ids['INUPI'] = nupi_id
+        if birth_not_id:
+            ext_ids['IBCN'] = birth_not_id
         if ext_ids:
             save_person_extids(ext_ids, ovc_id)
 
@@ -303,14 +312,13 @@ def ovc_registration(request, ovc_id, edit=0):
         caretaker = request.POST.get('caretaker')
         school_level = request.POST.get('school_level')
         # is_exited = request.POST.get('is_exited')
-        # exit_reason = request.POST.get('exit_reason')
+        exit_reason = request.POST.get('exit_reason')
         criterias = request.POST.getlist('eligibility')
         current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        # exit_date = request.POST.get('exit_date')
         ovc_detail = get_object_or_404(OVCRegistration, person_id=ovc_id)
         is_active = ovc_detail.is_active
-        exit_reason = ovc_detail.exit_reason
-        # is_exited = False if ovc_detail.is_active else True
-        exit_date = request.POST.get('exit_date')
+        exit_date = ovc_detail.exit_date
         # HIV status update only if unknown
         ovc_dob = ovc_detail.person.date_of_birth
         if edit == 0:

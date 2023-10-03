@@ -50,7 +50,7 @@ National
     {% if request.session.reg_ovc %}
     <div class="row">
 		<!-- begin col-3 -->
-		<div class="col-md-3 col-sm-4">
+		<div class="col-md-3 col-sm-3">
 			<div class="widget widget-stats bg-green">
 				<div class="stats-icon"><i class="fa fa-child"></i></div>
 				<div class="stats-info">
@@ -65,12 +65,12 @@ National
 		</div>
 		<!-- end col-3 -->
 		<!-- begin col-3 -->
-		<div class="col-md-2 col-sm-3">
+		<div class="col-md-3 col-sm-3">
 			<div class="widget widget-stats bg-blue">
 				<div class="stats-icon"><i class="fa fa-users"></i></div>
 				<div class="stats-info">
-					<h4 id="rpt_2">CAREGIVERS / GUARDIANS</h4>
-					<p>{{ ovc.guardians }}</p>
+					<h4 id="rpt_2">CAREGIVERS &amp; GUARDIANS (ACTIVE / EVER)</h4>
+					<p>{{ ovc.guardians }} / {{ ovc.guardians_all }}</p>
 				</div>
 				<div class="stats-link">
 					<a href="#" class="dash_details" id="dt_2">View Detail <i class="fa fa-arrow-circle-o-right"></i></a>
@@ -79,7 +79,7 @@ National
 		</div>
 		<!-- end col-3 -->
 		<!-- begin col-3 -->
-		<div class="col-md-2 col-sm-3">
+		<div class="col-md-2 col-sm-2">
 			<div class="widget widget-stats bg-purple">
 				<div class="stats-icon"><i class="fa fa-user"></i></div>
 				<div class="stats-info">
@@ -93,7 +93,7 @@ National
 		</div>
 		<!-- end col-3 -->
 		<!-- begin col-3 -->
-		<div class="col-md-2 col-sm-3">
+		<div class="col-md-2 col-sm-2">
 			<div class="widget widget-stats bg-aqua">
 				<div class="stats-icon"><i class="fa fa-institution"></i></div>
 				<div class="stats-info">
@@ -107,7 +107,7 @@ National
 		</div>
 		<!-- end col-3 -->
 		<!-- begin col-3 -->
-		<div class="col-md-3 col-sm-4">
+		<div class="col-md-2 col-sm-2">
 			<div class="widget widget-stats bg-red">
 				<div class="stats-icon"><i class="fa fa-chain-broken"></i></div>
 				<div class="stats-info">

@@ -1,7 +1,6 @@
 import datetime
 from django.db import connection
 import collections
-import html
 
 from cpovc_main.models import SetupGeography
 from cpovc_registry.models import RegOrgUnit
@@ -15,7 +14,7 @@ from .charts import (
     population_pyramid_chart, sparkline_chart, stacked_bar_chart,
     stacked_column_chart, column_chart_2, column_compare_chart,
     pie_chart, basic_bar_chart, table_chart, scatter_chart,
-    column_category_chart, column_comparison_chart)
+    column_category_chart, column_comparison_chart, bar_category_chart)
 
 from .models import IPInfo
 from cpovc_ovc.models import OVCRegistration
@@ -187,6 +186,8 @@ def get_chart_data(request, rid, county_id, const_id,
             resp = column_category_chart(request, params, data)
         elif ctts['ctype'] == 'table':
             resp = table_chart(request, params, data)
+        elif ctts['ctype'] == 'bar_category':
+            resp = bar_category_chart(request, params, data)
         elif ctts['ctype'] == 'column_comparison':
             resp = column_comparison_chart(request, params, data)
         else:

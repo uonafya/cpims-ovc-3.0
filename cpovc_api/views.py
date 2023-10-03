@@ -3,9 +3,9 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from cpovc_ovc.models import OVCRegistration, OVCHealth
+from cpovc_ovc.models import OVCRegistration, OVCHealth,OVCHouseHold
 from cpovc_registry.models import RegPersonsGeo, RegPersonsExternalIds
-from cpovc_forms.models import OVCCareEvents, OVCCareServices
+from cpovc_forms.models import OVCCareEvents, OVCCareServices,OVCCareCasePlan,OVCCareCpara,OVCCareF1B
 
 from cpovc_main.functions import get_dict
 from cpovc_main.models import SetupList
@@ -47,6 +47,26 @@ def dashboard(request):
             user_id = request.query_params.get('user_id')
             print(user_id)
         results['details'] = msg
+                
+        #  add data to be fetched for mobile dashboard
+        results['filled_cpara'] = OVCCareCpara.objects.values('cpara_id').count()
+        results['filled_f1B'] = OVCCareF1B.objects.values('form_id').count()
+        results['filled_f1A'] = OVCCareServices.objects.values('service_id'.count)
+        results['filled_caseplan'] = OVCCareCasePlan.objects.values('case_plan_id').count()
+        results['total_households'] = OVCHouseHold.objects.values('id').count()
+        results['total_ovc'] = OVCRegistration.objects.values('id').count()
+        results['total_clhiv'] = OVCRegistration.objects.filter(hiv_status='HSTP').count()
+        
+        # new results format 
+        '''
+        results = {"active": 132294, "ever_registered": 307005,
+                   "caregivers": 171142, "workforce": 487,
+                   "other_org_units": 36, "households": 154,
+                   "org_unit": "USAID 4TheChild", "org_unit_id": 7226
+                   "filled_cpara:123","filled_f1B":123,"filled_F1A":123,
+                   "filled_caseplan":123,"total_households":123,
+                   "total_ovc":123,total_clhiv:123}
+        '''
     except Exception as e:
         msg = 'Error getting Partner details - %s' % (str(e))
         return Response({'details': msg})

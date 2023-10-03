@@ -6,6 +6,8 @@ from cpovc_main.functions import get_org_units_list
 
 from .functions import create_year_list, get_clusters
 
+from .parameters import ORPTS
+
 
 all_list = get_all_geo_list()
 county_list = get_geo_list(all_list, 'GPRV', 'Please Select County')
@@ -32,7 +34,7 @@ report_vars = (('', 'Select Variable'), (1, 'Organisation Unit'),
 inst_vars = (('', 'Select Type'),
              ('TNCI', 'Charitable Children Institution'),
              ('TNSI', 'Statutory Institution'))
-
+'''
 usg_reports = (('', 'Select Report'), (1, 'DATIM'),
                (2, 'Services by Domain (PEPFAR Summary)'),
                (3, 'Key Performance Indicator'),
@@ -48,6 +50,13 @@ usg_reports = (('', 'Select Report'), (1, 'DATIM'),
                (13, 'Master List'),
                (14, 'List of OVC Assessed'),
                (15, 'Priority List'))
+'''
+usg_reports = (('', 'Select Report'),
+               (16, 'CaseLoad'))
+usgs = []
+for orp in ORPTS:
+    usgs.append((int(orp), ORPTS[orp]))
+usg_reports = sorted(tuple(usgs), key=lambda x: x[0])
 report_period = ()
 
 YEAR_CHOICES = create_year_list()

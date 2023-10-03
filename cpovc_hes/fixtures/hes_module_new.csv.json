@@ -1,0 +1,453 @@
+[
+
+    {
+        "pk": 39602,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "field_name": "employment_id",
+            "item_id": "EMP",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Employed",
+            "sms_keyword": false,
+            "item_description": "Employed",
+            "item_category": "EMPLOYMENT_STATUS"
+        }
+    },
+       {
+        "pk": 39603,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "user_configurable": false,
+            "field_name": "employment_id",
+            "item_id": "UEMP",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Unemployed",
+            "sms_keyword": false,
+            "item_description": "Unemployed",
+            "item_category": "EMPLOYMENT_STATUS"
+        }
+    },
+    {
+        "pk": 39604,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "field_name": "employment_type_id",
+            "item_id": "CASE",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Casual",
+            "sms_keyword": false,
+            "item_description": "Casual",
+            "item_category": "EMPLOYMENT_TYPE"
+        }
+    },
+    {
+        "pk": 39605,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "user_configurable": false,
+            "field_name": "employment_type_id",
+            "item_id": "BUSE",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Business",
+            "sms_keyword": false,
+            "item_description": "Business",
+            "item_category": "EMPLOYMENT_TYPE"
+        }
+    },
+    {
+        "pk": 39606,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "field_name": "health_scheme_id",
+            "item_id": "SCMC",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "County Health Scheme",
+            "sms_keyword": false,
+            "item_description": "County Health Scheme",
+            "item_category": "HEALTH_SCHEME"
+        }
+    },
+        {
+        "pk": 39607,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "user_configurable": false,
+            "field_name": "health_scheme_id",
+            "item_id": "SCMN",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "NHIF",
+            "sms_keyword": false,
+            "item_description": "NHIF",
+            "item_category": "HEALTH_SCHEME"
+        }
+    },
+     {
+        "pk": 39608,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "user_configurable": false,
+            "field_name": "health_scheme_id",
+            "item_id": "SCMU",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Universal Health Coverage",
+            "sms_keyword": false,
+            "item_description": "Universal Health Coverage",
+            "item_category": "HEALTH_SCHEME"
+        }
+    },
+    {
+        "pk": 39609,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "field_name": "safety_net_id",
+            "item_id": "SNCO",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "CT OVC",
+            "sms_keyword": false,
+            "item_description": "CT OVC",
+            "item_category": "SAFETY_NETS"
+        }
+    },
+     {
+        "pk": 39610,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "user_configurable": false,
+            "field_name": "safety_net_id",
+            "item_id": "SNEL",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "CT Elderly",
+            "sms_keyword": false,
+            "item_description": "CT Elderly",
+            "item_category": "SAFETY_NETS"
+        }
+    },
+    {
+        "pk": 39611,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "user_configurable": false,
+            "field_name": "safety_net_id",
+            "item_id": "SDIS",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "CT Disability",
+            "sms_keyword": false,
+            "item_description": "CT Disability",
+            "item_category": "SAFETY_NETS"
+        }
+    },
+
+    {
+        "pk": 39612,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "field_name": "sector_id",
+            "item_id": "NAGR",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Non Agriculture",
+            "sms_keyword": false,
+            "item_description": "Non Agriculture",
+            "item_category": "SECTOR"
+        }
+    },
+    {
+        "pk": 39613,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "field_name": "financial_institution_id",
+            "item_id": "BNK",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Bank",
+            "sms_keyword": false,
+            "item_description": "'Bank",
+            "item_category": "FINANCIAL_INSTITUTION_TYPE"
+        }
+    },
+     {
+        "pk": 39614,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "user_configurable": false,
+            "field_name": "financial_institution_id",
+            "item_id": "MFI",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "MFI",
+            "sms_keyword": false,
+            "item_description": "MFI",
+            "item_category": "FINANCIAL_INSTITUTION_TYPE"
+        }
+    },
+     {
+        "pk": 39615,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "user_configurable": false,
+            "field_name": "financial_institution_id",
+            "item_id": "SACC",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "SACCO",
+            "sms_keyword": false,
+            "item_description": "SACCO",
+            "item_category": "FINANCIAL_INSTITUTION_TYPE"
+        }
+    },
+    {
+        "pk": 39616,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "user_configurable": false,
+            "field_name": "financial_institution_id",
+            "item_id": "VSLA",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "VSLA",
+            "sms_keyword": false,
+            "item_description": "VSLA",
+            "item_category": "FINANCIAL_INSTITUTION_TYPE"
+        }
+    },
+    {
+        "pk": 39617,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "field_name": "asset_type_id",
+            "item_id": "ABUS",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Business Asset",
+            "sms_keyword": false,
+            "item_description": "Business Asset",
+            "item_category": "TYPE_OF_ASSETS"
+        }
+    },
+       {
+        "pk": 39618,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "user_configurable": false,
+            "field_name": "asset_type_id",
+            "item_id": "AAGR",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Agriculture assets",
+            "sms_keyword": false,
+            "item_description": "Agriculture assets",
+            "item_category": "TYPE_OF_ASSETS"
+        }
+    },
+    {
+        "pk": 39619,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "field_name": "use_of_ect_id",
+            "item_id": "ECTT",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Transport to facility",
+            "sms_keyword": false,
+            "item_description": "Transport to facility",
+            "item_category": "USE_OF_ECT"
+        }
+    },
+     {
+        "pk": 39620,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "user_configurable": false,
+            "field_name": "use_of_ect_id",
+            "item_id": "ECTF",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Food",
+            "sms_keyword": false,
+            "item_description": "Food",
+            "item_category": "USE_OF_ECT"
+        }
+    },
+     {
+        "pk": 39621,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "user_configurable": false,
+            "field_name": "use_of_ect_id",
+            "item_id": "ECTM",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Medication",
+            "sms_keyword": false,
+            "item_description": "Medication",
+            "item_category": "USE_OF_ECT"
+        }
+    },
+     {
+        "pk": 39622,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "user_configurable": false,
+            "field_name": "use_of_ect_id",
+            "item_id": "ECTB",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Setting up a business",
+            "sms_keyword": false,
+            "item_description": "Setting up a business",
+            "item_category": "USE_OF_ECT"
+        }
+    },
+    {
+        "pk": 39623,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "user_configurable": false,
+            "field_name": "use_of_ect_id",
+            "item_id": "ECTN",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": " NHIF",
+            "sms_keyword": false,
+            "item_description": " NHIF",
+            "item_category": "USE_OF_ECT"
+        }
+    },
+    {
+        "pk": 39624,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "field_name": "loan_utilization_id",
+            "item_id": "LOAB",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Business",
+            "sms_keyword": false,
+            "item_description": "Business",
+            "item_category": "LOAN_UTILIZATION"
+        }
+    },
+    {
+        "pk": 39625,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "user_configurable": false,
+            "field_name": "loan_utilization_id",
+            "item_id": "LOAF",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "School Fees",
+            "sms_keyword": false,
+            "item_description": "School Fees",
+            "item_category": "LOAN_UTILIZATION"
+        }
+    },
+    {
+        "pk": 39626,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "user_configurable": false,
+            "field_name": "loan_utilization_id",
+            "item_id": "LOFO",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Food",
+            "sms_keyword": false,
+            "item_description": "Food",
+            "item_category": "LOAN_UTILIZATION"
+        }
+    },
+    {
+        "pk": 39627,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "user_configurable": false,
+            "field_name": "loan_utilization_id",
+            "item_id": "LOAN",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "NONE",
+            "sms_keyword": false,
+            "item_description": "NONE",
+            "item_category": "LOAN_UTILIZATION"
+        }
+    },
+
+    {
+        "pk": 39628,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "field_name": "sector_id",
+            "item_id": "SAGR",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": " Agriculture",
+            "sms_keyword": false,
+            "item_description": "Agriculture",
+            "item_category": "SECTOR"
+        }
+    },
+         {
+        "pk": 39629,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "user_configurable": false,
+            "field_name": "health_scheme_id",
+            "item_id": "SCSC",
+            "is_void": false,
+            "item_sub_category": "",
+            "item_description_short": "Special Schemes",
+            "sms_keyword": false,
+            "item_description": "Special Schemes",
+            "item_category": "HEALTH_SCHEME"
+        }
+    }
+]

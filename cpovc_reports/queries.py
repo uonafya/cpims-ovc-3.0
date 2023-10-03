@@ -44,7 +44,7 @@ REPORTS[36] = 'active_beneficiary'
 REPORTS[37] = 'benchmark_v1'
 REPORTS[38] = 'graduation'
 REPORTS[39] = 'hei'
-REPORTS[40] ='exit_without_graduation'
+REPORTS[40] = 'case_load'
 # Other
 REPORTS[51] = 'datim'
 REPORTS[52] = 'pepfar'
@@ -4342,4 +4342,9 @@ FROM vw_cpims_treatment
 AND (vw_cpims_treatment.exit_status = 'ACTIVE' 
  AND vw_cpims_treatment.registration_date <= '31-mar-2019')
 GROUP BY CBO, ward, County,AgeRange,ward_id,countyid,Gender,vw_cpims_treatment.linked
+'''
+
+
+QUERIES['case_load'] = '''
+select * from vw_cpims_reg_active WHERE cbo_id in ({cbos})
 '''

@@ -79,7 +79,8 @@ class MyUserAdmin(UserAdmin):
     actions = [dump_to_csv]
 
     list_display = ['username', 'sex', 'surname', 'first_name', 'last_name',
-                    'email', 'timestamp_created', 'last_login', 'is_active']
+                    'user_email', 'timestamp_created',
+                    'last_login', 'is_active']
 
     search_fields = ['username']
     readonly_fields = ['reg_person']

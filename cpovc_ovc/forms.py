@@ -338,6 +338,41 @@ class OVCRegistrationForm(forms.Form):
                    'data-parsley-required': "true",
                    'id': 'hiv_statuss'}))
 
+    # July 2023
+    birth_not_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Birth Notification Number'),
+                   'class': 'form-control',
+                   'id': 'birth_not_id'}))
+
+    nemis_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('NEMIS Number'),
+                   'class': 'form-control',
+                   'id': 'nemis_id'}))
+
+    is_dreams_enrolled = forms.CharField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={'class': 'form-control',
+                   'id': 'is_dreams_enrolled'}))
+
+    dreams_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('DREAMS ID'),
+                   'class': 'form-control',
+                   'id': 'dreams_id'}))
+
+    nupi_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('NUPI Number'),
+                   'class': 'form-control',
+                   'id': 'nupi_id'}))
+
 
 class OVCExtraInfoForm(forms.Form):
     """OVC Extra Information form."""
