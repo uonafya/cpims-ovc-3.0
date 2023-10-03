@@ -11467,14 +11467,14 @@ def delete_cpara(request, id, btn_event_pk):
 def grad_monitor_tool(request, id):
     if request.method == 'POST':
         data = request.POST
-        # print(data)
-
+        print(data)
+        breakpoint()
         child = RegPerson.objects.get(id=id)       
         house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
         caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
         caregiver = RegPerson.objects.get(id=caregiver_id)
  
-        event_date = convert_date(data.get('gm1d'))
+        event_date = data.get('gm1d')
         event_type_id = 'obm'
         time_saved = timezone.now()
 
@@ -11497,7 +11497,8 @@ def grad_monitor_tool(request, id):
 
         answer_value = {
             'AYES': True,
-            'ANNO': False
+            'ANNO': False,
+            '':False
         }
         try:
             OVCBenchmarkMonitoring.objects.create(
@@ -11514,8 +11515,8 @@ def grad_monitor_tool(request, id):
                 benchmark7=answer_value[data.get('cm8q')],
                 benchmark8=answer_value[data.get('cm9q')],
                 benchmark9=answer_value[data.get('cm10q')],
-                succesful_exit_checked =answer_value[data.get('cm13q')],
-                case_closure_checked=answer_value[data.get('cm14q')],
+                succesful_exit_checked =answer_value[data.get('cm13q')] if data.get('cm13q') else False,
+                case_closure_checked=answer_value[data.get('cm14q')] if data.get('cm14q') else False,
                 event_date=event_date,
                 event=ovccareevent,
                 timestamp_created=time_saved
@@ -11523,10 +11524,10 @@ def grad_monitor_tool(request, id):
 
         except Exception as e:
             error_message = 'error saving graduation monitoring tool - %s' % (str(e))
-            messages.add_message(request, messages.INFO, error_message)
+            messages.add_message(request, messages.ERROR, error_message)
 
-        msg = 'Graduation Monitoring saved successful'
-        messages.add_message(request, messages.INFO, msg)
+        # msg = 'Graduation Monitoring saved successful'
+        # messages.add_message(request, messages.INFO, msg)
         url = reverse('ovc_view', kwargs={'id': id})
         return HttpResponseRedirect(url)        
 
@@ -11542,16 +11543,25 @@ def grad_monitor_tool(request, id):
             
             # Show previous cpara monitoring events
             event = OVCCareEvents.objects.filter(person_id=ovc_id).values_list('event')
+            today = datetime.now().date()
+
+            today_less90 = today - timedelta(days=90)
             
             try:
                 
-                benchmark_data = OVCBenchmarkMonitoring.objects.filter(
-                is_void=False, household=house_hold)   #filter(event=event).order_by('event_date'))
+                benchmark_data = OVCBenchmarkMonitoring.objects.filter(is_void=False, household=house_hold, event_date__range=[today_less90, today]).order_by('-event_date')
+                hhrcpa = benchmark_data.filter(form_type = 'hhrcpa').count()
+                hhcrpa_last = benchmark_data.filter(form_type = 'hhrcpa').first()
+                bm_last = benchmark_data.filter(form_type = 'bm').first()
+                last_score_hh = hhcrpa_last.benchmark1+hhcrpa_last.benchmark2+hhcrpa_last.benchmark3+hhcrpa_last.benchmark4+hhcrpa_last.benchmark5+hhcrpa_last.benchmark6+hhcrpa_last.benchmark7+hhcrpa_last.benchmark8+hhcrpa_last.benchmark9
+                bm_last_score = bm_last.benchmark1+bm_last.benchmark2+bm_last.benchmark3+bm_last.benchmark4+bm_last.benchmark5+bm_last.benchmark6+bm_last.benchmark7+bm_last.benchmark8+bm_last.benchmark9
+                
             except Exception as e:
                 benchmark_data = {}
                 print(e)
             
             form = gradMonitoringToolform()
+            print(f'{last_score_hh} , {hhrcpa} bm_lastscore {bm_last_score}')
                  
             context = {
                 'form': form, 
@@ -11560,7 +11570,10 @@ def grad_monitor_tool(request, id):
                 'child':child,
                 'ovc_id':ovc_id,
                 'caregiver':caregiver,
-                'benchmark_data': benchmark_data
+                'benchmark_data': benchmark_data,
+                "hh_count": hhrcpa,
+                "last_score": last_score_hh,
+                "bm_last": bm_last_score
                 }
             
             return render(request, 'forms/new_grad_monitor_tool.html',context)
@@ -11670,17 +11683,17 @@ def edit_grad_monitor(request, id):
     caregiver = RegPerson.objects.get(id=caregiver_id)
     form_type = OVCBenchmarkMonitoring.objects.filter(obm_id=id,is_void=False).values_list()[0][3]
     
-    if form_type == 'bm':
-        form_type = 'Benchmark Monitoring'
-    else:
-        form_type = 'Households Reaching Case Plan Achievement'
+    # if form_type == 'bm':
+    #     form_type = 'Benchmark Monitoring'
+    # else:
+    #     form_type = 'Households Reaching Case Plan Achievement'
     
     context = {'form':form,
             'status': 200,
             'care_giver': care_giver,
             'creg':creg,
             'caregiver':caregiver,
-            'form_type':form_type
+            'form_type':form_type,
                     }
         
     return render(request, 'forms/edit_grad_monitor_tool.html', context)

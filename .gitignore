@@ -4,8 +4,8 @@ reports
 cpims/settings.py
 .pyc
 __pycache__
+.history/*
+.history
 venv
-
 .history
 .history/*
-

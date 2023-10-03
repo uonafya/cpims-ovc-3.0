@@ -193,20 +193,22 @@
                                 </div>
                     
                     <br/>
-                    <hr style="border-color: darkgrey; border-width: 5px;"/>
-                    <div class="form-group">
-                                    <label class="col-md-9 control-label semi-bold">Household is still ready to successfully exit (Case plan achievement):<span class="asteriskField">*</label>
-                                    <div class="col-md-3">
-                                        {{ form.cm13q }}
-                                    </div>
+                          
+                    <div class="grad_control">
+                        <hr style="border-color: darkgrey; border-width: 5px;"/>
+                        <div class="form-group">
+                            <label class="col-md-9 control-label semi-bold">Household is still ready to successfully exit (Case plan achievement):<span class="asteriskField">*</label>
+                                <div class="col-md-3">
+                                    {{ form.cm13q }}
                                 </div>
-                <div class="form-group">
-                                    <label class="col-md-9 control-label semi-bold">Case determined ready for closure:<span class="asteriskField">*</label>
-                                    <div class="col-md-3">
-                                        {{ form.cm14q }}
-                                    </div>
-                                </div>
-                   
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-9 control-label semi-bold">Case determined ready for closure:<span class="asteriskField">*</label>
+                            <div class="col-md-3">
+                                {{ form.cm14q }}
+                            </div>
+                        </div>
+                    </div>
 
 					<div class="panel-body panel-form">
 						<div class="form-group">
@@ -240,6 +242,7 @@
                                         <th>Q 2</th>
                                         <th>Q 3</th>
                                         <th>Q 1</th>
+                                        <th>Score</th>
                                         <th>Date of Event</th>
                                         <th>Case Plan Achievement</th>
                                         <th>Ready fo closure</th>
@@ -251,18 +254,24 @@
                         {%   if row %}
                             <tr>
                             <td>{{ row.form_type }}</td>
-                            <td>{{ row.benchmark1 }}</td>
-                            <td>{{ row.benchmark2 }}</td>
-                            <td>{{ row.benchmark3 }}</td>
-                            <td>{{ row.benchmark4 }}</td>
-                            <td>{{ row.benchmark5 }}</td>
-                            <td>{{ row.benchmark6 }}</td>
-                            <td>{{ row.benchmark7 }}</td>
-                            <td>{{ row.benchmark8 }}</td>
-                            <td>{{ row.benchmark9 }}</td>
+                            <td>{%   if row.benchmark1 == True %} 1 {%else%} 0 {%endif%}</td>
+                            <td>{%   if row.benchmark2 == True %} 1 {%else%} 0 {%endif%}</td>
+                            <td>{%   if row.benchmark3 == True %} 1 {%else%} 0 {%endif%}</td>
+                            <td>{%   if row.benchmark4 == True %} 1 {%else%} 0 {%endif%}</td>
+                            <td>{%   if row.benchmark5 == True %} 1 {%else%} 0 {%endif%}</td>
+                            <td>{%   if row.benchmark6 == True %} 1 {%else%} 0 {%endif%}</td>
+                            <td>{%   if row.benchmark7 == True %} 1 {%else%} 0 {%endif%}</td>
+                            <td>{%   if row.benchmark8 == True %} 1 {%else%} 0 {%endif%}</td>
+                            <td>{%   if row.benchmark9 == True %} 1 {%else%} 0 {%endif%}</td>
+                            <td>{{row.benchmark1|add:row.benchmark2|add:row.benchmark3|add:row.benchmark4|add:row.benchmark5|add:row.benchmark6|add:row.benchmark7|add:row.benchmark8|add:row.benchmark9}}</td>
                             <td>{{ row.event_date }}</td>
-                            <td>{{ row.succesful_exit_checked }}</td>
-                            <td>{{ row.case_closure_checked }}</td>
+                            {%if row.form_type == 'bm' %}
+                                <td> N/A </td>
+                                <td> N/A </td>
+                            {%else%}
+                                <td>{{ row.succesful_exit_checked }}</td>
+                                <td>{{ row.case_closure_checked }}</td>
+                            {% endif %}
                             <td>
                                 <a href="{% url 'edit_grad_monitor' row.obm_id %}"><button type="button" class="btn btn-block btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
                             </td>
@@ -304,10 +313,75 @@
 <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
 
+
+
+<script>
 jQuery(document).ready(function() 
 {
 	$('html,body').scrollTop(0);
 	FormWizardValidation.init();
+
+    $('#monitoring_date').datepicker({ format: 'yyyy-mm-dd' }).val();
+
+
+
 });
 </script>
+
+ {% if hh_count %} 
+    {% if last_score == 9 %}
+    <script>
+        var hhrcpa_score = 9
+        console.log({ace: 9})
+    </script>
+    {%else%}
+        <script>
+            var hhrcpa_score = 0
+        </script>
+    {%endif%}
+{% else %}
+    <script>
+        var hhrcpa_score = 0
+        console.log({ace: 0})
+    </script>
+{% endif %}  
+
+{% if bm_last != 9%}
+    <script>
+        $('#id_form1_type label:eq(1)').hide()
+        $("#id_form1_type_1").hide()
+        $('.grad_control').hide()
+    </script>
+{%else%}
+    <script>
+        $('#id_form1_type label:eq(1)').show() 
+        $("#id_form1_type_1").show()
+        $('.grad_control').show()
+    </script>
+{%endif%}
+
+<script>
+$('input[name=form1_type]').on('click change', function(){
+    let f_type = $('input[name=form1_type]:checked').val()
+    if (f_type == 'bm'){
+        $('.grad_control').hide()
+        $('input[name=cm13q]').prop("disabled", true);
+        $('input[name=cm13q]').prop("required", false);
+        
+        $('input[name=cm14q]').prop("disbaled", true);
+        $('input[name=cm14q]').prop("required", false);
+    }else if (f_type=='hhrcpa' && hhrcpa_score > 2){
+        $('.grad_control').show()
+        $('input[name=cm13q]').prop("disabled", false);
+        $('input[name=cm13q]').prop("required", false);
+        
+        $('input[name=cm14q]').prop("disbaled", true);
+        $('input[name=cm14q]').prop("required", true);
+        
+        
+    }
+})
+</script>
+
+
 {% endblock lazy_javascript_code %}
