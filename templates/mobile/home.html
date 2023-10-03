@@ -34,7 +34,7 @@
     }
 
     tr td div {
-        display: inline-block;
+        {% comment %} display: inline-block; {% endcomment %}
     }
     table {
         color: black;
@@ -117,7 +117,7 @@ National
 					<h4 class="panel-title">Forms Approval</h4>
 				</div>
 				<div class="panel-body">
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-md-1"></div>
                         <div class="col-md-6">
                             <label>Comments</label><br>
@@ -128,8 +128,8 @@ National
                         <div class="col-md-4" id="approvalbuttons">
                             <input onclick="consolidatePost(this.id, 'approve')" id="btnApprove" class="btn btn-primary m-5" type="button" value="Approve" />
                             <input onclick="consolidatePost(this.id, 'reject')" id="btnReject" class="btn btn-danger m-5" type="button" value="Reject" />
-                        </div>
-                    </div>
+                        </div> 
+                    </div>   -->
                     <div class="row">
                         <div class="col-md-2">                        
                         </div>
@@ -146,7 +146,7 @@ National
                                 <thead>
                                     <tr>
                                         <td style="width: 10%;">
-                                            <input id="selectAl" type="checkbox" name="selectAll"><label class="m-5"> Select All</label>
+                                            <!-- <input id="selectAl" type="checkbox" name="selectAll"><label class="m-5"> Select All</label> -->
                                         </td>
                                         <td style="width: 90%;">Data</td>
                                     </tr>
@@ -304,37 +304,38 @@ National
         return response
     }
 
-    function consolidatePost(btnID, approval_type){
+    function consolidatePost(btnID, approval_type, form){
         //$("#"+btnID).click(function(){
-            checked = []
-            var selectcedSelectOne = $("input[name=selectOne]")
-            for (j=0; j<selectcedSelectOne.length; j++){
-                id = selectcedSelectOne[j].id
-                if ($("input[id="+id+"]").prop('checked')){
-                    selectcedSelectOne
-                    checked.push(selectcedSelectOne[j].id)
-                }
-            }
-            console.log({btnID, approval_type, checked})
-            if(checked.length >0){
+            checked = [btnID]
 
-                datachecked = {
-                    "data": checked,
-                    "type": approval_type
-                }
+            console.log({btnID, approval_type, checked})
+
+            let datachecked = {
+                "type": approval_type,
+                "form": form,
+                "data": btnID
+            }
+            if(checked.length >0 ){
+
                 jsondatachecked = JSON.stringify(datachecked)
                 console.log({checked,datachecked})    
                 url = '{% url 'approvedata' %}'
-                // var resp = postData(url, jsondatachecked)
-                var resp = apicall(url, datachecked , "POST")
-                console.log({resp})
+                
+                // var resp = apicall(url, datachecked , "POST")
+                id_actoniond = `#payload_${btnID}`
+                var payToPost = $(id_actoniond).text()
+                if (approval_type === 'approve'){
+                    var resp = apiPost(JSON.stringify(payToPost), form)
+                    console.log({resp})
+                }
+                postData(url, jsondatachecked)
 
                 //if(respStatus === 'success'){
                     checked.forEach((check) => {
                         var rowtr = $("#Dataapproval").DataTable().row("#"+check+"_tr").remove().draw();
                         console.log({check, rowtr})
                     })
-                    $("#selectAl")[0].checked = false
+                    
                     var msg = "Data "+ approval_type +" successful"
                     sendFeedback(msg, "primary")
                     
@@ -345,6 +346,7 @@ National
             }else {
                 var msg = "No record has been selected"
                 sendFeedback(msg, "danger")
+                
                 
             }
                 
@@ -411,26 +413,32 @@ National
     function fetchDataApp(){
         chvs = $("#my-select").val()
         form = $("#my-select2").val()
-        child = $("#my-select1").val()
+        child = $("#my-select1").val()[0]
         comments = $("#app_comments").val()
         // table = $("#Dataapproval").DataTable()
-
         console.log({chvs, form, child})
         if(chvs.length>0 && form != "" && ( child != null)){
-            data_fetch = {
-                "chvs": chvs,
-                "form": form,
-                "child": child,
-                "comments": comments
+            
+            let s_url
+            if (form === 'cpt'){
+                // s_url = '{% url 'get-one-cpt-record' 54 %}'
+                s_url = `cpt/${child}`
+            }
+            if (form === 'cpr'){
+                s_url = `cpara/${child}`
+            }
+            if (form ==='form1a'){
+                s_url = `forms/F1A/${child}`
+            }
+            if (form === 'form1b'){
+                s_url = `forms/F1B/${child}`
             }
             
+            console.log({chvs, form, child, s_url})
             $.ajax({
-                type: "POST",
-                url:  '{% url 'fetch_data' %}',
+                type: "GET",
+                url:  s_url,
                 headers: {'X-CSRFToken': '{{ csrf_token }}'},
-                // contentType: "Application/json", ---> Do not use this
-                dataType: "json",
-                data: data_fetch,
             })
             .fail(function(message){
                 console.error({error_submit: message})
@@ -443,76 +451,164 @@ National
                     var ta_trs = ""
                     for (dta in data){
                         console.log({dta, data})
-                        $("#Dataapproval tbody").append(`<tr id="${data[dta].id}_tr" class="datarows">
-                            <td style="width: 10%;" class="scheck">
-                                <input id="${data[dta].id}" type="checkbox" name="selectOne">
-                            </td>
-                            <td style="width: 90%;" class="">
-                                <p>Form: ${form} : Child Name: <b style="color:red;">  ${data[dta].name} </b>| Date of event -${data[dta].date_of_event}</p>
-                                <p>
-                                    
-                                    <div class="col-mod-2"> Domain:    ${data[dta].domain_id} | </div>
-                                    <div class="col-mod-2"> Service:    ${data[dta].service_id} | </div>
-                                    <div class="col-mod-2"> Message:    ${data[dta].message} | </div>
-                  
-                                </p <br>
-
-                            </td>
+                        for (serv in data[dta].services ){
+                            console.log({dta, data})
+                            let cpt = data[dta]
+                            let service = cpt.services[serv]
+                            let payload  = JSON.stringify({
+                                "ovc_cpims_id": cpt.ovc_cpims_id,
+                                "date_of_event": cpt.date_of_event,
+                                "services": [
+                                  {
+                                    "domain_id": service.domain_id,
+                                    "service_id": service.service_id
+                                  }]
+                            })
+                        $("#Dataapproval tbody").append(`<tr id="${service.id}_tr" class="datarows">
+                                <td style="width: 10%;" class="scheck">
+                                    {% comment %} <input id="${cpt.event_id}" type="checkbox" name="selectOne"> {% endcomment %}
+                                </td>
+                                <td style="width: 90%;" class="">
+                                    <p>Form: FORM 1A : Child OVC ID: <b style="color:red;">  ${cpt.ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
+                                    <div class="row">
+                                        <div clas="col-md-1">
+                                            ${service.domain_id} : ${service.service_id}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <p>
+           
+                                            </p>
+                                        </div>
+                                        <div class="col-md-2" id="approvalbuttons">
+                                            <input onclick="consolidatePost(this.id, 'approve', 'F1A')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'F1A')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                        </div>
+                                    </div>
+                                    <div class="row" hidden>
+                                        <div class="col-md-12">
+                                            <p id="payload_${service.id}">"${payload}"<p>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
-                        `);                   
+                        `);  
+                        }   
                         
                     }
                     
                            
-                }else if(form === 'form1a' ){
+                }else if(form === 'form1b' ){
                     var ta_trs = ""
                     for (dta in data){
                         console.log({dta, data})
-                        $("#Dataapproval tbody").append(`<tr id="${data[dta].id}_tr" class="datarows">
-                            <td style="width: 10%;" class="scheck">
-                                <input id="${data[dta].id}" type="checkbox" name="selectOne">
-                            </td>
-                            <td style="width: 90%;" class="">
-                                <p>Form: ${form} : Child Name: <b style="color:red;">  ${data[dta].name} </b>| Date of event -${data[dta].date_of_event}</p>
-                                <p>
-                                    <div class="col-mod-2"> Domain:    ${data[dta].domain_id} | </div>
-                                    <div class="col-mod-2"> Service:    ${data[dta].service_id} | </div>
-                                    <div class="col-mod-2"> Message:    ${data[dta].message} | </div>
-                  
-                                </p <br>
-
-                            </td>
+                        for (serv in data[dta].services ){
+                            console.log({dta, data})
+                            let cpt = data[dta]
+                            let service = cpt.services[serv]
+                            let payload  = JSON.stringify({
+                                "ovc_cpims_id": cpt.ovc_cpims_id,
+                                "date_of_event": cpt.date_of_event,
+                                "services": [
+                                  {
+                                    "domain_id": service.domain_id,
+                                    "service_id": service.service_id
+                                  }]
+                            })
+                        $("#Dataapproval tbody").append(`<tr id="${service.id}_tr" class="datarows">
+                                <td style="width: 10%;" class="scheck">
+                                    {% comment %} <input id="${cpt.event_id}" type="checkbox" name="selectOne"> {% endcomment %}
+                                </td>
+                                <td style="width: 90%;" class="">
+                                    <p>Form: FORM 1B : Child OVC ID: <b style="color:red;">  ${cpt.ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
+                                    <div class="row">
+                                        <div clas="col-md-1">
+                                            ${service.domain_id} : ${service.service_id}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <p>
+                        
+                                            
+                                            </p>
+                                        </div>
+                                        <div class="col-md-2" id="approvalbuttons">
+                                            <input onclick="consolidatePost(this.id, 'approve', 'F1B')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'F1B')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                        </div>
+                                    </div>
+                                    <div class="row" hidden>
+                                        <div class="col-md-12">
+                                            <p id="payload_${service.id}">"${payload}"<p>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
-                        `);                 
+                        `);  
+                        }                
                         
                     }
                 }else if(form === 'cpt' ){
                     var ta_trs = ""
                     for (dta in data){
-                        console.log({dta, data})
-                        $("#Dataapproval tbody").append(`<tr id="${data[dta].id}_tr" class="datarows">
+                        for (serv in data[dta].services ){
+                            console.log({dta, data})
+                            let cpt = data[dta]
+                            let service = cpt.services[serv]
+                            let payload  = JSON.stringify({
+                                "ovc_cpims_id": cpt.ovc_cpims_id,
+                                "date_of_event": cpt.date_of_event,
+                                "services": [
+                                  {
+                                    "domain_id": service.domain_id,
+                                    "service_id": service.service_id,
+                                    "goal_id": service.goal_id,
+                                    "gap_id": service.gap_id,
+                                    "priority_id": service.priority_id,
+                                    "responsible_id": service.responsible_id,
+                                    "results_id": service.results_id,
+                                    "reason_id": service.reason_id,
+                                    "completion_date": service.completion_date,
+                                  }]
+                            })
+                        $("#Dataapproval tbody").append(`<tr id="${service.id}_tr" class="datarows">
                                 <td style="width: 10%;" class="scheck">
-                                    <input id="${data[dta].id}" type="checkbox" name="selectOne">
+                                    {% comment %} <input id="${cpt.event_id}" type="checkbox" name="selectOne"> {% endcomment %}
                                 </td>
                                 <td style="width: 90%;" class="">
-                                    <p>Form: ${form} : Child Name: <b style="color:red;">  ${data[dta].name} </b>| Date of event -${data[dta].date_of_event}</p>
-                                    <p>
-                                        <div class="col-mod-2"> Domain:    ${data[dta].domain_id} | </div>
-                                        <div class="col-mod-2"> Service:    ${data[dta].service_id} | </div>
-                                        <div class="col-mod-2"> Goal:    ${data[dta].goal_id} | </div>
-                                        <div class="col-mod-2"> Gap:    ${data[dta].gap_id} | </div>
-                                        <div class="col-mod-2"> Priority:    ${data[dta].priority_id} | </div>
-                                    </p <br>
-                                    <p>
-                                        <div class="col-mod-2"> Responsible:    ${data[dta].responsible_id} | </div>
-                                        <div class="col-mod-2"> Results:    ${data[dta].results_id} | </div>
-                                        <div class="col-mod-2"> Reason:    ${data[dta].reason_id} | </div>
-                                        <div class="col-mod-2"> Completion Date:    ${data[dta].completion_date} | </div>
-                                        <div class="col-mod-2"></div>
-                                    </p
+                                    <p>Form: Case Plan Template : Child OVC ID: <b style="color:red;">  ${cpt.ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <p>
+                                                 Domain:    ${service['domain_id']} |
+                                                 Service:    ${service['service_id']} |
+                                                 Goal:    ${service['goal_id']} |
+                                                 Gap:    ${service['gap_id']} |
+                                                 Priority:    ${service['priority_id']} |
+                                            
+                                                 Responsible:    ${service['responsible_id']} |
+                                                 Results:    ${service['results_id']} |
+                                                 Reason:    ${service['reason_id']} |
+                                                 Completion Date:    ${service['completion_date']} |
+                                            
+                                            </p>
+                                        </div>
+                                        <div class="col-md-2" id="approvalbuttons">
+                                            <input onclick="consolidatePost(this.id, 'approve', 'CPT')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'CPT')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                        </div>
+                                    </div>
+                                    <div class="row" hidden>
+                                        <div class="col-md-12">
+                                            <p id="payload_${service.id}">"${payload}"<p>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
-                        `);                  
+                        `);  
+                        }                
                         
                     }
                     
@@ -522,13 +618,13 @@ National
                     var ta_trs = ""
                     for (dta in data){
                         console.log({dta, data})
-                        alert('jane')
+                        // alert('jane')
                         $("#Dataapproval tbody").append(`<tr id="${data[dta].id}_tr" class="datarows">
                                 <td style="width: 10%;" class="scheck">
                                     <input id="${data[dta].id}" type="checkbox" name="selectOne">
                                 </td>
                                 <td style="width: 90%;" class="">
-                                    <p> <b>${form}</b> - ${data[dta].name}</p>
+                                    <p> <b>CPARA</b> - ${data[dta].name}</p>
                                     Scores <br>
                                     <p>
                                         <div class="col-mod-2"> Benchmark 1:    ${data[dta].b1} | </div>
@@ -541,7 +637,12 @@ National
                                         <div class="col-mod-2"> Benchmark 7:    ${data[dta].b7} | </div>
                                         <div class="col-mod-2"> Benchmark 8:    ${data[dta].b8} | </div>
                                         <div class="col-mod-2"> Benchmark 9:    ${data[dta].b9} | </div>
-                                        <div class="col-mod-2"></div>
+                                        <div class="col-mod-2">
+                                            <div class="col-md-2" id="approvalbuttons">
+                                                <input onclick="consolidatePost(this.id, 'approve', 'CPR', ${data[dta].id})" id="btnApprove" class="btn btn-primary m-5" type="button" value="Approve" />
+                                                <input onclick="consolidatePost(this.id, 'reject', 'CPR', ${data[dta].id})" id="btnReject" class="btn btn-danger m-5" type="button" value="Reject" />
+                                            </div>
+                                        </div>
                                     </p
                                 </td>
                             </tr>
@@ -566,6 +667,33 @@ National
             }
             sendFeedback(msg, "danger")
         }
+    }
+
+    function apiPost(payload, form_id){
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk1ODQ0ODI4LCJpYXQiOjE2OTU4NDEyMjgsImp0aSI6ImRhMjA1MTExYzk3OTQ0YWNiNWRkYzJlNTY1MDdlOTQ5IiwidXNlcl9pZCI6Mzk2Nn0.bXpQysxo717lUmEU3rBDDZinRxygCgg3HboFF7GCgT4");
+        myHeaders.append("X-CSRFToken", "{{ csrf_token }}");
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: payload,
+        redirect: 'follow'
+        };
+
+        url = `/api/form/${form_id}/`
+
+        fetch(url, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            console.log(result)
+            // var msg = "Data "+ approval_type +" successful"
+            var msg = result.details || "Successful"
+                    sendFeedback(msg, "primary")
+        
+        })
+        .catch(error => console.log('error', error));
     }
 
     // to output messages to the front end 

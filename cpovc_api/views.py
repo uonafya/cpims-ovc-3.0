@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.http import JsonResponse
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 
 from cpovc_ovc.models import OVCRegistration, OVCHealth,OVCHouseHold
 from cpovc_registry.models import RegPersonsGeo, RegPersonsExternalIds
@@ -13,6 +13,8 @@ from .functions import (
     dcs_dashboard, get_attached_orgs, get_vals, save_form, validate_ovc)
 
 from cpovc_dashboard.parameters import PARAMS
+
+from rest_framework.permissions import IsAuthenticated,AllowAny 
 
 
 def api_home(request):
@@ -232,6 +234,7 @@ def settings(request):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
 def form_data(request, form_id):
     """Method to handle Forms ID."""
     try:
