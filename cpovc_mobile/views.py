@@ -429,7 +429,7 @@ def get_ovc_event(request,form_type, ovc_id):
             all = OVCEvent.objects.all()
             events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id, form_type=form_type).order_by('id')
             services_data = OVCServices.objects.filter(event__in=events).values(
-                'domain_id', 'service_id', 'is_accepted', 'event_id'
+                'domain_id', 'service_id', 'is_accepted', 'event_id', 'id'
             ).order_by('event_id')
             # breakpoint()
         else:
@@ -447,7 +447,8 @@ def get_ovc_event(request,form_type, ovc_id):
                     'event_id': service['event_id'],
                     'domain_id': service['domain_id'],
                     'service_id': service['service_id'],
-                    'is_accepted': service['is_accepted']
+                    'is_accepted': service['is_accepted'],
+                    'id': service['id']
                 }]
             }
             event_data.append(event_dict)
