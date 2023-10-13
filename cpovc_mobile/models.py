@@ -125,7 +125,7 @@ class CasePlanTemplateEvent(models.Model):
         db_table = 'case_plan_mobile_event'
 
 class CasePlanTemplateService(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    unique_service_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     message = models.TextField(null=True)
     event = models.ForeignKey(CasePlanTemplateEvent, on_delete=models.CASCADE)
     domain_id = models.CharField(max_length=255)
@@ -158,7 +158,7 @@ class CasePlanTemplateEventRejected(models.Model):
         db_table = 'case_plan_mobile_event_rejected'
 
 class CasePlanTemplateServiceRejected(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    unique_service_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     message = models.TextField(null=True)
     event = models.ForeignKey(CasePlanTemplateEventRejected, on_delete=models.CASCADE)
     domain_id = models.CharField(max_length=255)

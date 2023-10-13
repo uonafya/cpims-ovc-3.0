@@ -23,7 +23,7 @@ urlpatterns = [
     path('cpt/', views.create_case_plan_template, name='create-cpt-record'),
     path('cpt/all/', views.get_all_case_plans, name='get-all-cpt-records'),
     re_path(r'^cpt/(?P<ovc_id>[^/]+)/$', views.get_one_case_plan, name='get-one-cpt-record'),
-    re_path(r'^cpt/update/(?P<event_id>[^/]+)$', views.update_case_plan_is_accepted, name='update-one-cpt-record'),
+    re_path(r'^cpt/update/(?P<unique_service_id>[^/]+)$', views.update_case_plan_is_accepted, name='update-one-cpt-record'),
     re_path(r'^cpt/delete/(?P<event_id>[^/]+)$', views.delete_case_plan_event, name='delete-one-cpt-record'),
     
     # Fetch all unaccpeted data
