@@ -458,44 +458,43 @@ def get_ovc_event(request, ovc_id, form_type):
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
-def update_is_accepted(request, event_id):
+def update_is_accepted(request, unique_service_id):
+    print("ati nini")
     try:
-        event = OVCEvent.objects.get(pk=event_id)
-        services = OVCServices.objects.filter(event=event)
+        # Find the service using the unique_service_id
+        service = OVCServices.objects.get(unique_service_id=unique_service_id)
 
         is_accepted = request.data.get('is_accepted')
 
         if is_accepted == ApprovalStatus.FALSE.value:
             # If is_accepted is set to False (3), create corresponding rejected records
-            OVCEventRejected.objects.create(
-                user_id=event.user_id,
-                ovc_cpims_id=event.ovc_cpims_id,
-                date_of_event=event.date_of_event,
-                id=event.id  # Maintain the same UUID in the rejected model
+            rejected_event = OVCEventRejected.objects.create(
+                user_id=service.event.user_id,
+                ovc_cpims_id=service.event.ovc_cpims_id,
+                date_of_event=service.event.date_of_event,
+                form_type=service.event.form_type
             )
 
-            # Copy the services to rejected services
-            for service in services:
-                # Create the corresponding rejected service
-                OVCServicesRejected.objects.create(
-                    event=event,
-                    domain_id=service.domain_id,
-                    service_id=service.service_id,
-                    is_accepted=is_accepted,
-                    message=request.data.get('message'),
-                    id=service.id  # Maintain the same UUID in the rejected model
-                )
+            # Create the corresponding rejected service
+            OVCServicesRejected.objects.create(
+                event=rejected_event,
+                unique_service_id=service.unique_service_id,
+                domain_id=service.domain_id,
+                service_id=service.service_id,
+                is_accepted=is_accepted,
+                message=request.data.get('message')
+            )
 
-        # Update the is_accepted field for the original event's services
-        for service in services:
-            service.is_accepted = is_accepted
-            service.save()
+        # Update the is_accepted field for the original service
+        service.is_accepted = is_accepted
+        service.save()
 
         return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
-    except OVCEvent.DoesNotExist:
-        return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
+    except OVCServices.DoesNotExist:
+        return Response({'error': 'Service not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['DELETE'])
