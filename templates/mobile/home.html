@@ -80,7 +80,7 @@ National
         <div class="col-md-3">
             <label>CHV Name</label><br>
             <select multiple="multiple" id="my-select" name="my-select">
-                <option value='elem_1' selected disabled>Select a a CHV (s)</option>
+                <option value='' selected disabled>Select a a CHV (s)</option>
                 {% for chv in chvs %}
                     <option value='{{ chv.cpims_chv_id }}'>{{ chv.name }}</option>
                 {% endfor %}
@@ -330,6 +330,7 @@ National
                 if (approval_type === 'approve'){
                     var resp = apiPost(JSON.stringify(payToPost), form)
                     console.log({resp})
+
                     //if(resp){
                         pay_approve = {
                             "is_accepted": '2',
@@ -433,13 +434,14 @@ National
 
 
     function fetchDataApp(){
-        chvs = $("#my-select").val()
-        form = $("#my-select2").val()
-        child = $("#my-select1").val()[0]
-        comments = $("#app_comments").val()
+        let chvs = $("#my-select").val()
+        let form = $("#my-select2").val()
+        let childs = $("#my-select1").val()
+        let comments = $("#app_comments").val()
         // table = $("#Dataapproval").DataTable()
-        console.log({chvs, form, child})
-        if(chvs.length>0 && form != "" && ( child != null)){
+        console.log({chvs, form, childs})
+        if(chvs.length>0 && form != "" && ( childs != null)){
+            let child = childs[0]
             
             let s_url
             if (form === 'cpt'){
@@ -595,7 +597,7 @@ National
                                     "completion_date": service.completion_date,
                                   }]
                             })
-                        $("#Dataapproval tbody").append(`<tr id="${service.id}_tr" class="datarows">
+                        $("#Dataapproval tbody").append(`<tr id="${service.unique_service_id}_tr" class="datarows">
                                 <td style="width: 10%;" class="scheck">
                                     {% comment %} <input id="${cpt.event_id}" type="checkbox" name="selectOne"> {% endcomment %}
                                 </td>
@@ -618,13 +620,13 @@ National
                                             </p>
                                         </div>
                                         <div class="col-md-2" id="approvalbuttons">
-                                            <input onclick="consolidatePost(this.id, 'approve', 'CPT')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
-                                            <input onclick="consolidatePost(this.id, 'reject', 'CPT')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                            <input onclick="consolidatePost(this.id, 'approve', 'CPT')" id="${service.unique_service_id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'CPT')" id="${service.unique_service_id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
                                         </div>
                                     </div>
                                     <div class="row" hidden>
                                         <div class="col-md-12">
-                                            <p id="payload_${service.id}">"${payload}"<p>
+                                            <p id="payload_${service.unique_service_id}">"${payload}"<p>
                                         </div>
                                     </div>
                                 </td>
@@ -640,6 +642,8 @@ National
                     var ta_trs = ""
                     for (dta in data){
                         console.log({dta, data})
+
+                        let payload = JSON.stringify(data)
                         // alert('jane')
                         $("#Dataapproval tbody").append(`<tr id="${data[dta].id}_tr" class="datarows">
                                 <td style="width: 10%;" class="scheck">
@@ -661,8 +665,13 @@ National
                                         <div class="col-mod-2"> Benchmark 9:    ${data[dta].b9} | </div>
                                         <div class="col-mod-2">
                                             <div class="col-md-2" id="approvalbuttons">
-                                                <input onclick="consolidatePost(this.id, 'approve', 'CPR', ${data[dta].id})" id="btnApprove" class="btn btn-primary m-5" type="button" value="Approve" />
-                                                <input onclick="consolidatePost(this.id, 'reject', 'CPR', ${data[dta].id})" id="btnReject" class="btn btn-danger m-5" type="button" value="Reject" />
+                                                <input onclick="consolidatePost(this.id, 'approve', 'CPR', ${data[dta].id})" id="${data.event_id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                                <input onclick="consolidatePost(this.id, 'reject', 'CPR', ${data[dta].id})" id="${data.event_id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                            </div>
+                                        </div>
+                                        <div class="row" hidden>
+                                            <div class="col-md-12">
+                                                <p id="payload_${data.event_id}">"${payload}"<p>
                                             </div>
                                         </div>
                                     </p
@@ -680,11 +689,11 @@ National
 
         }else{
             var msg = ""
-            if(chvs.length===0 && child.length===0){
+            if(chvs.length===0 && childs==undefined){
                 msg = "CHV and Child not selected"
             }if(chvs.length===0){
                 msg = "CHV not selected"
-            }if(child=== null){
+            }if(childs=== null){
                 msg = "Child not selected"
             }
             sendFeedback(msg, "danger")
@@ -706,7 +715,18 @@ National
         if(f_uid == undefined){
             url = `/api/form/${form_id}/`
         }else {
-            url = `/${form_id}/update/${f_uid}`
+            if (form_id=="F1A"){
+                url = `/forms/update/${f_uid}`
+            }
+            if (form_id=="F1B"){
+                url = `/forms/update/${f_uid}`
+            }
+            if (form_id=="CPT"){
+                url = `/cpt/update/${f_uid}`
+            }
+            if (form_id=="CPR"){
+                url = `/cpara/update/${f_uid}`
+            }
         }
 
 
