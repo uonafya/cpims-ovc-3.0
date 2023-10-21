@@ -618,50 +618,48 @@ def get_one_case_plan(request, ovc_id):
 
 @api_view(['PATCH', 'POST'])
 @permission_classes([IsAuthenticated])
-def update_case_plan_is_accepted(request, event_id):
+def update_case_plan_is_accepted(request, unique_service_id):
     try:
-        event = CasePlanTemplateEvent.objects.get(id=event_id)
-        services = CasePlanTemplateService.objects.filter(event=event)
+        service = CasePlanTemplateService.objects.get(unique_service_id=unique_service_id)
+
+        event = service.event
 
         new_is_accepted = request.data.get('is_accepted')
         if new_is_accepted is not None:
             # Check if is_accepted is set to False (3)
             if new_is_accepted == ApprovalStatus.FALSE.value:
                 # Create a corresponding rejected record in CasePlanTemplateEventRejected
-                CasePlanTemplateEventRejected.objects.create(
+                rejected_event = CasePlanTemplateEventRejected.objects.create(
                     user_id=event.user_id,
                     ovc_cpims_id=event.ovc_cpims_id,
-                    date_of_event=event.date_of_event,
-                    id=event.id  # Maintain the same UUID in the rejected model
+                    date_of_event=event.date_of_event
                 )
 
-                # Copy the services to CasePlanTemplateServiceRejected
-                for service in services:
-                    # Create the corresponding rejected service
-                    CasePlanTemplateServiceRejected.objects.create(
-                        event=event,
-                        domain_id=service.domain_id,
-                        service_id=service.service_id,
-                        goal_id=service.goal_id,
-                        gap_id=service.gap_id,
-                        priority_id=service.priority_id,
-                        responsible_id=service.responsible_id,
-                        results_id=service.results_id,
-                        reason_id=service.reason_id,
-                        completion_date=service.completion_date,
-                        is_accepted=new_is_accepted,
-                        message=request.data.get('message'),
-                        id=service.id  # Maintain the same UUID in the rejected model
-                    )
+                # Create the corresponding rejected service
+                CasePlanTemplateServiceRejected.objects.create(
+                    event=rejected_event,
+                    domain_id=service.domain_id,
+                    service_id=service.service_id,
+                    goal_id=service.goal_id,
+                    gap_id=service.gap_id,
+                    priority_id=service.priority_id,
+                    responsible_id=service.responsible_id,
+                    results_id=service.results_id,
+                    reason_id=service.reason_id,
+                    completion_date=service.completion_date,
+                    is_accepted=new_is_accepted,
+                    message=request.data.get('message')
+                )
 
-            # Update the is_accepted field for the original event's services
-            services.update(is_accepted=new_is_accepted)
+            # Update the is_accepted field for the original service
+            service.is_accepted = new_is_accepted
+            service.save()
 
             return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
-    except CasePlanTemplateEvent.DoesNotExist:
-        return Response({'error': 'Case Plan Event not found'}, status=status.HTTP_404_NOT_FOUND)
+    except CasePlanTemplateService.DoesNotExist:
+        return Response({'error': 'Case Plan Service not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
