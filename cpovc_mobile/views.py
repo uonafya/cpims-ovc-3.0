@@ -616,7 +616,7 @@ def get_one_case_plan(request, ovc_id):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PATCH'])
+@api_view(['PATCH', 'POST'])
 @permission_classes([IsAuthenticated])
 def update_case_plan_is_accepted(request, event_id):
     try:

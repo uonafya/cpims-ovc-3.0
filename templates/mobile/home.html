@@ -8,6 +8,9 @@
 <link href="{% static 'plugins/datatables/css/buttons.dataTables.min.css' %}" rel="stylesheet" />
 <link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
 
+TEST USER
+
+
 
 <style>
 	a.svg: {
@@ -20,7 +23,7 @@
 	  content: "";
 	  position: absolute;
 	  top: 0;
-	  right: 0;
+	  right: 0;                                                                                                                                 
 	  bottom: 0;
 	  left: 0;
 
@@ -327,8 +330,24 @@ National
                 if (approval_type === 'approve'){
                     var resp = apiPost(JSON.stringify(payToPost), form)
                     console.log({resp})
+                    //if(resp){
+                        pay_approve = {
+                            "is_accepted": '2',
+                            "message": ""
+                        }
+                    var resp_app = apiPost(JSON.stringify(pay_approve), form, btnID)
+                    console.log({resp_app})
+                    //}
+                }else if (approval_type = 'reject'){
+                    pay_reject = {
+                        "is_accepted": '3',
+                        "message": ""
+                    }
+                var resp_reject = apiPost(JSON.stringify(pay_reject), form, btnID)
+                console.log({resp_reject})
+                    
                 }
-                postData(url, jsondatachecked)
+                // postData(url, jsondatachecked)
 
                 //if(respStatus === 'success'){
                     checked.forEach((check) => {
@@ -350,6 +369,9 @@ National
                 
             }
                 
+    
+
+
         //})
     }
 
@@ -669,7 +691,7 @@ National
         }
     }
 
-    function apiPost(payload, form_id){
+    function apiPost(payload, form_id, f_uid){
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk1ODQ0ODI4LCJpYXQiOjE2OTU4NDEyMjgsImp0aSI6ImRhMjA1MTExYzk3OTQ0YWNiNWRkYzJlNTY1MDdlOTQ5IiwidXNlcl9pZCI6Mzk2Nn0.bXpQysxo717lUmEU3rBDDZinRxygCgg3HboFF7GCgT4");
@@ -681,8 +703,12 @@ National
         body: payload,
         redirect: 'follow'
         };
+        if(f_uid == undefined){
+            url = `/api/form/${form_id}/`
+        }else {
+            url = `/${form_id}/update/${f_uid}`
+        }
 
-        url = `/api/form/${form_id}/`
 
         fetch(url, requestOptions)
         .then(response => response.text())
