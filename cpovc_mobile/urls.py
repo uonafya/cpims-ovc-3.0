@@ -15,7 +15,7 @@ urlpatterns = [
     # Form 1A and B urls
     path('form/', views.create_ovc_event, name='create-form-record'),
     path('forms/<str:form_type>/', views.get_all_ovc_events, name='get-all-form-records'),
-    re_path(r'^forms/(?P<form_type>[^/]+)/(?P<ovc_id>[^/]+)$', views.get_ovc_event, name='get-one-form-record'),
+    re_path(r'^forms/(?P<ovc_id>[^/]+)/(?P<form_type>[^/]+)$', views.get_ovc_event, name='get-one-form-record'),
     re_path(r'^forms/update/(?P<unique_service_id>[^/]+)$', views.update_is_accepted, name='update-one-form-record'),
     re_path(r'^forms/delete/(?P<event_id>[^/]+)$', views.delete_ovc_event, name='delete-one-form-record'),
     

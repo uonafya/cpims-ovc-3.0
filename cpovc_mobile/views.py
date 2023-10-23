@@ -424,12 +424,12 @@ def get_ovc_event(request, ovc_id, form_type):
         if form_type == 'F1A':
             events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id, form_type=form_type).order_by('id')
             services_data = OVCServices.objects.filter(event__in=events).values(
-                'domain_id', 'service_id', 'is_accepted', 'event_id'
+                'domain_id', 'service_id', 'is_accepted', 'event_id','unique_service_id'
             ).order_by('event_id')
         elif form_type == 'F1B':
             events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id, form_type=form_type).order_by('id')
             services_data = OVCServices.objects.filter(event__in=events).values(
-                'domain_id', 'service_id', 'is_accepted', 'event_id'
+                'domain_id', 'service_id', 'is_accepted', 'event_id','unique_service_id'
             ).order_by('event_id')
         else:
             return Response({'error': 'Enter a valid form type: F1A or F1B'})
@@ -440,11 +440,13 @@ def get_ovc_event(request, ovc_id, form_type):
                 'ovc_cpims_id': event.ovc_cpims_id,
                 'date_of_event': event.date_of_event,
                 'event_id': event.id,
+                'unique_service_id':service['unique_service_id'],
                 'services': [{
                     'event_id': service['event_id'],
                     'domain_id': service['domain_id'],
                     'service_id': service['service_id'],
-                    'is_accepted': service['is_accepted']
+                    'is_accepted': service['is_accepted'],
+
                 }]
             }
             event_data.append(event_dict)
@@ -459,7 +461,6 @@ def get_ovc_event(request, ovc_id, form_type):
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def update_is_accepted(request, unique_service_id):
-    print("ati nini")
     try:
         # Find the service using the unique_service_id
         service = OVCServices.objects.get(unique_service_id=unique_service_id)
