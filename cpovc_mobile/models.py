@@ -19,7 +19,7 @@ class OVCMobileEvent(models.Model):
     )
     message = models.TextField(null=True)
     class Meta:
-        db_table = 'cpara_mobile_event'
+        db_table = '    '
         
  # use for CPARA data       
 
@@ -74,7 +74,7 @@ class OVCEvent(models.Model):
 # use for Form1A and B
 class OVCServices(models.Model):
     event = models.ForeignKey(OVCEvent, on_delete=models.CASCADE, to_field='id')
-    unique_service_id = models.UUIDField(editable=False)
+    id = models.UUIDField(editable=False, primary_key=True)
     domain_id = models.CharField(max_length=10)
     service_id = models.CharField(max_length=10)
     message = models.TextField(null=True)

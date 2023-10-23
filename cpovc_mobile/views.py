@@ -31,6 +31,9 @@ import requests
 import json
 
 
+from cpovc_forms.models import OVCCareQuestions
+
+
 class ApprovalStatus(Enum):
     NEUTRAL = auto() # stored as 1 in the DB
     TRUE = auto() # stored as 2 in the DB
@@ -113,6 +116,7 @@ def get_all_ovc_mobile_cpara_data(request):
                 'ovc_cpims_id': event.ovc_cpims_id,
                 'date_of_event': event.date_of_event,
                 'is_accepted': event.is_accepted,
+                'event_id': event.id,
                 'questions': [],
                 'individual_questions': [],
                 'scores': {},  # Initialize scores as a dictionary
@@ -169,19 +173,21 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Fetch by ovc id
-        events = OVCMobileEvent.objects.filter(ovc_cpims_id=ovc_id)
+        events = OVCMobileEvent.objects.filter(ovc_cpims_id=ovc_id, is_accepted=1)
+        events_list = events.values('id')
 
+        # Retrieve  event attributes
+        attributes = OVCMobileEventAttribute.objects.filter(event__in=events_list)
         for event in events:
             event_data = {
                 'ovc_cpims_id': event.ovc_cpims_id,
                 'date_of_event': event.date_of_event,
+                'event_id': event.id,
                 'questions': [],
                 'individual_questions': [],
                 'scores': {},
             }
 
-            # Retrieve  event attributes
-            attributes = OVCMobileEventAttribute.objects.filter(event__in=events)
 
             for attribute in attributes:
                 attribute_data = {
@@ -190,14 +196,14 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                     'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,  
                 }
 
-                if attribute.question_name.startswith('question_'):
+                if attribute.question_name.startswith('question_') and attribute.event_id == event.id:
                     # Remove the 'question_' prefix
                     question_code = attribute.question_name[len('question_'):]
                     event_data['questions'].append({
                         'question_code': question_code,
                         'answer_id': attribute_data['answer_value'],
                     })
-                elif attribute.question_name.startswith('individual_question_'):
+                elif attribute.question_name.startswith('individual_question_') and attribute.event_id == event.id:
                     # Remove 'individual_question_' prefix
                     question_code = attribute.question_name[len('individual_question_'):]
                     individual_question = {
@@ -210,7 +216,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                         ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
                     individual_question['ovc_cpims_id'] = ovc_cpims_id_individual
                     event_data['individual_questions'].append(individual_question)
-                elif attribute.question_name.startswith('score_'):
+                elif attribute.question_name.startswith('score_') and attribute.event_id == event.id:
                     # Remove the 'score_' prefix
                     key = attribute.question_name[len('score_'):]
                     event_data['scores'][key] = attribute_data['answer_value']
@@ -278,7 +284,7 @@ def create_form_payload(attributes, event):
     return form_payload
 
 
-@api_view(['PATCH'])
+@api_view(['PATCH', 'POST'])
 @permission_classes([IsAuthenticated])
 def update_cpara_is_accepted(request, event_id):
     try:
@@ -309,9 +315,9 @@ def update_cpara_is_accepted(request, event_id):
 
 
         # Update is_accepted field for the main event
-        for attribute in attributes:
-            event.is_accepted = is_accepted
-            event.save()
+        # for attribute in attributes:
+        event.is_accepted = is_accepted
+        event.save()
 
         return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
     except OVCMobileEvent.DoesNotExist:
@@ -429,13 +435,13 @@ def get_ovc_event(request,form_type, ovc_id):
             all = OVCEvent.objects.all()
             events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id, form_type=form_type).order_by('id')
             services_data = OVCServices.objects.filter(event__in=events).values(
-                'domain_id', 'service_id', 'is_accepted', 'event_id', 'id'
+                'domain_id', 'service_id', 'is_accepted', 'event_id', 'id', 
             ).order_by('event_id')
             # breakpoint()
         else:
             return Response({'error': 'Enter a valid form type: F1A or F1B'})
         print(events)
-        print(services_data)
+        print(f"services_data {services_data}")
         print(all.values()[0])
         event_data = []
         for event, service in zip(events, services_data):
@@ -460,7 +466,7 @@ def get_ovc_event(request,form_type, ovc_id):
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['PATCH'])
+@api_view(['PATCH', 'POST'])
 @permission_classes([IsAuthenticated])
 def update_is_accepted(request, event_id):
     try:
@@ -518,7 +524,7 @@ def delete_ovc_event(request, event_id):
 # Helper function to serialize a service
 def service_serializer(service):
     return {
-        'id': service.id,
+        'id': service.unique_service_id,
         'event_id': service.event_id,
         'domain_id': service.domain_id,
         'service_id': service.service_id,
