@@ -16,15 +16,13 @@ urlpatterns = [
             views.delete_ovc_mobile_event, name='delete-ovc-mobile-event'),
 
     # Form 1A and B urls
-    path('form/', views.create_ovc_event, name='create-form-record'),
-    path('forms/<str:form_type>/', views.get_all_ovc_events,
-         name='get-all-form-records'),
-    re_path(r'^forms/(?P<form_type>[^/]+)/(?P<ovc_id>[^/]+)$',
-            views.get_ovc_event, name='get-one-form-record'),
-    re_path(r'^forms/update/(?P<event_id>[^/]+)$',
-            views.update_is_accepted, name='update-one-form-record'),
-    re_path(r'^forms/delete/(?P<event_id>[^/]+)$',
-            views.delete_ovc_event, name='delete-one-form-record'),
+
+    re_path(r'^form/(?P<form_id>[0-9A-Z]{3})/$', views.create_ovc_event, name='create-form-record'),
+    path('forms/<str:form_type>/', views.get_all_ovc_events, name='get-all-form-records'),
+    path('forms/update/<uuid:id>', views.update_is_accepted, name='update-one-form-record'),
+    re_path(r'^forms/(?P<form_type>[^/]+)/(?P<ovc_id>[^/]+)$', views.get_ovc_event, name='get-one-form-record'),
+    re_path(r'^forms/delete/(?P<event_id>[^/]+)$', views.delete_ovc_event, name='delete-one-form-record'),
+    
 
     # Case plan urls
     path('cpt/', views.create_case_plan_template, name='create-cpt-record'),

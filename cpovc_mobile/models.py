@@ -25,8 +25,6 @@ class OVCMobileEvent(models.Model):
     class Meta:
         db_table = 'cpara_mobile_event'
 
-# use for CPARA data
-
 
 class OVCMobileEventAttribute(models.Model):
     event = models.ForeignKey(OVCMobileEvent, on_delete=models.CASCADE)
