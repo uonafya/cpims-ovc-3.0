@@ -13,6 +13,8 @@ urlpatterns = [
     path(
         'token/refresh/', jwt_views.TokenRefreshView.as_view(),
         name='token_refresh'),
+    path(
+        'token/validate/', views.token_validate, name='token_validate'),
     # Setttings
     path('settings/', views.settings, name='api_settings'),
 
@@ -28,4 +30,13 @@ urlpatterns = [
 
     # DREAMS
     path('dreams/', views.dreams, name='dreams'),
+
+    # Mobile App
+    path('forms/', views.form_unapproved, name='unapproved_form'),
+    path('metadata/', views.metadata, name='get_metadata'),
+    path('subpop/', views.sub_pop, name='sub_pop'),
+    path('cpara/', views.cpara, name='sub_pop'),
+    path('caseplan/', views.caseplan, name='sub_pop'),
+    path('form1a/', views.form1a, name='sub_pop'),
+    path('form1b/', views.form1b, name='sub_pop'),
 ]
