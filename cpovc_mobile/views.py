@@ -341,7 +341,7 @@ def delete_ovc_mobile_event(request, event_id):
 # Views for Form1 A and B
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def create_ovc_event(request):
+def create_ovc_event(request,form_id):
     try:
  
         # Check if the user is authenticated
@@ -350,7 +350,7 @@ def create_ovc_event(request):
         
         
         user_id = request.user.id
-        form_type = request.GET.get('form_type')
+        form_type = form_id
         
         if form_type == 'F1A':
             form_type = form_type
@@ -377,11 +377,12 @@ def create_ovc_event(request):
         services = data.get('services', [])
         for service_data in services:
             OVCServices.objects.create(
+                id=uuid.uuid4(),
                 event=event,
                 domain_id=service_data['domain_id'],
                 service_id=service_data['service_id'],
                 is_accepted=ApprovalStatus.NEUTRAL.value,
-                unique_service_id=uuid.uuid4()
+                # unique_service_id=uuid.uuid4()
 
             )
 

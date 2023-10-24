@@ -19,7 +19,7 @@ class OVCMobileEvent(models.Model):
     )
     message = models.TextField(null=True)
     class Meta:
-        db_table = '    '
+        db_table = 'cpara_mobile_event'
         
  # use for CPARA data       
 
