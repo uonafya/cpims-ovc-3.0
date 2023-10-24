@@ -340,9 +340,10 @@ National
                     console.log({resp_app})
                     //}
                 }else if (approval_type = 'reject'){
+                    reject_message = $('#message_approve_'+btnID).val()
                     pay_reject = {
                         "is_accepted": '3',
-                        "message": ""
+                        "message": reject_message
                     }
                 var resp_reject = apiPost(JSON.stringify(pay_reject), form, btnID)
                 console.log({resp_reject})
@@ -494,10 +495,10 @@ National
                                     {% comment %} <input id="${cpt.event_id}" type="checkbox" name="selectOne"> {% endcomment %}
                                 </td>
                                 <td style="width: 90%;" class="">
-                                    <p>Form: FORM 1A : Child OVC ID: <b style="color:red;">  ${cpt.ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
+                                    <p>Form: FORM 1A : Child OVC ID: <b style="color:red;">  ${cpt.ovc_cpims_id} </b> | Date of event - ${data[dta].date_of_event}</p>
                                     <div class="row">
                                         <div clas="col-md-1">
-                                            ${service.domain_id} : ${service.service_id}
+                                            ${service.domain_id} : <b style="color: red;"> ${service.service_id}</b>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -656,14 +657,14 @@ National
                         let html_question = ''
                         let quiz_map = {}
                         {% for quiz in quizzes %}
-                            quiz_map['{{quiz.code}}'] = '{{ quiz.question_text}}'
+                            quiz_map['{{quiz.code}}'] = '{{ quiz.question}} : {{ quiz.question_text}}'
                         {% endfor %}
 
                         for (quiz in slice_question){
                             console.log({quiz, slice_question})
                             html_question += `
                             <div>
-                                ${slice_question[quiz].question_code}: ${slice_question[quiz].answer_id}
+                                
                             </div>
                             `}
                         let modal_html_question = ''
@@ -671,13 +672,20 @@ National
                             let question_code = questions[quiz].question_code
                             let question_answer = questions[quiz].answer_id
                             let question_code_val = quiz_map[question_code]
+                            let question_answer_val = ""
+                            if(question_answer == 'AYES'){question_answer_val = 'Yes'}else if(question_answer == 'ANNO'){question_answer_val = 'No'}else {question_answer_val = 'NA'}
 
                             
                             console.log({quiz, questions, quiz_map, question_code_val})
                             modal_html_question += `
-                                    <div class="col-md-4">
-                                        ${question_code_val}: ${question_answer}
+                                <div class="row"  style="border-bottom:1px solid black !important; padding: 5px">
+                                    <div class="col-md-10" style="">
+                                        ${question_code_val}: 
                                     </div>
+                                    <div class="col-md-2" style="">
+                                        <b style="color:red;"> ${question_answer_val} </b>
+                                    </div>
+                                </div>
                         `}
                         // alert('jane')
                         $("#Dataapproval tbody").append(`<tr id="${data_indx.event_id}_tr" class="datarows" data-toggle="modal" data-target="#${data_indx.event_id}">
@@ -686,15 +694,9 @@ National
                                 </td>
                                 <td style="width: 90%;">
                                     <p>Form: CPARA : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
-                                    <b><u> Questions</u></b> <br>
-                                    <div id="cpara_quiz">
-                                        <div class="row">
-                                            ${ html_question }
-                                        </div>
                                     </div>
                                         <br>
-                                        <b><u> Scores</u></b> <br>
-                                        
+                                        <b><u>Benchmark Scores</u></b> <br>                                        
                                             Benchmark 1:    <b style='color: red'> ${scores.b1}  </b>
                                             Benchmark 2:    <b style='color: red'> ${scores.b2}  </b>
                                             Benchmark 3:    <b style='color: red'> ${scores.b3}  </b>
@@ -703,8 +705,8 @@ National
                                             Benchmark 6:    <b style='color: red'> ${scores.b6}  </b>
                                             Benchmark 7:    <b style='color: red'> ${scores.b7}  </b>
                                             Benchmark 8:    <b style='color: red'> ${scores.b8}  </b>
-                                            Benchmark 9:    <b style='color: red'> ${scores.b9}  </b>
-                                        
+                                            Benchmark 9:    <b style='color: red'> ${scores.b9}  </b>  
+                                            Total:    <b style='color: red'> ${parseInt(scores.b1)  +parseInt(scores.b2)  +parseInt(scores.b3)  +parseInt(scores.b4)  +parseInt(scores.b5)  +parseInt(scores.b6)  +parseInt(scores.b7)  +parseInt(scores.b8)  +parseInt(scores.b9) }  </b>                                      
                                         <br>
                                         <div class="row" hidden>
                                             <div class="col-md-12">
@@ -722,24 +724,27 @@ National
                                                     </div>
                                                     <div class="modal-body">
                                                         <b><u> CPARA Questions </u></b> <br>
-                                                        ${modal_html_question}
-
-                                                        <hr>
-                                                        <b><u> Scores</u></b> <br>
+                                                            ${modal_html_question}
+                                                        <br>
+                                                        <div class="row">
+                                                            <hr><b><u> Scores </u></b> <br>
                                                         
-                                                            Benchmark 1:    <b style='color: red'> ${scores.b1}  </b>
-                                                            Benchmark 2:    <b style='color: red'> ${scores.b2}  </b>
-                                                            Benchmark 3:    <b style='color: red'> ${scores.b3}  </b>
-                                                            Benchmark 4:    <b style='color: red'> ${scores.b4}  </b>
-                                                            Benchmark 5:    <b style='color: red'> ${scores.b5}  </b>
-                                                            Benchmark 6:    <b style='color: red'> ${scores.b6}  </b>
-                                                            Benchmark 7:    <b style='color: red'> ${scores.b7}  </b>
-                                                            Benchmark 8:    <b style='color: red'> ${scores.b8}  </b>
-                                                            Benchmark 9:    <b style='color: red'> ${scores.b9}  </b>
-                                                            Total:    <b style='color: red'> ${parseInt(scores.b1) +parseInt(scores.b2) +parseInt(scores.b3) +parseInt(scores.b4) +parseInt(scores.b5) +parseInt(scores.b6) +parseInt(scores.b7) +parseInt(scores.b8) +parseInt(scores.b9)}  </b>
+                                                            Benchmark 1:    <b style='color: red'> ${scores.b1 || 0  }  </b>
+                                                            Benchmark 2:    <b style='color: red'> ${scores.b2 || 0  }  </b>
+                                                            Benchmark 3:    <b style='color: red'> ${scores.b3 || 0  }  </b>
+                                                            Benchmark 4:    <b style='color: red'> ${scores.b4 || 0  }  </b>
+                                                            Benchmark 5:    <b style='color: red'> ${scores.b5 || 0  }  </b>
+                                                            Benchmark 6:    <b style='color: red'> ${scores.b6 || 0  }  </b>
+                                                            Benchmark 7:    <b style='color: red'> ${scores.b7 || 0  }  </b>
+                                                            Benchmark 8:    <b style='color: red'> ${scores.b8 || 0  }  </b>
+                                                            Benchmark 9:    <b style='color: red'> ${scores.b9 || 0  }  </b>
+                                                            Total:    <b style='color: red'> ${parseInt(scores.b1)  +parseInt(scores.b2)  +parseInt(scores.b3)  +parseInt(scores.b4)  +parseInt(scores.b5)  +parseInt(scores.b6)  +parseInt(scores.b7)  +parseInt(scores.b8)  +parseInt(scores.b9) }  </b>
+                                                        </div>
+                                                            <hr><b><u> Sub Population </u></b> <br>  
+                                                                                                                        
+                                                            <hr><b><u> Reason for rejecting </u></b> <br>  
 
-                                                            <hr><b><u> Sub Population </u></b> <br>
-                                                            
+                                                            <textarea id="message_approve_${data_indx.event_id}" name="message_approve" rows="4" cols="100"></textarea>
                                                         
                                                     </div>
                                                     <div class="modal-footer">
