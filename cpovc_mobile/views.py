@@ -31,7 +31,8 @@ import requests
 import json
 
 
-from cpovc_forms.models import OVCCareQuestions
+from cpovc_forms.models import OVCCareQuestions, OVCCareQuestionss
+from cpovc_main.functions import get_list, get_dict
 
 
 class ApprovalStatus(Enum):
@@ -435,7 +436,7 @@ def get_ovc_event(request,form_type, ovc_id):
         if form_type:
             all = OVCEvent.objects.all()
             events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id, form_type=form_type).order_by('id')
-            services_data = OVCServices.objects.filter(event__in=events).values(
+            services_data = OVCServices.objects.filter(event__in=events, is_accepted=1).values(
                 'domain_id', 'service_id', 'is_accepted', 'event_id', 'id', 
             ).order_by('event_id')
             # breakpoint()
@@ -443,7 +444,7 @@ def get_ovc_event(request,form_type, ovc_id):
             return Response({'error': 'Enter a valid form type: F1A or F1B'})
         print(events)
         print(f"services_data {services_data}")
-        print(all.values()[0])
+        # print(all.values()[0])
         event_data = []
         for event, service in zip(events, services_data):
             event_dict = {
@@ -604,7 +605,7 @@ def get_all_case_plans(request):
 def get_one_case_plan(request, ovc_id):
     try:
         events = CasePlanTemplateEvent.objects.filter(ovc_cpims_id=ovc_id)
-        servicess = CasePlanTemplateService.objects.filter(event__in=events)
+        servicess = CasePlanTemplateService.objects.filter(event__in=events, is_accepted=1)
 
         event_data = []
         for event in events:
@@ -899,6 +900,16 @@ def mobile_home(request):
         lip_id = request.session.get('ou_primary')
 
         chvss = OVCRegistration.objects.filter(is_void=False, child_cbo_id=lip_id).distinct('child_chv_id')
+        care_quiz = OVCCareQuestionss.objects.filter(is_void=False, code__startswith="CP")
+        cpt_fields = ['case_plan_services_school', 'case_plan_services_safe', 'case_plan_services_stable', 'case_plan_services_health']
+        cpt_list = get_dict(field_name=cpt_fields)
+        f1b_fields = ['form1b_items']
+        f1b_list = get_dict(field_name=f1b_fields)
+        # f1a_list = get_dict([''])
+
+        print(cpt_list, f1b_list)
+   
+        
         chvs = []
         for chv in chvss:
             chvs.append({
@@ -912,7 +923,8 @@ def mobile_home(request):
                 'form': form,
                 'formdata': form1b,
                 'chvs': chvs,
-                'lip_name': lip_name
+                'lip_name': lip_name,
+                'quizzes': care_quiz
              
             }
              )
