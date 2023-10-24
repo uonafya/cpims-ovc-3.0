@@ -19,7 +19,7 @@ class OVCMobileEvent(models.Model):
     )
     message = models.TextField(null=True)
     class Meta:
-        db_table = 'cpara_mobile_event'
+        db_table = '    '
         
  # use for CPARA data       
 
@@ -74,7 +74,7 @@ class OVCEvent(models.Model):
 # use for Form1A and B
 class OVCServices(models.Model):
     event = models.ForeignKey(OVCEvent, on_delete=models.CASCADE, to_field='id')
-    unique_service_id = models.UUIDField(editable=False)
+    id = models.UUIDField(editable=False, primary_key=True)
     domain_id = models.CharField(max_length=10)
     service_id = models.CharField(max_length=10)
     message = models.TextField(null=True)
@@ -100,7 +100,7 @@ class OVCEventRejected(models.Model):
 
 # use for Form1A and B
 class OVCServicesRejected(models.Model):
-    event = models.ForeignKey(OVCEvent, on_delete=models.CASCADE, to_field='id')
+    event = models.ForeignKey(OVCEventRejected, on_delete=models.CASCADE, to_field='id')
     unique_service_id = models.UUIDField(editable=False)
     domain_id = models.CharField(max_length=10)
     service_id = models.CharField(max_length=10)
@@ -125,7 +125,7 @@ class CasePlanTemplateEvent(models.Model):
         db_table = 'case_plan_mobile_event'
 
 class CasePlanTemplateService(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    unique_service_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     message = models.TextField(null=True)
     event = models.ForeignKey(CasePlanTemplateEvent, on_delete=models.CASCADE)
     domain_id = models.CharField(max_length=255)
@@ -158,9 +158,9 @@ class CasePlanTemplateEventRejected(models.Model):
         db_table = 'case_plan_mobile_event_rejected'
 
 class CasePlanTemplateServiceRejected(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    unique_service_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     message = models.TextField(null=True)
-    event = models.ForeignKey(CasePlanTemplateEvent, on_delete=models.CASCADE)
+    event = models.ForeignKey(CasePlanTemplateEventRejected, on_delete=models.CASCADE)
     domain_id = models.CharField(max_length=255)
     service_id = models.CharField(max_length=255)
     goal_id = models.CharField(max_length=255)

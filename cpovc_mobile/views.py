@@ -31,6 +31,9 @@ import requests
 import json
 
 
+from cpovc_forms.models import OVCCareQuestions
+
+
 class ApprovalStatus(Enum):
     NEUTRAL = auto() # stored as 1 in the DB
     TRUE = auto() # stored as 2 in the DB
@@ -113,6 +116,7 @@ def get_all_ovc_mobile_cpara_data(request):
                 'ovc_cpims_id': event.ovc_cpims_id,
                 'date_of_event': event.date_of_event,
                 'is_accepted': event.is_accepted,
+                'event_id': event.id,
                 'questions': [],
                 'individual_questions': [],
                 'scores': {},  # Initialize scores as a dictionary
@@ -169,19 +173,21 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Fetch by ovc id
-        events = OVCMobileEvent.objects.filter(ovc_cpims_id=ovc_id)
+        events = OVCMobileEvent.objects.filter(ovc_cpims_id=ovc_id, is_accepted=1)
+        events_list = events.values('id')
 
+        # Retrieve  event attributes
+        attributes = OVCMobileEventAttribute.objects.filter(event__in=events_list)
         for event in events:
             event_data = {
                 'ovc_cpims_id': event.ovc_cpims_id,
                 'date_of_event': event.date_of_event,
+                'event_id': event.id,
                 'questions': [],
                 'individual_questions': [],
                 'scores': {},
             }
 
-            # Retrieve  event attributes
-            attributes = OVCMobileEventAttribute.objects.filter(event__in=events)
 
             for attribute in attributes:
                 attribute_data = {
@@ -190,14 +196,14 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                     'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,  
                 }
 
-                if attribute.question_name.startswith('question_'):
+                if attribute.question_name.startswith('question_') and attribute.event_id == event.id:
                     # Remove the 'question_' prefix
                     question_code = attribute.question_name[len('question_'):]
                     event_data['questions'].append({
                         'question_code': question_code,
                         'answer_id': attribute_data['answer_value'],
                     })
-                elif attribute.question_name.startswith('individual_question_'):
+                elif attribute.question_name.startswith('individual_question_') and attribute.event_id == event.id:
                     # Remove 'individual_question_' prefix
                     question_code = attribute.question_name[len('individual_question_'):]
                     individual_question = {
@@ -210,7 +216,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                         ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
                     individual_question['ovc_cpims_id'] = ovc_cpims_id_individual
                     event_data['individual_questions'].append(individual_question)
-                elif attribute.question_name.startswith('score_'):
+                elif attribute.question_name.startswith('score_') and attribute.event_id == event.id:
                     # Remove the 'score_' prefix
                     key = attribute.question_name[len('score_'):]
                     event_data['scores'][key] = attribute_data['answer_value']
@@ -278,7 +284,7 @@ def create_form_payload(attributes, event):
     return form_payload
 
 
-@api_view(['PATCH'])
+@api_view(['PATCH', 'POST'])
 @permission_classes([IsAuthenticated])
 def update_cpara_is_accepted(request, event_id):
     try:
@@ -309,9 +315,9 @@ def update_cpara_is_accepted(request, event_id):
 
 
         # Update is_accepted field for the main event
-        for attribute in attributes:
-            event.is_accepted = is_accepted
-            event.save()
+        # for attribute in attributes:
+        event.is_accepted = is_accepted
+        event.save()
 
         return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
     except OVCMobileEvent.DoesNotExist:
@@ -429,13 +435,13 @@ def get_ovc_event(request,form_type, ovc_id):
             all = OVCEvent.objects.all()
             events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id, form_type=form_type).order_by('id')
             services_data = OVCServices.objects.filter(event__in=events).values(
-                'domain_id', 'service_id', 'is_accepted', 'event_id', 'id'
+                'domain_id', 'service_id', 'is_accepted', 'event_id', 'id', 
             ).order_by('event_id')
             # breakpoint()
         else:
             return Response({'error': 'Enter a valid form type: F1A or F1B'})
         print(events)
-        print(services_data)
+        print(f"services_data {services_data}")
         print(all.values()[0])
         event_data = []
         for event, service in zip(events, services_data):
@@ -460,7 +466,7 @@ def get_ovc_event(request,form_type, ovc_id):
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['PATCH'])
+@api_view(['PATCH', 'POST'])
 @permission_classes([IsAuthenticated])
 def update_is_accepted(request, event_id):
     try:
@@ -518,7 +524,7 @@ def delete_ovc_event(request, event_id):
 # Helper function to serialize a service
 def service_serializer(service):
     return {
-        'id': service.id,
+        'id': service.unique_service_id,
         'event_id': service.event_id,
         'domain_id': service.domain_id,
         'service_id': service.service_id,
@@ -616,52 +622,50 @@ def get_one_case_plan(request, ovc_id):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PATCH'])
+@api_view(['PATCH', 'POST'])
 @permission_classes([IsAuthenticated])
-def update_case_plan_is_accepted(request, event_id):
+def update_case_plan_is_accepted(request, unique_service_id):
     try:
-        event = CasePlanTemplateEvent.objects.get(id=event_id)
-        services = CasePlanTemplateService.objects.filter(event=event)
+        service = CasePlanTemplateService.objects.get(unique_service_id=unique_service_id)
+
+        event = service.event
 
         new_is_accepted = request.data.get('is_accepted')
         if new_is_accepted is not None:
             # Check if is_accepted is set to False (3)
             if new_is_accepted == ApprovalStatus.FALSE.value:
                 # Create a corresponding rejected record in CasePlanTemplateEventRejected
-                CasePlanTemplateEventRejected.objects.create(
+                rejected_event = CasePlanTemplateEventRejected.objects.create(
                     user_id=event.user_id,
                     ovc_cpims_id=event.ovc_cpims_id,
-                    date_of_event=event.date_of_event,
-                    id=event.id  # Maintain the same UUID in the rejected model
+                    date_of_event=event.date_of_event
                 )
 
-                # Copy the services to CasePlanTemplateServiceRejected
-                for service in services:
-                    # Create the corresponding rejected service
-                    CasePlanTemplateServiceRejected.objects.create(
-                        event=event,
-                        domain_id=service.domain_id,
-                        service_id=service.service_id,
-                        goal_id=service.goal_id,
-                        gap_id=service.gap_id,
-                        priority_id=service.priority_id,
-                        responsible_id=service.responsible_id,
-                        results_id=service.results_id,
-                        reason_id=service.reason_id,
-                        completion_date=service.completion_date,
-                        is_accepted=new_is_accepted,
-                        message=request.data.get('message'),
-                        id=service.id  # Maintain the same UUID in the rejected model
-                    )
+                # Create the corresponding rejected service
+                CasePlanTemplateServiceRejected.objects.create(
+                    event=rejected_event,
+                    domain_id=service.domain_id,
+                    service_id=service.service_id,
+                    goal_id=service.goal_id,
+                    gap_id=service.gap_id,
+                    priority_id=service.priority_id,
+                    responsible_id=service.responsible_id,
+                    results_id=service.results_id,
+                    reason_id=service.reason_id,
+                    completion_date=service.completion_date,
+                    is_accepted=new_is_accepted,
+                    message=request.data.get('message')
+                )
 
-            # Update the is_accepted field for the original event's services
-            services.update(is_accepted=new_is_accepted)
+            # Update the is_accepted field for the original service
+            service.is_accepted = new_is_accepted
+            service.save()
 
             return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
-    except CasePlanTemplateEvent.DoesNotExist:
-        return Response({'error': 'Case Plan Event not found'}, status=status.HTTP_404_NOT_FOUND)
+    except CasePlanTemplateService.DoesNotExist:
+        return Response({'error': 'Case Plan Service not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
