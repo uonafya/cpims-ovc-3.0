@@ -589,14 +589,14 @@ National
                                 "services": [
                                   {
                                     "domain_id": service.domain_id,
-                                    "service_id": service.service_id,
+                                    "service_id": [service.service_id],
                                     "goal_id": service.goal_id,
                                     "gap_id": service.gap_id,
                                     "priority_id": service.priority_id,
                                     "responsible_id": service.responsible_id,
                                     "results_id": service.results_id,
                                     "reason_id": service.reason_id,
-                                    "completion_date": service.completion_date,
+                                    "completion_date": service.completion_date
                                   }]
                             })
                         $("#Dataapproval tbody").append(`<tr id="${service.id}_tr" class="datarows">

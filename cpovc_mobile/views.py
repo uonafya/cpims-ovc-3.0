@@ -31,7 +31,7 @@ import requests
 import json
 
 
-from cpovc_forms.models import OVCCareQuestions, OVCCareQuestionss
+from cpovc_forms.models import OVCCareQuestions
 from cpovc_main.functions import get_list, get_dict
 
 
@@ -900,7 +900,7 @@ def mobile_home(request):
         lip_id = request.session.get('ou_primary')
 
         chvss = OVCRegistration.objects.filter(is_void=False, child_cbo_id=lip_id).distinct('child_chv_id')
-        care_quiz = OVCCareQuestionss.objects.filter(is_void=False, code__startswith="CP")
+        care_quiz = OVCCareQuestions.objects.filter(is_void=False, code__startswith="CP")
         cpt_fields = ['case_plan_services_school', 'case_plan_services_safe', 'case_plan_services_stable', 'case_plan_services_health']
         cpt_list = get_dict(field_name=cpt_fields)
         f1b_fields = ['form1b_items']
