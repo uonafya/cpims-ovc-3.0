@@ -1,20 +1,19 @@
-from datetime import datetime
 from django.http import JsonResponse
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.renderers import JSONRenderer
 
-from cpovc_ovc.models import OVCRegistration, OVCHealth,OVCHouseHold
+from cpovc_ovc.models import OVCRegistration, OVCHealth
 from cpovc_registry.models import RegPersonsGeo, RegPersonsExternalIds
-from cpovc_forms.models import OVCCareEvents, OVCCareServices,OVCCareCasePlan,OVCCareCpara,OVCCareF1B
 
-from cpovc_main.functions import get_dict
 from cpovc_main.models import SetupList
 from .functions import (
-    dcs_dashboard, get_attached_orgs, get_vals, save_form, validate_ovc)
+    dcs_dashboard, ovc_dashboard, get_attached_orgs, save_form,
+    validate_ovc, get_ovc_data, get_services_data, get_caseload,
+    access_manager)
 
 from cpovc_dashboard.parameters import PARAMS
-
-from rest_framework.permissions import IsAuthenticated,AllowAny 
+from .params import SID, SIDS, META_IDS
 
 
 def api_home(request):
@@ -29,46 +28,38 @@ def api_home(request):
         pass
 
 
+def token_validate(request):
+    """ Method for home."""
+    try:
+        print('User', request.user.id)
+        Response = {"status": 0, "message": "Method NOT Allowed"}
+        return JsonResponse(
+            Response, content_type='application/json', safe=False)
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
 @api_view(['GET', 'POST'])
 def dashboard(request):
     """Method to handle DREAMS."""
     try:
         user_orgs = get_attached_orgs(request)
-        print(user_orgs)
-        results = dcs_dashboard(request, user_orgs)
+        print('User orgs', user_orgs)
+        reg_ovc = user_orgs['reg_ovc'] if 'reg_ovc' in user_orgs else False
+        if reg_ovc:
+            results = ovc_dashboard(request, user_orgs)
+        else:
+            results = dcs_dashboard(request, user_orgs)
         results['org_unit'] = user_orgs['ou_name']
         results['org_unit_id'] = user_orgs['ou_id']
-        '''
-        results = {"active": 132294, "ever_registered": 307005,
-                   "caregivers": 171142, "workforce": 487,
-                   "other_org_units": 36, "households": 154,
-                   "org_unit": "USAID 4TheChild", "org_unit_id": 7226}
-        '''
         msg = 'Partner details Found'
         if request.method == 'GET':
             user_id = request.query_params.get('user_id')
             print(user_id)
         results['details'] = msg
-                
-        #  add data to be fetched for mobile dashboard
-        results['filled_cpara'] = OVCCareCpara.objects.values('cpara_id').count()
-        results['filled_f1B'] = OVCCareF1B.objects.values('form_id').count()
-        results['filled_f1A'] = OVCCareServices.objects.values('service_id'.count)
-        results['filled_caseplan'] = OVCCareCasePlan.objects.values('case_plan_id').count()
-        results['total_households'] = OVCHouseHold.objects.values('id').count()
-        results['total_ovc'] = OVCRegistration.objects.values('id').count()
-        results['total_clhiv'] = OVCRegistration.objects.filter(hiv_status='HSTP').count()
-        
-        # new results format 
-        '''
-        results = {"active": 132294, "ever_registered": 307005,
-                   "caregivers": 171142, "workforce": 487,
-                   "other_org_units": 36, "households": 154,
-                   "org_unit": "USAID 4TheChild", "org_unit_id": 7226
-                   "filled_cpara:123","filled_f1B":123,"filled_F1A":123,
-                   "filled_caseplan":123,"total_households":123,
-                   "total_ovc":123,total_clhiv:123}
-        '''
+        print(results)
     except Exception as e:
         msg = 'Error getting Partner details - %s' % (str(e))
         return Response({'details': msg})
@@ -76,129 +67,18 @@ def dashboard(request):
         return Response(results)
 
 
-'''
-cbo_id
-cbo
-ward_id
-ward
-consituency_id
-constituency
-countyid
-county
-
-cpims_ovc_id
-ovc_names
-gender
-dob
-date_of_birth
-age
-age_at_reg
-agerange
-birthcert
-bcertnumber
-ovcdisability
-ncpwdnumber
-
-ovchivstatus
-artstatus
-
-facility_id
-facility
-facility_mfl_code
-date_of_linkage
-ccc_number
-duration_on_art
-viral_load
-date_of_event
-suppression
-
-chv_id
-chv_names
-
-caregiver_id
-caregiver_names
-caregiver_dob
-caregiver_age
-phone
-caregiver_relation
-caregiver_gender
-caregiver_nationalid
-caregiverhivstatus
-household
-caregiver_type
-
-father_alive
-mother_alive
-
-schoollevel
-school_id
-school_name
-class
-
-registration_date
-duration_in_program
-immunization
-eligibility
-
-exit_status
-exit_date
-exit_reason
-'''
-
-
 @api_view(['GET', 'POST'])
 def caseload(request):
     """Method to handle DREAMS."""
     try:
+        print('TRACK_Caseload', request.META)
         results = []
-        eligibity = []
-        ovcs = OVCRegistration.objects.filter(is_void=False)[:200]
-        check_fields = ['sex_id', 'hiv_status_id', 'exit_reason_id',
-                        'immunization_status_id']
-        vals = get_dict(field_name=check_fields)
-        for ovc in ovcs:
-            ovc_id = ovc.person_id
-            dob = str(ovc.person.date_of_birth)
-            reg_date = str(ovc.registration_date)
-            onames = ovc.person.other_names
-            ovc_sex = get_vals(ovc.person.sex_id, vals)
-            hiv_status = get_vals(ovc.hiv_status, vals)
-            art_status = get_vals(ovc.art_status, vals)
-            #
-            imm_status = ovc.immunization_status
-            immunization_status = get_vals(
-                imm_status, vals) if imm_status != 'None' else None
-            # Exit
-            exit_status = 'ACTIVE' if ovc.is_active else 'EXITED'
-            exit_date = str(ovc.exit_date) if ovc.exit_date else ovc.exit_date
-            exit_reason = get_vals(ovc.exit_reason, vals)
-            name = '%s %s%s' % (ovc.person.first_name,
-                                ovc.person.surname,
-                                ' %s' % onames if onames else '')
-            child = {"cbo_id": ovc.child_cbo_id,
-                     "cbo": ovc.child_cbo.org_unit_name,
-                     "cpims_ovc_id": ovc_id, "ovc_names": name,
-                     "sex": ovc_sex, "ovchivstatus": hiv_status,
-                     "artstatus": art_status, "eligibility": eligibity,
-                     "date_of_birth": dob, 'registration_date': reg_date,
-                     "immunization": immunization_status,
-                     "exit_status": exit_status, "exit_date": exit_date,
-                     "exit_reason": exit_reason
-                     }
-            if ovc.hiv_status in ['HSTP', 'HHEI']:
-                ovc_health = OVCHealth.objects.filter(
-                    person_id=ovc_id, is_void=False)
-                if ovc_health:
-                    for health in ovc_health:
-                        facility_name = health.facility.facility_name
-                        child['ccc_number'] = health.ccc_number
-                        child['date_of_linkage'] = health.date_linked
-                        child['facility_name'] = facility_name
-            results.append(child)
         msg = 'Partner OVC details Found'
+        access = access_manager(request)
         if request.method == 'GET':
-            org_unit_id = request.query_params.get('org_unit_id')
-            print(org_unit_id)
+            results = get_caseload(request, 0)
+        elif request.method == 'POST':
+            print('POST method to update some OVC data')
         # results['details'] = msg
     except Exception as e:
         msg = 'Error getting Partner details - %s' % (str(e))
@@ -209,9 +89,90 @@ def caseload(request):
 
 
 @api_view(['GET', 'POST'])
+def metadata(request):
+    try:
+        qs = SetupList.objects.filter(
+            field_name__in=META_IDS, is_void=False)
+        results = qs.values(
+            "field_name", "item_id", "item_description",
+            "item_sub_category", "the_order")
+    except Exception as e:
+        print("error getting metadata - %s" % str(e))
+        return Response([])
+    else:
+        return Response(results)
+
+
+@api_view(['POST'])
+@renderer_classes([JSONRenderer])
+def sub_pop(request):
+    try:
+        results = []
+        print('SUB POP', request.data)
+    except Exception as e:
+        print("error saving sub pop - %s" % str(e))
+        return Response([])
+    else:
+        return Response(results)
+
+
+@api_view(['POST'])
+@renderer_classes([JSONRenderer])
+def cpara(request):
+    try:
+        results = []
+        print('CPARA', request.data)
+    except Exception as e:
+        print("error saving cpara - %s" % str(e))
+        return Response([])
+    else:
+        return Response(results)
+
+
+@api_view(['POST'])
+@renderer_classes([JSONRenderer])
+def caseplan(request):
+    try:
+        results = []
+        print('CASEPLAN', request.data)
+    except Exception as e:
+        print("error saving caseplan - %s" % str(e))
+        return Response([])
+    else:
+        return Response(results)
+
+
+@api_view(['POST'])
+@renderer_classes([JSONRenderer])
+def form1a(request):
+    try:
+        results = []
+        print('FORM 1A', request.data)
+    except Exception as e:
+        print("error saving Form 1A - %s" % str(e))
+        return Response([])
+    else:
+        return Response(results)
+
+
+@api_view(['POST'])
+@renderer_classes([JSONRenderer])
+def form1b(request):
+    try:
+        results = []
+        print('FORM 1B', request.data)
+    except Exception as e:
+        print("error saving form 1B - %s" % str(e))
+        return Response([])
+    else:
+        return Response(results)
+
+
+@api_view(['GET', 'POST'])
 def registration(request):
     try:
-        return caseload(request)
+        results = get_caseload(request, 0)
+        return results
     except Exception as e:
         raise e
 
@@ -221,29 +182,47 @@ def settings(request):
     try:
         results = []
         field_name = request.query_params.get(
-            'field_name', 'case_category_id')
-        if field_name is not None:
+            'field_name', None)
+        if field_name and field_name in SIDS:
+            if field_name in SID:
+                f_field = SID[field_name]
+                f_name = f_field['id']
+                f_filter = f_field['filter'] if 'filter' in f_field else None
+            else:
+                f_name = field_name
+                f_filter = None
             results = SetupList.objects.filter(
-                field_name=field_name, is_void=False).values(
+                field_name=f_name, is_void=False)
+            if f_filter:
+                f_field, f_value = f_filter.split('__')
+                results = results.filter(**{f_field: f_value})
+            results = results.values(
                 'item_id', 'item_description',
                 'item_sub_category', 'the_order')
-    except Exception:
+        else:
+            results = []
+            for fname in SID:
+                fdname = SID[fname]['name']
+                fds = {"id": fname, "name": fdname}
+                results.append(fds)
+    except Exception as e:
+        print("Error settings - %s" % str(e))
         return Response([])
     else:
         return Response(results)
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
+@renderer_classes([JSONRenderer])
 def form_data(request, form_id):
     """Method to handle Forms ID."""
     try:
+        print('TRACK_Caseload', request.META)
         results = {}
         if request.method == 'GET':
             msg = 'OVC Form details Found'
             ovc_cpims_id = request.query_params.get('ovc_cpims_id')
-            results = {"cpims_id": ovc_cpims_id, "name": "Test child",
-                       "date_of_birth": "2020-01-01"}
+            results = get_ovc_data(request, ovc_cpims_id, form_id)
         elif request.method == 'POST':
             person_id = request.data.get('ovc_cpims_id')
             event_date = request.data.get('date_of_event')
@@ -268,9 +247,6 @@ def dreams(request):
     """DREAMS Query endpoints."""
     try:
         results = {}
-        check_fields = ['olmis_education_service_id', 'olmis_pss_service_id',
-                        'olmis_hes_service_id', 'olmis_health_service_id',
-                        'olmis_protection_service_id']
         if request.method == 'GET':
             ovc_id = request.query_params.get('cpims_id')
             dreams_id = request.query_params.get('dreams_id')
@@ -339,32 +315,7 @@ def dreams(request):
                                            'name': const_name}
                 results['ward'] = {'code': ward_id, 'name': ward_name}
                 # Services
-                today = datetime.now()
-                year = today.strftime('%Y')
-                month = today.strftime('%m')
-                yr_padd = 1
-                if int(month) < 9:
-                    yr_padd = 2
-                year = int(year) - yr_padd
-                start_date = '%s-09-01' % (year)
-                # print(year, month, start_date)
-                services = []
-                vals = get_dict(field_name=check_fields)
-                ovc_care_events = OVCCareEvents.objects.filter(
-                    person_id=ovc_id, date_of_event__gte=start_date,
-                    event_type_id='FSAM',
-                    is_void=False).order_by('-date_of_event')
-                for ovc_event in ovc_care_events:
-                    event_id = ovc_event.pk
-                    service_date = ovc_event.date_of_event
-                    ovccare_services = OVCCareServices.objects.filter(
-                        event_id=event_id, is_void=False)
-                    for ovccare_service in ovccare_services:
-                        service_code = ovccare_service.service_provided
-                        service_name = get_vals(service_code, vals)
-                        servs = {'date': service_date, 'code': service_code,
-                                 'name': service_name}
-                        services.append(servs)
+                services = get_services_data(request, ovc_id, 'FSAM')
                 results['services'] = services
                 msg = 'OVC details for DREAMS found using %s' % (qtype)
             else:
@@ -375,5 +326,25 @@ def dreams(request):
     except Exception as e:
         msg = 'Error getting OVC details for DREAMS - %s' % (str(e))
         return Response({'details': msg})
+    else:
+        return Response(results)
+
+
+@api_view(['GET'])
+@renderer_classes([JSONRenderer])
+def form_unapproved(request):
+    """Method to handle Forms ID."""
+    try:
+        results = []
+        resp = {"form_id": "F1A", "ovc_cpims_id": 4041779,
+                "date_of_event": "2023-06-13",
+                "services": [{"domain_id": "DHNU", "service_id": "CP11HEGs"}],
+                "critical_events": [{"event_id": "EV001A",
+                                     "event_date": "2023-06-13"}]}
+        results.append(resp)
+    except Exception as e:
+        msg = "Error getting Partner details - %s" % (str(e))
+        print(msg)
+        return Response([])
     else:
         return Response(results)
