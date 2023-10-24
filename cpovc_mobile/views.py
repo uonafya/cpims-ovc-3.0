@@ -31,7 +31,7 @@ import requests
 import json
 
 
-from cpovc_forms.models import OVCCareQuestions, OVCCareQuestionss
+from cpovc_forms.models import OVCCareQuestions
 
 
 class ApprovalStatus(Enum):
@@ -899,7 +899,7 @@ def mobile_home(request):
         lip_id = request.session.get('ou_primary')
 
         chvss = OVCRegistration.objects.filter(is_void=False, child_cbo_id=lip_id).distinct('child_chv_id')
-        care_quiz = OVCCareQuestionss.objects.filter(is_void=False, code__startswith="CP")
+        care_quiz = OVCCareQuestions.objects.filter(is_void=False, code__startswith="CP")
    
         
         chvs = []
