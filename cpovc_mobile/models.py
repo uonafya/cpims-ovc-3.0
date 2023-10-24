@@ -25,6 +25,7 @@ class OVCMobileEvent(models.Model):
     class Meta:
         db_table = 'cpara_mobile_event'
 
+
 class OVCMobileEventAttribute(models.Model):
     event = models.ForeignKey(OVCMobileEvent, on_delete=models.CASCADE)
     ovc_cpims_id_individual = models.CharField(max_length=255)
