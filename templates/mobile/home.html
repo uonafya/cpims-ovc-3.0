@@ -477,7 +477,7 @@ National
 
                 let f1ab_translate = {}
                 {% for  quiz, value in f1blist.items %}
-                    f1ab_translate['{{ quiz|safe }}'] = '{{ value|safe }}';
+                    f1ab_translate["{{ quiz|safe }}"] = "{{ value|safe }}";
                 {% endfor %}
                 if(form === 'form1a' ){
                     var ta_trs = ""
@@ -590,7 +590,7 @@ National
                             // console.log({dta, data})
                             let cpt_translate = {}
                             {% for  quiz, value in cptlist.items %}
-                                cpt_translate['{{ quiz|safe }}'] = '{{ value|safe }}';
+                                cpt_translate["{{ quiz|safe }}"] = "{{ value|safe }}";
                                
                             {% endfor %}
 
@@ -682,7 +682,7 @@ National
                         let html_question = ''
                         let quiz_map = {}
                         {% for quiz in quizzes %}
-                            quiz_map['{{quiz.code}}'] = '{{ quiz.question}} : {{ quiz.question_text}}'
+                            quiz_map["{{quiz.code}}"] = "{{ quiz.question}} : {{ quiz.question_text}}"
                         {% endfor %}
                         for (quiz in slice_question){
                             html_question += `
