@@ -787,16 +787,15 @@ def get_all_unaccepted_records(request):
 # Fetch unapproved records using query params
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def unaccepted_records(request):
+def unaccepted_records(request, form_type):
     try:
-        form_type = request.GET.get('form_type')
         data = []
-
-        # Check the record and 
-        if form_type == 'F1AB':
+        
+        if form_type == 'F1A' or form_type == 'F1B':
             # Fetch Form 1A and B records where is_accepted is FALSE (3) and user_id matches
-            ovc_services = OVCServicesRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
-
+           
+            ovc_services = OVCServices.objects.filter(is_accepted=3, event__user_id=request.user.id, event__form_type=form_type)
+            
             for service in ovc_services:
                 event_data = {
                     'ovc_cpims_id': service.event.ovc_cpims_id,
@@ -804,17 +803,16 @@ def unaccepted_records(request):
                     'date_of_event': service.event.date_of_event,
                     'services': {
                         'domain_id': service.domain_id,
-                        'service_id': service.service_id
-                    }
+                        'service_id': service.service_id,
+                    },
                 }
                 data.append(event_data)
         
         elif form_type == 'cpara':
-
             # Fetch cpara records where is_accepted is FALSE (3) and user_id matches
-            events = OVCMobileEventRejected.objects.filter(is_accepted=3, user_id=request.user.id)
-
-            for event in events:
+            cpara_events = OVCMobileEvent.objects.filter(is_accepted=3, user_id=request.user.id)
+            
+            for event in cpara_events:
                 event_data = {
                     'ovc_cpims_id': event.ovc_cpims_id,
                     'date_of_event': event.date_of_event,
@@ -822,48 +820,46 @@ def unaccepted_records(request):
                     'individual_questions': [],
                     'scores': {},
                 }
-
-                # Retrieve  event attributes
-                attributes = OVCMobileEventAttributeRejected.objects.filter(event__in=events)
-
+                
+                attributes = OVCMobileEventAttribute.objects.filter(event=event)
+                
                 for attribute in attributes:
                     attribute_data = {
                         'question_name': attribute.question_name,
                         'answer_value': attribute.answer_value,
-                        'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,  
+                        'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,
                     }
-
+                    
                     if attribute.question_name.startswith('question_'):
-                        # Remove the 'question_' prefix
                         question_code = attribute.question_name[len('question_'):]
                         event_data['questions'].append({
                             'question_code': question_code,
                             'answer_id': attribute_data['answer_value'],
                         })
                     elif attribute.question_name.startswith('individual_question_'):
-                        # Remove 'individual_question_' prefix
                         question_code = attribute.question_name[len('individual_question_'):]
                         individual_question = {
                             'question_code': question_code,
                             'answer_id': attribute_data['answer_value'],
                         }
-                        # Aremove the prefixes
+                        
                         ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
+                        
                         if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
                             ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
+                        
                         individual_question['ovc_cpims_id'] = ovc_cpims_id_individual
                         event_data['individual_questions'].append(individual_question)
                     elif attribute.question_name.startswith('score_'):
-                        # Remove the 'score_' prefix
                         key = attribute.question_name[len('score_'):]
                         event_data['scores'][key] = attribute_data['answer_value']
-
+                
                 data.append(event_data)
         
         elif form_type == 'caseplan':
             # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
-            case_plan_services = CasePlanTemplateServiceRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
-
+            case_plan_services = CasePlanTemplateService.objects.filter(is_accepted=3, event__user_id=request.user.id)
+            
             for service in case_plan_services:
                 event_data = {
                     'ovc_cpims_id': service.event.ovc_cpims_id,
@@ -871,17 +867,18 @@ def unaccepted_records(request):
                     'message': service.message,
                     'services': {
                         'domain_id': service.domain_id,
-                        'service_id': service.service_id
-                    }
+                        'service_id': service.service_id,
+                    },
                 }
                 data.append(event_data)
-
         else:
-            data = {'message': 'Unknown report type'}
-
-        return Response(data, status=status.HTTP_200_OK)
+            return JsonResponse({'error': 'Unknown report type'}, status=400)
+        
+        return JsonResponse(data, status=200, safe=False)
+    
     except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({'error': str(e)}, status=400)
+
 
   
  

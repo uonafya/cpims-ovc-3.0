@@ -26,11 +26,12 @@ urlpatterns = [
     re_path(r'^cpt/update/(?P<unique_service_id>[^/]+)$', views.update_case_plan_is_accepted, name='update-one-cpt-record'),
     re_path(r'^cpt/delete/(?P<event_id>[^/]+)$', views.delete_case_plan_event, name='delete-one-cpt-record'),
     
-    # Fetch all unaccpeted data
-    path('all/unaccepted', views.get_all_unaccepted_records, name='fetch-all-unaccepted-data'),
+    # Fetch all unaccepeted data
+    path('unaccepted_records', views.get_all_unaccepted_records, name='fetch-all-unaccepted-data'),
     
-    # Fetch all records /with query parameter
-    path('unaccepted_records/', views.unaccepted_records, name='fetch-unaccepted-data'),
+    # Fetch all records BY form type
+    path('unaccepted_records/<str:form_type>/', views.unaccepted_records, name='fetch-unaccepted-data'),
+    # re_path(r'^unaccepted_records/(?P<form_type>[0-9A-Z]{3})/$',views.unaccepted_records, name='fetch-unaccepted-data'),
     
   
     # front end validation urls
