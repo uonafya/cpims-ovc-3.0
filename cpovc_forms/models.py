@@ -1087,6 +1087,26 @@ class OVCCareQuestions(models.Model):
         db_table = 'ovc_care_questions'
 
 
+class OVCCareQuestionss(models.Model):
+    question_id = models.UUIDField(
+        primary_key=True, default=uuid.uuid1, editable=False)
+    code = models.CharField(max_length=5)
+    question = models.CharField(max_length=55)
+    domain = models.CharField(max_length=10)
+    question_text = models.CharField(max_length=255)
+    question_type = models.CharField(max_length=20, null=False)
+    # form = models.ForeignKey(OVCCareForms, on_delete=models.CASCADE)
+    is_void = models.BooleanField(default=False)
+    timestamp_created = models.DateTimeField(auto_now_add=True)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return self.code
+
+    class Meta:
+        db_table = 'ovc_care_questions1'
+
+
 
 # class OVCHIVRiskScreening(models.Model):
 #     risk_id = models.UUIDField( primary_key=True, default=uuid.uuid4, editable=False)

@@ -3,18 +3,25 @@ from django.db.models import Count
 
 from cpovc_registry.models import (
     RegPersonsTypes, RegPersonsOrgUnits, RegPerson, RegOrgUnit,
-    RegPersonsExternalIds)
+    RegPersonsExternalIds, RegPersonsGeo)
 from cpovc_forms.models import (
     OVCCaseRecord, OVCCaseCategory, OVCCareServices, OVCCaseGeo,
     OVCPlacement, OVCCareEvents, OVCCareF1B, OVCCareCasePlan,
-    OVCCareForms)
+    OVCCareForms, OVCCareQuestions, OVCCareBenchmarkScore,
+    OVCCareCpara, OVCSubPopulation, OVCCareIndividaulCpara, OVCCareEAV)
 
 from cpovc_auth.models import AppUser
 from cpovc_ovc.models import (
-    OVCRegistration, OVCHHMembers, OVCEligibility)
+    OVCRegistration, OVCHHMembers, OVCHealth)
 
 from cpovc_registry.functions import get_orgs_child
 from cpovc_auth.functions import get_attached_units
+
+from cpovc_main.functions import get_dict
+
+from cpovc_dashboard.parameters import PARAMS
+
+from .models import DeviceManagement
 
 
 def get_attached_orgs(request):
@@ -49,10 +56,11 @@ def get_attached_orgs(request):
             all_ous.append(str(org_id))
         # allroles = ','.join(list(set(all_roles)))
         # allous = ','.join(all_ous)
-
+        child_ous = get_child_units([reg_pri])
         vals = {'perms': orgs, 'ou_id': reg_pri,
                 'attached_ou': all_ous, 'perms_ou': all_roles,
-                'reg_ovc': reg_ovc, 'ou_name': reg_pri_name}
+                'reg_ovc': reg_ovc, 'ou_name': reg_pri_name,
+                'ou_attached': child_ous}
     except Exception as e:
         print('Error with dashboard - %s' % (str(e)))
         return {}
@@ -248,10 +256,10 @@ def ovc_dashboard(request, params):
         dash['caregivers'] = vals['TBGR']
         dash['government'] = vals['TWGE']
         dash['ngo'] = vals['TWNE']
-        # OVC Filters
-        cbo_id = request.session.get('ou_primary', 0)
-        cbo_ids = request.session.get('ou_attached', [])
-        reg_ovc = request.session.get('reg_ovc', 0)
+        # OVC Filters using params
+        cbo_id = params['ou_primary'] if 'ou_primary' in params else 0
+        org_ids = params['attached_ou'] if 'attached_ou' in params else []
+        reg_ovc = params['reg_ovc'] if 'reg_ovc' in params else 0
         # Case records
         case_records = OVCCaseRecord.objects.filter(
             date_case_opened__gte=start_date, is_void=False)
@@ -267,10 +275,6 @@ def ovc_dashboard(request, params):
         ptypes = RegPersonsTypes.objects.filter(
             person_type_id='TBVC', is_void=False,
             date_ended=None).values_list('person_id', flat=True)
-        # All linked CBOS
-        org_id = int(cbo_id)
-        org_ids = get_orgs_child(org_id)
-
         # Get org units
         orgs_count = len(org_ids) - 1 if len(org_ids) > 1 else 1
         dash['org_units'] = orgs_count
@@ -309,9 +313,6 @@ def ovc_dashboard(request, params):
         hh_count = OVCHHMembers.objects.filter(
             person_id__in=child_ids).values(
             'house_hold_id').distinct().count()
-        if cbo_ids:
-            cbos_list = [int(cbo_str) for cbo_str in cbo_ids.split(',')]
-            org_ids = org_ids + cbos_list
         if request.user.is_superuser:
             oregs = OVCRegistration.objects.filter(
                 registration_date__gte=start_date).values(
@@ -388,52 +389,15 @@ def ovc_dashboard(request, params):
             cdate = the_date.strftime('%d-%b-%y')
             ovc_regs[str(cdate)] = oreg['unit_count']
         # Case Records / OVC Services
-        svm, svf = 0, 0
-        if reg_ovc or request.user.is_superuser:
-            ovc_serv_all = OVCCareServices.objects.filter(
-                event__event_type_id='FSAM', is_void=False,
-                event__date_of_event__gte=start_date,
-                event__person_id__in=child_ids)
-            ovc_servs = ovc_serv_all.values(
-                'event__date_of_event').annotate(
-                unit_count=Count('event__date_of_event'))
-            # Served by gender
-            ovc_servgs = ovc_serv_all.values(
-                'event__person__sex_id').annotate(
-                gender_count=Count('event__person_id', distinct=True))
-            for oserv in ovc_servgs:
-                sgender = str(oserv['event__person__sex_id'])
-                child = oserv['gender_count']
-                if sgender == 'SMAL':
-                    svm = child
-                else:
-                    svf = child
-            for ovc_serv in ovc_servs:
-                the_date = ovc_serv['event__date_of_event']
-                cdate = the_date.strftime('%d-%b-%y')
-                case_regs[str(cdate)] = ovc_serv['unit_count']
-        else:
-            ovc_case_regs = case_records.values(
-                'date_case_opened').annotate(
-                unit_count=Count('date_case_opened'))
-            for ovc_reg in ovc_case_regs:
-                the_date = ovc_reg['date_case_opened']
-                cdate = the_date.strftime('%d-%b-%y')
-                case_regs[str(cdate)] = ovc_reg['unit_count']
-        ovc_summ['m3'] = svm
-        ovc_summ['f3'] = svf
+        ovc_summ['m3'] = 0
+        ovc_summ['f3'] = 0
         dash['ovc_summary'] = ovc_summ
         # Case categories Top 5
 
-        cases = OVCEligibility.objects.filter(
-            person_id__in=child_ids)
-        case_criteria = cases.values('criteria').annotate(unit_count=Count(
-            'criteria')).order_by('-unit_count')
-        dash['child_regs'] = child_regs
-        dash['ovc_regs'] = ovc_regs
-        dash['case_regs'] = case_regs
+        dash['ovc_regs'] = []
+        dash['case_regs'] = []
         dash['case_cats'] = {}
-        dash['criteria'] = case_criteria
+        dash['criteria'] = {}
     except Exception as e:
         print(
             'error - {}'.format(str(e)))
@@ -533,7 +497,9 @@ def get_event_count(request, person_id, ev_type_id):
 def get_user_org_unit(request, item_id=1):
     """Method to get user primary unit."""
     try:
-        ou_vars = get_attached_units(request.user)
+        print('U', request.user.username)
+        ou_vars = get_attached_units(request.user, False)
+        print('OUP', ou_vars)
         primary_ou, primary_name, attached_ou = 0, '', ''
         attached_ous = []
         if ou_vars:
@@ -569,11 +535,11 @@ def save_event(request, person_id, event_date, hhid, ev_type_id='FM1B'):
         return event_id
 
 
-def save_form(request, person_id, event_date, form_id, services):
+def save_form(request, person_id, event_date, form_id, services, scores=[]):
     """Method to save forms."""
     try:
         # Forms settings
-        fms = {'F1A': 'FSAM', 'F1B': 'FM1B', 'CPT': 'CPAR'}
+        fms = {'F1A': 'FSAM', 'F1B': 'FM1B', 'CPT': 'CPAR', 'CPR': 'cpr'}
         ev_type_id = fms[form_id] if form_id in fms else 'F1A'
         caregiver = OVCRegistration.objects.filter(person_id=person_id).first()
         caregiver_id = caregiver.caretaker_id
@@ -598,6 +564,16 @@ def save_form(request, person_id, event_date, form_id, services):
                     date_of_encounter_event=service_date,
                     event_id=event_id,
                 ).save()
+            # Critical events
+            cevents = request.data.get('critical_events')
+            for cevent in cevents:
+                critical_event_id = cevent['event_id']
+                OVCCareEAV(
+                    entity="CEVT",
+                    attribute="FSAM",
+                    value=critical_event_id,
+                    event_id=event_id
+                ).save()
         elif form_id == 'F1B':
             # Form 1B - Services to the Caregiver
             for service in services:
@@ -605,6 +581,16 @@ def save_form(request, person_id, event_date, form_id, services):
                 service_id = service['service_id']
                 OVCCareF1B(event_id=event_id, domain=service_domain,
                            entity=service_id).save()
+            # Critical events
+            cevents = request.data.get('critical_events')
+            for cevent in cevents:
+                critical_event_id = cevent['event_id']
+                OVCCareEAV(
+                    entity="CEVT",
+                    attribute="FSAM",
+                    value=critical_event_id,
+                    event_id=event_id
+                ).save()
         elif form_id == 'CPT':
             # Case Plan Template
             ddate = '1900-01-01'
@@ -654,9 +640,369 @@ def save_form(request, person_id, event_date, form_id, services):
         elif form_id == 'CPR':
             # Case Plan Achievement Readiness Assessment (CPARA)
             print('Form CPARA')
+            # Answer mappings
+            answers, ianswers = {}, {}
+            all_iqtns = ['CP15q', 'CP16q', 'CP17q']
+            amaps = {'AYES': True, 'ANNO': False,
+                     'ANA': 'Na', 'ANNA': 'Na'}
+            qtns = request.data.get('questions')
+            iqtns = request.data.get('individual_questions')
+            scores = request.data.get('scores')
+            sub_pops = request.data.get('ovc_subpopulation')
+            d_previous = request.data.get('date_of_previous_event')
+            date_previous = d_previous if d_previous else None
+            print('Questions', qtns)
+            print('Scores', scores)
+            print('Individual Questions', iqtns)
+            # Answers to dict
+            all_ans = {}
+            if qtns:
+                for qtn in qtns:
+                    q_code = qtn['question_code']
+                    ans_id = qtn['answer_id']
+                    if ans_id is None:
+                        f_answer = None
+                    else:
+                        f_answer = amaps[ans_id] if ans_id in amaps else 'No'
+                    all_ans[q_code] = f_answer
+            questions = OVCCareQuestions.objects.filter(
+                code__startswith='CP', is_void=False).values()
+            for question in questions:
+                qtnid = question['code']
+                # db_ans[qtnid] = question
+                if qtnid in all_ans:
+                    f_ans = all_ans[qtnid]
+                    question['answer_id'] = f_ans
+                else:
+                    question['answer_id'] = 'False'
+                answers[qtnid] = question
+                # Individual questions
+                if qtnid in all_iqtns:
+                    question['person_id'] = person_id
+                    ianswers[qtnid] = question
+            # Save questions for HH
+            for ans in answers:
+                answer = answers[ans]
+                OVCCareCpara.objects.create(
+                    person_id=person_id,
+                    caregiver_id=caregiver_id,
+                    question_id=answer['question_id'],
+                    question_code=answer['code'],
+                    answer=answer['answer_id'],
+                    household_id=hhid,
+                    question_type=answer['question_type'],
+                    domain=answer['domain'],
+                    event_id=event_id,
+                    date_of_event=event_date,
+                    date_of_previous_event=date_previous
+                )
+            # Save questions for individual HH members
+            for ians in ianswers:
+                ianswer = ianswers[ians]
+                print('ICPAARA', ianswer)
+                OVCCareIndividaulCpara.objects.create(
+                    person_id=ianswer['person_id'],
+                    caregiver_id=caregiver_id,
+                    question_code=ianswer['code'],
+                    question_id=answer['question_id'],
+                    answer=ianswer['answer_id'],
+                    household_id=hhid,
+                    question_type=ianswer['question_type'],
+                    domain=ianswer['domain'],
+                    date_of_event=event_date,
+                    date_of_previous_event=date_previous,
+                    event_id=event_id
+                )
+            # OVC sub population
+            if sub_pops:
+                for sub_pop in sub_pops:
+                    ovc_sid = sub_pop['ovc_cpims_id']
+                    criteria_id = sub_pop['criteria']
+                    OVCSubPopulation.objects.create(
+                        person_id=ovc_sid,
+                        criteria=criteria_id,
+                        event_id=event_id,
+                        date_of_event=event_date
+                    )
+            # Save scores by array IDS - None is Zero
+            ovc_score = [0 for i in range(0, 9)]
+            if scores:
+                for bm in scores:
+                    for itm in bm:
+                        bv = bm[itm]
+                        idx = int(itm.replace('b', '')) - 1
+                        ovc_score[idx] = int(bv)
+                OVCCareBenchmarkScore.objects.create(
+                    household_id=hhid,
+                    benchmark_1=int(ovc_score[0]),
+                    benchmark_2=int(ovc_score[1]),
+                    benchmark_3=int(ovc_score[2]),
+                    benchmark_4=int(ovc_score[3]),
+                    benchmark_5=int(ovc_score[4]),
+                    benchmark_6=int(ovc_score[5]),
+                    benchmark_7=int(ovc_score[6]),
+                    benchmark_8=int(ovc_score[7]),
+                    benchmark_9=int(ovc_score[8]),
+                    score=sum([int(i) for i in ovc_score]),
+                    event_id=event_id,
+                    date_of_event=event_date,
+                    care_giver_id=caregiver_id)
     except Exception as e:
         msg = 'Error saving form - %s' % (str(e))
         return msg
     else:
         msg = 'Form %s details saved successfully' % form_id
         return msg
+
+
+def get_ovc_data(request, ovc_cpims_id, form_id):
+    """Method to get OVC past events."""
+    try:
+        results = {}
+        fms = {'F1A': 'FSAM', 'F1B': 'FM1B', 'CPT': 'CPAR', 'CPR': 'cpr'}
+        ovc_access = validate_ovc(request, ovc_cpims_id)
+        if ovc_access:
+            qs = OVCRegistration.objects.filter(
+                person_id=ovc_cpims_id, is_void=False)
+            if qs:
+                queryset = qs[0]
+                if queryset.hiv_status in ['HSTP', 'HHEI']:
+                    health = OVCHealth.objects.get(
+                        person_id=ovc_cpims_id, is_void=False)
+                    if health:
+                        facility_name = health.facility.facility_name
+                        results["ccc_number"] = health.ccc_number
+                        results["date_of_linkage"] = health.date_linked
+                        results["facility_name"] = facility_name
+                # Primary information
+                results["ovc_cpims_id"] = ovc_cpims_id
+                results["ovc_names"] = queryset.person.all_names
+                results["date_of_birth"] = queryset.person.date_of_birth
+                results["ovc_enrollment_date"] = queryset.registration_date
+                exit_status = "ACTIVE" if queryset.is_active else "EXITED"
+                results["exit_status"] = exit_status
+                results["exit_date"] = queryset.exit_date
+                # CBO
+                results["cbo_id"] = queryset.child_cbo_id
+                results["cbo_name"] = queryset.child_cbo.org_unit_name
+                # CHV
+                results["chv_cpims_id"] = queryset.child_chv_id
+                results["chv_names"] = queryset.child_chv.all_names
+                # Caregiver
+                results["caregiver_cpims_id"] = queryset.caretaker_id
+                results["caregiver_names"] = queryset.caretaker.all_names
+                # Other identifiers
+                results["nemis_no"] = None
+                results["nupi_no"] = None
+                # Geo locations
+                geos = RegPersonsGeo.objects.filter(
+                    person_id=ovc_cpims_id, is_void=False)
+                ward_id, ward_name = None, None
+                const_id, const_name = None, None
+                county_id, county_name = None, None
+                for geo in geos:
+                    if geo.area.area_type_id == "GWRD":
+                        ward_id = geo.area.area_code
+                        ward_name = geo.area.area_name
+                    if geo.area.area_type_id == "GDIS":
+                        const_id = geo.area.area_code
+                        const_name = geo.area.area_name
+                        county_id = geo.area.parent_area_id
+                if county_id:
+                    county_id = str(county_id).zfill(3)
+                    county_name = PARAMS[county_id]
+                results["county"] = {"code": county_id, "name": county_name}
+                results["constituency"] = {"code": const_id,
+                                           "name": const_name}
+                results["ward"] = {"code": ward_id, "name": ward_name}
+            # Services
+            ev_tid = fms[form_id] if form_id in fms else 'FSAM'
+            services = get_services_data(request, ovc_cpims_id, ev_tid)
+            results["services"] = services
+        else:
+            results["message"] = "No permission to access OVC by IP/LIP"
+    except Exception:
+        return {"message": "Error occured"}
+    else:
+        return results
+
+
+def get_services_data(request, ovc_cpims_id, event_type_id='FSAM'):
+    """ method to get services."""
+    try:
+        services = []
+        check_fields = ['olmis_education_service_id', 'olmis_pss_service_id',
+                        'olmis_hes_service_id', 'olmis_health_service_id',
+                        'olmis_protection_service_id', 'form1b_items']
+        vals = get_dict(field_name=check_fields)
+        start_date = get_start_date()
+        person_id = ovc_cpims_id
+        if event_type_id == 'FM1B':
+            person = OVCRegistration.objects.filter(
+                person_id=person_id, is_void=False)
+            person_id = person[0].caretaker_id
+        ovc_care_events = OVCCareEvents.objects.filter(
+            person_id=person_id, date_of_event__gte=start_date,
+            event_type_id=event_type_id,
+            is_void=False).order_by('-date_of_event')
+        print('EVENT', event_type_id, start_date)
+        # Form 1A
+        if event_type_id == 'FSAM':
+            for ovc_event in ovc_care_events:
+                event_id = ovc_event.pk
+                service_date = ovc_event.date_of_event
+                ovccare_services = OVCCareServices.objects.filter(
+                    event_id=event_id, is_void=False)
+                for ovccare_service in ovccare_services:
+                    service_code = ovccare_service.service_provided
+                    service_name = get_vals(service_code, vals)
+                    servs = {'date': service_date, 'code': service_code,
+                             'name': service_name}
+                    services.append(servs)
+        elif event_type_id == 'FM1B':
+            for ovc_event in ovc_care_events:
+                event_id = ovc_event.pk
+                service_date = ovc_event.date_of_event
+                events = OVCCareF1B.objects.filter(
+                    event_id=event_id, is_void=False)
+                for ovc_event in events:
+                    print('Form 1B EV', ovc_event)
+                    service_code = ovc_event.entity
+                    service_name = get_vals(service_code, vals)
+                    servs = {'date': service_date, 'code': service_code,
+                             'name': service_name}
+                    services.append(servs)
+        elif event_type_id == 'CPAR':
+            services = []
+        elif event_type_id == 'cpr':
+            services = []
+    except Exception:
+        return []
+    else:
+        return services
+
+
+def get_start_date():
+    """Method to get start date."""
+    try:
+        today = datetime.now()
+        year = today.strftime('%Y')
+        month = today.strftime('%m')
+        yr_padd = 1
+        if int(month) < 9:
+            yr_padd = 2
+        year = int(year) - yr_padd
+        start_date = '%s-09-01' % (year)
+    except Exception:
+        return '1900-01-01'
+    else:
+        return start_date
+
+
+def get_caseload(request, allow_exit=1):
+    """Method to get caseload."""
+    try:
+        results = []
+        eligibility = []
+        org_unit_id = request.query_params.get('org_unit_id')
+        chv_cpims_id = request.query_params.get('chv_cpims_id')
+        is_active = request.query_params.get('active')
+        if not allow_exit:
+            is_active = 'TRUE'
+        ovcs = OVCRegistration.objects.filter(
+            is_void=False, caretaker_id__isnull=False)
+        if chv_cpims_id:
+            ovcs = ovcs.filter(child_chv_id=chv_cpims_id)
+        if is_active:
+            active = True if is_active.upper() == 'TRUE' else False
+            ovcs = ovcs.filter(is_active=active)
+        if org_unit_id:
+            ou_ids = [org_unit_id]
+        else:
+            ous = get_attached_orgs(request)
+            ou_ids = ous['attached_ou'] if 'attached_ou' in ous else []
+        print('OU IDS', ou_ids)
+        ovcs = ovcs.filter(child_cbo_id__in=ou_ids)[:100]
+        print('F RES', ovcs)
+        check_fields = ['sex_id', 'hiv_status_id', 'exit_reason_id',
+                        'immunization_status_id']
+        vals = get_dict(field_name=check_fields)
+        print('API ous', ous, ovcs)
+        for ovc in ovcs:
+            ovc_id = ovc.person_id
+            dob = str(ovc.person.date_of_birth)
+            reg_date = str(ovc.registration_date)
+            onames = ovc.person.other_names
+            cg_onames = ovc.caretaker.other_names
+            ovc_sex = get_vals(ovc.person.sex_id, vals)
+            hiv_status = get_vals(ovc.hiv_status, vals)
+            art_status = get_vals(ovc.art_status, vals)
+            #
+            imm_status = ovc.immunization_status
+            immunization_status = get_vals(
+                imm_status, vals) if imm_status != 'None' else None
+            # Exit
+            exit_status = 'ACTIVE' if ovc.is_active else 'EXITED'
+            exit_date = ovc.exit_date
+            exit_reason = get_vals(ovc.exit_reason, vals)
+            name = '%s %s%s' % (ovc.person.first_name,
+                                ovc.person.surname,
+                                ' %s' % onames if onames else '')
+            cg_name = '%s %s%s' % (ovc.caretaker.first_name,
+                                   ovc.caretaker.surname,
+                                   ' %s' % cg_onames if cg_onames else '')
+            child = {"cbo_id": ovc.child_cbo_id,
+                     "cbo": ovc.child_cbo.org_unit_name,
+                     "ovc_cpims_id": ovc_id, "ovc_names": name,
+                     "ovc_first_name": ovc.person.first_name,
+                     "ovc_surname": ovc.person.surname,
+                     "ovc_other_names": onames, "ovc_names": name,
+                     "age": ovc.person.years,
+                     "sex": ovc_sex, "ovchivstatus": hiv_status,
+                     "artstatus": art_status, "date_of_birth": dob,
+                     "caregiver_cpims_id": ovc.caretaker_id,
+                     "caregiver_names": cg_name,
+                     "caregiver_first_name": ovc.caretaker.first_name,
+                     "caregiver_surname": ovc.caretaker.surname,
+                     "caregiver_other_names": cg_onames,
+                     "chv_cpims_id": ovc.child_chv_id,
+                     'registration_date': reg_date,
+                     "eligibility": eligibility,
+                     "immunization": immunization_status,
+                     "exit_status": exit_status, "exit_date": exit_date,
+                     "exit_reason": exit_reason
+                     }
+            if ovc.hiv_status in ['HSTP', 'HHEI']:
+                ovc_health = OVCHealth.objects.filter(
+                    person_id=ovc_id, is_void=False)
+                if ovc_health:
+                    for health in ovc_health:
+                        facility_name = health.facility.facility_name
+                        child['ccc_number'] = health.ccc_number
+                        child['date_of_linkage'] = health.date_linked
+                        child['facility_name'] = facility_name
+            results.append(child)
+    except Exception as e:
+        print('Error getting case load - %s' % str(e))
+        return []
+    else:
+        return results
+
+
+def access_manager(request):
+    """Method to handle access management."""
+    try:
+        device_id = request.query_params.get('deviceID')
+        user_id = request.user.id
+        device, created = DeviceManagement.objects.get_or_create(
+            device_id=device_id, user_id=user_id,
+            defaults={'is_blocked': False, 'is_void': False})
+        if created:
+            print('New Device added %s' % str(device_id))
+        else:
+            print('Device Blocked', 'Void', device.is_blocked, device.is_void)
+    except Exception as e:
+        print('Error mapping device and user %s' % (str(e)))
+        return None
+    else:
+        return device
