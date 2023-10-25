@@ -186,7 +186,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                 'event_id': event.id,
                 'questions': [],
                 'individual_questions': [],
-                'scores': {},
+                'scores': [],
             }
 
 
@@ -219,8 +219,8 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                     event_data['individual_questions'].append(individual_question)
                 elif attribute.question_name.startswith('score_') and attribute.event_id == event.id:
                     # Remove the 'score_' prefix
-                    key = attribute.question_name[len('score_'):]
-                    event_data['scores'][key] = attribute_data['answer_value']
+
+                    event_data['scores'].append({attribute.question_name[len('score_'):] : attribute_data['answer_value']})
 
             data.append(event_data)
 
