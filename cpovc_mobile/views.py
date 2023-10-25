@@ -693,14 +693,13 @@ def get_all_unaccepted_records(request):
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        user_id = request.user.id
-
         # Fetch cpara records where is_accepted is FALSE (3) and user_id matches
-        ovc_mobile_events_rejected = OVCMobileEventRejected.objects.filter(is_accepted=3, user_id=user_id)
+        ovc_mobile_events_rejected = OVCMobileEvent.objects.filter(is_accepted=3, user_id=request.user.id)
 
         for rejected_event in ovc_mobile_events_rejected:
             event_data = {
                 'ovc_cpims_id': rejected_event.ovc_cpims_id,
+                'message':rejected_event.message,
                 'date_of_event': rejected_event.date_of_event,
                 'questions': [],
                 'individual_questions': [],
@@ -708,7 +707,7 @@ def get_all_unaccepted_records(request):
             }
 
             # Retrieve  related rejected event
-            attributes = OVCMobileEventAttributeRejected.objects.filter(event=rejected_event)
+            attributes = OVCMobileEventAttribute.objects.filter(event=rejected_event)
 
             for attribute in attributes:
                 attribute_data = {
@@ -745,12 +744,13 @@ def get_all_unaccepted_records(request):
             data.append(event_data)
 
         # Fetch Form 1A and B records where is_accepted is FALSE (3) and user_id matches
-        ovc_services_rejected = OVCServicesRejected.objects.filter(is_accepted=3, event__user_id=user_id)
+        ovc_services_rejected = OVCServices.objects.filter(is_accepted=3, event__user_id=request.user.id)
 
         for service_rejected in ovc_services_rejected:
             event_data = {
                 'ovc_cpims_id': service_rejected.event.ovc_cpims_id,
                 'date_of_event': service_rejected.event.date_of_event,
+                'message': service_rejected.message,
                 'services': {
                     'domain_id': service_rejected.domain_id,
                     'service_id': service_rejected.service_id,
@@ -759,12 +759,13 @@ def get_all_unaccepted_records(request):
             data.append(event_data)
 
         # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
-        case_plan_services_rejected = CasePlanTemplateServiceRejected.objects.filter(is_accepted=3, event__user_id=user_id)
+        case_plan_services_rejected = CasePlanTemplateService.objects.filter(is_accepted=3, event__user_id=request.user.id)
 
         for service_rejected in case_plan_services_rejected:
             event_data = {
                 'ovc_cpims_id': service_rejected.event.ovc_cpims_id,
                 'date_of_event': service_rejected.event.date_of_event,
+                'message': service_rejected.message,
                 'services': {
                     'domain_id': service_rejected.domain_id,
                     'service_id': service_rejected.service_id,
