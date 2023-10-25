@@ -174,7 +174,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                 'date_of_event': event.date_of_event,
                 'questions': [],
                 'individual_questions': [],
-                'scores': {},
+                'scores': [],
             }
 
             # Retrieve  event attributes
@@ -210,7 +210,9 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                 elif attribute.question_name.startswith('score_'):
                     # Remove the 'score_' prefix
                     key = attribute.question_name[len('score_'):]
-                    event_data['scores'][key] = attribute_data['answer_value']
+                    
+                    
+                    event_data['scores'].append({attribute.question_name[len('score_'):]:attribute_data['answer_value']})
 
             data.append(event_data)
 
