@@ -901,9 +901,9 @@ def mobile_home(request):
 
         chvss = OVCRegistration.objects.filter(is_void=False, child_cbo_id=lip_id).distinct('child_chv_id')
         care_quiz = OVCCareQuestions.objects.filter(is_void=False, code__startswith="CP")
-        cpt_fields = ['case_plan_services_school', 'case_plan_services_safe', 'case_plan_services_stable', 'case_plan_services_health']
+        cpt_fields = ['case_plan_services_school', 'case_plan_services_safe', 'case_plan_services_stable', 'case_plan_services_health', 'case_plan_goals_school', 'case_plan_goals_safe', 'case_plan_goals_stable', 'case_plan_goals_health', 'case_plan_gaps_school', 'case_plan_gaps_safe', 'case_plan_gaps_stable', 'case_plan_gaps_health', 'case_plan_priorities_school', 'case_plan_priorities_safe', 'case_plan_priorities_stable', 'case_plan_priorities_health', 'ovc_domain_id']
         cpt_list = get_dict(field_name=cpt_fields)
-        f1b_fields = ['form1b_items']
+        f1b_fields = ['form1b_items', 'olmis_domain_id', 'olmis_protection_service_id', 'olmis_hes_service_id', 'olmis_health_service_id', 'olmis_shelter_service_id', 'olmis_pss_service_id']
         f1b_list = get_dict(field_name=f1b_fields)
         # f1a_list = get_dict([''])
 
@@ -924,7 +924,9 @@ def mobile_home(request):
                 'formdata': form1b,
                 'chvs': chvs,
                 'lip_name': lip_name,
-                'quizzes': care_quiz
+                'quizzes': care_quiz,
+                'cptlist': cpt_list,
+                'f1blist' : f1b_list 
              
             }
              )

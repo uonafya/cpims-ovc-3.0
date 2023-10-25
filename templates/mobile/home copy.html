@@ -443,10 +443,9 @@ National
         $("#Dataapproval").DataTable().clear()
         console.log({chvs, form, childs})
         if(chvs.length>0 && form != "" && ( childs != null)){
-            for (idx in childs){
-                let child = childs[idx]
-
-                let s_url
+            let child = childs[0]
+            
+            let s_url
             if (form === 'cpt'){
                 // s_url = '{% url 'get-one-cpt-record' 54 %}'
                 s_url = `cpt/${child}`
@@ -510,10 +509,12 @@ National
                                             ${f1_domain_val} : <b style="color: red;"> ${f1_service_val}</b>
                                         </div>
                                     </div>
-                                    <hr><b><u> Reason for rejecting </u></b> <br>  
-
-                                    <textarea id="message_approve_${service.id}" name="message_approve" rows="2" cols="100"></textarea>
                                     <div class="row">
+                                        <div class="col-md-10">
+                                            <p>
+           
+                                            </p>
+                                        </div>
                                         <div class="col-md-2" id="approvalbuttons">
                                             <input onclick="consolidatePost(this.id, 'approve', 'F1A')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
                                             <input onclick="consolidatePost(this.id, 'reject', 'F1A')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
@@ -563,10 +564,13 @@ National
                                             ${f1b_domain_val} : ${f1b_service_val}
                                         </div>
                                     </div>
-                                    <hr><b><u> Reason for rejecting </u></b> <br>  
-
-                                    <textarea id="message_approve_${service.id}" name="message_approve" rows="2" cols="100"></textarea>
                                     <div class="row">
+                                        <div class="col-md-10">
+                                            <p>
+                        
+                                            
+                                            </p>
+                                        </div>
                                         <div class="col-md-2" id="approvalbuttons">
                                             <input onclick="consolidatePost(this.id, 'approve', 'F1B')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
                                             <input onclick="consolidatePost(this.id, 'reject', 'F1B')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
@@ -645,9 +649,6 @@ National
                                             
                                             </p>
                                         </div>
-                                        <hr><b><u> Reason for rejecting </u></b> <br>  
-
-                                        <textarea id="message_approve_${service.id}" name="message_approve" rows="2" cols="100"></textarea>
                                     </div>
                                         <div class="col-md-2" id="approvalbuttons">
                                             <input onclick="consolidatePost(this.id, 'approve', 'CPT')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
@@ -734,7 +735,7 @@ National
                                                 <input type='input' id="payload_${data_indx.event_id}" value='${payload}'>
                                             </div>
                                         </div>
-                                        <div class="modal fade cparamodal" id="${data_indx.event_id}">
+                                        <div class="modal fade" id="${data_indx.event_id}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -792,10 +793,6 @@ National
                 $("#Dataapproval").DataTable().draw()
             })
 
-            }
-            
-            
-
         }else{
             var msg = ""
             if(chvs.length===0 && childs==undefined){
@@ -812,6 +809,7 @@ National
     function apiPost(payload, form_id, f_uid){
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk1ODQ0ODI4LCJpYXQiOjE2OTU4NDEyMjgsImp0aSI6ImRhMjA1MTExYzk3OTQ0YWNiNWRkYzJlNTY1MDdlOTQ5IiwidXNlcl9pZCI6Mzk2Nn0.bXpQysxo717lUmEU3rBDDZinRxygCgg3HboFF7GCgT4");
         myHeaders.append("X-CSRFToken", "{{ csrf_token }}");
 
         var requestOptions = {
@@ -860,14 +858,7 @@ National
                     $('#msg').addClass('hidden')
                 }, 4000);
     }
-
-    var modal = document.getElementsByClassName("cparamodal");
-
-    modal.addEventListener('click', function(event) {
-        // Prevent clicks inside the modal from closing it
-        event.stopPropagation();
-    });
-            
+        
 
 
  
