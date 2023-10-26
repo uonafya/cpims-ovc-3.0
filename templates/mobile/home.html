@@ -477,6 +477,7 @@ National
                     var ta_trs = ""
                     for (dta in data){
                         // console.log({dta, data})
+                        let critical_events = data[dta].critical_events
                         for (serv in data[dta].services ){
                             let cpt = data[dta]
                             let service = cpt.services[serv]
@@ -520,6 +521,55 @@ National
                             </tr>
                         `);  
                         }   
+                        // Handle Critical events
+                        if (critical_events.length > 0 ){
+                            // console.log({dta, data})
+                            let cpt = data[dta]
+                            let service = cpt.services[serv]
+                            let crt_events = []
+                            for (critical_event in critical_events){
+                                let crt_event = f1ab_translate[service.event_id];
+                                let crt_event_date = f1ab_translate[service.event_date];
+                                crt_event_1 = {
+                                    crt_event : crt_event_date
+                                }
+                                crt_events.push(crt_event_1)
+
+                            }
+
+
+
+                            let payload  = JSON.stringify({
+                                "ovc_cpims_id": cpt.ovc_cpims_id,
+                                "date_of_event": cpt.date_of_event,
+                                "critical_events": crt_events
+                            })
+                        $("#Dataapproval tbody").append(`<tr id="${cpt.event_id}_tr" class="datarows">
+                                <td style="width: 100%;" class="mt-5">
+                                    <p>Form: FORM 1B : Child OVC ID: <b style="color:red;">  ${cpt.ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            ${crt_event} : ${crt_event_date}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <b><u> Reason for rejecting </u></b><br>
+                                            <textarea id="message_approve_${cpt.event_id}" name="message_approve" rows="1" cols="20" ></textarea>
+                                        </div>
+                                        <div class="col-md-2" id="approvalbuttons">
+                                            <input onclick="consolidatePost(this.id, 'approve', 'F1A')" id="${cpt.event_id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'F1A')" id="${cpt.event_id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row" hidden>
+                                        <div class="col-md-12">
+                                            <input id="payload_${cpt.event_id}" value='${payload}''>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        `);  
+                        }      
                         
                     }
                     
