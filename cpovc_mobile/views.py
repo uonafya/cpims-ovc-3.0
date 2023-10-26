@@ -426,46 +426,51 @@ def get_all_ovc_events(request, form_type):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_ovc_event(request,form_type, ovc_id):
+def get_ovc_event(request, form_type, ovc_id):
     ovc_id = int(ovc_id)
-    # import pdb
-    # pdb.set_trace()
+    event_data = []
+
     try:
-        print(ovc_id)
-        print(form_type)
         if form_type:
             all = OVCEvent.objects.all()
-            events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id, form_type=form_type).order_by('id')
-            services_data = OVCServices.objects.filter(event__in=events, is_accepted=1).values(
-                'domain_id', 'service_id', 'is_accepted', 'event_id', 'id', 
+            # events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id, form_type=form_type).order_by('id')
+            services_data = OVCServices.objects.filter(event__form_type=form_type, event__ovc_cpims_id=ovc_id, is_accepted=1).values(
+                'event_id', 'event__ovc_cpims_id', 'event__date_of_event', 'domain_id', 'service_id', 'is_accepted', 'id',
             ).order_by('event_id')
             # breakpoint()
         else:
             return Response({'error': 'Enter a valid form type: F1A or F1B'})
-        print(events)
-        print(f"services_data {services_data}")
-        # print(all.values()[0])
-        event_data = []
-        for event, service in zip(events, services_data):
-            event_dict = {
-                'ovc_cpims_id': event.ovc_cpims_id,
-                'date_of_event': event.date_of_event,
-                'event_id': event.id,
-                'services': [{
-                    'event_id': service['event_id'],
-                    'domain_id': service['domain_id'],
-                    'service_id': service['service_id'],
-                    'is_accepted': service['is_accepted'],
-                    'id': service['id']
-                }]
-            }
-            event_data.append(event_dict)
-            print(event_data)
+
+        # Create a dictionary to store event data
+        event_dict = {}
+        for service in services_data:
+            # Check if we've already encountered this event
+            event_id = service['event_id']
+            if event_id not in event_dict:
+                event_dict[event_id] = {
+                    'ovc_cpims_id': service['event__ovc_cpims_id'],
+                    'date_of_event': service['event__date_of_event'],
+                    'event_id': event_id,
+                    'services': []
+                }
+            # Add service details to the event
+            event_dict[event_id]['services'].append({
+                'event_id': service['event_id'],
+                'domain_id': service['domain_id'],
+                'service_id': service['service_id'],
+                'is_accepted': service['is_accepted'],
+                'id': service['id']
+            })
+
+        # Convert the dictionary into a list of event data
+        event_data = list(event_dict.values())
+
         return Response(event_data, status=status.HTTP_200_OK)
     except OVCEvent.DoesNotExist:
         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['PATCH', 'POST'])
