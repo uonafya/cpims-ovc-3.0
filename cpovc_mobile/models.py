@@ -84,8 +84,8 @@ class OVCServices(models.Model):
     event = models.ForeignKey(
         OVCEvent, on_delete=models.CASCADE, to_field='id')
     id = models.UUIDField(editable=False, primary_key=True)
-    domain_id = models.CharField(max_length=10)
-    service_id = models.CharField(max_length=10)
+    domain_id = models.CharField(max_length=255)
+    service_id = models.CharField(max_length=255)
     message = models.TextField(null=True)
     is_accepted = models.IntegerField(
         choices=[(status.value, status.name) for status in ApprovalStatus],
@@ -116,8 +116,8 @@ class OVCServicesRejected(models.Model):
     event = models.ForeignKey(
         OVCEventRejected, on_delete=models.CASCADE, to_field='id')
     unique_service_id = models.UUIDField(editable=False)
-    domain_id = models.CharField(max_length=10)
-    service_id = models.CharField(max_length=10)
+    domain_id = models.CharField(max_length=255)
+    service_id = models.CharField(max_length=255)
     message = models.TextField(null=True)
     is_accepted = models.IntegerField(
         choices=[(status.value, status.name) for status in ApprovalStatus],

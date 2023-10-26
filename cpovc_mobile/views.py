@@ -376,6 +376,7 @@ def create_ovc_event(request,form_id):
         )
 
         services = data.get('services', [])
+        critical_events = data.get('critical_events',[])
         for service_data in services:
             OVCServices.objects.create(
                 id=uuid.uuid4(),
@@ -387,6 +388,18 @@ def create_ovc_event(request,form_id):
 
             )
 
+        for c_event in critical_events:
+            domain_id=f'critical_key_{c_event["event_id"]}'
+            service_id=f'critical_value_{c_event["event_date"]}'
+            OVCServices.objects.create(
+                id=uuid.uuid4(),
+                event=event,
+                domain_id=domain_id,
+                service_id=service_id,
+                is_accepted=ApprovalStatus.NEUTRAL.value,
+                # unique_service_id=uuid.uuid4()
+
+            )
         return Response({'message': 'Data stored successfully'}, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -451,16 +464,27 @@ def get_ovc_event(request, form_type, ovc_id):
                     'ovc_cpims_id': service['event__ovc_cpims_id'],
                     'date_of_event': service['event__date_of_event'],
                     'event_id': event_id,
-                    'services': []
+                    'services': [],
+                    'critical_events':[],
                 }
-            # Add service details to the event
-            event_dict[event_id]['services'].append({
-                'event_id': service['event_id'],
-                'domain_id': service['domain_id'],
-                'service_id': service['service_id'],
-                'is_accepted': service['is_accepted'],
-                'id': service['id']
-            })
+                
+            # Check if the domain_id starts with 'critical_'
+            if service['domain_id'].startswith('critical_'):
+                critical_event_id = service['domain_id'][len('critical_key_'):]
+                # Add the critical event to the critical_events list
+                event_dict[event_id]['critical_events'].append({
+                    'event_id': critical_event_id,
+                    'event_date': service['event__date_of_event'],  # Use the date from the parent event
+                })
+            else:
+                # Add service details to the event
+                event_dict[event_id]['services'].append({
+                    'event_id': service['event_id'],
+                    'domain_id': service['domain_id'],
+                    'service_id': service['service_id'],
+                    'is_accepted': service['is_accepted'],
+                    'id': service['id']
+                })
 
         # Convert the dictionary into a list of event data
         event_data = list(event_dict.values())
