@@ -614,13 +614,19 @@ def create_case_plan_template(request):
         # Create a new CasePlanTemplateEvent
         event = CasePlanTemplateEvent.objects.create(
             ovc_cpims_id=payload['ovc_cpims_id'],
-            date_of_event=payload['date_of_event'],
+            date_of_event=payload['date_of_event'].split('T')[0],
             user_id = user_id
         )
 
         # Create a record for each service
         services = payload['services']
         for service in services:
+            completion_date = service['completion_date']
+            if completion_date == "":
+                completion_date = None
+            else:
+                completion_date = service['completion_date'].split('T')[0]
+                print(type(service['completion_date']))
             CasePlanTemplateService.objects.create(
                 event=event,
                 domain_id=service['domain_id'],
@@ -631,7 +637,7 @@ def create_case_plan_template(request):
                 responsible_id=service['responsible_id'],
                 results_id=service['results_id'],
                 reason_id=service['reason_id'],
-                completion_date=service['completion_date'],
+                completion_date=completion_date,
                 is_accepted=ApprovalStatus.NEUTRAL.value  # Set to NEUTRAL by default
             )
 
