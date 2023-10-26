@@ -86,6 +86,18 @@ def create_ovc_mobile_cpara_data(request):
                 answer_value=answer_value
             )
 
+         # Handle sub_population
+        sub_population = data.get('sub_population', [])
+        for sub_pop in sub_population:
+            question_name = f"sub_population_{sub_pop['criteria']}"
+            # answer_value = sub_pop['answer_id']
+            sub_pop_ovc_id = sub_pop.get('ovc_cpims_id', data.get('ovc_cpims_id'))
+            OVCMobileEventAttribute.objects.create(
+                event=event,
+                ovc_cpims_id_individual=f"individual_ovc_id_{sub_pop_ovc_id}",  # Add 'individual_ovc_id_' prefix
+                question_name=question_name,
+                # answer_value=answer_value
+            )
         # Handle scores
         scores = data.get('scores', [])
         for score in scores:
@@ -187,6 +199,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                 'questions': [],
                 'individual_questions': [],
                 'scores': [],
+                'sub_population':[],
             }
 
 
@@ -211,12 +224,29 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                         'question_code': question_code,
                         'answer_id': attribute_data['answer_value'],
                     }
-                    # Aremove the prefixes
+                    # remove the prefixes
                     ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
                     if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
                         ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
+                        
                     individual_question['ovc_cpims_id'] = ovc_cpims_id_individual
                     event_data['individual_questions'].append(individual_question)
+                    
+                elif attribute.question_name.startswith('sub_population_') and attribute.event_id == event.id:
+                    # Remove 'sub_population_' prefix
+                    question_code = attribute.question_name[len('sub_population_'):]
+                    individual_sub_pop = {
+                        'criteria': question_code,
+                       
+                    }
+                    # remove individual_cpims_id prefixes
+                    ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
+                    if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
+                        ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
+                        
+                    individual_sub_pop['ovc_cpims_id'] = ovc_cpims_id_individual
+                    event_data['sub_population'].append(individual_sub_pop)
+                    
                 elif attribute.question_name.startswith('score_') and attribute.event_id == event.id:
                     # Remove the 'score_' prefix
 
@@ -474,6 +504,7 @@ def get_ovc_event(request, form_type, ovc_id):
                 # Add the critical event to the critical_events list
                 event_dict[event_id]['critical_events'].append({
                     'event_id': critical_event_id,
+                    'id': service['id'],
                     'event_date': service['event__date_of_event'],  # Use the date from the parent event
                 })
             else:
