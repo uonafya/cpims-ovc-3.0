@@ -143,8 +143,7 @@ National
                         <div class="col-md-12" id="approvaltable">
                             <table id="Dataapproval">
                                 <thead>
-                                    <tr>
-  
+                                    <tr>  
                                         <td style="width: 100%;">Data</td>
                                     </tr>
                                 </thead>
@@ -158,50 +157,6 @@ National
         </div>
     </div>
 
-    
-
-    <!-- Modal start -->
-    <div class="modal fade" id="modal-reports">
-        <div class="modal-dialog">
-            <div class="modal-content form-horizontal form-bordered">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title">Reports details - <span id="sdetails"></span></h4>
-                </div>
-                <div class="modal-body">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div class="row">
-                            <table id="mydata" class="display" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Date Last Modified</th>
-                                        <th>Details</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Date Last Modified</th>
-                                        <th>Details</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="#" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- modal end -->
 </div>
 <!-- end row -->
 {% endblock %}
@@ -506,7 +461,7 @@ National
                                         </div>
                                         <div class="col-md-6">
                                             <b><u> Reason for rejecting </u></b><br>
-                                            <textarea id="message_approve_${service.id}" name="message_approve" rows="1" cols="20" ></textarea>
+                                            <textarea id="message_approve_${service.id}" name="message_approve" rows="1" cols="80" ></textarea>
                                         </div>
                                         <div class="col-md-2" id="approvalbuttons">
                                             <input onclick="consolidatePost(this.id, 'approve', 'F1A')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
@@ -557,7 +512,7 @@ National
                                         </div>
                                         <div class="col-md-6">
                                             <b><u> Reason for rejecting </u></b><br>
-                                            <textarea id="message_approve_${cpt.event_id}" name="message_approve" rows="1" cols="20" ></textarea>
+                                            <textarea id="message_approve_${cpt.event_id}" name="message_approve" rows="1" cols="80" ></textarea>
                                         </div>
                                         <div class="col-md-2" id="approvalbuttons">
                                             <input onclick="consolidatePost(this.id, 'approve', 'F1A')" id="${cpt.event_id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
@@ -609,11 +564,11 @@ National
                                         </div>
                                         <div class="col-md-6">
                                             <b><u> Reason for rejecting </u></b><br>
-                                            <textarea id="message_approve_${service.id}" name="message_approve" rows="1" cols="20" ></textarea>
+                                            <textarea id="message_approve_${service.id}" name="message_approve" rows="1" cols="80" ></textarea>
                                         </div>
                                         <div class="col-md-2" id="approvalbuttons">
-                                            <input onclick="consolidatePost(this.id, 'approve', 'F1A')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
-                                            <input onclick="consolidatePost(this.id, 'reject', 'F1A')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                            <input onclick="consolidatePost(this.id, 'approve', 'F1B')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'F1B')" id="${service.id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
                                         </div>
                                     </div>
                                     
@@ -661,11 +616,11 @@ National
                                         </div>
                                         <div class="col-md-6">
                                             <b><u> Reason for rejecting </u></b><br>
-                                            <textarea id="message_approve_${cpt.event_id}" name="message_approve" rows="1" cols="20" ></textarea>
+                                            <textarea id="message_approve_${cpt.event_id}" name="message_approve" rows="1" cols="80" ></textarea>
                                         </div>
                                         <div class="col-md-2" id="approvalbuttons">
-                                            <input onclick="consolidatePost(this.id, 'approve', 'F1A')" id="${cpt.event_id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
-                                            <input onclick="consolidatePost(this.id, 'reject', 'F1A')" id="${cpt.event_id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                            <input onclick="consolidatePost(this.id, 'approve', 'F1B')" id="${cpt.event_id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'F1B')" id="${cpt.event_id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
                                         </div>
                                     </div>
                                     
@@ -771,7 +726,6 @@ National
                         let scores  = data[dta].scores
                         let individual  = data[dta].individuals_questions
                         let questions  = data[dta].questions
-                        let slice_question = questions.slice(0,3)  
                         
                         console.log({scores})
                         let bench_score = ''
@@ -799,12 +753,7 @@ National
                         {% for quiz in quizzes %}
                             quiz_map["{{quiz.code}}"] = "{{ quiz.question}} : {{ quiz.question_text}}"
                         {% endfor %}
-                        for (quiz in slice_question){
-                            html_question += `
-                            <div>
-                                
-                            </div>
-                            `}
+                        
                         let modal_html_question = ''
                         for (quiz in questions){
                             let question_code = questions[quiz].question_code
@@ -952,7 +901,7 @@ National
                 $("#msg").html(msg)
                 setTimeout(function() {
                     $('#msg').addClass('hidden')
-                }, 4000);
+                }, 40000);
     }
             
 
