@@ -551,7 +551,7 @@ def update_is_accepted(request, id):
             # Create the corresponding rejected service
             OVCServicesRejected.objects.create(
                 event=rejected_event,
-                unique_service_id=service.id,
+                id=service.id,
                 domain_id=service.domain_id,
                 service_id=service.service_id,
                 is_accepted=is_accepted,
@@ -761,7 +761,7 @@ def get_all_unaccepted_records(request):
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Fetch cpara records where is_accepted is FALSE (3) and user_id matches
-        ovc_mobile_events_rejected = OVCMobileEvent.objects.filter(is_accepted=3, user_id=request.user.id)
+        ovc_mobile_events_rejected = OVCMobileEventRejected.objects.filter(is_accepted=3, user_id=request.user.id)
 
         for rejected_event in ovc_mobile_events_rejected:
             event_data = {
@@ -774,7 +774,7 @@ def get_all_unaccepted_records(request):
             }
 
             # Retrieve  related rejected event
-            attributes = OVCMobileEventAttribute.objects.filter(event=rejected_event)
+            attributes = OVCMobileEventAttributeRejected.objects.filter(event=rejected_event)
 
             for attribute in attributes:
                 attribute_data = {
@@ -811,7 +811,7 @@ def get_all_unaccepted_records(request):
             data.append(event_data)
 
         # Fetch Form 1A and B records where is_accepted is FALSE (3) and user_id matches
-        ovc_services_rejected = OVCServices.objects.filter(is_accepted=3, event__user_id=request.user.id)
+        ovc_services_rejected = OVCServicesRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
 
         for service_rejected in ovc_services_rejected:
             event_data = {
@@ -826,7 +826,7 @@ def get_all_unaccepted_records(request):
             data.append(event_data)
 
         # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
-        case_plan_services_rejected = CasePlanTemplateService.objects.filter(is_accepted=3, event__user_id=request.user.id)
+        case_plan_services_rejected = CasePlanTemplateServiceRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
 
         for service_rejected in case_plan_services_rejected:
             event_data = {
@@ -845,7 +845,9 @@ def get_all_unaccepted_records(request):
                 },
             }
             data.append(event_data)
-
+        ovc_mobile_events_rejected.delete()
+        ovc_services_rejected.delete()
+        case_plan_services_rejected.delete()
         return Response(data, status=status.HTTP_200_OK)
 
     except Exception as e:
@@ -862,7 +864,7 @@ def unaccepted_records(request, form_type):
         if form_type == 'F1A' or form_type == 'F1B':
             # Fetch Form 1A and B records where is_accepted is FALSE (3) and user_id matches
            
-            ovc_services = OVCServices.objects.filter(is_accepted=3, event__user_id=request.user.id, event__form_type=form_type)
+            ovc_services = OVCServicesRejected.objects.filter(is_accepted=3, event__user_id=request.user.id, event__form_type=form_type)
             
             for service in ovc_services:
                 event_data = {
@@ -875,10 +877,11 @@ def unaccepted_records(request, form_type):
                     },
                 }
                 data.append(event_data)
+            ovc_services.delete()
         
         elif form_type == 'cpara':
             # Fetch cpara records where is_accepted is FALSE (3) and user_id matches
-            cpara_events = OVCMobileEvent.objects.filter(is_accepted=3, user_id=request.user.id)
+            cpara_events = OVCMobileEventRejected.objects.filter(is_accepted=3, user_id=request.user.id)
             
             for event in cpara_events:
                 event_data = {
@@ -889,7 +892,7 @@ def unaccepted_records(request, form_type):
                     'scores': {},
                 }
                 
-                attributes = OVCMobileEventAttribute.objects.filter(event=event)
+                attributes = OVCMobileEventAttributeRejected.objects.filter(event=event)
                 
                 for attribute in attributes:
                     attribute_data = {
@@ -923,10 +926,13 @@ def unaccepted_records(request, form_type):
                         event_data['scores'][key] = attribute_data['answer_value']
                 
                 data.append(event_data)
+            
+            cpara_events.delete()
+        
         
         elif form_type == 'caseplan':
             # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
-            case_plan_services = CasePlanTemplateService.objects.filter(is_accepted=3, event__user_id=request.user.id)
+            case_plan_services = CasePlanTemplateServiceRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
             
             for service in case_plan_services:
                 event_data = {
@@ -939,6 +945,9 @@ def unaccepted_records(request, form_type):
                     },
                 }
                 data.append(event_data)
+                
+
+            case_plan_services.delete()
         else:
             return JsonResponse({'error': 'Unknown report type'}, status=400)
         
