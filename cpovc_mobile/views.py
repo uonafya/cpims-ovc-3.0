@@ -39,6 +39,24 @@ class ApprovalStatus(Enum):
     NEUTRAL = auto() # stored as 1 in the DB
     TRUE = auto() # stored as 2 in the DB
     FALSE = auto() # stored as 3 in the DB
+    
+# Functions
+def delete_parent_and_children(parent_model, child_model, parent_id):
+    try:
+        parent = parent_model.objects.get(id=parent_id)
+        
+        # 
+        if child_model.objects.filter(event=parent).exists():
+            # Delete child records
+            child_model.objects.filter(event=parent).delete()
+        
+        # Delete parent 
+        parent.delete()
+        return True
+    except parent_model.DoesNotExist:
+        return False  # Parent not found
+    except Exception as e:
+        return str(e)  # exceptions
 
 # Views for CPARA mobile
 @api_view(['POST'])
@@ -809,6 +827,7 @@ def get_all_unaccepted_records(request):
                     event_data['scores'][key] = attribute_data['answer_value']
 
             data.append(event_data)
+            ovc_mobile_events_rejected.delete()
 
         # Fetch Form 1A and B records where is_accepted is FALSE (3) and user_id matches
         ovc_services_rejected = OVCServicesRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
@@ -824,6 +843,9 @@ def get_all_unaccepted_records(request):
                 },
             }
             data.append(event_data)
+
+            delete_parent_and_children(OVCEventRejected,OVCServicesRejected,service_rejected.event.id)
+            
 
         # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
         case_plan_services_rejected = CasePlanTemplateServiceRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
@@ -845,9 +867,8 @@ def get_all_unaccepted_records(request):
                 },
             }
             data.append(event_data)
-        ovc_mobile_events_rejected.delete()
-        ovc_services_rejected.delete()
-        case_plan_services_rejected.delete()
+            delete_parent_and_children(CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected,service_rejected.event.id)
+            
         return Response(data, status=status.HTTP_200_OK)
 
     except Exception as e:
@@ -877,7 +898,8 @@ def unaccepted_records(request, form_type):
                     },
                 }
                 data.append(event_data)
-            ovc_services.delete()
+  
+                delete_parent_and_children(OVCEventRejected,OVCServicesRejected,service.event.id)
         
         elif form_type == 'cpara':
             # Fetch cpara records where is_accepted is FALSE (3) and user_id matches
@@ -927,7 +949,7 @@ def unaccepted_records(request, form_type):
                 
                 data.append(event_data)
             
-            cpara_events.delete()
+                cpara_events.delete()
         
         
         elif form_type == 'caseplan':
@@ -945,9 +967,12 @@ def unaccepted_records(request, form_type):
                     },
                 }
                 data.append(event_data)
+                delete_parent_and_children(CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected,service.event.id)
+               
                 
-
-            case_plan_services.delete()
+            if Response.status_code == 200:
+                
+                case_plan_services.delete()
         else:
             return JsonResponse({'error': 'Unknown report type'}, status=400)
         
