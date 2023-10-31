@@ -640,11 +640,12 @@ def create_case_plan_template(request):
         services = payload['services']
         for service in services:
             completion_date = service['completion_date']
-            if completion_date == "":
+            print("sssssssssss",len(completion_date))
+            if len(completion_date.strip()) == 0:
                 completion_date = None
             else:
                 completion_date = service['completion_date'].split('T')[0]
-                print(type(service['completion_date']))
+                print(service['completion_date'])
             CasePlanTemplateService.objects.create(
                 event=event,
                 domain_id=service['domain_id'],
