@@ -1,56 +1,53 @@
-from datetime import datetime
 import uuid
+import requests
+import json
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse, HttpResponse
-
-from cpovc_settings.forms import SettingsForm
+from django.http import JsonResponse
+from enum import Enum, auto
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 from .forms import mobile_approve
-from cpovc_forms.models import OVCCareF1B, OVCCareEAV
-
-from cpovc_registry.models import RegPersonsOrgUnits, RegOrgUnit, RegPerson
+from cpovc_forms.models import OVCCareEAV
 
 from cpovc_ovc.models import OVCRegistration
 # ---------------------------------------#
-from enum import Enum, auto
-from django.http import JsonResponse
+
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import OVCMobileEvent, OVCMobileEventAttribute,CasePlanTemplateEvent,CasePlanTemplateService,OVCEvent, OVCServices,OVCMobileEventRejected,OVCEventRejected,OVCMobileEventAttributeRejected,OVCServicesRejected,CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected
-from rest_framework.permissions import IsAuthenticated,AllowAny 
-from rest_framework.decorators import api_view, permission_classes
-from django.db.models import F, CharField, Value
-from django.db.models.functions import Concat
-from django.db.models import OuterRef, Subquery
-
-from cpovc_api.views import form_data
-
-import requests
-import json
+from .models import (
+    OVCMobileEvent, OVCMobileEventAttribute, CasePlanTemplateEvent,
+    CasePlanTemplateService, OVCEvent, OVCServices, OVCMobileEventRejected,
+    OVCEventRejected, OVCMobileEventAttributeRejected, OVCServicesRejected,
+    CasePlanTemplateEventRejected, CasePlanTemplateServiceRejected)
 
 
 from cpovc_forms.models import OVCCareQuestions
-from cpovc_main.functions import get_list, get_dict
+from cpovc_main.functions import get_dict
+
+from cpovc_auth.decorators import is_allowed_user_groups
 
 
 class ApprovalStatus(Enum):
-    NEUTRAL = auto() # stored as 1 in the DB
-    TRUE = auto() # stored as 2 in the DB
-    FALSE = auto() # stored as 3 in the DB
-    
+    NEUTRAL = auto()  # stored as 1 in the DB
+    TRUE = auto()  # stored as 2 in the DB
+    FALSE = auto()  # stored as 3 in the DB
+
 # Functions
+
+
 def delete_parent_and_children(parent_model, child_model, parent_id):
     try:
         parent = parent_model.objects.get(id=parent_id)
-        
-        # 
+
+        #
         if child_model.objects.filter(event=parent).exists():
             # Delete child records
             child_model.objects.filter(event=parent).delete()
-        
-        # Delete parent 
+
+        # Delete parent
         parent.delete()
         return True
     except parent_model.DoesNotExist:
@@ -59,13 +56,15 @@ def delete_parent_and_children(parent_model, child_model, parent_id):
         return str(e)  # exceptions
 
 # Views for CPARA mobile
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_ovc_mobile_cpara_data(request):
     try:
         data = request.data
         is_accepted = ApprovalStatus.NEUTRAL.value
-         # Check if the user is authenticated
+        # Check if the user is authenticated
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -86,7 +85,8 @@ def create_ovc_mobile_cpara_data(request):
             answer_value = question['answer_id']
             OVCMobileEventAttribute.objects.create(
                 event=event,
-                ovc_cpims_id_individual=data.get('ovc_cpims_id'),  # Use individual ovc_cpims_id if provided, otherwise use the main one
+                # Use individual ovc_cpims_id if provided, otherwise use the main one
+                ovc_cpims_id_individual=data.get('ovc_cpims_id'),
                 question_name=question_name,
                 answer_value=answer_value
             )
@@ -96,23 +96,27 @@ def create_ovc_mobile_cpara_data(request):
         for ind_question in individual_questions:
             question_name = f"individual_question_{ind_question['question_code']}"
             answer_value = ind_question['answer_id']
-            individual_ovc_id = ind_question.get('ovc_cpims_id', data.get('ovc_cpims_id'))
+            individual_ovc_id = ind_question.get(
+                'ovc_cpims_id', data.get('ovc_cpims_id'))
             OVCMobileEventAttribute.objects.create(
                 event=event,
-                ovc_cpims_id_individual=f"individual_ovc_id_{individual_ovc_id}",  # Add 'individual_ovc_id_' prefix
+                # Add 'individual_ovc_id_' prefix
+                ovc_cpims_id_individual=f"individual_ovc_id_{individual_ovc_id}",
                 question_name=question_name,
                 answer_value=answer_value
             )
 
-         # Handle sub_population
+        # Handle sub_population
         sub_population = data.get('sub_population', [])
         for sub_pop in sub_population:
             question_name = f"sub_population_{sub_pop['criteria']}"
             # answer_value = sub_pop['answer_id']
-            sub_pop_ovc_id = sub_pop.get('ovc_cpims_id', data.get('ovc_cpims_id'))
+            sub_pop_ovc_id = sub_pop.get(
+                'ovc_cpims_id', data.get('ovc_cpims_id'))
             OVCMobileEventAttribute.objects.create(
                 event=event,
-                ovc_cpims_id_individual=f"individual_ovc_id_{sub_pop_ovc_id}",  # Add 'individual_ovc_id_' prefix
+                # Add 'individual_ovc_id_' prefix
+                ovc_cpims_id_individual=f"individual_ovc_id_{sub_pop_ovc_id}",
                 question_name=question_name,
                 # answer_value=answer_value
             )
@@ -124,8 +128,8 @@ def create_ovc_mobile_cpara_data(request):
                 answer_value = value
                 OVCMobileEventAttribute.objects.create(
                     event=event,
-                     # Use the main ovc_cpims_id
-                    ovc_cpims_id_individual=data.get('ovc_cpims_id'), 
+                    # Use the main ovc_cpims_id
+                    ovc_cpims_id_individual=data.get('ovc_cpims_id'),
                     question_name=question_name,
                     answer_value=answer_value
                 )
@@ -171,7 +175,8 @@ def get_all_ovc_mobile_cpara_data(request):
                     })
                 elif attribute.question_name.startswith('individual_question_'):
                     # Remove 'individual_question_' prefix
-                    question_code = attribute.question_name[len('individual_question_'):]
+                    question_code = attribute.question_name[len(
+                        'individual_question_'):]
                     individual_question = {
                         'question_code': question_code,
                         'answer_id': attribute_data['answer_value'],
@@ -179,9 +184,11 @@ def get_all_ovc_mobile_cpara_data(request):
                     # Remove the prefixes
                     ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
                     if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
-                        ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
+                        ovc_cpims_id_individual = ovc_cpims_id_individual[len(
+                            'individual_ovc_id_'):]
                     individual_question['ovc_cpims_id'] = ovc_cpims_id_individual
-                    event_data['individual_questions'].append(individual_question)
+                    event_data['individual_questions'].append(
+                        individual_question)
                 elif attribute.question_name.startswith('score_'):
                     # Remove the 'score_' prefix
                     key = attribute.question_name[len('score_'):]
@@ -192,6 +199,7 @@ def get_all_ovc_mobile_cpara_data(request):
         return Response(data, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -204,11 +212,13 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Fetch by ovc id
-        events = OVCMobileEvent.objects.filter(ovc_cpims_id=ovc_id, is_accepted=1)
+        events = OVCMobileEvent.objects.filter(
+            ovc_cpims_id=ovc_id, is_accepted=1)
         events_list = events.values('id')
 
         # Retrieve  event attributes
-        attributes = OVCMobileEventAttribute.objects.filter(event__in=events_list)
+        attributes = OVCMobileEventAttribute.objects.filter(
+            event__in=events_list)
         for event in events:
             event_data = {
                 'ovc_cpims_id': event.ovc_cpims_id,
@@ -217,15 +227,14 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                 'questions': [],
                 'individual_questions': [],
                 'scores': [],
-                'sub_population':[],
+                'sub_population': [],
             }
-
 
             for attribute in attributes:
                 attribute_data = {
                     'question_name': attribute.question_name,
                     'answer_value': attribute.answer_value,
-                    'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,  
+                    'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,
                 }
 
                 if attribute.question_name.startswith('question_') and attribute.event_id == event.id:
@@ -237,7 +246,8 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                     })
                 elif attribute.question_name.startswith('individual_question_') and attribute.event_id == event.id:
                     # Remove 'individual_question_' prefix
-                    question_code = attribute.question_name[len('individual_question_'):]
+                    question_code = attribute.question_name[len(
+                        'individual_question_'):]
                     individual_question = {
                         'question_code': question_code,
                         'answer_id': attribute_data['answer_value'],
@@ -245,30 +255,35 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                     # remove the prefixes
                     ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
                     if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
-                        ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
-                        
+                        ovc_cpims_id_individual = ovc_cpims_id_individual[len(
+                            'individual_ovc_id_'):]
+
                     individual_question['ovc_cpims_id'] = ovc_cpims_id_individual
-                    event_data['individual_questions'].append(individual_question)
-                    
+                    event_data['individual_questions'].append(
+                        individual_question)
+
                 elif attribute.question_name.startswith('sub_population_') and attribute.event_id == event.id:
                     # Remove 'sub_population_' prefix
-                    question_code = attribute.question_name[len('sub_population_'):]
+                    question_code = attribute.question_name[len(
+                        'sub_population_'):]
                     individual_sub_pop = {
                         'criteria': question_code,
-                       
+
                     }
                     # remove individual_cpims_id prefixes
                     ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
                     if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
-                        ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
-                        
+                        ovc_cpims_id_individual = ovc_cpims_id_individual[len(
+                            'individual_ovc_id_'):]
+
                     individual_sub_pop['ovc_cpims_id'] = ovc_cpims_id_individual
                     event_data['sub_population'].append(individual_sub_pop)
-                    
+
                 elif attribute.question_name.startswith('score_') and attribute.event_id == event.id:
                     # Remove the 'score_' prefix
 
-                    event_data['scores'].append({attribute.question_name[len('score_'):] : attribute_data['answer_value']})
+                    event_data['scores'].append(
+                        {attribute.question_name[len('score_'):]: attribute_data['answer_value']})
 
             data.append(event_data)
 
@@ -277,6 +292,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 def create_rejected_event(event, attributes, data):
     is_accepted = data.get('is_accepted')
@@ -296,6 +312,7 @@ def create_rejected_event(event, attributes, data):
             question_name=attribute.question_name,
             answer_value=attribute.answer_value
         )
+
 
 def create_form_payload(attributes, event):
     form_payload = {
@@ -319,7 +336,8 @@ def create_form_payload(attributes, event):
                 'answer_id': attribute_data['answer_value'],
             })
         elif attribute.question_name.startswith('individual_question_'):
-            question_code = attribute.question_name[len('individual_question_'):]
+            question_code = attribute.question_name[len(
+                'individual_question_'):]
             individual_question = {
                 'question_code': question_code,
                 'answer_id': attribute_data['answer_value'],
@@ -348,20 +366,19 @@ def update_cpara_is_accepted(request, event_id):
         # If is_accepted is false recreate it in the rejected tables
         if is_accepted == ApprovalStatus.FALSE.value:
             create_rejected_event(event, attributes, request.data)
-         
-        # # If is_accepted is true push it to main DB    
+
+        # # If is_accepted is true push it to main DB
         # elif is_accepted == ApprovalStatus.TRUE.value:
-            
+
         #     # create the payload
         #     form_payload = create_form_payload(attributes, event)
         #     request.data['form_payload'] = form_payload
 
         #     form_id = 'CPR'
-            
+
         #     print("payload",request)
         #     response = form_data(request, form_id)
         #     print("response",response)
-
 
         # Update is_accepted field for the main event
         # for attribute in attributes:
@@ -388,26 +405,27 @@ def delete_ovc_mobile_event(request, event_id):
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 # Views for Form1 A and B
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def create_ovc_event(request,form_id):
+def create_ovc_event(request, form_id):
     try:
- 
+
         # Check if the user is authenticated
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
-        
-        
+
         user_id = request.user.id
         form_type = form_id
-        
+
         if form_type == 'F1A':
             form_type = form_type
         elif form_type == 'F1B':
             form_type = form_type
         else:
             return Response({'message': 'Invalid form type,(F1A,F1B)'})
-        
+
         data = request.data
         # Check if the user is authenticated
         if not request.user.is_authenticated:
@@ -424,7 +442,7 @@ def create_ovc_event(request,form_id):
         )
 
         services = data.get('services', [])
-        critical_events = data.get('critical_events',[])
+        critical_events = data.get('critical_events', [])
         for service_data in services:
             OVCServices.objects.create(
                 id=uuid.uuid4(),
@@ -437,8 +455,8 @@ def create_ovc_event(request,form_id):
             )
 
         for c_event in critical_events:
-            domain_id=f'critical_key_{c_event["event_id"]}'
-            service_id=f'critical_value_{c_event["event_date"]}'
+            domain_id = f'critical_key_{c_event["event_id"]}'
+            service_id = f'critical_value_{c_event["event_date"]}'
             OVCServices.objects.create(
                 id=uuid.uuid4(),
                 event=event,
@@ -451,6 +469,7 @@ def create_ovc_event(request,form_id):
         return Response({'message': 'Data stored successfully'}, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -485,6 +504,7 @@ def get_all_ovc_events(request, form_type):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_ovc_event(request, form_type, ovc_id):
@@ -513,9 +533,9 @@ def get_ovc_event(request, form_type, ovc_id):
                     'date_of_event': service['event__date_of_event'],
                     'event_id': event_id,
                     'services': [],
-                    'critical_events':[],
+                    'critical_events': [],
                 }
-                
+
             # Check if the domain_id starts with 'critical_'
             if service['domain_id'].startswith('critical_'):
                 critical_event_id = service['domain_id'][len('critical_key_'):]
@@ -523,7 +543,8 @@ def get_ovc_event(request, form_type, ovc_id):
                 event_dict[event_id]['critical_events'].append({
                     'event_id': critical_event_id,
                     'id': service['id'],
-                    'event_date': service['event__date_of_event'],  # Use the date from the parent event
+                    # Use the date from the parent event
+                    'event_date': service['event__date_of_event'],
                 })
             else:
                 # Add service details to the event
@@ -543,7 +564,6 @@ def get_ovc_event(request, form_type, ovc_id):
         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 @api_view(['PATCH', 'POST'])
@@ -601,6 +621,8 @@ def delete_ovc_event(request, event_id):
 
 # case plan template
 # Helper function to serialize a service
+
+
 def service_serializer(service):
     return {
         'id': service.unique_service_id,
@@ -617,6 +639,7 @@ def service_serializer(service):
         'is_accepted': ApprovalStatus(service.is_accepted).name
     }
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_case_plan_template(request):
@@ -625,22 +648,21 @@ def create_case_plan_template(request):
         # Check if the user is authenticated
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
-        
-        
+
         user_id = request.user.id
 
         # Create a new CasePlanTemplateEvent
         event = CasePlanTemplateEvent.objects.create(
             ovc_cpims_id=payload['ovc_cpims_id'],
             date_of_event=payload['date_of_event'].split('T')[0],
-            user_id = user_id
+            user_id=user_id
         )
 
         # Create a record for each service
         services = payload['services']
         for service in services:
             completion_date = service['completion_date']
-            print("sssssssssss",len(completion_date))
+            print("sssssssssss", len(completion_date))
             if len(completion_date.strip()) == 0:
                 completion_date = None
             else:
@@ -664,6 +686,7 @@ def create_case_plan_template(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_all_case_plans(request):
@@ -685,22 +708,24 @@ def get_all_case_plans(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_one_case_plan(request, ovc_id):
     try:
         events = CasePlanTemplateEvent.objects.filter(ovc_cpims_id=ovc_id)
-        servicess = CasePlanTemplateService.objects.filter(event__in=events, is_accepted=1)
+        servicess = CasePlanTemplateService.objects.filter(
+            event__in=events, is_accepted=1)
 
         event_data = []
         for event in events:
             services = servicess.filter(event=event)
             event_data.append({
-            'event_id': event.id,
-            'ovc_cpims_id': event.ovc_cpims_id,
-            'date_of_event': event.date_of_event,
-            'services': [service_serializer(service) for service in services]
-        })
+                'event_id': event.id,
+                'ovc_cpims_id': event.ovc_cpims_id,
+                'date_of_event': event.date_of_event,
+                'services': [service_serializer(service) for service in services]
+            })
 
         return Response(event_data, status=status.HTTP_200_OK)
     except CasePlanTemplateEvent.DoesNotExist:
@@ -708,11 +733,13 @@ def get_one_case_plan(request, ovc_id):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['PATCH', 'POST'])
 @permission_classes([IsAuthenticated])
 def update_case_plan_is_accepted(request, unique_service_id):
     try:
-        service = CasePlanTemplateService.objects.get(unique_service_id=unique_service_id)
+        service = CasePlanTemplateService.objects.get(
+            unique_service_id=unique_service_id)
 
         event = service.event
 
@@ -767,7 +794,8 @@ def delete_case_plan_event(request, event_id):
         return Response({'error': 'Entry not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-       
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_all_unaccepted_records(request):
@@ -780,12 +808,13 @@ def get_all_unaccepted_records(request):
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Fetch cpara records where is_accepted is FALSE (3) and user_id matches
-        ovc_mobile_events_rejected = OVCMobileEventRejected.objects.filter(is_accepted=3, user_id=request.user.id)
+        ovc_mobile_events_rejected = OVCMobileEventRejected.objects.filter(
+            is_accepted=3, user_id=request.user.id)
 
         for rejected_event in ovc_mobile_events_rejected:
             event_data = {
                 'ovc_cpims_id': rejected_event.ovc_cpims_id,
-                'message':rejected_event.message,
+                'message': rejected_event.message,
                 'date_of_event': rejected_event.date_of_event,
                 'questions': [],
                 'individual_questions': [],
@@ -793,13 +822,14 @@ def get_all_unaccepted_records(request):
             }
 
             # Retrieve  related rejected event
-            attributes = OVCMobileEventAttributeRejected.objects.filter(event=rejected_event)
+            attributes = OVCMobileEventAttributeRejected.objects.filter(
+                event=rejected_event)
 
             for attribute in attributes:
                 attribute_data = {
                     'question_name': attribute.question_name,
                     'answer_value': attribute.answer_value,
-                    'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,  
+                    'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,
                 }
 
                 if attribute.question_name.startswith('question_'):
@@ -811,7 +841,8 @@ def get_all_unaccepted_records(request):
                     })
                 elif attribute.question_name.startswith('individual_question_'):
                     # Remove 'individual_question_' prefix
-                    question_code = attribute.question_name[len('individual_question_'):]
+                    question_code = attribute.question_name[len(
+                        'individual_question_'):]
                     individual_question = {
                         'question_code': question_code,
                         'answer_id': attribute_data['answer_value'],
@@ -819,9 +850,11 @@ def get_all_unaccepted_records(request):
                     # Aremove the prefixes
                     ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
                     if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
-                        ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
+                        ovc_cpims_id_individual = ovc_cpims_id_individual[len(
+                            'individual_ovc_id_'):]
                     individual_question['ovc_cpims_id'] = ovc_cpims_id_individual
-                    event_data['individual_questions'].append(individual_question)
+                    event_data['individual_questions'].append(
+                        individual_question)
                 elif attribute.question_name.startswith('score_'):
                     # Remove the 'score_' prefix
                     key = attribute.question_name[len('score_'):]
@@ -831,7 +864,8 @@ def get_all_unaccepted_records(request):
             ovc_mobile_events_rejected.delete()
 
         # Fetch Form 1A and B records where is_accepted is FALSE (3) and user_id matches
-        ovc_services_rejected = OVCServicesRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
+        ovc_services_rejected = OVCServicesRejected.objects.filter(
+            is_accepted=3, event__user_id=request.user.id)
 
         for service_rejected in ovc_services_rejected:
             event_data = {
@@ -845,11 +879,12 @@ def get_all_unaccepted_records(request):
             }
             data.append(event_data)
 
-            delete_parent_and_children(OVCEventRejected,OVCServicesRejected,service_rejected.event.id)
-            
+            delete_parent_and_children(
+                OVCEventRejected, OVCServicesRejected, service_rejected.event.id)
 
         # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
-        case_plan_services_rejected = CasePlanTemplateServiceRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
+        case_plan_services_rejected = CasePlanTemplateServiceRejected.objects.filter(
+            is_accepted=3, event__user_id=request.user.id)
 
         for service_rejected in case_plan_services_rejected:
             event_data = {
@@ -860,16 +895,17 @@ def get_all_unaccepted_records(request):
                     'domain_id': service_rejected.domain_id,
                     'service_id': service_rejected.service_id,
                     'goal_id': service_rejected.goal_id,
-                    'priority_id':service_rejected.priority_id,
-                    'responsible_id':service_rejected.responsible_id,
-                    'results_id':service_rejected.results_id,
-                    'reason_id':service_rejected.reason_id,
-                    'completion_date':service_rejected.reason_id
+                    'priority_id': service_rejected.priority_id,
+                    'responsible_id': service_rejected.responsible_id,
+                    'results_id': service_rejected.results_id,
+                    'reason_id': service_rejected.reason_id,
+                    'completion_date': service_rejected.reason_id
                 },
             }
             data.append(event_data)
-            delete_parent_and_children(CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected,service_rejected.event.id)
-            
+            delete_parent_and_children(
+                CasePlanTemplateEventRejected, CasePlanTemplateServiceRejected, service_rejected.event.id)
+
         return Response(data, status=status.HTTP_200_OK)
 
     except Exception as e:
@@ -882,12 +918,13 @@ def get_all_unaccepted_records(request):
 def unaccepted_records(request, form_type):
     try:
         data = []
-        
+
         if form_type == 'F1A' or form_type == 'F1B':
             # Fetch Form 1A and B records where is_accepted is FALSE (3) and user_id matches
-           
-            ovc_services = OVCServicesRejected.objects.filter(is_accepted=3, event__user_id=request.user.id, event__form_type=form_type)
-            
+
+            ovc_services = OVCServicesRejected.objects.filter(
+                is_accepted=3, event__user_id=request.user.id, event__form_type=form_type)
+
             for service in ovc_services:
                 event_data = {
                     'ovc_cpims_id': service.event.ovc_cpims_id,
@@ -899,13 +936,15 @@ def unaccepted_records(request, form_type):
                     },
                 }
                 data.append(event_data)
-  
-                delete_parent_and_children(OVCEventRejected,OVCServicesRejected,service.event.id)
-        
+
+                delete_parent_and_children(
+                    OVCEventRejected, OVCServicesRejected, service.event.id)
+
         elif form_type == 'cpara':
             # Fetch cpara records where is_accepted is FALSE (3) and user_id matches
-            cpara_events = OVCMobileEventRejected.objects.filter(is_accepted=3, user_id=request.user.id)
-            
+            cpara_events = OVCMobileEventRejected.objects.filter(
+                is_accepted=3, user_id=request.user.id)
+
             for event in cpara_events:
                 event_data = {
                     'ovc_cpims_id': event.ovc_cpims_id,
@@ -914,49 +953,54 @@ def unaccepted_records(request, form_type):
                     'individual_questions': [],
                     'scores': {},
                 }
-                
-                attributes = OVCMobileEventAttributeRejected.objects.filter(event=event)
-                
+
+                attributes = OVCMobileEventAttributeRejected.objects.filter(
+                    event=event)
+
                 for attribute in attributes:
                     attribute_data = {
                         'question_name': attribute.question_name,
                         'answer_value': attribute.answer_value,
                         'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,
                     }
-                    
+
                     if attribute.question_name.startswith('question_'):
-                        question_code = attribute.question_name[len('question_'):]
+                        question_code = attribute.question_name[len(
+                            'question_'):]
                         event_data['questions'].append({
                             'question_code': question_code,
                             'answer_id': attribute_data['answer_value'],
                         })
                     elif attribute.question_name.startswith('individual_question_'):
-                        question_code = attribute.question_name[len('individual_question_'):]
+                        question_code = attribute.question_name[len(
+                            'individual_question_'):]
                         individual_question = {
                             'question_code': question_code,
                             'answer_id': attribute_data['answer_value'],
                         }
-                        
+
                         ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
-                        
+
                         if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
-                            ovc_cpims_id_individual = ovc_cpims_id_individual[len('individual_ovc_id_'):]
-                        
+                            ovc_cpims_id_individual = ovc_cpims_id_individual[len(
+                                'individual_ovc_id_'):]
+
                         individual_question['ovc_cpims_id'] = ovc_cpims_id_individual
-                        event_data['individual_questions'].append(individual_question)
+                        event_data['individual_questions'].append(
+                            individual_question)
                     elif attribute.question_name.startswith('score_'):
                         key = attribute.question_name[len('score_'):]
                         event_data['scores'][key] = attribute_data['answer_value']
-                
+
                 data.append(event_data)
-            
+
                 cpara_events.delete()
-        
-        
+
         elif form_type == 'caseplan':
             # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
-            case_plan_services = CasePlanTemplateServiceRejected.objects.filter(is_accepted=3, event__user_id=request.user.id)
-            
+            case_plan_services = CasePlanTemplateServiceRejected.objects.filter(
+                is_accepted=3, event__user_id=request.user.id)
+
             for service in case_plan_services:
                 event_data = {
                     'ovc_cpims_id': service.event.ovc_cpims_id,
@@ -968,47 +1012,50 @@ def unaccepted_records(request, form_type):
                     },
                 }
                 data.append(event_data)
-                delete_parent_and_children(CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected,service.event.id)
-               
-                
+                delete_parent_and_children(
+                    CasePlanTemplateEventRejected, CasePlanTemplateServiceRejected, service.event.id)
+
             if Response.status_code == 200:
-                
+
                 case_plan_services.delete()
         else:
             return JsonResponse({'error': 'Unknown report type'}, status=400)
-        
+
         return JsonResponse(data, status=200, safe=False)
-    
+
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
 
 
-  
- 
 # Front end validation login
 
 @login_required
+@is_allowed_user_groups(['DAP'])
 def mobile_home(request):
     """Method to do pivot reports."""
 
-    form1b = OVCCareEAV.objects.filter(event = 'b4e0d636-34e8-11e9-9e13-e4a471adc5eb')
+    form1b = OVCCareEAV.objects.filter(
+        event='b4e0d636-34e8-11e9-9e13-e4a471adc5eb')
     currentUser = request.user.reg_person_id
     try:
         form = mobile_approve()
         lip_name = request.session.get('ou_primary_name')
         lip_id = request.session.get('ou_primary')
 
-        chvss = OVCRegistration.objects.filter(is_void=False, child_cbo_id=lip_id).distinct('child_chv_id')
-        care_quiz = OVCCareQuestions.objects.filter(is_void=False, code__startswith="CP")
-        cpt_fields = ['case_plan_services_school', 'case_plan_services_safe', 'case_plan_services_stable', 'case_plan_services_health', 'case_plan_goals_school', 'case_plan_goals_safe', 'case_plan_goals_stable', 'case_plan_goals_health', 'case_plan_gaps_school', 'case_plan_gaps_safe', 'case_plan_gaps_stable', 'case_plan_gaps_health', 'case_plan_priorities_school', 'case_plan_priorities_safe', 'case_plan_priorities_stable', 'case_plan_priorities_health', 'ovc_domain_id']
+        chvss = OVCRegistration.objects.filter(
+            is_void=False, child_cbo_id=lip_id).distinct('child_chv_id')
+        care_quiz = OVCCareQuestions.objects.filter(
+            is_void=False, code__startswith="CP")
+        cpt_fields = ['case_plan_services_school', 'case_plan_services_safe', 'case_plan_services_stable', 'case_plan_services_health', 'case_plan_goals_school', 'case_plan_goals_safe', 'case_plan_goals_stable', 'case_plan_goals_health',
+                      'case_plan_gaps_school', 'case_plan_gaps_safe', 'case_plan_gaps_stable', 'case_plan_gaps_health', 'case_plan_priorities_school', 'case_plan_priorities_safe', 'case_plan_priorities_stable', 'case_plan_priorities_health', 'ovc_domain_id']
         cpt_list = get_dict(field_name=cpt_fields)
-        f1b_fields = ['form1b_items', 'olmis_domain_id', 'olmis_protection_service_id', 'olmis_hes_service_id', 'olmis_health_service_id', 'olmis_shelter_service_id', 'olmis_pss_service_id', 'olmis_education_service_id', 'olmis_critical_event_id', 'caregiver_critical_event_id']
+        f1b_fields = ['form1b_items', 'olmis_domain_id', 'olmis_protection_service_id', 'olmis_hes_service_id', 'olmis_health_service_id',
+                      'olmis_shelter_service_id', 'olmis_pss_service_id', 'olmis_education_service_id', 'olmis_critical_event_id', 'caregiver_critical_event_id']
         f1b_list = get_dict(field_name=f1b_fields)
         # f1a_list = get_dict([''])
 
         print(cpt_list, f1b_list)
-   
-        
+
         chvs = []
         for chv in chvss:
             chvs.append({
@@ -1025,14 +1072,15 @@ def mobile_home(request):
                 'lip_name': lip_name,
                 'quizzes': care_quiz,
                 'cptlist': cpt_list,
-                'f1blist' : f1b_list 
-             
+                'f1blist': f1b_list
+
             }
-             )
+        )
     except Exception as e:
         raise e
     else:
         pass
+
 
 def mobiledataapproval(request):
     if request.method == "POST":
@@ -1041,7 +1089,8 @@ def mobiledataapproval(request):
             app_type = data.get('type')
             app_data = data.get('data[]')
             app_form = data.get('form')
-            print(f">>>>>approval data{app_type} {app_data}, {app_form} {data}    {request.POST}")
+            print(
+                f">>>>>approval data{app_type} {app_data}, {app_form} {data}    {request.POST}")
 
             if app_form == 'CPR':
                 if app_type == "approve":
@@ -1050,17 +1099,17 @@ def mobiledataapproval(request):
                     pass
             if app_form == 'CPT':
                 if app_type == "approve":
-                    acccepted = CasePlanTemplateService.objects.get(id=app_data)
-                    acce_event = CasePlanTemplateEvent.objects.get(id = acccepted.event_id)
+                    acccepted = CasePlanTemplateService.objects.get(
+                        id=app_data)
+                    acce_event = CasePlanTemplateEvent.objects.get(
+                        id=acccepted.event_id)
                     acccepted.is_accepted = 2
                     acccepted.save()
-                    
-                    
+
                 elif app_type == 'reject':
                     rejected = CasePlanTemplateService.objects.get(id=app_data)
                     rejected.is_accepted = 3
                     rejected.save()
-                    
 
             if app_form == 'F1A':
                 if app_type == "approve":
@@ -1079,16 +1128,18 @@ def mobiledataapproval(request):
         response_data = {
             "status": "success",
             "message": "Data received and processed successfully."
-            }
+        }
         return JsonResponse(response_data, safe=False)
     else:
         return JsonResponse({"error": "Invalid request method."}, safe=False)
-    
+
+
 def fetchChildren(request):
     children = []
     if request.method == "POST":
         data = request.POST.getlist('data[]')
-        childrens = OVCRegistration.objects.filter(is_void=False, child_chv_id__in = data).distinct('person')
+        childrens = OVCRegistration.objects.filter(
+            is_void=False, child_chv_id__in=data).distinct('person')
         for child in childrens:
             children.append({
                 'cpims_ovc_id': child.person.pk,
@@ -1097,11 +1148,13 @@ def fetchChildren(request):
 
         print(f"----- {data} >- {children} -  {childrens}")
         # Do something with the data, e.g., save to a database
-        response_data = {"message": "Data received and processed successfully."}
+        response_data = {
+            "message": "Data received and processed successfully."}
         return JsonResponse(children, safe=False)
     else:
         return JsonResponse({"error": "Invalid request method."}, safe=False)
-    
+
+
 def fetchData(request):
     if request.method == "POST":
         data = request.POST
@@ -1111,18 +1164,21 @@ def fetchData(request):
         chv_sel = request.POST.getlist('chvs[]')
         child_sel = request.POST.getlist('child[]')
 
-        formdata =[]
+        formdata = []
         if (form_sel == 'cpr'):
 
-            events = OVCMobileEvent.objects.filter(ovc_cpims__in=child_sel, is_accepted = 1)
-            form_datas = OVCMobileEventAttribute.objects.filter(event__in=events)
+            events = OVCMobileEvent.objects.filter(
+                ovc_cpims__in=child_sel, is_accepted=1)
+            form_datas = OVCMobileEventAttribute.objects.filter(
+                event__in=events)
             dta = {}
             indx = 0
             for event in events:
                 indx += 1
                 for form_dta in form_datas.values():
                     if(event.id == form_dta['event_id']):
-                        dta[form_dta['question_name']] = form_dta['answer_value']
+                        dta[form_dta['question_name']
+                            ] = form_dta['answer_value']
                         dta['name'] = form_datas[indx].event.ovc_cpims.full_name
                         dta['date_of_event'] = form_datas[indx].event.date_of_event
                         dta['id'] = form_datas[indx].event.id
@@ -1133,8 +1189,10 @@ def fetchData(request):
             # print(f"{form_sel} - {chv_sel} - {child_sel} -- {form_data}")
         elif((form_sel == 'cpt')):
 
-            events = CasePlanTemplateEvent.objects.filter(ovc_cpims__in=child_sel)
-            form_datas = CasePlanTemplateService.objects.filter(event__in=events, is_accepted=1)
+            events = CasePlanTemplateEvent.objects.filter(
+                ovc_cpims__in=child_sel)
+            form_datas = CasePlanTemplateService.objects.filter(
+                event__in=events, is_accepted=1)
             formdata = []
             indx = 0
             for form_dta in form_datas.values():
@@ -1147,11 +1205,12 @@ def fetchData(request):
                 dta['date_of_event'] = form_datas[indx].event.date_of_event
                 indx += 1
                 formdata.append(dta)
-                
+
         elif((form_sel == 'form1a')):
 
             events = OVCEvent.objects.filter(ovc_cpims__in=child_sel)
-            form_datas = OVCServices.objects.filter(event__in=events, is_accepted=1)
+            form_datas = OVCServices.objects.filter(
+                event__in=events, is_accepted=1)
             formdata = []
             indx = 0
             for form_dta in form_datas.values():
@@ -1167,7 +1226,8 @@ def fetchData(request):
         elif((form_sel == 'form1b')):
 
             events = OVCEvent.objects.filter(ovc_cpims__in=child_sel)
-            form_datas = OVCServices.objects.filter(event__in=events, is_accepted=1)
+            form_datas = OVCServices.objects.filter(
+                event__in=events, is_accepted=1)
             formdata = []
             indx = 0
             for form_dta in form_datas.values():
@@ -1180,11 +1240,11 @@ def fetchData(request):
                 dta['date_of_event'] = form_datas[indx].event.date_of_event
                 indx += 1
                 formdata.append(dta)
-   
+
         response_data = {
             "status": "success",
             "message": "Data received and processed successfully."
-            }
+        }
         return JsonResponse(formdata, safe=False)
     else:
         return JsonResponse({"error": "Invalid request method."}, safe=False)
@@ -1194,10 +1254,10 @@ def apiCall(payload, form_id):
     url = "http://127.0.0.1:8000/api/form/CPT/"
 
     payload = json.dumps(payload)
-   
+
     headers = {
-    'Content-Type': 'application/json',
-    # 'Authorization': 'Basic dGVzdDoxMjM0NTZAQWI='
+        'Content-Type': 'application/json',
+        # 'Authorization': 'Basic dGVzdDoxMjM0NTZAQWI='
     }
     response = requests.request("POST", url, headers=headers, data=payload)
     status_msg = response.text
@@ -1205,6 +1265,6 @@ def apiCall(payload, form_id):
 
     return JsonResponse({"message": status_msg}, safe=False)
 
+
 def update_mobile_forms():
     pass
-    
