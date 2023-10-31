@@ -115,7 +115,7 @@ class OVCEventRejected(models.Model):
 class OVCServicesRejected(models.Model):
     event = models.ForeignKey(
         OVCEventRejected, on_delete=models.CASCADE, to_field='id')
-    unique_service_id = models.UUIDField(editable=False)
+    id = models.UUIDField(editable=False, primary_key=True)
     domain_id = models.CharField(max_length=255)
     service_id = models.CharField(max_length=255)
     message = models.TextField(null=True)
