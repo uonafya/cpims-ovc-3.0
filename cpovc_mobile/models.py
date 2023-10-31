@@ -151,8 +151,8 @@ class CasePlanTemplateService(models.Model):
     priority_id = models.CharField(max_length=255)
     responsible_id = models.JSONField()
     results_id = models.CharField(max_length=255)
-    reason_id = models.CharField(max_length=255)
-    completion_date = models.DateField()
+    reason_id = models.CharField(max_length=255,null=True)
+    completion_date = models.DateField(null=True)
     is_accepted = models.IntegerField(
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
@@ -187,8 +187,8 @@ class CasePlanTemplateServiceRejected(models.Model):
     priority_id = models.CharField(max_length=255)
     responsible_id = models.JSONField()
     results_id = models.CharField(max_length=255)
-    reason_id = models.CharField(max_length=255)
-    completion_date = models.DateField()
+    reason_id = models.CharField(max_length=255,null=True)
+    completion_date = models.DateField(null=True)
     is_accepted = models.IntegerField(
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
