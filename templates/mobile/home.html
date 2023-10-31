@@ -530,6 +530,7 @@ National
                                 crt_event_1 = {
                                     "event_id" : critical_events[critical_event]['event_id'], "event_date" : critical_events[critical_event]['event_date']
                                 }
+                                console.log({crt_event_1})
                                 crt_events.push(crt_event_1)
                                 event_ids += critical_events[critical_event]['id'] + ';'
                                 html_crt_ev += `
@@ -634,10 +635,11 @@ National
                                 let crt_event = f1ab_translate[critical_events[critical_event]['event_id']];
                                 let crt_event_date = critical_events[critical_event]['event_date'];
                                 crt_event_1 = {
-                                    "event_id" : [critical_events[critical_event]['event_id']], "event_date" : critical_events[critical_event]['event_date']
+                                    "event_id" : critical_events[critical_event]['event_id'], "event_date" : critical_events[critical_event]['event_date']
                                 }
+                                console.log({crt_event_1})
                                 crt_events.push(crt_event_1)
-                                += critical_events[critical_event]['id'] + ';'
+                                event_ids += critical_events[critical_event]['id'] + ';'
                                 html_crt_ev += `
                                     <p>${crt_event}  :   ${crt_event_date}</p>
                                 `
