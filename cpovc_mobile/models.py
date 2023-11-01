@@ -115,7 +115,7 @@ class OVCEventRejected(models.Model):
 class OVCServicesRejected(models.Model):
     event = models.ForeignKey(
         OVCEventRejected, on_delete=models.CASCADE, to_field='id')
-    unique_service_id = models.UUIDField(editable=False)
+    id = models.UUIDField(editable=False, primary_key=True)
     domain_id = models.CharField(max_length=255)
     service_id = models.CharField(max_length=255)
     message = models.TextField(null=True)
@@ -151,8 +151,8 @@ class CasePlanTemplateService(models.Model):
     priority_id = models.CharField(max_length=255)
     responsible_id = models.JSONField()
     results_id = models.CharField(max_length=255)
-    reason_id = models.CharField(max_length=255)
-    completion_date = models.DateField()
+    reason_id = models.CharField(max_length=255,null=True)
+    completion_date = models.DateField(null=True)
     is_accepted = models.IntegerField(
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
@@ -187,8 +187,8 @@ class CasePlanTemplateServiceRejected(models.Model):
     priority_id = models.CharField(max_length=255)
     responsible_id = models.JSONField()
     results_id = models.CharField(max_length=255)
-    reason_id = models.CharField(max_length=255)
-    completion_date = models.DateField()
+    reason_id = models.CharField(max_length=255,null=True)
+    completion_date = models.DateField(null=True)
     is_accepted = models.IntegerField(
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
