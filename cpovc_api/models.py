@@ -15,6 +15,7 @@ class DeviceManagement(models.Model):
     timestamp_created = models.DateTimeField(default=timezone.now)
     timestamp_updated = models.DateTimeField(auto_now=True)
     is_blocked = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
     is_void = models.BooleanField(default=False)
 
     class Meta:

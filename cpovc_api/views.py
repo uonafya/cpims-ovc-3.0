@@ -74,7 +74,8 @@ def caseload(request):
         print('TRACK_Caseload', request.META)
         results = []
         msg = 'Partner OVC details Found'
-        access = access_manager(request)
+        device, status = access_manager(request)
+        print('Device Status', status, device)
         if request.method == 'GET':
             results = get_caseload(request, 0)
         elif request.method == 'POST':

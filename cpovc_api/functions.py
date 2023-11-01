@@ -565,7 +565,7 @@ def save_form(request, person_id, event_date, form_id, services, scores=[]):
                     event_id=event_id,
                 ).save()
             # Critical events
-            cevents = request.data.get('critical_events')
+            cevents = request.data.get('critical_events', [])
             for cevent in cevents:
                 critical_event_id = cevent['event_id']
                 OVCCareEAV(
@@ -655,7 +655,7 @@ def save_form(request, person_id, event_date, form_id, services, scores=[]):
             print('Scores', scores)
             print('Individual Questions', iqtns)
             # Answers to dict
-            all_ans = {}
+            all_ans, all_ians = {}, {}
             if qtns:
                 for qtn in qtns:
                     q_code = qtn['question_code']
@@ -665,6 +665,16 @@ def save_form(request, person_id, event_date, form_id, services, scores=[]):
                     else:
                         f_answer = amaps[ans_id] if ans_id in amaps else 'No'
                     all_ans[q_code] = f_answer
+            # Individual answers
+            if iqtns:
+                for ind_ovcs in iqtns:
+                    ind_code = ind_ovcs["question_code"]
+                    ans_id = ind_ovcs["answer_id"]
+                    if ans_id is None:
+                        ind_answer = None
+                    else:
+                        ind_answer = amaps[ans_id] if ans_id in amaps else 'No'
+                    all_ians[ind_code] = ind_answer
             questions = OVCCareQuestions.objects.filter(
                 code__startswith='CP', is_void=False).values()
             for question in questions:
@@ -678,8 +688,10 @@ def save_form(request, person_id, event_date, form_id, services, scores=[]):
                 answers[qtnid] = question
                 # Individual questions
                 if qtnid in all_iqtns:
-                    question['person_id'] = person_id
-                    ianswers[qtnid] = question
+                    if qtnid in all_ians:
+                        f_ans = all_ians[qtnid]
+                        question['answer_id'] = f_ans
+                        ianswers[qtnid] = question
             # Save questions for HH
             for ans in answers:
                 answer = answers[ans]
@@ -697,22 +709,30 @@ def save_form(request, person_id, event_date, form_id, services, scores=[]):
                     date_of_previous_event=date_previous
                 )
             # Save questions for individual HH members
-            for ians in ianswers:
-                ianswer = ianswers[ians]
-                print('ICPAARA', ianswer)
-                OVCCareIndividaulCpara.objects.create(
-                    person_id=ianswer['person_id'],
-                    caregiver_id=caregiver_id,
-                    question_code=ianswer['code'],
-                    question_id=answer['question_id'],
-                    answer=ianswer['answer_id'],
-                    household_id=hhid,
-                    question_type=ianswer['question_type'],
-                    domain=ianswer['domain'],
-                    date_of_event=event_date,
-                    date_of_previous_event=date_previous,
-                    event_id=event_id
-                )
+            print('CPARA Check', ianswers)
+            if iqtns:
+                for ind_ovcs in iqtns:
+                    ind_ovc = ind_ovcs["ovc_cpims_id"]
+                    ind_code = ind_ovcs["question_code"]
+                    print('ICPARA', ind_ovcs)
+                    for ians in ianswers:
+                        ianswer = ianswers[ians]
+                        i_code = ianswer['code']
+                        print('ICPAARA', ianswer)
+                        if i_code == ind_code:
+                            OVCCareIndividaulCpara.objects.create(
+                                person_id=ind_ovc,
+                                caregiver_id=caregiver_id,
+                                question_code=i_code,
+                                question_id=ianswer['question_id'],
+                                answer=ind_answer,
+                                household_id=hhid,
+                                question_type=ianswer['question_type'],
+                                domain=ianswer['domain'],
+                                date_of_event=event_date,
+                                date_of_previous_event=date_previous,
+                                event_id=event_id
+                            )
             # OVC sub population
             if sub_pops:
                 for sub_pop in sub_pops:
@@ -922,7 +942,7 @@ def get_caseload(request, allow_exit=1):
             ous = get_attached_orgs(request)
             ou_ids = ous['attached_ou'] if 'attached_ou' in ous else []
         print('OU IDS', ou_ids)
-        ovcs = ovcs.filter(child_cbo_id__in=ou_ids)[:100]
+        ovcs = ovcs.filter(child_cbo_id__in=ou_ids)[:10000]
         print('F RES', ovcs)
         check_fields = ['sex_id', 'hiv_status_id', 'exit_reason_id',
                         'immunization_status_id']
@@ -992,17 +1012,40 @@ def get_caseload(request, allow_exit=1):
 def access_manager(request):
     """Method to handle access management."""
     try:
+        status = 9
+        device = None
         device_id = request.query_params.get('deviceID')
         user_id = request.user.id
-        device, created = DeviceManagement.objects.get_or_create(
-            device_id=device_id, user_id=user_id,
-            defaults={'is_blocked': False, 'is_void': False})
-        if created:
-            print('New Device added %s' % str(device_id))
-        else:
-            print('Device Blocked', 'Void', device.is_blocked, device.is_void)
+        user_devices = DeviceManagement.objects.filter(
+            user_id=user_id, is_void=False)
+        if user_devices:
+            if user_devices.count() > 1:
+                status = 5
+            else:
+                device = user_devices.first()
+                if device.is_blocked:
+                    status = 4
+                elif device.is_active:
+                    status = 1
+                    if device.device_id != device_id:
+                        status = 3
+                else:
+                    status = 2
+        if status == 9 and device_id:
+            reg_devices = DeviceManagement.objects.filter(
+                device_id=device_id, is_void=False)
+            if reg_devices:
+                status = 6
+            else:
+                device, created = DeviceManagement.objects.get_or_create(
+                    device_id=device_id, user_id=user_id,
+                    defaults={'is_blocked': False, 'is_void': False})
+                if created:
+                    print('New Device added %s' % str(device_id))
+                else:
+                    print('Device Blocked', 'Void', device_id)
     except Exception as e:
         print('Error mapping device and user %s' % (str(e)))
-        return None
+        return None, 0
     else:
-        return device
+        return device, status
