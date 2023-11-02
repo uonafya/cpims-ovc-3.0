@@ -46,6 +46,10 @@
         display: flex;
         justify-content: flex-end;
     }
+    table tr:nth-child(even)  {
+        background: #2d23235e !important;
+        color: black !important;
+    }
 
 </style>
 {% endblock style_code%}
@@ -459,7 +463,6 @@ National
             $("#my-select1").html("")
             $("#my-select1").append("<option value='' selected disabled>Select a child(rens)</option>")
             urls = '{% url 'fetch_child' %}'
-            // let get_children = apicall(urls, chv_selected, "POST")
             $.ajax({
                 type: "POST",
                 url:  urls,
@@ -890,25 +893,33 @@ National
                                 </div>
                         `}
                         // alert('jane')
-                        $("#Dataapproval tbody").append(`<tr id="${data_indx.event_id}_tr" class="datarows" data-toggle="modal" data-target="#${data_indx.event_id}">
+                        $("#Dataapproval tbody").append(`<tr id="${data_indx.event_id}_tr" class="datarows">
 
                                 <td style="width: 100%;">
                                     <p>Form: CPARA : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
-                                    </div>
+                                    <div class="row">
                                         <br>
-                                        <b><u>Benchmark Scores</u></b> <br>
+                                        <div class="col-md-10">
+                                            <b><u>Benchmark Scores</u></b> <br>
                                             ${bench_score}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#${data_indx.event_id}">
+                                                View record
+                                              </button>
+                                        </div>
                                         <br>
+                                    </div>
                                         <div class="row" hidden>
                                             <div class="col-md-12">
                                                 <input type='input' id="payload_${data_indx.event_id}" value='${payload}'>
                                             </div>
                                         </div>
-                                        <div class="modal fade cparamodal" id="${data_indx.event_id}" data-bs-backdrop='static'>
+                                        <div class="modal fade cparamodal" id="${data_indx.event_id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <button type="button" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                        <button type="button" data-dismiss="modal" class="close" aria-label="Close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                                         <h4 class="modal-title">
                                                             <p>Form: CPARA : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
                                                         </h4>
