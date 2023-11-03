@@ -27,7 +27,9 @@ from .models import (
 from cpovc_forms.models import OVCCareQuestions
 from cpovc_main.functions import get_dict
 
-from cpovc_auth.decorators import is_allowed_user_groups
+from cpovc_registry.models import RegPerson
+
+# from cpovc_auth.decorators import is_allowed_user_groups
 
 
 class ApprovalStatus(Enum):
@@ -1031,7 +1033,7 @@ def unaccepted_records(request, form_type):
 # Front end validation login
 
 @login_required
-@is_allowed_user_groups(['DAP'])
+# @is_allowed_user_groups(['DAP'])
 def mobile_home(request):
     """Method to do pivot reports."""
 
@@ -1072,6 +1074,8 @@ def mobile_home(request):
                 'cpims_chv_id': chv.child_chv.pk,
                 'name': f"{chv.child_chv.full_name}"
             })
+      
+        summary['CPT'] = 5
 
         return render(
             request, 'mobile/home.html',
@@ -1154,7 +1158,8 @@ def fetchChildren(request):
         for child in childrens:
             children.append({
                 'cpims_ovc_id': child.person.pk,
-                'name': child.person.full_name
+                'name': child.person.full_name,
+                'cpims_ovc_id':  child.person.id
             })
 
         print(f"----- {data} >- {children} -  {childrens}")
