@@ -1061,8 +1061,11 @@ def mobile_home(request):
                       'case_plan_priorities_health',
                       ]
         cpt_list = get_dict(field_name=cpt_fields)
-        f1b_fields = ['form1b_items', 'olmis_domain_id', 'olmis_protection_service_id', 'olmis_hes_service_id', 'olmis_health_service_id',
-                      'olmis_shelter_service_id', 'olmis_pss_service_id', 'olmis_education_service_id', 'olmis_critical_event_id', 'caregiver_critical_event_id']
+        f1b_fields = ['form1b_items', 'olmis_domain_id',
+                      'olmis_protection_service_id', 'olmis_hes_service_id',
+                      'olmis_health_service_id', 'olmis_shelter_service_id',
+                      'olmis_pss_service_id', 'olmis_education_service_id',
+                      'olmis_critical_event_id', 'caregiver_critical_event_id']
         f1b_list = get_dict(field_name=f1b_fields)
         summary['CHV'] = chvss.count()
         chvs = []
