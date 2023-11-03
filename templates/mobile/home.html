@@ -272,18 +272,48 @@ National
                 
                 id_actoniond = `#payload_${btnID}`
                 let payToPost = $(id_actoniond).val()
+                let ui_msg
 
 
                 if (approval_type === 'approve'){
-                    let resp = apiPost(payToPost, form)
-                    console.log({resp, id_actoniond, payToPost})
 
-                        pay_approve = {
-                            "is_accepted": '2',
-                            "message": ""
-                        }
-                    let resp_app = apiPost(JSON.stringify(pay_approve), form, btnID)
-                    console.log({resp_app})
+                        apiPost(payToPost, form)
+                            .then(response => {
+                                console.log("API Response:", response.details);
+                                // Handle the response data here
+                                pay_approve = {"is_accepted": '2', "message": ""}
+
+                                let type_api_res
+                                if(response.details.includes('success')){
+                                    apiPost(JSON.stringify(pay_approve), form, btnID)
+                                        .then(jresponse => {
+                                            if(jresponse.error){
+                                                ui_msg = jresponse.error
+                                                type_api_res = 'danger'
+                                            }else if (jresponse.message){
+                                                ui_msg = response.details
+                                                type_api_res = 'primary'
+                                            }
+                                            console.log({jresponse, ui_msg, response})
+                                            sendFeedback(ui_msg, type_api_res)
+                                        })
+                                    
+                                }else{
+                                    type_api_res = "danger"
+                                    ui_msg = response.details
+                                    console.log({ui_msg, "not success": "not success"})
+                                    sendFeedback(ui_msg, type_api_res)
+                                }
+                            })
+                            .catch(error => {
+                                console.error("API Error:", error);
+                                // Handle errors here
+                                sendFeedback(error, "danger")
+                            });
+
+                    // let resp = apiPost(payToPost, form)
+                    // console.log({resp, id_actoniond, payToPost})
+// 
 
                 }else if (approval_type = 'reject'){
                     reject_message = $('#message_approve_'+btnID).val()
@@ -291,19 +321,23 @@ National
                         "is_accepted": '3',
                         "message": reject_message
                     }
-                let resp_reject = apiPost(JSON.stringify(pay_reject), form, btnID)
-                console.log({resp_reject})
+                apiPost(JSON.stringify(pay_reject), form, btnID)
+                .then(jresponse => {
+                    if(jresponse.error){
+                        ui_msg = jresponse.error
+                        type_api_res = 'danger'
+                    }else if (jresponse.message){
+                        ui_msg = jresponse.message
+                        type_api_res = 'primary'
+                    }
+                    console.log({jresponse, ui_msg, "reject": "reject"})
+                    sendFeedback(ui_msg, type_api_res)
+                })
 
-                    
                 }
-
                     checked.forEach((check) => {
                         let rowtr = $("#Dataapproval").DataTable().row("#"+check+"_tr").remove().draw();
                     })
-                    
-                    let msg = "Data "+ approval_type +" successful"
-                    sendFeedback(msg, "primary")
-
             }else {
                 let msg = "No record has been selected"
                 sendFeedback(msg, "danger")
@@ -330,23 +364,50 @@ National
                 
                 id_actoniond = `#payload_${btnID}`
                 let payToPost = $(id_actoniond).val()
+                let ui_msg
 
                 
                 if (approval_type === 'approve'){
-                    let resp = apiPost(payToPost, form)
 
-                        pay_approve = {
-                            "is_accepted": '2',
-                            "message": ""
+                    apiPost(payToPost, form)
+                    .then(response => {
+                        console.log("API Response:", response.details);
+                        // Handle the response data here
+                        pay_approve = {"is_accepted": '2', "message": ""}
+                        if(response.details.includes('success')){
+                           // let resp_app = apiPost(JSON.stringify(pay_approve), form, btnID)
+                           // console.log({resp_app})
+                           array_of_Ids.split(";").map((eventID)=>{
+                            if(eventID.length>0){
+                                
+                                apiPost(JSON.stringify(pay_approve), form, eventID)
+                                        .then(jresponse => {
+                                            if(jresponse.error){
+                                                ui_msg = jresponse.error
+                                                type_api_res = 'danger'
+                                            }else if (jresponse.message){
+                                                ui_msg = response.details
+                                                type_api_res = 'primary'
+                                            }
+                                            console.log({jresponse, ui_msg, response})
+                                            sendFeedback(ui_msg, type_api_res)
+                                        })
+                                
+                            }                     
+                        })
+                        } else{
+                            type_api_res = "danger"
+                            ui_msg = response.details
+                            console.log({ui_msg, "not success": "not success"})
+                            sendFeedback(ui_msg, type_api_res)
                         }
-                    array_of_Ids.split(";").map((eventID)=>{
-                        if(eventID.length>0){
-                            
-                            let resp_app = apiPost(JSON.stringify(pay_approve), form, eventID);
-                            console.log({resp_app});
-                        }
-                        
-                })
+                    })
+                    .catch(error => {
+                        console.error("API Error:", error);
+                        // Handle errors here
+                    });
+
+                   
                     //}
                 }else if (approval_type = 'reject'){
                     reject_message = $('#message_approve_'+btnID).val()
@@ -357,8 +418,22 @@ National
                     array_of_Ids.split(";").map((eventID)=>{
                         if(eventID.length>0){
 
-                            let resp_reject = apiPost(JSON.stringify(pay_reject), form, eventID);
-                            console.log({resp_reject});
+                           // let resp_reject = apiPost(JSON.stringify(pay_reject), form, eventID);
+                           // console.log({resp_reject});
+                           apiPost(JSON.stringify(pay_reject), form, eventID)
+                           .then(jresponse => {
+                               if(jresponse.error){
+                                   ui_msg = jresponse.error
+                                   type_api_res = 'danger'
+                               }else if (jresponse.message){
+                                   ui_msg = jresponse.message
+                                   type_api_res = 'primary'
+                               }
+                               console.log({jresponse, ui_msg, "reject": "reject"})
+                               sendFeedback(ui_msg, type_api_res)
+                           })
+
+
                         }
                 })
                 }
@@ -366,9 +441,7 @@ National
                         let rowtr = $("#Dataapproval").DataTable().row("#"+check+"_tr").remove().draw();
                         console.log({check, rowtr})
                     })
-                    
-                    let msg = "Data "+ approval_type +" successful"
-                    sendFeedback(msg, "primary")
+
             }else {
                 let msg = "No record has been selected"
                 sendFeedback(msg, "danger")              
@@ -895,50 +968,44 @@ National
         }
     }
 
-    function apiPost(payload, form_id, f_uid){
+    function apiPost(payload, form_id, f_uid) {
         let myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("X-CSRFToken", "{{ csrf_token }}");
-
+    
         let requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: payload,
-        redirect: 'follow'
+            method: 'POST',
+            headers: myHeaders,
+            body: payload,
+            redirect: 'follow'
         };
-
- 
-
-
-        if(f_uid == undefined){
-            
-            url = `/api/form/${form_id}/`
-        }else {
-            if (form_id=="F1A"){
-                url = `/mobile/forms/update/${f_uid}`
-            }
-            if (form_id=="F1B"){
-                url = `/mobile/forms/update/${f_uid}`
-            }
-            if (form_id=="CPT"){
-                url = `/mobile/cpt/update/${f_uid}`
-            }
-            if (form_id=="CPR"){
-                url = `/mobile/cpara/update/${f_uid}`
+    
+        let url;
+        if (f_uid === undefined) {
+            url = `/api/form/${form_id}/`;
+        } else {
+            if (form_id === "F1A" || form_id === "F1B") {
+                url = `/mobile/forms/update/${f_uid}`;
+            } else if (form_id === "CPT") {
+                url = `/mobile/cpt/update/${f_uid}`;
+            } else if (form_id === "CPR") {
+                url = `/mobile/cpara/update/${f_uid}`;
             }
         }
-
-
-        fetch(url, requestOptions)
-        .then(response => response.text())
-        .then(result => {
-            console.log(result)
-            // let msg = "Data "+ approval_type +" successful"
-            msg = result.details || "Successful"
-                     sendFeedback(msg, "primary")
-        
-        })
-        .catch(error => console.log('error', error));
+    
+        return new Promise((resolve, reject) => {
+            fetch(url, requestOptions)
+                .then(response => response.json()) // Assuming response is in JSON format
+                .then(result => {
+                    console.log(result);
+                    // Assuming result contains the details you want to return
+                    resolve(result);
+                })
+                .catch(error => {
+                    console.error('error', error);
+                    reject(error);
+                });
+        });
     }
 
     // to output messages to the front end 
