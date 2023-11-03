@@ -20,6 +20,8 @@ class OVCMobileEvent(models.Model):
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     message = models.TextField(null=True)
 
     class Meta:
@@ -48,6 +50,8 @@ class OVCMobileEventRejected(models.Model):
         default=ApprovalStatus.NEUTRAL.value
     )
     message = models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'cpara_mobile_event_rejected'
@@ -73,6 +77,8 @@ class OVCEvent(models.Model):
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
     form_type = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'f1ab_mobile_event'
@@ -91,6 +97,8 @@ class OVCServices(models.Model):
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'f1ab_mobile_attributes'
@@ -105,6 +113,8 @@ class OVCEventRejected(models.Model):
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
     form_type = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'f1ab_mobile_event_rejected'
@@ -123,6 +133,8 @@ class OVCServicesRejected(models.Model):
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'f1ab_mobile_attributes_rejected'
@@ -134,6 +146,8 @@ class CasePlanTemplateEvent(models.Model):
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
     user_id = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'case_plan_mobile_event'
@@ -157,6 +171,8 @@ class CasePlanTemplateService(models.Model):
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'case_plan_mobile_attributes'
@@ -169,6 +185,8 @@ class CasePlanTemplateEventRejected(models.Model):
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
     user_id = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'case_plan_mobile_event_rejected'
@@ -193,6 +211,8 @@ class CasePlanTemplateServiceRejected(models.Model):
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'case_plan_mobile_attributes_rejected'
