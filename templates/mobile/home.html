@@ -54,7 +54,7 @@
 <!-- begin breadcrumb -->
 <ol class="breadcrumb pull-right">
 	<li><a href="#">Home</a></li>
-	<li class="active">Mobile Data approval</li>
+	<li class="active">Mobile App Data approval</li>
 </ol>
 <!-- end breadcrumb -->
 <!-- begin page-header -->
@@ -63,7 +63,7 @@
 {{ lip_name }}
 {% else %} 
 National
-{% endif %} - Mobile Data approval 
+{% endif %} - Mobile App Data approval 
  </h1>
 <!-- end page-header -->
 
@@ -75,7 +75,7 @@ National
         <div class="col-md-4">
             <label>CHV Name</label><br>
             <select multiple="multiple" id="my-select" name="my-select">
-                <option value='' selected disabled>Select a a CHV (s)</option>
+                <option value='' selected disabled>Select a CHV (s)</option>
                 {% for chv in chvs %}
                     <option value='{{ chv.cpims_chv_id }}'>{{ chv.name }}</option>
                 {% endfor %}
@@ -143,7 +143,7 @@ National
                             <table id="Dataapproval">
                                 <thead>
                                     <tr>  
-                                        <td style="width: 100%;">Data</td>
+                                        <td style="width: 100%;">Data for approval (CHV : {{ summary.CHV }}, CPT : 0, CPARA : 0, F1B : 0, F1A : 0)</td>
                                     </tr>
                                 </thead>
                                 <tbody id="tbody">

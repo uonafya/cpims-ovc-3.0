@@ -513,10 +513,11 @@ def get_ovc_event(request, form_type, ovc_id):
 
     try:
         if form_type:
-            all = OVCEvent.objects.all()
-            # events = OVCEvent.objects.filter(ovc_cpims_id=ovc_id, form_type=form_type).order_by('id')
-            services_data = OVCServices.objects.filter(event__form_type=form_type, event__ovc_cpims_id=ovc_id, is_accepted=1).values(
-                'event_id', 'event__ovc_cpims_id', 'event__date_of_event', 'domain_id', 'service_id', 'is_accepted', 'id',
+            services_data = OVCServices.objects.filter(
+                event__form_type=form_type, event__ovc_cpims_id=ovc_id,
+                is_accepted=1).values(
+                'event_id', 'event__ovc_cpims_id', 'event__date_of_event',
+                'domain_id', 'service_id', 'is_accepted', 'id',
             ).order_by('event_id')
             # breakpoint()
         else:
@@ -1036,8 +1037,8 @@ def mobile_home(request):
 
     form1b = OVCCareEAV.objects.filter(
         event='b4e0d636-34e8-11e9-9e13-e4a471adc5eb')
-    currentUser = request.user.reg_person_id
     try:
+        summary = {}
         form = mobile_approve()
         lip_name = request.session.get('ou_primary_name')
         lip_id = request.session.get('ou_primary')
@@ -1046,17 +1047,25 @@ def mobile_home(request):
             is_void=False, child_cbo_id=lip_id).distinct('child_chv_id')
         care_quiz = OVCCareQuestions.objects.filter(
             is_void=False, code__startswith="CP")
-        cpt_fields = ['case_plan_services_school', 'case_plan_services_safe', 'case_plan_services_stable', 'case_plan_services_health', 'case_plan_goals_school', 'case_plan_goals_safe', 'case_plan_goals_stable', 'case_plan_goals_health',
-                      'case_plan_gaps_school', 'case_plan_gaps_safe', 'case_plan_gaps_stable', 'case_plan_gaps_health', 'case_plan_priorities_school', 'case_plan_priorities_safe', 'case_plan_priorities_stable', 'case_plan_priorities_health', 'ovc_domain_id']
+        cpt_fields = ['case_plan_services_school', 'case_plan_services_safe',
+                      'case_plan_services_stable', 'case_plan_services_health',
+                      'case_plan_goals_school', 'case_plan_goals_safe',
+                      'case_plan_goals_stable', 'case_plan_goals_health',
+                      'case_plan_gaps_school', 'case_plan_gaps_safe',
+                      'case_plan_gaps_stable', 'case_plan_gaps_health',
+                      'case_plan_priorities_school', 'ovc_domain_id',
+                      'case_plan_priorities_safe',
+                      'case_plan_priorities_stable',
+                      'case_plan_priorities_health',
+                      ]
         cpt_list = get_dict(field_name=cpt_fields)
-        f1b_fields = ['form1b_items', 'olmis_domain_id', 'olmis_protection_service_id', 'olmis_hes_service_id', 'olmis_health_service_id',
-                      'olmis_shelter_service_id', 'olmis_pss_service_id', 'olmis_education_service_id', 'olmis_critical_event_id', 'caregiver_critical_event_id']
-
+        f1b_fields = ['form1b_items', 'olmis_domain_id',
+                      'olmis_protection_service_id', 'olmis_hes_service_id',
+                      'olmis_health_service_id', 'olmis_shelter_service_id',
+                      'olmis_pss_service_id', 'olmis_education_service_id',
+                      'olmis_critical_event_id', 'caregiver_critical_event_id']
         f1b_list = get_dict(field_name=f1b_fields)
-        # f1a_list = get_dict([''])
-
-        print(cpt_list, f1b_list)
-
+        summary['CHV'] = chvss.count()
         chvs = []
         for chv in chvss:
             chvs.append({
@@ -1073,7 +1082,8 @@ def mobile_home(request):
                 'lip_name': lip_name,
                 'quizzes': care_quiz,
                 'cptlist': cpt_list,
-                'f1blist': f1b_list
+                'f1blist': f1b_list,
+                'summary': summary
 
             }
         )
