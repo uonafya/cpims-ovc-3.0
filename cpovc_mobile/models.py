@@ -393,6 +393,7 @@ class HIVManagementStagingRejected(models.Model):
         default=ApprovalStatus.NEUTRAL.value
     )
     user_id = models.IntegerField()
+    message = models.TextField(null=True)
 
     class Meta:
         db_table = 'hiv_management_staging_rejected'
@@ -443,6 +444,7 @@ class RiskScreeningStagingRejected(models.Model):
         default=ApprovalStatus.NEUTRAL.value
     )
     user_id = models.IntegerField()
+    message = models.TextField(null=True)
 
     class Meta:
         db_table = 'risk_screening_staging_rejected'
