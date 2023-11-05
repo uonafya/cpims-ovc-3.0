@@ -275,6 +275,7 @@ class HIVManagementStaging(models.Model):
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
     )
+    user_id = models.IntegerField()
 
     class Meta:
         db_table = 'hiv_management_staging'
@@ -324,6 +325,7 @@ class RiskScreeningStaging(models.Model):
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
     )
+    user_id = models.IntegerField()
 
     class Meta:
         db_table = 'risk_screening_staging'
@@ -390,6 +392,7 @@ class HIVManagementStagingRejected(models.Model):
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
     )
+    user_id = models.IntegerField()
 
     class Meta:
         db_table = 'hiv_management_staging_rejected'
@@ -439,6 +442,7 @@ class RiskScreeningStagingRejected(models.Model):
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
     )
+    user_id = models.IntegerField()
 
     class Meta:
         db_table = 'risk_screening_staging_rejected'
