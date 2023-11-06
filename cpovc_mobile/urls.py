@@ -38,6 +38,18 @@ urlpatterns = [
     path('unaccepted_records/<str:form_type>/', views.unaccepted_records, name='fetch-unaccepted-data'),
     # re_path(r'^unaccepted_records/(?P<form_type>[0-9A-Z]{3})/$',views.unaccepted_records, name='fetch-unaccepted-data'),
     
+    # hiv screening
+    path('hiv_screening/', views.create_ovc_hiv_screeing,
+         name='create-ovc-mobile-data'),
+    
+    # hiv management
+    path('hiv_management/', views.create_ovc_hiv_management,
+         name='create-ovc-mobile-data'),
+     path('hiv_management/update/<uuid:adherence_id>', views.update_hiv_management,
+          name='update-one-hiv-management'),
+     re_path(r'^hiv_management/(?P<ovc_id>[^/]+)/$', views.get_one_hiv_management,
+          name='get-one-hiv-management'),
+    
   
     # front end validation urls
     path('', views.mobile_home, name='mobile_view'),
