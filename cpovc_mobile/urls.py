@@ -39,8 +39,12 @@ urlpatterns = [
     # re_path(r'^unaccepted_records/(?P<form_type>[0-9A-Z]{3})/$',views.unaccepted_records, name='fetch-unaccepted-data'),
     
     # hiv screening
-    path('hiv_screening/', views.create_ovc_hiv_screeing,
+    path('hiv_screening/', views.create_ovc_hiv_screening,
          name='create-ovc-mobile-data'),
+     path('hiv_screening/update/<uuid:risk_id>', views.update_hiv_screening,
+          name='update-one-hiv-screening'),
+     re_path(r'^hiv_screening/(?P<ovc_id>[^/]+)/$', views.get_one_hiv_screening,
+          name='get-one-hiv-screening'),
     
     # hiv management
     path('hiv_management/', views.create_ovc_hiv_management,
