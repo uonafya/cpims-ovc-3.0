@@ -429,11 +429,12 @@ def create_ovc_event(request, form_id):
             return Response({'message': 'Invalid form type,(F1A,F1B)'})
 
         data = request.data
-        # Check if the user is authenticated
-        if not request.user.is_authenticated:
-            return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
         user_id = request.user.id
+        
+        if len(data.get('ovc_cpims_id').strip()) == 0:
+            return Response({'message': 'ovc_cpims_id cannot be empty'})
+            
 
         event = OVCEvent.objects.create(
             ovc_cpims_id=data.get('ovc_cpims_id'),
