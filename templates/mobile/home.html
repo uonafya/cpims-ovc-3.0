@@ -92,6 +92,8 @@ National
                 <option value='form1b'>Form 1 B</option>
                 <option value='cpt'>Case Plan template</option>
                 <option value='cpr'>CPARA</option>
+                <option value='hmf'>HIV Management Form</option>
+                <option value='hrs'>HIV Risk Screening</option>
             </select>
         </div>
         <div class="col-md-4">
@@ -933,6 +935,26 @@ National
                                                             ${bench_score}
                                                         </div>
                                                             <hr><b><u> Sub Population </u></b> <br>  
+                                                            <table id="table_view" class="table table-condensed table-responsive">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Name</th>
+                                                                        <th>orphans (double or Child headed)?</th>
+                                                                        <th>
+                                                                            At Risk Adolescent Girls andYoung Women (AGYW)? </th>
+                                                                        <th>
+                                                                            HEI? </th>
+                                                                        <th>Children of Female Sex Workers (FSW)?*</th>
+                                                                        <th>Children of People Living with HIV/AIDS (PLHIV)?</th>
+                                                                        <th>Children living with HIV/AIDS (CLHIV)?</th>
+                                                                        <th>sexual violence against children (SVAC)?</th>
+                                                                        <th>Household affected by HIV ?</th>            
+                                                                    </tr>
+                                                                </thead>                                                                
+                                                                <tbody>
+                                                                    ${sub_pop_html}
+                                                                </tbody>
+                                                            </table>
                                                                                                                         
                                                             <hr><b><u> Reason for rejecting </u></b> <br>  
 
