@@ -57,7 +57,7 @@ class OVCMobileEventRejected(models.Model):
     class Meta:
         db_table = 'cpara_mobile_event_rejected'
 
- # use for CPARA data
+# use for CPARA data
 
 
 class OVCMobileEventAttributeRejected(models.Model):
