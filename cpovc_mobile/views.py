@@ -807,13 +807,8 @@ def delete_case_plan_event(request, event_id):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
- 
- 
- 
- # Hiv screening
 
-
-#convert yes_no to Boolean
+#convert yes_no to Boolean handle null
 def handle_Null(answer):
     if answer:
         if answer == 'Yes':
@@ -824,9 +819,6 @@ def handle_Null(answer):
             return None
         else:
             return answer
-
-
-
 
 
 # Hiv screening
@@ -1342,6 +1334,7 @@ def get_all_unaccepted_records(request):
 
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 # Fetch unapproved records using query params
