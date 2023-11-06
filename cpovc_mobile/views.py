@@ -22,7 +22,12 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from .models import OVCMobileEvent, OVCMobileEventAttribute,CasePlanTemplateEvent,CasePlanTemplateService,OVCEvent, OVCServices,OVCMobileEventRejected,OVCEventRejected,OVCMobileEventAttributeRejected,OVCServicesRejected,CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected,HIVManagementStaging,HIVManagementStagingRejected,RiskScreeningStaging,RiskScreeningStagingRejected
+from .models import (OVCMobileEvent, OVCMobileEventAttribute,CasePlanTemplateEvent,CasePlanTemplateService,
+                    OVCEvent, OVCServices,
+                    OVCMobileEventRejected,OVCEventRejected,
+                    OVCMobileEventAttributeRejected,OVCServicesRejected, CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected,
+                    HIVManagementStaging,HIVManagementStagingRejected,RiskScreeningStaging,RiskScreeningStagingRejected
+                    )
 from rest_framework.permissions import IsAuthenticated,AllowAny 
 from rest_framework.decorators import api_view, permission_classes
 from django.db.models import F, CharField, Value
@@ -587,7 +592,7 @@ def update_is_accepted(request, id):
         # Find the service using the id
         service = OVCServices.objects.get(id=id)
 
-        is_accepted = request.data.get('is_accepted')
+        is_accepted = int(request.data.get('is_accepted'))
 
         if is_accepted == ApprovalStatus.FALSE.value:
             # If is_accepted is set to False (3), create corresponding rejected records
