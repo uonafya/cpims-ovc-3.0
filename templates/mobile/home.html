@@ -92,6 +92,8 @@ National
                 <option value='form1b'>Form 1 B</option>
                 <option value='cpt'>Case Plan template</option>
                 <option value='cpr'>CPARA</option>
+                <option value='hmf'>HIV Management Form</option>
+                <option value='hrs'>HIV Risk Screening</option>
             </select>
         </div>
         <div class="col-md-4">
@@ -297,6 +299,10 @@ National
                                             }else if (jresponse.message){
                                                 ui_msg = response.details
                                                 type_api_res = 'primary'
+
+                                                checked.forEach((check) => {
+                                                    let rowtr = $("#Dataapproval").DataTable().row("#"+check+"_tr").remove().draw();
+                                                })
                                             }
                                             console.log({jresponse, ui_msg, response})
                                             sendFeedback(ui_msg, type_api_res)
@@ -333,15 +339,17 @@ National
                     }else if (jresponse.message){
                         ui_msg = jresponse.message
                         type_api_res = 'primary'
+
+                        checked.forEach((check) => {
+                            let rowtr = $("#Dataapproval").DataTable().row("#"+check+"_tr").remove().draw();
+                        })
                     }
                     console.log({jresponse, ui_msg, "reject": "reject"})
                     sendFeedback(ui_msg, type_api_res)
                 })
 
                 }
-                    checked.forEach((check) => {
-                        let rowtr = $("#Dataapproval").DataTable().row("#"+check+"_tr").remove().draw();
-                    })
+                    
             }else {
                 let msg = "No record has been selected"
                 sendFeedback(msg, "danger")
@@ -377,7 +385,7 @@ National
                     .then(response => {
                         console.log("API Response:", response.details);
                         // Handle the response data here
-                        pay_approve = {"is_accepted": '2', "message": ""}
+                        pay_approve = {"is_accepted": 2, "message": ""}
                         if(response.details.includes('success')){
                            // let resp_app = apiPost(JSON.stringify(pay_approve), form, btnID)
                            // console.log({resp_app})
@@ -416,7 +424,7 @@ National
                 }else if (approval_type = 'reject'){
                     reject_message = $('#message_approve_'+btnID).val()
                     pay_reject = {
-                        "is_accepted": '3',
+                        "is_accepted": 3,
                         "message": reject_message
                     }
                     array_of_Ids.split(";").map((eventID)=>{
@@ -874,6 +882,7 @@ National
                             quiz_map["{{quiz.code}}"] = "{{ quiz.question}} : {{ quiz.question_text}}"
                         {% endfor %}
                         
+                        let sub_pop_html = ''
                         let modal_html_question = ''
                         for (quiz in questions){
                             let question_code = questions[quiz].question_code
@@ -933,6 +942,7 @@ National
                                                             ${bench_score}
                                                         </div>
                                                             <hr><b><u> Sub Population </u></b> <br>  
+                                                       
                                                                                                                         
                                                             <hr><b><u> Reason for rejecting </u></b> <br>  
 
