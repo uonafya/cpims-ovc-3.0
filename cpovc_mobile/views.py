@@ -1335,7 +1335,34 @@ def get_all_unaccepted_records(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
+# Count unnapproved records
+def count_unnapproved_records(request):
+    
+    cpara_rejected = OVCMobileEventRejected.objects.filter(
+            is_accepted=3, user_id=request.user.id).count()
+    f1A_rejected = OVCServicesRejected.objects.filter(
+                is_accepted=3, event__user_id=request.user.id, event__form_type='F1A').count()
+    f1B_rejected = OVCServicesRejected.objects.filter(
+                is_accepted=3, event__user_id=request.user.id, event__form_type='F1B').count()
+    caseplan_rejected = CasePlanTemplateServiceRejected.objects.filter(
+                is_accepted=3, event__user_id=request.user.id).count()
+    hiv_management_rejected = HIVManagementStagingRejected.objects.filter(
+                is_accepted=3, user_id=request.user.id).count()
+    hiv_screening_rejected = RiskScreeningStagingRejected.objects.filter(
+                is_accepted=3, user_id=request.user.id).count()
+    
+    count_data = {
+                'rejected_cpara':cpara_rejected,
+                'f1A_rejected':f1A_rejected,
+                'f1B_rejected':f1B_rejected,
+                'caseplan_rejected':caseplan_rejected,
+                'hiv_management_rejected':hiv_management_rejected,
+                'hiv_screening_rejected':hiv_screening_rejected
+                }
+    print('hey',count_data)
+    
+    return JsonResponse(count_data, status=200, safe=False)
+    
 
 # Fetch unapproved records using query params
 @api_view(['GET'])
