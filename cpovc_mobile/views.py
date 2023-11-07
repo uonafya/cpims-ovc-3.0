@@ -234,9 +234,13 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
         # Retrieve  event attributes
         attributes = OVCMobileEventAttribute.objects.filter(
             event__in=events_list)
+        
         for event in events:
+            # get child name
+            child = OVCRegistration.objects.get(is_void=False, person=event.ovc_cpims_id)
             event_data = {
                 'ovc_cpims_id': event.ovc_cpims_id,
+                'ovc_cpims_name': child.person.full_name,
                 'date_of_event': event.date_of_event,
                 'event_id': event.id,
                 'questions': [],
@@ -290,8 +294,11 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                     if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
                         ovc_cpims_id_individual = ovc_cpims_id_individual[len(
                             'individual_ovc_id_'):]
+                    
+                    child = OVCRegistration.objects.get(is_void=False, person=ovc_cpims_id_individual)
 
                     individual_sub_pop['ovc_cpims_id'] = ovc_cpims_id_individual
+                    individual_sub_pop['ovc_cpims_name'] = child.person.full_name
                     event_data['sub_population'].append(individual_sub_pop)
 
                 elif attribute.question_name.startswith('score_') and attribute.event_id == event.id:
@@ -545,8 +552,10 @@ def get_ovc_event(request, form_type, ovc_id):
             # Check if we've already encountered this event
             event_id = service['event_id']
             if event_id not in event_dict:
+                child = OVCRegistration.objects.get(is_void=False, person=service['event__ovc_cpims_id'])
                 event_dict[event_id] = {
                     'ovc_cpims_id': service['event__ovc_cpims_id'],
+                    'ovc_cpims_name': child.person.full_name,
                     'date_of_event': service['event__date_of_event'],
                     'event_id': event_id,
                     'services': [],
@@ -736,10 +745,12 @@ def get_one_case_plan(request, ovc_id):
 
         event_data = []
         for event in events:
+            child = OVCRegistration.objects.get(is_void=False, person=event.ovc_cpims_id)
             services = servicess.filter(event=event)
             event_data.append({
                 'event_id': event.id,
                 'ovc_cpims_id': event.ovc_cpims_id,
+                'ovc_cpims_name': child.person.full_name,
                 'date_of_event': event.date_of_event,
                 'services': [service_serializer(service) for service in services]
             })
