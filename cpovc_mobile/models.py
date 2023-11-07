@@ -246,7 +246,7 @@ class HIVManagementStaging(models.Model):
     adherence = models.CharField(max_length=20, null=False)
     adherence_drugs_duration = models.CharField(max_length=3, null=True)
     adherence_counselling = models.CharField(max_length=20, null=True)
-    treatment_suppoter = models.CharField(max_length=100, null=True)
+    treatment_supporter = models.CharField(max_length=100, null=True)
     treatment_supporter_relationship = models.CharField(max_length=20, null=True)
     treatment_supporter_gender = models.CharField(max_length=11, null=True)
     treatment_supporter_age = models.CharField(max_length=11, null=True)
