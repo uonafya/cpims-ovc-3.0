@@ -1472,7 +1472,7 @@ def unaccepted_records(request, form_type):
                 case_plan_services.delete()
                 
             
-        elif form_type == 'hiv_management':
+        elif form_type == 'hmf':
             
             # Fetch unaccepted HIV_Management records for and OVC
             hiv_management_rejected = HIVManagementStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
@@ -1530,7 +1530,7 @@ def unaccepted_records(request, form_type):
                     hiv_management.delete()
         
         
-        elif form_type == 'hiv_screening':
+        elif form_type == 'hrs':
             
             # Fetch unaccepted hiv_screening_rejected records for and OVC
             hiv_screening_rejected = RiskScreeningStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
