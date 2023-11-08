@@ -50,9 +50,15 @@
         background: #2d23235e !important;
         color: black !important;
     }
-    subpop_c{
-        border: 1px solid black !important;
+    .quiz_header_row {
+        border-bottom: 2px black solid;
+        font-size: bolder;
     }
+    .quiz_row {
+        border-bottom: 1px black solid;
+        padding: 5px;
+    }
+    
 
 </style>
 {% endblock style_code%}
@@ -539,6 +545,12 @@ National
             if (form === 'form1b'){
                 s_url = `forms/F1B/${child}`
             }
+            if (form === 'hmf'){
+                s_url = `hmf/${child}`
+            }
+            if (form === 'hrs'){
+                s_url = `hrs/${child}`
+            }
             
             console.log({chvs, form, child, s_url})
             $.ajax({
@@ -858,7 +870,6 @@ National
                         let individual  = data[dta].individuals_questions
                         let questions  = data[dta].questions
                         let subpopulations  = data[dta].sub_population
-                        console.log(subpopulations)
                         let bench_score = ''
                         if (scores.length> 0){
                             bench_score += `
@@ -907,7 +918,6 @@ National
                         let sub_pop_dict = {'CP6d_1':'double','CP6d_2':'AGYW','CP6d_3':'HEI','CP6d_4':'FSW','CP6d_5':'PLHIV','CP6d_6':'CLHIV','CP6d_7':'SVAC','CP6d_8':'AHIV'}
                         if(subpopulations.length >0){
                             let unique_sub_pop_ovc = [... new Set(subpopulations.map(ovc => ovc.ovc_cpims_id))]
-                            console.log({unique_sub_pop_ovc})
                             if(unique_sub_pop_ovc.length>0){
                                 unique_sub_pop_ovc.map(id =>{
                                     ovc_sub_pop = subpopulations.filter(xd => xd.ovc_cpims_id === id)
@@ -932,8 +942,6 @@ National
                                         q_7 = ovc_sub_pop.filter(qd=> qd.criteria == 'CP6d_7').length ? 'Yes' : ''
                                         q_8 = ovc_sub_pop.filter(qd=> qd.criteria == 'CP6d_8').length ? 'Yes' : ''
 
-                                        console.log({ovc_sub_pop, id, subpopulations, sub_name, q_1})
-
                                         sub_pop_html += `
                                         <div class="row">
                                             <div class="col-md-3 subpop_c">${sub_name}</div>
@@ -945,6 +953,13 @@ National
                                             <div class="col-md-1 subpop_c">${q_6}</div>
                                             <div class="col-md-1 subpop_c">${q_7}</div>
                                             <div class="col-md-1 subpop_c">${q_8}</div>
+                                        </div>
+                                        `
+                                    }else{
+                                        sub_pop_html += `
+                                        <div class="row quiz_row">
+                                            <div class="col-md-3 subpop_c" style="color:red;"><b>There are not records</b></div>
+                                            
                                         </div>
                                         `
                                     }
@@ -994,7 +1009,7 @@ National
                                                         </div>
                                                         
                                                         <hr><b><u> Sub Population </u></b> <br> 
-                                                        <div class="row" style="font-size:bold;">
+                                                        <div class="row quiz_header_row" style="font-size:bold;">
                                                             <div class="col-md-3 subpop_c">Name</div>
                                                             <div class="col-md-1 subpop_c">orphans (double or Child headed)?</div>
                                                             <div class="col-md-1 subpop_c">At Risk Adolescent Girls andYoung Women (AGYW)? </div>
@@ -1034,6 +1049,277 @@ National
                     }
                     
                            
+                }else if(form === 'hmf' ){
+                    let ta_trs = {}
+                    
+                    let hmf_translate = {{  hiv_form|safe }}
+                    hmf_translates = hmf_translate.filter(x=> x.form==='hmf')
+                    for (dta in data){
+                        let html_question = ''
+                        let data_indx = data[dta]
+                        if (data_indx){
+                            for (indx in hmf_translates){
+                                let question_no = hmf_translates[indx].Question_no
+                                let question_text = hmf_translates[indx].form_text
+                                let question_dbname = hmf_translates[indx].db_name
+                                let question_formname = hmf_translates[indx].form_name
+                                let question_answer = data_indx[question_dbname]
+                                let ui_answer = ''
+                                ta_trs[question_formname] = question_answer
+
+                                if(question_dbname.includes('date') && question_answer && question_answer.length>0 ){
+                                    ui_answer = formatDate(question_answer)
+                                }else {
+                                    ui_answer = question_answer
+                                }
+                                
+
+                                html_question += `
+                                    <div class="row quiz_row">
+                                        <div class="col-md-1"> ${question_no}  </div>
+                                        <div class="col-md-5"> ${question_text} </div>
+                                        <div class="col-md-3"> ${ui_answer} </div>
+                                        <div class="col-md-3">  </div>
+                                    </div>
+                                `
+                            }
+                            
+                        }else{
+                            html_question += `<p style="color: red;">No benchmark Scores</p>`
+                        }
+                        let payload = JSON.stringify(ta_trs)
+
+                    
+                        
+                        $("#Dataapproval tbody").append(`
+                                <tr id="${data_indx.ovc_cpims_id}_${dta}_tr" class="datarows">
+                                    <td style="width: 100%;">
+                                                <p>Form: HIV Management Form : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_cpims_name} </b> | Date of event - ${data[dta].date_of_event}</p>
+                                                <div class="row">
+                                                    <br>
+                                                    <div class="col-md-10">
+                                                        <b><u>Preview</u></b> <br>
+                                                        <div class="row">
+                                                            <div class="col-md-1"><b><u> # </u></b> </div>
+                                                            <div class="col-md-5"><b><u> Questions </u></b> </div>
+                                                            <div class="col-md-3"><b><u> Answers </u></b> </div>
+                                                            <div class="col-md-3"><b><u> Date </u></b> </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-1"> 1 </div>
+                                                            <div class="col-md-5"> Date confirmed HIV Positive </div>
+                                                            <div class="col-md-3"> ${formatDate(data_indx.hiv_confirmed_date)} </div>
+                                                            <div class="col-md-3">  </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-1"> 2a  </div>
+                                                            <div class="col-md-5"> Date initiated on Treatment  </div>
+                                                            <div class="col-md-3"> ${formatDate(data_indx.treatment_initiated_date)}  </div>
+                                                            <div class="col-md-3">   </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#${data_indx.ovc_cpims_id}_${dta}">
+                                                            View record
+                                                        </button>
+                                                    </div>
+                                                    <br>
+                                                </div>
+                                                <div class="row" hidden>
+                                                    <div class="col-md-12">
+                                                        <input type='input' id="payload_${data_indx.ovc_cpims_id}_${dta}" value='${payload}'>
+                                                    </div>
+                                                </div>
+                                            
+                                        <div class="modal fade cparamodal" id="${data_indx.ovc_cpims_id}_${dta}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" data-dismiss="modal" class="close" aria-label="Close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                        <h4 class="modal-title">
+                                                            <p>Form: HIV Management Form : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
+                                                        </h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <b><u>Art Therapy </u></b> <br>
+                                                        <div class="row quiz_header_row">
+                                                            <div class="col-md-1"><b><u> # </u></b> </div>
+                                                            <div class="col-md-5"><b><u> Questions </u></b> </div>
+                                                            <div class="col-md-3"><b><u> Answers </u></b> </div>
+                                                            <div class="col-md-3"><b><u> Date </u></b> </div>
+                                                        </div>
+                                                        ${html_question}
+                                                                                                                                                                   
+                                                        <hr><b><u> Reason for rejecting </u></b> <br>  
+
+                                                        <textarea id="message_approve_${data_indx.ovc_cpims_id}_${dta}" name="message_approve" rows="4" cols="100"></textarea>
+                                                        
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <div class="col-md-2" id="approvalbuttons">
+                                                            <input onclick="consolidatePost(this.id, 'approve', 'hmf')" id="${data_indx.ovc_cpims_id}_${dta}" class="btnApprove btn btn-primary m-5" data-dismiss="modal" type="button" value="Approve" />
+                                                            <input onclick="consolidatePost(this.id, 'reject', 'hmf')" id="${data_indx.ovc_cpims_id}_${dta}" class="btnReject btn btn-danger m-5" data-dismiss="modal" type="button" value="Reject" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                        `);                  
+                    }
+                }
+                else if(form === 'hrs' ){
+                    let ta_trs = {}
+                    let html_question = ''
+
+                    let hmf_translate = {{  hiv_form|safe }}
+                    hmf_translates = hmf_translate.filter(x=> x.form==='hrs')
+                    for (dta in data){
+                        html_question = ''
+                        let data_indx = data[dta]
+                        if (data_indx){
+                            for (indx in hmf_translates){
+                                let question_no = hmf_translates[indx].Question_no
+                                let question_text = hmf_translates[indx].form_text
+                                let question_dbname = hmf_translates[indx].db_name
+                                let question_formname = hmf_translates[indx].form_name
+                                let question_answer = data_indx[question_dbname]
+                                let ui_answer = ''
+                                ta_trs[question_formname] = question_answer
+                                console.log(ta_trs)
+
+                                if(question_dbname.includes('date') && question_answer && question_answer.length>0 ){
+                                    ui_answer = formatDate(question_answer)
+                                }else {
+                                    ui_answer = question_answer
+                                }
+                                let facility_code = ''
+                                if(question_dbname == 'facility_code'){
+                                    facility_code = `
+                                    Facility Name : <input type="text" class="form-control" name="facility_field" id="facility_field" placeholder="Search for facility here" required>
+                                    <br>
+                                    MFL Code: <br> <input type="text" class="form-control" name="HIV_RA_3Q6" id="HIV_RA_3Q6" readonly disabled>  `
+                                }
+
+                                html_question += `
+                                    <div class="row quiz_row">
+                                        <div class="col-md-1"> ${question_no}  </div>
+                                        <div class="col-md-5"> ${question_text} </div>
+                                        <div class="col-md-3"> ${ui_answer} </div>
+                                        <div class="col-md-3"> ${facility_code} </div>
+                                    </div>
+                                `
+                            }
+                            
+                        }else{
+                            html_question += `<p style="color: red;">No benchmark Scores</p>`
+                        }
+                        let payload = JSON.stringify(ta_trs)
+                        $( "#facility_field" ).autocomplete({
+                            source: function( request, response ) {
+                            $.ajax({
+                                url: "{% url 'ovc_search' %}",
+                                dataType: "json",
+                                data: {q: request.term, id: 1},
+                                success: function( data ) {
+                                    response( data );
+                                }
+                                });
+                            },
+                            minLength: 4,
+                            select: function( event, ui ) {
+                                $('#facility_field').val(ui.item.name);
+                                $('#HIV_RA_3Q6').val(ui.item.id);
+                            },
+                            open: function() {
+                                $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+                            },
+                            close: function() {
+                                $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+                                $('.btnApprove').removeAttr('disabled')
+                            }
+                        });
+
+                    
+                        
+                        $("#Dataapproval tbody").append(`
+                                <tr id="${data_indx.ovc_cpims_id}_${dta}_tr" class="datarows">
+                                    <td style="width: 100%;">
+                                                <p>Form: HIV Risk Screening : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_cpims_name} </b> | Date of event - ${data[dta].date_of_event}</p>
+                                                <div class="row">
+                                                    <br>
+                                                    <div class="col-md-10">
+                                                        <b><u>Preview</u></b> <br>
+                                                        <div class="row">
+                                                            <div class="col-md-1"><b><u> # </u></b> </div>
+                                                            <div class="col-md-5"><b><u> Questions </u></b> </div>
+                                                            <div class="col-md-3"><b><u> Answers </u></b> </div>
+                                                            <div class="col-md-3"><b><u> Date </u></b> </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-1"> 1 </div>
+                                                            <div class="col-md-5"> Date of Event </div>
+                                                            <div class="col-md-3"> ${formatDate(data_indx.date_of_event)} </div>
+                                                            <div class="col-md-3">  </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-1"> 2a  </div>
+                                                            <div class="col-md-5"> Does the caregiver know the status of the child?  </div>
+                                                            <div class="col-md-3"> ${data_indx.caregiver_know_status}  </div>
+                                                            <div class="col-md-3">   </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#${data_indx.ovc_cpims_id}_${dta}">
+                                                            View record
+                                                        </button>
+                                                    </div>
+                                                    <br>
+                                                </div>
+                                                <div class="row" hidden>
+                                                    <div class="col-md-12">
+                                                        <input type='input' id="payload_${data_indx.ovc_cpims_id}_${dta}" value='${payload}'>
+                                                    </div>
+                                                </div>
+                                            
+                                        <div class="modal fade cparamodal" id="${data_indx.ovc_cpims_id}_${dta}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" data-dismiss="modal" class="close" aria-label="Close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                        <h4 class="modal-title">
+                                                            <p>Form: HIV Risk Screening : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
+                                                        </h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <b><u>Art Therapy </u></b> <br>
+                                                        <div class="row quiz_header_row">
+                                                            <div class="col-md-1"><b><u> # </u></b> </div>
+                                                            <div class="col-md-5"><b><u> Questions </u></b> </div>
+                                                            <div class="col-md-3"><b><u> Answers </u></b> </div>
+                                                            <div class="col-md-3"><b><u> Date </u></b> </div>
+                                                        </div>
+                                                        ${html_question}
+                                                                                                                                                                   
+                                                        <hr><b><u> Reason for rejecting </u></b> <br>  
+
+                                                        <textarea id="message_approve_${data_indx.ovc_cpims_id}_${dta}" name="message_approve" rows="4" cols="100"></textarea>
+                                                        
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <div class="col-md-2" id="approvalbuttons">
+                                                            <input onclick="consolidatePost(this.id, 'approve', 'hmf')" id="${data_indx.ovc_cpims_id}_${dta}" class="btnApprove btn btn-primary m-5" data-dismiss="modal" type="button" value="Approve"  disabled/>
+                                                            <input onclick="consolidatePost(this.id, 'reject', 'hmf')" id="${data_indx.ovc_cpims_id}_${dta}" class="btnReject btn btn-danger m-5" data-dismiss="modal" type="button" value="Reject" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                        `);                  
+                    }
                 }
 
                 $("#Dataapproval").DataTable().draw()
@@ -1079,6 +1365,9 @@ National
             } else if (form_id === "CPR") {
                 url = `/mobile/cpara/update/${f_uid}`;
             }
+            else  {
+                url = `/mobile/${form_id}/update/${f_uid}`;
+            }
         }
     
         return new Promise((resolve, reject) => {
@@ -1109,6 +1398,22 @@ National
     $('.modal').on('hide.bs.modal', function () { 
         $(".modal-backdrop").remove();
     }); 
+    // function to format and return date as dd-mmm-yyyy for ui preview
+    function formatDate(inputDate) {
+        const months = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+    
+        const date = new Date(inputDate);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+    
+        return `${day}-${month}-${year}`;
+    }
+
+    
 
 
  
