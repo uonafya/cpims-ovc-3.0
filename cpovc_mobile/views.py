@@ -66,6 +66,79 @@ def delete_parent_and_children(parent_model, child_model, parent_id):
     except Exception as e:
         return str(e)  # exceptions
 
+hmf_field_mapping = {
+    "hiv_confirmed_date": "HIV_MGMT_1_A",
+    "treatment_initiated_date": "HIV_MGMT_1_B",
+    "baseline_hei": "HIV_MGMT_1_C",
+    "firstline_start_date": "HIV_MGMT_1_D",
+    "substitution_firstline_arv": "HIV_MGMT_1_E",
+    "substitution_firstline_date": "HIV_MGMT_1_E_DATE",
+    "switch_secondline_arv": "HIV_MGMT_1_F",
+    "switch_secondline_date": "HIV_MGMT_1_F_DATE",
+    "switch_thirdline_arv": "HIV_MGMT_1_G",
+    "switch_thirdline_date": "HIV_MGMT_1_G_DATE",
+    "visit_date": "HIV_MGMT_2_A",
+    "duration_art": "HIV_MGMT_2_B",
+    "height": "HIV_MGMT_2_C",
+    "muac": "HIV_MGMT_2_D",
+    "adherence": "HIV_MGMT_2_E",
+    "adherence_drugs_duration": "HIV_MGMT_2_F",
+    "adherence_counselling": "HIV_MGMT_2_G",
+    "treatment_supporter": "HIV_MGMT_2_H_2",
+    "treatment_supporter_relationship": "HIV_MGMT_2_H_1",
+    "treatment_supporter_gender": "HIV_MGMT_2_H_3",
+    "treatment_supporter_age": "HIV_MGMT_2_H_4",
+    "treament_supporter_hiv": "HIV_MGMT_2_H_5",
+    "viral_load_results": "HIV_MGMT_2_I_1",
+    "viral_load_date": "HIV_MGMT_2_I_DATE",
+    "detectable_viralload_interventions": "HIV_MGMT_2_J",
+    "disclosure": "HIV_MGMT_2_K",
+    "muac_score": "HIV_MGMT_2_L_1",
+    "bmi": "HIV_MGMT_2_L_2",
+    "nutritional_support": "HIV_MGMT_2_M",
+    "support_group_status": "HIV_MGMT_2_N",
+    "nhif_enrollment": "HIV_MGMT_2_O_1",
+    "nhif_status": "HIV_MGMT_2_O_2",
+    "referral_services": "HIV_MGMT_2_P",
+    "nextappointment_date": "HIV_MGMT_2_Q",
+    "peer_educator_name": "HIV_MGMT_2_R",
+    "peer_educator_contact": "HIV_MGMT_2_S",
+    "date_of_event": "HIV_MGMT_2_A"
+}
+
+hrs_field_mapping = {
+    "ovc_cpims_id": "HIV_RS_01",
+    "date_of_event": "HIV_RA_1A",
+    "test_done_when": "HIV_RS_03",
+    "test_donewhen_result": "",
+    "caregiver_know_status": "HIV_RS_01",
+    "caregiver_knowledge_yes": "HIV_RS_02",
+    "parent_PLWH": "HIV_RS_04",
+    "child_sick_malnourished": "HIV_RS_05",
+    "child_sexual_abuse": "HIV_RS_06",
+    "traditional_procedure": "HIV_RS_06A",
+    "adol_sick": "HIV_RS_07",
+    "adol_had_tb": "HIV_RS_08",
+    "adol_sexual_abuse": "HIV_RS_09",
+    "sex": "HIV_RS_10",
+    "sti": "HIV_RS_10A",
+    "sharing_needles": "HIV_RS_10B",
+    "hiv_test_required": "HIV_RS_11",
+    "parent_consent_testing": "HIV_RS_14",
+    "parent_consent_date": "HIV_RS_15",
+    "referral_made": "HIV_RS_16",
+    "referral_made_date": "HIV_RS_17",
+    "referral_completed": "HIV_RS_18",
+    "referral_completed_date": "HIV_RS_14",
+    "not_completed": "HIV_RS_18A",
+    "test_result": "HIV_RS_18B",
+    "art_referral": "HIV_RS_21",
+    "art_referral_date": "HIV_RS_22",
+    "art_referral_completed": "HIV_RS_23",
+    "art_referral_completed_date": "HIV_RS_24",
+    "facility_code": "HIV_RA_3Q6",
+}
+
 # Views for CPARA mobile
 
 
@@ -84,15 +157,15 @@ def create_ovc_mobile_cpara_data(request):
         event_id = data.get('id')
 
         try:
-            # Try to get an existing OVCMobileEvent with the provided ID
+            # get an existing OVCMobileEvent with the provided ID
             event = OVCMobileEvent.objects.get(pk=event_id)
 
-            # Update the existing event with new data
+            # Update 
             event.ovc_cpims_id = data.get('ovc_cpims_id', event.ovc_cpims_id)
             event.date_of_event = data.get('date_of_event', event.date_of_event)
             event.save()
 
-            action = 'update'
+
         except OVCMobileEvent.DoesNotExist:
             # If the event with the provided ID does not exist, create a new event
             event = OVCMobileEvent.objects.create(
@@ -102,7 +175,8 @@ def create_ovc_mobile_cpara_data(request):
                 is_accepted=is_accepted,
                 user_id=user_id
             )
-            action = 'create'
+            event.save()
+
 
         # Handle questions
         questions = data.get('questions', [])
@@ -394,8 +468,8 @@ def update_cpara_is_accepted(request, event_id):
         if is_accepted == ApprovalStatus.TRUE.value:
             # event.is_accepted = is_accepted
             # event.save()
-            event_rejected = OVCMobileEvent.objects.get(pk=event_id)
-            OVCMobileEventAttribute.objects.filter(event=event_rejected)
+            event_rejected = OVCMobileEventRejected.objects.get(pk=event_id).delete()
+            OVCMobileEventAttributeRejected.objects.filter(event=event_rejected).delete()
             attributes.delete()
             event.delete()
             return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
@@ -609,31 +683,42 @@ def update_is_accepted(request, id):
         service = OVCServices.objects.get(id=id)
 
         is_accepted = request.data.get('is_accepted')
+        
+        if is_accepted is not None:
 
-        if is_accepted == ApprovalStatus.FALSE.value:
-            # If is_accepted is set to False (3), create corresponding rejected records
-            rejected_event = OVCEventRejected.objects.create(
-                user_id=service.event.user_id,
-                ovc_cpims_id=service.event.ovc_cpims_id,
-                date_of_event=service.event.date_of_event,
-                form_type=service.event.form_type
-            )
+            if is_accepted == ApprovalStatus.FALSE.value:
+                # If is_accepted is set to False (3), create corresponding rejected records
+                rejected_event = OVCEventRejected.objects.create(
+                    user_id=service.event.user_id,
+                    ovc_cpims_id=service.event.ovc_cpims_id,
+                    date_of_event=service.event.date_of_event,
+                    form_type=service.event.form_type
+                )
 
-            # Create the corresponding rejected service
-            OVCServicesRejected.objects.create(
-                event=rejected_event,
-                id=service.id,
-                domain_id=service.domain_id,
-                service_id=service.service_id,
-                is_accepted=is_accepted,
-                message=request.data.get('message')
-            )
-
-        # Update the is_accepted field for the original service
-        service.is_accepted = is_accepted
-        service.save()
-
-        return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
+                # Create the corresponding rejected service
+                OVCServicesRejected.objects.create(
+                    event=rejected_event,
+                    id=service.id,
+                    domain_id=service.domain_id,
+                    service_id=service.service_id,
+                    is_accepted=is_accepted,
+                    message=request.data.get('message')
+                )
+                # Update the is_accepted field for the original service
+                service.is_accepted = is_accepted
+                service.save()
+                return Response({'message': 'is_accepted updated successfully to FALSE'}, status=status.HTTP_200_OK)
+            
+            elif is_accepted == ApprovalStatus.TRUE.value:
+                service_id = OVCServicesRejected.objects.get(id=id).delete()
+                rejected_event = service_id.event
+                rejected_event.delete()
+                service.delete()
+                OVCEvent.objects.get(id=service.event).delete()
+            
+        else:
+            return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
+            
     except OVCEvent.DoesNotExist:
         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
@@ -683,13 +768,23 @@ def create_case_plan_template(request):
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
         user_id = request.user.id
-
-        # Create a new CasePlanTemplateEvent
-        event = CasePlanTemplateEvent.objects.create(
-            ovc_cpims_id=payload['ovc_cpims_id'],
-            date_of_event=payload['date_of_event'].split('T')[0],
-            user_id=user_id
-        )
+        event_id = payload.get('id')
+        
+        
+        try:
+            event = CasePlanTemplateEvent.objects.get(pk=event_id)
+            event.ovc_cpims_id=payload['ovc_cpims_id']
+            event.date_of_event=payload['date_of_event'].split('T')[0]
+            event.save()
+            
+            
+        except CasePlanTemplateEvent.DoesNotExist:
+            # Create a new CasePlanTemplateEvent
+            event = CasePlanTemplateEvent.objects.create(
+                ovc_cpims_id=payload['ovc_cpims_id'],
+                date_of_event=payload['date_of_event'].split('T')[0],
+                user_id=user_id
+            )
 
         # Create a record for each service
         services = payload['services']
@@ -803,13 +898,20 @@ def update_case_plan_is_accepted(request, unique_service_id):
                     is_accepted=new_is_accepted,
                     message=request.data.get('message')
                 )
+                # Update the is_accepted field for the original service
+                service.is_accepted = new_is_accepted
+                service.save()
+                return Response({'message': 'is_accepted updated successfully to FALSE'}, status=status.HTTP_200_OK)
 
-            # Update the is_accepted field for the original service
-            service.is_accepted = new_is_accepted
-            service.updated_at = timezone.now()
-            service.save()
-
-            return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
+            
+            elif new_is_accepted == ApprovalStatus.TRUE.value:
+                service_id = CasePlanTemplateServiceRejected.objects.get(unique_service_id=unique_service_id).delete()
+                rejected_event = service_id.event
+                rejected_event.delete()
+                service.delete()
+                CasePlanTemplateEvent.objects.get(id=event).delete()
+                return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
+ 
         else:
             return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
     except CasePlanTemplateService.DoesNotExist:
@@ -834,11 +936,11 @@ def delete_case_plan_event(request, event_id):
 #convert yes_no to Boolean handle null
 def handle_Null(answer):
     if answer:
-        if answer == 'Yes':
+        if answer == 'AYES':
             return True
-        elif answer == 'No':
+        elif answer == 'ANNO':
             return False
-        elif answer == '':
+        elif len(answer.strip()) == 0:
             return None
         else:
             return answer
@@ -850,48 +952,43 @@ def handle_Null(answer):
 def create_ovc_hiv_screening(request):
     try:
         data = request.data
-            # Check if the user is authenticated
+        user_id = request.user.id
+        ovc_cpims_id = handle_Null(data.get('ovc_cpims_id'))
+        event_id = handle_Null(data.get('adherence_id'))
+        date_of_event = str(data.get('HIV_RA_1A'))
+        print("date_of_event...",type(date_of_event),"aaaaaa",date_of_event)
+
+
+        # Check if the user is authenticated
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
-        
-        # create screening 
-        RiskScreeningStaging.objects.create(   
-                ovc_cpims_id = handle_Null(data.get('HIV_RS_01')),
-                date_of_event = handle_Null(data.get('HIV_RA_1A')),
-                test_done_when = handle_Null(data.get('HIV_RS_03')),
-                test_donewhen_result = handle_Null(data.get('')),
-                caregiver_know_status = handle_Null(data.get('HIV_RS_01')),
-                caregiver_knowledge_yes = handle_Null(data.get('HIV_RS_02')),
-                parent_PLWH = handle_Null(data.get('HIV_RS_04')),
-                child_sick_malnourished = handle_Null(data.get('HIV_RS_05')),
-                child_sexual_abuse = handle_Null(data.get('HIV_RS_06')),
-                traditional_procedure = handle_Null(data.get('HIV_RS_06A')),
-                adol_sick = handle_Null(data.get('HIV_RS_07')),
-                adol_had_tb = handle_Null(data.get('HIV_RS_08')),
-                adol_sexual_abuse = handle_Null(data.get('HIV_RS_09')),
-                sex = handle_Null(data.get('HIV_RS_10')),
-                sti = handle_Null(data.get('HIV_RS_10A')),
-                sharing_needles = handle_Null(data.get('HIV_RS_10B')),
-                hiv_test_required = handle_Null(data.get('HIV_RS_11')),
-                parent_consent_testing = handle_Null(data.get('HIV_RS_14')),
-                parent_consent_date = handle_Null(data.get('HIV_RS_15')),
-                referral_made = handle_Null(data.get('HIV_RS_16')),
-                referral_made_date = handle_Null(data.get('HIV_RS_17')),
-                referral_completed = handle_Null(data.get('HIV_RS_18')),
-                referral_completed_date = handle_Null(data.get('HIV_RS_14')),
-                not_completed = handle_Null(data.get('HIV_RS_18A')),
-                test_result = handle_Null(data.get('HIV_RS_18B')),
-                art_referral = handle_Null(data.get('HIV_RS_21')),
-                art_referral_date = handle_Null(data.get('HIV_RS_22')),
-                art_referral_completed = handle_Null(data.get('HIV_RS_23')),
-                art_referral_completed_date = handle_Null(data.get('HIV_RS_24')),
-                facility_code = handle_Null(data.get('HIV_RA_3Q6')),
-                is_accepted = ApprovalStatus.NEUTRAL.value,
-                user_id = request.user.id
-  
-        )
-        
-        return Response({'message': 'Data stored successfully'}, status=status.HTTP_201_CREATED)
+
+        # Check if an ID is provided to determine if it's an update or create
+        if event_id:
+            try:
+                # Try to update the existing record
+                hiv_management = RiskScreeningStaging.objects.get(adherence_id=event_id)
+                hiv_management.date_of_event = date_of_event
+                for model_field, payload_field in hrs_field_mapping.items():
+                    setattr(hiv_management, model_field, handle_Null(data.get(payload_field)))
+                
+                hiv_management.save()
+                
+            except RiskScreeningStaging.DoesNotExist:
+                return Response({'error': 'Record with  provided ID not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            # Create a new record
+            hiv_management = RiskScreeningStaging(
+                ovc_cpims_id=ovc_cpims_id,
+                user_id=user_id,
+                date_of_event=date_of_event,
+            )
+            for model_field, payload_field in hrs_field_mapping.items():
+                setattr(hiv_management, model_field, handle_Null(data.get(payload_field)))
+                
+            hiv_management.save()
+
+        return Response({'message': 'HIV Management record created successfully'}, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -948,9 +1045,14 @@ def update_hiv_screening(request, risk_id):
                     message = request.data.get('message')
                 )
 
-            # Update the is_accepted field for the original screening
-            screening.is_accepted = new_is_accepted
-            screening.save()
+                # Update the is_accepted field for the original screening
+                screening.is_accepted = new_is_accepted
+                screening.save()
+            
+            elif new_is_accepted == ApprovalStatus.TRUE.value:
+                RiskScreeningStagingRejected.objects.get(risk_id=risk_id).delete()
+                RiskScreeningStaging.objects.get(risk_id=risk_id).delete()
+                
 
             return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
         else:
@@ -985,56 +1087,43 @@ def get_one_hiv_screening(request, ovc_id):
 def create_ovc_hiv_management(request):
     try:
         data = request.data
-            # Check if the user is authenticated
+        user_id = request.user.id
+        ovc_cpims_id = handle_Null(data.get('ovc_cpims_id'))
+        event_id = handle_Null(data.get('adherence_id'))
+        
+
+        # Check if the user is authenticated
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Check id exists
+        try:
+            hiv_management = HIVManagementStaging.objects.get(pk=event_id)
+
+            for model_field, payload_field in hmf_field_mapping.items():
+
+                hiv_management.model_field = data.get(handle_Null(payload_field))
+
+            
+        except HIVManagementStaging.DoesNotExist:
+            # Create a new record
+            hiv_management = HIVManagementStaging(
+                ovc_cpims_id=ovc_cpims_id,
+                user_id=user_id,
+            )
+            
+            for model_field, payload_field in hmf_field_mapping.items():
+                setattr(hiv_management, model_field, handle_Null(data.get(payload_field)))
+
+                # hiv_management.model_field = data.get(payload_field)
         
-        # create screening 
-        HIVManagementStaging.objects.create(
-                    ovc_cpims_id = handle_Null(data.get('ovc_cpims_id')),
-                    hiv_confirmed_date = handle_Null(data.get('HIV_MGMT_1_A')),
-                    treatment_initiated_date = handle_Null(data.get('HIV_MGMT_1_B')),
-                    baseline_hei = handle_Null(data.get('HIV_MGMT_1_C')),
-                    firstline_start_date = handle_Null(data.get('HIV_MGMT_1_D')),
-                    substitution_firstline_arv = handle_Null(data.get('_HIV_MGMT_1_E')),
-                    substitution_firstline_date = handle_Null(data.get('_HIV_MGMT_1_E_DATE')),
-                    switch_secondline_arv = handle_Null(data.get('_HIV_MGMT_1_F')),
-                    switch_secondline_date = handle_Null(data.get('_HIV_MGMT_1_F_DATE')),
-                    switch_thirdline_arv = handle_Null(data.get('_HIV_MGMT_1_G')),
-                    switch_thirdline_date = handle_Null(data.get('_HIV_MGMT_1_G_DATE')),
-                    visit_date = handle_Null(data.get('HIV_MGMT_2_A')),
-                    duration_art = handle_Null(data.get('HIV_MGMT_2_B')),
-                    height = handle_Null(data.get('HIV_MGMT_2_C')),
-                    adherence = handle_Null(data.get('HIV_MGMT_2_E')),
-                    adherence_drugs_duration = handle_Null(data.get('HIV_MGMT_2_F')),
-                    adherence_counselling = handle_Null(data.get('HIV_MGMT_2_G')),
-                    treatment_supporter = handle_Null(data.get('HIV_MGMT_2_H_2')),
-                    treatment_supporter_relationship = handle_Null(data.get('HIV_MGMT_2_H_1')),
-                    treatment_supporter_gender = handle_Null(data.get('HIV_MGMT_2_H_3')),
-                    treament_supporter_hiv = handle_Null(data.get('HIV_MGMT_2_H_5')),
-                    viral_load_results = handle_Null(data.get('HIV_MGMT_2_I_1')),
-                    viral_load_date = handle_Null(data.get('HIV_MGMT_2_I_DATE')),
-                    treatment_supporter_age = handle_Null(data.get('HIV_MGMT_2_H_4')),
-                    detectable_viralload_interventions = handle_Null(data.get('HIV_MGMT_2_J')),
-                    disclosure = handle_Null(data.get('HIV_MGMT_2_K')),
-                    muac_score = handle_Null(data.get('HIV_MGMT_2_L_1')),
-                    bmi = handle_Null(data.get('HIV_MGMT_2_L_2')),
-                    nutritional_support = handle_Null(data.get('HIV_MGMT_2_M')),
-                    support_group_status = handle_Null(data.get('HIV_MGMT_2_N')),
-                    nhif_enrollment = handle_Null(data.get('_HIV_MGMT_2_O_1')),
-                    nhif_status = handle_Null(data.get('_HIV_MGMT_2_O_2')),
-                    referral_services = handle_Null(data.get('HIV_MGMT_2_P')),
-                    nextappointment_date = handle_Null(data.get('HIV_MGMT_2_Q')),
-                    peer_educator_name = handle_Null(data.get('HIV_MGMT_2_R')),
-                    peer_educator_contact = handle_Null(data.get('HIV_MGMT_2_S')),
-                    date_of_event = handle_Null(data.get('HIV_MGMT_2_A')),
-                    user_id = request.user.id
-                
-        )
-        
-        return Response({'message': 'Data stored successfully'}, status=status.HTTP_201_CREATED)
+        hiv_management.save()                
+            
+        return Response({'message': 'HIV Management record created successfully'}, status=status.HTTP_201_CREATED)
+
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
    
    
    
@@ -1070,7 +1159,7 @@ def update_hiv_management(request, adherence_id):
                     adherence = service.adherence,
                     adherence_drugs_duration = service.adherence_drugs_duration,
                     adherence_counselling = service.adherence_counselling,
-                    treatment_suppoter = service.treatment_suppoter,
+                    treatment_supporter = service.treatment_supporter,
                     treatment_supporter_relationship = service.treatment_supporter_relationship,
                     treatment_supporter_gender = service.treatment_supporter_gender,
                     treatment_supporter_age = service.treatment_supporter_age,
@@ -1105,12 +1194,16 @@ def update_hiv_management(request, adherence_id):
                     # support_group_enrollment = service.support_group_enrollment,
 
                 )
+                
+                # Update the is_accepted field for the original service
+                service.is_accepted = new_is_accepted
+                service.save()
+                return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
 
-            # Update the is_accepted field for the original service
-            service.is_accepted = new_is_accepted
-            service.save()
-
-            return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
+            elif new_is_accepted == ApprovalStatus.TRUE.value:
+                HIVManagementStagingRejected.objects.get(adherence_id=adherence_id).delete()
+                HIVManagementStaging.objects.get(adherence_id=adherence_id).delete()
+   
         else:
             return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
     except HIVManagementStaging.DoesNotExist:
@@ -1214,6 +1307,7 @@ def get_all_unaccepted_records(request):
 
         for service_rejected in ovc_services_rejected:
             event_data = {
+                'id':service_rejected.event.id,
                 'ovc_cpims_id': service_rejected.event.ovc_cpims_id,
                 'date_of_event': service_rejected.event.date_of_event,
                 'message': service_rejected.message,
@@ -1224,8 +1318,6 @@ def get_all_unaccepted_records(request):
             }
             data.append(event_data)
 
-            # delete_parent_and_children(
-            #     OVCEventRejected, OVCServicesRejected, service_rejected.event.id)
 
         # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
         case_plan_services_rejected = CasePlanTemplateServiceRejected.objects.filter(
@@ -1233,6 +1325,7 @@ def get_all_unaccepted_records(request):
 
         for service_rejected in case_plan_services_rejected:
             event_data = {
+                'id':service_rejected.event.id,
                 'ovc_cpims_id': service_rejected.event.ovc_cpims_id,
                 'date_of_event': service_rejected.event.date_of_event,
                 'message': service_rejected.message,
@@ -1249,13 +1342,13 @@ def get_all_unaccepted_records(request):
             }
             data.append(event_data)
 
-            # delete_parent_and_children(CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected,service_rejected.event.id)
         
         
         # Fetch unaccepted HIV_Management records for and OVC
         hiv_management_rejected = HIVManagementStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
         for hiv_management in hiv_management_rejected:
             event_data = {
+                'adherence_id':hiv_management.adherence_id,
                 'ovc_cpims_id': hiv_management.ovc_cpims_id,
                 'hiv_confirmed_date': hiv_management.hiv_confirmed_date,
                 'treatment_initiated_date': hiv_management.treatment_initiated_date,
@@ -1309,6 +1402,7 @@ def get_all_unaccepted_records(request):
         hiv_screening_rejected = RiskScreeningStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
         for hiv_screening in hiv_screening_rejected:
             event_data = {
+                'risk_id': hiv_screening.risk_id,
                 'ovc_cpims_id': hiv_screening.ovc_cpims_id,
                 'date_of_event': hiv_screening.date_of_event,
                 'test_done_when': hiv_screening.test_done_when,
@@ -1345,10 +1439,7 @@ def get_all_unaccepted_records(request):
                 }
             data.append(event_data)
 
-         
 
-           # delete_parent_and_children(
-           #    CasePlanTemplateEventRejected, CasePlanTemplateServiceRejected, service_rejected.event.id)
 
         return Response(data, status=status.HTTP_200_OK)
 
@@ -1496,6 +1587,7 @@ def unaccepted_records(request, form_type):
             hiv_management_rejected = HIVManagementStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
             for hiv_management in hiv_management_rejected:
                 event_data = {
+                    'adherence_id':hiv_management.adherence_id,
                     'ovc_cpims_id': hiv_management.ovc_cpims_id,
                     'hiv_confirmed_date': hiv_management.hiv_confirmed_date,
                     'treatment_initiated_date': hiv_management.treatment_initiated_date,
@@ -1546,13 +1638,14 @@ def unaccepted_records(request, form_type):
                 data.append(event_data)
 
         
-        
         elif form_type == 'hrs':
             
             # Fetch unaccepted hiv_screening_rejected records for and OVC
             hiv_screening_rejected = RiskScreeningStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
+            
             for risk_screening in hiv_screening_rejected:
                 event_data = {
+                    'risk_id':risk_screening.risk_id,
                     'ovc_cpims_id': risk_screening.ovc_cpims_id,
                     'date_of_event': risk_screening.date_of_event,
                     'test_done_when': risk_screening.test_done_when,
