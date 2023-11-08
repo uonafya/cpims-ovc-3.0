@@ -42,7 +42,7 @@ class OVCMobileEventAttribute(models.Model):
 # Store rejected CPARA
 # use for CPARA
 class OVCMobileEventRejected(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, editable=False)
     user_id = models.IntegerField()
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
@@ -109,7 +109,7 @@ class OVCServices(models.Model):
 
 
 class OVCEventRejected(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, editable=False)
     user_id = models.IntegerField()
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
@@ -182,7 +182,7 @@ class CasePlanTemplateService(models.Model):
 # Store rejected case plan templates
 # use for case plan template
 class CasePlanTemplateEventRejected(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, editable=False)
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
     user_id = models.IntegerField()
@@ -337,7 +337,7 @@ class RiskScreeningStaging(models.Model):
 # Rejected models for HIV Management and Risk Screening
 # OVC HIV MANAGEMENT
 class HIVManagementStagingRejected(models.Model):
-    adherence_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    adherence_id = models.UUIDField(primary_key=True, editable=False)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     ovc_cpims_id = models.CharField(max_length=255)
     hiv_confirmed_date = models.DateTimeField(null=False)
@@ -403,7 +403,7 @@ class HIVManagementStagingRejected(models.Model):
 
 # HIV SCREENING
 class RiskScreeningStagingRejected(models.Model):
-    risk_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    risk_id = models.UUIDField(primary_key=True, editable=False)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     ovc_cpims_id = models.CharField(max_length=255)
     test_done_when = models.BooleanField(null=True)
