@@ -281,15 +281,21 @@ National
             }
             if(checked.length >0 ){
 
-                jsondatachecked = JSON.stringify(datachecked)
-                console.log({checked,datachecked})    
-                url = '{% url 'approvedata' %}'
+                // jsondatachecked = JSON.stringify(datachecked)
+                // console.log({checked,datachecked})    
+                // url = '{% url 'approvedata' %}'
                 
                 id_actoniond = `#payload_${btnID}`
-                let payToPost = $(id_actoniond).val()
                 let ui_msg
+                let payToPosts = JSON.parse($(id_actoniond).val())
 
-
+                // Handle hrs add of mfl code incase of edit
+                if(form === 'hrs'){
+                    new_mfl = $('#HIV_RA_3Q6').val()
+                    payToPosts['facility_code'] = new_mfl
+                }
+                payToPost = JSON.stringify(payToPosts)
+                
                 if (approval_type === 'approve'){
 
                         apiPost(payToPost, form)
@@ -1092,7 +1098,7 @@ National
                     
                         
                         $("#Dataapproval tbody").append(`
-                                <tr id="${data_indx.ovc_cpims_id}_${dta}_tr" class="datarows">
+                                <tr id="${data_indx.adherence_id}_tr" class="datarows">
                                     <td style="width: 100%;">
                                                 <p>Form: HIV Management Form : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_cpims_name} </b> | Date of event - ${data[dta].date_of_event}</p>
                                                 <div class="row">
@@ -1119,7 +1125,7 @@ National
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2">
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#${data_indx.ovc_cpims_id}_${dta}">
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#${data_indx.adherence_id}">
                                                             View record
                                                         </button>
                                                     </div>
@@ -1127,11 +1133,11 @@ National
                                                 </div>
                                                 <div class="row" hidden>
                                                     <div class="col-md-12">
-                                                        <input type='input' id="payload_${data_indx.ovc_cpims_id}_${dta}" value='${payload}'>
+                                                        <input type='input' id="payload_${data_indx.adherence_id}" value='${payload}'>
                                                     </div>
                                                 </div>
                                             
-                                        <div class="modal fade cparamodal" id="${data_indx.ovc_cpims_id}_${dta}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                        <div class="modal fade cparamodal" id="${data_indx.adherence_id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -1152,13 +1158,13 @@ National
                                                                                                                                                                    
                                                         <hr><b><u> Reason for rejecting </u></b> <br>  
 
-                                                        <textarea id="message_approve_${data_indx.ovc_cpims_id}_${dta}" name="message_approve" rows="4" cols="100"></textarea>
+                                                        <textarea id="message_approve_${data_indx.adherence_id}" name="message_approve" rows="4" cols="100"></textarea>
                                                         
                                                     </div>
                                                     <div class="modal-footer">
                                                         <div class="col-md-2" id="approvalbuttons">
-                                                            <input onclick="consolidatePost(this.id, 'approve', 'hmf')" id="${data_indx.ovc_cpims_id}_${dta}" class="btnApprove btn btn-primary m-5" data-dismiss="modal" type="button" value="Approve" />
-                                                            <input onclick="consolidatePost(this.id, 'reject', 'hmf')" id="${data_indx.ovc_cpims_id}_${dta}" class="btnReject btn btn-danger m-5" data-dismiss="modal" type="button" value="Reject" />
+                                                            <input onclick="consolidatePost(this.id, 'approve', 'hmf')" id="${data_indx.adherence_id}" class="btnApprove btn btn-primary m-5" data-dismiss="modal" type="button" value="Approve" />
+                                                            <input onclick="consolidatePost(this.id, 'reject', 'hmf')" id="${data_indx.adherence_id}" class="btnReject btn btn-danger m-5" data-dismiss="modal" type="button" value="Reject" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1187,7 +1193,6 @@ National
                                 let question_answer = data_indx[question_dbname]
                                 let ui_answer = ''
                                 ta_trs[question_formname] = question_answer
-                                console.log(ta_trs)
 
                                 if(question_dbname.includes('date') && question_answer && question_answer.length>0 ){
                                     ui_answer = formatDate(question_answer)
@@ -1244,7 +1249,7 @@ National
                     
                         
                         $("#Dataapproval tbody").append(`
-                                <tr id="${data_indx.ovc_cpims_id}_${dta}_tr" class="datarows">
+                                <tr id="${data_indx.risk_id}_tr" class="datarows">
                                     <td style="width: 100%;">
                                                 <p>Form: HIV Risk Screening : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_cpims_name} </b> | Date of event - ${data[dta].date_of_event}</p>
                                                 <div class="row">
@@ -1271,7 +1276,7 @@ National
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2">
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#${data_indx.ovc_cpims_id}_${dta}">
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#${data_indx.risk_id}">
                                                             View record
                                                         </button>
                                                     </div>
@@ -1279,11 +1284,11 @@ National
                                                 </div>
                                                 <div class="row" hidden>
                                                     <div class="col-md-12">
-                                                        <input type='input' id="payload_${data_indx.ovc_cpims_id}_${dta}" value='${payload}'>
+                                                        <input type='input' id="payload_${data_indx.risk_id}" value='${payload}'>
                                                     </div>
                                                 </div>
                                             
-                                        <div class="modal fade cparamodal" id="${data_indx.ovc_cpims_id}_${dta}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                        <div class="modal fade cparamodal" id="${data_indx.risk_id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -1304,13 +1309,13 @@ National
                                                                                                                                                                    
                                                         <hr><b><u> Reason for rejecting </u></b> <br>  
 
-                                                        <textarea id="message_approve_${data_indx.ovc_cpims_id}_${dta}" name="message_approve" rows="4" cols="100"></textarea>
+                                                        <textarea id="message_approve_${data_indx.risk_id}" name="message_approve" rows="4" cols="100"></textarea>
                                                         
                                                     </div>
                                                     <div class="modal-footer">
                                                         <div class="col-md-2" id="approvalbuttons">
-                                                            <input onclick="consolidatePost(this.id, 'approve', 'hmf')" id="${data_indx.ovc_cpims_id}_${dta}" class="btnApprove btn btn-primary m-5" data-dismiss="modal" type="button" value="Approve"  disabled/>
-                                                            <input onclick="consolidatePost(this.id, 'reject', 'hmf')" id="${data_indx.ovc_cpims_id}_${dta}" class="btnReject btn btn-danger m-5" data-dismiss="modal" type="button" value="Reject" />
+                                                            <input onclick="consolidatePost(this.id, 'approve', 'hrs')" id="${data_indx.risk_id}" class="btnApprove btn btn-primary m-5" data-dismiss="modal" type="button" value="Approve"  disabled/>
+                                                            <input onclick="consolidatePost(this.id, 'reject', 'hrs')" id="${data_indx.risk_id}" class="btnReject btn btn-danger m-5" data-dismiss="modal" type="button" value="Reject" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1346,7 +1351,6 @@ National
         let myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("X-CSRFToken", "{{ csrf_token }}");
-    
         let requestOptions = {
             method: 'POST',
             headers: myHeaders,
