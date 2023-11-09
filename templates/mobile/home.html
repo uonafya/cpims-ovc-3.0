@@ -1184,6 +1184,9 @@ National
                     for (dta in data){
                         html_question = ''
                         let data_indx = data[dta]
+                        let row_id_btn = data_indx.risk_id+'_ap'
+                        
+                        console.log({row_id_btn})
                         if (data_indx){
                             for (indx in hmf_translates){
                                 let question_no = hmf_translates[indx].Question_no
@@ -1242,7 +1245,7 @@ National
                             },
                             close: function() {
                                 $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-                                $('.btnApprove').removeAttr('disabled')
+                                $('#'+data_indx.risk_id+'').removeAttr('disabled')
                             }
                         });
 
@@ -1314,7 +1317,7 @@ National
                                                     </div>
                                                     <div class="modal-footer">
                                                         <div class="col-md-2" id="approvalbuttons">
-                                                            <input onclick="consolidatePost(this.id, 'approve', 'hrs')" id="${data_indx.risk_id}" class="btnApprove btn btn-primary m-5" data-dismiss="modal" type="button" value="Approve"  disabled/>
+                                                            <input onclick="consolidatePost(this.id, 'approve', 'hrs')" id="${row_id_btn}" class="btnApprove btn btn-primary m-5" data-dismiss="modal" type="button" value="Approve"  disabled/>
                                                             <input onclick="consolidatePost(this.id, 'reject', 'hrs')" id="${data_indx.risk_id}" class="btnReject btn btn-danger m-5" data-dismiss="modal" type="button" value="Reject" />
                                                         </div>
                                                     </div>
