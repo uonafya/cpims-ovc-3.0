@@ -778,7 +778,7 @@ def update_is_accepted(request, id):
                 # Update the is_accepted field for the original service
                 service.is_accepted = is_accepted
                 service.save()
-                return Response({'message': 'is_accepted updated successfully to FALSE'}, status=status.HTTP_200_OK)
+                return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
 
 
             
