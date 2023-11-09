@@ -13,7 +13,7 @@ class ApprovalStatus(Enum):
 
 
 class OVCMobileEvent(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     user_id = models.IntegerField()
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
@@ -42,7 +42,7 @@ class OVCMobileEventAttribute(models.Model):
 # Store rejected CPARA
 # use for CPARA
 class OVCMobileEventRejected(models.Model):
-    id = models.UUIDField(primary_key=True, editable=False)
+    id = models.UUIDField(primary_key=True, editable=True)
     user_id = models.IntegerField()
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
@@ -73,7 +73,7 @@ class OVCMobileEventAttributeRejected(models.Model):
 
 # use for form 1 A and B
 class OVCEvent(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     user_id = models.IntegerField()
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
@@ -90,7 +90,7 @@ class OVCEvent(models.Model):
 class OVCServices(models.Model):
     event = models.ForeignKey(
         OVCEvent, on_delete=models.CASCADE, to_field='id')
-    id = models.UUIDField(editable=False, primary_key=True)
+    id = models.UUIDField(editable=True, primary_key=True)
     domain_id = models.CharField(max_length=255)
     service_id = models.CharField(max_length=255)
     message = models.TextField(null=True)
@@ -109,7 +109,7 @@ class OVCServices(models.Model):
 
 
 class OVCEventRejected(models.Model):
-    id = models.UUIDField(primary_key=True, editable=False)
+    id = models.UUIDField(primary_key=True, editable=True)
     user_id = models.IntegerField()
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
@@ -126,7 +126,7 @@ class OVCEventRejected(models.Model):
 class OVCServicesRejected(models.Model):
     event = models.ForeignKey(
         OVCEventRejected, on_delete=models.CASCADE, to_field='id')
-    id = models.UUIDField(editable=False, primary_key=True)
+    id = models.UUIDField(editable=True, primary_key=True)
     domain_id = models.CharField(max_length=255)
     service_id = models.CharField(max_length=255)
     message = models.TextField(null=True)
@@ -143,7 +143,7 @@ class OVCServicesRejected(models.Model):
 
 # use for case plan template
 class CasePlanTemplateEvent(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
     user_id = models.IntegerField()
@@ -156,7 +156,7 @@ class CasePlanTemplateEvent(models.Model):
 
 class CasePlanTemplateService(models.Model):
     unique_service_id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False)
+        primary_key=True, default=uuid.uuid4, editable=True)
     message = models.TextField(null=True)
     event = models.ForeignKey(CasePlanTemplateEvent, on_delete=models.CASCADE)
     domain_id = models.CharField(max_length=255)
@@ -182,7 +182,7 @@ class CasePlanTemplateService(models.Model):
 # Store rejected case plan templates
 # use for case plan template
 class CasePlanTemplateEventRejected(models.Model):
-    id = models.UUIDField(primary_key=True, editable=False)
+    id = models.UUIDField(primary_key=True, editable=True)
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
     user_id = models.IntegerField()
@@ -195,7 +195,7 @@ class CasePlanTemplateEventRejected(models.Model):
 
 class CasePlanTemplateServiceRejected(models.Model):
     unique_service_id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False)
+        primary_key=True, default=uuid.uuid4, editable=True)
     message = models.TextField(null=True)
     event = models.ForeignKey(
         CasePlanTemplateEventRejected, on_delete=models.CASCADE)
@@ -220,7 +220,7 @@ class CasePlanTemplateServiceRejected(models.Model):
 
 # OVC HIV MANAGEMENT
 class HIVManagementStaging(models.Model):
-    adherence_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    adherence_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     ovc_cpims_id = models.CharField(max_length=255)
     hiv_confirmed_date = models.DateTimeField(null=False)
@@ -285,7 +285,7 @@ class HIVManagementStaging(models.Model):
 
 # HIV SCREENING
 class RiskScreeningStaging(models.Model):
-    risk_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    risk_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     ovc_cpims_id = models.CharField(max_length=255)
     test_done_when = models.BooleanField(null=True)
@@ -337,7 +337,7 @@ class RiskScreeningStaging(models.Model):
 # Rejected models for HIV Management and Risk Screening
 # OVC HIV MANAGEMENT
 class HIVManagementStagingRejected(models.Model):
-    adherence_id = models.UUIDField(primary_key=True, editable=False)
+    adherence_id = models.UUIDField(primary_key=True, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     ovc_cpims_id = models.CharField(max_length=255)
     hiv_confirmed_date = models.DateTimeField(null=False)
@@ -403,7 +403,7 @@ class HIVManagementStagingRejected(models.Model):
 
 # HIV SCREENING
 class RiskScreeningStagingRejected(models.Model):
-    risk_id = models.UUIDField(primary_key=True, editable=False)
+    risk_id = models.UUIDField(primary_key=True, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     ovc_cpims_id = models.CharField(max_length=255)
     test_done_when = models.BooleanField(null=True)
