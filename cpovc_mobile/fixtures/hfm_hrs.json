@@ -1,0 +1,522 @@
+[
+    {
+      "db_name": "hiv_confirmed_date",
+      "form_name": "HIV_MGMT_1_A",
+      "form_text": "Date confirmed HIV Positive",
+      "Question_no": 1,
+      "form": "hmf",
+      "sort": 1
+    },
+    {
+      "db_name": "treatment_initiated_date",
+      "form_name": "HIV_MGMT_1_B",
+      "form_text": "Date initiated on Treatment",
+      "Question_no": "2a",
+      "form": "hmf",
+      "sort": 2
+    },
+    {
+      "db_name": "baseline_hei",
+      "form_name": "HIV_MGMT_1_C",
+      "form_text": "Baseline viral load for HEI",
+      "Question_no": "2b",
+      "form": "hmf",
+      "sort": 3
+    },
+    {
+      "db_name": "firstline_start_date",
+      "form_name": "HIV_MGMT_1_D",
+      "form_text": "Date started on 1st Line",
+      "Question_no": 3,
+      "form": "hmf",
+      "sort": 4
+    },
+    {
+      "db_name": "substitution_firstline_arv",
+      "form_name": "HIV_MGMT_1_E",
+      "form_text": "Substitution of ARVs within 1st Line Regimen",
+      "Question_no": 4,
+      "form": "hmf",
+      "sort": 5
+    },
+    {
+      "db_name": "substitution_firstline_date",
+      "form_name": "HIV_MGMT_1_E_DATE",
+      "form_text": "",
+      "Question_no": 4,
+      "form": "hmf",
+      "sort": 6
+    },
+    {
+      "db_name": "switch_secondline_arv",
+      "form_name": "HIV_MGMT_1_F",
+      "form_text": "Switch to 2nd Line (or Substitute within 2nd Line)",
+      "Question_no": 5,
+      "form": "hmf",
+      "sort": 7
+    },
+    {
+      "db_name": "switch_secondline_date",
+      "form_name": "HIV_MGMT_1_F_DATE",
+      "form_text": "",
+      "Question_no": 5,
+      "form": "hmf",
+      "sort": 8
+    },
+    {
+      "db_name": "switch_thirdline_arv",
+      "form_name": "HIV_MGMT_1_G",
+      "form_text": "Switch to 3rd Line (or Substitute within 3nd Line)",
+      "Question_no": 6,
+      "form": "hmf",
+      "sort": 9
+    },
+    {
+      "db_name": "switch_thirdline_date",
+      "form_name": "HIV_MGMT_1_G_DATE",
+      "form_text": "",
+      "Question_no": 6,
+      "form": "hmf",
+      "sort": 10
+    },
+    {
+      "db_name": "visit_date",
+      "form_name": "HIV_MGMT_2_A",
+      "form_text": "Visit date",
+      "Question_no": "Q1",
+      "form": "hmf",
+      "sort": 11
+    },
+    {
+      "db_name": "duration_art",
+      "form_name": "HIV_MGMT_2_B",
+      "form_text": "Duration on ARTs (in months)",
+      "Question_no": "Q2",
+      "form": "hmf",
+      "sort": 12
+    },
+    {
+      "db_name": "height",
+      "form_name": "HIV_MGMT_2_C",
+      "form_text": "Height (cm)",
+      "Question_no": "Q3",
+      "form": "hmf",
+      "sort": 13
+    },
+    {
+      "db_name": "muac",
+      "form_name": "HIV_MGMT_2_D",
+      "form_text": "MUAC",
+      "Question_no": "Q4",
+      "form": "hmf",
+      "sort": 14
+    },
+    {
+      "db_name": "adherence",
+      "form_name": "HIV_MGMT_2_E",
+      "form_text": "ARV drugs - Adherence",
+      "Question_no": "Q5",
+      "form": "hmf",
+      "sort": 15
+    },
+    {
+      "db_name": "adherence_drugs_duration",
+      "form_name": "HIV_MGMT_2_F",
+      "form_text": "ARV drugs - Duration for drugs (in months)",
+      "Question_no": "Q6",
+      "form": "hmf",
+      "sort": 16
+    },
+    {
+      "db_name": "adherence_counselling",
+      "form_name": "HIV_MGMT_2_G",
+      "form_text": "Adherence Counseling",
+      "Question_no": "Q7",
+      "form": "hmf",
+      "sort": 17
+    },
+    {
+      "db_name": "treatment_suppoter",
+      "form_name": "HIV_MGMT_2_H_2",
+      "form_text": "Treatment supporter",
+      "Question_no": "Q8",
+      "form": "hmf",
+      "sort": 18
+    },
+    {
+      "db_name": "treatment_supporter_relationship",
+      "form_name": "HIV_MGMT_2_H_1",
+      "form_text": "Treatment supporter-Others",
+      "Question_no": "Q9",
+      "form": "hmf",
+      "sort": 19
+    },
+    {
+      "db_name": "treatment_supporter_gender",
+      "form_name": "HIV_MGMT_2_H_3",
+      "form_text": "Treatment supporter-Sex",
+      "Question_no": "Q10",
+      "form": "hmf",
+      "sort": 20
+    },
+    {
+      "db_name": "treatment_supporter_age",
+      "form_name": "HIV_MGMT_2_H_4",
+      "form_text": "Treatment supporter-Age",
+      "Question_no": "Q11",
+      "form": "hmf",
+      "sort": 21
+    },
+    {
+      "db_name": "treament_supporter_hiv",
+      "form_name": "HIV_MGMT_2_H_5",
+      "form_text": "Treatment supporter-HIV_Status",
+      "Question_no": "Q12",
+      "form": "hmf",
+      "sort": 22
+    },
+    {
+      "db_name": "viral_load_results",
+      "form_name": "HIV_MGMT_2_I_1",
+      "form_text": "Lab Investigations-Viral load results",
+      "Question_no": "Q13",
+      "form": "hmf",
+      "sort": 23
+    },
+    {
+      "db_name": "viral_load_date",
+      "form_name": "HIV_MGMT_2_I_DATE",
+      "form_text": "Lab Investigations - Date",
+      "Question_no": "Q14",
+      "form": "hmf",
+      "sort": 24
+    },
+    {
+      "db_name": "detectable_viralload_interventions",
+      "form_name": "HIV_MGMT_2_J",
+      "form_text": "Detectable (>401 cp/ml)Viral load interventions",
+      "Question_no": "Q15",
+      "form": "hmf",
+      "sort": 25
+    },
+    {
+      "db_name": "disclosure",
+      "form_name": "HIV_MGMT_2_K",
+      "form_text": "Disclosure",
+      "Question_no": "Q16",
+      "form": "hmf",
+      "sort": 26
+    },
+    {
+      "db_name": "muac_score",
+      "form_name": "HIV_MGMT_2_L_1",
+      "form_text": "Nutritional assessment-MUAC Score",
+      "Question_no": "Q17",
+      "form": "hmf",
+      "sort": 27
+    },
+    {
+      "db_name": "bmi",
+      "form_name": "HIV_MGMT_2_L_2",
+      "form_text": "Nutritional assessment-BMI(Z Score)",
+      "Question_no": "Q18",
+      "form": "hmf",
+      "sort": 28
+    },
+    {
+      "db_name": "nutritional_support",
+      "form_name": "HIV_MGMT_2_M",
+      "form_text": "Nutritional Support",
+      "Question_no": "Q19",
+      "form": "hmf",
+      "sort": 29
+    },
+    {
+      "db_name": "support_group_status",
+      "form_name": "HIV_MGMT_2_N",
+      "form_text": "Enrolled in support group(status)",
+      "Question_no": "Q20",
+      "form": "hmf",
+      "sort": 30
+    },
+    {
+      "db_name": "nhif_enrollment",
+      "form_name": "HIV_MGMT_2_O_1",
+      "form_text": "Enrolled in NHIF?",
+      "Question_no": "Q21",
+      "form": "hmf",
+      "sort": 31
+    },
+    {
+      "db_name": "nhif_status",
+      "form_name": "HIV_MGMT_2_O_2",
+      "form_text": "Enrolled in NHIF -Status?",
+      "Question_no": "Q22",
+      "form": "hmf",
+      "sort": 32
+    },
+    {
+      "db_name": "referral_services",
+      "form_name": "HIV_MGMT_2_P",
+      "form_text": "Referral services (specify)",
+      "Question_no": "Q23",
+      "form": "hmf",
+      "sort": 33
+    },
+    {
+      "db_name": "nextappointment_date",
+      "form_name": "HIV_MGMT_2_Q",
+      "form_text": "Date of Next Appointment",
+      "Question_no": "Q24",
+      "form": "hmf",
+      "sort": 34
+    },
+    {
+      "db_name": "peer_educator_name",
+      "form_name": "HIV_MGMT_2_R",
+      "form_text": "Peer Educator Name",
+      "Question_no": "Q25",
+      "form": "hmf",
+      "sort": 35
+    },
+    {
+      "db_name": "peer_educator_contact",
+      "form_name": "HIV_MGMT_2_S",
+      "form_text": "Peer Educator Contacts",
+      "Question_no": "Q26",
+      "form": "hmf",
+      "sort": 36
+    },
+    {
+      "db_name": "date_of_event",
+      "form_name": "HIV_MGMT_2_A",
+      "form_text": "Event Date",
+      "Question_no": "Q27",
+      "form": "hmf",
+      "sort": 37
+    },
+    {
+      "db_name": "test_done_when",
+      "form_name": "test_done_when",
+      "form_text": "Was the HIV test done less than 6 months ago?",
+      "Question_no": "1c",
+      "form": "hrs",
+      "sort": ""
+    },
+    {
+      "db_name": "caregiver_know_status",
+      "form_name": "caregiver_know_status",
+      "form_text": "Does the caregiver know the status of the child?",
+      "Question_no": "1b",
+      "form": "hrs",
+      "sort": 2
+    },
+    {
+      "db_name": "caregiver_knowledge_yes",
+      "form_name": "caregiver_knowledge_yes",
+      "form_text": "Does the Adolescent and youth (>15) years know his/her status?",
+      "Question_no": "1b",
+      "form": "hrs",
+      "sort": 3
+    },
+    {
+      "db_name": "parent_PLWH",
+      "form_name": "parent_PLWH",
+      "form_text": "Is the biological father/mother/siblings of the child living/ lived with HIV?",
+      "Question_no": "Q1",
+      "form": "hrs",
+      "sort": 4
+    },
+    {
+      "db_name": "child_sick_malnourished",
+      "form_name": "child_sick_malnourished",
+      "form_text": "Has the child been persistently sick/malnourished/Failure to trive in the past 3 months without improvement?",
+      "Question_no": "Q2",
+      "form": "hrs",
+      "sort": 5
+    },
+    {
+      "db_name": "child_sexual_abuse",
+      "form_name": "child_sexual_abuse",
+      "form_text": "Is the child exposed to sexual abuse (defiled/raped) ?",
+      "Question_no": "Q3",
+      "form": "hrs",
+      "sort": 6
+    },
+    {
+      "db_name": "traditional_procedure",
+      "form_name": "traditional_procedure",
+      "form_text": "Has the child been subjected to traditional/non medical procedures (eg scarification/tattooing, traditional circumcision) ?",
+      "Question_no": "Q4",
+      "form": "hrs",
+      "sort": 7
+    },
+    {
+      "db_name": "adol_sick",
+      "form_name": "adol_sick",
+      "form_text": "Have you been persistently sick in the past 3 months without improvement?",
+      "Question_no": "Q5",
+      "form": "hrs",
+      "sort": 8
+    },
+    {
+      "db_name": "adol_had_tb",
+      "form_name": "adol_had_tb",
+      "form_text": "Have you had TB in the last 12 months?",
+      "Question_no": "Q6",
+      "form": "hrs",
+      "sort": 9
+    },
+    {
+      "db_name": "adol_sexual_abuse",
+      "form_name": "adol_sexual_abuse",
+      "form_text": "Have you been sexually abuse (defiled) or been physically forced to have sexual intercouse?",
+      "Question_no": "Q7",
+      "form": "hrs",
+      "sort": 10
+    },
+    {
+      "db_name": "sex",
+      "form_name": "sex",
+      "form_text": "Have you had unprotected sexual intercourse in the past 6 months?",
+      "Question_no": "Q8",
+      "form": "hrs",
+      "sort": 11
+    },
+    {
+      "db_name": "sti",
+      "form_name": "sti",
+      "form_text": "Do you have any Symptoms of sexually transmitted infections? {Penial/Vaginal sores, unusual discharge or Pain) ?",
+      "Question_no": "Q9",
+      "form": "hrs",
+      "sort": 12
+    },
+    {
+      "db_name": "sharing_needles",
+      "form_name": "sharing_needles",
+      "form_text": "Are you an IV drug user sharing needles?",
+      "Question_no": "Q10",
+      "form": "hrs",
+      "sort": 13
+    },
+    {
+      "db_name": "hiv_test_required",
+      "form_name": "hiv_test_required",
+      "form_text": "",
+      "Question_no": "Q11",
+      "form": "hrs",
+      "sort": 14
+    },
+    {
+      "db_name": "parent_consent_testing",
+      "form_name": "parent_consent_testing",
+      "form_text": "Does the parent accept HIV testing for the child?",
+      "Question_no": 1,
+      "form": "hrs",
+      "sort": 15
+    },
+    {
+      "db_name": "parent_consent_date",
+      "form_name": "parent_consent_date",
+      "form_text": "",
+      "Question_no": 1,
+      "form": "hrs",
+      "sort": 16
+    },
+    {
+      "db_name": "referral_made",
+      "form_name": "referral_made",
+      "form_text": "Was a formal referral made for HIV testing?",
+      "Question_no": 2,
+      "form": "hrs",
+      "sort": 17
+    },
+    {
+      "db_name": "referral_made_date",
+      "form_name": "referral_made_date",
+      "form_text": "",
+      "Question_no": 2,
+      "form": "hrs",
+      "sort": 18
+    },
+    {
+      "db_name": "referral_completed",
+      "form_name": "referral_completed",
+      "form_text": "Was the referal for HIV testing completed?",
+      "Question_no": 3,
+      "form": "hrs",
+      "sort": 19
+    },
+    {
+      "db_name": "referral_completed_date",
+      "form_name": "referral_completed_date",
+      "form_text": "",
+      "Question_no": 3,
+      "form": "hrs",
+      "sort": 20
+    },
+    {
+      "db_name": "not_completed",
+      "form_name": "not_completed",
+      "form_text": "If no (formal referral made), report why not",
+      "Question_no": "3a",
+      "form": "hrs",
+      "sort": 21
+    },
+    {
+      "db_name": "test_result",
+      "form_name": "test_result",
+      "form_text": "If yes(formal referral made), ellicit the HIV test result of the child from the caregiver.",
+      "Question_no": "3b",
+      "form": "hrs",
+      "sort": 22
+    },
+    {
+      "db_name": "art_referral",
+      "form_name": "art_referral",
+      "form_text": "If HIV positive(3b), was the child referred for ART?",
+      "Question_no": 4,
+      "form": "hrs",
+      "sort": 23
+    },
+    {
+      "db_name": "art_referral_date",
+      "form_name": "art_referral_date",
+      "form_text": "",
+      "Question_no": 4,
+      "form": "hrs",
+      "sort": 24
+    },
+    {
+      "db_name": "art_referral_completed",
+      "form_name": "art_referral_completed",
+      "form_text": "If HIV positive(3b), was the ART referral completed?",
+      "Question_no": 5,
+      "form": "hrs",
+      "sort": 25
+    },
+    {
+      "db_name": "art_referral_completed_date",
+      "form_name": "art_referral_completed_date",
+      "form_text": "",
+      "Question_no": 5,
+      "form": "hrs",
+      "sort": 26
+    },
+    {
+      "db_name": "facility_code",
+      "form_name": "facility_code",
+      "form_text": "(If applicable) Record facility of child's ART enrollment",
+      "Question_no": 6,
+      "form": "hrs",
+      "sort": 27
+    },
+    {
+      "db_name": "date_of_event",
+      "form_name": "date_of_event",
+      "form_text": "Date of Assessment",
+      "Question_no": "1a",
+      "form": "hrs",
+      "sort": 1
+    }
+  ]

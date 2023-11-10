@@ -23,7 +23,12 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from .models import OVCMobileEvent, OVCMobileEventAttribute,CasePlanTemplateEvent,CasePlanTemplateService,OVCEvent, OVCServices,OVCMobileEventRejected,OVCEventRejected,OVCMobileEventAttributeRejected,OVCServicesRejected,CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected,HIVManagementStaging,HIVManagementStagingRejected,RiskScreeningStaging,RiskScreeningStagingRejected
+from .models import (OVCMobileEvent, OVCMobileEventAttribute,CasePlanTemplateEvent,CasePlanTemplateService,
+                    OVCEvent, OVCServices,
+                    OVCMobileEventRejected,OVCEventRejected,
+                    OVCMobileEventAttributeRejected,OVCServicesRejected, CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected,
+                    HIVManagementStaging,HIVManagementStagingRejected,RiskScreeningStaging,RiskScreeningStagingRejected
+                    )
 from rest_framework.permissions import IsAuthenticated,AllowAny 
 from rest_framework.decorators import api_view, permission_classes
 from django.db.models import F, CharField, Value
@@ -37,6 +42,26 @@ from cpovc_forms.models import OVCCareQuestions
 from cpovc_main.functions import get_dict
 
 from cpovc_registry.models import RegPerson
+
+from django.conf import settings
+import os
+
+def read_json_fixture(filename):
+    # Get the path to the JSON file in the fixtures directory
+    json_file_path = os.path.join(settings.BASE_DIR+'/cpovc_mobile', 'fixtures', filename)
+
+    try:
+        # Open and read the JSON file
+        with open(json_file_path, 'r') as json_file:
+            data = json.load(json_file)
+        return JsonResponse(data, safe=False)
+    except FileNotFoundError:
+        # Handle the case when the file is not found
+        return JsonResponse({'error': 'JSON file not found'}, status=404)
+    except json.JSONDecodeError:
+        # Handle JSON decoding error
+        return JsonResponse({'error': 'Error decoding JSON'}, status=500)
+
 
 # from cpovc_auth.decorators import is_allowed_user_groups
 
@@ -469,9 +494,13 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
         # Retrieve  event attributes
         attributes = OVCMobileEventAttribute.objects.filter(
             event__in=events_list)
+        
         for event in events:
+            # get child name
+            child = OVCRegistration.objects.get(is_void=False, person=event.ovc_cpims_id)
             event_data = {
                 'ovc_cpims_id': event.ovc_cpims_id,
+                'ovc_cpims_name': child.person.full_name,
                 'date_of_event': event.date_of_event,
                 'event_id': event.id,
                 'questions': [],
@@ -525,8 +554,11 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                     if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
                         ovc_cpims_id_individual = ovc_cpims_id_individual[len(
                             'individual_ovc_id_'):]
+                    
+                    child = OVCRegistration.objects.get(is_void=False, person=ovc_cpims_id_individual)
 
                     individual_sub_pop['ovc_cpims_id'] = ovc_cpims_id_individual
+                    individual_sub_pop['ovc_cpims_name'] = child.person.full_name
                     event_data['sub_population'].append(individual_sub_pop)
 
                 elif attribute.question_name.startswith('score_') and attribute.event_id == event.id:
@@ -737,8 +769,10 @@ def get_ovc_event(request, form_type, ovc_id):
             # Check if we've already encountered this event
             event_id = service['event_id']
             if event_id not in event_dict:
+                child = OVCRegistration.objects.get(is_void=False, person=service['event__ovc_cpims_id'])
                 event_dict[event_id] = {
                     'ovc_cpims_id': service['event__ovc_cpims_id'],
+                    'ovc_cpims_name': child.person.full_name,
                     'date_of_event': service['event__date_of_event'],
                     'event_id': event_id,
                     'services': [],
@@ -813,6 +847,8 @@ def update_is_accepted(request, id):
                 service.save()
                 return Response({'message': 'is_accepted updated successfully to FALSE'}, status=status.HTTP_200_OK)
 
+
+            
             elif is_accepted == ApprovalStatus.TRUE.value:
                 # Assuming 'id' is a valid UUID string
                 try:
@@ -955,10 +991,12 @@ def get_one_case_plan(request, ovc_id):
 
         event_data = []
         for event in events:
+            child = OVCRegistration.objects.get(is_void=False, person=event.ovc_cpims_id)
             services = servicess.filter(event=event)
             event_data.append({
                 'event_id': event.id,
                 'ovc_cpims_id': event.ovc_cpims_id,
+                'ovc_cpims_name': child.person.full_name,
                 'date_of_event': event.date_of_event,
                 'services': [service_serializer(service) for service in services]
             })
@@ -1170,6 +1208,11 @@ def get_one_hiv_screening(request, ovc_id):
         hiv_management_events = RiskScreeningStaging.objects.filter(ovc_cpims_id=ovc_id, is_accepted=1)
         data = [model_to_dict(event) for event in hiv_management_events]
 
+        if(len(data)>0):
+            child = OVCRegistration.objects.get(is_void=False, person=ovc_id)
+            for dat in data:
+                dat['ovc_cpims_name'] = child.person.full_name
+
         return Response(data, status=status.HTTP_200_OK)
     except RiskScreeningStaging.DoesNotExist:
         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -1328,6 +1371,10 @@ def get_one_hiv_management(request, ovc_id):
         # Fetch by ovc id
         hiv_management_events = HIVManagementStaging.objects.filter(ovc_cpims_id=ovc_id, is_accepted=1)
         data = [model_to_dict(event) for event in hiv_management_events]
+        if(len(data)>0):
+            child = OVCRegistration.objects.get(is_void=False, person=ovc_id)
+            for dat in data:
+                dat['ovc_cpims_name'] = child.person.full_name
 
         return Response(data, status=status.HTTP_200_OK)
     except HIVManagementStaging.DoesNotExist:
@@ -1827,7 +1874,10 @@ def unaccepted_records(request, form_type):
 # @is_allowed_user_groups(['DAP'])
 def mobile_home(request):
     """Method to do pivot reports."""
-
+    
+    hmfhrs = json.loads(read_json_fixture('hfm_hrs.json').content)
+    print(hmfhrs)
+ 
     form1b = OVCCareEAV.objects.filter(
         event='b4e0d636-34e8-11e9-9e13-e4a471adc5eb')
     try:
@@ -1878,7 +1928,8 @@ def mobile_home(request):
                 'quizzes': care_quiz,
                 'cptlist': cpt_list,
                 'f1blist': f1b_list,
-                'summary': summary
+                'summary': summary,
+                'hiv_form': hmfhrs 
 
             }
         )
@@ -1945,7 +1996,7 @@ def fetchChildren(request):
     if request.method == "POST":
         data = request.POST.getlist('data[]')
         childrens = OVCRegistration.objects.filter(
-            is_void=False, child_chv_id__in=data).distinct('person')
+            is_void=False, child_chv_id__in=data).select_related('person').order_by(F('person__first_name'))
         for child in childrens:
             children.append({
                 'cpims_ovc_id': child.person.pk,
