@@ -3,6 +3,8 @@ import uuid
 
 from django.forms import model_to_dict
 
+from .functions import model_to_dict_custom
+
 import requests
 import json
 
@@ -180,6 +182,7 @@ def strip_prefix(to_strip):
 def create_ovc_mobile_cpara_data(request):
     try:       
         data = request.data
+        print(f"CPARA mobile data {data}")
         is_accepted = ApprovalStatus.NEUTRAL.value
         # Check if the user is authenticated
         if not request.user.is_authenticated:
@@ -570,7 +573,7 @@ def create_ovc_event(request, form_id):
             return Response({'message': 'Invalid form type (F1A, F1B)'}, status=status.HTTP_400_BAD_REQUEST)
 
         data = request.data
-        print(data)
+        print(f" {form_type} mobile data {data}")
 
         ovc_cpims_id = data.get('ovc_cpims_id', '').strip()
         if not ovc_cpims_id:
@@ -836,6 +839,7 @@ def service_serializer(service):
 def create_case_plan_template(request):
     try:
         payload = request.data
+        print(f"CPT mobile data {payload}")
         # Check if the user is authenticated
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -1031,7 +1035,7 @@ def create_ovc_hiv_screening(request):
         ovc_cpims_id = handle_Null(data.get('ovc_cpims_id'))
         event_id = handle_Null(data.get('adherence_id'))
         date_of_event = str(data.get('HIV_RA_1A'))
-        print("date_of_event...",type(date_of_event),"aaaaaa",date_of_event)
+        print(f"HRS mobile data {data}")
 
 
         # Check if the user is authenticated
@@ -1063,9 +1067,10 @@ def create_ovc_hiv_screening(request):
                 
             hiv_management.save()
 
-        return Response({'message': 'HIV Management record created successfully'}, status=status.HTTP_201_CREATED)
+        return Response({'message': 'HIV Risk Screening record created successfully'}, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        print(f"HRS Saving {e}")
     
 
 
@@ -1148,7 +1153,7 @@ def get_one_hiv_screening(request, ovc_id):
         
         # Fetch by ovc id
         hiv_management_events = RiskScreeningStaging.objects.filter(ovc_cpims_id=ovc_id, is_accepted=1)
-        data = [model_to_dict(event) for event in hiv_management_events]
+        data = [model_to_dict_custom(event) for event in hiv_management_events]
 
         if(len(data)>0):
             child = OVCRegistration.objects.get(is_void=False, person=ovc_id)
@@ -1167,6 +1172,7 @@ def get_one_hiv_screening(request, ovc_id):
 def create_ovc_hiv_management(request):
     try:
         data = request.data
+        print(f"hmf mobile data {data}")
         user_id = request.user.id
         ovc_cpims_id = handle_Null(data.get('ovc_cpims_id'))
         event_id = handle_Null(data.get('adherence_id'))
@@ -1303,7 +1309,7 @@ def get_one_hiv_management(request, ovc_id):
         
         # Fetch by ovc id
         hiv_management_events = HIVManagementStaging.objects.filter(ovc_cpims_id=ovc_id, is_accepted=1)
-        data = [model_to_dict(event) for event in hiv_management_events]
+        data = [model_to_dict_custom(event) for event in hiv_management_events]
         if(len(data)>0):
             child = OVCRegistration.objects.get(is_void=False, person=ovc_id)
             for dat in data:
