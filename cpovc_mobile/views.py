@@ -61,20 +61,17 @@ def delete_accepted_records(main_model, rejected_model, unique_id):
         main_model.objects.get(unique_id=unique_id).delete()
         return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
 
-def remove_quotes(input_string):
-    k_json = input_string.replace("'", "\"")
-    result_dict = json.loads(k_json)
-    return result_dict
+def serialize_string(app_form_metadata):
+        app_form_metadata_str = app_form_metadata
+        app_form_metadata = {}
 
-def remove_outer_quotes(input_string):
-    if input_string.startswith('"') and input_string.endswith('"'):
-        content_inside = input_string[1:-1]
-        result_list = eval(content_inside)
-        return result_list
-    else:
-        # If the input string is not enclosed in double quotes, return it as is
-        return input_string
-
+        if app_form_metadata_str:
+            try:
+                app_form_metadata = json.loads(app_form_metadata_str)
+                return app_form_metadata
+            except json.JSONDecodeError as e:
+                return app_form_metadata
+                
 def delete_parent_and_children(parent_model, child_model, parent_id):
     try:
         parent = parent_model.objects.get(id=parent_id)
@@ -133,7 +130,7 @@ hmf_field_mapping = {
 }
 
 hrs_field_mapping = {
-    "ovc_cpims_id": "HIV_RS_01",
+    "ovc_cpims_id": "ovc_cpims_id",
     "date_of_event": "HIV_RA_1A",
     "test_done_when": "HIV_RS_03",
     "test_donewhen_result": "",
@@ -155,7 +152,7 @@ hrs_field_mapping = {
     "referral_made": "HIV_RS_16",
     "referral_made_date": "HIV_RS_17",
     "referral_completed": "HIV_RS_18",
-    "referral_completed_date": "HIV_RS_14",
+    "referral_completed_date": "HIV_RS_19",
     "not_completed": "HIV_RS_18A",
     "test_result": "HIV_RS_18B",
     "art_referral": "HIV_RS_21",
@@ -164,6 +161,7 @@ hrs_field_mapping = {
     "art_referral_completed_date": "HIV_RS_24",
     "facility_code": "HIV_RA_3Q6",
 }
+
 
 def strip_prefix(to_strip):
     stripped = str(to_strip).split('_')
@@ -215,6 +213,7 @@ def create_rejected_event(event, attributes, data):
         ovc_cpims_id=event.ovc_cpims_id,
         date_of_event=event.date_of_event,
         is_accepted=is_accepted,
+        app_form_metadata=event.app_form_metadata,
         message=data.get('message'),
         id=event.id
     )
@@ -316,7 +315,7 @@ def create_ovc_mobile_cpara_data(request):
                 date_of_event=data.get('date_of_event'),
                 is_accepted=is_accepted,
                 user_id=user_id,
-                app_form_metadata=data.get('app_form_metadata')
+                app_form_metadata=json.dumps(data.get('app_form_metadata'))
             )
         else:            
             event = OVCMobileEvent.objects.create(
@@ -1354,11 +1353,13 @@ def get_all_unaccepted_records(request):
             is_accepted=3, user_id=request.user.id)
 
         for rejected_event in ovc_mobile_events_rejected:
+            app_metadata = json.loads(rejected_event.app_form_metadata.replace("'", "\""))
             event_data = {
                 'id':rejected_event.id,
                 'ovc_cpims_id': rejected_event.ovc_cpims_id,
                 'message': rejected_event.message,
                 'date_of_event': rejected_event.date_of_event,
+                'app_form_metadata':app_metadata,
                 'questions': [],
                 'individual_questions': [],
                 'scores': {},
@@ -1457,22 +1458,18 @@ def get_all_unaccepted_records(request):
         data = data + list(grouped_data.values())
 
 
-
-
-
-
-
-
         # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
         case_plan_services_rejected = CasePlanTemplateServiceRejected.objects.filter(
             is_accepted=3, event__user_id=request.user.id)
 
         for service_rejected in case_plan_services_rejected:
+            app_metadata = json.loads(hiv_screening.app_form_metadata.replace("'", "\""))
             event_data = {
                 'id':service_rejected.event.id,
                 'ovc_cpims_id': service_rejected.event.ovc_cpims_id,
                 'date_of_event': service_rejected.event.date_of_event,
                 'message': service_rejected.message,
+                'app_metadata':app_metadata,
                 'services': {
                     'domain_id': service_rejected.domain_id,
                     'service_id': service_rejected.service_id,
@@ -1491,6 +1488,7 @@ def get_all_unaccepted_records(request):
         # Fetch unaccepted HIV_Management records for and OVC
         hiv_management_rejected = HIVManagementStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
         for hiv_management in hiv_management_rejected:
+            app_metadata = json.loads(hiv_management.app_form_metadata.replace("'", "\""))
             event_data = {
                 'adherence_id':hiv_management.adherence_id,
                 'ovc_cpims_id': hiv_management.ovc_cpims_id,
@@ -1530,6 +1528,7 @@ def get_all_unaccepted_records(request):
                 'peer_educator_name': hiv_management.peer_educator_name,
                 'peer_educator_contact': hiv_management.peer_educator_contact,
                 'date_of_event': hiv_management.date_of_event,
+                'app_metadata':app_metadata,
                 # 'weight': hiv_management.equivalent,
                 # 'muac': hiv_management.mUAC,
                 # 'currentregimen': hiv_management.equivalent,
@@ -1546,6 +1545,7 @@ def get_all_unaccepted_records(request):
         # Fetch unaccepted HIV Screening records for an Ovc
         hiv_screening_rejected = RiskScreeningStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
         for hiv_screening in hiv_screening_rejected:
+            app_metadata = json.loads(hiv_screening.app_form_metadata.replace("'", "\""))
             event_data = {
                 'risk_id': hiv_screening.risk_id,
                 'ovc_cpims_id': hiv_screening.ovc_cpims_id,
@@ -1581,6 +1581,7 @@ def get_all_unaccepted_records(request):
                 'is_accepted': hiv_screening.is_accepted,
                 'user_id': hiv_screening.user_id,
                 'message': request.data.get('message'),
+                'app_metadata':app_metadata,
                 }
             data.append(event_data)
 
@@ -1606,11 +1607,13 @@ def unaccepted_records(request, form_type):
                 is_accepted=3, event__user_id=request.user.id, event__form_type=form_type)
 
             for service in ovc_services:
+                app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
                 event_data = {
                 'id':service.event.id,
                 'ovc_cpims_id': service.event.ovc_cpims_id,
                 'date_of_event': service.event.date_of_event,
                 'message': service.message,
+                'app_metadata':app_metadata,
                 'services': {
                     'id':service.id,
                     'domain_id': service.domain_id,
@@ -1628,10 +1631,12 @@ def unaccepted_records(request, form_type):
                 is_accepted=3, user_id=request.user.id)
 
             for event in cpara_events:
+                app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
                 event_data = {
                     'id':event.id,
                     'ovc_cpims_id': event.ovc_cpims_id,
                     'date_of_event': event.date_of_event,
+                    'app_form_metadata': app_metadata,
                     'questions': [],
                     'individual_questions': [],
                     'scores': {},
@@ -1684,10 +1689,12 @@ def unaccepted_records(request, form_type):
                 is_accepted=3, event__user_id=request.user.id)
 
             for service in case_plan_services:
+                app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
                 event_data = {
                     'ovc_cpims_id': service.event.ovc_cpims_id,
                     'date_of_event': service.event.date_of_event,
                     'message': service.message,
+                    'app_form_metadata': app_metadata,
                     'services': {
                         'domain_id': service.domain_id,
                         'service_id': service.service_id,
@@ -1703,6 +1710,7 @@ def unaccepted_records(request, form_type):
             
             # Fetch unaccepted HIV_Management records for and OVC
             hiv_management_rejected = HIVManagementStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
+            app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
             for hiv_management in hiv_management_rejected:
                 event_data = {
                     'adherence_id':hiv_management.adherence_id,
@@ -1743,6 +1751,7 @@ def unaccepted_records(request, form_type):
                     'peer_educator_name': hiv_management.peer_educator_name,
                     'peer_educator_contact': hiv_management.peer_educator_contact,
                     'date_of_event': hiv_management.date_of_event,
+                    'app_form_metadata': app_metadata,
                     # 'weight': hiv_management.equivalent,
                     # 'muac': hiv_management.mUAC,
                     # 'currentregimen': hiv_management.equivalent,
@@ -1762,6 +1771,7 @@ def unaccepted_records(request, form_type):
             hiv_screening_rejected = RiskScreeningStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
             
             for risk_screening in hiv_screening_rejected:
+                app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
                 event_data = {
                     'risk_id':risk_screening.risk_id,
                     'ovc_cpims_id': risk_screening.ovc_cpims_id,
@@ -1797,6 +1807,7 @@ def unaccepted_records(request, form_type):
                     'is_accepted': risk_screening.is_accepted,
                     'user_id': risk_screening.user_id,
                     'message': request.data.get('message'),
+                    'app_form_metadata': app_metadata,
                     }
                 data.append(event_data)
 
