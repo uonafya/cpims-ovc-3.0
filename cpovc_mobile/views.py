@@ -133,7 +133,7 @@ hmf_field_mapping = {
 }
 
 hrs_field_mapping = {
-    "ovc_cpims_id": "HIV_RS_01",
+    "ovc_cpims_id": "ovc_cpims_id",
     "date_of_event": "HIV_RA_1A",
     "test_done_when": "HIV_RS_03",
     "test_donewhen_result": "",
