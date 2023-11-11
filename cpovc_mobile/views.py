@@ -1402,7 +1402,6 @@ def get_one_hiv_management(request, ovc_id):
         # Fetch by ovc id
         hiv_management_events = HIVManagementStaging.objects.filter(ovc_cpims_id=ovc_id, is_accepted=1)
         data = [model_to_dict_custom(event) for event in hiv_management_events]
-        breakpoint()
         if(len(data)>0):
             child = OVCRegistration.objects.get(is_void=False, person=ovc_id)
             for dat in data:
@@ -1500,6 +1499,7 @@ def get_all_unaccepted_records(request):
             for service_rejected in ovc_services_rejected:
                 service_id = service_rejected.event.id
                 ovc_cpims_id = service_rejected.event.ovc_cpims_id
+                app_metadata = json.loads(service_rejected.event.app_form_metadata)
                 event_id = None
                 event_date = None
 
@@ -1528,7 +1528,8 @@ def get_all_unaccepted_records(request):
                     # Create a new entry in the dictionary
                     grouped_data[service_id] = {
                         'ovc_cpims_id': ovc_cpims_id,
-                        'id': service_rejected.event.id,  # Corrected the assignment of 'id'
+                        'app_form_metadata':app_metadata,
+                        'id': service_rejected.event.id,  
                         'date_of_event': service_rejected.event.date_of_event,
                         'services': [] if not service_rejected.domain_id.startswith("critical_key_") else [],
                         'critical_events': [] if event_id is None or event_date is None else [{
@@ -1547,7 +1548,7 @@ def get_all_unaccepted_records(request):
             is_accepted=3, event__user_id=request.user.id)
         if case_plan_services_rejected:
             for service_rejected in case_plan_services_rejected:
-                app_metadata = json.loads(hiv_screening.app_form_metadata.replace("'", "\""))
+                app_metadata = json.loads(service_rejected.event.app_form_metadata.replace("'", "\""))
                 event_data = {
                     'id':service_rejected.event.id,
                     'ovc_cpims_id': service_rejected.event.ovc_cpims_id,
@@ -1693,10 +1694,11 @@ def unaccepted_records(request, form_type):
                 is_accepted=3, event__user_id=request.user.id, event__form_type=form_type)
 
             for service in ovc_services:
-                app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
+                app_metadata = json.loads(service.event.app_form_metadata.replace("'", "\""))
                 event_data = {
                 'id':service.event.id,
                 'ovc_cpims_id': service.event.ovc_cpims_id,
+                'app_form_metadata':app_metadata,
                 'date_of_event': service.event.date_of_event,
                 'message': service.message,
                 'app_metadata':app_metadata,
@@ -1769,13 +1771,13 @@ def unaccepted_records(request, form_type):
                 data.append(event_data)
 
 
-        elif form_type == 'caseplan':
+        elif form_type == 'cpt':
             # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
             case_plan_services = CasePlanTemplateServiceRejected.objects.filter(
                 is_accepted=3, event__user_id=request.user.id)
 
             for service in case_plan_services:
-                app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
+                app_metadata = json.loads(service.event.app_form_metadata.replace("'", "\""))
                 event_data = {
                     'ovc_cpims_id': service.event.ovc_cpims_id,
                     'date_of_event': service.event.date_of_event,
@@ -1796,7 +1798,7 @@ def unaccepted_records(request, form_type):
             
             # Fetch unaccepted HIV_Management records for and OVC
             hiv_management_rejected = HIVManagementStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
-            app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
+            app_metadata = json.loads(hiv_management.app_form_metadata.replace("'", "\""))
             for hiv_management in hiv_management_rejected:
                 event_data = {
                     'adherence_id':hiv_management.adherence_id,
@@ -1857,7 +1859,7 @@ def unaccepted_records(request, form_type):
             hiv_screening_rejected = RiskScreeningStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
             
             for risk_screening in hiv_screening_rejected:
-                app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
+                app_metadata = json.loads(risk_screening.app_form_metadata.replace("'", "\""))
                 event_data = {
                     'risk_id':risk_screening.risk_id,
                     'ovc_cpims_id': risk_screening.ovc_cpims_id,
