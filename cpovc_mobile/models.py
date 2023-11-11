@@ -13,7 +13,7 @@ class ApprovalStatus(Enum):
 
 
 class OVCMobileEvent(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     user_id = models.IntegerField()
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
@@ -24,6 +24,7 @@ class OVCMobileEvent(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     message = models.TextField(null=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'cpara_mobile_event'
@@ -42,7 +43,7 @@ class OVCMobileEventAttribute(models.Model):
 # Store rejected CPARA
 # use for CPARA
 class OVCMobileEventRejected(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, editable=True)
     user_id = models.IntegerField()
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
@@ -53,6 +54,7 @@ class OVCMobileEventRejected(models.Model):
     message = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'cpara_mobile_event_rejected'
@@ -73,13 +75,14 @@ class OVCMobileEventAttributeRejected(models.Model):
 
 # use for form 1 A and B
 class OVCEvent(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     user_id = models.IntegerField()
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
     form_type = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'f1ab_mobile_event'
@@ -90,7 +93,7 @@ class OVCEvent(models.Model):
 class OVCServices(models.Model):
     event = models.ForeignKey(
         OVCEvent, on_delete=models.CASCADE, to_field='id')
-    id = models.UUIDField(editable=False, primary_key=True)
+    id = models.UUIDField(editable=True, primary_key=True)
     domain_id = models.CharField(max_length=255)
     service_id = models.CharField(max_length=255)
     message = models.TextField(null=True)
@@ -109,13 +112,14 @@ class OVCServices(models.Model):
 
 
 class OVCEventRejected(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, editable=True)
     user_id = models.IntegerField()
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
     form_type = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'f1ab_mobile_event_rejected'
@@ -126,7 +130,7 @@ class OVCEventRejected(models.Model):
 class OVCServicesRejected(models.Model):
     event = models.ForeignKey(
         OVCEventRejected, on_delete=models.CASCADE, to_field='id')
-    id = models.UUIDField(editable=False, primary_key=True)
+    id = models.UUIDField(editable=True, primary_key=True)
     domain_id = models.CharField(max_length=255)
     service_id = models.CharField(max_length=255)
     message = models.TextField(null=True)
@@ -143,12 +147,13 @@ class OVCServicesRejected(models.Model):
 
 # use for case plan template
 class CasePlanTemplateEvent(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
     user_id = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'case_plan_mobile_event'
@@ -156,7 +161,7 @@ class CasePlanTemplateEvent(models.Model):
 
 class CasePlanTemplateService(models.Model):
     unique_service_id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False)
+        primary_key=True, default=uuid.uuid4, editable=True)
     message = models.TextField(null=True)
     event = models.ForeignKey(CasePlanTemplateEvent, on_delete=models.CASCADE)
     domain_id = models.CharField(max_length=255)
@@ -182,12 +187,13 @@ class CasePlanTemplateService(models.Model):
 # Store rejected case plan templates
 # use for case plan template
 class CasePlanTemplateEventRejected(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, editable=True)
     ovc_cpims_id = models.CharField(max_length=255)
     date_of_event = models.DateField()
     user_id = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'case_plan_mobile_event_rejected'
@@ -195,7 +201,7 @@ class CasePlanTemplateEventRejected(models.Model):
 
 class CasePlanTemplateServiceRejected(models.Model):
     unique_service_id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False)
+        primary_key=True, default=uuid.uuid4, editable=True)
     message = models.TextField(null=True)
     event = models.ForeignKey(
         CasePlanTemplateEventRejected, on_delete=models.CASCADE)
@@ -220,7 +226,7 @@ class CasePlanTemplateServiceRejected(models.Model):
 
 # OVC HIV MANAGEMENT
 class HIVManagementStaging(models.Model):
-    adherence_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    adherence_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     ovc_cpims_id = models.CharField(max_length=255)
     hiv_confirmed_date = models.DateTimeField(null=False)
@@ -245,19 +251,19 @@ class HIVManagementStaging(models.Model):
     enrolledotz = models.CharField(max_length=20, null=True)
     adherence = models.CharField(max_length=20, null=False)
     adherence_drugs_duration = models.CharField(max_length=3, null=True)
-    adherence_counselling = models.CharField(max_length=20, null=True)
-    treatment_suppoter = models.CharField(max_length=100, null=True)
+    adherence_counselling = models.CharField(max_length=30, null=True)
+    treatment_supporter = models.CharField(max_length=100, null=True)
     treatment_supporter_relationship = models.CharField(max_length=20, null=True)
     treatment_supporter_gender = models.CharField(max_length=11, null=True)
     treatment_supporter_age = models.CharField(max_length=11, null=True)
-    treament_supporter_hiv = models.CharField(max_length=100, null=True)
+    treatment_supporter_hiv = models.CharField(max_length=100, null=True)
     viral_load_results = models.CharField(max_length=7, null=True)
     viral_load_date = models.DateTimeField(null=False)
     detectable_viralload_interventions = models.CharField(max_length=50, null=True)
     disclosure = models.CharField(max_length=20, null=True)
     muac_score = models.CharField(max_length=20, null=True)
     bmi = models.CharField(max_length=20, null=True)
-    nutritional_support = models.CharField(max_length=50, null=True)
+    nutritional_support = models.CharField(max_length=255, null=True)
     support_group_status = models.CharField(max_length=11, null=True)
     nhif_enrollment = models.BooleanField(default=False)
     support_group_enrollment = models.BooleanField(default=False)
@@ -276,6 +282,7 @@ class HIVManagementStaging(models.Model):
         default=ApprovalStatus.NEUTRAL.value
     )
     user_id = models.IntegerField()
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'hiv_management_staging'
@@ -285,7 +292,7 @@ class HIVManagementStaging(models.Model):
 
 # HIV SCREENING
 class RiskScreeningStaging(models.Model):
-    risk_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    risk_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     ovc_cpims_id = models.CharField(max_length=255)
     test_done_when = models.BooleanField(null=True)
@@ -326,6 +333,7 @@ class RiskScreeningStaging(models.Model):
         default=ApprovalStatus.NEUTRAL.value
     )
     user_id = models.IntegerField()
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'risk_screening_staging'
@@ -337,7 +345,7 @@ class RiskScreeningStaging(models.Model):
 # Rejected models for HIV Management and Risk Screening
 # OVC HIV MANAGEMENT
 class HIVManagementStagingRejected(models.Model):
-    adherence_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    adherence_id = models.UUIDField(primary_key=True, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     ovc_cpims_id = models.CharField(max_length=255)
     hiv_confirmed_date = models.DateTimeField(null=False)
@@ -362,19 +370,19 @@ class HIVManagementStagingRejected(models.Model):
     enrolledotz = models.CharField(max_length=20, null=True)
     adherence = models.CharField(max_length=20, null=False)
     adherence_drugs_duration = models.CharField(max_length=3, null=True)
-    adherence_counselling = models.CharField(max_length=20, null=True)
-    treatment_suppoter = models.CharField(max_length=100, null=True)
+    adherence_counselling = models.CharField(max_length=30, null=True)
+    treatment_supporter = models.CharField(max_length=100, null=True)
     treatment_supporter_relationship = models.CharField(max_length=20, null=True)
     treatment_supporter_gender = models.CharField(max_length=11, null=True)
     treatment_supporter_age = models.CharField(max_length=11, null=True)
-    treament_supporter_hiv = models.CharField(max_length=100, null=True)
+    treatment_supporter_hiv = models.CharField(max_length=100, null=True)
     viral_load_results = models.CharField(max_length=7, null=True)
     viral_load_date = models.DateTimeField(null=False)
     detectable_viralload_interventions = models.CharField(max_length=50, null=True)
     disclosure = models.CharField(max_length=20, null=True)
     muac_score = models.CharField(max_length=20, null=True)
     bmi = models.CharField(max_length=20, null=True)
-    nutritional_support = models.CharField(max_length=50, null=True)
+    nutritional_support = models.CharField(max_length=255, null=True)
     support_group_status = models.CharField(max_length=11, null=True)
     nhif_enrollment = models.BooleanField(default=False)
     support_group_enrollment = models.BooleanField(default=False)
@@ -394,6 +402,7 @@ class HIVManagementStagingRejected(models.Model):
     )
     user_id = models.IntegerField()
     message = models.TextField(null=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'hiv_management_staging_rejected'
@@ -403,7 +412,7 @@ class HIVManagementStagingRejected(models.Model):
 
 # HIV SCREENING
 class RiskScreeningStagingRejected(models.Model):
-    risk_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    risk_id = models.UUIDField(primary_key=True, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     ovc_cpims_id = models.CharField(max_length=255)
     test_done_when = models.BooleanField(null=True)
@@ -445,6 +454,7 @@ class RiskScreeningStagingRejected(models.Model):
     )
     user_id = models.IntegerField()
     message = models.TextField(null=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'risk_screening_staging_rejected'
