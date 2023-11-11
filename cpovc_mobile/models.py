@@ -2,6 +2,7 @@ from django.db import models
 from enum import Enum, auto
 import uuid
 from django.utils import timezone
+from cpovc_registry.models import RegPerson
 
 
 class ApprovalStatus(Enum):
@@ -15,7 +16,7 @@ class ApprovalStatus(Enum):
 class OVCMobileEvent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     user_id = models.IntegerField()
-    ovc_cpims_id = models.CharField(max_length=255)
+    ovc_cpims_id = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     date_of_event = models.DateField()
     is_accepted = models.IntegerField(
         choices=[(status.value, status.name) for status in ApprovalStatus],
@@ -25,6 +26,7 @@ class OVCMobileEvent(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     message = models.TextField(null=True)
     app_form_metadata = models.CharField(max_length=500)
+    approved_initiated = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'cpara_mobile_event'
@@ -77,7 +79,7 @@ class OVCMobileEventAttributeRejected(models.Model):
 class OVCEvent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     user_id = models.IntegerField()
-    ovc_cpims_id = models.CharField(max_length=255)
+    ovc_cpims_id =  models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     date_of_event = models.DateField()
     form_type = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -103,6 +105,7 @@ class OVCServices(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    approved_initiated = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'f1ab_mobile_attributes'
@@ -148,7 +151,7 @@ class OVCServicesRejected(models.Model):
 # use for case plan template
 class CasePlanTemplateEvent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
-    ovc_cpims_id = models.CharField(max_length=255)
+    ovc_cpims_id =  models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     date_of_event = models.DateField()
     user_id = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -179,6 +182,7 @@ class CasePlanTemplateService(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    approved_initiated = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'case_plan_mobile_attributes'
@@ -228,7 +232,7 @@ class CasePlanTemplateServiceRejected(models.Model):
 class HIVManagementStaging(models.Model):
     adherence_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    ovc_cpims_id = models.CharField(max_length=255)
+    ovc_cpims_id =  models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     hiv_confirmed_date = models.DateTimeField(null=False)
     treatment_initiated_date = models.DateTimeField(null=False)
     baseline_hei = models.CharField(max_length=100, null=False)
@@ -283,6 +287,7 @@ class HIVManagementStaging(models.Model):
     )
     user_id = models.IntegerField()
     app_form_metadata = models.CharField(max_length=500)
+    approved_initiated = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'hiv_management_staging'
@@ -294,7 +299,7 @@ class HIVManagementStaging(models.Model):
 class RiskScreeningStaging(models.Model):
     risk_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    ovc_cpims_id = models.CharField(max_length=255)
+    ovc_cpims_id =  models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     test_done_when = models.BooleanField(null=True)
     test_donewhen_result = models.BooleanField(null=True)
     caregiver_know_status = models.BooleanField(null=True)
@@ -334,6 +339,7 @@ class RiskScreeningStaging(models.Model):
     )
     user_id = models.IntegerField()
     app_form_metadata = models.CharField(max_length=500)
+    approved_initiated = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'risk_screening_staging'
