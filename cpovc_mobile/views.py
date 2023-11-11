@@ -505,7 +505,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                 'ovc_cpims_id': event.ovc_cpims_id,
                 'ovc_cpims_name': child.person.full_name,
                 'date_of_event': event.date_of_event,
-                'app_form_metadata':event.app_form_metadata,
+                'app_form_metadata':json.loads(event.app_form_metadata),
                 'event_id': event.id,
                 'questions': [],
                 'individual_questions': [],
@@ -789,7 +789,7 @@ def get_ovc_event(request, form_type, ovc_id):
                     'ovc_cpims_name': child.person.full_name,
                     'date_of_event': service['event__date_of_event'],
                     'event_id': event_id,
-                    'app_form_metadata':service['event__app_form_metadata'],
+                    'app_form_metadata':json.loads(service['event__app_form_metadata']),
                     'services': [],
                     'critical_events': [],
                 }
@@ -1007,7 +1007,7 @@ def get_one_case_plan(request, ovc_id):
             event_data.append({
                 'event_id': event.id,
                 'ovc_cpims_id': event.ovc_cpims_id,
-                'app_form_metadata':event.app_form_metadata,
+                'app_form_metadata':json.loads(event.app_form_metadata),
                 'ovc_cpims_name': child.person.full_name,
                 'date_of_event': event.date_of_event,
                 'services': [service_serializer(service) for service in services]
@@ -1029,10 +1029,8 @@ def update_case_plan_is_accepted(request, unique_service_id):
 
         event = service.event
         rejected_event=event.id
-        print(event)
 
         new_is_accepted = request.data.get('is_accepted')
-        print("ent....")
         if new_is_accepted is not None:
             # Check if is_accepted is set to False (3)
             if new_is_accepted == ApprovalStatus.FALSE.value:
@@ -1068,17 +1066,17 @@ def update_case_plan_is_accepted(request, unique_service_id):
             
             elif new_is_accepted == ApprovalStatus.TRUE.value:
                 try:
-                    service_rejected = CasePlanTemplateServiceRejected.objects.get(unique_service_id=unique_service_id)
                     CasePlanTemplateServiceRejected.objects.get(unique_service_id=unique_service_id).delete()
+                    CasePlanTemplateEventRejected.objects.get(id=service.event.id).delete()
+                    
                     CasePlanTemplateService.objects.get(unique_service_id=unique_service_id).delete()
-                    CasePlanTemplateEventRejected.objects.get(id=service_rejected.event).delete()
-                    CasePlanTemplateEvent.objects.get(id=event).delete()
+                    CasePlanTemplateEvent.objects.get(id=service.event.id).delete()
                     return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
 
                 
                 except Exception as e :
                     CasePlanTemplateService.objects.get(unique_service_id=unique_service_id).delete()
-                    CasePlanTemplateEvent.objects.get(id=event).delete()
+                    CasePlanTemplateEvent.objects.get(id=service.event.id).delete()
                     return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
                     
  
@@ -1242,6 +1240,8 @@ def get_one_hiv_screening(request, ovc_id):
         if(len(data)>0):
             child = OVCRegistration.objects.get(is_void=False, person=ovc_id)
             for dat in data:
+                if dat['app_form_metadata']:
+                    dat['app_form_metadata'] =json.loads(dat['app_form_metadata'])
                 dat['ovc_cpims_name'] = child.person.full_name
 
         return Response(data, status=status.HTTP_200_OK)
@@ -1402,9 +1402,13 @@ def get_one_hiv_management(request, ovc_id):
         # Fetch by ovc id
         hiv_management_events = HIVManagementStaging.objects.filter(ovc_cpims_id=ovc_id, is_accepted=1)
         data = [model_to_dict_custom(event) for event in hiv_management_events]
+        breakpoint()
         if(len(data)>0):
             child = OVCRegistration.objects.get(is_void=False, person=ovc_id)
             for dat in data:
+                if dat['app_form_metadata']:
+                    dat['app_form_metadata'] =json.loads(dat['app_form_metadata'])
+                    
                 dat['ovc_cpims_name'] = child.person.full_name
 
         return Response(data, status=status.HTTP_200_OK)
