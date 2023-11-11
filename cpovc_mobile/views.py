@@ -533,6 +533,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                 'ovc_cpims_id': event.ovc_cpims_id,
                 'ovc_cpims_name': child.person.full_name,
                 'date_of_event': event.date_of_event,
+                'app_form_metadata':json.loads(event.app_form_metadata),
                 'event_id': event.id,
                 'questions': [],
                 'individual_questions': [],
@@ -625,10 +626,16 @@ def update_cpara_is_accepted(request, event_id):
         if is_accepted == ApprovalStatus.TRUE.value:
             # event.is_accepted = is_accepted
             # event.save()
-            event_rejected = OVCMobileEventRejected.objects.get(pk=event_id).delete()
-            OVCMobileEventAttributeRejected.objects.filter(event=event_rejected).delete()
-            attributes.delete()
-            event.delete()
+            try:
+                event_rejected = OVCMobileEventRejected.objects.get(pk=event_id).delete()
+                OVCMobileEventAttributeRejected.objects.filter(event=event_rejected).delete()
+                attributes.delete()
+                event.delete()
+                return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
+            except OVCMobileEventRejected.DoesNotExist:
+                attributes.delete()
+                event.delete()
+
             return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
         
         elif is_accepted == ApprovalStatus.FALSE.value:
@@ -810,6 +817,7 @@ def get_ovc_event(request, form_type, ovc_id):
                     'ovc_cpims_name': child.person.full_name,
                     'date_of_event': service['event__date_of_event'],
                     'event_id': event_id,
+                    'app_form_metadata':json.loads(service['event__app_form_metadata']),
                     'services': [],
                     'critical_events': [],
                 }
@@ -886,29 +894,21 @@ def update_is_accepted(request, id):
 
             
             elif is_accepted == ApprovalStatus.TRUE.value:
-                # Assuming 'id' is a valid UUID string
                 try:
-                    service_to_delete = OVCServices.objects.get(id=id)
-                    event = service_to_delete.event
+                    OVCServicesRejected.objects.get(id=id).delete()
+                    OVCEventRejected.objects.get(id=service.event.id).delete()
+                    
+                    OVCServices.objects.get(id=id).delete()
+                    OVCEvent.objects.get(id=service.event.id).delete()
+                    
 
-                    # Check if there are related rejected services
-                    rejected_services = OVCServicesRejected.objects.filter(event=event)
+                    return Response({'message': 'form accepted successfully'}, status=status.HTTP_200_OK)
 
-                    # Delete the services and related rejected services
-                    service_to_delete.delete()
-                    rejected_services.delete()
-
-                    # Check if there is a related rejected event
-                    if OVCEventRejected.objects.filter(id=event.id).exists():
-                        # Delete the related rejected event
-                        OVCEventRejected.objects.get(id=event.id).delete()
-
-                    return Response({'message': 'Service and associated events deleted successfully'}, status=status.HTTP_200_OK)
-
-                except OVCServices.DoesNotExist:
-                    return Response({'error': 'Service not found'}, status=status.HTTP_404_NOT_FOUND)
                 except Exception as e:
-                    return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+                    OVCServices.objects.get(id=id).delete()
+                    OVCEvent.objects.get(id=service.event.id).delete()
+
+                return Response({'message': 'form accepted successfully'}, status=status.HTTP_200_OK)
 
             else:
                 return Response({'error': 'Invalid value for is_accepted'}, status=status.HTTP_400_BAD_REQUEST)
@@ -1035,6 +1035,7 @@ def get_one_case_plan(request, ovc_id):
             event_data.append({
                 'event_id': event.id,
                 'ovc_cpims_id': event.ovc_cpims_id,
+                'app_form_metadata':json.loads(event.app_form_metadata),
                 'ovc_cpims_name': child.person.full_name,
                 'date_of_event': event.date_of_event,
                 'services': [service_serializer(service) for service in services]
@@ -1056,10 +1057,8 @@ def update_case_plan_is_accepted(request, unique_service_id):
 
         event = service.event
         rejected_event=event.id
-        print(event)
 
         new_is_accepted = request.data.get('is_accepted')
-        print("ent....")
         if new_is_accepted is not None:
             # Check if is_accepted is set to False (3)
             if new_is_accepted == ApprovalStatus.FALSE.value:
@@ -1094,12 +1093,20 @@ def update_case_plan_is_accepted(request, unique_service_id):
 
             
             elif new_is_accepted == ApprovalStatus.TRUE.value:
-                service_rejected = CasePlanTemplateServiceRejected.objects.get(unique_service_id=unique_service_id).delete()
-                rejected_event = service_rejected.event
-                rejected_event.delete()
-                service.delete()
-                CasePlanTemplateEvent.objects.get(id=event).delete()
-                return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
+                try:
+                    CasePlanTemplateServiceRejected.objects.get(unique_service_id=unique_service_id).delete()
+                    CasePlanTemplateEventRejected.objects.get(id=service.event.id).delete()
+                    
+                    CasePlanTemplateService.objects.get(unique_service_id=unique_service_id).delete()
+                    CasePlanTemplateEvent.objects.get(id=service.event.id).delete()
+                    return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
+
+                
+                except Exception as e :
+                    CasePlanTemplateService.objects.get(unique_service_id=unique_service_id).delete()
+                    CasePlanTemplateEvent.objects.get(id=service.event.id).delete()
+                    return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
+                    
  
         else:
             return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
@@ -1230,8 +1237,11 @@ def update_hiv_screening(request, risk_id):
                 screening.save()
             
             elif new_is_accepted == ApprovalStatus.TRUE.value:
-                RiskScreeningStagingRejected.objects.get(risk_id=risk_id).delete()
-                RiskScreeningStaging.objects.get(risk_id=risk_id).delete()
+                try:
+                    RiskScreeningStagingRejected.objects.get(risk_id=risk_id).delete()
+                    RiskScreeningStaging.objects.get(risk_id=risk_id).delete()
+                except Exception as e:
+                    RiskScreeningStaging.objects.get(risk_id=risk_id).delete()
                 
 
             return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
@@ -1258,6 +1268,8 @@ def get_one_hiv_screening(request, ovc_id):
         if(len(data)>0):
             child = OVCRegistration.objects.get(is_void=False, person=ovc_id)
             for dat in data:
+                if dat['app_form_metadata']:
+                    dat['app_form_metadata'] =json.loads(dat['app_form_metadata'])
                 dat['ovc_cpims_name'] = child.person.full_name
 
         return Response(data, status=status.HTTP_200_OK)
@@ -1391,13 +1403,12 @@ def update_hiv_management(request, adherence_id):
                 try:
                     HIVManagementStagingRejected.objects.get(adherence_id=adherence_id).delete()
                     HIVManagementStaging.objects.get(adherence_id=adherence_id).delete()
-                    return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
+                
 
-                except HIVManagementStagingRejected.DoesNotExist:
+                except Exception as e:
                     HIVManagementStaging.objects.get(adherence_id=adherence_id).delete()
-                    return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
-
-                    
+            return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
+          
    
         else:
             return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
@@ -1422,6 +1433,9 @@ def get_one_hiv_management(request, ovc_id):
         if(len(data)>0):
             child = OVCRegistration.objects.get(is_void=False, person=ovc_id)
             for dat in data:
+                if dat['app_form_metadata']:
+                    dat['app_form_metadata'] =json.loads(dat['app_form_metadata'])
+                    
                 dat['ovc_cpims_name'] = child.person.full_name
 
         return Response(data, status=status.HTTP_200_OK)
@@ -1513,6 +1527,7 @@ def get_all_unaccepted_records(request):
             for service_rejected in ovc_services_rejected:
                 service_id = service_rejected.event.id
                 ovc_cpims_id = service_rejected.event.ovc_cpims_id
+                app_metadata = json.loads(service_rejected.event.app_form_metadata)
                 event_id = None
                 event_date = None
 
@@ -1541,7 +1556,8 @@ def get_all_unaccepted_records(request):
                     # Create a new entry in the dictionary
                     grouped_data[service_id] = {
                         'ovc_cpims_id': ovc_cpims_id,
-                        'id': service_rejected.event.id,  # Corrected the assignment of 'id'
+                        'app_form_metadata':app_metadata,
+                        'id': service_rejected.event.id,  
                         'date_of_event': service_rejected.event.date_of_event,
                         'services': [] if not service_rejected.domain_id.startswith("critical_key_") else [],
                         'critical_events': [] if event_id is None or event_date is None else [{
@@ -1560,7 +1576,7 @@ def get_all_unaccepted_records(request):
             is_accepted=3, event__user_id=request.user.id)
         if case_plan_services_rejected:
             for service_rejected in case_plan_services_rejected:
-                app_metadata = json.loads(hiv_screening.app_form_metadata.replace("'", "\""))
+                app_metadata = json.loads(service_rejected.event.app_form_metadata.replace("'", "\""))
                 event_data = {
                     'id':service_rejected.event.id,
                     'ovc_cpims_id': service_rejected.event.ovc_cpims_id,
@@ -1706,10 +1722,11 @@ def unaccepted_records(request, form_type):
                 is_accepted=3, event__user_id=request.user.id, event__form_type=form_type)
 
             for service in ovc_services:
-                app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
+                app_metadata = json.loads(service.event.app_form_metadata.replace("'", "\""))
                 event_data = {
                 'id':service.event.id,
                 'ovc_cpims_id': service.event.ovc_cpims_id,
+                'app_form_metadata':app_metadata,
                 'date_of_event': service.event.date_of_event,
                 'message': service.message,
                 'app_metadata':app_metadata,
@@ -1782,13 +1799,13 @@ def unaccepted_records(request, form_type):
                 data.append(event_data)
 
 
-        elif form_type == 'caseplan':
+        elif form_type == 'cpt':
             # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
             case_plan_services = CasePlanTemplateServiceRejected.objects.filter(
                 is_accepted=3, event__user_id=request.user.id)
 
             for service in case_plan_services:
-                app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
+                app_metadata = json.loads(service.event.app_form_metadata.replace("'", "\""))
                 event_data = {
                     'ovc_cpims_id': service.event.ovc_cpims_id,
                     'date_of_event': service.event.date_of_event,
@@ -1809,7 +1826,7 @@ def unaccepted_records(request, form_type):
             
             # Fetch unaccepted HIV_Management records for and OVC
             hiv_management_rejected = HIVManagementStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
-            app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
+            app_metadata = json.loads(hiv_management.app_form_metadata.replace("'", "\""))
             for hiv_management in hiv_management_rejected:
                 event_data = {
                     'adherence_id':hiv_management.adherence_id,
@@ -1870,7 +1887,7 @@ def unaccepted_records(request, form_type):
             hiv_screening_rejected = RiskScreeningStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
             
             for risk_screening in hiv_screening_rejected:
-                app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
+                app_metadata = json.loads(risk_screening.app_form_metadata.replace("'", "\""))
                 event_data = {
                     'risk_id':risk_screening.risk_id,
                     'ovc_cpims_id': risk_screening.ovc_cpims_id,
