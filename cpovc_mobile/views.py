@@ -598,10 +598,16 @@ def update_cpara_is_accepted(request, event_id):
         if is_accepted == ApprovalStatus.TRUE.value:
             # event.is_accepted = is_accepted
             # event.save()
-            event_rejected = OVCMobileEventRejected.objects.get(pk=event_id).delete()
-            OVCMobileEventAttributeRejected.objects.filter(event=event_rejected).delete()
-            attributes.delete()
-            event.delete()
+            try:
+                event_rejected = OVCMobileEventRejected.objects.get(pk=event_id).delete()
+                OVCMobileEventAttributeRejected.objects.filter(event=event_rejected).delete()
+                attributes.delete()
+                event.delete()
+                return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
+            except OVCMobileEventRejected.DoesNotExist:
+                attributes.delete()
+                event.delete()
+
             return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
         
         elif is_accepted == ApprovalStatus.FALSE.value:
@@ -860,29 +866,21 @@ def update_is_accepted(request, id):
 
             
             elif is_accepted == ApprovalStatus.TRUE.value:
-                # Assuming 'id' is a valid UUID string
                 try:
-                    service_to_delete = OVCServices.objects.get(id=id)
-                    event = service_to_delete.event
+                    OVCServicesRejected.objects.get(id=id).delete()
+                    OVCEventRejected.objects.get(id=service.event.id).delete()
+                    
+                    OVCServices.objects.get(id=id).delete()
+                    OVCEvent.objects.get(id=service.event.id).delete()
+                    
 
-                    # Check if there are related rejected services
-                    rejected_services = OVCServicesRejected.objects.filter(event=event)
+                    return Response({'message': 'form accepted successfully'}, status=status.HTTP_200_OK)
 
-                    # Delete the services and related rejected services
-                    service_to_delete.delete()
-                    rejected_services.delete()
-
-                    # Check if there is a related rejected event
-                    if OVCEventRejected.objects.filter(id=event.id).exists():
-                        # Delete the related rejected event
-                        OVCEventRejected.objects.get(id=event.id).delete()
-
-                    return Response({'message': 'Service and associated events deleted successfully'}, status=status.HTTP_200_OK)
-
-                except OVCServices.DoesNotExist:
-                    return Response({'error': 'Service not found'}, status=status.HTTP_404_NOT_FOUND)
                 except Exception as e:
-                    return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+                    OVCServices.objects.get(id=id).delete()
+                    OVCEvent.objects.get(id=service.event.id).delete()
+
+                return Response({'message': 'form accepted successfully'}, status=status.HTTP_200_OK)
 
             else:
                 return Response({'error': 'Invalid value for is_accepted'}, status=status.HTTP_400_BAD_REQUEST)
@@ -1069,12 +1067,20 @@ def update_case_plan_is_accepted(request, unique_service_id):
 
             
             elif new_is_accepted == ApprovalStatus.TRUE.value:
-                service_rejected = CasePlanTemplateServiceRejected.objects.get(unique_service_id=unique_service_id).delete()
-                rejected_event = service_rejected.event
-                rejected_event.delete()
-                service.delete()
-                CasePlanTemplateEvent.objects.get(id=event).delete()
-                return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
+                try:
+                    service_rejected = CasePlanTemplateServiceRejected.objects.get(unique_service_id=unique_service_id)
+                    CasePlanTemplateServiceRejected.objects.get(unique_service_id=unique_service_id).delete()
+                    CasePlanTemplateService.objects.get(unique_service_id=unique_service_id).delete()
+                    CasePlanTemplateEventRejected.objects.get(id=service_rejected.event).delete()
+                    CasePlanTemplateEvent.objects.get(id=event).delete()
+                    return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
+
+                
+                except Exception as e :
+                    CasePlanTemplateService.objects.get(unique_service_id=unique_service_id).delete()
+                    CasePlanTemplateEvent.objects.get(id=event).delete()
+                    return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
+                    
  
         else:
             return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
@@ -1205,8 +1211,11 @@ def update_hiv_screening(request, risk_id):
                 screening.save()
             
             elif new_is_accepted == ApprovalStatus.TRUE.value:
-                RiskScreeningStagingRejected.objects.get(risk_id=risk_id).delete()
-                RiskScreeningStaging.objects.get(risk_id=risk_id).delete()
+                try:
+                    RiskScreeningStagingRejected.objects.get(risk_id=risk_id).delete()
+                    RiskScreeningStaging.objects.get(risk_id=risk_id).delete()
+                except Exception as e:
+                    RiskScreeningStaging.objects.get(risk_id=risk_id).delete()
                 
 
             return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
@@ -1366,13 +1375,12 @@ def update_hiv_management(request, adherence_id):
                 try:
                     HIVManagementStagingRejected.objects.get(adherence_id=adherence_id).delete()
                     HIVManagementStaging.objects.get(adherence_id=adherence_id).delete()
-                    return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
+                
 
-                except HIVManagementStagingRejected.DoesNotExist:
+                except Exception as e:
                     HIVManagementStaging.objects.get(adherence_id=adherence_id).delete()
-                    return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
-
-                    
+            return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
+          
    
         else:
             return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
