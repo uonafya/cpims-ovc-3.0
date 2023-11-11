@@ -677,7 +677,7 @@ def create_ovc_event(request, form_id):
                 date_of_event=data.get('date_of_event'),
                 form_type=form_type,
                 user_id=user_id,
-                app_form_metadata=data.get('app_form_metadata')
+                app_form_metadata=json.dumps(data.get('app_form_metadata'))
             )
             
         else:
@@ -685,7 +685,8 @@ def create_ovc_event(request, form_id):
                 ovc_cpims_id=ovc_cpims_id,
                 date_of_event=data.get('date_of_event'),
                 form_type=form_type,
-                user_id=user_id
+                user_id=user_id,
+                app_form_metadata=json.dumps(data.get('app_form_metadata'))
             )
 
         
@@ -835,7 +836,8 @@ def update_is_accepted(request, id):
                         user_id=service.event.user_id,
                         ovc_cpims_id=service.event.ovc_cpims_id,
                         date_of_event=service.event.date_of_event,
-                        form_type=service.event.form_type
+                        form_type=service.event.form_type,
+                        app_form_metadata=service.event.app_form_metadata
                     )
 
                 # Create the corresponding rejected service
@@ -925,6 +927,7 @@ def create_case_plan_template(request):
             event = CasePlanTemplateEvent.objects.get(pk=event_id)
             event.ovc_cpims_id=payload['ovc_cpims_id']
             event.date_of_event=payload['date_of_event'].split('T')[0]
+            event.app_form_metadata=json.dumps(payload['app_form_metadata'])
             event.save()
             
             
@@ -934,7 +937,8 @@ def create_case_plan_template(request):
                 ovc_cpims_id=payload['ovc_cpims_id'],
                 date_of_event=payload['date_of_event'].split('T')[0],
                 user_id=user_id,
-                app_form_metadata=payload['app_form_metadata']
+                app_form_metadata=json.dumps(payload['app_form_metadata']),
+               
             )
 
         # Create a record for each service
@@ -1023,22 +1027,26 @@ def update_case_plan_is_accepted(request, unique_service_id):
             unique_service_id=unique_service_id)
 
         event = service.event
+        rejected_event=event.id
+        print(event)
 
         new_is_accepted = request.data.get('is_accepted')
+        print("ent....")
         if new_is_accepted is not None:
             # Check if is_accepted is set to False (3)
             if new_is_accepted == ApprovalStatus.FALSE.value:
                 # Create a corresponding rejected record in CasePlanTemplateEventRejected
-                rejected_event = CasePlanTemplateEventRejected.objects.create(
-                    id=event,
+                event_rejected = CasePlanTemplateEventRejected.objects.create(
+                    id=rejected_event,
                     user_id=event.user_id,
                     ovc_cpims_id=event.ovc_cpims_id,
-                    date_of_event=event.date_of_event
+                    date_of_event=event.date_of_event,
+                    app_form_metadata=event.app_form_metadata
                 )
 
                 # Create the corresponding rejected service
                 CasePlanTemplateServiceRejected.objects.create(
-                    event=rejected_event,
+                    event=event_rejected,
                     domain_id=service.domain_id,
                     service_id=service.service_id,
                     goal_id=service.goal_id,
@@ -1058,8 +1066,8 @@ def update_case_plan_is_accepted(request, unique_service_id):
 
             
             elif new_is_accepted == ApprovalStatus.TRUE.value:
-                service_id = CasePlanTemplateServiceRejected.objects.get(unique_service_id=unique_service_id).delete()
-                rejected_event = service_id.event
+                service_rejected = CasePlanTemplateServiceRejected.objects.get(unique_service_id=unique_service_id).delete()
+                rejected_event = service_rejected.event
                 rejected_event.delete()
                 service.delete()
                 CasePlanTemplateEvent.objects.get(id=event).delete()
@@ -1095,8 +1103,11 @@ def create_ovc_hiv_screening(request):
         user_id = request.user.id
         ovc_cpims_id = handle_Null(data.get('ovc_cpims_id'))
         event_id = handle_Null(data.get('adherence_id'))
-        date_of_event = str(data.get('HIV_RA_1A'))
+
+        date_of_event = data.get('HIV_RA_1A')
+        print("date_of_event...",type(date_of_event),"aaaaaa",date_of_event)        
         print(f"HRS mobile data {data}")
+
 
 
         # Check if the user is authenticated
@@ -1107,12 +1118,12 @@ def create_ovc_hiv_screening(request):
         if event_id:
             try:
                 # Try to update the existing record
-                hiv_management = RiskScreeningStaging.objects.get(adherence_id=event_id)
-                hiv_management.date_of_event = date_of_event
+                hiv_risk = RiskScreeningStaging.objects.get(adherence_id=event_id)
+
                 for model_field, payload_field in hrs_field_mapping.items():
-                    setattr(hiv_management, model_field, handle_Null(data.get(payload_field)))
+                    setattr(hiv_risk, model_field, handle_Null(data.get(payload_field)))
                 
-                hiv_management.save()
+                hiv_risk.save()
                 
             except RiskScreeningStaging.DoesNotExist:
                 return Response({'error': 'Record with  provided ID not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -1121,12 +1132,12 @@ def create_ovc_hiv_screening(request):
             hiv_management = RiskScreeningStaging(
                 ovc_cpims_id=ovc_cpims_id,
                 user_id=user_id,
-                date_of_event=date_of_event,
+                # date_of_event=date_of_event,
             )
             for model_field, payload_field in hrs_field_mapping.items():
                 setattr(hiv_management, model_field, handle_Null(data.get(payload_field)))
                 
-            hiv_management.save()
+            hiv_risk.save()
 
         return Response({'message': 'HIV Risk Screening record created successfully'}, status=status.HTTP_201_CREATED)
     except Exception as e:
@@ -1408,59 +1419,60 @@ def get_all_unaccepted_records(request):
         ovc_mobile_events_rejected = OVCMobileEventRejected.objects.filter(
             is_accepted=3, user_id=request.user.id)
 
-        for rejected_event in ovc_mobile_events_rejected:
-            app_metadata = json.loads(rejected_event.app_form_metadata.replace("'", "\""))
-            event_data = {
-                'id':rejected_event.id,
-                'ovc_cpims_id': rejected_event.ovc_cpims_id,
-                'message': rejected_event.message,
-                'date_of_event': rejected_event.date_of_event,
-                'app_form_metadata':app_metadata,
-                'questions': [],
-                'individual_questions': [],
-                'scores': {},
-            }
-
-            # Retrieve  related rejected event
-            attributes = OVCMobileEventAttributeRejected.objects.filter(
-                event=rejected_event)
-
-            for attribute in attributes:
-                attribute_data = {
-                    'question_name': attribute.question_name,
-                    'answer_value': attribute.answer_value,
-                    'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,
+        if ovc_mobile_events_rejected:
+            for rejected_event in ovc_mobile_events_rejected:
+                app_metadata = json.loads(rejected_event.app_form_metadata.replace("'", "\""))
+                event_data = {
+                    'id':rejected_event.id,
+                    'ovc_cpims_id': rejected_event.ovc_cpims_id,
+                    'message': rejected_event.message,
+                    'date_of_event': rejected_event.date_of_event,
+                    'app_form_metadata':app_metadata,
+                    'questions': [],
+                    'individual_questions': [],
+                    'scores': {},
                 }
 
-                if attribute.question_name.startswith('question_'):
-                    # Remove the 'question_' prefix
-                    question_code = attribute.question_name[len('question_'):]
-                    event_data['questions'].append({
-                        'question_code': question_code,
-                        'answer_id': attribute_data['answer_value'],
-                    })
-                elif attribute.question_name.startswith('individual_question_'):
-                    # Remove 'individual_question_' prefix
-                    question_code = attribute.question_name[len(
-                        'individual_question_'):]
-                    individual_question = {
-                        'question_code': question_code,
-                        'answer_id': attribute_data['answer_value'],
-                    }
-                    # Aremove the prefixes
-                    ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
-                    if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
-                        ovc_cpims_id_individual = ovc_cpims_id_individual[len(
-                            'individual_ovc_id_'):]
-                    individual_question['ovc_cpims_id'] = ovc_cpims_id_individual
-                    event_data['individual_questions'].append(
-                        individual_question)
-                elif attribute.question_name.startswith('score_'):
-                    # Remove the 'score_' prefix
-                    key = attribute.question_name[len('score_'):]
-                    event_data['scores'][key] = attribute_data['answer_value']
+                # Retrieve  related rejected event
+                attributes = OVCMobileEventAttributeRejected.objects.filter(
+                    event=rejected_event)
 
-            data.append(event_data)
+                for attribute in attributes:
+                    attribute_data = {
+                        'question_name': attribute.question_name,
+                        'answer_value': attribute.answer_value,
+                        'ovc_cpims_id_individual': attribute.ovc_cpims_id_individual,
+                    }
+
+                    if attribute.question_name.startswith('question_'):
+                        # Remove the 'question_' prefix
+                        question_code = attribute.question_name[len('question_'):]
+                        event_data['questions'].append({
+                            'question_code': question_code,
+                            'answer_id': attribute_data['answer_value'],
+                        })
+                    elif attribute.question_name.startswith('individual_question_'):
+                        # Remove 'individual_question_' prefix
+                        question_code = attribute.question_name[len(
+                            'individual_question_'):]
+                        individual_question = {
+                            'question_code': question_code,
+                            'answer_id': attribute_data['answer_value'],
+                        }
+                        # Aremove the prefixes
+                        ovc_cpims_id_individual = attribute_data['ovc_cpims_id_individual']
+                        if ovc_cpims_id_individual.startswith('individual_ovc_id_'):
+                            ovc_cpims_id_individual = ovc_cpims_id_individual[len(
+                                'individual_ovc_id_'):]
+                        individual_question['ovc_cpims_id'] = ovc_cpims_id_individual
+                        event_data['individual_questions'].append(
+                            individual_question)
+                    elif attribute.question_name.startswith('score_'):
+                        # Remove the 'score_' prefix
+                        key = attribute.question_name[len('score_'):]
+                        event_data['scores'][key] = attribute_data['answer_value']
+
+                data.append(event_data)
             
 
         #fetch Rejected F1A and B
@@ -1469,177 +1481,180 @@ def get_all_unaccepted_records(request):
         print(ovc_services_rejected)
         grouped_data = {}
 
-        for service_rejected in ovc_services_rejected:
-            service_id = service_rejected.event.id
-            ovc_cpims_id = service_rejected.event.ovc_cpims_id
-            event_id = None
-            event_date = None
+        if ovc_services_rejected:
+            for service_rejected in ovc_services_rejected:
+                service_id = service_rejected.event.id
+                ovc_cpims_id = service_rejected.event.ovc_cpims_id
+                event_id = None
+                event_date = None
 
-            if service_rejected.domain_id.startswith("critical_key_"):
-                event_id = service_rejected.domain_id.replace("critical_key_", "")
-                event_date = service_rejected.service_id.replace("critical_value_", "")
+                if service_rejected.domain_id.startswith("critical_key_"):
+                    event_id = service_rejected.domain_id.replace("critical_key_", "")
+                    event_date = service_rejected.service_id.replace("critical_value_", "")
 
-            if service_id in grouped_data:
-                # If it's not a critical event, append it to 'services'
-                if not service_rejected.domain_id.startswith("critical_key_"):
-                    grouped_data[service_id]['services'].append({
-                        'id': service_rejected.id,
-                        'domain_id': service_rejected.domain_id,
-                        'service_id': service_rejected.service_id,
-                        'message': service_rejected.message,
-                    })
-                # If it's a critical event, append it to 'critical_events'
-                elif event_id is not None and event_date is not None:
-                    grouped_data[service_id]['critical_events'].append({
-                        'id': service_rejected.id,
-                        'event_id': event_id,
-                        'event_date': event_date,
-                        'message': service_rejected.message,
-                    })
-            else:
-                # Create a new entry in the dictionary
-                grouped_data[service_id] = {
-                    'ovc_cpims_id': ovc_cpims_id,
-                    'id': service_rejected.event.id,  # Corrected the assignment of 'id'
-                    'date_of_event': service_rejected.event.date_of_event,
-                    'services': [] if not service_rejected.domain_id.startswith("critical_key_") else [],
-                    'critical_events': [] if event_id is None or event_date is None else [{
-                        'id': service_rejected.id,
-                        'event_id': event_id,
-                        'event_date': event_date,
-                        'message': service_rejected.message,
-                    }]
-                }
+                if service_id in grouped_data:
+                    # If it's not a critical event, append it to 'services'
+                    if not service_rejected.domain_id.startswith("critical_key_"):
+                        grouped_data[service_id]['services'].append({
+                            'id': service_rejected.id,
+                            'domain_id': service_rejected.domain_id,
+                            'service_id': service_rejected.service_id,
+                            'message': service_rejected.message,
+                        })
+                    # If it's a critical event, append it to 'critical_events'
+                    elif event_id is not None and event_date is not None:
+                        grouped_data[service_id]['critical_events'].append({
+                            'id': service_rejected.id,
+                            'event_id': event_id,
+                            'event_date': event_date,
+                            'message': service_rejected.message,
+                        })
+                else:
+                    # Create a new entry in the dictionary
+                    grouped_data[service_id] = {
+                        'ovc_cpims_id': ovc_cpims_id,
+                        'id': service_rejected.event.id,  # Corrected the assignment of 'id'
+                        'date_of_event': service_rejected.event.date_of_event,
+                        'services': [] if not service_rejected.domain_id.startswith("critical_key_") else [],
+                        'critical_events': [] if event_id is None or event_date is None else [{
+                            'id': service_rejected.id,
+                            'event_id': event_id,
+                            'event_date': event_date,
+                            'message': service_rejected.message,
+                        }]
+                    }
 
-        data = data + list(grouped_data.values())
+            data = data + list(grouped_data.values())
 
 
         # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
         case_plan_services_rejected = CasePlanTemplateServiceRejected.objects.filter(
             is_accepted=3, event__user_id=request.user.id)
-
-        for service_rejected in case_plan_services_rejected:
-            app_metadata = json.loads(hiv_screening.app_form_metadata.replace("'", "\""))
-            event_data = {
-                'id':service_rejected.event.id,
-                'ovc_cpims_id': service_rejected.event.ovc_cpims_id,
-                'date_of_event': service_rejected.event.date_of_event,
-                'message': service_rejected.message,
-                'app_metadata':app_metadata,
-                'services': {
-                    'domain_id': service_rejected.domain_id,
-                    'service_id': service_rejected.service_id,
-                    'goal_id': service_rejected.goal_id,
-                    'priority_id': service_rejected.priority_id,
-                    'responsible_id': service_rejected.responsible_id,
-                    'results_id': service_rejected.results_id,
-                    'reason_id': service_rejected.reason_id,
-                    'completion_date': service_rejected.reason_id
-                },
-            }
-            data.append(event_data)
+        if case_plan_services_rejected:
+            for service_rejected in case_plan_services_rejected:
+                app_metadata = json.loads(hiv_screening.app_form_metadata.replace("'", "\""))
+                event_data = {
+                    'id':service_rejected.event.id,
+                    'ovc_cpims_id': service_rejected.event.ovc_cpims_id,
+                    'date_of_event': service_rejected.event.date_of_event,
+                    'message': service_rejected.message,
+                    'app_metadata':app_metadata,
+                    'services': {
+                        'domain_id': service_rejected.domain_id,
+                        'service_id': service_rejected.service_id,
+                        'goal_id': service_rejected.goal_id,
+                        'priority_id': service_rejected.priority_id,
+                        'responsible_id': service_rejected.responsible_id,
+                        'results_id': service_rejected.results_id,
+                        'reason_id': service_rejected.reason_id,
+                        'completion_date': service_rejected.reason_id
+                    },
+                }
+                data.append(event_data)
 
         
         
         # Fetch unaccepted HIV_Management records for and OVC
         hiv_management_rejected = HIVManagementStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
-        for hiv_management in hiv_management_rejected:
-            app_metadata = json.loads(hiv_management.app_form_metadata.replace("'", "\""))
-            event_data = {
-                'adherence_id':hiv_management.adherence_id,
-                'ovc_cpims_id': hiv_management.ovc_cpims_id,
-                'hiv_confirmed_date': hiv_management.hiv_confirmed_date,
-                'treatment_initiated_date': hiv_management.treatment_initiated_date,
-                'baseline_hei': hiv_management.baseline_hei,
-                'firstline_start_date': hiv_management.firstline_start_date,
-                'substitution_firstline_arv': hiv_management.substitution_firstline_arv,
-                'substitution_firstline_date': hiv_management.substitution_firstline_date,
-                'switch_secondline_arv': hiv_management.switch_secondline_arv,
-                'switch_secondline_date': hiv_management.switch_secondline_date,
-                'switch_thirdline_arv': hiv_management.switch_thirdline_arv,
-                'switch_thirdline_date': hiv_management.switch_thirdline_date,
-                'visit_date': hiv_management.visit_date,
-                'duration_art': hiv_management.duration_art,
-                'height': hiv_management.height,
-                'adherence': hiv_management.adherence,
-                'adherence_drugs_duration': hiv_management.adherence_drugs_duration,
-                'adherence_counselling': hiv_management.adherence_counselling,
-                'treatment_supporter': hiv_management.treatment_supporter,
-                'treatment_supporter_relationship': hiv_management.treatment_supporter_relationship,
-                'treatment_supporter_gender': hiv_management.treatment_supporter_gender,
-                'treatment_supporter_age': hiv_management.treatment_supporter_age,
-                'treatment_supporter_hiv': hiv_management.treatment_supporter_hiv,
-                'viral_load_results': hiv_management.viral_load_results,
-                'viral_load_date': hiv_management.viral_load_date,
-                'detectable_viralload_interventions': hiv_management.detectable_viralload_interventions,
-                'disclosure': hiv_management.disclosure,
-                'muac_score': hiv_management.muac_score,
-                'bmi': hiv_management.bmi,
-                'nutritional_support': hiv_management.nutritional_support,
-                'support_group_status': hiv_management.support_group_status,
-                'nhif_enrollment': hiv_management.nhif_enrollment,
-                'nhif_status': hiv_management.nhif_status,
-                'referral_services': hiv_management.referral_services,
-                'nextappointment_date': hiv_management.nextappointment_date,
-                'peer_educator_name': hiv_management.peer_educator_name,
-                'peer_educator_contact': hiv_management.peer_educator_contact,
-                'date_of_event': hiv_management.date_of_event,
-                'app_metadata':app_metadata,
-                # 'weight': hiv_management.equivalent,
-                # 'muac': hiv_management.mUAC,
-                # 'currentregimen': hiv_management.equivalent,
-                # 'enoughdrugs': hiv_management.equivalent,
-                # 'attendingsuppportgroup': hiv_management.equivalent,
-                # 'pamacare': hiv_management.equivalent,
-                # 'enrolledotz': hiv_management.equivalent,
-                # 'is_void': hiv_management.equivalent,
-                # 'support_group_enrollment': hiv_management.equivalent,
-                }
-            data.append(event_data)
+        if hiv_management_rejected:
+            for hiv_management in hiv_management_rejected:
+                app_metadata = json.loads(hiv_management.app_form_metadata.replace("'", "\""))
+                event_data = {
+                    'adherence_id':hiv_management.adherence_id,
+                    'ovc_cpims_id': hiv_management.ovc_cpims_id,
+                    'hiv_confirmed_date': hiv_management.hiv_confirmed_date,
+                    'treatment_initiated_date': hiv_management.treatment_initiated_date,
+                    'baseline_hei': hiv_management.baseline_hei,
+                    'firstline_start_date': hiv_management.firstline_start_date,
+                    'substitution_firstline_arv': hiv_management.substitution_firstline_arv,
+                    'substitution_firstline_date': hiv_management.substitution_firstline_date,
+                    'switch_secondline_arv': hiv_management.switch_secondline_arv,
+                    'switch_secondline_date': hiv_management.switch_secondline_date,
+                    'switch_thirdline_arv': hiv_management.switch_thirdline_arv,
+                    'switch_thirdline_date': hiv_management.switch_thirdline_date,
+                    'visit_date': hiv_management.visit_date,
+                    'duration_art': hiv_management.duration_art,
+                    'height': hiv_management.height,
+                    'adherence': hiv_management.adherence,
+                    'adherence_drugs_duration': hiv_management.adherence_drugs_duration,
+                    'adherence_counselling': hiv_management.adherence_counselling,
+                    'treatment_supporter': hiv_management.treatment_supporter,
+                    'treatment_supporter_relationship': hiv_management.treatment_supporter_relationship,
+                    'treatment_supporter_gender': hiv_management.treatment_supporter_gender,
+                    'treatment_supporter_age': hiv_management.treatment_supporter_age,
+                    'treatment_supporter_hiv': hiv_management.treatment_supporter_hiv,
+                    'viral_load_results': hiv_management.viral_load_results,
+                    'viral_load_date': hiv_management.viral_load_date,
+                    'detectable_viralload_interventions': hiv_management.detectable_viralload_interventions,
+                    'disclosure': hiv_management.disclosure,
+                    'muac_score': hiv_management.muac_score,
+                    'bmi': hiv_management.bmi,
+                    'nutritional_support': hiv_management.nutritional_support,
+                    'support_group_status': hiv_management.support_group_status,
+                    'nhif_enrollment': hiv_management.nhif_enrollment,
+                    'nhif_status': hiv_management.nhif_status,
+                    'referral_services': hiv_management.referral_services,
+                    'nextappointment_date': hiv_management.nextappointment_date,
+                    'peer_educator_name': hiv_management.peer_educator_name,
+                    'peer_educator_contact': hiv_management.peer_educator_contact,
+                    'date_of_event': hiv_management.date_of_event,
+                    'app_metadata':app_metadata,
+                    # 'weight': hiv_management.equivalent,
+                    # 'muac': hiv_management.mUAC,
+                    # 'currentregimen': hiv_management.equivalent,
+                    # 'enoughdrugs': hiv_management.equivalent,
+                    # 'attendingsuppportgroup': hiv_management.equivalent,
+                    # 'pamacare': hiv_management.equivalent,
+                    # 'enrolledotz': hiv_management.equivalent,
+                    # 'is_void': hiv_management.equivalent,
+                    # 'support_group_enrollment': hiv_management.equivalent,
+                    }
+                data.append(event_data)
 
             
         # Fetch unaccepted HIV Screening records for an Ovc
         hiv_screening_rejected = RiskScreeningStagingRejected.objects.filter(is_accepted=3, user_id=request.user.id)
-        for hiv_screening in hiv_screening_rejected:
-            app_metadata = json.loads(hiv_screening.app_form_metadata.replace("'", "\""))
-            event_data = {
-                'risk_id': hiv_screening.risk_id,
-                'ovc_cpims_id': hiv_screening.ovc_cpims_id,
-                'date_of_event': hiv_screening.date_of_event,
-                'test_done_when': hiv_screening.test_done_when,
-                'test_donewhen_result': hiv_screening.test_donewhen_result,
-                'caregiver_know_status': hiv_screening.caregiver_know_status,
-                'caregiver_knowledge_yes': hiv_screening.caregiver_knowledge_yes,
-                'parent_PLWH': hiv_screening.parent_PLWH,
-                'child_sick_malnourished': hiv_screening.child_sick_malnourished,
-                'child_sexual_abuse': hiv_screening.child_sexual_abuse,
-                'traditional_procedure': hiv_screening.traditional_procedure,
-                'adol_sick': hiv_screening.adol_sick,
-                'adol_had_tb': hiv_screening.adol_had_tb,
-                'adol_sexual_abuse': hiv_screening.adol_sexual_abuse,
-                'sex': hiv_screening.sex,
-                'sti': hiv_screening.sti,
-                'sharing_needles': hiv_screening.sharing_needles,
-                'hiv_test_required': hiv_screening.hiv_test_required,
-                'parent_consent_testing': hiv_screening.parent_consent_testing,
-                'parent_consent_date': hiv_screening.parent_consent_date,
-                'referral_made': hiv_screening.referral_made,
-                'referral_made_date': hiv_screening.referral_made_date,
-                'referral_completed': hiv_screening.referral_completed,
-                'referral_completed_date': hiv_screening.referral_completed_date,
-                'not_completed': hiv_screening.not_completed,
-                'test_result': hiv_screening.test_result,
-                'art_referral': hiv_screening.art_referral,
-                'art_referral_date': hiv_screening.art_referral_date,
-                'art_referral_completed': hiv_screening.art_referral_completed,
-                'art_referral_completed_date': hiv_screening.art_referral_completed_date,
-                'facility_code': hiv_screening.facility_code,
-                'is_accepted': hiv_screening.is_accepted,
-                'user_id': hiv_screening.user_id,
-                'message': request.data.get('message'),
-                'app_metadata':app_metadata,
-                }
-            data.append(event_data)
+        if hiv_screening_rejected:
+            for hiv_screening in hiv_screening_rejected:
+                app_metadata = json.loads(hiv_screening.app_form_metadata.replace("'", "\""))
+                event_data = {
+                    'risk_id': hiv_screening.risk_id,
+                    'ovc_cpims_id': hiv_screening.ovc_cpims_id,
+                    'date_of_event': hiv_screening.date_of_event,
+                    'test_done_when': hiv_screening.test_done_when,
+                    'test_donewhen_result': hiv_screening.test_donewhen_result,
+                    'caregiver_know_status': hiv_screening.caregiver_know_status,
+                    'caregiver_knowledge_yes': hiv_screening.caregiver_knowledge_yes,
+                    'parent_PLWH': hiv_screening.parent_PLWH,
+                    'child_sick_malnourished': hiv_screening.child_sick_malnourished,
+                    'child_sexual_abuse': hiv_screening.child_sexual_abuse,
+                    'traditional_procedure': hiv_screening.traditional_procedure,
+                    'adol_sick': hiv_screening.adol_sick,
+                    'adol_had_tb': hiv_screening.adol_had_tb,
+                    'adol_sexual_abuse': hiv_screening.adol_sexual_abuse,
+                    'sex': hiv_screening.sex,
+                    'sti': hiv_screening.sti,
+                    'sharing_needles': hiv_screening.sharing_needles,
+                    'hiv_test_required': hiv_screening.hiv_test_required,
+                    'parent_consent_testing': hiv_screening.parent_consent_testing,
+                    'parent_consent_date': hiv_screening.parent_consent_date,
+                    'referral_made': hiv_screening.referral_made,
+                    'referral_made_date': hiv_screening.referral_made_date,
+                    'referral_completed': hiv_screening.referral_completed,
+                    'referral_completed_date': hiv_screening.referral_completed_date,
+                    'not_completed': hiv_screening.not_completed,
+                    'test_result': hiv_screening.test_result,
+                    'art_referral': hiv_screening.art_referral,
+                    'art_referral_date': hiv_screening.art_referral_date,
+                    'art_referral_completed': hiv_screening.art_referral_completed,
+                    'art_referral_completed_date': hiv_screening.art_referral_completed_date,
+                    'facility_code': hiv_screening.facility_code,
+                    'is_accepted': hiv_screening.is_accepted,
+                    'user_id': hiv_screening.user_id,
+                    'message': request.data.get('message'),
+                    'app_metadata':app_metadata,
+                    }
+                data.append(event_data)
 
 
 
