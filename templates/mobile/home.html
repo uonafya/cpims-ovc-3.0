@@ -298,9 +298,6 @@ National
                 
                 if (approval_type === 'approve'){
 
-                        // send that the data is being approved flag
-                        postData(initiate_url, {'id': btnID, 'form': form})
-
                         apiPost(payToPost, form)
                             .then(response => {
                                 console.log("API Response:", response.details);
@@ -309,6 +306,8 @@ National
 
                                 let type_api_res
                                 if(response.details.includes('success')){
+                                    // send that the data is being approved flag
+                                    postData(initiate_url, {'id': btnID, 'form': form})
                                     apiPost(JSON.stringify(pay_approve), form, btnID)
                                         .then(jresponse => {
                                             if(jresponse.error){
@@ -407,9 +406,11 @@ National
                         if(response.details.includes('success')){
                            // let resp_app = apiPost(JSON.stringify(pay_approve), form, btnID)
                            // console.log({resp_app})
+
                            array_of_Ids.split(";").map((eventID)=>{
                             if(eventID.length>0){
-                                
+                                // send that the data is being approved flag
+                                postData(initiate_url, {'id': eventID, 'form': form})
                                 apiPost(JSON.stringify(pay_approve), form, eventID)
                                         .then(jresponse => {
                                             if(jresponse.error){
