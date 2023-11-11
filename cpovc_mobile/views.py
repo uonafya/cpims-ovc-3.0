@@ -502,6 +502,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                 'ovc_cpims_id': event.ovc_cpims_id,
                 'ovc_cpims_name': child.person.full_name,
                 'date_of_event': event.date_of_event,
+                'app_form_metadata':event.app_form_metadata,
                 'event_id': event.id,
                 'questions': [],
                 'individual_questions': [],
@@ -776,6 +777,7 @@ def get_ovc_event(request, form_type, ovc_id):
                     'ovc_cpims_name': child.person.full_name,
                     'date_of_event': service['event__date_of_event'],
                     'event_id': event_id,
+                    'app_form_metadata':service['event__app_form_metadata'],
                     'services': [],
                     'critical_events': [],
                 }
@@ -1000,6 +1002,7 @@ def get_one_case_plan(request, ovc_id):
             event_data.append({
                 'event_id': event.id,
                 'ovc_cpims_id': event.ovc_cpims_id,
+                'app_form_metadata':event.app_form_metadata,
                 'ovc_cpims_name': child.person.full_name,
                 'date_of_event': event.date_of_event,
                 'services': [service_serializer(service) for service in services]
