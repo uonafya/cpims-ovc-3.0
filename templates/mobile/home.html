@@ -302,7 +302,7 @@ National
                             .then(response => {
                                 console.log("API Response:", response.details);
                                 // Handle the response data here
-                                pay_approve = {"is_accepted": '2', "message": ""}
+                                pay_approve = {"is_accepted": 2, "message": ""}
 
                                 let type_api_res
                                 if(response.details.includes('success')){
@@ -343,7 +343,7 @@ National
                 }else if (approval_type = 'reject'){
                     reject_message = $('#message_approve_'+btnID).val()
                     pay_reject = {
-                        "is_accepted": '3',
+                        "is_accepted": 3,
                         "message": reject_message
                     }
                 apiPost(JSON.stringify(pay_reject), form, btnID)
