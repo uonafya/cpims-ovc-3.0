@@ -24,6 +24,7 @@ class OVCMobileEvent(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     message = models.TextField(null=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'cpara_mobile_event'
@@ -53,6 +54,7 @@ class OVCMobileEventRejected(models.Model):
     message = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'cpara_mobile_event_rejected'
@@ -80,6 +82,7 @@ class OVCEvent(models.Model):
     form_type = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'f1ab_mobile_event'
@@ -116,6 +119,7 @@ class OVCEventRejected(models.Model):
     form_type = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'f1ab_mobile_event_rejected'
@@ -149,6 +153,7 @@ class CasePlanTemplateEvent(models.Model):
     user_id = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'case_plan_mobile_event'
@@ -188,6 +193,7 @@ class CasePlanTemplateEventRejected(models.Model):
     user_id = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'case_plan_mobile_event_rejected'
@@ -276,6 +282,7 @@ class HIVManagementStaging(models.Model):
         default=ApprovalStatus.NEUTRAL.value
     )
     user_id = models.IntegerField()
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'hiv_management_staging'
@@ -326,6 +333,7 @@ class RiskScreeningStaging(models.Model):
         default=ApprovalStatus.NEUTRAL.value
     )
     user_id = models.IntegerField()
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'risk_screening_staging'
@@ -363,7 +371,7 @@ class HIVManagementStagingRejected(models.Model):
     adherence = models.CharField(max_length=20, null=False)
     adherence_drugs_duration = models.CharField(max_length=3, null=True)
     adherence_counselling = models.CharField(max_length=30, null=True)
-    treatment_suppoter = models.CharField(max_length=100, null=True)
+    treatment_supporter = models.CharField(max_length=100, null=True)
     treatment_supporter_relationship = models.CharField(max_length=20, null=True)
     treatment_supporter_gender = models.CharField(max_length=11, null=True)
     treatment_supporter_age = models.CharField(max_length=11, null=True)
@@ -394,6 +402,7 @@ class HIVManagementStagingRejected(models.Model):
     )
     user_id = models.IntegerField()
     message = models.TextField(null=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'hiv_management_staging_rejected'
@@ -445,6 +454,7 @@ class RiskScreeningStagingRejected(models.Model):
     )
     user_id = models.IntegerField()
     message = models.TextField(null=True)
+    app_form_metadata = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'risk_screening_staging_rejected'
