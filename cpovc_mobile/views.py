@@ -44,6 +44,7 @@ from cpovc_forms.models import OVCCareQuestions
 from cpovc_main.functions import get_dict
 
 from cpovc_registry.models import RegPerson
+from django.db.models import Count
 
 from django.conf import settings
 import os
@@ -306,6 +307,33 @@ def count_unnapproved_records(request):
                 'caseplan_rejected':caseplan_rejected,
                 'hiv_management_rejected':hiv_management_rejected,
                 'hiv_screening_rejected':hiv_screening_rejected
+                }
+    print('hey',count_data)
+    
+    return JsonResponse(count_data, status=200, safe=False)
+
+def count_neutral_records(request):
+    
+    cpara_neutral = OVCMobileEventRejected.objects.filter(
+            is_accepted=1, user_id=request.user.id).count()
+    f1A_neutral = OVCServicesRejected.objects.filter(
+                is_accepted=1, event__user_id=request.user.id, event__form_type='F1A').count()
+    f1B_neutral = OVCServicesRejected.objects.filter(
+                is_accepted=1, event__user_id=request.user.id, event__form_type='F1B').count()
+    caseplan_neutral = CasePlanTemplateServiceRejected.objects.filter(
+                is_accepted=1, event__user_id=request.user.id).count()
+    hiv_management_neutral = HIVManagementStagingRejected.objects.filter(
+                is_accepted=1, user_id=request.user.id).count()
+    hiv_screening_neutral = RiskScreeningStagingRejected.objects.filter(
+                is_accepted=1, user_id=request.user.id).count()
+    
+    count_data = {
+                'cpara_neutral':cpara_neutral,
+                'f1A_neutral':f1A_neutral,
+                'f1B_neutral':f1B_neutral,
+                'caseplan_neutral':caseplan_neutral,
+                'hiv_management_neutral':hiv_management_neutral,
+                'hiv_screening_neutral':hiv_screening_neutral
                 }
     print('hey',count_data)
     
@@ -1916,7 +1944,6 @@ def mobile_home(request):
     """Method to do pivot reports."""
     
     hmfhrs = json.loads(read_json_fixture('hfm_hrs.json').content)
-    print(hmfhrs)
  
     form1b = OVCCareEAV.objects.filter(
         event='b4e0d636-34e8-11e9-9e13-e4a471adc5eb')
@@ -1955,8 +1982,56 @@ def mobile_home(request):
                 'cpims_chv_id': chv.child_chv.pk,
                 'name': f"{chv.child_chv.full_name}"
             })
-      
-        summary['CPT'] = 5
+        chv_list = chvss.values('child_chv_id')
+        childrens = OVCRegistration.objects.filter(
+            is_void=False, child_chv_id__in=chv_list).values('person_id')
+        
+        # count cpara unapproved
+        cpr_count=OVCMobileEvent.objects.filter(is_accepted=1, ovc_cpims_id__in=childrens).count()
+
+        # count Case plan template unapproved
+        event_ids = CasePlanTemplateEvent.objects.filter(ovc_cpims_id__in=childrens)
+        result = (
+            CasePlanTemplateService.objects
+            .filter(is_accepted=True, event_id__in=event_ids)
+            .values('event_id')
+            .annotate(event_count=Count('event_id'))
+        )
+        # Filtering only events with at least one record where is_accepted is True
+        cpt_count = result.filter(event_count__gt=0).count()
+
+        # count F1A and F1B unapproved
+        event_ids_f1a = OVCEvent.objects.filter(ovc_cpims_id__in=childrens, form_type='F1A')
+        event_ids_f1b = OVCEvent.objects.filter(ovc_cpims_id__in=childrens, form_type='F1B')
+        result_f1a = (
+            OVCServices.objects
+            .filter(is_accepted=True, event_id__in=event_ids_f1a)
+            .values('event_id')
+            .annotate(event_count=Count('event_id'))
+        )
+
+        result_f1b = (
+            OVCServices.objects
+            .filter(is_accepted=True, event_id__in=event_ids_f1b)
+            .values('event_id')
+            .annotate(event_count=Count('event_id'))
+        )
+        # Filtering only events with at least one record where is_accepted is True
+        f1a_count = result_f1a.filter(event_count__gt=0).count()
+        f1b_count = result_f1b.filter(event_count__gt=0).count()
+
+        # count HMF and HRS unapproved
+        hmf_count=HIVManagementStaging.objects.filter(is_accepted=1, ovc_cpims_id__in=childrens).count()
+        hrs_count=RiskScreeningStaging.objects.filter(is_accepted=1, ovc_cpims_id__in=childrens).count()
+
+        
+        print(f"Counts: CPR-> {cpr_count} CPT-> {cpt_count}")      
+        summary['CPT'] = cpt_count
+        summary['CPR'] = cpr_count
+        summary['F1A'] = cpt_count
+        summary['F1B'] = cpr_count
+        summary['HMF'] = hmf_count
+        summary['HRS'] = hrs_count
 
         return render(
             request, 'mobile/home.html',
@@ -1980,56 +2055,52 @@ def mobile_home(request):
 
 
 def mobiledataapproval(request):
-    if request.method == "POST":
-        data = request.POST
-        if(data):
-            app_type = data.get('type')
-            app_data = data.get('data[]')
-            app_form = data.get('form')
-            print(
-                f">>>>>approval data{app_type} {app_data}, {app_form} {data}    {request.POST}")
+    message = {}
+    try:
+        if request.method == "POST":
+            data = request.POST
+            if(data):
+                app_id = data.get('data[id]')
+                app_form = data.get('data[form]').upper()
+                print(
+                    f">>>>>approval data {data} ")
 
-            if app_form == 'CPR':
-                if app_type == "approve":
-                    pass
-                elif app_type == 'reject':
-                    pass
-            if app_form == 'CPT':
-                if app_type == "approve":
-                    acccepted = CasePlanTemplateService.objects.get(
-                        id=app_data)
-                    acce_event = CasePlanTemplateEvent.objects.get(
-                        id=acccepted.event_id)
-                    acccepted.is_accepted = 2
-                    acccepted.save()
+                if app_form == 'CPR':
+                    ovc_mobile_event = OVCMobileEvent.objects.get(id=app_id)
+                    ovc_mobile_event.approved_initiated = True
+                    ovc_mobile_event.save()
+                if app_form == 'CPT':
+                    cpt_mobile_event = CasePlanTemplateService.objects.get(id=app_id)
+                    cpt_mobile_event.approved_initiated = True
+                    cpt_mobile_event.save()
+                if app_form == 'F1A':
+                    f1a_mobile_event = OVCServices.objects.get(id=app_id)
+                    f1a_mobile_event.approved_initiated = True
+                    f1a_mobile_event.save()
+                if app_form == 'F1B':
+                    f1b_mobile_event = OVCServices.objects.get(id=app_id)
+                    f1b_mobile_event.approved_initiated = True
+                    f1b_mobile_event.save()
+                if app_form == 'HRS':
+                    hrs_mobile_event = RiskScreeningStaging.objects.get(id=app_id)
+                    hrs_mobile_event.approved_initiated = True
+                    hrs_mobile_event.save()
+                if app_form == 'HMF':
+                    hrs_mobile_event = HIVManagementStaging.objects.get(id=app_id)
+                    hrs_mobile_event.approved_initiated = True
+                    hrs_mobile_event.save()
+    
+            response_data = {
+                "status": "success",
+                "message": "Data received and processed successfully."
+            }
+            message.update(response_data)
+        else:
+            message.update({"error": "Invalid request method."})
+    except Exception as e:
+        print(f"Mark initiated approval error?: {e}")
 
-                elif app_type == 'reject':
-                    rejected = CasePlanTemplateService.objects.get(id=app_data)
-                    rejected.is_accepted = 3
-                    rejected.save()
-
-            if app_form == 'F1A':
-                if app_type == "approve":
-                    pass
-                elif app_type == 'reject':
-                    pass
-            if app_form == 'F1B':
-                if app_type == "approve":
-                    pass
-                elif app_type == 'reject':
-                    pass
-        # Do something with the data, e.g., save to a database
-
-        approval_type = data.get('type')
-        approval_data = data.getlist('data[]')
-        response_data = {
-            "status": "success",
-            "message": "Data received and processed successfully."
-        }
-        return JsonResponse(response_data, safe=False)
-    else:
-        return JsonResponse({"error": "Invalid request method."}, safe=False)
-
+    return JsonResponse(message, safe=False)
 
 def fetchChildren(request):
     children = []
@@ -2044,7 +2115,6 @@ def fetchChildren(request):
                 'cpims_ovc_id':  child.person.id
             })
 
-        print(f"----- {data} >- {children} -  {childrens}")
         # Do something with the data, e.g., save to a database
         response_data = {
             "message": "Data received and processed successfully."}
