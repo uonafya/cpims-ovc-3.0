@@ -3,7 +3,7 @@ from enum import Enum, auto
 import uuid
 from django.utils import timezone
 from cpovc_registry.models import RegPerson
-
+from cpovc_auth.models import AppUser
 
 class ApprovalStatus(Enum):
     NEUTRAL = auto()  # stored as 1 in the DB
@@ -15,8 +15,8 @@ class ApprovalStatus(Enum):
 
 class OVCMobileEvent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
-    user_id = models.IntegerField()
-    ovc_cpims_id = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     date_of_event = models.DateField()
     is_accepted = models.IntegerField(
         choices=[(status.value, status.name) for status in ApprovalStatus],
@@ -34,7 +34,7 @@ class OVCMobileEvent(models.Model):
 
 class OVCMobileEventAttribute(models.Model):
     event = models.ForeignKey(OVCMobileEvent, on_delete=models.CASCADE)
-    ovc_cpims_id_individual = models.CharField(max_length=255)
+    ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     question_name = models.CharField(max_length=255)
     answer_value = models.CharField(max_length=255)
 
@@ -46,8 +46,8 @@ class OVCMobileEventAttribute(models.Model):
 # use for CPARA
 class OVCMobileEventRejected(models.Model):
     id = models.UUIDField(primary_key=True, editable=True)
-    user_id = models.IntegerField()
-    ovc_cpims_id = models.CharField(max_length=255)
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    ovc_cpims = models.CharField(max_length=255)
     date_of_event = models.DateField()
     is_accepted = models.IntegerField(
         choices=[(status.value, status.name) for status in ApprovalStatus],
@@ -67,7 +67,7 @@ class OVCMobileEventRejected(models.Model):
 class OVCMobileEventAttributeRejected(models.Model):
     event = models.ForeignKey(OVCMobileEventRejected,
                               on_delete=models.CASCADE, to_field='id')
-    ovc_cpims_id_individual = models.CharField(max_length=255)
+    ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     question_name = models.CharField(max_length=255)
     answer_value = models.CharField(max_length=255)
 
@@ -78,8 +78,8 @@ class OVCMobileEventAttributeRejected(models.Model):
 # use for form 1 A and B
 class OVCEvent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
-    user_id = models.IntegerField()
-    ovc_cpims_id =  models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    ovc_cpims =  models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     date_of_event = models.DateField()
     form_type = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -116,8 +116,8 @@ class OVCServices(models.Model):
 
 class OVCEventRejected(models.Model):
     id = models.UUIDField(primary_key=True, editable=True)
-    user_id = models.IntegerField()
-    ovc_cpims_id = models.CharField(max_length=255)
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    ovc_cpims = models.CharField(max_length=255)
     date_of_event = models.DateField()
     form_type = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -151,9 +151,9 @@ class OVCServicesRejected(models.Model):
 # use for case plan template
 class CasePlanTemplateEvent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
-    ovc_cpims_id =  models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    ovc_cpims =  models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     date_of_event = models.DateField()
-    user_id = models.IntegerField()
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     app_form_metadata = models.CharField(max_length=500)
@@ -192,9 +192,9 @@ class CasePlanTemplateService(models.Model):
 # use for case plan template
 class CasePlanTemplateEventRejected(models.Model):
     id = models.UUIDField(primary_key=True, editable=True)
-    ovc_cpims_id = models.CharField(max_length=255)
+    ovc_cpims = models.CharField(max_length=255)
     date_of_event = models.DateField()
-    user_id = models.IntegerField()
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     app_form_metadata = models.CharField(max_length=500)
@@ -232,7 +232,7 @@ class CasePlanTemplateServiceRejected(models.Model):
 class HIVManagementStaging(models.Model):
     adherence_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    ovc_cpims_id =  models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    ovc_cpims =  models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     hiv_confirmed_date = models.DateTimeField(null=False)
     treatment_initiated_date = models.DateTimeField(null=False)
     baseline_hei = models.CharField(max_length=100, null=False)
@@ -285,7 +285,7 @@ class HIVManagementStaging(models.Model):
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
     )
-    user_id = models.IntegerField()
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     app_form_metadata = models.CharField(max_length=500)
     approved_initiated = models.BooleanField(default=False)
 
@@ -299,7 +299,7 @@ class HIVManagementStaging(models.Model):
 class RiskScreeningStaging(models.Model):
     risk_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    ovc_cpims_id =  models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    ovc_cpims =  models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     test_done_when = models.BooleanField(null=True)
     test_donewhen_result = models.BooleanField(null=True)
     caregiver_know_status = models.BooleanField(null=True)
@@ -337,7 +337,7 @@ class RiskScreeningStaging(models.Model):
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
     )
-    user_id = models.IntegerField()
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     app_form_metadata = models.CharField(max_length=500)
     approved_initiated = models.BooleanField(default=False)
 
@@ -353,7 +353,7 @@ class RiskScreeningStaging(models.Model):
 class HIVManagementStagingRejected(models.Model):
     adherence_id = models.UUIDField(primary_key=True, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    ovc_cpims_id = models.CharField(max_length=255)
+    ovc_cpims = models.CharField(max_length=255)
     hiv_confirmed_date = models.DateTimeField(null=False)
     treatment_initiated_date = models.DateTimeField(null=False)
     baseline_hei = models.CharField(max_length=100, null=False)
@@ -406,7 +406,7 @@ class HIVManagementStagingRejected(models.Model):
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
     )
-    user_id = models.IntegerField()
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     message = models.TextField(null=True)
     app_form_metadata = models.CharField(max_length=500)
 
@@ -420,7 +420,7 @@ class HIVManagementStagingRejected(models.Model):
 class RiskScreeningStagingRejected(models.Model):
     risk_id = models.UUIDField(primary_key=True, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    ovc_cpims_id = models.CharField(max_length=255)
+    ovc_cpims = models.CharField(max_length=255)
     test_done_when = models.BooleanField(null=True)
     test_donewhen_result = models.BooleanField(null=True)
     caregiver_know_status = models.BooleanField(null=True)
@@ -458,7 +458,7 @@ class RiskScreeningStagingRejected(models.Model):
         choices=[(status.value, status.name) for status in ApprovalStatus],
         default=ApprovalStatus.NEUTRAL.value
     )
-    user_id = models.IntegerField()
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     message = models.TextField(null=True)
     app_form_metadata = models.CharField(max_length=500)
 
