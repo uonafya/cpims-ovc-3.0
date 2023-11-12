@@ -79,12 +79,11 @@ def delete_accepted_records(main_model, rejected_model, unique_id):
         print(rejected_model.objects.get(unique_id=unique_id).values())
         print(main_model.objects.get(unique_id=unique_id).values())
         
-        # Assuming you want to delete records from both models if they exist
         rejected_model.objects.get(unique_id=unique_id).delete()
         main_model.objects.get(unique_id=unique_id).delete()
 
     except rejected_model.DoesNotExist:
-        # If the rejected_model record doesn't exist, delete only the main_model record
+        # If model record doesn't exist, delete only the main_model record
         main_model.objects.get(unique_id=unique_id).delete()
         return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
 
@@ -321,7 +320,7 @@ def create_ovc_mobile_cpara_data(request):
         data = request.data
         print(f"CPARA mobile data {data}")
         is_accepted = ApprovalStatus.NEUTRAL.value
-        # Check if the user is authenticated
+        
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -485,7 +484,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
     try:
         data = []
 
-        # Check if the user is authenticated
+        
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -587,7 +586,7 @@ def update_cpara_is_accepted(request, event_id):
         event = OVCMobileEvent.objects.get(pk=event_id)
         attributes = OVCMobileEventAttribute.objects.filter(event=event)
 
-        # Check if the user is authenticated
+        
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -648,7 +647,7 @@ def delete_ovc_mobile_event(request, event_id):
 @permission_classes([IsAuthenticated])
 def create_ovc_event(request, form_id):
     try:
-        # Check if the user is authenticated
+        
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -915,7 +914,7 @@ def create_case_plan_template(request):
     try:
         payload = request.data
         print(f"CPT mobile data {payload}")
-        # Check if the user is authenticated
+        
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -1117,7 +1116,7 @@ def create_ovc_hiv_screening(request):
 
 
 
-        # Check if the user is authenticated
+        
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -1262,7 +1261,7 @@ def create_ovc_hiv_management(request):
         event_id = handle_Null(data.get('adherence_id'))
         
 
-        # Check if the user is authenticated
+        
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -1425,7 +1424,7 @@ def get_all_unaccepted_records(request):
 
         data = []
 
-        # Check if the user is authenticated
+        
         if not request.user.is_authenticated:
             return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
