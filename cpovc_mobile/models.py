@@ -27,6 +27,7 @@ class OVCMobileEvent(models.Model):
     message = models.TextField(null=True)
     app_form_metadata = models.CharField(max_length=500)
     approved_initiated = models.BooleanField(default=False)
+    signature = models.BinaryField(max_length=500)
 
     class Meta:
         db_table = 'cpara_mobile_event'

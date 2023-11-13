@@ -424,6 +424,7 @@ def create_ovc_mobile_cpara_data(request):
                 ovc_cpims_id=data.get('ovc_cpims_id'),
                 date_of_event=data.get('date_of_event'),
                 is_accepted=is_accepted,
+                signature=data.get('signature'),
                 user_id=user_id,
                 app_form_metadata=json.dumps(data.get('app_form_metadata'))
             )
@@ -433,6 +434,7 @@ def create_ovc_mobile_cpara_data(request):
                 ovc_cpims_id=data.get('ovc_cpims_id'),
                 date_of_event=data.get('date_of_event'),
                 is_accepted=is_accepted,
+                signature=data.get('signature'),
                 user_id=user_id,
                 app_form_metadata=data.get('app_form_metadata')
             )
@@ -589,6 +591,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                 'date_of_event': event.date_of_event,
                 'app_form_metadata':json.loads(event.app_form_metadata),
                 'event_id': event.id,
+                'signature':event.signature,
                 'questions': [],
                 'individual_questions': [],
                 'scores': [],
