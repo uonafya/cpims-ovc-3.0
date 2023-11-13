@@ -1,6 +1,6 @@
 from datetime import timezone
 import uuid
-
+import base64
 from django.forms import model_to_dict
 
 from .functions import model_to_dict_custom
@@ -424,7 +424,7 @@ def create_ovc_mobile_cpara_data(request):
                 ovc_cpims_id=data.get('ovc_cpims_id'),
                 date_of_event=data.get('date_of_event'),
                 is_accepted=is_accepted,
-                signature=data.get('signature'),
+                signature=base64.b64encode(data.get('signature').encode("utf-8")),
                 user_id=user_id,
                 app_form_metadata=json.dumps(data.get('app_form_metadata'))
             )
@@ -434,7 +434,7 @@ def create_ovc_mobile_cpara_data(request):
                 ovc_cpims_id=data.get('ovc_cpims_id'),
                 date_of_event=data.get('date_of_event'),
                 is_accepted=is_accepted,
-                signature=data.get('signature'),
+                signature=base64.b64encode(data.get('signature').encode("utf-8")),
                 user_id=user_id,
                 app_form_metadata=data.get('app_form_metadata')
             )
