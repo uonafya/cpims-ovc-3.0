@@ -2026,11 +2026,11 @@ def mobile_home(request):
         hrs_count=RiskScreeningStaging.objects.filter(is_accepted=1, ovc_cpims_id__in=childrens).count()
 
         
-        print(f"Counts: CPR-> {cpr_count} CPT-> {cpt_count}")      
+        print(f"CPT-> {cpt_count} CPR-> {cpr_count} F1A-> {f1a_count} F1B-> {f1b_count} HMF-> {hmf_count} HRS-> {hrs_count}")      
         summary['CPT'] = cpt_count
         summary['CPR'] = cpr_count
-        summary['F1A'] = cpt_count
-        summary['F1B'] = cpr_count
+        summary['F1A'] = f1a_count
+        summary['F1B'] = f1b_count
         summary['HMF'] = hmf_count
         summary['HRS'] = hrs_count
 
