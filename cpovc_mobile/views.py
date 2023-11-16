@@ -684,7 +684,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                     # child = OVCRegistration.objects.get(is_void=False, person=ovc_cpims_id_individual)
 
                     individual_sub_pop['ovc_cpims_id'] = ovc_cpims_id_individual
-                    individual_sub_pop['ovc_cpims_name'] = full_name
+                    individual_sub_pop['ovc_name'] = full_name
                     individual_sub_pop['ovc_age'] = ovc_age
                     individual_sub_pop['ovc_sex'] = ovc_sex
                     event_data['sub_population'].append(individual_sub_pop)
@@ -942,7 +942,7 @@ def get_ovc_event(request, form_type, ovc_id):
                 print(service['event__ovc_cpims_id'])
                 event_dict[event_id] = {
                     'ovc_cpims_id': service['event__ovc_cpims_id'],
-                    'ovc_cpims_name': full_name,
+                    'ovc_name': full_name,
                     'date_of_event': service['event__date_of_event'],
                     'event_id': event_id,
                     'app_form_metadata':app_metadata,
@@ -1183,7 +1183,7 @@ def get_one_case_plan(request, ovc_id):
                 'ovc_cpims_id': event.ovc_cpims.id,
                 'ovc_sex': ovc_sex,
                 'app_form_metadata':app_metadata,
-                'ovc_cpims_name': full_name,
+                'ovc_name': full_name,
                 'date_of_event': event.date_of_event,
                 'services': [service_serializer(service) for service in services]
             })
