@@ -602,9 +602,13 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
             
             # get child name
             full_name= f"{event.ovc_cpims.first_name} {event.ovc_cpims.other_names} {event.ovc_cpims.surname}"
+            ovc_age=event.ovc_cpims.age
+            ovc_sex=get_sex_person(event.ovc_cpims.sex_id)
             event_data = {
                 'ovc_cpims_id': event.ovc_cpims.id,               
-                'ovc_cpims_name': full_name,
+                'ovc_name': full_name,
+                'ovc_sex': ovc_sex,
+                'ovc_age': ovc_age,
                 'date_of_event': event.date_of_event,
                 'app_form_metadata':app_metadata,
                 'event_id': event.id,
