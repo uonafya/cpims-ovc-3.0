@@ -470,8 +470,7 @@ def create_ovc_mobile_cpara_data(request):
         for ind_question in individual_questions:
             question_name = f"individual_question_{ind_question['question_code']}"
             answer_value = ind_question['answer_id']
-            individual_ovc_id = ind_question.get(
-                'ovc_cpims_id', data.get('ovc_cpims_id'))  
+            individual_ovc_id = ind_question.get('ovc_cpims_id', data.get('ovc_cpims_id'))  
             individual_ovc_id = RegPerson.objects.get(pk=individual_ovc_id)
             OVCMobileEventAttribute.objects.create(
                 event=event,
@@ -486,12 +485,11 @@ def create_ovc_mobile_cpara_data(request):
         for sub_pop in sub_population:
             question_name = f"sub_population_{sub_pop['criteria']}"
             # answer_value = sub_pop['answer_id']
-            sub_pop_ovc_id = sub_pop.get(
-                'ovc_cpims_id', data.get('ovc_cpims_id'))
+            sub_pop_ovc_id = int(sub_pop.get('ovc_cpims_id', data.get('ovc_cpims_id')))
             OVCMobileEventAttribute.objects.create(
                 event=event,
                 # Add 'individual_ovc_id_' prefix
-                ovc_cpims_id=f"individual_ovc_id_{sub_pop_ovc_id}",
+                ovc_cpims_id=sub_pop_ovc_id,
                 question_name=question_name,
                 # answer_value=answer_value
             )
@@ -2115,12 +2113,13 @@ def unaccepted_records(request, form_type):
             
             # Fetch unaccepted hiv_screening_rejected records for and OVC
             hiv_screening_rejected = RiskScreeningStagingRejected.objects.filter(is_accepted=3, user=request.user.id)
+            print(f" load : {hiv_screening_rejected}  userId:  {request.user.id} form  {form_type}")
             
             for risk_screening in hiv_screening_rejected:
                 app_metadata = json.loads(risk_screening.app_form_metadata.replace("'", "\""))
                 event_data = {
                     'risk_id':risk_screening.risk_id,
-                    'ovc_cpims_id': risk_screening.ovc_cpims,
+                    'ovc_cpims_id': risk_screening.ovc_cpims.id,
                     'date_of_event': risk_screening.date_of_event,
                     'test_done_when': risk_screening.test_done_when,
                     'test_donewhen_result': risk_screening.test_donewhen_result,
@@ -2151,7 +2150,7 @@ def unaccepted_records(request, form_type):
                     'art_referral_completed_date': risk_screening.art_referral_completed_date,
                     'facility_code': risk_screening.facility_code,
                     'is_accepted': risk_screening.is_accepted,
-                    'user_id': risk_screening.user,
+                    'user_id': risk_screening.user.id,
                     'message': request.data.get('message'),
                     'app_form_metadata': app_metadata,
                     }
