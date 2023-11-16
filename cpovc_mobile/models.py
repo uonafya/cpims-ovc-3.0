@@ -27,7 +27,7 @@ class OVCMobileEvent(models.Model):
     message = models.TextField(null=True)
     app_form_metadata = models.CharField(max_length=500)
     approved_initiated = models.BooleanField(default=False)
-    signature = models.BinaryField(max_length=500)
+    signature = models.BinaryField(max_length=500, null=True)
 
     class Meta:
         db_table = 'cpara_mobile_event'
@@ -419,7 +419,7 @@ class HIVManagementStagingRejected(models.Model):
 
 # HIV SCREENING
 class RiskScreeningStagingRejected(models.Model):
-    risk_id = models.UUIDField(primary_key=True, editable=True)
+    risk_id = models.UUIDField(primary_key=True, editable=True, default=uuid.uuid4())
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     test_done_when = models.BooleanField(null=True)

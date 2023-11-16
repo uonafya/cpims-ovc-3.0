@@ -982,9 +982,10 @@ def get_ovc_event(request, form_type, ovc_id):
 @permission_classes([IsAuthenticated])
 def update_is_accepted(request, id):
     try:
+        # breakpoint()
         service = OVCServices.objects.get(id=id)
         is_accepted = request.data.get('is_accepted')
-
+        count_service_by_event = OVCServices.objects.filter(event_id=service.event.id).count()
         if is_accepted is not None:
             if is_accepted == ApprovalStatus.FALSE.value:
                 try:
@@ -1021,18 +1022,27 @@ def update_is_accepted(request, id):
             
             elif is_accepted == ApprovalStatus.TRUE.value:
                 try:
-                    OVCServicesRejected.objects.get(id=id).delete()
-                    OVCEventRejected.objects.get(id=service.event.id).delete()
+                    sevice_rej = OVCServicesRejected.objects.get(id=id)
+                    count_service_by_event_rej = OVCServicesRejected.objects.filter(event_id=sevice_rej.event.id).count()
+                    sevice_rej.delete()
                     
-                    OVCServices.objects.get(id=id).delete()
-                    OVCEvent.objects.get(id=service.event.id).delete()
+                    
+                    service.delete() 
+                    if count_service_by_event <2 :                   
+                        print(f"deleted services : {count_service_by_event}")
+                        OVCEvent.objects.get(id=service.event.id).delete()
+                    if count_service_by_event_rej <2 :                   
+                        OVCEventRejected.objects.get(id=service.event.id).delete()
+
                     
 
                     return Response({'message': 'form accepted successfully'}, status=status.HTTP_200_OK)
 
                 except Exception as e:
                     OVCServices.objects.get(id=id).delete()
-                    OVCEvent.objects.get(id=service.event.id).delete()
+                    if count_service_by_event <2 :                   
+                        print(f"deleted services : {count_service_by_event}")
+                        OVCEvent.objects.get(id=service.event.id).delete()
 
                 return Response({'message': 'form accepted successfully'}, status=status.HTTP_200_OK)
 
@@ -1230,21 +1240,24 @@ def update_case_plan_is_accepted(request, unique_service_id):
             
             elif new_is_accepted == ApprovalStatus.TRUE.value:
                 try:
-                
-                    CasePlanTemplateServiceRejected.objects.get(unique_service_id=unique_service_id).delete()
-                    CasePlanTemplateEventRejected.objects.get(id=service.event.id).delete()
+                    reject_service = CasePlanTemplateServiceRejected.objects.get(unique_service_id=unique_service_id)
+                    count_event_reject_service = CasePlanTemplateEventRejected.objects.filter(id = reject_service.event.pk).count()
+                    if count_event_reject_service < 2:
+                        reject_service.delete()
+                        CasePlanTemplateEventRejected.objects.get(id=reject_service.event.id).delete()
                     
-                    CasePlanTemplateService.objects.get(unique_service_id=unique_service_id).delete()
-                    CasePlanTemplateEvent.objects.get(id=service.event.id).delete()
-                    return Response({'message': 'Caseplan re-approved successfully '}, status=status.HTTP_200_OK)
-                
-                except CasePlanTemplateServiceRejected.DoesNotExist as f:                
-                    CasePlanTemplateService.objects.get(unique_service_id=unique_service_id).delete()
-                    CasePlanTemplateEvent.objects.get(id=service.event.id).delete()
-                    return Response({'message': 'Caseplan approved updated successfully  '}, status=status.HTTP_200_OK)
+                    accept_service = CasePlanTemplateService.objects.get(unique_service_id=unique_service_id)
+                    count_accept_service_event = CasePlanTemplateEvent.objects.get(id=accept_service.event.id).count()
+                    accept_service.delete()
+                    if count_accept_service_event < 2 :
+                        CasePlanTemplateEvent.objects.get(id=service.event.id).delete()
+                    return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
+
                 
                 except Exception as e :
-                    return Response({f"'message': {e}"}, status=status.HTTP_200_OK)
+                    # CasePlanTemplateService.objects.get(unique_service_id=unique_service_id).delete()
+                    # CasePlanTemplateEvent.objects.get(id=service.event.id).delete()
+                    return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
                     
  
         else:
@@ -1329,8 +1342,7 @@ def update_hiv_screening(request, risk_id):
 
         new_is_accepted = request.data.get('is_accepted')
         if new_is_accepted is not None:
-            # Check if is_accepted is set to False (3)
-            
+            # Check if is_accepted is set to False (3)            
             if new_is_accepted == ApprovalStatus.FALSE.value:
                 # Create rejected records
                 RiskScreeningStagingRejected.objects.create(
@@ -2222,10 +2234,10 @@ def mobile_home(request):
             is_void=False, child_chv_id__in=chv_list).values('person_id')
         
         # count cpara unapproved
-        cpr_count=OVCMobileEvent.objects.filter(is_accepted=1, ovc_cpims_id__in=childrens).count()
+        cpr_count=OVCMobileEvent.objects.filter(is_accepted=1, ovc_cpims__in=childrens).count()
 
         # count Case plan template unapproved
-        event_ids = CasePlanTemplateEvent.objects.filter(ovc_cpims_id__in=childrens)
+        event_ids = CasePlanTemplateEvent.objects.filter(ovc_cpims__in=childrens)
         result = (
             CasePlanTemplateService.objects
             .filter(is_accepted=True, event_id__in=event_ids)
@@ -2236,8 +2248,8 @@ def mobile_home(request):
         cpt_count = result.filter(event_count__gt=0).count()
 
         # count F1A and F1B unapproved
-        event_ids_f1a = OVCEvent.objects.filter(ovc_cpims_id__in=childrens, form_type='F1A')
-        event_ids_f1b = OVCEvent.objects.filter(ovc_cpims_id__in=childrens, form_type='F1B')
+        event_ids_f1a = OVCEvent.objects.filter(ovc_cpims__in=childrens, form_type='F1A')
+        event_ids_f1b = OVCEvent.objects.filter(ovc_cpims__in=childrens, form_type='F1B')
         result_f1a = (
             OVCServices.objects
             .filter(is_accepted=True, event_id__in=event_ids_f1a)
@@ -2256,15 +2268,15 @@ def mobile_home(request):
         f1b_count = result_f1b.filter(event_count__gt=0).count()
 
         # count HMF and HRS unapproved
-        hmf_count=HIVManagementStaging.objects.filter(is_accepted=1, ovc_cpims_id__in=childrens).count()
-        hrs_count=RiskScreeningStaging.objects.filter(is_accepted=1, ovc_cpims_id__in=childrens).count()
+        hmf_count=HIVManagementStaging.objects.filter(is_accepted=1, ovc_cpims__in=childrens).count()
+        hrs_count=RiskScreeningStaging.objects.filter(is_accepted=1, ovc_cpims__in=childrens).count()
 
         
-        print(f"Counts: CPR-> {cpr_count} CPT-> {cpt_count}")      
+        print(f"CPT-> {cpt_count} CPR-> {cpr_count} F1A-> {f1a_count} F1B-> {f1b_count} HMF-> {hmf_count} HRS-> {hrs_count}")      
         summary['CPT'] = cpt_count
         summary['CPR'] = cpr_count
-        summary['F1A'] = cpt_count
-        summary['F1B'] = cpr_count
+        summary['F1A'] = f1a_count
+        summary['F1B'] = f1b_count
         summary['HMF'] = hmf_count
         summary['HRS'] = hrs_count
 
