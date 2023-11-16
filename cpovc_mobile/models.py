@@ -27,6 +27,7 @@ class OVCMobileEvent(models.Model):
     message = models.TextField(null=True)
     app_form_metadata = models.CharField(max_length=500)
     approved_initiated = models.BooleanField(default=False)
+    signature = models.BinaryField(max_length=500)
 
     class Meta:
         db_table = 'cpara_mobile_event'
@@ -47,7 +48,7 @@ class OVCMobileEventAttribute(models.Model):
 class OVCMobileEventRejected(models.Model):
     id = models.UUIDField(primary_key=True, editable=True)
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
-    ovc_cpims = models.CharField(max_length=255)
+    ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     date_of_event = models.DateField()
     is_accepted = models.IntegerField(
         choices=[(status.value, status.name) for status in ApprovalStatus],
@@ -117,7 +118,7 @@ class OVCServices(models.Model):
 class OVCEventRejected(models.Model):
     id = models.UUIDField(primary_key=True, editable=True)
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
-    ovc_cpims = models.CharField(max_length=255)
+    ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     date_of_event = models.DateField()
     form_type = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -192,7 +193,7 @@ class CasePlanTemplateService(models.Model):
 # use for case plan template
 class CasePlanTemplateEventRejected(models.Model):
     id = models.UUIDField(primary_key=True, editable=True)
-    ovc_cpims = models.CharField(max_length=255)
+    ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     date_of_event = models.DateField()
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -353,7 +354,7 @@ class RiskScreeningStaging(models.Model):
 class HIVManagementStagingRejected(models.Model):
     adherence_id = models.UUIDField(primary_key=True, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    ovc_cpims = models.CharField(max_length=255)
+    ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     hiv_confirmed_date = models.DateTimeField(null=False)
     treatment_initiated_date = models.DateTimeField(null=False)
     baseline_hei = models.CharField(max_length=100, null=False)
@@ -420,7 +421,7 @@ class HIVManagementStagingRejected(models.Model):
 class RiskScreeningStagingRejected(models.Model):
     risk_id = models.UUIDField(primary_key=True, editable=True)
     # person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    ovc_cpims = models.CharField(max_length=255)
+    ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     test_done_when = models.BooleanField(null=True)
     test_donewhen_result = models.BooleanField(null=True)
     caregiver_know_status = models.BooleanField(null=True)
