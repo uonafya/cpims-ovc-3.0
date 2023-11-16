@@ -606,7 +606,7 @@ National
                         $("#Dataapproval tbody").append(`<tr id="${service.id}_tr" class="datarows">
 
                                 <td style="width: 100%;" class="mt-2" style="border:1px solid black;">
-                                    <p>Form: FORM 1A : Child OVC ID: <b style="color:red;">  ${cpt.ovc_cpims_id} </b> | Date of event - ${data[dta].date_of_event}</p>
+                                    <p>Form: Form 1A Services : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                     <div class="row" >
                                         <div class="col-md-4">
                                             <br>
@@ -662,7 +662,7 @@ National
 
                         $("#Dataapproval tbody").append(`<tr id="${cpt.event_id}_tr" class="datarows">
                                 <td style="width: 100%;" class="mt-5">
-                                    <p>Form: FORM 1A Critical Events : Child OVC ID: <b style="color:red;">  ${cpt.ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
+                                    <p>Form: Form 1A Critical Events : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                     <div class="row">
                                         <div class="col-md-4">
                                             ${html_crt_ev}
@@ -718,7 +718,7 @@ National
                             })
                         $("#Dataapproval tbody").append(`<tr id="${service.id}_tr" class="datarows">
                                 <td style="width: 100%;" class="mt-5">
-                                    <p>Form: FORM 1B : Child OVC ID: <b style="color:red;">  ${cpt.ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_cpims_name} </b> | Date of event - ${data[dta].date_of_event}</p>
+                                    <p>Form: Form 1B Services : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                     <div class="row">
                                         <div class="col-md-4">
                                             ${f1b_domain_val} : ${f1b_service_val}
@@ -774,7 +774,7 @@ National
                             })
                             $("#Dataapproval tbody").append(`<tr id="${cpt.event_id}_tr" class="datarows">
                                     <td style="width: 100%;" class="mt-5">
-                                        <p>Form: Form 1B Critical Events : Child OVC ID: <b style="color:red;">  ${cpt.ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_cpims_name} </b> | Date of event - ${data[dta].date_of_event}</p>
+                                        <p>Form: Form 1B Critical Events : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 ${html_crt_ev}
@@ -845,7 +845,7 @@ National
                             })
                         $("#Dataapproval tbody").append(`<tr id="${service.id}_tr" class="datarows">
                                 <td style="width: 100%;" class="">
-                                    <p>Form: Case Plan Template : Child OVC ID: <b style="color:red;">  ${cpt.ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_cpims_name} </b> |  Date of event - ${data[dta].date_of_event}</p>
+                                    <p>Form: Case Plan Template : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <p>
@@ -893,7 +893,7 @@ National
                         let data_indx = data[dta]
                         // console.log({dta, data, data_indx})
                         let scores  = data[dta].scores
-                        let individual  = data[dta].individuals_questions
+                        let individual  = data[dta].individual_questions
                         let questions  = data[dta].questions
                         let subpopulations  = data[dta].sub_population
                         let bench_score = ''
@@ -923,6 +923,7 @@ National
                         {% endfor %}
                         
                         let sub_pop_html = ''
+                        let indi_html = ''
                         let modal_html_question = ''
                         for (quiz in questions){
                             let question_code = questions[quiz].question_code
@@ -959,6 +960,8 @@ National
                                         let q_7 = ''
                                         let q_8 = ''
                                         sub_name = ovc_sub_pop[0].ovc_cpims_name
+                                        sub_age = ovc_sub_pop[0].ovc_age
+                                        sub_sex = ovc_sub_pop[0].ovc_sex
                                         q_1 = ovc_sub_pop.filter(qd=> qd.criteria == 'double').length > 0 ? 'Yes' : ''
                                         q_2 = ovc_sub_pop.filter(qd=> qd.criteria == 'AGYW').length > 0 ? 'Yes' : ''
                                         q_3 = ovc_sub_pop.filter(qd=> qd.criteria == 'HEI').length > 0 ? 'Yes' : ''
@@ -970,7 +973,7 @@ National
 
                                         sub_pop_html += `
                                         <div class="row">
-                                            <div class="col-md-3 subpop_c">${sub_name}</div>
+                                            <div class="col-md-3 subpop_c">${sub_name} -  ${sub_age} - ${sub_sex}</div>
                                             <div class="col-md-1 subpop_c">${q_1}</div>
                                             <div class="col-md-1 subpop_c">${q_2}</div>
                                             <div class="col-md-1 subpop_c">${q_3}</div>
@@ -992,11 +995,52 @@ National
                                 })
                             }
                         }
+
+                        if(individual.length >0){
+                            let unique_indi_ovc = [... new Set(individual.map(ovc => ovc.ovc_cpims_id))]
+                            if(unique_indi_ovc.length>0){
+                                unique_indi_ovc.map(id =>{
+                                    ovc_indi = individual.filter(xd => xd.ovc_cpims_id === id)
+                                    if(ovc_indi.length>0){
+
+                                        let sub_name = ''
+                                        let q_1 = (ovc_indi.filter(qd=> qd.question_code == 'qd7')) || [0,0,0]
+                                        let q_2 = (ovc_indi.filter(qd=> qd.question_code == 'qd8')) || [0,0,0]
+                                        let q_3 = (ovc_indi.filter(qd=> qd.question_code == 'qd9')) || [0,0,0]
+                                        let q_4 = (ovc_indi.filter(qd=> qd.question_code == 'qd10')) || [0,0,0]
+                                        sub_name = ovc_indi[0].ovc_name
+                                        sub_age = ovc_indi[0].ovc_age
+                                        sub_sex = ovc_indi[0].ovc_sex
+                                        if(q_1.length>0){q_11 = q_1[0].answer_id == 'AYES' ? 'Yes' : 'No'}else{q_11 = ""}
+                                        if(q_2.length>0){q_22 = q_2[0].answer_id == 'AYES' ? 'Yes' : 'No'}else{q_22 = ""}
+                                        if(q_3.length>0){q_33 = q_3[0].answer_id == 'AYES' ? 'Yes' : 'No'}else{q_33 = ""}
+                                        if(q_4.length>0){q_44 = q_4[0].answer_id == 'AYES' ? 'Yes' : 'No'}else{q_44 = ""}
+
+                                        indi_html += `
+                                        <div class="row">
+                                            <div class="col-md-3 subpop_c">${sub_name} -  ${sub_age} - ${sub_sex}</div>
+                                            <div class="col-md-1 subpop_c">${q_11}</div>
+                                            <div class="col-md-1 subpop_c">${q_22}</div>
+                                            <div class="col-md-1 subpop_c">${q_33}</div>
+                                            <div class="col-md-1 subpop_c">${q_44}</div>
+                                        </div>
+                                        `
+                                    }else{
+                                        indi_html += `
+                                        <div class="row quiz_row">
+                                            <div class="col-md-3 subpop_c" style="color:red;"><b>There are not records</b></div>
+                                            
+                                        </div>
+                                        `
+                                    }
+                                })
+                            }
+                        }
                         
                         $("#Dataapproval tbody").append(`
                                 <tr id="${data_indx.event_id}_tr" class="datarows">
                                     <td style="width: 100%;">
-                                                <p>Form: CPARA : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_cpims_name} </b> | Date of event - ${data[dta].date_of_event}</p>
+                                                <p>Form: CPARA : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                                 <div class="row">
                                                     <br>
                                                     <div class="col-md-10">
@@ -1022,7 +1066,7 @@ National
                                                     <div class="modal-header">
                                                         <button type="button" data-dismiss="modal" class="close" aria-label="Close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                                         <h4 class="modal-title">
-                                                            <p>Form: CPARA : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
+                                                            <p>Form: CPARA : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                                         </h4>
                                                     </div>
                                                     <div class="modal-body">
@@ -1048,6 +1092,18 @@ National
                                                         </div> 
                                                         <div class="row">
                                                             ${sub_pop_html}
+                                                        </div> 
+
+                                                        <hr><b><u> individual questions </u></b> <br> 
+                                                        <div class="row quiz_header_row" style="font-size:bold;">
+                                                            <div class="col-md-3 subpop_c">Name</div>
+                                                            <div class="col-md-1 subpop_c">Questions 3.1</div>
+                                                            <div class="col-md-1 subpop_c">Questions 3.2 </div>
+                                                            <div class="col-md-1 subpop_c">Questions 3.3 </div>
+                                                            <div class="col-md-1 subpop_c">Questions 6.2</div>
+                                                        </div> 
+                                                        <div class="row">
+                                                            ${indi_html}
                                                         </div> 
                                                         
                                                     
@@ -1091,7 +1147,11 @@ National
                                 let question_formname = hmf_translates[indx].form_name
                                 let question_answer = data_indx[question_dbname]
                                 let ui_answer = ''
-                                ta_trs[question_formname] = question_answer
+                                if(question_formname == 'HIV_MGMT_2_M'){
+                                    ta_trs[question_formname] = question_answer.replace(/'/g, '"')
+                                }else{
+                                    ta_trs[question_formname] = question_answer
+                                }
 
                                 if(question_dbname.includes('date') && question_answer && question_answer.length>0 ){
                                     ui_answer = formatDate(question_answer)
@@ -1120,7 +1180,7 @@ National
                         $("#Dataapproval tbody").append(`
                                 <tr id="${data_indx.adherence_id}_tr" class="datarows">
                                     <td style="width: 100%;">
-                                                <p>Form: HIV Management Form : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_cpims_name} </b> | Date of event - ${data[dta].date_of_event}</p>
+                                        <p>Form: HIV Management Form : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                                 <div class="row">
                                                     <br>
                                                     <div class="col-md-10">
@@ -1163,7 +1223,7 @@ National
                                                     <div class="modal-header">
                                                         <button type="button" data-dismiss="modal" class="close" aria-label="Close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                                         <h4 class="modal-title">
-                                                            <p>Form: HIV Management Form : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
+                                                            <p>Form: HIV Management Form : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                                         </h4>
                                                     </div>
                                                     <div class="modal-body">
@@ -1205,6 +1265,8 @@ National
                         html_question = ''
                         let data_indx = data[dta]
                         let row_id_btn = data_indx.risk_id
+                        let app_form_metdata = data_indx.app_form_metdata
+                        ta_trs['app_form_metadata'] = app_form_metdata
                         
                         console.log({row_id_btn})
                         if (data_indx){
@@ -1274,7 +1336,7 @@ National
                         $("#Dataapproval tbody").append(`
                                 <tr id="${data_indx.risk_id}_tr" class="datarows">
                                     <td style="width: 100%;">
-                                                <p>Form: HIV Risk Screening : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_cpims_name} </b> | Date of event - ${data[dta].date_of_event}</p>
+                                                <p>Form: HIV Risk Screening : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                                 <div class="row">
                                                     <br>
                                                     <div class="col-md-10">
@@ -1317,7 +1379,7 @@ National
                                                     <div class="modal-header">
                                                         <button type="button" data-dismiss="modal" class="close" aria-label="Close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                                         <h4 class="modal-title">
-                                                            <p>Form: HIV Risk Screening : Child OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b>| Date of event - ${data[dta].date_of_event}</p>
+                                                            <p>Form: HIV Risk Screening : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                                         </h4>
                                                     </div>
                                                     <div class="modal-body">

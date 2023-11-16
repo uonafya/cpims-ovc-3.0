@@ -25,7 +25,7 @@ class OVCMobileEvent(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     message = models.TextField(null=True)
-    app_form_metadata = models.CharField(max_length=500, default='{}')
+    app_form_metadata = models.CharField(max_length=500, default="{}")
     approved_initiated = models.BooleanField(default=False)
     signature = models.BinaryField(max_length=500, null=True)
 
@@ -57,7 +57,7 @@ class OVCMobileEventRejected(models.Model):
     message = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    app_form_metadata = models.CharField(max_length=500, default='{}')
+    app_form_metadata = models.CharField(max_length=500, default="{}")
 
     class Meta:
         db_table = 'cpara_mobile_event_rejected'
@@ -85,7 +85,7 @@ class OVCEvent(models.Model):
     form_type = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    app_form_metadata = models.CharField(max_length=500, default='{}')
+    app_form_metadata = models.CharField(max_length=500, default="{}")
 
     class Meta:
         db_table = 'f1ab_mobile_event'
@@ -123,7 +123,7 @@ class OVCEventRejected(models.Model):
     form_type = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    app_form_metadata = models.CharField(max_length=500, default='{}')
+    app_form_metadata = models.CharField(max_length=500, default="{}")
 
     class Meta:
         db_table = 'f1ab_mobile_event_rejected'
@@ -157,7 +157,7 @@ class CasePlanTemplateEvent(models.Model):
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    app_form_metadata = models.CharField(max_length=500, default='{}')
+    app_form_metadata = models.CharField(max_length=500, default="{}")
 
     class Meta:
         db_table = 'case_plan_mobile_event'
@@ -198,7 +198,7 @@ class CasePlanTemplateEventRejected(models.Model):
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    app_form_metadata = models.CharField(max_length=500, default='{}')
+    app_form_metadata = models.CharField(max_length=500, default="{}")
 
     class Meta:
         db_table = 'case_plan_mobile_event_rejected'
@@ -287,7 +287,7 @@ class HIVManagementStaging(models.Model):
         default=ApprovalStatus.NEUTRAL.value
     )
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
-    app_form_metadata = models.CharField(max_length=500, default='{}')
+    app_form_metadata = models.CharField(max_length=500, default="{}")
     approved_initiated = models.BooleanField(default=False)
 
     class Meta:
@@ -339,7 +339,7 @@ class RiskScreeningStaging(models.Model):
         default=ApprovalStatus.NEUTRAL.value
     )
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
-    app_form_metadata = models.CharField(max_length=500, default='{}')
+    app_form_metadata = models.CharField(max_length=500, default="{}")
     approved_initiated = models.BooleanField(default=False)
 
     class Meta:
@@ -409,7 +409,7 @@ class HIVManagementStagingRejected(models.Model):
     )
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     message = models.TextField(null=True)
-    app_form_metadata = models.CharField(max_length=500, default='{}')
+    app_form_metadata = models.CharField(max_length=500, default="{}")
 
     class Meta:
         db_table = 'hiv_management_staging_rejected'
@@ -461,7 +461,7 @@ class RiskScreeningStagingRejected(models.Model):
     )
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     message = models.TextField(null=True)
-    app_form_metadata = models.CharField(max_length=500, default='{}')
+    app_form_metadata = models.CharField(max_length=500, default="{}")
 
     class Meta:
         db_table = 'risk_screening_staging_rejected'
