@@ -1187,21 +1187,24 @@ def update_case_plan_is_accepted(request, unique_service_id):
     try:
         service = CasePlanTemplateService.objects.get(
             unique_service_id=unique_service_id)
-
+        # breakpoint()
         event = service.event
-        rejected_event=event.id
+        rejected_event=service.event_id
 
         new_is_accepted = request.data.get('is_accepted')
         if new_is_accepted is not None:
             # Check if is_accepted is set to False (3)
             if new_is_accepted == ApprovalStatus.FALSE.value:
+                
                 # Create a corresponding rejected record in CasePlanTemplateEventRejected
-                event_rejected = CasePlanTemplateEventRejected.objects.create(
+                event_rejected, created = CasePlanTemplateEventRejected.objects.update_or_create(
                     id=rejected_event,
-                    user=event.user,
-                    ovc_cpims=event.ovc_cpims,
-                    date_of_event=event.date_of_event,
-                    app_form_metadata=event.app_form_metadata
+                    defaults={
+                        'user': event.user,
+                        'ovc_cpims': event.ovc_cpims,
+                        'date_of_event': event.date_of_event,
+                        'app_form_metadata': event.app_form_metadata
+                    }
                 )
 
                 # Create the corresponding rejected service
@@ -1227,18 +1230,21 @@ def update_case_plan_is_accepted(request, unique_service_id):
             
             elif new_is_accepted == ApprovalStatus.TRUE.value:
                 try:
+                
                     CasePlanTemplateServiceRejected.objects.get(unique_service_id=unique_service_id).delete()
                     CasePlanTemplateEventRejected.objects.get(id=service.event.id).delete()
                     
                     CasePlanTemplateService.objects.get(unique_service_id=unique_service_id).delete()
                     CasePlanTemplateEvent.objects.get(id=service.event.id).delete()
-                    return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
-
+                    return Response({'message': 'Caseplan re-approved successfully '}, status=status.HTTP_200_OK)
                 
-                except Exception as e :
+                except CasePlanTemplateServiceRejected.DoesNotExist as f:                
                     CasePlanTemplateService.objects.get(unique_service_id=unique_service_id).delete()
                     CasePlanTemplateEvent.objects.get(id=service.event.id).delete()
-                    return Response({'message': 'is_accepted updated successfully to TRUE'}, status=status.HTTP_200_OK)
+                    return Response({'message': 'Caseplan approved updated successfully  '}, status=status.HTTP_200_OK)
+                
+                except Exception as e :
+                    return Response({f"'message': {e}"}, status=status.HTTP_200_OK)
                     
  
         else:
@@ -1328,6 +1334,7 @@ def update_hiv_screening(request, risk_id):
             if new_is_accepted == ApprovalStatus.FALSE.value:
                 # Create rejected records
                 RiskScreeningStagingRejected.objects.create(
+                    risk_id = screening.risk_id,
                     ovc_cpims = screening.ovc_cpims,
                     date_of_event = screening.date_of_event,
                     test_done_when = screening.test_done_when,
@@ -1360,7 +1367,8 @@ def update_hiv_screening(request, risk_id):
                     facility_code = screening.facility_code,
                     is_accepted = new_is_accepted,
                     user = screening.user,
-                    message = request.data.get('message')
+                    message = request.data.get('message'),
+                    app_form_metadata = screening.app_form_metadata
                 )
 
                 # Update the is_accepted field for the original screening
@@ -1522,7 +1530,8 @@ def update_hiv_management(request, adherence_id):
                     date_of_event = service.date_of_event,
                     message=request.data.get('message'),
                     user = service.user,
-                    is_accepted = new_is_accepted
+                    is_accepted = new_is_accepted,
+                    app_form_metadata = service.app_form_metadata
                     # You can leave the following as commented code
                     # weight = service.weight,
                     # muac = service.muac,
@@ -1887,7 +1896,7 @@ def unaccepted_records(request, form_type):
         if form_type == 'F1A' or form_type == 'F1B':
             # Fetch Form 1A and B records where is_accepted is FALSE (3) and user_id matches
             ovc_services_rejected = OVCServicesRejected.objects.filter(
-                is_accepted=3, event__user=request.user.id)
+                is_accepted=3, event__user=request.user.id, event__form_type=form_type)
             print(ovc_services_rejected)
             grouped_data = {}
 
@@ -1896,7 +1905,7 @@ def unaccepted_records(request, form_type):
                     print(service_rejected)
                     app_metadata = json.loads(service_rejected.event.app_form_metadata.replace("'", "\""))
                     service_id = service_rejected.event.id
-                    ovc_cpims_id = service_rejected.event.ovc_cpims
+                    ovc_cpims_id = service_rejected.event.ovc_cpims.id
                     app_metadata = app_metadata
                     event_id = None
                     event_date = None
@@ -1966,7 +1975,7 @@ def unaccepted_records(request, form_type):
                 app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
                 event_data = {
                     'id':event.id,
-                    'ovc_cpims_id': event.ovc_cpims,
+                    'ovc_cpims_id': event.ovc_cpims.id,
                     'date_of_event': event.date_of_event,
                     'app_form_metadata': app_metadata,
                     'questions': [],
@@ -2012,30 +2021,37 @@ def unaccepted_records(request, form_type):
                         key = attribute.question_name[len('score_'):]
                         event_data['scores'][key] = attribute_data['answer_value']
 
-                    data.append(event_data)
+                data.append(event_data)
 
 
         elif form_type == 'cpt':
             # Fetch CasePlanTemplate records where is_accepted is FALSE (3) and user_id matches
             case_plan_services = CasePlanTemplateServiceRejected.objects.filter(
                 is_accepted=3, event__user_id=request.user.id)
+            
+            events = CasePlanTemplateEvent.objects.filter(user_id=request.user.id)
 
-            for service in case_plan_services:
-                app_metadata = json.loads(service.event.app_form_metadata.replace("'", "\""))
-                event_data = {
-                    'ovc_cpims_id': service.event.ovc_cpims,
-                    'date_of_event': service.event.date_of_event,
-                    'message': service.message,
-                    'app_form_metadata': app_metadata,
-                    'services': {
-                        'domain_id': service.domain_id,
-                        'service_id': service.service_id,
-                    },
+            servicess = CasePlanTemplateService.objects.filter(
+                event__in=events, is_accepted=3)
+
+        
+            for event in events:  
+                full_name= f"{event.ovc_cpims.first_name} {event.ovc_cpims.other_names} {event.ovc_cpims.surname}"
+                app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
+                ovc_sex=get_sex_person(event.ovc_cpims.sex_id)
+                
+                services = servicess.filter(event=event)
+                event_data={
+                    'event_id': event.id,
+                    'ovc_cpims_id': event.ovc_cpims.id,
+                    'app_form_metadata':app_metadata,
+                    'date_of_event': event.date_of_event,
+                    'services': [service_serializer(service) for service in services]
                 }
-                data.append(event_data)
-                # delete_parent_and_children(
-                #     CasePlanTemplateEventRejected, CasePlanTemplateServiceRejected, service.event.id)
+        
 
+                data.append(event_data)
+                
                             
         elif form_type == 'hmf':
             
@@ -2045,7 +2061,7 @@ def unaccepted_records(request, form_type):
                 app_metadata = json.loads(hiv_management.app_form_metadata.replace("'", "\""))
                 event_data = {
                     'adherence_id':hiv_management.adherence_id,
-                    'ovc_cpims_id': hiv_management.ovc_cpims,
+                    'ovc_cpims_id': hiv_management.ovc_cpims.id,
                     'hiv_confirmed_date': hiv_management.hiv_confirmed_date,
                     'treatment_initiated_date': hiv_management.treatment_initiated_date,
                     'baseline_hei': hiv_management.baseline_hei,
@@ -2083,6 +2099,7 @@ def unaccepted_records(request, form_type):
                     'peer_educator_contact': hiv_management.peer_educator_contact,
                     'date_of_event': hiv_management.date_of_event,
                     'app_form_metadata': app_metadata,
+                    'message':hiv_management.message,
                     # 'weight': hiv_management.equivalent,
                     # 'muac': hiv_management.mUAC,
                     # 'currentregimen': hiv_management.equivalent,
@@ -2097,15 +2114,16 @@ def unaccepted_records(request, form_type):
 
         
         elif form_type == 'hrs':
-            
+            hrs_rejected = []
             # Fetch unaccepted hiv_screening_rejected records for and OVC
             hiv_screening_rejected = RiskScreeningStagingRejected.objects.filter(is_accepted=3, user=request.user.id)
             
             for risk_screening in hiv_screening_rejected:
                 app_metadata = json.loads(risk_screening.app_form_metadata.replace("'", "\""))
+                print(app_metadata)
                 event_data = {
                     'risk_id':risk_screening.risk_id,
-                    'ovc_cpims_id': risk_screening.ovc_cpims,
+                    'ovc_cpims_id': risk_screening.ovc_cpims.id,
                     'date_of_event': risk_screening.date_of_event,
                     'test_done_when': risk_screening.test_done_when,
                     'test_donewhen_result': risk_screening.test_donewhen_result,
@@ -2136,10 +2154,11 @@ def unaccepted_records(request, form_type):
                     'art_referral_completed_date': risk_screening.art_referral_completed_date,
                     'facility_code': risk_screening.facility_code,
                     'is_accepted': risk_screening.is_accepted,
-                    'user_id': risk_screening.user,
-                    'message': request.data.get('message'),
+                    'message': risk_screening.message,
                     'app_form_metadata': app_metadata,
                     }
+                # hrs_rejected.append(event_data)
+                
                 data.append(event_data)
 
         
