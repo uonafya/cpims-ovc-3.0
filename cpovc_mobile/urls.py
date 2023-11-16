@@ -36,7 +36,9 @@ urlpatterns = [
     
     # Fetch all records BY form type
     path('unaccepted_records/<str:form_type>/', views.unaccepted_records, name='fetch-unaccepted-data'),
-    # re_path(r'^unaccepted_records/(?P<form_type>[0-9A-Z]{3})/$',views.unaccepted_records, name='fetch-unaccepted-data'),
+    
+    # check for success downstream and delete
+    path('record_saved', views.check_saved_rejected, name='check-saved-unaccepted-data'),
     
     # hiv screening
     path('hrs/', views.create_ovc_hiv_screening,
