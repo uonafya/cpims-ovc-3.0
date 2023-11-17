@@ -489,7 +489,7 @@ def create_ovc_mobile_cpara_data(request):
             OVCMobileEventAttribute.objects.create(
                 event=event,
                 # Add 'individual_ovc_id_' prefix
-                ovc_cpims_id=sub_pop_ovc_id,
+                # ovc_cpims_id=sub_pop_ovc_id,
                 ovc_cpims_id=sub_pop_ovc_id,
                 question_name=question_name,
                 # answer_value=answer_value

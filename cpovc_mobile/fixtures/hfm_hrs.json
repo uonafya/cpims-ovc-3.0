@@ -521,16 +521,16 @@
   },
   {
     "db_name": "ovc_cpims",
-    "form_name": "ovc_cpims",
-    "form_text": "ovc_cpims",
+    "form_name": "ovc_cpims_id",
+    "form_text": "ovc_cpims_id",
     "Question_no": "",
     "form": "hrs",
     "sort": 0
   },
   {
     "db_name": "ovc_cpims",
-    "form_name": "ovc_cpims",
-    "form_text": "ovc_cpims",
+    "form_name": "ovc_cpims_id",
+    "form_text": "ovc_cpims_id",
     "Question_no": "",
     "form": "hmf",
     "sort": 0
