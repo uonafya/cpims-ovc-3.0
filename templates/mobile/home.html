@@ -896,8 +896,11 @@ National
                         let individual  = data_indx.individual_questions
                         let questions  = data_indx.questions
                         let subpopulations  = data_indx.sub_population
-                        let app_form_metadata = data_indx.app_form_metdata || {}
-                        console.log({app_form_metadata, subpopulations})
+                        let app_form_metadata = data_indx.app_form_metadata || {}
+                        let signature = data_indx.signature || ""
+                        console.log({signature})
+
+                       
                         let bench_score = ''
                         if (scores.length> 0){
                             bench_score += `
@@ -1057,8 +1060,10 @@ National
                                                     <br>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-12">
-                                                        <p><a href="https://maps.google.com/?q=${app_form_metadata.location_lat || 0},${app_form_metadata.location_long || 0}" blank="_">Household Location on Google Maps</a></p>
+                                                    <div class="col-md-6">
+                                                        <p><a href="https://maps.google.com/?q=${app_form_metadata.location_lat || 0},${app_form_metadata.location_long || 0}" target="_blank">Household Location on Google Maps</a></p>
+                                                    </div>
+                                                    <div class="col-md-6" id="image_${data_indx.event_id}">                                                        
                                                     </div>
                                                 </div>
                                                 <div class="row" hidden>
@@ -1132,8 +1137,9 @@ National
                                     </td>
                                 </tr>
                         `);
-                        
-
+                        if(signature.length > 0){
+                            createImageNode(signature, data_indx.event_id)
+                        }
                         
                     }
                     
@@ -1507,6 +1513,12 @@ National
         const year = date.getFullYear();
     
         return `${day}-${month}-${year}`;
+    }
+
+    function createImageNode(signature, nodeID){
+        var image = new Image();
+        image.src = `data:image/png;base64,${signature}`;
+        {% comment %} $(`#image_${nodeID}`).html(image); {% endcomment %}
     }
 
     
