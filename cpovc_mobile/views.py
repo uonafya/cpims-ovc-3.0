@@ -490,7 +490,6 @@ def create_ovc_mobile_cpara_data(request):
                 event=event,
                 # Add 'individual_ovc_id_' prefix
                 ovc_cpims_id=sub_pop_ovc_id,
-                ovc_cpims_id=sub_pop_ovc_id,
                 question_name=question_name,
                 # answer_value=answer_value
             )
@@ -603,6 +602,12 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
             full_name= f"{event.ovc_cpims.first_name} {event.ovc_cpims.other_names} {event.ovc_cpims.surname}"
             ovc_age=event.ovc_cpims.age
             ovc_sex=get_sex_person(event.ovc_cpims.sex_id)
+            event_signature = event.signature
+            event_signature = event_signature.tobytes()
+            event_signature = event_signature.decode('utf-8')
+            # print("dir",type(event_signature))
+            # breakpoint()
+            
             event_data = {
                 'ovc_cpims_id': event.ovc_cpims.id,               
                 'ovc_name': full_name,
@@ -612,7 +617,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                 'app_form_metadata':app_metadata,
                 'event_id': event.id,
                 'created_at':event.created_at,
-                'signature':event.signature,
+                'signature':event_signature,
                 'questions': [],
                 'individual_questions': [],
                 'scores': [],
