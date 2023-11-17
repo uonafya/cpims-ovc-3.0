@@ -892,10 +892,12 @@ National
                     for (dta in data){
                         let data_indx = data[dta]
                         // console.log({dta, data, data_indx})
-                        let scores  = data[dta].scores
-                        let individual  = data[dta].individual_questions
-                        let questions  = data[dta].questions
-                        let subpopulations  = data[dta].sub_population
+                        let scores  = data_indx.scores
+                        let individual  = data_indx.individual_questions
+                        let questions  = data_indx.questions
+                        let subpopulations  = data_indx.sub_population
+                        let app_form_metadata = data_indx.app_form_metdata || {}
+                        console.log({app_form_metadata, subpopulations})
                         let bench_score = ''
                         if (scores.length> 0){
                             bench_score += `
@@ -1053,6 +1055,11 @@ National
                                                         </button>
                                                     </div>
                                                     <br>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <p><a href="https://maps.google.com/?q=${app_form_metadata.location_lat || 0},${app_form_metadata.location_long || 0}">Household Location on Google Maps</a></p>
+                                                    </div>
                                                 </div>
                                                 <div class="row" hidden>
                                                     <div class="col-md-12">
