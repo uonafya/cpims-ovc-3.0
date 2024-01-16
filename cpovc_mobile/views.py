@@ -31,7 +31,8 @@ from .models import (OVCMobileEvent, OVCMobileEventAttribute,CasePlanTemplateEve
                     OVCEvent, OVCServices,
                     OVCMobileEventRejected,OVCEventRejected,
                     OVCMobileEventAttributeRejected,OVCServicesRejected, CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected,
-                    HIVManagementStaging,HIVManagementStagingRejected,RiskScreeningStaging,RiskScreeningStagingRejected
+                    HIVManagementStaging,HIVManagementStagingRejected,RiskScreeningStaging,RiskScreeningStagingRejected,
+                    MobileAppDataTrack
                     )
 from rest_framework.permissions import IsAuthenticated,AllowAny 
 from rest_framework.decorators import api_view, permission_classes
@@ -50,6 +51,30 @@ from django.db.models import Count
 
 from django.conf import settings
 import os
+
+from cpovc_registry.models import RegOrgUnit
+
+def createMobileAppDataTrack(payload={}):
+    print(f'start function executions , payload {payload}')
+    lip_id = RegOrgUnit.objects.get(id=payload.get('ou_primary'))
+    print(f'payload {payload}----------{lip_id}')
+    try:
+        MobileAppDataTrack.objects.create(
+            event_id = payload.get('event_id'),
+            date_of_event = payload.get('date_of_event'),
+            service_id = payload.get('service_id'),
+            form_type = payload.get('form_type'),
+            timestamp_created = payload.get('timestamp_created'),
+            action = payload.get('action'),
+            timestamp_actioned = payload.get('timestamp_actioned'),
+            user_submitting = payload.get('user_submitting'),
+            user_actioning = payload.get('user_actioning'),
+            ovc_cpims = payload.get('ovc_cpims_id'),
+            CBO = lip_id
+        )
+        print 
+    except Exception as e:
+        print(f'could not save the tracking table because:  {e}')
 
 def read_json_fixture(filename):
     # Get the path to the JSON file in the fixtures directory
@@ -711,9 +736,20 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
 @api_view(['PATCH', 'POST'])
 @permission_classes([IsAuthenticated])
 def update_cpara_is_accepted(request, event_id):
+    track_payload = {
+        'event_id': event_id,
+        'form_type': 'CPR'        
+    }
     try:
         event = OVCMobileEvent.objects.get(pk=event_id)
         attributes = OVCMobileEventAttribute.objects.filter(event=event)
+
+        track_payload['date_of_event'] = event.date_of_event
+        track_payload['timestamp_created'] = event.created_at
+        track_payload['user_submitting'] = event.user
+        track_payload['user_actioning'] = AppUser.objects.get(pk=request.user.id)
+        track_payload['ovc_cpims_id'] = event.ovc_cpims
+        track_payload['ou_primary'] = request.session.get('ou_primary')
 
         
         if not request.user.is_authenticated:
@@ -721,12 +757,15 @@ def update_cpara_is_accepted(request, event_id):
 
         # If is_accepted is false, recreate it in the rejected tables
         is_accepted = request.data.get('is_accepted')
+        track_payload['action'] = int(is_accepted)
         print("hapa",is_accepted)
-        
+        breakpoint()
+        createMobileAppDataTrack(track_payload)
         if is_accepted == ApprovalStatus.TRUE.value:
             # event.is_accepted = is_accepted
             # event.save()
             try:
+                
                 event_rejected = OVCMobileEventRejected.objects.get(pk=event_id).delete()
                 OVCMobileEventAttributeRejected.objects.filter(event=event_rejected).delete()
                 attributes.delete()
@@ -772,7 +811,7 @@ def update_cpara_is_accepted(request, event_id):
 
         else:
             return Response({'error': 'Invalid value for is_accepted'}, status=status.HTTP_400_BAD_REQUEST)
-
+        
     except OVCMobileEvent.DoesNotExist:
         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
