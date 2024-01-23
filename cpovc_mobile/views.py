@@ -744,6 +744,7 @@ def update_cpara_is_accepted(request, event_id):
         event = OVCMobileEvent.objects.get(pk=event_id)
         attributes = OVCMobileEventAttribute.objects.filter(event=event)
 
+        # Data for tracking table
         track_payload['date_of_event'] = event.date_of_event
         track_payload['timestamp_created'] = event.created_at
         track_payload['user_submitting'] = event.user
@@ -758,8 +759,6 @@ def update_cpara_is_accepted(request, event_id):
         # If is_accepted is false, recreate it in the rejected tables
         is_accepted = request.data.get('is_accepted')
         track_payload['action'] = int(is_accepted)
-        print("hapa",is_accepted)
-        breakpoint()
         createMobileAppDataTrack(track_payload)
         if is_accepted == ApprovalStatus.TRUE.value:
             # event.is_accepted = is_accepted
@@ -1028,12 +1027,27 @@ def get_ovc_event(request, form_type, ovc_id):
 @api_view(['PATCH', 'POST'])
 @permission_classes([IsAuthenticated])
 def update_is_accepted(request, id):
+    track_payload = {'service_id': id }
     try:
         # breakpoint()
         service = OVCServices.objects.get(id=id)
         is_accepted = request.data.get('is_accepted')
         count_service_by_event = OVCServices.objects.filter(event_id=service.event.id).count()
+
+        # Data for tracking table
+        track_payload['form_type'] = service.event.form_type
+        track_payload['event_id'] = service.event.id
+        track_payload['date_of_event'] = service.event.date_of_event
+        track_payload['timestamp_created'] = service.created_at
+        track_payload['user_submitting'] = service.event.user
+        track_payload['user_actioning'] = AppUser.objects.get(pk=request.user.id)
+        track_payload['ovc_cpims_id'] = service.event.ovc_cpims
+        track_payload['ou_primary'] = request.session.get('ou_primary')
+
         if is_accepted is not None:
+            track_payload['action'] = int(is_accepted)
+            createMobileAppDataTrack(track_payload)
+
             if is_accepted == ApprovalStatus.FALSE.value:
                 try:
                     # Try to get an existing rejected event
@@ -1241,6 +1255,9 @@ def get_one_case_plan(request, ovc_id):
 @api_view(['PATCH', 'POST'])
 @permission_classes([IsAuthenticated])
 def update_case_plan_is_accepted(request, unique_service_id):
+    track_payload = {
+        'form_type': 'CPT'        
+    }
     try:
         service = CasePlanTemplateService.objects.get(
             unique_service_id=unique_service_id)
@@ -1248,8 +1265,20 @@ def update_case_plan_is_accepted(request, unique_service_id):
         event = service.event
         rejected_event=service.event_id
 
+        # Data for tracking table
+        track_payload['event_id'] = rejected_event
+        track_payload['service_id'] = unique_service_id
+        track_payload['date_of_event'] = event.date_of_event
+        track_payload['timestamp_created'] = event.created_at
+        track_payload['user_submitting'] = event.user
+        track_payload['user_actioning'] = AppUser.objects.get(pk=request.user.id)
+        track_payload['ovc_cpims_id'] = event.ovc_cpims
+        track_payload['ou_primary'] = request.session.get('ou_primary')
+
         new_is_accepted = request.data.get('is_accepted')
         if new_is_accepted is not None:
+            track_payload['action'] = int(new_is_accepted)
+            createMobileAppDataTrack(track_payload)
             # Check if is_accepted is set to False (3)
             if new_is_accepted == ApprovalStatus.FALSE.value:
                 
@@ -1384,12 +1413,30 @@ def create_ovc_hiv_screening(request):
 @api_view(['PATCH', 'POST'])
 @permission_classes([IsAuthenticated])
 def update_hiv_screening(request, risk_id):
+    track_payload = {
+        'event_id': risk_id,
+        'form_type': 'HRS'        
+    }
+
     try:
         screening = RiskScreeningStaging.objects.get(risk_id=risk_id)
 
         new_is_accepted = request.data.get('is_accepted')
+
+          # Data for tracking table
+        track_payload['date_of_event'] = screening.date_of_event
+        track_payload['timestamp_created'] = screening.timestamp_created
+        track_payload['user_submitting'] = screening.user
+        track_payload['user_actioning'] = AppUser.objects.get(pk=request.user.id)
+        track_payload['ovc_cpims_id'] = screening.ovc_cpims
+        track_payload['ou_primary'] = request.session.get('ou_primary')
+
+
         if new_is_accepted is not None:
-            # Check if is_accepted is set to False (3)            
+            # Check if is_accepted is set to False (3)      
+
+            track_payload['action'] = int(new_is_accepted)
+            createMobileAppDataTrack(track_payload)      
             if new_is_accepted == ApprovalStatus.FALSE.value:
                 # Create rejected records
                 RiskScreeningStagingRejected.objects.create(
@@ -1538,15 +1585,32 @@ def create_ovc_hiv_management(request):
 @api_view(['PATCH', 'POST'])
 @permission_classes([IsAuthenticated])
 def update_hiv_management(request, adherence_id):
+    track_payload = {
+        'event_id': adherence_id,
+        'form_type': 'HMF'        
+    }
     try:
         service = HIVManagementStaging.objects.get(adherence_id=adherence_id)
         adherence_id=service.adherence_id
 
         new_is_accepted = request.data.get('is_accepted')
+
+          # Data for tracking table
+        track_payload['date_of_event'] = service.date_of_event
+        track_payload['timestamp_created'] = service.timestamp_created
+        track_payload['user_submitting'] = service.user
+        track_payload['user_actioning'] = AppUser.objects.get(pk=request.user.id)
+        track_payload['ovc_cpims_id'] = service.ovc_cpims
+        track_payload['ou_primary'] = request.session.get('ou_primary')
+
         if new_is_accepted is not None:
             # Check if is_accepted is set to False (3)
             
             if new_is_accepted == ApprovalStatus.FALSE.value:
+
+                track_payload['action'] = int(new_is_accepted)
+                createMobileAppDataTrack(track_payload)  
+
                 # Create rejected records
                 HIVManagementStagingRejected.objects.create(
                     adherence_id = adherence_id,

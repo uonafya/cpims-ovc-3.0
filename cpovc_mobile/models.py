@@ -499,9 +499,9 @@ class RiskScreeningStagingRejected(models.Model):
     
 class MobileAppDataTrack(models.Model):
     id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
-    event_id=models.UUIDField(null=False, blank=False)
+    event_id=models.UUIDField(null=False, blank=False, unique=True)
     date_of_event = models.DateField(null=True)
-    service_id=models.UUIDField(null=True, blank=True)
+    service_id=models.UUIDField(null=True, blank=True, unique=True)
     form_type=models.CharField(max_length=100,blank=False)
     timestamp_created=models.DateTimeField()
     action=models.IntegerField(
