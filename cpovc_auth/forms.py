@@ -101,8 +101,6 @@ class LoginForm(forms.Form):
         attrs={'placeholder': _('Password'),
                'class': 'form-control input-lg',
                'data-parsley-required': "true",
-               'data-placement': "after",
-               'data-toggle': "password",
                'data-parsley-error-message': "Please enter your password.",
                'autofocus': 'true'}),
         error_messages={'required': 'Please enter your password.',
@@ -131,6 +129,7 @@ class RolesForm(forms.Form):
     scm = 'System Configuration'
     std = 'Standard logged in'
     swm = 'National child services'
+    dap = 'Data approver'
     fa_lg = '<i class="fa fa-info-circle fa-lg"></i>'
     acm_text = ('<a href="#" id="id_ACM" data-toggle="tooltip" title="%s - '
                 'This role allows allocation of roles (both restricted and '
@@ -150,12 +149,18 @@ class RolesForm(forms.Form):
                 'This role allows viewing of sensitive individual beneficiary '
                 'registry records and forms data throughout the entire '
                 'country">%s</a>') % (swm, fa_lg)
+
+    dap_text = ('<a href="#" id="id_DAP" data-toggle="tooltip" title="%s - '
+                'This role allows viewing of sensitive individual beneficiary '
+                'service data and approval as submitted from the Mobile App '
+                '">%s</a>') % (swm, fa_lg)
     user_id = forms.CharField(widget=forms.HiddenInput)
     group_SCM = forms.BooleanField(label=_('%s %s' % (scm, scm_text)))
     group_RGM = forms.BooleanField(label=_('%s %s' % (rgm, rgm_text)))
     group_ACM = forms.BooleanField(label=_('%s %s' % (acm, acm_text)))
     group_SWM = forms.BooleanField(label=_('%s %s' % (swm, ncs_text)))
     group_STD = forms.BooleanField(label=_('%s %s' % (std, std_text)))
+    group_DAP = forms.BooleanField(label=_('%s %s' % (dap, dap_text)))
     reset_password = forms.BooleanField()
 
     ACTIVATE_CHOICES = (('activate', 'Activate (May log into CPIMS)',),

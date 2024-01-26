@@ -205,6 +205,22 @@ jQuery(document).ready(function() {
         dateFormat: 'yy-mm-dd', format: 'dd-M-yyyy',
         endDate: '+0d', enddate: '+0d', autoclose: true
     });
+
+    if ({{ report_id }} == 40){
+        $('#id_report_type').val('O');
+        $('#from_date').val('01-Jan-1900');
+        $('#to_date').val('{% now "d-b-Y" %}');
+        // Read ONLY
+        $('#id_report_type').attr('readonly', 'readonly');
+        $('#id_report_period').attr('readonly', 'readonly');
+        $('#from_date').attr('readonly', 'readonly');
+        $('#to_date').attr('readonly', 'readonly');
+        //
+        $('#id_report_type').attr('disabled', 'disabled');
+        $('#id_report_period').attr('disabled', 'disabled');
+        $('#from_date').attr('disabled', 'disabled');
+        $('#to_date').attr('disabled', 'disabled');
+    }
     
     $('#map-print, #rpt-download').hide();
     $('#other_reports').empty();

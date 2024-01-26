@@ -2003,7 +2003,8 @@ def get_chvs(person_id):
         persons = RegPersonsTypes.objects.filter(
             is_void=False, person_type_id='TWVL', person_id__in=person_ids)
         for person in persons:
-            cbo_detail[person.person_id] = person.person.full_name
+            cbo_detail[person.person_id] = '%s - %s' % (
+                person.person.full_name, person.person_id)
         chvs = cbo_detail.items()
     except Exception as e:
         print("error getting CHV - {}".format(str(e)))

@@ -927,6 +927,10 @@ def get_caseload(request, allow_exit=1):
         org_unit_id = request.query_params.get('org_unit_id')
         chv_cpims_id = request.query_params.get('chv_cpims_id')
         is_active = request.query_params.get('active')
+        # Get person ID and check on OVC registration if it a CHV
+        user_person_id = request.user.reg_person_id
+        chv_count = OVCRegistration.objects.filter(
+            is_void=False, is_active=True, child_chv_id=user_person_id).count()
         if not allow_exit:
             is_active = 'TRUE'
         ovcs = OVCRegistration.objects.filter(
@@ -936,13 +940,15 @@ def get_caseload(request, allow_exit=1):
         if is_active:
             active = True if is_active.upper() == 'TRUE' else False
             ovcs = ovcs.filter(is_active=active)
+        if chv_count > 0:
+            ovcs = ovcs.filter(child_chv_id=user_person_id)
         if org_unit_id:
             ou_ids = [org_unit_id]
         else:
             ous = get_attached_orgs(request)
             ou_ids = ous['attached_ou'] if 'attached_ou' in ous else []
         print('OU IDS', ou_ids)
-        ovcs = ovcs.filter(child_cbo_id__in=ou_ids)[:10000]
+        ovcs = ovcs.filter(child_cbo_id__in=ou_ids)
         print('F RES', ovcs)
         check_fields = ['sex_id', 'hiv_status_id', 'exit_reason_id',
                         'immunization_status_id']

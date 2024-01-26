@@ -54,7 +54,7 @@ from cpovc_auth.models import AppUser
 from django.conf import settings
 from django.db.models import Count
 from .queries import QUERIES, REPORTS
-from .parameters import ORPTS, RPTS
+from .parameters import ORPTS, RPTS, PR_RPTS, PM_RPTS
 
 MEDIA_ROOT = settings.MEDIA_ROOT
 STATIC_ROOT = settings.STATICFILES_DIRS[0]
@@ -2009,6 +2009,10 @@ def get_variables(request):
         rpt_ovc_id = int(report_ovc_id) if report_ovc_id else 1
         if rpt_ovc == 6 or rpt_ovc in [1, 2, 3]:
             report_ovc_name = ORPTS[rpt_ovc_id]
+        elif rpt_ovc == 7:
+            report_ovc_name = PR_RPTS[rpt_ovc_id]
+        elif rpt_ovc == 8:
+            report_ovc_name = PM_RPTS[rpt_ovc_id]
         else:
             report_ovc_name = RPTS[rpt_ovc]
         report_name = report_ovc_name.title().replace(' ', '')
@@ -2632,6 +2636,9 @@ def get_sql_data(request, params):
     print(params)
     df_rpt = REPORTS[1]
     qname = REPORTS[rpt_ovc] if rpt_ovc in REPORTS else df_rpt
+    # Override
+    if int(params['report_ovc']) in [7, 8]:
+        qname = params['report_ovc_name']
     sql = QUERIES[qname]
     sql = sql.format(**params)
     print('Report Name', qname)

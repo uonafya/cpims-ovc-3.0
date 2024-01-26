@@ -458,7 +458,7 @@
                             <option value="">Please Select Caretaker</option>
                             {% for guardian in hhmembers %}
                                {% if 'OVC' not in guardian.member_type and 'TBVC' not in guardian.member_type %}
-                               <option value="{{ guardian.person_id }}" {% if ctaker == guardian.person_id %}selected="selected"{% endif %}>{{ guardian.member_type|gen_value:vals }}</option>
+                               <option value="{{ guardian.person_id }}" {% if ctaker == guardian.person_id %}selected="selected"{% endif %}>{{ guardian.member_type|gen_value:vals }} ({{ guardian.person_id }})</option>
                             {% endif %}
                             {% endfor %}
                         </select>

@@ -276,7 +276,6 @@ def get_dashboard(request):
             # Case category names
             cnames = get_dict(field_name=['case_category_id'])
             other_case = 0
-            print(f'case_cats{case_cats}')
             for case_cat in case_cats:
                 cat_id = case_cat['case_category']
                 cat_data = case_cat['unit_count']
@@ -357,3 +356,5 @@ def csrf_failure(request, reason):
         return render(request, 'csrf.html', {'status': 500, 'reason': reason})
     except Exception as e:
         raise e
+
+

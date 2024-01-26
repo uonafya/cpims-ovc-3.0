@@ -769,12 +769,15 @@ def population_pyramid_chart(request, params, data):
                 });
             </script>'''
         yMax = 0
-        for yVal in data['mdata'].split(','):
-            if int(yVal) > yMax:
-                yMax = int(yVal)
-        for yfVal in data['fdata'].split(','):
-            if int(yfVal) > yMax:
-                yMax = int(yfVal)
+        print('Pcheck', data['mdata'], data['fdata'])
+        if data['mdata']:
+            for yVal in data['mdata'].split(','):
+                if int(yVal) > yMax:
+                    yMax = int(yVal)
+        if data['fdata']:
+            for yfVal in data['fdata'].split(','):
+                if int(yfVal) > yMax:
+                    yMax = int(yfVal)
         yPadd = 1000 if yMax > 1000 else 100
         yMax = yMax + yPadd
         sel_color = request.session.get('sel_color', 0)

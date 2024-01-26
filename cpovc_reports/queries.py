@@ -92,9 +92,9 @@ and  ((exit_status = 'ACTIVE' and registration_date <= '{end_date}')
 
 # Registration List April 2019
 QUERIES['registration_list'] = '''
-SELECT * from vw_cpims_registration_fy22 WHERE  cbo_id in ({cbos})
-and vw_cpims_registration_fy22.registration_date between '{start_date}' and '{end_date}'
-order by  chv_id ASC, vw_cpims_registration_fy22.dob ASC, cbo_id ASC, ward_id ASC;
+SELECT * from vw_cpims_registration_fy23 WHERE  cbo_id in ({cbos})
+and vw_cpims_registration_fy23.registration_date between '{start_date}' and '{end_date}'
+order by  chv_id ASC, vw_cpims_registration_fy23.dob ASC, cbo_id ASC, ward_id ASC;
 
 '''
 # Registration List
@@ -1353,7 +1353,7 @@ group by person_id) as fp where scnts > 0;
 
 # List of OVC Served
 QUERIES['ovc_served_list'] = '''
-select * from vw_cpims_list_served_fy22 where cbo_id in ({cbos})
+select * from vw_cpims_list_served_fy23 where cbo_id in ({cbos})
 AND date_of_service between '{start_date}' and '{end_date}'
 AND service != '' and service is not null;
 '''
@@ -4263,6 +4263,13 @@ Select * from vw_cpims_critical_events
 WHERE cbo_id in ({cbos}) AND (vw_cpims_critical_events.date_of_event BETWEEN '{start_date}' AND '{end_date}');
 '''
 
+QUERIES['graduation'] = '''
+Select * from vw_cpims_dash_graduated WHERE cbo_id in ({cbos}) ;
+'''
+
+
+
+
 QUERIES['hei'] = '''
 Select * from vw_cpims_hei WHERE cbo_id in ({cbos}) ;
 '''
@@ -4347,4 +4354,31 @@ GROUP BY CBO, ward, County,AgeRange,ward_id,countyid,Gender,vw_cpims_treatment.l
 
 QUERIES['case_load'] = '''
 select * from vw_cpims_reg_active WHERE cbo_id in ({cbos})
+'''
+
+# Preventive - as in parameters but without spaces
+
+QUERIES['Register'] = '''
+Select * from vw_cpims_preventive_registration WHERE cbo_id in ({cbos}) ;
+'''
+
+QUERIES['Attendance'] = '''
+Select * from vw_preventive_attendance  WHERE cbo_id in ({cbos}) ;
+
+'''
+
+QUERIES['Services'] = '''
+'''
+
+QUERIES['SINOVUYO'] = '''
+'''
+
+QUERIES['FMP'] = '''
+'''
+
+# PMTCT
+QUERIES['PregnantTeenOrWomen'] = '''
+'''
+
+QUERIES['HEI'] = '''
 '''

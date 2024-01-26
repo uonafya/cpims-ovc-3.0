@@ -77,7 +77,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from cpovc_registry.functions import extract_post_params
 from cpovc_ovc.functions import get_ovcdetails,search_master
-from .functions import create_fields, create_form_fields, save_form1b, save_bursary
+from .functions import (
+    create_fields, create_form_fields, save_form1b, save_bursary, get_caseplan)
 from .documents import create_mcert
 
 from cpovc_ovc.views import ovc_view
@@ -7028,13 +7029,14 @@ def new_form1b(request, id):
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def form1a_events(request, id):
     init_data = RegPerson.objects.filter(pk=id)
-    check_fields = ['sex_id']
+    check_fields = ['sex_id', 'hiv_status_id']
     vals = get_dict(field_name=check_fields)
     form = OVCF1AForm(initial={'person': id})
+    caseplans = get_caseplan(request, id)
     return render(request,
                   'forms/form1a_events.html',
                   {'form': form, 'init_data': init_data,
-                   'vals': vals})
+                   'vals': vals, 'caseplans': caseplans})
 
 
 @login_required
@@ -9070,6 +9072,7 @@ def case_plan_template(request, id):
                 xyz = RegPerson.objects.filter(id=caregiver_id).values('id')
 
                 for service in my_service:
+                    my_event_date = convert_date(my_date_of_caseplan, fmt='%Y-%m-%d')
                     OVCCareCasePlan(
                         domain=my_domain,
                         goal=my_goal,
@@ -9092,6 +9095,12 @@ def case_plan_template(request, id):
                         event=ovccareevent
                     ).save()
 
+            # Update event date to one of the event dates in the payload
+            # Could be multiple hence not reliable in reports
+            # event_id = ovccareevent.pk
+            ovccareevent.date_of_event = my_event_date
+            ovccareevent.save()
+
         msg = 'Case Plan saved successfully'
         messages.add_message(request, messages.INFO, msg)
         url = reverse('ovc_view', kwargs={'id': id})
@@ -9110,7 +9119,9 @@ def case_plan_template(request, id):
         form = CasePlanTemplate()
 
         # past cpt
+        print('proceed 0')
         caseplan_events = get_past_cpt(child.id)
+        print('proceed')
 
         return render(request,
                       'forms/case_plan_template.html',
@@ -9232,105 +9243,72 @@ def update_caseplan(request, event_id, ovcid):
 @validate_ovc([], 1)
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def monitor_caseplan(request, event_id, ovcid):
-    this_eventt = OVCCareEvents.objects.get(event_type_id='CPAR', pk=event_id)
-    this_event_pk = this_eventt.event
-    child = RegPerson.objects.get(id=ovcid)
+    """ Method to handle CPT monitoring. """
+    try:
+        this_event = OVCCareEvents.objects.get(event_type_id='CPAR', pk=event_id)
+        this_event_pk = this_event.event
+        ovc_id = int(ovcid)
+        child = RegPerson.objects.get(id=ovc_id)
+        if request.method == 'POST':
+            delta = 0
+            event = OVCCareEvents.objects.filter(pk=event_id)
+            if event:
+                d_event = event[0].timestamp_created
+                delta = get_days_difference(d_event)
+            print('Monitoring', delta, request.POST)
+            if delta < 365:
+                cpt_results = request.POST.get('CPT_RESULTS')
+                cpt_completion_date = request.POST.get('CPT_ACTUAL_DATE_COMPLETION')
+                cpt_reason = request.POST.get('CPT_REASONS')
+                cpt_event_id = request.POST.get('CPT_EVENT')
 
-    if request.method == 'POST':
-        d_event = OVCCareEvents.objects.filter(pk=event_id)[0].timestamp_created
-        delta = get_days_difference(d_event)
-
-        if delta < 90:
-            try:
-                my_request = request.POST.get('final_submission')
-
-                child = RegPerson.objects.get(id=ovcid)
-                house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-
-                care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-                caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
-
-                if my_request:
-                    caseplandata = json.loads(my_request)
-                    for all_data in caseplandata:
-                        acd = all_data['actual_completion_date'] if 'actual_completion_date' in all_data else '1900-01-01'
-                        my_domain = all_data['domain']
-                        my_goal = all_data['goal']
-                        my_gap = all_data['gaps']
-                        my_action = all_data['actions']
-                        my_service = all_data['services']
-                        my_responsible = all_data['responsible']
-                        my_date_completed = all_data['date']
-                        my_actual_completion_date = acd
-                        my_date_of_prev_evnt = timezone.now()
-                        my_date_of_caseplan = all_data['CPT_DATE_CASEPLAN']
-                        my_results = all_data['results']
-                        my_reason = all_data['reasons']
-
-                    xyz = RegPerson.objects.filter(id=caregiver_id).values('id')
-
-                    for service in my_service:
-                        print(('person_id', id))
-                        print(('person_ovcid', ovcid))
-                        print(('caregiver_id', caregiver_id))
-                        OVCCareCasePlan(
-                            domain=my_domain,
-                            goal=my_goal,
-                            person_id=ovcid,
-                            caregiver_id=caregiver_id,
-                            household=house_hold,
-                            need=my_gap,
-                            priority=my_action,
-                            cp_service=service,
-                            responsible=my_responsible,
-                            date_of_previous_event=my_date_of_prev_evnt,
-                            date_of_event=convert_date(my_date_of_caseplan, fmt='%Y-%m-%d'),
-                            form=OVCCareForms.objects.get(name='OVCCareCasePlan'),
-                            completion_date=convert_date(my_date_completed, fmt='%Y-%m-%d'),
-                            actual_completion_date=convert_date(my_actual_completion_date, fmt='%Y-%m-%d'),
-                            results=my_results,
-                            reasons=my_reason,
-                            case_plan_status='D',
-                            event_id=this_event_pk
-                        ).save()
+                cpt_detail = OVCCareCasePlan.objects.get(pk=cpt_event_id)
+                cpt_detail.actual_completion_date=cpt_completion_date
+                cpt_detail.results=cpt_results
+                cpt_detail.reasons=cpt_reason
+                cpt_detail.save()
+                # case.case_stage = stage
+                # case.save()
 
                 msg = 'Case Plan updated successfully'
                 messages.add_message(request, messages.INFO, msg)
                 url = reverse('ovc_view', kwargs={'id': ovcid})
                 return HttpResponseRedirect(url)
-            except Exception as e:
-                print('error updating caseplan - %s' % (str(e)))
-                return False
-        else:
-            msg = "Can't update after 30 days"
-            messages.add_message(request, messages.ERROR, msg)
-            url = reverse('ovc_view', kwargs={'id': ovcid})
-            return HttpResponseRedirect(url)
-    form = CasePlanTemplate()
-    ovc_id = int(ovcid)
-    child = RegPerson.objects.get(is_void=False, id=ovc_id)
-    care_giver = RegPerson.objects.get(
-        id=OVCRegistration.objects.get(person=child).caretaker_id)
-    caseplan_events = get_past_cpt(ovc_id)
+            else:
+                msg = "Can't update after %s days. Beyond CP Lifetime." % (delta)
+                messages.add_message(request, messages.ERROR, msg)
+                url = reverse('ovc_view', kwargs={'id': ovcid})
+                return HttpResponseRedirect(url)
+        form = CasePlanTemplate()
+        ovc_id = int(ovcid)
+        child = RegPerson.objects.get(is_void=False, id=ovc_id)
+        care_giver = RegPerson.objects.get(
+            id=OVCRegistration.objects.get(person=child).caretaker_id)
+        caseplan_events = get_past_cpt(ovc_id)
 
-    check_fields = ['sex_id', 'relationship_type_id', 'case_plan_goals_health',
-                    'case_plan_goals_school', 'case_plan_goals_stable',
-                    'case_plan_goals_safe', 'case_plan_gaps_health',
-                    'case_plan_gaps_school', 'case_plan_gaps_stable',
-                    'case_plan_gaps_safe', 'case_plan_priorities_health',
-                    'case_plan_priorities_school',
-                    'case_plan_priorities_stable',
-                    'case_plan_priorities_safe', 'case_plan_services_health',
-                    'case_plan_services_school', 'case_plan_services_stable',
-                    'case_plan_services_safe']
-    vals = get_dict(field_name=check_fields)
-    init_data = RegPerson.objects.filter(pk=ovcid)
+        check_fields = ['sex_id', 'relationship_type_id', 'case_plan_goals_health',
+                        'case_plan_goals_school', 'case_plan_goals_stable',
+                        'case_plan_goals_safe', 'case_plan_gaps_health',
+                        'case_plan_gaps_school', 'case_plan_gaps_stable',
+                        'case_plan_gaps_safe', 'case_plan_priorities_health',
+                        'case_plan_priorities_school',
+                        'case_plan_priorities_stable',
+                        'case_plan_priorities_safe', 'case_plan_services_health',
+                        'case_plan_services_school', 'case_plan_services_stable',
+                        'case_plan_services_safe']
+        vals = get_dict(field_name=check_fields)
+        init_data = RegPerson.objects.filter(pk=ovcid)
 
-    return render(request, 'forms/monitor_case_plan.html',
-                  {'form': form, 'init_data': init_data, 'vals': vals,
-                   'child': child, 'this_event': this_eventt,
-                   'care_giver': care_giver, 'cp_id': event_id,
-                   'caseplan_events': caseplan_events})
+        return render(request, 'forms/monitor_case_plan.html',
+                      {'form': form, 'init_data': init_data, 'vals': vals,
+                       'child': child, 'this_event': this_event,
+                       'care_giver': care_giver, 'cp_id': event_id,
+                       'caseplan_events': caseplan_events})
+    except Exception as e:
+        msg = 'Error updating case plan - %s' % (str(e))
+        messages.add_message(request, messages.ERROR, msg)
+        url = reverse('ovc_view', kwargs={'id': ovcid})
+        return HttpResponseRedirect(url)
 
 
 @login_required
@@ -11467,14 +11445,14 @@ def delete_cpara(request, id, btn_event_pk):
 def grad_monitor_tool(request, id):
     if request.method == 'POST':
         data = request.POST
-        print(data)
-        breakpoint()
+        # print(data)
+
         child = RegPerson.objects.get(id=id)       
         house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
         caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
         caregiver = RegPerson.objects.get(id=caregiver_id)
  
-        event_date = data.get('gm1d')
+        event_date = convert_date(data.get('gm1d'))
         event_type_id = 'obm'
         time_saved = timezone.now()
 
@@ -11497,8 +11475,7 @@ def grad_monitor_tool(request, id):
 
         answer_value = {
             'AYES': True,
-            'ANNO': False,
-            '':False
+            'ANNO': False
         }
         try:
             OVCBenchmarkMonitoring.objects.create(
@@ -11515,8 +11492,8 @@ def grad_monitor_tool(request, id):
                 benchmark7=answer_value[data.get('cm8q')],
                 benchmark8=answer_value[data.get('cm9q')],
                 benchmark9=answer_value[data.get('cm10q')],
-                succesful_exit_checked =answer_value[data.get('cm13q')] if data.get('cm13q') else False,
-                case_closure_checked=answer_value[data.get('cm14q')] if data.get('cm14q') else False,
+                succesful_exit_checked =answer_value[data.get('cm13q')],
+                case_closure_checked=answer_value[data.get('cm14q')],
                 event_date=event_date,
                 event=ovccareevent,
                 timestamp_created=time_saved
@@ -11524,10 +11501,10 @@ def grad_monitor_tool(request, id):
 
         except Exception as e:
             error_message = 'error saving graduation monitoring tool - %s' % (str(e))
-            messages.add_message(request, messages.ERROR, error_message)
+            messages.add_message(request, messages.INFO, error_message)
 
-        # msg = 'Graduation Monitoring saved successful'
-        # messages.add_message(request, messages.INFO, msg)
+        msg = 'Graduation Monitoring saved successful'
+        messages.add_message(request, messages.INFO, msg)
         url = reverse('ovc_view', kwargs={'id': id})
         return HttpResponseRedirect(url)        
 
@@ -11543,25 +11520,16 @@ def grad_monitor_tool(request, id):
             
             # Show previous cpara monitoring events
             event = OVCCareEvents.objects.filter(person_id=ovc_id).values_list('event')
-            today = datetime.now().date()
-
-            today_less90 = today - timedelta(days=90)
             
             try:
                 
-                benchmark_data = OVCBenchmarkMonitoring.objects.filter(is_void=False, household=house_hold, event_date__range=[today_less90, today]).order_by('-event_date')
-                hhrcpa = benchmark_data.filter(form_type = 'hhrcpa').count()
-                hhcrpa_last = benchmark_data.filter(form_type = 'hhrcpa').first()
-                bm_last = benchmark_data.filter(form_type = 'bm').first()
-                last_score_hh = hhcrpa_last.benchmark1+hhcrpa_last.benchmark2+hhcrpa_last.benchmark3+hhcrpa_last.benchmark4+hhcrpa_last.benchmark5+hhcrpa_last.benchmark6+hhcrpa_last.benchmark7+hhcrpa_last.benchmark8+hhcrpa_last.benchmark9
-                bm_last_score = bm_last.benchmark1+bm_last.benchmark2+bm_last.benchmark3+bm_last.benchmark4+bm_last.benchmark5+bm_last.benchmark6+bm_last.benchmark7+bm_last.benchmark8+bm_last.benchmark9
-                
+                benchmark_data = OVCBenchmarkMonitoring.objects.filter(
+                is_void=False, household=house_hold)   #filter(event=event).order_by('event_date'))
             except Exception as e:
                 benchmark_data = {}
                 print(e)
             
             form = gradMonitoringToolform()
-            print(f'{last_score_hh} , {hhrcpa} bm_lastscore {bm_last_score}')
                  
             context = {
                 'form': form, 
@@ -11570,10 +11538,7 @@ def grad_monitor_tool(request, id):
                 'child':child,
                 'ovc_id':ovc_id,
                 'caregiver':caregiver,
-                'benchmark_data': benchmark_data,
-                "hh_count": hhrcpa,
-                "last_score": last_score_hh,
-                "bm_last": bm_last_score
+                'benchmark_data': benchmark_data
                 }
             
             return render(request, 'forms/new_grad_monitor_tool.html',context)
@@ -11683,17 +11648,17 @@ def edit_grad_monitor(request, id):
     caregiver = RegPerson.objects.get(id=caregiver_id)
     form_type = OVCBenchmarkMonitoring.objects.filter(obm_id=id,is_void=False).values_list()[0][3]
     
-    # if form_type == 'bm':
-    #     form_type = 'Benchmark Monitoring'
-    # else:
-    #     form_type = 'Households Reaching Case Plan Achievement'
+    if form_type == 'bm':
+        form_type = 'Benchmark Monitoring'
+    else:
+        form_type = 'Households Reaching Case Plan Achievement'
     
     context = {'form':form,
             'status': 200,
             'care_giver': care_giver,
             'creg':creg,
             'caregiver':caregiver,
-            'form_type':form_type,
+            'form_type':form_type
                     }
         
     return render(request, 'forms/edit_grad_monitor_tool.html', context)

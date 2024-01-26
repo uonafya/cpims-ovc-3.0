@@ -36,25 +36,7 @@ urlpatterns = [
     
     # Fetch all records BY form type
     path('unaccepted_records/<str:form_type>/', views.unaccepted_records, name='fetch-unaccepted-data'),
-    
-    # check for success downstream and delete
-    path('record_saved', views.check_saved_rejected, name='check-saved-unaccepted-data'),
-    
-    # hiv screening
-    path('hrs/', views.create_ovc_hiv_screening,
-         name='create-ovc-mobile-data'),
-     path('hrs/update/<uuid:risk_id>', views.update_hiv_screening,
-          name='update-one-hiv-screening'),
-     re_path(r'^hrs/(?P<ovc_id>[^/]+)/$', views.get_one_hiv_screening,
-          name='get-one-hiv-screening'),
-    
-    # hiv management
-    path('hmf/', views.create_ovc_hiv_management,
-         name='create-ovc-mobile-data'),
-     path('hmf/update/<uuid:adherence_id>', views.update_hiv_management,
-          name='update-one-hiv-management'),
-     re_path(r'^hmf/(?P<ovc_id>[^/]+)/$', views.get_one_hiv_management,
-          name='get-one-hiv-management'),
+    # re_path(r'^unaccepted_records/(?P<form_type>[0-9A-Z]{3})/$',views.unaccepted_records, name='fetch-unaccepted-data'),
     
   
     # front end validation urls

@@ -416,6 +416,7 @@
                                     
                                     <th>#</th>
                                     <th>Domain</th>
+                                    <th>Case Plan Date</th>
                                     <th>Goal</th>
                                     <th>Needs/Gaps</th>
                                     <th>Priority Actions</th>
@@ -433,6 +434,11 @@
                                         <tr>
                                             <td rowspan="4" style="text-align: center;vertical-align: middle;" width="40px" valign="center">{{forloop.counter}}</td>
                                             <td style="text-align: center;vertical-align: middle;"><b>HEALTHY</b></td>
+                                            <td>
+                                                {% for one_healthy in one_cpt_event.event_healthy %}
+                                                    <small><b>({{forloop.counter}})</b></small> <small>{{ one_healthy.ev_date }}</small> <hr class="m-t-0 m-b-0"/>
+                                                {% endfor %}
+                                            </td>
                                             <td>
                                                 {% for one_healthy in one_cpt_event.event_healthy %}
                                                     <small><b>({{forloop.counter}})</b></small> <small>{{one_healthy.ev_goal}}</small><hr class="m-t-0 m-b-0"/>
@@ -474,7 +480,7 @@
                                                 {% endfor %}
                                             </td>
                                             <td rowspan="4" style="text-align: center;vertical-align: middle;" width="40px" valign="center">
-                                                <a href="{% url 'update_caseplan' event_id=one_cpt_event.event_id ovcid=one_cpt_event.event_ovc %}" class="btn btn-sm btn-primary btn-outline btn-sm">Update &nbsp; </a><p></p>
+                                                <a href="{% url 'update_caseplan' event_id=one_cpt_event.event_id ovcid=one_cpt_event.event_ovc %}" class="btn btn-sm btn-primary btn-outline btn-sm">Update &nbsp; &nbsp; </a><p></p>
                                                 <a href="{% url 'monitor_caseplan' event_id=one_cpt_event.event_id ovcid=one_cpt_event.event_ovc %}" class="btn btn-sm btn-primary btn-outline">Monitor</a><p></p>
                                                 <a href="#delete-caseplan-entry-{{ one_cpt_event.event_id }}" class="btn btn-sm btn-danger btn-outline" data-toggle="modal">Delete &nbsp;&nbsp;</a>
                                                 <!--Confirm form1a delete Modal -->
@@ -502,6 +508,11 @@
                                         </tr>
                                         <tr>
                                             <td style="text-align: center;vertical-align: middle;"><b>STABLE</b></td>
+                                            <td>
+                                                {% for one_stable in one_cpt_event.event_stable %}
+                                                    <small><b>({{forloop.counter}})</b></small> <small>{{ one_stable.ev_date }}</small> <hr class="m-t-0 m-b-0"/>
+                                                {% endfor %}
+                                            </td>
                                             <td>
                                                 {% for one_stable in one_cpt_event.event_stable %}
                                                     <small><b>({{forloop.counter}})</b></small> <small>{{one_stable.ev_goal}}</small><hr class="m-t-0 m-b-0"/>
@@ -547,6 +558,11 @@
                                             <td style="text-align: center;vertical-align: middle;"><b>SAFE</b></td>
                                             <td>
                                                 {% for one_safe in one_cpt_event.event_safe %}
+                                                    <small><b>({{forloop.counter}})</b></small> <small>{{ one_school.ev_date }}</small> - <hr class="m-t-0 m-b-0"/>
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                {% for one_safe in one_cpt_event.event_safe %}
                                                     <small><b>({{forloop.counter}})</b></small> <small>{{one_safe.ev_goal}}</small><hr class="m-t-0 m-b-0"/>
                                                 {% endfor %}
                                             </td>
@@ -588,6 +604,11 @@
                                         </tr>
                                         <tr style="border-bottom: 5px solid #aaa;">
                                             <td style="text-align: center;vertical-align: middle;"><b>SCHOOLED</b></td>
+                                            <td>
+                                                {% for one_school in one_cpt_event.event_school %}
+                                                    <small><b>({{forloop.counter}})</b></small> <small>{{ one_school.ev_date }}</small> <hr class="m-t-0 m-b-0"/>
+                                                {% endfor %}
+                                            </td>
                                             <td>
                                                 {% for one_school in one_cpt_event.event_school %}
                                                     <small><b>({{forloop.counter}})</b></small> <small>{{one_school.ev_goal}}</small><hr class="m-t-0 m-b-0"/>
@@ -633,10 +654,6 @@
                                     {% endfor %}
                             </tbody>
                         </table>
-
-
-
-
 
                         <table class="table hidden">
                             <thead>

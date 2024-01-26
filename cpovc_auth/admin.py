@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from .models import AppUser
+from .models import AppUser, CPOVCRole
 from cpovc_registry.models import RegPerson
 from cpovc_main.admin import dump_to_csv
 
@@ -79,8 +79,7 @@ class MyUserAdmin(UserAdmin):
     actions = [dump_to_csv]
 
     list_display = ['username', 'sex', 'surname', 'first_name', 'last_name',
-                    'user_email', 'timestamp_created',
-                    'last_login', 'is_active']
+                    'email', 'timestamp_created', 'last_login', 'is_active']
 
     search_fields = ['username']
     readonly_fields = ['reg_person']
@@ -109,4 +108,6 @@ class MyUserAdmin(UserAdmin):
 
 
 admin.site.register(AppUser, MyUserAdmin)
+
+admin.site.register(CPOVCRole)
 

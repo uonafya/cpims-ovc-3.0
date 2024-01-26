@@ -17,12 +17,30 @@ FORMS = ['crs', 'education', 'school', 'documents']
 TRANS = {'search': 0, 'new': 1, 'edit': 2, 'view': 3, 'delete': 4}
 
 
+def is_allowed_user_groups(allowed_groups, page=11):
+
+    def decorator(function):
+        @wraps(function)
+        def wrap(request, *args, **kwargs):
+            if request.user.is_active and request.user.is_superuser:
+                return function(request, *args, **kwargs)
+            allowed = check_permisions(request, allowed_groups)
+            if allowed:
+                return function(request, *args, **kwargs)
+            else:
+                page_info = 'Permission denied'
+                return render(request, 'registry/roles_none.html',
+                              {'page': page_info})
+        return wrap
+    return decorator
+
+
 def is_allowed_groups(allowed_groups, page=11):
 
     def decorator(function):
         @wraps(function)
         def wrap(request, *args, **kwargs):
-            allowed = check_permisions(request, allowed_groups)
+            allowed = True
             if allowed:
                 return function(request, *args, **kwargs)
             else:
@@ -37,9 +55,15 @@ def check_permisions(request, allowed_groups):
     """ Return permissions."""
     try:
         profile = request.user.id
-        print('User', profile, allowed_groups)
-        is_allowed = True
-    except Exception:
+        cpims_groups = request.user.groups.values_list(
+            'cpovcrole__group_id', flat=True)
+        print('User', profile, allowed_groups, cpims_groups)
+        response = any(value in cpims_groups for value in allowed_groups)
+        is_allowed = False
+        if response:
+            is_allowed = True
+    except Exception as e:
+        print('Permissions error - %s' % (str(e)))
         return False
     else:
         return is_allowed

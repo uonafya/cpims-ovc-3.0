@@ -77,7 +77,10 @@ def caseload(request):
         device, status = access_manager(request)
         print('Device Status', status, device)
         if request.method == 'GET':
-            results = get_caseload(request, 0)
+            if status < 10:
+                results = get_caseload(request, 0)
+            else:
+                results = []
         elif request.method == 'POST':
             print('POST method to update some OVC data')
         # results['details'] = msg

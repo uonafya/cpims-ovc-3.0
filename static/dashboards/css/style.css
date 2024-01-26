@@ -6584,7 +6584,7 @@ body .bootstrap-datetimepicker-widget table td {
     left: 0;
     right: 0;
     z-index: 1015;
-    border-bottom: 4px solid #d7191c;
+    border-bottom: 2px solid #d7191c;
 }
 .top-menu .nav {
     white-space: nowrap;
