@@ -618,13 +618,13 @@ from ft_cpims_list_served {oftdates} {cbos}
 UNION
 Select count(distinct(person_id)) AS dcount,
 'SMAL' as sex_id, 'Served Two Quarters' as services
-from ft_cpims_two_quarters where ('2022-09-30' - date_of_event) <=200
-AND date_of_event < '2022-09-30' {cbos} {ftdates}
+from ft_cpims_two_quarters where ('2023-09-30' - date_of_event) <=200
+AND date_of_event < '2023-09-30' {cbos} {ftdates}
 UNION
 Select count(distinct(person_id)) as dcount,
 'SMAL' as sex_id, 'Case Plans' as services
-from ft_cpims_case_plan where ('2022-09-30' - date_of_event) <= 400
-AND date_of_event < '2022-09-30' {cbos} {ftdates}
+from ft_cpims_case_plan where ('2023-09-30' - date_of_event) <= 400
+AND date_of_event < '2023-09-30' {cbos} {ftdates}
 UNION
 select count(distinct(person_id)) as dcount,  'SMAL' as sex_id,
 'Graduated' as services from ft_cpims_graduated

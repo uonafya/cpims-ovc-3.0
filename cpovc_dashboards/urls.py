@@ -32,4 +32,7 @@ urlpatterns = [
         'performance/', views.ovc_dashboard_perform,
         name='perform_dash'),
     path('glossary/', views.ovc_dashboard_help, name='dash_help'),
+    path('data/', views.ovc_dashboard_data, name='dash_data'),
+    path('download/', views.ovc_dashboard_download, name='dash_download'),
+    
 ]
