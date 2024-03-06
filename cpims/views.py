@@ -1,5 +1,6 @@
 """Main CPIMS common views."""
 import memcache
+import sys
 from datetime import datetime, timedelta
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -337,7 +338,15 @@ def handler_400(request, exception, template_name="400.html"):
 def handler_404(request, exception):
     """Some default page for the Page not Found."""
     try:
-        return render(request, '404.html', {'status': 404})
+        todate = datetime.now()
+        ts = todate.strftime("%d %b %Y %H:%M:%S")
+        context = {'status': 404}
+        etype, value, traceback = sys.exc_info()
+        context['traceback'] = traceback
+        context['value'] = value
+        context['etype'] = etype
+        context['ts'] = ts
+        return render(request, '404.html', context)
     except Exception as e:
         raise e
 
@@ -345,7 +354,15 @@ def handler_404(request, exception):
 def handler_500(request):
     """Some default page for Server Errors."""
     try:
-        return render(request, '500.html', {'status': 500})
+        todate = datetime.now()
+        ts = todate.strftime("%d %b %Y %H:%M:%S")
+        context = {'status': 500}
+        etype, value, traceback = sys.exc_info()
+        context['traceback'] = traceback
+        context['value'] = value
+        context['etype'] = etype
+        context['ts'] = ts
+        return render(request, '500.html', context)
     except Exception as e:
         raise e
 

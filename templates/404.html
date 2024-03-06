@@ -1,44 +1,78 @@
-{% extends 'base_home.html' %}
+{% extends 'base.html' %}
 {% load static %}
+{% block page_title %} Custom Error 404 {% endblock %}
 
-{% block page_title %} {{block.super}} Page not Found {% endblock page_title%}    
+{% load crispy_forms_tags %}
+
+{% block style_code %}
+
+{% endblock %}
 
 {% block primary %}
-<!-- begin right-content -->
-<div class="right-content">
-    <!-- begin register-header -->
-    <div class="register-header">
-        <h4 class="brand shome">Department of Children Services (DCS)</h4>
-    </div>
-    <h1 class="register-header">
-        <small>The requested page {{ request.get_full_path }} could not be Found - Error 404</small>
-    </h1>
-    <!-- end register-header -->  
-    <!-- begin register-content -->
-    <div class="register-content"> 
-
-        <div class="m-t-40 m-b-40">
-            <p><strong>You may not be able to find the page you were after because of:</strong></p>
-			<ol type="a">
-			<li>An <strong>out-of-date bookmark/favorite</strong></li>
-			<li>A search engine that has an <strong>out-of-date listing for us</strong></li>
-			<li>A <strong>mis-typed address or page</strong></li>
-			</ol>
-		</div>
-		<div class="m-t-20 m-b-20 p-b-20">
-	        Please visit our <a href="{% url 'home' %}" class="text-success">home page</a> or 
-	        <a href="{% url 'login' %}" class="text-success">login page</a> or contact administrator at cpims&lt;@&gt;labour&lt;dot&gt;go.ke
-	    </div>
-	        <span class="promo m-t-40">
-	            <p>
-	                <img src="{% static 'img/logo_public.jpg' %}" height="80">
-	            </span>
-	            <hr />
-	            <p class="text-center text-inverse">
-	                &copy; {% now "Y" %} Department of Children Services (DCS). All Rights Reserved.
-	            </p>
-    </div>
-    <!-- end register-content -->
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+	<li><a href="#">Home</a></li>
+	<li class="active">Custom Error</li>
+</ol>
+<!-- end breadcrumb -->
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-exclamation"></i> Error 404 </h1>
+<!-- end page-header -->
+<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+    <span class="invalid-form-message" id="invalid-form-message"></span>
 </div>
-<!-- end right-content -->
-{% endblock primary %}
+<!-- begin row -->
+<div class="row">
+  <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin panel -->
+        <div class="panel panel-inverse">
+
+            <!-- start panel body -->
+            <div class="panel-body">
+
+                <h2>URL : {{ request.get_full_path }}</h2>
+
+                <div class="height-sm" data-scrollbar="true">                
+                    <blockquote>
+                        <p>{{ value }}</p>
+                    </blockquote>                    
+                </div>
+                <blockquote>
+                    <small>because errors do occur - <cite title="Source Title">at {{ ts }}</cite></small>
+                </blockquote>
+                
+
+                <hr>
+
+                <div class="m-t-40 m-b-40">
+                    <p><strong>You may not be able to find the page you were after because of:</strong></p>
+                    <ol type="a">
+                    <li>An <strong>out-of-date bookmark/favorite</strong></li>
+                    <li>A search engine that has an <strong>out-of-date listing for us</strong></li>
+                    <li>A <strong>mis-typed address or page</strong></li>
+                    </ol>
+                </div>
+                <div class="m-t-40 m-b-40">
+                    <p><strong>To resolve this:</strong></p>
+                    <ol type="a">
+                    <li>You <strong>may scream about it</strong>.</li>
+                    <li>Contact <strong>system administrator</strong> for resolution.</li>
+                    <li>Forward this error to <strong> service desk</strong></li>
+                    </ol>
+                </div>
+            </div>
+            <!-- end panel body -->
+        </div>
+        <!-- end panel -->  
+    </div>
+    <!-- end col-12 -->
+</div>
+<!-- end row -->
+{% endblock %}
+
+{% block lazy_javascript_code %}
+
+{% endblock %}
