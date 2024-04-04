@@ -363,13 +363,25 @@ def check_saved_rejected(request):
                 OVCEvent.objects.get(id=service.event.id).delete()
                 
             elif form_type == 'cpt':
-          
-                service_rejected = CasePlanTemplateServiceRejected.objects.filter(unique_service_id=record_id)
-                CasePlanTemplateServiceRejected.objects.filter(unique_service_id=record_id).delete()
-                CasePlanTemplateEventRejected.objects.get(id=service_rejected.event.id).delete()       
-                service=CasePlanTemplateService.objects.filter(unique_service_id=record_id)
-                CasePlanTemplateService.objects.get(unique_service_id=record_id).delete()
-                CasePlanTemplateEvent.objects.get(id=service.event.id).delete()
+                        
+                saved_event = CasePlanTemplateEventRejected.objects.filter(id=record_id)
+                event_id = saved_event.first().id
+
+                shared_event_id_rejected = CasePlanTemplateServiceRejected.objects.filter(event_id=event_id).count()
+                shared_event_id = CasePlanTemplateService.objects.filter(event_id=event_id).count()
+
+                CasePlanTemplateServiceRejected.objects.filter(event_id=record_id).delete()
+                CasePlanTemplateService.objects.filter(event_id=record_id,is_accepted=3).delete()
+
+                if shared_event_id_rejected == 1:
+                    service_rejected_event = CasePlanTemplateEventRejected.objects.filter(id=event_id)
+                    if service_rejected_event:
+                        service_rejected_event.delete()
+
+                if shared_event_id == 1:
+                    service_event = CasePlanTemplateEvent.objects.filter(id=event_id)
+                    if service_event:
+                        service_event.delete()
                     
             elif form_type == 'cpara':
                 
