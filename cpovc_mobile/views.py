@@ -355,12 +355,24 @@ def check_saved_rejected(request):
         if form_type and (saved == 1) and record_id:
             if form_type in ['F1A','F1B']:
                 
-                service_rejected=OVCServicesRejected.objects.get(id=record_id)
-                OVCServicesRejected.objects.get(id=record_id).delete()
-                OVCEventRejected.objects.get(id=service_rejected.event.id).delete()               
-                service=OVCServices.objects.get(id=record_id)
-                OVCServices.objects.get(id=record_id).delete()
-                OVCEvent.objects.get(id=service.event.id).delete()
+                saved_event = OVCEventRejected.objects.filter(id=record_id)
+                event_id = saved_event.first().id
+
+                shared_event_id_rejected = OVCServicesRejected.objects.filter(event_id=event_id).count()
+                shared_event_id = OVCServices.objects.filter(event_id=event_id).count()
+
+                OVCServicesRejected.objects.filter(event_id=record_id).delete()
+                OVCServices.objects.filter(event_id=record_id,is_accepted=3).delete()
+
+                if shared_event_id_rejected == 1:
+                    service_rejected_event = OVCEventRejected.objects.filter(id=event_id)
+                    if service_rejected_event:
+                        service_rejected_event.delete()
+
+                if shared_event_id == 1:
+                    service_event = OVCEvent.objects.filter(id=event_id)
+                    if service_event:
+                        service_event.delete()
                 
             elif form_type == 'cpt':
                         
