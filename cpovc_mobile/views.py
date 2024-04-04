@@ -288,7 +288,7 @@ def service_serializer(service):
         'id': service.unique_service_id,
         'event_id': service.event_id,
         'domain_id': service.domain_id,
-        'service_id': service.service_id,
+        'service_id': json.loads(service.service_id.replace("'", '"')),
         'goal_id': service.goal_id,
         'gap_id': service.gap_id,
         'priority_id': service.priority_id,
@@ -380,21 +380,45 @@ def check_saved_rejected(request):
         if form_type and (saved == 1) and record_id:
             if form_type in ['F1A','F1B']:
                 
-                service_rejected=OVCServicesRejected.objects.get(id=record_id)
-                OVCServicesRejected.objects.get(id=record_id).delete()
-                OVCEventRejected.objects.get(id=service_rejected.event.id).delete()               
-                service=OVCServices.objects.get(id=record_id)
-                OVCServices.objects.get(id=record_id).delete()
-                OVCEvent.objects.get(id=service.event.id).delete()
+                saved_event = OVCEventRejected.objects.filter(id=record_id)
+                event_id = saved_event.first().id
+
+                shared_event_id_rejected = OVCServicesRejected.objects.filter(event_id=event_id).count()
+                shared_event_id = OVCServices.objects.filter(event_id=event_id).count()
+
+                OVCServicesRejected.objects.filter(event_id=record_id).delete()
+                OVCServices.objects.filter(event_id=record_id,is_accepted=3).delete()
+
+                if shared_event_id_rejected == 1:
+                    service_rejected_event = OVCEventRejected.objects.filter(id=event_id)
+                    if service_rejected_event:
+                        service_rejected_event.delete()
+
+                if shared_event_id == 1:
+                    service_event = OVCEvent.objects.filter(id=event_id)
+                    if service_event:
+                        service_event.delete()
                 
             elif form_type == 'cpt':
-          
-                service_rejected = CasePlanTemplateServiceRejected.objects.filter(unique_service_id=record_id)
-                CasePlanTemplateServiceRejected.objects.filter(unique_service_id=record_id).delete()
-                CasePlanTemplateEventRejected.objects.get(id=service_rejected.event.id).delete()       
-                service=CasePlanTemplateService.objects.filter(unique_service_id=record_id)
-                CasePlanTemplateService.objects.get(unique_service_id=record_id).delete()
-                CasePlanTemplateEvent.objects.get(id=service.event.id).delete()
+                        
+                saved_event = CasePlanTemplateEventRejected.objects.filter(id=record_id)
+                event_id = saved_event.first().id
+
+                shared_event_id_rejected = CasePlanTemplateServiceRejected.objects.filter(event_id=event_id).count()
+                shared_event_id = CasePlanTemplateService.objects.filter(event_id=event_id).count()
+
+                CasePlanTemplateServiceRejected.objects.filter(event_id=record_id).delete()
+                CasePlanTemplateService.objects.filter(event_id=record_id,is_accepted=3).delete()
+
+                if shared_event_id_rejected == 1:
+                    service_rejected_event = CasePlanTemplateEventRejected.objects.filter(id=event_id)
+                    if service_rejected_event:
+                        service_rejected_event.delete()
+
+                if shared_event_id == 1:
+                    service_event = CasePlanTemplateEvent.objects.filter(id=event_id)
+                    if service_event:
+                        service_event.delete()
                     
             elif form_type == 'cpara':
                 
@@ -416,10 +440,13 @@ def check_saved_rejected(request):
                 HIVManagementStagingRejected.objects.get(adherence_id=record_id).delete()
                 HIVManagementStaging.objects.get(adherence_id=record_id).delete()
             
-            return Response({'message': 'Record delted successfully'}, status=status.HTTP_200_OK)
+            else:
+                return(Response({'message':'incomplete/incorrect payload'},status=status.HTTP_400_BAD_REQUEST))
             
+            return Response({'message': 'Record delted successfully'}, status=status.HTTP_200_OK)
         else:
-            return(Response({'message':'Record not deleted in Staging'}))
+            return(Response({'message':'Record not deleted..incomplete/incorrect payload'},status=status.HTTP_400_BAD_REQUEST))
+               
     
     except Exception as e:
         return(Response({'error':str(e)}))
@@ -1295,6 +1322,7 @@ def update_case_plan_is_accepted(request, unique_service_id):
 
                 # Create the corresponding rejected service
                 CasePlanTemplateServiceRejected.objects.create(
+                    unique_service_id=service.unique_service_id,
                     event=event_rejected,
                     domain_id=service.domain_id,
                     service_id=service.service_id,
@@ -2087,8 +2115,7 @@ def unaccepted_records(request, form_type):
                 # delete_parent_and_children(
                     # OVCEventRejected, OVCServicesRejected, service.event.id)
             
-        
-        
+                
         elif form_type == 'cpara':
             # Fetch cpara records where is_accepted is FALSE (3) and user_id matches
             cpara_events = OVCMobileEventRejected.objects.filter(
@@ -2152,9 +2179,9 @@ def unaccepted_records(request, form_type):
             case_plan_services = CasePlanTemplateServiceRejected.objects.filter(
                 is_accepted=3, event__user_id=request.user.id)
             
-            events = CasePlanTemplateEvent.objects.filter(user_id=request.user.id)
+            events = CasePlanTemplateEventRejected.objects.filter(user_id=request.user.id)
 
-            servicess = CasePlanTemplateService.objects.filter(
+            servicess = CasePlanTemplateServiceRejected.objects.filter(
                 event__in=events, is_accepted=3)
 
         
@@ -2183,46 +2210,47 @@ def unaccepted_records(request, form_type):
             for hiv_management in hiv_management_rejected:
                 app_metadata = json.loads(hiv_management.app_form_metadata.replace("'", "\""))
                 event_data = {
-                    'adherence_id':hiv_management.adherence_id,
+                    'adherence_id': hiv_management.adherence_id,
                     'ovc_cpims_id': hiv_management.ovc_cpims.id,
-                    'hiv_confirmed_date': hiv_management.hiv_confirmed_date,
-                    'treatment_initiated_date': hiv_management.treatment_initiated_date,
-                    'baseline_hei': hiv_management.baseline_hei,
-                    'firstline_start_date': hiv_management.firstline_start_date,
-                    'substitution_firstline_arv': hiv_management.substitution_firstline_arv,
-                    'substitution_firstline_date': hiv_management.substitution_firstline_date,
-                    'switch_secondline_arv': hiv_management.switch_secondline_arv,
-                    'switch_secondline_date': hiv_management.switch_secondline_date,
-                    'switch_thirdline_arv': hiv_management.switch_thirdline_arv,
-                    'switch_thirdline_date': hiv_management.switch_thirdline_date,
-                    'visit_date': hiv_management.visit_date,
-                    'duration_art': hiv_management.duration_art,
-                    'height': hiv_management.height,
-                    'adherence': hiv_management.adherence,
-                    'adherence_drugs_duration': hiv_management.adherence_drugs_duration,
-                    'adherence_counselling': hiv_management.adherence_counselling,
-                    'treatment_supporter': hiv_management.treatment_supporter,
-                    'treatment_supporter_relationship': hiv_management.treatment_supporter_relationship,
-                    'treatment_supporter_gender': hiv_management.treatment_supporter_gender,
-                    'treatment_supporter_age': hiv_management.treatment_supporter_age,
-                    'treatment_supporter_hiv': hiv_management.treatment_supporter_hiv,
-                    'viral_load_results': hiv_management.viral_load_results,
-                    'viral_load_date': hiv_management.viral_load_date,
-                    'detectable_viralload_interventions': hiv_management.detectable_viralload_interventions,
-                    'disclosure': hiv_management.disclosure,
-                    'muac_score': hiv_management.muac_score,
-                    'bmi': hiv_management.bmi,
-                    'nutritional_support': hiv_management.nutritional_support,
-                    'support_group_status': hiv_management.support_group_status,
-                    'nhif_enrollment': hiv_management.nhif_enrollment,
-                    'nhif_status': hiv_management.nhif_status,
-                    'referral_services': hiv_management.referral_services,
-                    'nextappointment_date': hiv_management.nextappointment_date,
-                    'peer_educator_name': hiv_management.peer_educator_name,
-                    'peer_educator_contact': hiv_management.peer_educator_contact,
-                    'date_of_event': hiv_management.date_of_event,
+                    'HIV_MGMT_1_A': hiv_management.hiv_confirmed_date,
+                    'HIV_MGMT_1_B': hiv_management.treatment_initiated_date,
+                    'HIV_MGMT_1_C': hiv_management.baseline_hei,
+                    'HIV_MGMT_1_D': hiv_management.firstline_start_date,
+                    'HIV_MGMT_1_E': hiv_management.substitution_firstline_arv,
+                    'HIV_MGMT_1_E_DATE': hiv_management.substitution_firstline_date,
+                    'HIV_MGMT_1_F': hiv_management.switch_secondline_arv,
+                    'HIV_MGMT_1_F_DATE': hiv_management.switch_secondline_date,
+                    'HIV_MGMT_1_G': hiv_management.switch_thirdline_arv,
+                    'HIV_MGMT_1_G_DATE': hiv_management.switch_thirdline_date,
+                    'HIV_MGMT_2_A': hiv_management.visit_date,
+                    'HIV_MGMT_2_B': hiv_management.duration_art,
+                    'HIV_MGMT_2_C': hiv_management.height,
+                    'HIV_MGMT_2_D': hiv_management.muac,
+                    'HIV_MGMT_2_E': hiv_management.adherence,
+                    'HIV_MGMT_2_F': hiv_management.adherence_drugs_duration,
+                    'HIV_MGMT_2_G': hiv_management.adherence_counselling,
+                    'HIV_MGMT_2_H_2': hiv_management.treatment_supporter,
+                    'HIV_MGMT_2_H_1': hiv_management.treatment_supporter_relationship,
+                    'HIV_MGMT_2_H_3': hiv_management.treatment_supporter_gender,
+                    'HIV_MGMT_2_H_4': hiv_management.treatment_supporter_age,
+                    'HIV_MGMT_2_H_5': hiv_management.treatment_supporter_hiv,
+                    'HIV_MGMT_2_I_1': hiv_management.viral_load_results,
+                    'HIV_MGMT_2_I_DATE': hiv_management.viral_load_date,
+                    'HIV_MGMT_2_J': hiv_management.detectable_viralload_interventions,
+                    'HIV_MGMT_2_K': hiv_management.disclosure,
+                    'HIV_MGMT_2_L_1': hiv_management.muac_score,
+                    'HIV_MGMT_2_L_2': hiv_management.bmi,
+                    'HIV_MGMT_2_M': hiv_management.nutritional_support,
+                    'HIV_MGMT_2_N': hiv_management.support_group_status,
+                    'HIV_MGMT_2_O_1': hiv_management.nhif_enrollment,
+                    'HIV_MGMT_2_O_2': hiv_management.nhif_status,
+                    'HIV_MGMT_2_P': hiv_management.referral_services,
+                    'HIV_MGMT_2_Q': hiv_management.nextappointment_date,
+                    'HIV_MGMT_2_R': hiv_management.peer_educator_name,
+                    'HIV_MGMT_2_S': hiv_management.peer_educator_contact,
+                    'HIV_MGMT_2_A': hiv_management.date_of_event,
                     'app_form_metadata': app_metadata,
-                    'message':hiv_management.message,
+                    'message': hiv_management.message,
                     # 'weight': hiv_management.equivalent,
                     # 'muac': hiv_management.mUAC,
                     # 'currentregimen': hiv_management.equivalent,
@@ -2246,42 +2274,42 @@ def unaccepted_records(request, form_type):
                 app_metadata = json.loads(risk_screening.app_form_metadata.replace("'", "\""))
                 print(app_metadata)
                 event_data = {
-                    'risk_id':risk_screening.risk_id,
-                    'ovc_cpims_id': risk_screening.ovc_cpims.id,
-                    'date_of_event': risk_screening.date_of_event,
-                    'test_done_when': risk_screening.test_done_when,
-                    'test_donewhen_result': risk_screening.test_donewhen_result,
-                    'caregiver_know_status': risk_screening.caregiver_know_status,
-                    'caregiver_knowledge_yes': risk_screening.caregiver_knowledge_yes,
-                    'parent_PLWH': risk_screening.parent_PLWH,
-                    'child_sick_malnourished': risk_screening.child_sick_malnourished,
-                    'child_sexual_abuse': risk_screening.child_sexual_abuse,
-                    'traditional_procedure': risk_screening.traditional_procedure,
-                    'adol_sick': risk_screening.adol_sick,
-                    'adol_had_tb': risk_screening.adol_had_tb,
-                    'adol_sexual_abuse': risk_screening.adol_sexual_abuse,
-                    'sex': risk_screening.sex,
-                    'sti': risk_screening.sti,
-                    'sharing_needles': risk_screening.sharing_needles,
-                    'hiv_test_required': risk_screening.hiv_test_required,
-                    'parent_consent_testing': risk_screening.parent_consent_testing,
-                    'parent_consent_date': risk_screening.parent_consent_date,
-                    'referral_made': risk_screening.referral_made,
-                    'referral_made_date': risk_screening.referral_made_date,
-                    'referral_completed': risk_screening.referral_completed,
-                    'referral_completed_date': risk_screening.referral_completed_date,
-                    'not_completed': risk_screening.not_completed,
-                    'test_result': risk_screening.test_result,
-                    'art_referral': risk_screening.art_referral,
-                    'art_referral_date': risk_screening.art_referral_date,
-                    'art_referral_completed': risk_screening.art_referral_completed,
-                    'art_referral_completed_date': risk_screening.art_referral_completed_date,
-                    'facility_code': risk_screening.facility_code,
-                    'is_accepted': risk_screening.is_accepted,
-                    'message': risk_screening.message,
-                    'app_form_metadata': app_metadata,
+                'risk_id': risk_screening.risk_id,
+                'ovc_cpims_id': risk_screening.ovc_cpims.id,
+                'HIV_RA_1A': risk_screening.date_of_event,
+                'HIV_RS_03': risk_screening.test_done_when,
+                'test_donewhen_result': risk_screening.test_donewhen_result,
+                'HIV_RS_01': risk_screening.caregiver_know_status,
+                'HIV_RS_02': risk_screening.caregiver_knowledge_yes,
+                'HIV_RS_04': risk_screening.parent_PLWH,
+                'HIV_RS_05': risk_screening.child_sick_malnourished,
+                'HIV_RS_06': risk_screening.child_sexual_abuse,
+                'HIV_RS_06A': risk_screening.traditional_procedure,
+                'HIV_RS_07': risk_screening.adol_sick,
+                'HIV_RS_08': risk_screening.adol_had_tb,
+                'HIV_RS_09': risk_screening.adol_sexual_abuse,
+                'HIV_RS_10': risk_screening.sex,
+                'HIV_RS_10A': risk_screening.sti,
+                'HIV_RS_10B': risk_screening.sharing_needles,
+                'HIV_RS_11': risk_screening.hiv_test_required,
+                'HIV_RS_14': risk_screening.parent_consent_testing,
+                'HIV_RS_15': risk_screening.parent_consent_date,
+                'HIV_RS_16': risk_screening.referral_made,
+                'HIV_RS_17': risk_screening.referral_made_date,
+                'HIV_RS_18': risk_screening.referral_completed,
+                'HIV_RS_19': risk_screening.referral_completed_date,
+                'HIV_RS_18A': risk_screening.not_completed,
+                'HIV_RS_18B': risk_screening.test_result,
+                'HIV_RS_21': risk_screening.art_referral,
+                'HIV_RS_22': risk_screening.art_referral_date,
+                'HIV_RS_23': risk_screening.art_referral_completed,
+                'HIV_RS_24': risk_screening.art_referral_completed_date,
+                'HIV_RA_3Q6': risk_screening.facility_code,
+                'is_accepted': risk_screening.is_accepted,
+                'message': risk_screening.message,
+                'app_form_metadata': app_metadata,
                     }
-                # hrs_rejected.append(event_data)
+
                 
                 data.append(event_data)
 

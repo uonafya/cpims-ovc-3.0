@@ -335,7 +335,7 @@ class RiskScreeningStaging(models.Model):
     referral_completed = models.BooleanField(null=True)
     referral_completed_date = models.DateField(
         default=timezone.now, null=True)  # date new 2
-    not_completed = models.CharField(max_length=50)
+    not_completed = models.CharField(max_length=50, null=True)
     test_result = models.CharField(max_length=20, null=True)
     art_referral = models.BooleanField(null=True)
     art_referral_date = models.DateField(
@@ -465,7 +465,7 @@ class RiskScreeningStagingRejected(models.Model):
     referral_completed = models.BooleanField(null=True)
     referral_completed_date = models.DateField(
         default=timezone.now, null=True)  # date new 2
-    not_completed = models.CharField(max_length=50)
+    not_completed = models.CharField(max_length=50, null=True)
     test_result = models.CharField(max_length=20, null=True)
     art_referral = models.BooleanField(null=True)
     art_referral_date = models.DateField(
