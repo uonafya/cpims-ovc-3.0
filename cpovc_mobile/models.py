@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 from cpovc_registry.models import RegPerson
 from cpovc_auth.models import AppUser
+from cpovc_registry.models import RegOrgUnit
 
 
 class ApprovalStatus(Enum):
@@ -24,7 +25,7 @@ class OVCMobileEvent(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     message = models.TextField(null=True)
     app_form_metadata = models.CharField(max_length=500, default="{}")
-    approved_initiated = models.BooleanField(default=False)
+    # approved_initiated = models.BooleanField(default=False, null=True, blank=True)
     signature = models.BinaryField(max_length=500, null=True)
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
@@ -85,7 +86,6 @@ class OVCEvent(models.Model):
     form_type = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    app_form_metadata = models.CharField(max_length=500, default="{}")
     app_form_metadata = models.CharField(max_length=500)
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
@@ -244,7 +244,7 @@ class HIVManagementStaging(models.Model):
     baseline_hei = models.CharField(max_length=100, null=False)
     firstline_start_date = models.DateTimeField(null=False)
     substitution_firstline_arv = models.BooleanField(default=False)
-    substitution_firstline_date = models.DateTimeField(default=timezone.now)
+    substitution_firstline_date = models.DateTimeField(null=True, blank=True)
     switch_secondline_arv = models.BooleanField(default=False)
     switch_secondline_date = models.DateTimeField(null=True)
     switch_thirdline_arv = models.BooleanField(default=False)
@@ -295,7 +295,7 @@ class HIVManagementStaging(models.Model):
     )
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     app_form_metadata = models.CharField(max_length=500, default="{}")
-    approved_initiated = models.BooleanField(default=False)
+    # approved_initiated = models.BooleanField(default=False, null=True, blank=True)
     ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
 
     class Meta:
@@ -332,7 +332,7 @@ class RiskScreeningStaging(models.Model):
     referral_completed = models.BooleanField(null=True)
     referral_completed_date = models.DateField(
         default=timezone.now, null=True)  # date new 2
-    not_completed = models.CharField(max_length=50)
+    not_completed = models.CharField(max_length=50, null=True)
     test_result = models.CharField(max_length=20, null=True)
     art_referral = models.BooleanField(null=True)
     art_referral_date = models.DateField(
@@ -351,7 +351,7 @@ class RiskScreeningStaging(models.Model):
         default=ApprovalStatus.NEUTRAL.value
     )
     app_form_metadata = models.CharField(max_length=500, default="{}")
-    approved_initiated = models.BooleanField(default=False)
+    # approved_initiated = models.BooleanField(default=False, null=True, blank=True)
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
 
@@ -462,7 +462,7 @@ class RiskScreeningStagingRejected(models.Model):
     referral_completed = models.BooleanField(null=True)
     referral_completed_date = models.DateField(
         default=timezone.now, null=True)  # date new 2
-    not_completed = models.CharField(max_length=50)
+    not_completed = models.CharField(max_length=50, null=True)
     test_result = models.CharField(max_length=20, null=True)
     art_referral = models.BooleanField(null=True)
     art_referral_date = models.DateField(
@@ -488,5 +488,29 @@ class RiskScreeningStagingRejected(models.Model):
     class Meta:
         db_table = 'risk_screening_staging_rejected'
 
-    def __unicode__(self):
-        return str(self.risk_id)
+    # def __unicode__(self):
+    #     return str(self.risk_id)
+    
+
+# Track the data flow from submission to approval / rejection
+    
+class MobileAppDataTrack(models.Model):
+    id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
+    event_id=models.UUIDField(null=False, blank=False, unique=True)
+    date_of_event = models.DateField(null=True)
+    service_id=models.UUIDField(null=True, blank=True, unique=True)
+    form_type=models.CharField(max_length=100,blank=False)
+    timestamp_created=models.DateTimeField()
+    action=models.IntegerField(
+        choices=[(status.value, status.name) for status in ApprovalStatus],
+        default=ApprovalStatus.NEUTRAL.value
+    )
+    timestamp_actioned=models.DateTimeField(auto_now_add=True)
+    user_submitting=models.ForeignKey(AppUser,related_name='user_submitting', on_delete=models.CASCADE)
+    user_actioning=models.ForeignKey(AppUser,related_name='user_actioning', on_delete=models.CASCADE)
+    ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    CBO=models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'mobile_app_data_track'
+
