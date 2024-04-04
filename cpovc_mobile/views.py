@@ -263,7 +263,7 @@ def service_serializer(service):
         'id': service.unique_service_id,
         'event_id': service.event_id,
         'domain_id': service.domain_id,
-        'service_id': service.service_id,
+        'service_id': json.loads(service.service_id.replace("'", '"')),
         'goal_id': service.goal_id,
         'gap_id': service.gap_id,
         'priority_id': service.priority_id,
