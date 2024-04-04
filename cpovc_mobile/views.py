@@ -391,10 +391,13 @@ def check_saved_rejected(request):
                 HIVManagementStagingRejected.objects.get(adherence_id=record_id).delete()
                 HIVManagementStaging.objects.get(adherence_id=record_id).delete()
             
-            return Response({'message': 'Record delted successfully'}, status=status.HTTP_200_OK)
+            else:
+                return(Response({'message':'incomplete/incorrect payload'},status=status.HTTP_400_BAD_REQUEST))
             
+            return Response({'message': 'Record delted successfully'}, status=status.HTTP_200_OK)
         else:
-            return(Response({'message':'Record not deleted in Staging'}))
+            return(Response({'message':'Record not deleted..incomplete/incorrect payload'},status=status.HTTP_400_BAD_REQUEST))
+               
     
     except Exception as e:
         return(Response({'error':str(e)}))
