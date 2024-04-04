@@ -1227,6 +1227,7 @@ def update_case_plan_is_accepted(request, unique_service_id):
 
                 # Create the corresponding rejected service
                 CasePlanTemplateServiceRejected.objects.create(
+                    unique_service_id=service.unique_service_id,
                     event=event_rejected,
                     domain_id=service.domain_id,
                     service_id=service.service_id,
