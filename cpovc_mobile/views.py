@@ -2000,8 +2000,7 @@ def unaccepted_records(request, form_type):
                 # delete_parent_and_children(
                     # OVCEventRejected, OVCServicesRejected, service.event.id)
             
-        
-        
+                
         elif form_type == 'cpara':
             # Fetch cpara records where is_accepted is FALSE (3) and user_id matches
             cpara_events = OVCMobileEventRejected.objects.filter(
@@ -2065,9 +2064,9 @@ def unaccepted_records(request, form_type):
             case_plan_services = CasePlanTemplateServiceRejected.objects.filter(
                 is_accepted=3, event__user_id=request.user.id)
             
-            events = CasePlanTemplateEvent.objects.filter(user_id=request.user.id)
+            events = CasePlanTemplateEventRejected.objects.filter(user_id=request.user.id)
 
-            servicess = CasePlanTemplateService.objects.filter(
+            servicess = CasePlanTemplateServiceRejected.objects.filter(
                 event__in=events, is_accepted=3)
 
         
