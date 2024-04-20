@@ -101,10 +101,7 @@
                 </div>
                 <h4 class="panel-title"> Case Plan Monitoring</h4>
             </div>
-            <div class="panel-body">
-                <form class="form-horizontal" method="POST" id="new-form-1a" action="." data-parsley-validate="true">
-            	
-
+            <div class="panel-body">    	
 					<div id="wizard-f1a">
 
 						<!-- begin wizard step-1 -->
@@ -113,7 +110,8 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>Domain</th><th>Goal</th><th>Needs / Gaps</th>
+                                            <th>Domain</th><th>Date</th>
+                                            <th>Goal</th><th>Needs / Gaps</th>
                                             <th>Priority Actions</th><th>Services</th>
                                             <th>Responsible</th><th>Completion Date</th>
                                             <th>Results</th><th>Reasons</th>
@@ -124,11 +122,12 @@
                                     {% if one_cpt_event and one_cpt_event.event_id == cp_id %}
                                        {% if one_cpt_event.event_healthy %}
                                        <tr bgcolor="#f0f3f5">
-                                           <td colspan="9"><b>HEALTHY </b></td>
+                                           <td colspan="10"><b>HEALTHY </b></td>
                                         </tr>
                                         {% for one_healthy in one_cpt_event.event_healthy %}
                                             <tr>
-                                                <td></td>
+                                               <td></td>
+                                               <td>{{ one_healthy.ev_date }}</td>
                                                <td>{{ one_healthy.ev_goal }}</td>
                                                <td>{{ one_healthy.ev_need }}</td>
                                                <td>{{ one_healthy.ev_priority }}</td>
@@ -149,24 +148,38 @@
                                                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                           <h4 class="modal-title">Monitor - {{ one_cpt_event.event_id }}</h4>
                                                         </div>
-                                                        <form id='cpt-monitoring-{{ one_healthy.cid }}' class="cptManage" method="post" action=".">
+                                                        <form id='cpt-monitoring-{{ one_healthy.cid }}' class="inline" method="post" action=".">
+                                                        {% csrf_token %}
+                                                        <p></p>
                                                         <div class="modal-body">                                                          
                                                           <table class="table">
-                                                              <tr><th>Item</th><th>Value</th></tr>
+                                                              <tr bgcolor="#ddd"><th>Item</th><th>Value</th></tr>
                                                               <tr><td>Domain</td><td>Healthy</td></tr>
+                                                              <tr><td>Date</td><td>{{ one_healthy.ev_date }}</td></tr>
                                                               <tr><td>Goal</td><td>{{ one_healthy.ev_goal }} - {{ one_healthy.ev_goal|gen_value:vals }}</td></tr>
                                                               <tr><td>Needs / Gaps</td><td>{{ one_healthy.ev_need }} - {{ one_healthy.ev_need|gen_value:vals }}</td></tr>
                                                               <tr><td>Priority Actions</td><td>{{ one_healthy.ev_priority }} - {{ one_healthy.ev_priority|gen_value:vals }}</td></tr>
                                                               <tr><td>Services</td><td>{{ one_healthy.ev_services }} - {{ one_healthy.ev_services|gen_value:vals }}</td></tr>
                                                               <tr><td>Person Responsible</td><td>{{ one_healthy.ev_responsible }}</td></tr>
-                                                              <tr><td>Date Completed</td><td>{{ one_healthy.ev_completion_date }}</td></tr>
+                                                              <tr><td>Completion Date</td><td>{{ one_healthy.ev_completion_date }}</td></tr>
+                                                              <tr bgcolor="#ddd"><td colspan="2"><b>Case Plan Metadata</b></td></tr>
+                                                              <tr><td>User ID</td><td>{{ one_healthy.ev_meta.created_by }}</td></tr>
+                                                              {% for ev in one_cpt_event.event_user %}
+                                                              <tr><td>Username</td><td>{{ ev.username }}</td></tr>
+                                                              <tr><td>Name</td><td>{{ ev.reg_person.first_name }} {{ ev.reg_person.surname }} ({{ ev.reg_person.id }})</td></tr>
+                                                              {% endfor %}                                                               
+                                                              <tr><td>Timestamp</td><td>{{ one_healthy.ev_meta.timestamp_created }}</td></tr>
+                                                              <tr bgcolor="#ddd"><td colspan="2"><b>Monitor details</b></td></tr>
+                                                              <tr><td colspan="2"><div id="cpt-message-{{ one_healthy.cid }}"></div></td></tr>
                                                               <tr><td>Results</td><td>{{ form.CPT_RESULTS }}</td></tr>
+                                                              <tr><td>Actual completion date</td><td>{{ form.CPT_ACTUAL_DATE_COMPLETION }}</td></tr>
                                                               <tr><td>Reasons</td><td>{{ form.CPT_REASONS }}</td></tr>
                                                               <tr><td></td><td></td></tr>
                                                           </table>
                                                         </div>
                                                         <div class="modal-footer">
-                                                          <button type="submit" class="btn btn-default btn-primary">Monitor H</button>
+                                                          <input type="hidden" value="{{ one_healthy.cid }}" name="CPT_EVENT">
+                                                          <button value="{{ one_healthy.cid }}" type="button" class="btn btn-default btn-primary cptMonitor">Monitor</button>
                                                           <button type="button" class="btn btn-default btn-default" data-dismiss="modal">Cancel</button>
                                                         </div>
                                                         </form>
@@ -180,11 +193,12 @@
                                        {% endif %}
                                        {% if one_cpt_event.event_stable %}
                                        <tr bgcolor="#f0f3f5">
-                                           <td colspan="9"><b>STABLE</b></td>
+                                           <td colspan="10"><b>STABLE</b></td>
                                         </tr>
                                         {% for one_stable in one_cpt_event.event_stable %}
                                             <tr>
                                                 <td></td>
+                                                <td>{{ one_stable.ev_date }}</td>
                                                <td>{{ one_stable.ev_goal }}</td>
                                                <td>{{ one_stable.ev_need }}</td>
                                                <td>{{ one_stable.ev_priority }}</td>
@@ -205,27 +219,41 @@
                                                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                           <h4 class="modal-title">Monitor - {{ one_cpt_event.event_id }}</h4>
                                                         </div>
+                                                        <form id='cpt-monitoring-{{ one_stable.cid }}' class="inline" method="post" action=".">
+                                                        {% csrf_token %}
+                                                        <p></p>
                                                         <div class="modal-body">
                                                           <table class="table">
-                                                              <tr><th>Item</th><th>Value</th></tr>
+                                                              <tr bgcolor="#ddd"><th>Item</th><th>Value</th></tr>
                                                               <tr><td>Domain</td><td>Stable</td></tr>
                                                               <tr><td>Goal</td><td>{{ one_stable.ev_goal }} - {{ one_stable.ev_goal|gen_value:vals }}</td></tr>
                                                               <tr><td>Needs / Gaps</td><td>{{ one_stable.ev_need }} - {{ one_stable.ev_need|gen_value:vals }}</td></tr>
                                                               <tr><td>Priority Actions</td><td>{{ one_stable.ev_priority }} - {{ one_stable.ev_priority|gen_value:vals }}</td></tr>
                                                               <tr><td>Services</td><td>{{ one_stable.ev_services }} - {{ one_stable.ev_services|gen_value:vals }}</td></tr>
                                                               <tr><td>Person Responsible</td><td>{{ one_stable.ev_responsible }}</td></tr>
-                                                              <tr><td>Date Completed</td><td>{{ one_stable.ev_completion_date }}</td></tr>
+                                                              <tr><td>Completion date</td><td>{{ one_stable.ev_completion_date }}</td></tr>
+                                                              <tr bgcolor="#ddd"><td colspan="2"><b>Case Plan Metadata</b></td></tr>
+                                                              <tr><td>User ID</td><td>{{ one_stable.ev_meta.created_by }}</td></tr>
+                                                              {% for ev in one_cpt_event.event_user %}
+                                                              <tr><td>Username</td><td>{{ ev.username }}</td></tr>
+                                                              <tr><td>Name</td><td>{{ ev.reg_person.first_name }} {{ ev.reg_person.surname }} ({{ ev.reg_person.id }})</td></tr>
+                                                              {% endfor %}                                                               
+                                                              <tr><td>Timestamp</td><td>{{ one_stable.ev_meta.timestamp_created }}</td></tr>
+                                                              <tr bgcolor="#ddd"><td colspan="2"><b>Monitor details</b></td></tr>
+                                                              <tr><td colspan="2"><div id="cpt-message-{{ one_stable.cid }}"></div></td></tr>
                                                               <tr><td>Results</td><td>{{ form.CPT_RESULTS }}</td></tr>
+                                                              <tr><td>Actual completion date</td><td>{{ form.CPT_ACTUAL_DATE_COMPLETION }}</td></tr>
                                                               <tr><td>Reasons</td><td>{{ form.CPT_REASONS }}</td></tr>
                                                               <tr><td></td><td></td></tr>
                                                           </table>
                                                         </div>
                                                         <div class="modal-footer">
-                                                          <button type="button" class="btn btn-default btn-primary"  data-dismiss="modal">Monitor</button>
-                                                          <button type="button" class="btn btn-default btn-default" data-dismiss="modal">Cancel</button>
+                                                            <input type="hidden" value="{{ one_stable.cid }}" name="CPT_EVENT">
+                                                            <button value="{{ one_stable.cid }}" type="button" class="btn btn-default btn-primary cptMonitor">Monitor</button>
+                                                            <button type="button" class="btn btn-default btn-default" data-dismiss="modal">Cancel</button>
                                                         </div>
                                                       </div>
-
+                                                      </form>
                                                     </div>
                                                   </div>
                                                </td>
@@ -234,11 +262,12 @@
                                        {% endif %}
                                        {% if one_cpt_event.event_safe %}
                                        <tr bgcolor="#f0f3f5">
-                                           <td colspan="9"><b>SAFE</b></td>
+                                           <td colspan="10"><b>SAFE</b></td>
                                         </tr>
                                         {% for one_safe in one_cpt_event.event_safe %}
                                             <tr>
                                                 <td></td>
+                                                <td>{{ one_safe.ev_date }}</td>
                                                <td>{{ one_safe.ev_goal }}</td>
                                                <td>{{ one_safe.ev_need }}</td>
                                                <td>{{ one_safe.ev_priority }}</td>
@@ -259,27 +288,40 @@
                                                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                           <h4 class="modal-title">Monitor - {{ one_cpt_event.event_id }}</h4>
                                                         </div>
+                                                        <form id='cpt-monitoring-{{ one_safe.cid }}' class="inline" method="post" action=".">
+                                                        {% csrf_token %}
                                                         <div class="modal-body">
                                                           <table class="table">
-                                                              <tr><th>Item</th><th>Value</th></tr>
+                                                              <tr bgcolor="#ddd"><th>Item</th><th>Value</th></tr>
                                                               <tr><td>Domain</td><td>Safe</td></tr>
                                                               <tr><td>Goal</td><td>{{ one_safe.ev_goal }} - {{ one_safe.ev_goal|gen_value:vals }}</td></tr>
                                                               <tr><td>Needs / Gaps</td><td>{{ one_safe.ev_need }} - {{ one_safe.ev_need|gen_value:vals }}</td></tr>
                                                               <tr><td>Priority Actions</td><td>{{ one_safe.ev_priority }} - {{ one_safe.ev_priority|gen_value:vals }}</td></tr>
                                                               <tr><td>Services</td><td>{{ one_safe.ev_services }} - {{ one_safe.ev_services|gen_value:vals }}</td></tr>
                                                               <tr><td>Person Responsible</td><td>{{ one_safe.ev_responsible }}</td></tr>
-                                                              <tr><td>Date Completed</td><td>{{ one_safe.ev_completion_date }}</td></tr>
+                                                              <tr><td>Completion date</td><td>{{ one_safe.ev_completion_date }}</td></tr>
+                                                              <tr bgcolor="#ddd"><td colspan="2"><b>Case Plan Metadata</b></td></tr>
+                                                              <tr><td>User ID</td><td>{{ one_safe.ev_meta.created_by }}</td></tr>
+                                                              {% for ev in one_cpt_event.event_user %}
+                                                              <tr><td>Username</td><td>{{ ev.username }}</td></tr>
+                                                              <tr><td>Name</td><td>{{ ev.reg_person.first_name }} {{ ev.reg_person.surname }} ({{ ev.reg_person.id }})</td></tr>
+                                                              {% endfor %}                                                               
+                                                              <tr><td>Timestamp</td><td>{{ one_safe.ev_meta.timestamp_created }}</td></tr>
+                                                              <tr bgcolor="#ddd"><td colspan="2"><b>Monitor details</b></td></tr>
+                                                              <tr><td colspan="2"><div id="cpt-message-{{ one_safe.cid }}"></div></td></tr>
                                                               <tr><td>Results</td><td>{{ form.CPT_RESULTS }}</td></tr>
+                                                              <tr><td>Actual completion date</td><td>{{ form.CPT_ACTUAL_DATE_COMPLETION }}</td></tr>
                                                               <tr><td>Reasons</td><td>{{ form.CPT_REASONS }}</td></tr>
                                                               <tr><td></td><td></td></tr>
                                                           </table>
                                                         </div>
                                                         <div class="modal-footer">
-                                                          <button type="button" class="btn btn-default btn-primary"  data-dismiss="modal">Monitor</button>
+                                                            <input type="hidden" value="{{ one_safe.cid }}" name="CPT_EVENT">
+                                                          <button value="{{ one_safe.cid }}" type="button" class="btn btn-default btn-primary cptMonitor">Monitor</button>
                                                           <button type="button" class="btn btn-default btn-default" data-dismiss="modal">Cancel</button>
                                                         </div>
                                                       </div>
-
+                                                      </form>
                                                     </div>
                                                   </div>
                                                </td>
@@ -288,11 +330,12 @@
                                        {% endif %}
                                        {% if one_cpt_event.event_school %}
                                        <tr bgcolor="#f0f3f5">
-                                            <td colspan="9"><b>SCHOOLED</b></td>
+                                            <td colspan="10"><b>SCHOOLED</b></td>
                                        </tr>
                                             {% for one_school in one_cpt_event.event_school %}
                                             <tr>
                                                 <td></td>
+                                                <td>{{ one_school.ev_date }}</td>
                                                <td>{{ one_school.ev_goal }}</td>
                                                <td>{{ one_school.ev_need }}</td>
                                                <td>{{ one_school.ev_priority }}</td>
@@ -313,26 +356,40 @@
                                                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                           <h4 class="modal-title">Monitor - {{ one_cpt_event.event_id }}</h4>
                                                         </div>
+                                                        <form id='cpt-monitoring-{{ one_school.cid }}' class="inline" method="post" action=".">
+                                                        {% csrf_token %}
                                                         <div class="modal-body">
                                                           <table class="table">
-                                                              <tr><th>Item</th><th>Value</th></tr>
+                                                              <tr bgcolor="#ddd"><th>Item</th><th>Value</th></tr>
                                                               <tr><td>Domain</td><td>Schooled</td></tr>
                                                               <tr><td>Goal</td><td>{{ one_school.ev_goal }} - {{ one_school.ev_goal|gen_value:vals }}</td></tr>
                                                               <tr><td>Needs / Gaps</td><td>{{ one_school.ev_need }} - {{ one_school.ev_need|gen_value:vals }}</td></tr>
                                                               <tr><td>Priority Actions</td><td>{{ one_school.ev_priority }} - {{ one_school.ev_priority|gen_value:vals }}</td></tr>
                                                               <tr><td>Services</td><td>{{ one_school.ev_services }} - {{ one_school.ev_services|gen_value:vals }}</td></tr>
                                                               <tr><td>Person Responsible</td><td>{{ one_school.ev_responsible }}</td></tr>
-                                                              <tr><td>Date Completed</td><td>{{ one_school.ev_completion_date }}</td></tr>
+                                                              <tr><td>Completion date</td><td>{{ one_school.ev_completion_date }}</td></tr>
+                                                              <tr bgcolor="#ddd"><td colspan="2"><b>Case Plan Metadata</b></td></tr>
+                                                              <tr><td>User ID</td><td>{{ one_school.ev_meta.created_by }}</td></tr>
+                                                              {% for ev in one_cpt_event.event_user %}
+                                                              <tr><td>Username</td><td>{{ ev.username }}</td></tr>
+                                                              <tr><td>Name</td><td>{{ ev.reg_person.first_name }} {{ ev.reg_person.surname }} ({{ ev.reg_person.id }})</td></tr>
+                                                              {% endfor %}                                                               
+                                                              <tr><td>Timestamp</td><td>{{ one_school.ev_meta.timestamp_created }}</td></tr>
+                                                              <tr bgcolor="#ddd"><td colspan="2"><b>Monitor details</b></td></tr>
+                                                              <tr><td colspan="2"><div id="cpt-message-{{ one_school.cid }}"></div></td></tr>
                                                               <tr><td>Results</td><td>{{ form.CPT_RESULTS }}</td></tr>
+                                                              <tr><td>Actual completion date</td><td>{{ form.CPT_ACTUAL_DATE_COMPLETION }}</td></tr>
                                                               <tr><td>Reasons</td><td>{{ form.CPT_REASONS }}</td></tr>
                                                               <tr><td></td><td></td></tr>
                                                           </table>
                                                         </div>
                                                         <div class="modal-footer">
-                                                          <button type="button" class="btn btn-default btn-primary"  data-dismiss="modal">Monitor</button>
+                                                           <input type="hidden" value="{{ one_school.cid }}" name="CPT_EVENT">
+                                                           <button value="{{ one_school.cid }}" type="button" class="btn btn-default btn-primary cptMonitor">Monitor</button>
                                                           <button type="button" class="btn btn-default btn-default" data-dismiss="modal">Cancel</button>
                                                         </div>
                                                       </div>
+                                                  </form>
 
                                                     </div>
                                                   </div>
@@ -349,10 +406,6 @@
                         </fieldset>
 
                     </div>
-                <form class="hidden" action="." method="POST" data-parsley-validate="true" name="form-wizard-f1a" id="new_f1a">
-                    {% csrf_token %}
-                    <input type="hidden" name="final_submission"/>
-				</form>
             </div>
             <a href="{% url 'ovc_view' id=child.id %}" class="badge badge-primary m-4"> Back to OVC</a>
             <div class="badge pull-right m-4">Revised: May 2022</div>
@@ -606,38 +659,8 @@
                             </tbody>
                         </table>
 
-
-
-
-
-                        <table class="table hidden">
-                            <thead>
-                                <tr>
-                                    <td>Event ID</td>
-                                    <td>Event Date</td>
-                                    <td># Services</td>
-                                    <td>Actions</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for one_cpt_event in caseplan_events %}
-                                    {% if one_cpt_event %}
-                                        <tr>
-                                            <td><b>{{one_cpt_event.event_id}}</b></td>
-                                            <td>{{one_cpt_event.event_date}}</td>
-                                            <td>{{one_cpt_event.event_services_count}}</td>
-                                            <td>
-                                                <a href="{% url 'update_caseplan' event_id=one_cpt_event.event_id ovcid=one_cpt_event.event_ovc %}" class="btn btn-sm btn-primary btn-outline">Update</a>
-                                                <a href="#" class="btn btn-sm btn-primary btn-outline">Monitor</a>
-                                                <a href="#" class="btn btn-sm btn-danger btn-outline">Delete</a>
-                                            </td>
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
-                            </tbody>
-                        </table>
                     </div>
-                    <br><br>                           
+                         
                 </div>
             </div>
 
@@ -656,42 +679,38 @@
 <script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>	
 <script src="{% static 'plugins/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}"></script>
 <script src="{% static 'js/apps.js' %}"></script>
-<script src="{% static 'js/form-wizards.js' %}"></script>
-<script src="{% static 'js/tag-it.js' %}"></script>
-<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
-<script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
-<script src="{% static 'js/cpt-script.js' %}"></script>	
 
 <script>
-	
-	$('input[name=if_first_cpara],input[name=date_first_cpara]').removeAttr('required');
-    $('input[name=date_first_cpara]').attr('disabled', true);
-	$('input[name=if_first_cpara]').change(function(){
-		var valu = $(this).val();
-		if(valu === 'AYES'){
-			$('input[name=date_first_cpara]').val('');
-			$('input[name=date_first_cpara]').attr('disabled', true);
-		}else if(valu === 'ANNO'){
-			$('input[name=date_first_cpara]').val('');
-			$('input[name=date_first_cpara]').removeAttr('disabled');
-		}
-	});
+
     $(document).ready(function () {
-        $('#CPT_ACTUAL_DATE_COMPLETION').removeAttr('required');
+        // $('#CPT_ACTUAL_DATE_COMPLETION').removeAttr('required');
+        $('*[name=CPT_ACTUAL_DATE_COMPLETION]').datepicker({ format: 'yyyy-mm-dd' });
+        $('#CPT_ACTUAL_DATE_COMPLETION').val('1900-01-01');
+        $('*[name=CPT_RESULTS]').prepend('<option selected value="">Pick an item</option>').attr('required', true);
+
+
+        $(".cptMonitor").click(function(e){
+            var val = $(this).val();
+            var csrftoken = $.cookie('csrftoken');
+            var msg_id = $('#cpt-message-' + val);
+            $(msg_id).removeClass( "alert alert-danger fade in" );
+            if ( $('#cpt-monitoring-' + val).parsley().isValid() ) {
+                var fms = $('#cpt-monitoring-' + val).serialize();
+                console.log('cpt', val, fms);
+                //$(this).closest("form").submit();
+                $('#cpt-monitoring-' + val).submit();
+
+                
+            }else{
+                console.log('Invalid cpt form');                
+                $(msg_id).addClass( "alert alert-danger fade in" );
+                $(msg_id).html( "Please provide the Results, Actual completion date and Reasons" );
+            }
+        });
+
     });
-    $('*[name=CPT_RESULTS]').prepend('<option selected value="">Pick an item</option>').attr('required', true)
-	
-    ///////
-    $('#div_CPT_ACTUAL_DATE_COMPLETION').addClass('hidden');
-    $('#CPT_ACTUAL_DATE_COMPLETION').val('1900-01-01');
-    $('*[name=CPT_RESULTS]').change(function(){
-        var thisval=$('*[name=CPT_RESULTS] option:selected').val();
-        if(thisval=='NA'){
-            $('#div_CPT_ACTUAL_DATE_COMPLETION').removeClass('hidden');
-        }else{
-            $('#div_CPT_ACTUAL_DATE_COMPLETION').addClass('hidden');
-        }
-    })
+    
+
     function deleteCPTEntry(ovc_id, event_id){
         //alert('Delete record');
         var CPTDelete= "{% url 'delete_caseplan' id=1234 event_id='00000000-0000-0000-0000-000000000000' %}".replace(/1234/, ovc_id.toString()).replace(/00000000-0000-0000-0000-000000000000/, event_id.toString());
@@ -699,9 +718,7 @@
         window.location.href = CPTDelete;
     }
 
-    $(".cptManage").submit(function(e){
-        alert('Failed');
-    });
+    
 </script>
 {% endblock %}
 	

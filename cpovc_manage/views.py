@@ -643,6 +643,3 @@ def se_data(request):
         raise e
     else:
         pass
-
-
-

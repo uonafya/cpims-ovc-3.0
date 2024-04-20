@@ -1,0 +1,31 @@
+QUERIES = {}
+
+QUERIES[1] = 'SELECT * FROM ft_cpims_registration'
+QUERIES[2] = 'SELECT * FROM ft_cpims_caseload'
+QUERIES[3] = 'SELECT * FROM ft_cpims_active_beneficiary'
+QUERIES[4] = 'SELECT * FROM ft_cpims_graduated'
+QUERIES[5] = 'SELECT * FROM ft_cpims_hivstat'
+QUERIES[6] = 'SELECT * FROM ft_cpims_ovc_serv'
+QUERIES[7] = 'SELECT * FROM ft_cpims_viral_load'
+QUERIES[8] = 'SELECT * FROM ft_cpims_case_plan'
+QUERIES[9] = 'SELECT * FROM ft_cpims_cpara'
+QUERIES[10] = 'SELECT * FROM ft_cpims_list_served'
+QUERIES[11] = 'SELECT * FROM ft_cpims_benchmark'
+QUERIES[12] = 'SELECT * FROM ft_cpims_attrition'
+QUERIES[13] = 'SELECT * FROM ft_cpims_not_served'
+
+# No spaces for uses with the download files
+QNAMES = {}
+QNAMES[1] = 'Registration-List'
+QNAMES[2] = 'Caseload'
+QNAMES[3] = 'Active-Beneficiary'
+QNAMES[4] = 'Graduated'
+QNAMES[5] = 'HIVSTAT'
+QNAMES[6] = 'OVC_SERV'
+QNAMES[7] = 'Viral-Load'
+QNAMES[8] = 'Case-Plan'
+QNAMES[9] = 'CPARA'
+QNAMES[10] = 'List-Served'
+QNAMES[11] = 'Benchmark'
+QNAMES[12] = 'Attrition'
+QNAMES[13] = 'Not-Served'

@@ -1,10 +1,3 @@
-
-# credentials = {'username': 'Wadhao', 'password': 'Andromeda8922203'}
-# credentials = {'username': 'nmugaya', 'password': 'P@ss4321'}
-# credentials = {'username': 'testhealthit', 'password': 'T3st@987654321'}
-
-credentials = {'username': 'nmugaya', 'password': '1P@ss2023'}
-
 SID = {}
 # Default settings
 
@@ -90,3 +83,15 @@ SIDS = ['sex_id', 'ovc_domain_id',
 META_IDS = []
 for S_ID in SID:
     META_IDS.append(SID[S_ID]['id'])
+
+# Device management status
+STATUSES = {}
+STATUSES[1] = 'Device added successfully'
+STATUSES[2] = 'New Device has not been activated.'
+STATUSES[3] = 'Change of Device'
+STATUSES[4] = 'Device is Blocked'
+STATUSES[5] = 'Multiple devices set up'
+STATUSES[6] = 'Device already set up for a different user'
+STATUSES[7] = 'Reserved'
+STATUSES[8] = 'Reserved'
+STATUSES[9] = 'New Device set up activate first.'

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from django.db.models import Count
+from django.utils import timezone
 
 from cpovc_registry.models import (
     RegPersonsTypes, RegPersonsOrgUnits, RegPerson, RegOrgUnit,
@@ -8,11 +9,12 @@ from cpovc_forms.models import (
     OVCCaseRecord, OVCCaseCategory, OVCCareServices, OVCCaseGeo,
     OVCPlacement, OVCCareEvents, OVCCareF1B, OVCCareCasePlan,
     OVCCareForms, OVCCareQuestions, OVCCareBenchmarkScore,
-    OVCCareCpara, OVCSubPopulation, OVCCareIndividaulCpara, OVCCareEAV)
+    OVCCareCpara, OVCSubPopulation, OVCCareIndividaulCpara, OVCCareEAV,
+    OVCHIVRiskScreening, OVCHIVManagement)
 
 from cpovc_auth.models import AppUser
 from cpovc_ovc.models import (
-    OVCRegistration, OVCHHMembers, OVCHealth)
+    OVCRegistration, OVCHHMembers, OVCHealth, OVCFacility)
 
 from cpovc_registry.functions import get_orgs_child
 from cpovc_auth.functions import get_attached_units
@@ -22,6 +24,7 @@ from cpovc_main.functions import get_dict
 from cpovc_dashboard.parameters import PARAMS
 
 from .models import DeviceManagement
+from notifications.signals import notify
 
 
 def get_attached_orgs(request):
@@ -398,6 +401,19 @@ def ovc_dashboard(request, params):
         dash['case_regs'] = []
         dash['case_cats'] = {}
         dash['criteria'] = {}
+        # Mobile App additions
+        dash['unapproved'] = 0
+        dash['form1a'] = 0
+        dash['form1b'] = 0
+        dash['cpara'] = 0
+        dash['cpt'] = 0
+        dash['clhiv'] = 0
+        dash['unapproved_F1A'] = 0
+        dash['unapproved_F1B'] = 0
+        dash['unapproved_CPR'] = 0
+        dash['unapproved_CPT'] = 0
+        dash['unapproved_HRS'] = 0
+        dash['unapproved_HMF'] = 0
     except Exception as e:
         print(
             'error - {}'.format(str(e)))
@@ -418,6 +434,19 @@ def ovc_dashboard(request, params):
         dash['household'] = 0
         dash['criteria'] = {}
         dash['ovc_summary'] = {}
+        # Mobile App additions
+        dash['unapproved'] = 0
+        dash['form1a'] = 0
+        dash['form1b'] = 0
+        dash['cpara'] = 0
+        dash['cpt'] = 0
+        dash['clhiv'] = 0
+        dash['unapproved_F1A'] = 0
+        dash['unapproved_F1B'] = 0
+        dash['unapproved_CPR'] = 0
+        dash['unapproved_CPT'] = 0
+        dash['unapproved_HRS'] = 0
+        dash['unapproved_HMF'] = 0
         return dash
     else:
         return dash
@@ -539,12 +568,17 @@ def save_form(request, person_id, event_date, form_id, services, scores=[]):
     """Method to save forms."""
     try:
         # Forms settings
-        fms = {'F1A': 'FSAM', 'F1B': 'FM1B', 'CPT': 'CPAR', 'CPR': 'cpr'}
+        fms = {'F1A': 'FSAM', 'F1B': 'FM1B', 'CPT': 'CPAR',
+               'CPR': 'cpr', 'HRS': 'HRST', 'HMF': 'MGMT'}
         ev_type_id = fms[form_id] if form_id in fms else 'F1A'
         caregiver = OVCRegistration.objects.filter(person_id=person_id).first()
         caregiver_id = caregiver.caretaker_id
         if ev_type_id == 'FM1B':
             person_id = caregiver_id
+        if form_id == 'HRS':
+            event_date = request.data.get('HIV_RA_1A')
+        elif form_id == 'HMF':
+            event_date = request.data.get('HIV_MGMT_2_A')
         hhid = get_household(request, person_id)
         event_id = save_event(request, person_id, event_date, hhid, ev_type_id)
         org_unit_name = get_user_org_unit(request)
@@ -596,6 +630,7 @@ def save_form(request, person_id, event_date, form_id, services, scores=[]):
             ddate = '1900-01-01'
             acd = 'actual_completion_date'
             dpe = 'date_of_prev_event'
+            cdt = 'completion_date'
             for service in services:
                 service_domain = service['domain_id']
                 service_ids = service['service_id']
@@ -606,11 +641,11 @@ def save_form(request, person_id, event_date, form_id, services, scores=[]):
                 results_id = service['results_id']
                 reason_id = service['reason_id']
                 prev_date = service[dpe] if dpe in service else '1900-01-01'
-                comp_date = service['completion_date']
+                comp_date = service[cdt] if cdt in service else '1900-01-01'
                 acomp_date = service[acd] if acd in service else None
                 # Dates
                 date_of_prev_event = prev_date if prev_date else None
-                completion_date = comp_date if comp_date else None
+                completion_date = comp_date if comp_date else '1900-01-01'
                 actual_completion_date = acomp_date if acomp_date else ddate
 
                 # Form ID
@@ -767,6 +802,10 @@ def save_form(request, person_id, event_date, form_id, services, scores=[]):
                     event_id=event_id,
                     date_of_event=event_date,
                     care_giver_id=caregiver_id)
+        elif form_id == 'HRS':
+            save_hrs(request, event_id, person_id)
+        elif form_id == 'HMF':
+            save_hmf(request, event_id, person_id)
     except Exception as e:
         msg = 'Error saving form - %s' % (str(e))
         return msg
@@ -927,6 +966,10 @@ def get_caseload(request, allow_exit=1):
         org_unit_id = request.query_params.get('org_unit_id')
         chv_cpims_id = request.query_params.get('chv_cpims_id')
         is_active = request.query_params.get('active')
+        # Get person ID and check on OVC registration if it a CHV
+        user_person_id = request.user.reg_person_id
+        chv_count = OVCRegistration.objects.filter(
+            is_void=False, is_active=True, child_chv_id=user_person_id).count()
         if not allow_exit:
             is_active = 'TRUE'
         ovcs = OVCRegistration.objects.filter(
@@ -936,13 +979,15 @@ def get_caseload(request, allow_exit=1):
         if is_active:
             active = True if is_active.upper() == 'TRUE' else False
             ovcs = ovcs.filter(is_active=active)
+        if chv_count > 0:
+            ovcs = ovcs.filter(child_chv_id=user_person_id)
         if org_unit_id:
             ou_ids = [org_unit_id]
         else:
             ous = get_attached_orgs(request)
             ou_ids = ous['attached_ou'] if 'attached_ou' in ous else []
         print('OU IDS', ou_ids)
-        ovcs = ovcs.filter(child_cbo_id__in=ou_ids)[:10000]
+        ovcs = ovcs.filter(child_cbo_id__in=ou_ids)
         print('F RES', ovcs)
         check_fields = ['sex_id', 'hiv_status_id', 'exit_reason_id',
                         'immunization_status_id']
@@ -1009,12 +1054,14 @@ def get_caseload(request, allow_exit=1):
         return results
 
 
-def access_manager(request):
+def access_manager(request, method='GET'):
     """Method to handle access management."""
     try:
         status = 9
         device = None
         device_id = request.query_params.get('deviceID')
+        if method == 'POST':
+            device_id = request.data.get('deviceID')
         user_id = request.user.id
         user_devices = DeviceManagement.objects.filter(
             user_id=user_id, is_void=False)
@@ -1026,7 +1073,7 @@ def access_manager(request):
                 if device.is_blocked:
                     status = 4
                 elif device.is_active:
-                    status = 1
+                    status = 0
                     if device.device_id != device_id:
                         status = 3
                 else:
@@ -1041,11 +1088,223 @@ def access_manager(request):
                     device_id=device_id, user_id=user_id,
                     defaults={'is_blocked': False, 'is_void': False})
                 if created:
+                    status = 1
                     print('New Device added %s' % str(device_id))
                 else:
                     print('Device Blocked', 'Void', device_id)
     except Exception as e:
         print('Error mapping device and user %s' % (str(e)))
-        return None, 0
+        return None, 8
     else:
         return device, status
+
+
+def handle_notification(request, status_code):
+    """Method to handle Notifications"""
+    try:
+        user = request.user
+        details = 'Status code - %s' % (status_code)
+        notify.send(user, recipient=user, description=details,
+                    verb='Mobile App device access')
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+def get_date(request, field_id):
+    '''Method to save HRS'''
+    try:
+        field_value = request.data.get('HIV_RS_15')
+        if not field_value:
+            field_value = timezone.now()
+    except Exception as e:
+        print('Error getting date field - %s' % str(e))
+        return '1900-01-01'
+    else:
+        return field_value
+
+
+def save_hrs(request, event_id, person_id):
+    '''Method to save HRS'''
+    try:
+        parent_consentdate = get_date(request, 'HIV_RS_15')
+        referal_madedate = get_date(request, 'HIV_RS_17')
+        referal_completeddate = get_date(request, 'HIV_RS_19')
+        art_referaldate = get_date(request, 'HIV_RS_22')
+        art_refer_completeddate = get_date(request, 'HIV_RS_24')
+
+        # Converting values AYES and ANNO to boolean true / false
+        boolean_fields = [
+            'HIV_RS_01', 'HIV_RS_02', 'HIV_RS_03', 'HIV_RS_03A',
+            'HIV_RS_04', 'HIV_RS_05', 'HIV_RS_06', 'HIV_RS_06A',
+            'HIV_RS_07', 'HIV_RS_08', 'HIV_RS_09', 'HIV_RS_10',
+            'HIV_RS_10A', 'HIV_RS_10B', 'HIV_RS_11', 'HIV_RS_14',
+            'HIV_RS_16', 'HIV_RS_18', 'HIV_RS_18A', 'HIV_RS_21',
+            'HIV_RS_23'
+        ]
+
+        data_to_save = {}
+
+        for key, value in request.data.items():
+            if key in boolean_fields:
+                data_to_save.update({
+                    key: True if value == "AYES" else False
+                })
+            else:
+                data_to_save.update({key: value})
+
+        facility = data_to_save.get('HIV_RA_3Q6')
+        if facility:
+            facility_res = OVCFacility.objects.get(id=facility).facility_code
+        else:
+            facility_res = None
+        skipped = boolean_fields - data_to_save.keys()
+        for skip in skipped:
+            data_to_save[skip] = False
+
+        print('HRS data', data_to_save)
+
+        hrs_tool = OVCHIVRiskScreening.objects.create(
+            person_id=person_id,
+            test_done_when=data_to_save.get('HIV_RS_03'),
+            test_donewhen_result=False,
+            caregiver_know_status=data_to_save.get('HIV_RS_01'),
+            caregiver_knowledge_yes=data_to_save.get('HIV_RS_02'),
+            parent_PLWH=data_to_save.get('HIV_RS_04'),
+            child_sick_malnourished=data_to_save.get('HIV_RS_05'),
+            child_sexual_abuse=data_to_save.get('HIV_RS_06'),
+            traditional_procedure=data_to_save.get('HIV_RS_06A'),
+            adol_sick=data_to_save.get('HIV_RS_07'),
+            adol_had_tb=data_to_save.get('HIV_RS_08'),
+            adol_sexual_abuse=data_to_save.get('HIV_RS_09'),
+            sex=data_to_save.get('HIV_RS_10'),
+            sti=data_to_save.get('HIV_RS_10A'),
+            sharing_needles=data_to_save.get('HIV_RS_10B'),
+            hiv_test_required=data_to_save.get('HIV_RS_11'),
+            parent_consent_testing=data_to_save.get('HIV_RS_14'),
+            parent_consent_date=parent_consentdate,
+            referral_made=data_to_save.get('HIV_RS_16'),
+            referral_made_date=referal_madedate,
+            referral_completed=data_to_save.get('HIV_RS_18'),
+            referral_completed_date=referal_completeddate,
+            not_completed=data_to_save.get('HIV_RS_18A'),
+            test_result=data_to_save.get('HIV_RS_18B'),
+            art_referral=data_to_save.get('HIV_RS_21'),
+            art_referral_date=art_referaldate,
+            art_referral_completed=data_to_save.get('HIV_RS_23'),
+            art_referral_completed_date=art_refer_completeddate,
+            facility_code=facility_res,
+            event_id=event_id,
+            date_of_event=data_to_save.get('HIV_RA_1A'),
+            timestamp_created=timezone.now(),
+        )
+    except Exception as e:
+        print('Error - %s' % str(e))
+        return 'Error saving HRS -  %s' % str(e)
+    else:
+        return hrs_tool.pk
+
+
+def save_hmf(request, event_id, person_id):
+    """Method to save HIV Risk Management Form."""
+    try:
+        '''
+        hiv_confirmed_date = models.DateTimeField(null=False)
+        treatment_initiated_date = models.DateTimeField(null=False)
+        firstline_start_date = models.DateTimeField(null=False)
+        substitution_firstline_date = models.DateTimeField(default=timezone.now)
+        switch_secondline_date = models.DateTimeField(null=True)
+        switch_thirdline_date = models.DateTimeField(null=True)
+        visit_date = models.DateTimeField(null=False)
+        viral_load_date = models.DateTimeField(null=False)
+        nextappointment_date = models.DateField(null=True)
+
+
+        switch_secondline_arv = models.BooleanField(default=False)
+        switch_thirdline_arv = models.BooleanField(default=False)
+        nhif_enrollment = models.BooleanField(default=False)
+
+        support_group_enrollment = models.BooleanField(default=False)
+        substitution_firstline_arv = models.BooleanField(default=False)
+        '''
+
+        _HIV_MGMT_1_E = False
+        _HIV_MGMT_1_F = False
+        _HIV_MGMT_1_G = False
+        _HIV_MGMT_2_O_1 = False
+
+        if (request.data.get('HIV_MGMT_1_E')):
+            HIV_MGMT_1_E = request.data.get('HIV_MGMT_1_E')
+            _HIV_MGMT_1_E = True if HIV_MGMT_1_E == 'AYES' else False
+        if (request.data.get('HIV_MGMT_1_F')):
+            HIV_MGMT_1_F = request.data.get('HIV_MGMT_1_F')
+            _HIV_MGMT_1_F = True if HIV_MGMT_1_F == 'AYES' else False
+        if (request.data.get('HIV_MGMT_1_G')):
+            HIV_MGMT_1_G = request.data.get('HIV_MGMT_1_G')
+            _HIV_MGMT_1_G = True if HIV_MGMT_1_G == 'AYES' else False
+        if (request.data.get('HIV_MGMT_2_O_1')):
+            HIV_MGMT_2_O_1 = request.data.get('HIV_MGMT_2_O_1')
+            _HIV_MGMT_2_O_1 = True if HIV_MGMT_2_O_1 == 'AYES' else False
+
+        _HIV_MGMT_1_E_DATE = "1900-01-01"
+        _HIV_MGMT_1_F_DATE = "1900-01-01"
+        _HIV_MGMT_1_G_DATE = "1900-01-01"
+
+        if (request.data.get('HIV_MGMT_1_E_DATE')):
+            _HIV_MGMT_1_E_DATE = request.data.get('HIV_MGMT_1_E_DATE')
+        if (request.data.get('HIV_MGMT_1_F_DATE')):
+            _HIV_MGMT_1_F_DATE = request.data.get('HIV_MGMT_1_F_DATE')
+        if (request.data.get('HIV_MGMT_1_G_DATE')):
+            _HIV_MGMT_1_G_DATE = request.data.get('HIV_MGMT_1_G_DATE')
+        # Other
+        supporter_rel = request.data.get('HIV_MGMT_2_H_1')
+        vl_intervention = request.data.get('HIV_MGMT_2_J')
+
+        hmf_tool = OVCHIVManagement(
+            person_id=person_id,
+            hiv_confirmed_date=request.data.get('HIV_MGMT_1_A'),
+            baseline_hei=request.data.get('HIV_MGMT_1_C'),
+            treatment_initiated_date=request.data.get('HIV_MGMT_1_B'),
+            firstline_start_date=request.data.get('HIV_MGMT_1_D'),  # date
+            substitution_firstline_arv=_HIV_MGMT_1_E,
+            substitution_firstline_date=_HIV_MGMT_1_E_DATE,
+            switch_secondline_arv=_HIV_MGMT_1_F,
+            switch_secondline_date=_HIV_MGMT_1_F_DATE,
+            switch_thirdline_arv=_HIV_MGMT_1_G,
+            switch_thirdline_date=_HIV_MGMT_1_G_DATE,
+            visit_date=request.data.get('HIV_MGMT_2_A'),
+            duration_art=request.data.get('HIV_MGMT_2_B'),
+            height=request.data.get('HIV_MGMT_2_C'),
+            muac=request.data.get('HIV_MGMT_2_D'),
+            adherence=request.data.get('HIV_MGMT_2_E'),
+            adherence_drugs_duration=request.data.get('HIV_MGMT_2_F'),
+            adherence_counselling=request.data.get('HIV_MGMT_2_G'),
+            treatment_suppoter=request.data.get('HIV_MGMT_2_H_2'),
+            treatment_supporter_relationship=supporter_rel,
+            treatment_supporter_gender=request.data.get('HIV_MGMT_2_H_3'),
+            treament_supporter_hiv=request.data.get('HIV_MGMT_2_H_5'),
+            viral_load_results=request.data.get('HIV_MGMT_2_I_1'),
+            viral_load_date=request.data.get('HIV_MGMT_2_I_DATE'),
+            treatment_supporter_age=request.data.get('HIV_MGMT_2_H_4'),
+            detectable_viralload_interventions=vl_intervention,
+            disclosure=request.data.get('HIV_MGMT_2_K'),
+            muac_score=request.data.get('HIV_MGMT_2_L_1'),
+            bmi=request.data.get('HIV_MGMT_2_L_2'),
+            nutritional_support=request.data.get('HIV_MGMT_2_M'),
+            support_group_status=request.data.get('HIV_MGMT_2_N'),
+            nhif_enrollment=_HIV_MGMT_2_O_1,
+            nhif_status=request.data.get('_HIV_MGMT_2_O_2'),
+            referral_services=request.data.get('HIV_MGMT_2_P'),
+            nextappointment_date=request.data.get('HIV_MGMT_2_Q'),
+            peer_educator_name=request.data.get('HIV_MGMT_2_R'),
+            peer_educator_contact=request.data.get('HIV_MGMT_2_S'),
+            event_id=event_id,
+            date_of_event=request.data.get('HIV_MGMT_2_A'),
+            timestamp_created=timezone.now()
+        ).save()
+    except Exception as e:
+        print('HMF error - %s' % str(e))
+        return 'Error saving HMF -  %s' % str(e)
+    else:
+        return hmf_tool.pk

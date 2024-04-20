@@ -112,7 +112,7 @@
                                                     <label class="control-label formlabel" for="csi_qs">Form Type :</label>
                                                 </div>
                                                 <div class="col-md-6 col-sm-6">
-                                                  <h4> <u> <strong> {% if form_type == 'bm' %} Benchmark Monitoring {% else %} Household Reaching Case Plan Achievement {% endif %} </strong> </u> </h4>
+                                                  <h4> <u> <strong> {{ form_type }} </strong> </u> </h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -196,7 +196,6 @@
                     
                     <br/>
                     <hr style="border-color: darkgrey; border-width: 5px;"/>
-                    <div {% if form_type == 'bm' %} style = "display:none;"  {% else %} dispaly = '' {% endif %}>
                     <div class="form-group">
                                     <label class="col-md-9 control-label semi-bold">Household is still ready to successfully exit (Case plan achievement):<span class="asteriskField">*</label>
                                     <div class="col-md-3">
@@ -209,7 +208,6 @@
                                         {{ form.cm14q }}
                                     </div>
                                 </div>
-                            </div>
 
 					<div class="panel-body panel-form">
 						<div class="form-group">

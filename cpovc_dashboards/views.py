@@ -1,3 +1,5 @@
+import os
+import time
 from datetime import datetime
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -8,6 +10,11 @@ from .functions import get_geo, get_lips, get_chart_data, get_ips, get_data
 from .parameters import colors as dcolors
 from .parameters import CHART
 from .params import CHART as GCHART
+from .utils import generate_output_file, get_data
+
+from django.conf import settings
+
+MEDIA_ROOT = settings.MEDIA_ROOT
 
 from cpovc_settings.forms import SettingsForm
 
@@ -284,3 +291,54 @@ def ovc_dashboard_help(request):
         raise e
     else:
         pass
+
+
+@login_required
+def ovc_dashboard_data(request):
+    """Method to do pivot reports."""
+    try:
+        form = CaseLoad()
+        context = {'form': form}
+        if request.method == 'POST':
+            print(request.POST)
+            response = generate_output_file(request)
+            return JsonResponse(response, safe=False)
+        # Archives
+        reports = []
+        directory = '%s/csv/' % (MEDIA_ROOT)
+        for filename in os.listdir(directory):
+            file_pref = 'RawData.%s' % (request.user.id)
+            if filename.startswith(file_pref):
+                rname = os.path.join(directory, filename)
+                cdate = os.stat(rname)
+                (md, ino, dev, nnk, uid, gid, size, atm, mtime, ctime) = cdate
+                create_date = time.ctime(mtime)
+                report = [filename, create_date, filename.replace('.csv', '')]
+                reports.append(report)
+        context['reports'] = reports
+        return render(
+            request, 'dashboards/ovc_dashboard_data.html',  context )
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+@login_required
+def ovc_dashboard_download(request):
+    """Method to do pivot reports."""
+    try:
+        form = CaseLoad()
+        context = {'form': form}
+        fname = request.GET.get('file_name')
+        fmt = request.GET.get('format')
+        user_id = request.user.id
+        allowed = True if fname.startswith('RawData.%s' % (user_id)) else False
+        response = get_data(request, fname, fmt)
+        if not fname and not fmt:
+            return render(
+                request, 'dashboards/ovc_dashboard_data.html',  context )
+    except Exception as e:
+        raise e
+    else:
+        return response

@@ -5,7 +5,8 @@ from django.core.cache import cache
 from cpovc_registry.functions import (
     get_client_ip, get_meta_data)
 
-from cpovc_main.functions import get_general_list, convert_date
+from cpovc_main.functions import (
+    get_general_list, convert_date, get_days_difference)
 from cpovc_forms.models import (
     FormsAuditTrail, OVCCareCpara, OVCCareCasePlan,
     OVCCareEvents, OVCEducationFollowUp)
@@ -15,9 +16,10 @@ from cpovc_registry.models import RegOrgUnit
 from .models import (
     OVCGokBursary, OVCCareEAV, OvcCaseInformation, OVCPlacement,
     OVCCaseLocation, OVCCareF1B, OVCProgramRegistration)
-from cpovc_ovc.models import OVCFacility
+from cpovc_ovc.models import OVCFacility, OVCRegistration
 
 from cpovc_main.models import ListAnswers
+from cpovc_auth.models import AppUser
 
 
 def save_audit_trail(request, params, audit_type):
@@ -188,10 +190,14 @@ def save_cpara_form_by_domain(
 
 
 # PAST CPT
-def get_past_cpt(ovc_id):
+def get_past_cpt_old(ovc_id):
     # past cpt
     all_cpt_events = OVCCareEvents.objects.filter(
         event_type_id='CPAR', person_id=ovc_id, is_void=False)
+
+    # We need the caregiver
+    ovc_reg = OVCRegistration.objects.get(person_id=ovc_id, is_void=False)
+    caregiver_id = ovc_reg.caretaker_id
 
     caseplan_events = []
     try:
@@ -275,6 +281,124 @@ def get_past_cpt(ovc_id):
                 'event_school': one_event_school
             })
         print(("get_past_cpt successful::::::::::::", caseplan_events))
+        return caseplan_events
+    except Exception as e:
+        caseplan_events = []
+        caseplan_events.append({
+            'error': True,
+            'msg': '%s :error fetching past CPT - %s' % (ovc_id, str(e))
+        })
+        print('%s :error fetching past CPT - %s' % (ovc_id, str(e)))
+        # return False
+        return caseplan_events
+
+
+# PAST CPT
+def get_past_cpt(ovc_id):
+    # past cpt
+    all_cpt_events = OVCCareEvents.objects.filter(
+        event_type_id='CPAR', person_id=ovc_id, is_void=False)
+
+    # We need the caregiver
+    # ovc_reg = OVCRegistration.objects.get(person_id=ovc_id, is_void=False)
+    # caregiver_id = ovc_reg.caretaker_id
+
+    caseplan_events = []
+    try:
+        for one_caseplan_event in all_cpt_events:
+            one_event_stable = []
+            one_event_safe = []
+            one_event_healthy = []
+            one_event_school = []
+
+            user_id = one_caseplan_event.created_by
+
+            all_cpt = OVCCareCasePlan.objects.filter(
+                event=one_caseplan_event, is_void=False)
+            if all_cpt:
+                for one_cpt in all_cpt:
+                    comp_date = one_cpt.completion_date.strftime('%d-%b-%Y')
+                    cid = one_cpt.case_plan_id
+                    cev_date = one_cpt.date_of_event
+                    if one_cpt.domain == 'DHNU':
+                        one_event_healthy.append({
+                            'cid': cid,
+                            'ev_domain': one_cpt.domain,
+                            'ev_goal': one_cpt.goal,
+                            'ev_need': one_cpt.need,
+                            'ev_priority': one_cpt.priority,
+                            'ev_services': one_cpt.cp_service,
+                            'ev_results': one_cpt.results,
+                            'ev_reasons': one_cpt.reasons,
+                            'ev_completion_date': comp_date,
+                            'ev_responsible': one_cpt.responsible,
+                            'ev_person': ovc_id,
+                            'ev_date': cev_date,
+                            'ev_meta': one_cpt.event
+                        })
+                    elif one_cpt.domain == 'DHES':
+                        one_event_stable.append({
+                            'cid': cid,
+                            'ev_domain': one_cpt.domain,
+                            'ev_goal': one_cpt.goal,
+                            'ev_need': one_cpt.need,
+                            'ev_priority': one_cpt.priority,
+                            'ev_services': one_cpt.cp_service,
+                            'ev_results': one_cpt.results,
+                            'ev_reasons': one_cpt.reasons,
+                            'ev_completion_date': comp_date,
+                            'ev_responsible': one_cpt.responsible,
+                            'ev_person': ovc_id,
+                            'ev_date': cev_date,
+                            'ev_meta': one_cpt.event
+                        })
+                    elif one_cpt.domain == 'DPRO':
+                        one_event_safe.append({
+                            'cid': cid,
+                            'ev_domain': one_cpt.domain,
+                            'ev_goal': one_cpt.goal,
+                            'ev_need': one_cpt.need,
+                            'ev_priority': one_cpt.priority,
+                            'ev_services': one_cpt.cp_service,
+                            'ev_results': one_cpt.results,
+                            'ev_reasons': one_cpt.reasons,
+                            'ev_completion_date': comp_date,
+                            'ev_responsible': one_cpt.responsible,
+                            'ev_person': ovc_id,
+                            'ev_date': cev_date,
+                            'ev_meta': one_cpt.event
+                        })
+                    elif one_cpt.domain == 'DEDU':
+                        one_event_school.append({
+                            'cid': cid,
+                            'ev_domain': one_cpt.domain,
+                            'ev_goal': one_cpt.goal,
+                            'ev_need': one_cpt.need,
+                            'ev_priority': one_cpt.priority,
+                            'ev_services': one_cpt.cp_service,
+                            'ev_results': one_cpt.results,
+                            'ev_reasons': one_cpt.reasons,
+                            'ev_completion_date': comp_date,
+                            'ev_responsible': one_cpt.responsible,
+                            'ev_person': ovc_id,
+                            'ev_date': cev_date,
+                            'ev_meta': one_cpt.event
+                        })
+            ev_date = one_caseplan_event.date_of_event.strftime('%d-%b-%Y')
+            my_user = AppUser.objects.filter(id=user_id)
+            caseplan_events.append({
+                'error': False,
+                'event_ovc': ovc_id,
+                'event_id': one_caseplan_event.pk,
+                'event_date': ev_date,
+                'event_stable': one_event_stable,
+                'event_safe': one_event_safe,
+                'event_healthy': one_event_healthy,
+                'event_school': one_event_school,
+                'event_meta': one_caseplan_event,
+                'event_user': my_user
+            })
+        print(("get_past_cpt successful::::::::::::", len(caseplan_events)))
         return caseplan_events
     except Exception as e:
         caseplan_events = []
@@ -744,3 +868,42 @@ def get_ovc_program(request, person_id, ovc_prog):
         return None
     else:
         return program
+
+
+def get_caseplan(request, ovc_id):
+    """Method to get if caseplan is valid."""
+    try:
+        caseplans = {}
+        ovc = OVCRegistration.objects.get(
+            person_id=ovc_id, is_void=False)
+        caregiver_id = ovc.caretaker_id
+        caseplans['ovc'] = ovc
+        caseplan = OVCCareCasePlan.objects.filter(
+            person_id=ovc_id, is_void=False).order_by('-date_of_event')
+        if not caseplan:
+            caseplan = OVCCareCasePlan.objects.filter(
+                caregiver_id=caregiver_id,
+                is_void=False).order_by('-date_of_event')
+        for cp in caseplan:
+            print(cp, cp.date_of_event)
+        if caseplan:
+            d_event = caseplan.first().date_of_event
+            delta = get_days_difference(d_event)
+            if delta > 400:
+                cg_caseplan = OVCCareCasePlan.objects.filter(
+                    caregiver_id=caregiver_id,
+                    is_void=False).order_by('-date_of_event')
+                d_event = cg_caseplan.first().date_of_event
+                delta = get_days_difference(d_event)
+            caseplans['cp_date'] = d_event
+            caseplans['cp_days'] = delta
+        else:
+            caseplans['cp_date'] = '1900-01-01'
+            caseplans['cp_days'] = 999
+        print("CP", caseplans)
+        print('OVC', ovc)
+    except Exception as e:
+        print("error getting current case plan - %s" % (str(e)))
+        return {}
+    else:
+        return caseplans

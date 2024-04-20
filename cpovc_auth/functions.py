@@ -131,15 +131,17 @@ def check_national(user):
         return False
 
 
-def get_attached_units(user):
+def get_attached_units(user, su=True):
     """"Method to check attached units."""
     orgs = []
     try:
-        if user.is_superuser:
+        if user.is_superuser and su:
+            print('is su')
             return {}
         person_id = user.reg_person_id
         person_orgs = RegPersonsOrgUnits.objects.filter(
             person_id=person_id, is_void=False)
+        print('POGS', person_orgs)
         if person_orgs:
             reg_pri, reg_ovc, reg_pri_name = 0, False, ''
             all_roles, all_ous = [], []

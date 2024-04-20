@@ -459,6 +459,14 @@ CHART['4I']['calc'] = '''
 A count of Top 5 unique services provided by frequency and Domain
 '''
 
+CHART['4J'] = {}
+CHART['4J']['desc'] = '''
+Total number of CPARA, Caseplan and Service Layering
+'''
+CHART['4J']['calc'] = '''
+A count of CPARA, Caseplan and Service Layering
+'''
+
 
 # =============== Case Management OVC ==========================
 

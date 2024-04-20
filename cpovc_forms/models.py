@@ -1286,7 +1286,6 @@ class OVCBasicCRS(models.Model):
     latitude = models.DecimalField(max_digits=10, decimal_places=7, null=True)
     account = models.ForeignKey(AppUser, on_delete=models.CASCADE, default=1)
     case_params = models.TextField(null=True)
-    load = models.JSONField
     status = models.IntegerField(default=0)
     case_comments = models.TextField(null=True)
     case_record = models.ForeignKey(

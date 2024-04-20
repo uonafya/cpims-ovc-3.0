@@ -767,7 +767,7 @@ National
                             let payload  = JSON.stringify({
                                 "ovc_cpims_id": cpt.ovc_cpims_id,
                                 "date_of_event": cpt.date_of_event,
-                                'event_id': event_id,
+                                'event_id': event_ids,
                                 'app_form_metadata': app_form,
                                 "critical_events": crt_events,
                                 "services": []
@@ -816,7 +816,7 @@ National
                             let services = []
                             let app_form = data[dta].app_form_metadata || {}
                             let event_id = data[dta].event_id   
-                            servId =  service.service_id
+                            servId =  service.id
                             ja = JSON.parse(servId.replace(/'/g, '"'));
                             html_services = ''
                             for (indx in ja){
@@ -1193,7 +1193,7 @@ National
                         $("#Dataapproval tbody").append(`
                                 <tr id="${data_indx.adherence_id}_tr" class="datarows">
                                     <td style="width: 100%;">
-                                        <p>Form: HIV Management Form : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
+                                        <p>Form: HIV Management Form : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                                 <div class="row">
                                                     <br>
                                                     <div class="col-md-10">

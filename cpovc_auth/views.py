@@ -371,6 +371,7 @@ def roles_edit(request, user_id):
             access_manager = request.POST.get('group_ACM')
             national_welfare = request.POST.get('group_SWM')
             standard_log = request.POST.get('group_STD')
+            data_approve = request.POST.get('group_DAP')
             # Accounts specific
             reset_password = request.POST.get('reset_password')
             activate_choice = request.POST.get('activate_choice')
@@ -384,6 +385,8 @@ def roles_edit(request, user_id):
                 group_ids.append(groups_cpims['group_SWM'])
             if standard_log:
                 group_ids.append(groups_cpims['group_STD'])
+            if data_approve:
+                group_ids.append(groups_cpims['group_DAP'])
             # Check if any group is being removed
             removed_groups = list(set(mygrp) - set(group_ids))
             print('New groups', group_ids)

@@ -288,6 +288,19 @@
                 <!-- end col-12 -->
             </div>
             <!-- end row -->
+            <!-- begin row -->
+            <div class="row">
+                <!-- begin col-12 -->
+                <div class="col-md-12">            
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div id="container-4J" style="min-height: 680px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-12 -->
+            </div>
+            <!-- end row -->
 
             <!-- begin row -->
             <div class="row">
@@ -397,9 +410,12 @@
 
             // $('#sel-period').attr('disabled', true);
             $('#sel-year').attr('disabled', true);
+            // $('#sel-county').attr('disabled', true);
+            // $('#sel-constituency').attr('disabled', true);
+            // $('#sel-ward').attr('disabled', true);
 
             // Dynamically load Charts
-           var chartlists = ['4A', '4B', '4C', '4D', '4E', '4F', '4G', '4H', '4I'];
+           var chartlists = ['4A', '4B', '4C', '4D', '4E', '4F', '4G', '4H', '4I', '4J'];
 
            var hashes = window.location.hash.substr(1);
            var fields = hashes.split('/');

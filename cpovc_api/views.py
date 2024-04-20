@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer
+from rest_framework import status
 
 from cpovc_ovc.models import OVCRegistration, OVCHealth
 from cpovc_registry.models import RegPersonsGeo, RegPersonsExternalIds
@@ -10,10 +11,10 @@ from cpovc_main.models import SetupList
 from .functions import (
     dcs_dashboard, ovc_dashboard, get_attached_orgs, save_form,
     validate_ovc, get_ovc_data, get_services_data, get_caseload,
-    access_manager)
+    access_manager, handle_notification)
 
 from cpovc_dashboard.parameters import PARAMS
-from .params import SID, SIDS, META_IDS
+from .params import SID, SIDS, META_IDS, STATUSES
 
 
 def api_home(request):
@@ -28,22 +29,28 @@ def api_home(request):
         pass
 
 
+@api_view(['POST'])
 def token_validate(request):
     """ Method for home."""
     try:
         print('User', request.user.id)
-        Response = {"status": 0, "message": "Method NOT Allowed"}
-        return JsonResponse(
-            Response, content_type='application/json', safe=False)
-    except Exception as e:
-        raise e
+        device, status_code = access_manager(request, 'POST')
+        message = STATUSES[status_code] if status_code in STATUSES else 'Error'
+        response = {"message": message}
+        if status_code == 0:
+            http_status = status.HTTP_200_OK
+        else:
+            http_status = 250 + status_code
+    except Exception:
+        response = {"message": "Error or Method NOT Allowed"}
+        return Response(response, status=status.HTTP_204_NO_CONTENT)
     else:
-        pass
+        return Response(response, status=http_status)
 
 
 @api_view(['GET', 'POST'])
 def dashboard(request):
-    """Method to handle DREAMS."""
+    """Method to handle Dashboards."""
     try:
         user_orgs = get_attached_orgs(request)
         print('User orgs', user_orgs)
@@ -69,24 +76,34 @@ def dashboard(request):
 
 @api_view(['GET', 'POST'])
 def caseload(request):
-    """Method to handle DREAMS."""
+    """Method to handle Caseload."""
     try:
         print('TRACK_Caseload', request.META)
         results = []
         msg = 'Partner OVC details Found'
-        device, status = access_manager(request)
-        print('Device Status', status, device)
+        device, status_code = access_manager(request)
+        print('Device Status', status_code, device)
+        # Override for testing to be removed in Production
+        status_code = 0
+        if status_code == 0:
+            http_status = status.HTTP_200_OK
+        else:
+            http_status = 250 + status_code
+            handle_notification(request, status_code)
         if request.method == 'GET':
-            results = get_caseload(request, 0)
+            if status_code < 4:
+                results = get_caseload(request, 0)
+            else:
+                results = []
         elif request.method == 'POST':
             print('POST method to update some OVC data')
         # results['details'] = msg
     except Exception as e:
         msg = 'Error getting Partner details - %s' % (str(e))
         print(msg)
-        return Response([])
+        return Response([], status=status.HTTP_204_NO_CONTENT)
     else:
-        return Response(results)
+        return Response(results, status=http_status)
 
 
 @api_view(['GET', 'POST'])
@@ -99,71 +116,6 @@ def metadata(request):
             "item_sub_category", "the_order")
     except Exception as e:
         print("error getting metadata - %s" % str(e))
-        return Response([])
-    else:
-        return Response(results)
-
-
-@api_view(['POST'])
-@renderer_classes([JSONRenderer])
-def sub_pop(request):
-    try:
-        results = []
-        print('SUB POP', request.data)
-    except Exception as e:
-        print("error saving sub pop - %s" % str(e))
-        return Response([])
-    else:
-        return Response(results)
-
-
-@api_view(['POST'])
-@renderer_classes([JSONRenderer])
-def cpara(request):
-    try:
-        results = []
-        print('CPARA', request.data)
-    except Exception as e:
-        print("error saving cpara - %s" % str(e))
-        return Response([])
-    else:
-        return Response(results)
-
-
-@api_view(['POST'])
-@renderer_classes([JSONRenderer])
-def caseplan(request):
-    try:
-        results = []
-        print('CASEPLAN', request.data)
-    except Exception as e:
-        print("error saving caseplan - %s" % str(e))
-        return Response([])
-    else:
-        return Response(results)
-
-
-@api_view(['POST'])
-@renderer_classes([JSONRenderer])
-def form1a(request):
-    try:
-        results = []
-        print('FORM 1A', request.data)
-    except Exception as e:
-        print("error saving Form 1A - %s" % str(e))
-        return Response([])
-    else:
-        return Response(results)
-
-
-@api_view(['POST'])
-@renderer_classes([JSONRenderer])
-def form1b(request):
-    try:
-        results = []
-        print('FORM 1B', request.data)
-    except Exception as e:
-        print("error saving form 1B - %s" % str(e))
         return Response([])
     else:
         return Response(results)
@@ -337,12 +289,6 @@ def form_unapproved(request):
     """Method to handle Forms ID."""
     try:
         results = []
-        resp = {"form_id": "F1A", "ovc_cpims_id": 4041779,
-                "date_of_event": "2023-06-13",
-                "services": [{"domain_id": "DHNU", "service_id": "CP11HEGs"}],
-                "critical_events": [{"event_id": "EV001A",
-                                     "event_date": "2023-06-13"}]}
-        results.append(resp)
     except Exception as e:
         msg = "Error getting Partner details - %s" % (str(e))
         print(msg)

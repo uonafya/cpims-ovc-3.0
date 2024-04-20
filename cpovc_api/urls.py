@@ -34,9 +34,4 @@ urlpatterns = [
     # Mobile App
     path('forms/', views.form_unapproved, name='unapproved_form'),
     path('metadata/', views.metadata, name='get_metadata'),
-    path('subpop/', views.sub_pop, name='sub_pop'),
-    path('cpara/', views.cpara, name='sub_pop'),
-    path('caseplan/', views.caseplan, name='sub_pop'),
-    path('form1a/', views.form1a, name='sub_pop'),
-    path('form1b/', views.form1b, name='sub_pop'),
 ]

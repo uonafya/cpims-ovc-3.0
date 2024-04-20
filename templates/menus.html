@@ -35,9 +35,9 @@
 			<li class="online_mode"><a href="{% url 'documents_manager' %}">Documents Manager</a></li>
 			<li class="online_mode"><a href="{% url 'ovc_home' %}">OVC Care (Comp)</a></li>
 		        <li class="online_mode"><a href="{% url 'pfs_home' %}">OVC Care (Preventive)</a></li>
-			<li class="online_mode"><a href="{% url 'pmtct_home' %}">PMTCT</a></li>
+			<li class="online_mode"><a href="{% url 'pmtct_home' %}">PMTCT</a></li>			
 			<li class="online_mode"><a href="#">DREAMS</a></li>
-			<li class="online_mode"><a href="{% url 'hes_home' %}">HES (Family Support)</a></li>
+			<li class="online_mode"><a href="{% url 'hes_home' %}">HES</a></li>
 			<li><a href="#ovc_home" class="btn_ovc_home_offline">OVC Care Offline</a></li>
 		</ul>
 
@@ -113,7 +113,6 @@
                     <li><a href="{% url 'reports_ovc' id=28 %}">HIV Risk Screening</a></li>
                     <li><a href="{% url 'reports_ovc' id=29 %}">HIV Management</a></li>
                     <li><a href="{% url 'reports_ovc' id=30 %}">Case Transfer</a></li>
-                    <li><a href="{% url 'reports_ovc' id=40 %}">Caseload</a></li>
                     <li><a href="/reports/ovc/">ALL Reports</a></li>
 				</ul>
 			</li>
@@ -124,9 +123,11 @@
 				    <span>Preventive Reports</span>
 				</a>
 				<ul class="sub-menu">
-					<li><a href="#">Attendance</a></li>
-					<li><a href="#">Sinovuyo Pre/Post</a></li>
-					<li><a href="#">FMP Pre/Post</a></li>
+					<li><a href="{% url 'prev_reports' id=1 %}">Register</a></li>
+                                        <li><a href="{% url 'prev_reports' id=2 %}">Attendance</a></li> 
+                                         <li><a href="{% url 'prev_reports' id=3 %}">Services</a></li>
+					<li><a href="{% url 'prev_reports' id=4 %}">Sinovuyo Pre/Post</a></li>
+					<li><a href="{% url 'prev_reports' id=5 %}">FMP Pre/Post</a></li>
 				</ul>
 			</li>
 			<li class="has-sub">
@@ -136,8 +137,8 @@
 				    <span>PMTCT Reports</span>
 				</a>
 				<ul class="sub-menu">
-					<li><a href="#">Pregnant teens / mothers</a></li>
-					<li><a href="#">HEI</a></li>
+					<li><a href="{% url 'pmtct_reports' id=1 %}">Pregnant teens / mothers</a></li>
+					<li><a href="{% url 'pmtct_reports' id=2 %}">HEI</a></li>
 				</ul>
 			</li>
 		</ul>

@@ -892,6 +892,19 @@ CHART['4I']['colors'] = ['#72C3B4', '#BFDDFF', '#F2BC40', '#E07653']
 
 # - Top 5 Services by Domain - Agency
 CHART['4J'] = {}
+CHART['4J']['ctitle'] = 'CPARA, Caseplan and Service Layering'
+CHART['4J']['ctype'] = 'bar_category'
+CHART['4J']['qparam'] = 'service'
+CHART['4J']['qfilter'] = 'domain'
+CHART['4J']['categories'] = []
+CHART['4J']['has_sex'] = False
+CHART['4J']['defaults'] = []
+CHART['4J']['colors'] = ['#72C3B4', '#BFDDFF', '#F2BC40', '#E07653']
+
+
+# - Top 5 Services by Domain - Agency
+'''
+CHART['4J'] = {}
 CHART['4J']['ctitle'] = 'Comprehensive Services by Domain - Top 5 Services to Beneficiaries by Domain'
 CHART['4J']['ctype'] = 'sparkline'
 CHART['4J']['qparam'] = 'service'
@@ -900,6 +913,7 @@ CHART['4J']['categories'] = []
 CHART['4J']['has_sex'] = False
 CHART['4J']['defaults'] = ['Healthy', 'Safe', 'Stable', 'Schooled']
 CHART['4J']['colors'] = ['#BFDDFF', '#F2BC40', '#E07653', '#72C3B4']
+'''
 
 # -- Case Management OVC ---------------------------------
 # =================== Section 5 : Services Reporting Charts =================
