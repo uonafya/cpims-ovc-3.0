@@ -816,8 +816,9 @@ National
                             let services = []
                             let app_form = data[dta].app_form_metadata || {}
                             let event_id = data[dta].event_id   
-                            servId =  service.id
-                            ja = JSON.parse(servId.replace(/'/g, '"'));
+                            servId =  service.service_id
+                            console.log({service, servId})
+                            ja = servId // JSON.parse(servId.replace(/'/g, '"'));
                             html_services = ''
                             for (indx in ja){
                                 services.push(ja[indx])
