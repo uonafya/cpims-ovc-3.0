@@ -55,6 +55,15 @@ urlpatterns = [
           name='update-one-hiv-management'),
      re_path(r'^hmf/(?P<ovc_id>[^/]+)/$', views.get_one_hiv_management,
           name='get-one-hiv-management'),
+     
+     # grad monitor
+     
+     path('grad_monitor/<int:id>/', views.create_grad_monitor,
+         name='create-ovc-mobile-data'),
+     path('grad_monitor/update/<uuid:id>/', views.update_grad_monitor,
+          name='update-one-hiv-management'),
+     re_path(r'^grad_monitor/(?P<ovc_id>[^/]+)/$', views.get_one_grad_monitor,
+          name='get-one-hiv-management'),
     
   
     # front end validation urls
