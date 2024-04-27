@@ -60,9 +60,9 @@ urlpatterns = [
      
      path('grad_monitor/<int:id>/', views.create_grad_monitor,
          name='create-ovc-mobile-data'),
-     path('grad_monitor/update/<uuid:id>/', views.update_grad_monitor,
+     path('grad_monitor/update/<uuid:obm_id>', views.update_grad_monitor,
           name='update-one-hiv-management'),
-     re_path(r'^grad_monitor/(?P<ovc_id>[^/]+)/$', views.get_one_grad_monitor,
+     re_path(r'^grad_monitor/(?P<form_type>[^/]+)/(?P<ovc_id>[^/]+)/$', views.get_one_grad_monitor,
           name='get-one-hiv-management'),
     
   
