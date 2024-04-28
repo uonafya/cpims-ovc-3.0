@@ -2,10 +2,10 @@ import uuid
 from enum import Enum, auto
 from django.db import models
 from django.utils import timezone
-from cpovc_registry.models import RegPerson,OVCHouseHold
+from cpovc_registry.models import RegPerson
 from cpovc_auth.models import AppUser
 from cpovc_registry.models import RegOrgUnit
-from cpovc_forms.models import OVCCareEvents
+from cpovc_ovc.models import OVCHouseHold
 
 
 class ApprovalStatus(Enum):
@@ -520,7 +520,7 @@ class MobileAppDataTrack(models.Model):
 class OVCBenchmarkMonitoringStaging(models.Model):
     obm_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
-    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name="care_giver")
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name="care_giver_staging")
     form_type = models.CharField(max_length=50)
     benchmark1 =models.BooleanField()
     benchmark2=models.BooleanField()
@@ -533,7 +533,7 @@ class OVCBenchmarkMonitoringStaging(models.Model):
     benchmark9=models.BooleanField()
     succesful_exit_checked=models.BooleanField()
     case_closure_checked=models.BooleanField()
-    is_void = models.BooleanField(default=False)
+    is_void = models.BooleanField(default=False)    
     event_date = models.DateField()
     app_form_metadata = models.CharField(max_length=500)
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
@@ -554,7 +554,7 @@ class OVCBenchmarkMonitoringStaging(models.Model):
 class OVCBenchmarkMonitoringRejected(models.Model):
     obm_id = models.UUIDField(primary_key=True, editable=True)
     household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
-    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name="care_giver")
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name="care_giver_rejected")
     form_type = models.CharField(max_length=50)
     benchmark1 =models.BooleanField()
     benchmark2=models.BooleanField()
