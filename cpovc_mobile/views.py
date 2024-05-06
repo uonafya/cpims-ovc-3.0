@@ -440,6 +440,11 @@ def check_saved_rejected(request):
                 HIVManagementStagingRejected.objects.get(adherence_id=record_id).delete()
                 HIVManagementStaging.objects.get(adherence_id=record_id).delete()
             
+            elif form_type in ['hhrcpa', 'bm']:
+                
+                OVCBenchmarkMonitoringRejected.objects.get(obm_id=record_id,form_type=form_type).delete()
+                OVCBenchmarkMonitoringStaging.objects.get(obm_id=record_id,form_type=form_type).delete()
+                
             else:
                 return(Response({'message':'incomplete/incorrect payload'},status=status.HTTP_400_BAD_REQUEST))
             
