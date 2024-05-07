@@ -5,6 +5,7 @@ from django.utils import timezone
 from cpovc_registry.models import RegPerson
 from cpovc_auth.models import AppUser
 from cpovc_registry.models import RegOrgUnit
+from cpovc_ovc.models import OVCHouseHold
 
 
 class ApprovalStatus(Enum):
@@ -514,3 +515,71 @@ class MobileAppDataTrack(models.Model):
     class Meta:
         db_table = 'mobile_app_data_track'
 
+
+# Benchmark Monitoring
+class OVCBenchmarkMonitoringStaging(models.Model):
+    obm_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
+    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name="care_giver_staging")
+    form_type = models.CharField(max_length=50)
+    benchmark1 =models.BooleanField()
+    benchmark2=models.BooleanField()
+    benchmark3=models.BooleanField()
+    benchmark4=models.BooleanField()
+    benchmark5=models.BooleanField()
+    benchmark6=models.BooleanField()
+    benchmark7=models.BooleanField()
+    benchmark8=models.BooleanField()
+    benchmark9=models.BooleanField()
+    succesful_exit_checked=models.BooleanField()
+    case_closure_checked=models.BooleanField()
+    is_void = models.BooleanField(default=False)    
+    event_date = models.DateField()
+    app_form_metadata = models.CharField(max_length=500)
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    is_accepted = models.IntegerField(
+        choices=[(status.value, status.name) for status in ApprovalStatus],
+        default=ApprovalStatus.NEUTRAL.value
+    )
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ovc_benchmark_monitoring_staging'
+
+        def __unicode__(self):
+            return str(self.obm_id)
+        
+
+class OVCBenchmarkMonitoringRejected(models.Model):
+    obm_id = models.UUIDField(primary_key=True, editable=True)
+    household = models.ForeignKey(OVCHouseHold, on_delete=models.CASCADE)
+    caregiver = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name="care_giver_rejected")
+    form_type = models.CharField(max_length=50)
+    benchmark1 =models.BooleanField()
+    benchmark2=models.BooleanField()
+    benchmark3=models.BooleanField()
+    benchmark4=models.BooleanField()
+    benchmark5=models.BooleanField()
+    benchmark6=models.BooleanField()
+    benchmark7=models.BooleanField()
+    benchmark8=models.BooleanField()
+    benchmark9=models.BooleanField()
+    succesful_exit_checked=models.BooleanField()
+    case_closure_checked=models.BooleanField()
+    is_void = models.BooleanField(default=False)
+    event_date = models.DateField()
+    app_form_metadata = models.CharField(max_length=500)
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    is_accepted = models.IntegerField(
+        choices=[(status.value, status.name) for status in ApprovalStatus],
+        default=ApprovalStatus.NEUTRAL.value
+    )
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ovc_benchmark_monitoring_rejected'
+
+        def __unicode__(self):
+            return str(self.obm_id)
