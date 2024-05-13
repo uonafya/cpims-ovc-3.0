@@ -20,7 +20,7 @@ from rest_framework.permissions import IsAuthenticated
 from .forms import mobile_approve
 from cpovc_forms.models import OVCCareEAV
 
-from cpovc_ovc.models import OVCRegistration
+from cpovc_ovc.models import OVCHHMembers, OVCHouseHold, OVCRegistration
 # ---------------------------------------#
 
 from rest_framework.response import Response
@@ -32,7 +32,7 @@ from .models import (OVCMobileEvent, OVCMobileEventAttribute,CasePlanTemplateEve
                     OVCMobileEventRejected,OVCEventRejected,
                     OVCMobileEventAttributeRejected,OVCServicesRejected, CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected,
                     HIVManagementStaging,HIVManagementStagingRejected,RiskScreeningStaging,RiskScreeningStagingRejected,
-                    MobileAppDataTrack
+                    MobileAppDataTrack,OVCBenchmarkMonitoringStaging,OVCBenchmarkMonitoringRejected
                     )
 from rest_framework.permissions import IsAuthenticated,AllowAny 
 from rest_framework.decorators import api_view, permission_classes
@@ -440,6 +440,11 @@ def check_saved_rejected(request):
                 HIVManagementStagingRejected.objects.get(adherence_id=record_id).delete()
                 HIVManagementStaging.objects.get(adherence_id=record_id).delete()
             
+            elif form_type in ['hhrcpa', 'bm']:
+                
+                OVCBenchmarkMonitoringRejected.objects.get(obm_id=record_id,form_type=form_type).delete()
+                OVCBenchmarkMonitoringStaging.objects.get(obm_id=record_id,form_type=form_type).delete()
+                
             else:
                 return(Response({'message':'incomplete/incorrect payload'},status=status.HTTP_400_BAD_REQUEST))
             
@@ -1709,6 +1714,7 @@ def update_hiv_management(request, adherence_id):
 
                 except Exception as e:
                     HIVManagementStaging.objects.get(adherence_id=adherence_id).delete()
+                    
             return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
           
    
@@ -1750,6 +1756,180 @@ def get_one_hiv_management(request, ovc_id):
         return Response(data, status=status.HTTP_200_OK)
     except HIVManagementStaging.DoesNotExist:
         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# Graduation monitoring
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_grad_monitor(request, id):
+    try:
+        data = request.data
+        child = RegPerson.objects.get(id=id)       
+        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+        caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
+        caregiver = RegPerson.objects.get(id=caregiver_id)
+        print("uiooj",type(house_hold))
+        
+ 
+        event_date = data.get('gm1d')
+        user_id = AppUser.objects.get(pk=request.user.id)
+        form_type = data.get('form1_type')
+        obm_id = handle_Null(data.get('benchmark_id'))
+        
+        
+        if form_type not in ['hhrcpa', 'bm']:
+            return Response({'message': 'Invalid form type (hhrcpa, bm)'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            ovc_bm = OVCBenchmarkMonitoringStaging.objects.get(pk=obm_id)
+            ovc_bm.delete()
+            print("hereyui")
+            
+            OVCBenchmarkMonitoringStaging.objects.create(
+                obm_id=obm_id,
+                household=house_hold,
+                caregiver=caregiver,
+                form_type=form_type,
+                benchmark1=handle_Null(data.get('cm2q')),
+                benchmark2=handle_Null(data.get('cm3q')),
+                benchmark3=handle_Null(data.get('cm4q')),
+                benchmark4=handle_Null(data.get('cm5q')),
+                benchmark5=handle_Null(data.get('cm6q')),
+                benchmark6=handle_Null(data.get('cm7q')),
+                benchmark7=handle_Null(data.get('cm8q')),
+                benchmark8=handle_Null(data.get('cm9q')),
+                benchmark9=handle_Null(data.get('cm10q')),
+                succesful_exit_checked =handle_Null(data.get('cm13q')),
+                case_closure_checked=handle_Null(data.get('cm14q')),
+                event_date=event_date,
+                app_form_metadata=json.dumps(data.get('app_form_metadata')),
+                user=user_id,
+                
+            )
+            print("uio")
+            
+        except OVCBenchmarkMonitoringStaging.DoesNotExist:
+            
+            OVCBenchmarkMonitoringStaging.objects.create(
+                    household=house_hold,
+                    caregiver=caregiver,
+                    form_type=form_type,
+                    benchmark1=handle_Null(data.get('cm2q')),
+                    benchmark2=handle_Null(data.get('cm3q')),
+                    benchmark3=handle_Null(data.get('cm4q')),
+                    benchmark4=handle_Null(data.get('cm5q')),
+                    benchmark5=handle_Null(data.get('cm6q')),
+                    benchmark6=handle_Null(data.get('cm7q')),
+                    benchmark7=handle_Null(data.get('cm8q')),
+                    benchmark8=handle_Null(data.get('cm9q')),
+                    benchmark9=handle_Null(data.get('cm10q')),
+                    succesful_exit_checked =handle_Null(data.get('cm13q')),
+                    case_closure_checked=handle_Null(data.get('cm14q')),
+                    event_date=event_date,
+                    app_form_metadata=json.dumps(data.get('app_form_metadata')),
+                    user=user_id,
+                    
+                )
+        return Response({'message': 'OVC Benchmark monitoring record created successfully'}, status=status.HTTP_201_CREATED)
+        
+                    
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+@api_view(['PATCH','POST'])
+@permission_classes([IsAuthenticated])
+def update_grad_monitor(request, obm_id):
+    try:
+        obm = OVCBenchmarkMonitoringStaging.objects.get(obm_id=obm_id)
+        new_is_accepted = request.data.get('is_accepted')
+        
+        if new_is_accepted is None:
+            return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        elif new_is_accepted == ApprovalStatus.FALSE.value:
+            obm.is_accepted = new_is_accepted
+            obm.save()
+            OVCBenchmarkMonitoringRejected.objects.create(
+            obm_id = obm.obm_id,
+            household = obm.household,
+            caregiver = obm.caregiver,
+            form_type = obm.form_type,
+            benchmark1 = obm.benchmark1,
+            benchmark2 = obm.benchmark2,
+            benchmark3 = obm.benchmark3,
+            benchmark4 = obm.benchmark4,
+            benchmark5 = obm.benchmark5,
+            benchmark6 = obm.benchmark6,
+            benchmark7 = obm.benchmark7,
+            benchmark8 = obm.benchmark8,
+            benchmark9 = obm.benchmark9,
+            succesful_exit_checked = obm.succesful_exit_checked,
+            case_closure_checked = obm.case_closure_checked,
+            is_void = obm.is_void,
+            event_date = obm.event_date,
+            app_form_metadata = obm.app_form_metadata,
+            user =  obm.user,
+            is_accepted = obm.is_accepted,
+            timestamp_created = obm.timestamp_created,
+            timestamp_updated = obm.timestamp_updated,     
+            )
+            
+        elif new_is_accepted == ApprovalStatus.TRUE.value:
+            try:
+                OVCBenchmarkMonitoringRejected.objects.get(obm_id=obm_id).delete()
+                OVCBenchmarkMonitoringStaging.objects.get(obm_id=obm_id).delete()
+                
+
+            except Exception as e:
+                OVCBenchmarkMonitoringStaging.objects.get(obm_id=obm_id).delete()
+
+        return Response({'message': 'is_accepted updated successfully'}, status=status.HTTP_200_OK)
+      
+    except OVCBenchmarkMonitoringStaging.DoesNotExist:
+        return Response({'error': 'ovc benchmark monitoring not found'}, status=status.HTTP_404_NOT_FOUND)   
+    
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_one_grad_monitor(request,form_type, ovc_id):
+    try:
+        if form_type not in ['hhrcpa','bm']:
+            return Response({'message': 'Invalid form type (hhrcpa, bm)'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        data = []
+        child = RegPerson.objects.get(id=ovc_id)
+        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
+        caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
+        caregiver = RegPerson.objects.get(id=caregiver_id)
+
+        graduation_monitoring_events = OVCBenchmarkMonitoringStaging.objects.filter(
+            household=house_hold,
+            caregiver=caregiver,
+            form_type=form_type,
+            is_accepted=1
+        )
+        
+        for gme in graduation_monitoring_events:
+            full_name= f"{child.first_name} {child.other_names} {child.surname}"
+            app_metadata = json.loads(gme.app_form_metadata.replace("'", "\""))
+            ovc_sex=get_sex_person(child.sex_id)
+            ovc_age=child.age
+            
+            gme.app_form_metadata =app_metadata
+            model_dict = model_to_dict_custom(gme)
+            model_dict['ovc_name']=full_name
+            model_dict['ovc_sex']=ovc_sex
+            model_dict['ovc_age']=ovc_age
+            
+            data.append(model_dict)
+                    
+        return Response(data, status=status.HTTP_200_OK)
+        
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -2313,6 +2493,30 @@ def unaccepted_records(request, form_type):
                 
                 data.append(event_data)
 
+
+        elif form_type == 'hhrcpa' or form_type == 'bm':
+            ovc_benchmark_rejected = OVCBenchmarkMonitoringRejected.objects.filter(is_accepted=3,form_type=form_type, user=request.user.id)
+            for ovc_bm in ovc_benchmark_rejected:
+                app_metadata = json.loads(ovc_bm.app_form_metadata.replace("'", "\""))
+                event_data = {
+                    'obm_id': ovc_bm.obm_id,
+                    'cm2q': ovc_bm.benchmark1,
+                    'cm3q': ovc_bm.benchmark2,
+                    'cm4q': ovc_bm.benchmark3,
+                    'cm5q': ovc_bm.benchmark4,
+                    'cm6q': ovc_bm.benchmark5,
+                    'cm7q': ovc_bm.benchmark6,
+                    'cm8q': ovc_bm.benchmark7,
+                    'cm9q': ovc_bm.benchmark8,
+                    'cm10q': ovc_bm.benchmark9,
+                    'cm13q': ovc_bm.succesful_exit_checked,
+                    'cm14q': ovc_bm.case_closure_checked,
+                    'gm1d': ovc_bm.event_date,
+                    'app_form_metadata': app_metadata,                
+                }
+                
+                data.append(event_data)
+                       
         
         else:
             return JsonResponse({'error': 'Unknown report type'}, status=400)
