@@ -1768,15 +1768,13 @@ def create_grad_monitor(request, id):
     try:
         data = request.data
         child = RegPerson.objects.get(id=id)       
-        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-        caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
-        caregiver = RegPerson.objects.get(id=caregiver_id)
-        print("uiooj",type(house_hold))
-        
- 
+        caregiver_id = OVCRegistration.objects.get(person=id).caretaker_id
+        house_hold = OVCHouseHold.objects.get(head_person_id=caregiver_id,is_void=False)        
+        caregiver = RegPerson.objects.get(id=caregiver_id,is_void=False)
+         
         event_date = data.get('gm1d')
         user_id = AppUser.objects.get(pk=request.user.id)
-        form_type = data.get('form1_type')
+        form_type = data.get('form_type')
         obm_id = handle_Null(data.get('benchmark_id'))
         
         
@@ -1786,7 +1784,6 @@ def create_grad_monitor(request, id):
         try:
             ovc_bm = OVCBenchmarkMonitoringStaging.objects.get(pk=obm_id)
             ovc_bm.delete()
-            print("hereyui")
             
             OVCBenchmarkMonitoringStaging.objects.create(
                 obm_id=obm_id,
@@ -1809,7 +1806,6 @@ def create_grad_monitor(request, id):
                 user=user_id,
                 
             )
-            print("uio")
             
         except OVCBenchmarkMonitoringStaging.DoesNotExist:
             
@@ -1833,7 +1829,7 @@ def create_grad_monitor(request, id):
                     user=user_id,
                     
                 )
-        return Response({'message': 'OVC Benchmark monitoring record created successfully'}, status=status.HTTP_201_CREATED)
+        return Response({'message': 'OVC Graduation monitoring record created successfully'}, status=status.HTTP_201_CREATED)
         
                     
     except Exception as e:
