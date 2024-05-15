@@ -1764,11 +1764,12 @@ def get_one_hiv_management(request, ovc_id):
 # Graduation monitoring
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def create_grad_monitor(request, id):
+def create_grad_monitor(request):
     try:
         data = request.data
-        child = RegPerson.objects.get(id=id)       
-        caregiver_id = OVCRegistration.objects.get(person=id).caretaker_id
+        ovc_id = data.get('ovc_cpims_id')
+        # child = RegPerson.objects.get(id=id)      
+        caregiver_id = OVCRegistration.objects.get(person=ovc_id).caretaker_id
         house_hold = OVCHouseHold.objects.get(head_person_id=caregiver_id,is_void=False)        
         caregiver = RegPerson.objects.get(id=caregiver_id,is_void=False)
          

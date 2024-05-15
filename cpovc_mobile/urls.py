@@ -58,7 +58,7 @@ urlpatterns = [
      
      # grad monitor
      
-     path('grad_monitor/<int:id>/', views.create_grad_monitor,
+     path('grad_monitor/', views.create_grad_monitor,
          name='create-ovc-mobile-data'),
      path('grad_monitor/update/<uuid:obm_id>', views.update_grad_monitor,
           name='update-one-hiv-management'),
