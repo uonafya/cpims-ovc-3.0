@@ -103,6 +103,7 @@ National
                 <option value='cpr'>CPARA</option>
                 <option value='hmf'>HIV Management Form</option>
                 <option value='hrs'>HIV Risk Screening</option>
+                <option value='grad_monitor'>Graduation Monitoring</option>
             </select>
         </div>
         <div class="col-md-4">
@@ -560,6 +561,9 @@ National
             }
             if (form === 'hrs'){
                 s_url = `hrs/${child}`
+            }
+            if (form === 'grad_monitor'){
+                s_url = `grad_monitor/bm/${child}`
             }
             
             console.log({chvs, form, child, s_url})
