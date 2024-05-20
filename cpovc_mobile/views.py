@@ -55,8 +55,9 @@ import os
 from cpovc_registry.models import RegOrgUnit
 
 def createMobileAppDataTrack(payload={}):
-    print(f'start function executions , payload {payload}')
-    lip_id = RegOrgUnit.objects.get(id=payload.get('ou_primary'))
+    primary_ou_id = payload.get('ou_primary')
+    print(f'start function executions , payload {payload} Primary OU: {primary_ou_id}')
+    lip_id = RegOrgUnit.objects.get(id=primary_ou_id)
     print(f'payload {payload}----------{lip_id}')
     try:
         MobileAppDataTrack.objects.create(
@@ -793,6 +794,7 @@ def update_cpara_is_accepted(request, event_id):
         is_accepted = request.data.get('is_accepted')
         track_payload['action'] = int(is_accepted)
         createMobileAppDataTrack(track_payload)
+        
         if is_accepted == ApprovalStatus.TRUE.value:
             # event.is_accepted = is_accepted
             # event.save()
@@ -1474,7 +1476,7 @@ def update_hiv_screening(request, risk_id):
             # Check if is_accepted is set to False (3)      
 
             track_payload['action'] = int(new_is_accepted)
-            createMobileAppDataTrack(track_payload)      
+            createMobileAppDataTrack(track_payload)   
             if new_is_accepted == ApprovalStatus.FALSE.value:
                 # Create rejected records
                 RiskScreeningStagingRejected.objects.create(
@@ -1652,10 +1654,10 @@ def update_hiv_management(request, adherence_id):
         if new_is_accepted is not None:
             # Check if is_accepted is set to False (3)
             
+            track_payload['action'] = int(new_is_accepted)
+            createMobileAppDataTrack(track_payload)  
             if new_is_accepted == ApprovalStatus.FALSE.value:
 
-                track_payload['action'] = int(new_is_accepted)
-                createMobileAppDataTrack(track_payload)  
 
                 # Create rejected records
                 HIVManagementStagingRejected.objects.create(
@@ -1859,11 +1861,26 @@ def update_grad_monitor(request, obm_id):
     try:
         obm = OVCBenchmarkMonitoringStaging.objects.get(obm_id=obm_id)
         new_is_accepted = request.data.get('is_accepted')
+        track_payload = {
+        'event_id': obm.obm_id,
+        'form_type':'obm'    
+        }
         
         if new_is_accepted is None:
             return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
-        
         elif new_is_accepted == ApprovalStatus.FALSE.value:
+            track_payload['date_of_event'] = obm.event_date
+            track_payload['timestamp_created'] = obm.timestamp_created
+            track_payload['user_submitting'] = obm.user
+            track_payload['user_actioning'] = AppUser.objects.get(pk=request.user.id)
+            track_payload['ovc_cpims_id'] = obm.caregiver
+            track_payload['ou_primary'] = request.session.get('ou_primary')
+            
+            # Track Table
+            track_payload['action'] = int(new_is_accepted)
+            createMobileAppDataTrack(track_payload)
+
+
             obm.is_accepted = new_is_accepted
             obm.save()
             OVCBenchmarkMonitoringRejected.objects.create(
@@ -1895,6 +1912,11 @@ def update_grad_monitor(request, obm_id):
             try:
                 OVCBenchmarkMonitoringRejected.objects.get(obm_id=obm_id).delete()
                 OVCBenchmarkMonitoringStaging.objects.get(obm_id=obm_id).delete()
+                
+                
+                # Track Table
+                track_payload['action'] = int(new_is_accepted)
+                createMobileAppDataTrack(track_payload)
                 
 
             except Exception as e:
@@ -1942,9 +1964,8 @@ def get_one_grad_monitor(request,form_type, ovc_id):
             model_dict['ovc_age']=ovc_age
             model_dict['user_id']=gme.user_id
             model_dict['created_at']=gme.timestamp_created
-            model_dict['ovc_cpims_id']=child.id
+            model_dict['ovc_cpims_id']=child.pk
 
-            
             
             data.append(model_dict)
                     
@@ -2596,6 +2617,7 @@ def mobile_home(request):
         chv_list = chvss.values('child_chv_id')
         childrens = OVCRegistration.objects.filter(
             is_void=False, child_chv_id__in=chv_list).values('person_id')
+        house_holds = OVCHHMembers.objects.filter(is_void=False, person_id__in=childrens).values('house_hold').distinct()
         
         # count cpara unapproved
         cpr_count=OVCMobileEvent.objects.filter(is_accepted=1, ovc_cpims__in=childrens).count()
@@ -2635,14 +2657,17 @@ def mobile_home(request):
         hmf_count=HIVManagementStaging.objects.filter(is_accepted=1, ovc_cpims__in=childrens).count()
         hrs_count=RiskScreeningStaging.objects.filter(is_accepted=1, ovc_cpims__in=childrens).count()
 
+        # Count Benchmark Monitoring Unapproved
+        obm_count=OVCBenchmarkMonitoringStaging.objects.filter(is_accepted=1, household__in=house_holds).count()
         
-        print(f"CPT-> {cpt_count} CPR-> {cpr_count} F1A-> {f1a_count} F1B-> {f1b_count} HMF-> {hmf_count} HRS-> {hrs_count}")      
+        print(f"CPT-> {cpt_count} CPR-> {cpr_count} F1A-> {f1a_count} F1B-> {f1b_count} HMF-> {hmf_count} HRS-> {hrs_count} OBM-> {obm_count}")
         summary['CPT'] = cpt_count
         summary['CPR'] = cpr_count
         summary['F1A'] = f1a_count
         summary['F1B'] = f1b_count
         summary['HMF'] = hmf_count
         summary['HRS'] = hrs_count
+        summary['OBM'] = obm_count
 
         return render(
             request, 'mobile/home.html',
