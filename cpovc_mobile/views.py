@@ -55,8 +55,9 @@ import os
 from cpovc_registry.models import RegOrgUnit
 
 def createMobileAppDataTrack(payload={}):
-    print(f'start function executions , payload {payload}')
-    lip_id = RegOrgUnit.objects.get(id=payload.get('ou_primary'))
+    primary_ou_id = payload.get('ou_primary')
+    print(f'start function executions , payload {payload} Primary OU: {primary_ou_id}')
+    lip_id = RegOrgUnit.objects.get(id=primary_ou_id)
     print(f'payload {payload}----------{lip_id}')
     try:
         MobileAppDataTrack.objects.create(
@@ -674,6 +675,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                 'app_form_metadata':app_metadata,
                 'event_id': event.id,
                 'created_at':event.created_at,
+                'user_id':event.user_id,
                 'signature':event_signature,
                 'questions': [],
                 'individual_questions': [],
@@ -792,6 +794,7 @@ def update_cpara_is_accepted(request, event_id):
         is_accepted = request.data.get('is_accepted')
         track_payload['action'] = int(is_accepted)
         createMobileAppDataTrack(track_payload)
+        
         if is_accepted == ApprovalStatus.TRUE.value:
             # event.is_accepted = is_accepted
             # event.save()
@@ -1019,6 +1022,8 @@ def get_ovc_event(request, form_type, ovc_id):
                     'ovc_name': full_name,
                     'date_of_event': service['event__date_of_event'],
                     'event_id': event_id,
+                    'created_at':event.created_at,
+                    'user_id':event.user_id,                    
                     'app_form_metadata':app_metadata,
                     'ovc_sex':ovc_sex,
                     'ovc_age':ovc_age,
@@ -1271,6 +1276,8 @@ def get_one_case_plan(request, ovc_id):
                 'event_id': event.id,
                 'ovc_cpims_id': event.ovc_cpims.id,
                 'ovc_sex': ovc_sex,
+                'created_at':event.created_at,
+                'user_id':event.user_id,
                 'app_form_metadata':app_metadata,
                 'ovc_name': full_name,
                 'date_of_event': event.date_of_event,
@@ -1469,7 +1476,7 @@ def update_hiv_screening(request, risk_id):
             # Check if is_accepted is set to False (3)      
 
             track_payload['action'] = int(new_is_accepted)
-            createMobileAppDataTrack(track_payload)      
+            createMobileAppDataTrack(track_payload)   
             if new_is_accepted == ApprovalStatus.FALSE.value:
                 # Create rejected records
                 RiskScreeningStagingRejected.objects.create(
@@ -1542,18 +1549,26 @@ def get_one_hiv_screening(request, ovc_id):
         # Fetch by ovc id
         hiv_management_events = RiskScreeningStaging.objects.filter(ovc_cpims=ovc_id, is_accepted=1)
         #data = [model_to_dict_custom(event) for event in hiv_management_events]
-        
         for event in hiv_management_events:
             full_name= f"{event.ovc_cpims.first_name} {event.ovc_cpims.other_names} {event.ovc_cpims.surname}"
             app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
             ovc_sex=get_sex_person(event.ovc_cpims.sex_id)
             ovc_age=event.ovc_cpims.age
+            created_at=event.timestamp_created
+            user_id=event.user_id
+            
+            
             
             event.app_form_metadata =app_metadata
             model_dict = model_to_dict_custom(event)
             model_dict['ovc_name']=full_name
             model_dict['ovc_sex']=ovc_sex
             model_dict['ovc_age']=ovc_age
+            model_dict['created_at']=created_at
+            model_dict['user_id']=user_id
+            
+            
+            
             
             data.append(model_dict)
 
@@ -1639,10 +1654,10 @@ def update_hiv_management(request, adherence_id):
         if new_is_accepted is not None:
             # Check if is_accepted is set to False (3)
             
+            track_payload['action'] = int(new_is_accepted)
+            createMobileAppDataTrack(track_payload)  
             if new_is_accepted == ApprovalStatus.FALSE.value:
 
-                track_payload['action'] = int(new_is_accepted)
-                createMobileAppDataTrack(track_payload)  
 
                 # Create rejected records
                 HIVManagementStagingRejected.objects.create(
@@ -1744,12 +1759,16 @@ def get_one_hiv_management(request, ovc_id):
             app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
             ovc_sex=get_sex_person(event.ovc_cpims.sex_id)
             ovc_age=event.ovc_cpims.age
+            created_at=event.timestamp_created
+            user_id=event.user_id
             
             event.app_form_metadata =app_metadata
             model_dict = model_to_dict_custom(event)
             model_dict['ovc_name']=full_name
             model_dict['ovc_sex']=ovc_sex
             model_dict['ovc_age']=ovc_age
+            model_dict['created_at']=created_at
+            model_dict['user_id']=user_id
             
             data.append(model_dict)
 
@@ -1764,19 +1783,18 @@ def get_one_hiv_management(request, ovc_id):
 # Graduation monitoring
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def create_grad_monitor(request, id):
+def create_grad_monitor(request):
     try:
         data = request.data
-        child = RegPerson.objects.get(id=id)       
-        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-        caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
-        caregiver = RegPerson.objects.get(id=caregiver_id)
-        print("uiooj",type(house_hold))
-        
- 
+        ovc_id = data.get('ovc_cpims_id')
+        # child = RegPerson.objects.get(id=id)      
+        caregiver_id = OVCRegistration.objects.get(person=ovc_id).caretaker_id
+        house_hold = OVCHouseHold.objects.get(head_person_id=caregiver_id,is_void=False)        
+        caregiver = RegPerson.objects.get(id=caregiver_id,is_void=False)
+         
         event_date = data.get('gm1d')
         user_id = AppUser.objects.get(pk=request.user.id)
-        form_type = data.get('form1_type')
+        form_type = data.get('form_type')
         obm_id = handle_Null(data.get('benchmark_id'))
         
         
@@ -1786,7 +1804,6 @@ def create_grad_monitor(request, id):
         try:
             ovc_bm = OVCBenchmarkMonitoringStaging.objects.get(pk=obm_id)
             ovc_bm.delete()
-            print("hereyui")
             
             OVCBenchmarkMonitoringStaging.objects.create(
                 obm_id=obm_id,
@@ -1809,7 +1826,6 @@ def create_grad_monitor(request, id):
                 user=user_id,
                 
             )
-            print("uio")
             
         except OVCBenchmarkMonitoringStaging.DoesNotExist:
             
@@ -1833,7 +1849,7 @@ def create_grad_monitor(request, id):
                     user=user_id,
                     
                 )
-        return Response({'message': 'OVC Benchmark monitoring record created successfully'}, status=status.HTTP_201_CREATED)
+        return Response({'message': 'OVC Graduation monitoring record created successfully'}, status=status.HTTP_201_CREATED)
         
                     
     except Exception as e:
@@ -1845,11 +1861,26 @@ def update_grad_monitor(request, obm_id):
     try:
         obm = OVCBenchmarkMonitoringStaging.objects.get(obm_id=obm_id)
         new_is_accepted = request.data.get('is_accepted')
+        track_payload = {
+        'event_id': obm.obm_id,
+        'form_type':'obm'    
+        }
         
         if new_is_accepted is None:
             return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
-        
         elif new_is_accepted == ApprovalStatus.FALSE.value:
+            track_payload['date_of_event'] = obm.event_date
+            track_payload['timestamp_created'] = obm.timestamp_created
+            track_payload['user_submitting'] = obm.user
+            track_payload['user_actioning'] = AppUser.objects.get(pk=request.user.id)
+            track_payload['ovc_cpims_id'] = obm.caregiver
+            track_payload['ou_primary'] = request.session.get('ou_primary')
+            
+            # Track Table
+            track_payload['action'] = int(new_is_accepted)
+            createMobileAppDataTrack(track_payload)
+
+
             obm.is_accepted = new_is_accepted
             obm.save()
             OVCBenchmarkMonitoringRejected.objects.create(
@@ -1881,6 +1912,11 @@ def update_grad_monitor(request, obm_id):
             try:
                 OVCBenchmarkMonitoringRejected.objects.get(obm_id=obm_id).delete()
                 OVCBenchmarkMonitoringStaging.objects.get(obm_id=obm_id).delete()
+                
+                
+                # Track Table
+                track_payload['action'] = int(new_is_accepted)
+                createMobileAppDataTrack(track_payload)
                 
 
             except Exception as e:
@@ -1919,12 +1955,17 @@ def get_one_grad_monitor(request,form_type, ovc_id):
             app_metadata = json.loads(gme.app_form_metadata.replace("'", "\""))
             ovc_sex=get_sex_person(child.sex_id)
             ovc_age=child.age
+            print(ovc_id)
             
             gme.app_form_metadata =app_metadata
             model_dict = model_to_dict_custom(gme)
             model_dict['ovc_name']=full_name
             model_dict['ovc_sex']=ovc_sex
             model_dict['ovc_age']=ovc_age
+            model_dict['user_id']=gme.user_id
+            model_dict['created_at']=gme.timestamp_created
+            model_dict['ovc_cpims_id']=child.pk
+
             
             data.append(model_dict)
                     
@@ -2576,6 +2617,7 @@ def mobile_home(request):
         chv_list = chvss.values('child_chv_id')
         childrens = OVCRegistration.objects.filter(
             is_void=False, child_chv_id__in=chv_list).values('person_id')
+        house_holds = OVCHHMembers.objects.filter(is_void=False, person_id__in=childrens).values('house_hold').distinct()
         
         # count cpara unapproved
         cpr_count=OVCMobileEvent.objects.filter(is_accepted=1, ovc_cpims__in=childrens).count()
@@ -2615,14 +2657,17 @@ def mobile_home(request):
         hmf_count=HIVManagementStaging.objects.filter(is_accepted=1, ovc_cpims__in=childrens).count()
         hrs_count=RiskScreeningStaging.objects.filter(is_accepted=1, ovc_cpims__in=childrens).count()
 
+        # Count Benchmark Monitoring Unapproved
+        obm_count=OVCBenchmarkMonitoringStaging.objects.filter(is_accepted=1, household__in=house_holds).count()
         
-        print(f"CPT-> {cpt_count} CPR-> {cpr_count} F1A-> {f1a_count} F1B-> {f1b_count} HMF-> {hmf_count} HRS-> {hrs_count}")      
+        print(f"CPT-> {cpt_count} CPR-> {cpr_count} F1A-> {f1a_count} F1B-> {f1b_count} HMF-> {hmf_count} HRS-> {hrs_count} OBM-> {obm_count}")
         summary['CPT'] = cpt_count
         summary['CPR'] = cpr_count
         summary['F1A'] = f1a_count
         summary['F1B'] = f1b_count
         summary['HMF'] = hmf_count
         summary['HRS'] = hrs_count
+        summary['OBM'] = obm_count
 
         return render(
             request, 'mobile/home.html',
