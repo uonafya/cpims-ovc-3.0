@@ -675,6 +675,7 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                 'app_form_metadata':app_metadata,
                 'event_id': event.id,
                 'created_at':event.created_at,
+                'user_id':event.user_id,
                 'signature':event_signature,
                 'questions': [],
                 'individual_questions': [],
@@ -1021,6 +1022,8 @@ def get_ovc_event(request, form_type, ovc_id):
                     'ovc_name': full_name,
                     'date_of_event': service['event__date_of_event'],
                     'event_id': event_id,
+                    'created_at':event.created_at,
+                    'user_id':event.user_id,                    
                     'app_form_metadata':app_metadata,
                     'ovc_sex':ovc_sex,
                     'ovc_age':ovc_age,
@@ -1273,6 +1276,8 @@ def get_one_case_plan(request, ovc_id):
                 'event_id': event.id,
                 'ovc_cpims_id': event.ovc_cpims.id,
                 'ovc_sex': ovc_sex,
+                'created_at':event.created_at,
+                'user_id':event.user_id,
                 'app_form_metadata':app_metadata,
                 'ovc_name': full_name,
                 'date_of_event': event.date_of_event,
@@ -1544,18 +1549,26 @@ def get_one_hiv_screening(request, ovc_id):
         # Fetch by ovc id
         hiv_management_events = RiskScreeningStaging.objects.filter(ovc_cpims=ovc_id, is_accepted=1)
         #data = [model_to_dict_custom(event) for event in hiv_management_events]
-        
         for event in hiv_management_events:
             full_name= f"{event.ovc_cpims.first_name} {event.ovc_cpims.other_names} {event.ovc_cpims.surname}"
             app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
             ovc_sex=get_sex_person(event.ovc_cpims.sex_id)
             ovc_age=event.ovc_cpims.age
+            created_at=event.timestamp_created
+            user_id=event.user_id
+            
+            
             
             event.app_form_metadata =app_metadata
             model_dict = model_to_dict_custom(event)
             model_dict['ovc_name']=full_name
             model_dict['ovc_sex']=ovc_sex
             model_dict['ovc_age']=ovc_age
+            model_dict['created_at']=created_at
+            model_dict['user_id']=user_id
+            
+            
+            
             
             data.append(model_dict)
 
@@ -1746,12 +1759,16 @@ def get_one_hiv_management(request, ovc_id):
             app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
             ovc_sex=get_sex_person(event.ovc_cpims.sex_id)
             ovc_age=event.ovc_cpims.age
+            created_at=event.timestamp_created
+            user_id=event.user_id
             
             event.app_form_metadata =app_metadata
             model_dict = model_to_dict_custom(event)
             model_dict['ovc_name']=full_name
             model_dict['ovc_sex']=ovc_sex
             model_dict['ovc_age']=ovc_age
+            model_dict['created_at']=created_at
+            model_dict['user_id']=user_id
             
             data.append(model_dict)
 
@@ -1938,13 +1955,17 @@ def get_one_grad_monitor(request,form_type, ovc_id):
             app_metadata = json.loads(gme.app_form_metadata.replace("'", "\""))
             ovc_sex=get_sex_person(child.sex_id)
             ovc_age=child.age
+            print(ovc_id)
             
             gme.app_form_metadata =app_metadata
             model_dict = model_to_dict_custom(gme)
             model_dict['ovc_name']=full_name
             model_dict['ovc_sex']=ovc_sex
             model_dict['ovc_age']=ovc_age
+            model_dict['user_id']=gme.user_id
+            model_dict['created_at']=gme.timestamp_created
             model_dict['ovc_cpims_id']=child.pk
+
             
             data.append(model_dict)
                     
