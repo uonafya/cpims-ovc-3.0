@@ -1492,8 +1492,8 @@ National
                                             <textarea id="message_approve_${event_id}" name="message_approve" rows="1" style="width:80%;" ></textarea>
                                         </div>
                                         <div class="col-md-2" id="approvalbuttons">
-                                            <input onclick="consolidatePost(this.id, 'approve', 'grad_monitor')" id="${event_id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
-                                            <input onclick="consolidatePost(this.id, 'reject', 'grad_monitor')" id="${event_id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                            <input onclick="consolidatePost(this.id, 'approve', 'grm')" id="${event_id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'grm')" id="${event_id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
                                         </div>
                                     </div>
                                     <div class="row" hidden>
@@ -1543,11 +1543,7 @@ National
     
         let url;
         if (f_uid === undefined) {
-            if (form_id === "grad_monitor"){
-                url = `/api/form/${form_id}/`;
-            }else {
                 url = `/api/form/${form_id.toUpperCase()}/`;
-            }
         } else {
             if (form_id === "F1A" || form_id === "F1B") {
                 url = `/mobile/forms/update/${f_uid}`;
@@ -1555,7 +1551,7 @@ National
                 url = `/mobile/cpt/update/${f_uid}`;
             } else if (form_id === "CPR") {
                 url = `/mobile/cpara/update/${f_uid}`;
-            }else if (form_id === "grad_monitor") {
+            }else if (form_id === "grm") {
             url = `/mobile/grad_monitor/update/${f_uid}`;
             }
             else  {
