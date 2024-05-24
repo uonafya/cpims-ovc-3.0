@@ -2559,7 +2559,9 @@ def unaccepted_records(request, form_type):
                     'cm13q': ovc_bm.succesful_exit_checked,
                     'cm14q': ovc_bm.case_closure_checked,
                     'gm1d': ovc_bm.event_date,
-                    'app_form_metadata': app_metadata,                
+                    'app_form_metadata': app_metadata,
+                    'form_type': ovc_bm.form_type,
+                    'ovc_cpims_id':ovc_bm.ovc_cpims_id,               
                 }
                 
                 data.append(event_data)
