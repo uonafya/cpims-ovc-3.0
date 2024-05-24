@@ -1908,7 +1908,8 @@ def update_grad_monitor(request, obm_id):
             is_accepted = obm.is_accepted,
             timestamp_created = obm.timestamp_created,
             timestamp_updated = obm.timestamp_updated,
-            message = message,     
+            message = message,
+            ovc_cpims=obm.ovc_cpims,     
             )
             
         elif new_is_accepted == ApprovalStatus.TRUE.value:
