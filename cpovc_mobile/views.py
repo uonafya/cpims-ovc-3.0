@@ -1859,6 +1859,7 @@ def update_grad_monitor(request, obm_id):
     try:
         obm = OVCBenchmarkMonitoringStaging.objects.get(obm_id=obm_id)
         new_is_accepted = request.data.get('is_accepted')
+        message = request.data.get('message')
         track_payload = {
         'event_id': obm.obm_id,
         'form_type':'obm'    
@@ -1903,7 +1904,8 @@ def update_grad_monitor(request, obm_id):
             user =  obm.user,
             is_accepted = obm.is_accepted,
             timestamp_created = obm.timestamp_created,
-            timestamp_updated = obm.timestamp_updated,     
+            timestamp_updated = obm.timestamp_updated,
+            message = message,     
             )
             
         elif new_is_accepted == ApprovalStatus.TRUE.value:
