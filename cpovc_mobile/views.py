@@ -40,6 +40,7 @@ from django.db.models import F, CharField, Value
 from django.db.models.functions import Concat
 from django.db.models import OuterRef, Subquery
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
 
 
 
@@ -453,9 +454,10 @@ def check_saved_rejected(request):
         else:
             return(Response({'message':'Record not deleted..incomplete/incorrect payload'},status=status.HTTP_400_BAD_REQUEST))
                
-    
+    except ObjectDoesNotExist as e:
+        return Response({'error': 'Record not found.' + str(e)}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
-        return(Response({'error':str(e)}))
+        return(Response({'error':str(e)},status=status.HTTP_400_BAD_REQUEST))
 
 def get_sex_person(sex):
     if sex == 'SMAL':
