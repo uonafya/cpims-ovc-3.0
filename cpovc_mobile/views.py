@@ -2563,7 +2563,8 @@ def unaccepted_records(request, form_type):
                     'gm1d': ovc_bm.event_date,
                     'app_form_metadata': app_metadata,
                     'form_type': ovc_bm.form_type,
-                    'ovc_cpims_id':ovc_bm.ovc_cpims_id,               
+                    'ovc_cpims_id':ovc_bm.ovc_cpims_id,
+                    'message':ovc_bm.message,               
                 }
                 
                 data.append(event_data)
