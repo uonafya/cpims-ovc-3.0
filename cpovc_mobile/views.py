@@ -1785,7 +1785,7 @@ def create_grad_monitor(request):
     try:
         data = request.data
         ovc_id = data.get('ovc_cpims_id')
-        # child = RegPerson.objects.get(id=id)      
+        child = RegPerson.objects.get(id=ovc_id)      
         caregiver_id = OVCRegistration.objects.get(person=ovc_id).caretaker_id
         house_hold = OVCHouseHold.objects.get(head_person_id=caregiver_id,is_void=False)        
         caregiver = RegPerson.objects.get(id=caregiver_id,is_void=False)
@@ -1822,6 +1822,7 @@ def create_grad_monitor(request):
                 event_date=event_date,
                 app_form_metadata=json.dumps(data.get('app_form_metadata')),
                 user=user_id,
+                ovc_cpims = child,
                 
             )
             
@@ -1845,6 +1846,8 @@ def create_grad_monitor(request):
                     event_date=event_date,
                     app_form_metadata=json.dumps(data.get('app_form_metadata')),
                     user=user_id,
+                    ovc_cpims = child,
+                    
                     
                 )
         return Response({'message': 'OVC Graduation monitoring record created successfully'}, status=status.HTTP_201_CREATED)
