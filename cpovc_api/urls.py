@@ -5,7 +5,8 @@ from rest_framework_simplejwt import views as jwt_views
 from . import views
 
 urlpatterns = [
-    path('', views.api_home, name='api_home'),
+    # path('', views.api_home, name='api_home'),
+    path('', views.APIRoot.as_view(), name='api_home'),
     # Authentication
     path(
         'token/', jwt_views.TokenObtainPairView.as_view(),

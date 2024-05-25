@@ -373,6 +373,14 @@ class OVCRegistrationForm(forms.Form):
                    'class': 'form-control',
                    'id': 'nupi_id'}))
 
+    # May 2024
+    exit_org_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'class': 'form-control',
+                   'readonly': 'readonly',
+                   'id': 'exit_org_id'}))
+
 
 class OVCExtraInfoForm(forms.Form):
     """OVC Extra Information form."""

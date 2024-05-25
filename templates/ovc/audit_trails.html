@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page_title %} OVC Audit trails {% endblock %}
+
+{% load app_filters %}
+
+{% block style_code %}
+
+{% endblock %}
+
+{% block primary %}
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+	<li><a href="#">Home</a></li>
+	<li class="active">OVC Care</li>
+</ol>
+<!-- end breadcrumb -->
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-child"></i> OVC Care <small>Audit trails</small></h1>
+<!-- end page-header -->
+
+{% if messages %}
+    {% for message in messages %}
+    {% if 'error' in message.tags %}
+        <div id="messages" class="alert alert-danger fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-info fa-2x pull-left"></i>
+    {% else %}
+        <div id="messages" class="alert alert-success fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+    {% endif %}    
+        <p>{{ message }}</p>
+    </div>
+   {% endfor %}
+{% endif %}
+    <div id="message" class="alert alert-success fade in" style="display: none">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+  
+        <span id="response"></span>
+    </div>
+<!-- begin row -->
+<div class="row">
+    <!-- begin panel -->
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <div class="panel-heading-btn">
+                <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                <a href="#" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+            </div>                      
+            <h4 class="panel-title">OVC Audit trails details</h4>
+        </div>
+        <div style="overflow-x: auto; min-height: 300px;">
+        <!-- start panel body -->
+        <div class="panel-body">
+            <fieldset>
+            <div class="row">                
+                <legend class="pull-left width-full">Person Registry</legend>
+                {% if reg_audits %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>User ID</th>
+                            <th>Username</th>
+                            <th>User details</th>
+                            <th>Transaction</th>
+                            <th>Datetime</th>
+                            <th>IP Address</th>
+                            <th>Metadata</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for audit in reg_audits %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ audit.app_user_id }}</td>
+                            <td>{{ audit.app_user.username }}</td>
+                            <td>{{ audit.app_user.reg_person.first_name }} {{ audit.app_user.reg_person.surname }} </td>                            
+                            <td>{{ audit.transaction_type_id }}</td>
+                            <td>{{ audit.timestamp_modified }}</td>
+                            <td>{{ audit.ip_address }}</td>
+                            <td>{{ audit.meta_data }}</td>
+                        </tr>                        
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>No Registry audit trails available</p>
+                {% endif %}
+                
+                <legend class="pull-left width-full">Service Provision</legend>
+                {% if serv_audits %}
+                {% for audit in serv_audits %}
+                {% endfor %}
+                {% else %}
+                <p>No services audit trails available</p>
+                {% endif %}
+
+                <legend class="pull-left width-full">Mobile App</legend>
+                {% if app_audits %}
+                {% for audit in app_audits %}
+                {% endfor %}
+                {% else %}
+                <p>No Mobile App audit trails available</p>
+                {% endif %}
+                </div>
+            </fieldset>
+            </div>
+
+            <a href="{% url 'ovc_view' id=ovc_id %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: May 2024</div>
+        </div>
+        <!-- end panel body -->
+    </div>
+    <!-- end panel --> 
+</div>
+<!-- end row -->
+{% endblock %}
+
+{% block lazy_javascript_code %}
+
+{% endblock %}

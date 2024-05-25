@@ -221,7 +221,8 @@
 
                 </form>
             </div>
-            <div class="badge pull-right m-4">Revised: March 7th 2019</div>
+            <a href="{% url 'ovc_view' id=ovc_id %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: March 7th 2019</div>  
         </div>
         <!-- end panel -->
 
@@ -245,8 +246,12 @@
 <script>
 jQuery(document).ready(function() 
 {
-	$('html,body').scrollTop(0);
-	FormWizardValidation.init();
+    $('html,body').scrollTop(0);
+    FormWizardValidation.init();
+
+    $('#monitoring_date').datepicker({
+        format: 'dd-M-yyyy', autoclose: true
+    });
 });
 </script>
 {% endblock lazy_javascript_code %}

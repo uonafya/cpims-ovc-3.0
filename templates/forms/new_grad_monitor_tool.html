@@ -217,7 +217,9 @@
 							</div>
 						</div>
                     </div>
-
+                <hr>
+                <a href="{% url 'ovc_view' id=ovc_id %}" class="badge badge-primary m-4"> Back to OVC</a>
+                <div class="badge pull-right m-4">Revised: March 7th 2019</div>
                 </form>
                 <div>
                     <table class="table" border="1">
@@ -304,10 +306,15 @@
 <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
 
+<script>
 jQuery(document).ready(function() 
 {
 	$('html,body').scrollTop(0);
 	FormWizardValidation.init();
+
+    $('#monitoring_date').datepicker({
+        format: 'dd-M-yyyy', autoclose: true
+    });
 });
 </script>
 {% endblock lazy_javascript_code %}
