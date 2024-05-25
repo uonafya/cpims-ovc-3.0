@@ -8,7 +8,8 @@ from django.db.models import Count, Q
 from datetime import (date, datetime)
 from .forms import OVCSearchForm, OVCRegistrationForm, OVCExtraInfoForm
 from cpovc_registry.models import (
-    RegPerson, RegPersonsGuardians, RegPersonsSiblings, RegPersonsExternalIds)
+    RegPerson, RegPersonsGuardians, RegPersonsSiblings, RegPersonsExternalIds,
+    RegPersonsAuditTrail)
 from cpovc_main.functions import (get_dict, get_days_difference)
 from .models import (
     OVCRegistration, OVCHHMembers, OVCEligibility, OVCViralload)
@@ -17,8 +18,9 @@ from .functions import (
     search_master, get_school, get_health, manage_checkins, ovc_management,
     get_exit_org, save_health, save_hh_info, get_extra_info)
 from cpovc_auth.decorators import is_allowed_ous
-from cpovc_forms.models import OVCCareEvents
-from cpovc_forms.models import OVCHivStatus
+
+from cpovc_forms.models import (
+    OVCCareEvents, OVCHivStatus, OVCCareBenchmarkScore, OVCBenchmarkMonitoring)
 
 from .functions import PersonObj
 from cpovc_auth.decorators import validate_ovc
@@ -833,3 +835,107 @@ def ovc_manage(request):
         results = {'message': msg}
         return JsonResponse(results, content_type='application/json',
                             safe=False)
+
+
+def ovc_audit_trails(request, id):
+    """Method to list all audit trails."""
+    try:
+        vals = {}
+        ovc_id = int(id)
+        reg_audits = RegPersonsAuditTrail.objects.filter(person_id=ovc_id)
+        return render(request, 'ovc/audit_trails.html',
+                      {'status': 200, 'vals': vals, 'ovc_id': ovc_id,
+                       'reg_audits': reg_audits})
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+def ovc_viral_load(request, id):
+    """Method to list all audit trails."""
+    try:
+        vals = {}
+        initial = {}
+        ovc_id = int(id)
+        guids = {'guids': [], 'chids': []}
+        form = OVCRegistrationForm(guids=guids, data=initial)
+        child = RegPerson.objects.get(is_void=False, id=ovc_id)
+        creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
+        vloads = OVCViralload.objects.filter(
+            is_void=False, person_id=ovc_id).order_by("-viral_date")
+        return render(request, 'ovc/viral_load.html',
+                      {'status': 200, 'vals': vals, 'ovc_id': ovc_id,
+                       'vloads': vloads, 'child': child, 'form': form,
+                       'creg': creg})
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+def ovc_hiv_status(request, id):
+    """Method to list all audit trails."""
+    try:
+        vals = {}
+        initial = {}
+        ovc_id = int(id)
+        guids = {'guids': [], 'chids': []}
+        form = OVCRegistrationForm(guids=guids, data=initial)
+        child = RegPerson.objects.get(is_void=False, id=ovc_id)
+        creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
+        vloads = OVCViralload.objects.filter(
+            is_void=False, person_id=ovc_id).order_by("-viral_date")
+        return render(request, 'ovc/hiv_status.html',
+                      {'status': 200, 'vals': vals, 'ovc_id': ovc_id,
+                       'vloads': vloads, 'child': child, 'form': form,
+                       'creg': creg})
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+def ovc_exits(request, id):
+    """Method to list all audit trails."""
+    try:
+        delta = 0
+        vals = {}
+        initial = {}
+        ovc_id = int(id)
+        guids = {'guids': [], 'chids': []}
+        child = RegPerson.objects.get(is_void=False, id=ovc_id)
+        creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
+        ovc_cg_id = creg.caretaker_id
+        # Past CPARA
+        cpara = OVCCareBenchmarkScore.objects.filter(
+            event__event_type_id='cpr',
+            event__person_id=ovc_id).order_by('-date_of_event').first()
+        # Benchmark Monitoring / HHRCPA
+        m_bm = OVCBenchmarkMonitoring.objects.filter(
+            event__event_type_id='obm', form_type='bm',
+            caregiver_id=ovc_cg_id).order_by('-event__date_of_event').first()
+        m_cpa = OVCBenchmarkMonitoring.objects.filter(
+            event__event_type_id='obm', form_type='hhrcpa',
+            caregiver_id=ovc_cg_id).order_by('-event__date_of_event').first()
+        print('BMS', m_bm.event_date, m_bm.form_type)
+        # Initial details
+        if creg.exit_date:
+            delta = get_days_difference(creg.exit_date)
+            exit_date = creg.exit_date.strftime('%d-%b-%Y')
+            exit_org = get_exit_org(ovc_id, True)
+            initial['ovc_exit_reason'] = creg.exit_reason
+            initial['exit_date'] = exit_date
+            initial['exit_org_name'] = exit_org.org_unit_name
+            initial['exit_org_id'] = exit_org.org_unit_id
+        form = OVCRegistrationForm(guids=guids, data=initial)
+        reg_audits = RegPersonsAuditTrail.objects.filter(person_id=ovc_id)
+        return render(request, 'ovc/exit_and_graduation.html',
+                      {'status': 200, 'vals': vals, 'ovc_id': ovc_id,
+                       'reg_audits': reg_audits, 'child': child,
+                       'form': form, 'delta': delta, 'cpara': cpara,
+                       'm_bm': m_bm, 'm_cpa': m_cpa})
+    except Exception as e:
+        raise e
+    else:
+        pass

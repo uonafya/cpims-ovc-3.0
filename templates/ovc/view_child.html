@@ -215,7 +215,43 @@ Caregiver details | {{care_giver}}
                     <div class="m-t-4">Wellbeing Adolescent</div></a>
                 </td>
             </tr>
-        </table> 
+        </table>
+        <div class="m-b-10 text-inverse f-s-12"><b>Other Forms</b></div>
+
+        <table class="text-inverse m-b-20 width-full">
+            <tr>
+                <td>
+                    <a href="{% url 'ovc_hiv_status' id=creg.person_id %}">
+                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
+                    <span class="badge pull-right">N</span>
+                    <div class="m-t-4">HIV Status</div></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{% url 'ovc_viral_load' id=creg.person_id %}">
+                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
+                    <span class="badge pull-right">N</span>
+                    <div class="m-t-4">Viral Load</div></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{% url 'ovc_exits' id=creg.person_id %}">
+                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
+                    <span class="badge pull-right">N</span>
+                    <div class="m-t-4">Exits and Graduations</div></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{% url 'ovc_audit_trails' id=creg.person_id %}">
+                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
+                    <span class="badge pull-right">N</span>
+                    <div class="m-t-4">Audit Trails</div></a>
+                </td>
+            </tr>
+        </table>
 
     </div>
     <!-- end col-2 -->
