@@ -543,6 +543,8 @@ class OVCBenchmarkMonitoringStaging(models.Model):
     )
     timestamp_created = models.DateTimeField(default=timezone.now)
     timestamp_updated = models.DateTimeField(auto_now=True)
+    ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE, null=True)
+    
 
     class Meta:
         db_table = 'ovc_benchmark_monitoring_staging'
@@ -577,6 +579,10 @@ class OVCBenchmarkMonitoringRejected(models.Model):
     )
     timestamp_created = models.DateTimeField(default=timezone.now)
     timestamp_updated = models.DateTimeField(auto_now=True)
+    message = models.TextField(null=True)
+    ovc_cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE, null=True)
+    
+    
 
     class Meta:
         db_table = 'ovc_benchmark_monitoring_rejected'

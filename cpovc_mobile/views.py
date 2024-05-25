@@ -40,6 +40,7 @@ from django.db.models import F, CharField, Value
 from django.db.models.functions import Concat
 from django.db.models import OuterRef, Subquery
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
 
 
 
@@ -453,9 +454,10 @@ def check_saved_rejected(request):
         else:
             return(Response({'message':'Record not deleted..incomplete/incorrect payload'},status=status.HTTP_400_BAD_REQUEST))
                
-    
+    except ObjectDoesNotExist as e:
+        return Response({'error': 'Record not found.' + str(e)}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
-        return(Response({'error':str(e)}))
+        return(Response({'error':str(e)},status=status.HTTP_400_BAD_REQUEST))
 
 def get_sex_person(sex):
     if sex == 'SMAL':
@@ -1785,7 +1787,7 @@ def create_grad_monitor(request):
     try:
         data = request.data
         ovc_id = data.get('ovc_cpims_id')
-        # child = RegPerson.objects.get(id=id)      
+        child = RegPerson.objects.get(id=ovc_id)      
         caregiver_id = OVCRegistration.objects.get(person=ovc_id).caretaker_id
         house_hold = OVCHouseHold.objects.get(head_person_id=caregiver_id,is_void=False)        
         caregiver = RegPerson.objects.get(id=caregiver_id,is_void=False)
@@ -1822,6 +1824,7 @@ def create_grad_monitor(request):
                 event_date=event_date,
                 app_form_metadata=json.dumps(data.get('app_form_metadata')),
                 user=user_id,
+                ovc_cpims = child,
                 
             )
             
@@ -1845,6 +1848,8 @@ def create_grad_monitor(request):
                     event_date=event_date,
                     app_form_metadata=json.dumps(data.get('app_form_metadata')),
                     user=user_id,
+                    ovc_cpims = child,
+                    
                     
                 )
         return Response({'message': 'OVC Graduation monitoring record created successfully'}, status=status.HTTP_201_CREATED)
@@ -1859,6 +1864,7 @@ def update_grad_monitor(request, obm_id):
     try:
         obm = OVCBenchmarkMonitoringStaging.objects.get(obm_id=obm_id)
         new_is_accepted = request.data.get('is_accepted')
+        message = request.data.get('message')
         track_payload = {
         'event_id': obm.obm_id,
         'form_type':'obm'    
@@ -1903,7 +1909,9 @@ def update_grad_monitor(request, obm_id):
             user =  obm.user,
             is_accepted = obm.is_accepted,
             timestamp_created = obm.timestamp_created,
-            timestamp_updated = obm.timestamp_updated,     
+            timestamp_updated = obm.timestamp_updated,
+            message = message,
+            ovc_cpims=obm.ovc_cpims,     
             )
             
         elif new_is_accepted == ApprovalStatus.TRUE.value:
@@ -2553,7 +2561,10 @@ def unaccepted_records(request, form_type):
                     'cm13q': ovc_bm.succesful_exit_checked,
                     'cm14q': ovc_bm.case_closure_checked,
                     'gm1d': ovc_bm.event_date,
-                    'app_form_metadata': app_metadata,                
+                    'app_form_metadata': app_metadata,
+                    'form_type': ovc_bm.form_type,
+                    'ovc_cpims_id':ovc_bm.ovc_cpims_id,
+                    'message':ovc_bm.message,               
                 }
                 
                 data.append(event_data)
