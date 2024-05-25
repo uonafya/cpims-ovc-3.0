@@ -40,6 +40,7 @@ from django.db.models import F, CharField, Value
 from django.db.models.functions import Concat
 from django.db.models import OuterRef, Subquery
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
 
 
 
@@ -452,9 +453,10 @@ def check_saved_rejected(request):
         else:
             return(Response({'message':'Record not deleted..incomplete/incorrect payload'},status=status.HTTP_400_BAD_REQUEST))
                
-    
+    except ObjectDoesNotExist as e:
+        return Response({'error': 'Record not found.' + str(e)}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
-        return(Response({'error':str(e)}))
+        return(Response({'error':str(e)},status=status.HTTP_400_BAD_REQUEST))
 
 def get_sex_person(sex):
     if sex == 'SMAL':
@@ -673,7 +675,8 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
                 'date_of_event': event.date_of_event,
                 'app_form_metadata':app_metadata,
                 'event_id': event.id,
-                'created_at':event.created_at,
+                'timestamp_created':event.created_at,
+                'user_id':event.user_id,
                 'signature':event_signature,
                 'questions': [],
                 'individual_questions': [],
@@ -1010,6 +1013,8 @@ def get_ovc_event(request, form_type, ovc_id):
             app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
             ovc_sex=get_sex_person(event.ovc_cpims.sex_id)
             ovc_age=event.ovc_cpims.age
+            timestamp_created=event.created_at
+            user_id=event.user_id
            
             
             if event_id not in event_dict:
@@ -1022,6 +1027,8 @@ def get_ovc_event(request, form_type, ovc_id):
                     'app_form_metadata':app_metadata,
                     'ovc_sex':ovc_sex,
                     'ovc_age':ovc_age,
+                    'timestamp_created':timestamp_created,
+                    'user_id':user_id,
                     'services': [],
                     'critical_events': [],
                 }
@@ -1274,6 +1281,8 @@ def get_one_case_plan(request, ovc_id):
                 'app_form_metadata':app_metadata,
                 'ovc_name': full_name,
                 'date_of_event': event.date_of_event,
+                'timestamp_created':event.created_at,
+                'user_id':event.user_id,
                 'services': [service_serializer(service) for service in services]
             })
 
@@ -1548,9 +1557,12 @@ def get_one_hiv_screening(request, ovc_id):
             app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
             ovc_sex=get_sex_person(event.ovc_cpims.sex_id)
             ovc_age=event.ovc_cpims.age
+            timestamp_created=event.timestamp_created
             
             event.app_form_metadata =app_metadata
             model_dict = model_to_dict_custom(event)
+            model_dict['user_id'] = model_dict.pop('user')
+            model_dict['timestamp_created']=timestamp_created
             model_dict['ovc_name']=full_name
             model_dict['ovc_sex']=ovc_sex
             model_dict['ovc_age']=ovc_age
@@ -1744,9 +1756,11 @@ def get_one_hiv_management(request, ovc_id):
             app_metadata = json.loads(event.app_form_metadata.replace("'", "\""))
             ovc_sex=get_sex_person(event.ovc_cpims.sex_id)
             ovc_age=event.ovc_cpims.age
-            
+            timestamp_created=event.timestamp_created         
             event.app_form_metadata =app_metadata
             model_dict = model_to_dict_custom(event)
+            model_dict['user_id'] = model_dict.pop('user')
+            model_dict['timestamp_created']=timestamp_created
             model_dict['ovc_name']=full_name
             model_dict['ovc_sex']=ovc_sex
             model_dict['ovc_age']=ovc_age
@@ -1767,13 +1781,11 @@ def get_one_hiv_management(request, ovc_id):
 def create_grad_monitor(request, id):
     try:
         data = request.data
-        child = RegPerson.objects.get(id=id)       
-        house_hold = OVCHouseHold.objects.get(id=OVCHHMembers.objects.get(person=child).house_hold_id)
-        caregiver_id = OVCRegistration.objects.get(person=child).caretaker_id
-        caregiver = RegPerson.objects.get(id=caregiver_id)
-        print("uiooj",type(house_hold))
-        
- 
+        ovc_id = data.get('ovc_cpims_id')
+        child = RegPerson.objects.get(id=ovc_id)      
+        caregiver_id = OVCRegistration.objects.get(person=ovc_id).caretaker_id
+        house_hold = OVCHouseHold.objects.get(head_person_id=caregiver_id,is_void=False)        
+        caregiver = RegPerson.objects.get(id=caregiver_id,is_void=False)
         event_date = data.get('gm1d')
         user_id = AppUser.objects.get(pk=request.user.id)
         form_type = data.get('form1_type')
@@ -1807,6 +1819,7 @@ def create_grad_monitor(request, id):
                 event_date=event_date,
                 app_form_metadata=json.dumps(data.get('app_form_metadata')),
                 user=user_id,
+                ovc_cpims = child,
                 
             )
             print("uio")
@@ -1831,6 +1844,8 @@ def create_grad_monitor(request, id):
                     event_date=event_date,
                     app_form_metadata=json.dumps(data.get('app_form_metadata')),
                     user=user_id,
+                    ovc_cpims = child,
+                    
                     
                 )
         return Response({'message': 'OVC Benchmark monitoring record created successfully'}, status=status.HTTP_201_CREATED)
@@ -1845,6 +1860,11 @@ def update_grad_monitor(request, obm_id):
     try:
         obm = OVCBenchmarkMonitoringStaging.objects.get(obm_id=obm_id)
         new_is_accepted = request.data.get('is_accepted')
+        message = request.data.get('message')
+        track_payload = {
+        'event_id': obm.obm_id,
+        'form_type':'obm'    
+        }
         
         if new_is_accepted is None:
             return Response({'error': 'is_accepted field is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
@@ -1874,7 +1894,9 @@ def update_grad_monitor(request, obm_id):
             user =  obm.user,
             is_accepted = obm.is_accepted,
             timestamp_created = obm.timestamp_created,
-            timestamp_updated = obm.timestamp_updated,     
+            timestamp_updated = obm.timestamp_updated,
+            message = message,
+            ovc_cpims=obm.ovc_cpims,     
             )
             
         elif new_is_accepted == ApprovalStatus.TRUE.value:
@@ -1919,12 +1941,17 @@ def get_one_grad_monitor(request,form_type, ovc_id):
             app_metadata = json.loads(gme.app_form_metadata.replace("'", "\""))
             ovc_sex=get_sex_person(child.sex_id)
             ovc_age=child.age
+            timestamp_created=gme.timestamp_created
+            user_id=gme.user_id
             
             gme.app_form_metadata =app_metadata
             model_dict = model_to_dict_custom(gme)
             model_dict['ovc_name']=full_name
             model_dict['ovc_sex']=ovc_sex
             model_dict['ovc_age']=ovc_age
+            model_dict['ovc_cpims_id']=child.pk
+            model_dict['timestamp_created']=timestamp_created
+            model_dict['user_id']=model_dict.pop('user')
             
             data.append(model_dict)
                     
@@ -2512,7 +2539,10 @@ def unaccepted_records(request, form_type):
                     'cm13q': ovc_bm.succesful_exit_checked,
                     'cm14q': ovc_bm.case_closure_checked,
                     'gm1d': ovc_bm.event_date,
-                    'app_form_metadata': app_metadata,                
+                    'app_form_metadata': app_metadata,
+                    'form_type': ovc_bm.form_type,
+                    'ovc_cpims_id':ovc_bm.ovc_cpims_id,
+                    'message':ovc_bm.message,               
                 }
                 
                 data.append(event_data)
