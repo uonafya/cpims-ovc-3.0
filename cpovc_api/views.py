@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status
+from rest_framework.views import APIView
 
 from cpovc_ovc.models import OVCRegistration, OVCHealth
 from cpovc_registry.models import RegPersonsGeo, RegPersonsExternalIds
@@ -15,6 +16,39 @@ from .functions import (
 
 from cpovc_dashboard.parameters import PARAMS
 from .params import SID, SIDS, META_IDS, STATUSES
+
+
+class APIRoot(APIView):
+
+    """
+    This page serves as the entry point to the entire API for
+    Child Protection Information Management System (CPIMS).
+
+    # Exploring the API
+    There are two ways to explore this API:
+
+     * the [Swagger](http://swagger.io/)
+     [**sandbox** ( click here )](/api/docs/swagger/#!/api)
+
+     * the [browsable API ( click here )](/api/docs/redoc/)
+
+    # Authentication
+
+    Anonymous users have **read only** access to *most* ( not all ) views.
+    If you want to try out the `POST`, `PUT`, `PATCH` and `DELETE` actions,
+    you will need to log in using three provided methods. Username/password 
+    (Session), JSON Web Token (JWT) or Basic Token.
+
+    For the experimental sandbox, you can get suitable credentials from
+    [the documentation](https://cpims-docs.readthedocs.io/en/latest/). For a live
+    instance, you need to request for access from the Directorate of 
+    Children Services (DCS).
+    """
+    def get_view_name(self):
+        return "CPIMS API - Home"
+
+    def get(self, request, format=None):
+        return Response()
 
 
 def api_home(request):

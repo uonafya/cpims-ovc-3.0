@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page_title %} OVC Care - Exit / Graduation {% endblock %}
+
+{% load app_filters %}
+{% load app_forms %}
+
+{% block style_code %}
+<link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block primary %}
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+	<li><a href="#">Home</a></li>
+	<li class="active">OVC Care</li>
+</ol>
+<!-- end breadcrumb -->
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-child"></i> OVC Care <small>Exit / Graduation details | {{ child.first_name }} {{ child.surname }} | {{ child.age }}</small></h1>
+<!-- end page-header -->
+<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+    <span class="close" data-dismiss="alert">�</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+    <span class="invalid-form-message" id="invalid-form-message"></span>
+</div>
+<!-- begin row -->
+<div class="row">
+  <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin panel -->
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>                      
+                <h4 class="panel-title">Exit / Graduation details &nbsp;</h4>
+            </div>
+            <!-- start panel body -->
+            <div class="panel-body">
+                <form class="form-horizontal" action="." method="post" name="ovcreg_form" id="ovcreg_form"  data-parsley-validate="true">
+                {% csrf_token %}
+                <input type="hidden" name="ovc_id" id="ovc_id" value="{{ child.id }}">
+
+                    <div id="exit-message"></div>
+
+                    {% if delta > 90 %}
+
+                    <div class="note note-danger">
+                        <h4>Edit not allowed</h4>
+                        <p>
+                            It is 90 days since the exit / graduation and you are not allowed to edit this records.
+                        </p>
+                    </div>
+
+                    {% else %}
+                    {% if delta > 0 %}
+                    <div class="alert alert-warning fade in m-b-15">
+                        <strong>OVC exited!</strong>
+                        You are ONLY allowed to edit this exit/graduation within 90 days from the exit date.
+                        <span class="close" data-dismiss="alert">&times;</span>
+                    </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Exit reason</label>
+                        <div class="col-md-7">{{ form.ovc_exit_reason }}</div>
+                        <div class="col-md-2"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Exit Date</label>
+                        <div class="col-md-7">{{ form.exit_date }}</div>
+                        <div class="col-md-2"></div>
+                    </div>
+
+                    <div class="form-group" id="exit_org_div">
+                        <label class="col-md-3 control-label">Organization Name</label>
+                        <div class="col-md-5">{{ form.exit_org_name }}</div>
+                        <div class="col-md-2">{{ form.exit_org_id }}</div>
+                        <div class="col-md-2"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Checklist details</label>
+                        <div class="col-md-7">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Value</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Current Benchmark Score</td>
+                                        <td>{{ cpara.score }}</td>
+                                        <td>{{ cpara.date_of_event }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Benchmark Monitoring</td>
+                                        <td>
+                                            {% if m_bm %}
+                                            {% if m_bm.case_closure_checked %} Ready {% else %} Not Ready {% endif%}
+                                                For Closure
+                                            {% else %}
+                                                Missing
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ m_bm.event_date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>HHRCPA</td>
+                                        <td>
+                                            {% if m_cpa %}
+                                            {% if m_cpa.case_closure_checked %} Ready {% else %} Not Ready {% endif%}
+                                                For Closure
+                                            {% else %}
+                                                Missing
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ m_cpa.event_date }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-2"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                                <button type="button" class="btn btn-danger" value="exit-ovc" id="oexit">Exit OVC</button>
+                        </div>
+                    </div>
+
+                    {% endif %}                 
+                        
+                </div>
+                
+            <a href="{% url 'ovc_view' id=ovc_id %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: May 2024</div>
+            <!-- end panel body -->
+        </div>
+        <!-- end panel -->  
+    </div>
+    <!-- end col-12 -->
+    
+</div>
+</div>
+</form>
+<!-- end row -->
+{% endblock %}
+
+{% block lazy_javascript_code %}
+<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap-multiselect.js' %}"></script>
+<script>
+    $("#wizard").bwizard();
+    $('#ovcreg_form').submit(function(){
+        if ($('#ovcreg_form').parsley().isValid()){ 
+             $('#messages').html('Form is OK.');
+             $('#messages').show();
+        }else{
+            $('#messages').html('Please fill all the mandatory fields. Only complete records will be saved.');
+            $('#messages').show();
+            return true;
+        }
+    
+         
+    });
+    $("#is_exited").prop("disabled", true);
+
+    $('#ovcexit').click(function() { 
+        $('#modal-ovc-exit').modal('toggle');
+    });
+ 
+    $('#oexit').click(function() {
+        $('#ovcreg_form').parsley().validate("primary4");
+        var ovc_id = $('#ovc_id').val();
+        var ovc_exit_reason = $('#ovc_exit_reason').val();
+        var ovc_exit_date = $('#exit_date').val();
+        var ovc_exit_org = $('#exit_org_name').val();
+        var exit_org_id = $('#exit_org_id').val(); 
+        
+        var csrftoken = $.cookie('csrftoken');
+        var values = {'ovc_id': ovc_id, 'action': 2,
+                      'exit_reason': ovc_exit_reason,
+                      'exit_date': ovc_exit_date,
+                      'exit_org_name': ovc_exit_org,
+                      'exit_org_id': exit_org_id,
+                      'csrfmiddlewaretoken': csrftoken };
+        //Ajax call
+        var is_allowed = true;
+        if ((ovc_exit_reason == 'ERTL' || ovc_exit_reason == 'ERFO') && ovc_exit_org == ''){
+            is_allowed = false;
+        }
+        //if ($('#ovcreg_form').parsley().isValid()){
+        if (ovc_exit_reason && ovc_exit_date && is_allowed){
+            $.ajax({
+                type: "POST",
+                data: values,
+                dataType: "json",
+                url: "{% url 'ovc_manage' %}",
+                success: function(data){
+                    $('#messages').html('Exit was successful - ' + ovc_exit_date );
+                    $('#messages').show();
+                    // Redirect to view
+                    $('#modal-ovc-exit').modal('toggle');
+                    $(location).attr('href', '{% url 'ovc_view' id=child.id %}');
+                },
+                error: function(){
+                    $('#messages').html("Error");
+                    $('#messages').show();
+                }
+            });
+        }else{
+            $('#exit-message').html("Please provide all the details.");
+            $("#exit-message").addClass( "alert alert-danger fade in" );
+        }
+    });
+    
+    var is_exit = $('#is_exited').is(":checked");
+    disable_fields(is_exit, 'exit_reason');
+    //Class levels
+
+    $('#exit_reason').multiselect({
+        enableCaseInsensitiveFiltering: true,
+        numberDisplayed: 1,
+        maxHeight: 300,
+        buttonWidth: '100%',
+        disableIfEmpty: true,
+        enableClickableOptGroups: true,
+        buttonClass: 'btn btn-white'
+    });
+    $('#exit_date, #viral_date').datepicker({
+        dateFormat: 'yy-mm-dd', format: 'dd-M-yyyy',
+        endDate: '+0d', enddate: '+0d', autoclose: true
+    });
+
+    $('#exit_org_div').hide();
+    var cond = $('#ovc_exit_reason').val();
+    handle_exit_org(cond);
+    $('#ovc_exit_reason').live('change', function() {
+        var cond = $('#ovc_exit_reason').val();
+        handle_exit_org(cond);
+    });
+    // DREAMS
+    var drcond = $('#is_dreams_enrolled').is(":checked");
+    disable_fields(drcond, 'dreams_id');
+    $('#is_dreams_enrolled').live('change', function() {
+        var drcond = $('#is_dreams_enrolled').is(":checked");
+        disable_fields(drcond, 'dreams_id');
+    });
+
+    $('#caretaker').val('{{ child.caretaker }}');
+    var hstatus = $('#hiv_status').val();
+    var hlevel = $('#school_level').val();
+
+    $('#school_class').val('{{ sch_class }}');
+    $('#hiv_status').change(function(){
+        handle_hstatus(this.value);
+    });
+
+
+    //Org unit query
+    $( "#exit_org_name" ).autocomplete({
+        source: function( request, response ) {
+        $.ajax({
+          url: "{% url 'ovc_search' %}",
+          dataType: "json",
+          data: {q: request.term, id: 3},
+          success: function( data ) {
+            response( data );
+          }
+        });
+      },
+      minLength: 4,
+      select: function( event, ui ) {
+         $('#exit_org_name').val(ui.item.name);
+         $('#exit_org_id').val(ui.item.id);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      }
+    });
+
+    function handle_exit_org(cond){
+        if (cond == 'ERFO' || cond == 'ERTL'){
+           $('#exit_org_div').show(); 
+           $('#exit_org_name').attr("data-parsley-required", "true");
+        }else{
+           $('#exit_org_div').hide();
+           $('#exit_org_name').attr("data-parsley-required", "false");
+        }
+    }
+
+    
+    function disable_fields(cond, field_id){
+        if (cond){
+            console.log(field_id + ' 1');
+            $('#'+ field_id).prop('disabled', false);
+            $('#'+ field_id).attr("data-parsley-required", "true");  
+        }else{
+            console.log(field_id + ' 2');
+            $('#'+ field_id).prop('disabled', true);
+            $('#'+ field_id).attr("data-parsley-required", "false");
+        }
+        
+    }
+</script>
+
+{% endblock %}

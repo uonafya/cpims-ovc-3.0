@@ -690,6 +690,7 @@ def perform_exit(request):
         exit_date = convert_date(request.POST.get('exit_date'))
         exit_reason = request.POST.get('exit_reason')
         exit_org_name = request.POST.get('exit_org_name')
+        exit_org_id = request.POST.get('exit_org_id', None)
         # Today's date
         days_diff = get_days_difference(exit_date)
         month_exit = exit_date.month
@@ -716,7 +717,7 @@ def perform_exit(request):
                 # ovc_details.exit_org_name = exit_org_name
                 org, created = OVCExit.objects.update_or_create(
                     person_id=ovcid,
-                    defaults={'person_id': ovcid,
+                    defaults={'person_id': ovcid, 'org_unit_id': exit_org_id,
                               'org_unit_name': exit_org_name},)
             ovc_details.is_active = False
             ovc_details.save(
@@ -729,7 +730,7 @@ def perform_exit(request):
         return msg
 
 
-def get_exit_org(ovc_id):
+def get_exit_org(ovc_id, all_obj=False):
     """Method to get exit organization."""
     try:
         org = OVCExit.objects.get(is_void=False, person_id=ovc_id)
@@ -737,6 +738,8 @@ def get_exit_org(ovc_id):
         print('No org details - %s' % (str(e)))
         return ''
     else:
+        if all_obj:
+            return org
         return org.org_unit_name
 
 

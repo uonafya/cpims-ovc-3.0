@@ -806,6 +806,10 @@ def save_form(request, person_id, event_date, form_id, services, scores=[]):
             save_hrs(request, event_id, person_id)
         elif form_id == 'HMF':
             save_hmf(request, event_id, person_id)
+        elif form_id == 'GRM':
+            save_grad_monitor(request, event_id, person_id)
+        #Save metadata
+        save_metadata(request, form_id)
     except Exception as e:
         msg = 'Error saving form - %s' % (str(e))
         return msg
@@ -1308,3 +1312,55 @@ def save_hmf(request, event_id, person_id):
         return 'Error saving HMF -  %s' % str(e)
     else:
         return hmf_tool.pk
+
+
+def save_grad_monitor(request, event_id, person_id):
+    """Method to save Graduation monitoring."""
+    try:
+        gmf_tool = OVCBenchmarkMonitoring(
+                household_id=request.data.get('household'),
+                caregiver=caregiver,
+                form_type=request.data.get('HIV_MGMT_2_G'),
+                benchmark1=answer_value[data.get('cm2q')],
+                benchmark2=answer_value[data.get('cm3q')],
+                benchmark3=answer_value[data.get('cm4q')],
+                benchmark4=answer_value[data.get('cm5q')],
+                benchmark5=answer_value[data.get('cm6q')],
+                benchmark6=answer_value[data.get('cm7q')],
+                benchmark7=answer_value[data.get('cm8q')],
+                benchmark8=answer_value[data.get('cm9q')],
+                benchmark9=answer_value[data.get('cm10q')],
+                succesful_exit_checked=answer_value[data.get('cm13q')],
+                case_closure_checked=answer_value[data.get('cm14q')],
+                event_date=request.data.get('date_of_event'),
+                event_id=event_id,
+                timestamp_created=timezone.now()
+            ).save()
+    except Exception as e:
+        print('Graduation monitoring save error - %s' % str(e))
+        return 'Error saving GRM -  %s' % str(e)
+    else:
+        return gmf_tool.pk
+
+
+def save_metadata(request):
+    """Method to save Metadata."""
+    try:
+        '''
+        {"household":"7446cf3d-5dfd-4619-b5b0-8aa065a2f504",
+        "date_of_event":"2024-05-13",
+        "event_id":"85bd2429-3845-46f8-9687-86c40ee0180c",
+        "app_form_metadata":{"form_id":"fb012507-7192-4e93-ba34-0ab34c8177ff",
+        "location_lat":"37.4219985","location_long":"-122.0839999",
+        "start_of_interview":"2024-05-13 15:53:52.256938",
+        "end_of_interview":"2024-05-13T15:54:23.651669",
+        "form_type":"bm","device_id":"9951cbfa0bc29e54"}}
+        '''
+        metadata = request.data.get('app_form_metadata', None)
+        if metadata:
+            print('Metadata', metadata)
+    except Exception as e:
+        print('Metadata save error - %s' % str(e))
+        return 'Error saving metadata -  %s' % str(e)
+    else:
+        return gmf_tool.pk

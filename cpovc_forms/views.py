@@ -11617,7 +11617,7 @@ def edit_grad_monitor(request, id):
             return 'ANNO'
 
     edit_data= {
-        'gm1d': data_db[0]['event_date'].strftime("%Y-%m-%d"),
+        'gm1d': data_db[0]['event_date'].strftime("%d-%b-%Y"),
         'cm2q': map_yes_no(data_db[0]['benchmark1']),
         'cm3q': map_yes_no(data_db[0]['benchmark2']),
         'cm4q': map_yes_no(data_db[0]['benchmark3']),
@@ -11656,7 +11656,7 @@ def edit_grad_monitor(request, id):
     context = {'form':form,
             'status': 200,
             'care_giver': care_giver,
-            'creg':creg,
+            'creg':creg, 'ovc_id': ovc_id,
             'caregiver':caregiver,
             'form_type':form_type
                     }

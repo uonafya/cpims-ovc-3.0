@@ -35,6 +35,8 @@ from cpovc_dashboards import urls as dashboards_urls
 from cpovc_mobile import urls as mobile_urls
 from cpovc_hes import urls as hes_urls
 
+from drf_spectacular.views import (
+    SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -120,6 +122,10 @@ urlpatterns = [
     path('api/', include(api_urls)),
     path('mobile/', include(mobile_urls)),
     path('hes/', include(hes_urls)),
+    # API Documentations
+    path('api/docs/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/docs/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
 handler400 = 'cpims.views.handler_400'
