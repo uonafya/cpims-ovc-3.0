@@ -1153,6 +1153,10 @@ National
                     for (dta in data){
                         let html_question = ''
                         let data_indx = data[dta]
+                        let app_form_metdata = data_indx.app_form_metadata
+                        app_form_metdata.start_of_interview = formatPythonDate(app_form_metdata.start_of_interview)
+                        app_form_metdata.end_of_interview = formatPythonDate(app_form_metdata.end_of_interview)
+
                         if (data_indx){
                             for (indx in hmf_translates){
                                 let question_no = hmf_translates[indx].Question_no
@@ -1187,6 +1191,10 @@ National
                         }else{
                             html_question += `<p style="color: red;">No benchmark Scores</p>`
                         }
+                        ta_trs['ovc_cpims_id'] = data[dta].ovc_cpims ? data[dta].ovc_cpims : 'false'
+                        ta_trs.created_at = formatPythonDate(data_indx.created_at)
+                        ta_trs.user_id = data_indx.user_id
+                        ta_trs['app_form_metadata'] = app_form_metdata
                         let payload = JSON.stringify(ta_trs)
 
                     
@@ -1268,8 +1276,7 @@ National
                                 </tr>
                         `);                  
                     }
-                }
-                else if(form === 'hrs' ){
+                }else if(form === 'hrs' ){
                     let ta_trs = {}
                     let html_question = ''
 
@@ -1279,10 +1286,13 @@ National
                         html_question = ''
                         let data_indx = data[dta]
                         let row_id_btn = data_indx.risk_id
-                        let app_form_metdata = data_indx.app_form_metdata
+                        let app_form_metdata = data_indx.app_form_metadata
+                        app_form_metdata.start_of_interview = formatPythonDate(app_form_metdata.start_of_interview)
+                        app_form_metdata.end_of_interview = formatPythonDate(app_form_metdata.end_of_interview)
+
+                        let cpims_id = data_indx.ovc_cpims
                         ta_trs['app_form_metadata'] = app_form_metdata
                         
-                        console.log({row_id_btn})
                         if (data_indx){
                             for (indx in hmf_translates){
                                 let question_no = hmf_translates[indx].Question_no
@@ -1319,7 +1329,13 @@ National
                         }else{
                             html_question += `<p style="color: red;">No benchmark Scores</p>`
                         }
+                        ta_trs.ovc_cpims_id = cpims_id
+                        ta_trs.created_at = formatPythonDate(data_indx.created_at)
+                        ta_trs.user_id = data_indx.user_id
                         let payload = JSON.stringify(ta_trs)
+
+                        console.log({ta_trs, data_indx, cpims_id, payload})
+
                         $( "#facility_field_"+row_id_btn ).autocomplete({
                             source: function( request, response ) {
                             $.ajax({
@@ -1393,7 +1409,7 @@ National
                                                     <div class="modal-header">
                                                         <button type="button" data-dismiss="modal" class="close" aria-label="Close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                                         <h4 class="modal-title">
-                                                            <p>Form: HIV Risk Screening : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
+                                                            <p>Form: HIV Risk Screening : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                                         </h4>
                                                     </div>
                                                     <div class="modal-body">
@@ -1424,6 +1440,80 @@ National
                                 </tr>
                         `);                  
                     }
+                }else if(form === 'hhrcpa' || form === 'bm' ){
+                    let ta_trs = ""
+                    for (dta in data){
+                        let app_form = data[dta].app_form_metadata || {}
+                        let event_id = data[dta].obm_id
+                        let form_type = data[dta].form_type
+
+                            let payload  = JSON.stringify({
+                                'household': data[dta].household ? data[dta].household : "",
+                                'date_of_event': data[dta].event_date ? data[dta].event_date : "",
+                                'event_id': event_id ? event_id : "",
+                                'app_form_metadata': app_form ? app_form : "",
+                                "obm_id": data[dta].obm_id ? data[dta].obm_id : "",
+                                "household": data[dta].household ? data[dta].household : "",
+                                "caregiver": data[dta].caregiver ? data[dta].caregiver : "",
+                                "form_type": data[dta].form_type ? data[dta].form_type : "",
+                                "benchmark1": data[dta].benchmark1 ? data[dta].benchmark1 : "",
+                                "benchmark2": data[dta].benchmark2 ? data[dta].benchmark2 : "",
+                                "benchmark3": data[dta].benchmark3 ? data[dta].benchmark3 : "",
+                                "benchmark4": data[dta].benchmark4 ? data[dta].benchmark4 : "",
+                                "benchmark5": data[dta].benchmark5 ? data[dta].benchmark5 : "",
+                                "benchmark6": data[dta].benchmark6 ? data[dta].benchmark6 : "",
+                                "benchmark7": data[dta].benchmark7 ? data[dta].benchmark7 : "",
+                                "benchmark8": data[dta].benchmark8 ? data[dta].benchmark8 : "",
+                                "benchmark9": data[dta].benchmark9 ? data[dta].benchmark9 : "",
+                                "timestamp_created": data[dta].timestamp_created ? data[dta].timestamp_created : "",
+                                "ovc_cpims_id": data[dta].ovc_cpims_id ? data[dta].ovc_cpims_id : "",
+                                "user_id": data[dta].user_id ? data[dta].user_id : "",
+                            })
+                        $("#Dataapproval tbody").append(`<tr id="${event_id}_tr" class="datarows">
+
+                                <td style="width: 100%;" class="mt-2" style="border:1px solid black;">
+                                    <p>Form: ${form_type == 'bm' ? 'Benchmark Monitoring' : 'Household Reaching Case Plan Achievement' } : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].event_date}</p>
+                                    <div class="col-md-10">
+                                        <b><u>Benchmark Scores</u></b> <br>
+                                        <p>                                        
+                                        Benchmark 1:    <b style='color: red'> ${data[dta].benchmark1 ? 1 : 0}  </b>
+                                        Benchmark 2:    <b style='color: red'> ${data[dta].benchmark2 ? 1 : 0}  </b>
+                                        Benchmark 3:    <b style='color: red'> ${data[dta].benchmark3 ? 1 : 0}  </b>
+                                        Benchmark 4:    <b style='color: red'> ${data[dta].benchmark4 ? 1 : 0}  </b>
+                                        Benchmark 5:    <b style='color: red'> ${data[dta].benchmark5 ? 1 : 0} </b>
+                                        Benchmark 6:    <b style='color: red'> ${data[dta].benchmark6 ? 1 : 0}  </b>
+                                        Benchmark 7:    <b style='color: red'> ${data[dta].benchmark7 ? 1 : 0}  </b>
+                                        Benchmark 8:    <b style='color: red'> ${data[dta].benchmark8 ? 1 : 0}  </b>
+                                        Benchmark 9:    <b style='color: red'> ${data[dta].benchmark9 ? 1 : 0}  </b>  
+                                        </br>
+                                        Total:    <b style='color: red'> ${data[dta].benchmark1  +data[dta].benchmark2  +data[dta].benchmark3  +data[dta].benchmark4  +data[dta].benchmark5  +data[dta].benchmark6  +data[dta].benchmark7  +data[dta].benchmark8  +data[dta].benchmark9 }  </b>
+                                        </p>
+                                    </div>
+                                    <div class="row" >
+                                        <div class="col-md-4">
+                                            <br>
+                                            Ready for Successful Exit : <b style="color: red;"> ${data[dta].succesful_exit_checked}</b> <br>
+                                            Ready for Case Closure : <b style="color: red;"> ${data[dta].case_closure_checked}</b>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <b><u> Reason for rejecting </u></b><br>
+                                            <textarea id="message_approve_${event_id}" name="message_approve" rows="1" style="width:80%;" ></textarea>
+                                        </div>
+                                        <div class="col-md-2" id="approvalbuttons">
+                                            <input onclick="consolidatePost(this.id, 'approve', 'grm')" id="${event_id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
+                                            <input onclick="consolidatePost(this.id, 'reject', 'grm')" id="${event_id}" class="btnReject btn btn-danger m-5" type="button" value="Reject" />
+                                        </div>
+                                    </div>
+                                    <div class="row" hidden>
+                                        <div class="col-md-12">
+                                            <input type="input" id="payload_${event_id}" value='${payload}'>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        `);   
+                    }                   
+                           
                 }
 
                 $("#Dataapproval").DataTable().draw()
@@ -1515,6 +1605,20 @@ National
     
         return `${day}-${month}-${year}`;
     }
+
+    function formatPythonDate(date) {
+        var d = new Date(date),
+          month = '' + (d.getMonth() + 1),
+          day = '' + d.getDate(),
+          year = d.getFullYear();
+  
+        if (month.length < 2) 
+          month = '0' + month;
+        if (day.length < 2) 
+          day = '0' + day;
+  
+        return [year, month, day].join('-');
+      }
 
     function createImageNode(signature, nodeID){
         var image = new Image();
