@@ -103,6 +103,8 @@ National
                 <option value='cpr'>CPARA</option>
                 <option value='hmf'>HIV Management Form</option>
                 <option value='hrs'>HIV Risk Screening</option>
+                <option value='hhrcpa'>Household RCPA</option>
+                <option value='bm'>Benchmark Monitoring</option>
             </select>
         </div>
         <div class="col-md-4">
@@ -158,7 +160,7 @@ National
                             <table id="Dataapproval">
                                 <thead>
                                     <tr>  
-                                        <td style="width: 100%;">Data for approval (CHV : {{ summary.CHV }}, CPT : {{ summary.CPT }}, CPARA :  {{ summary.CPR }}, F1B :  {{ summary.F1B }}, F1A :  {{ summary.F1A }}, HMF :  {{ summary.F1B }}, HRS :  {{ summary.F1A }})</td>
+                                        <td style="width: 100%;">Data for approval (CHV : {{ summary.CHV }}, CPT : {{ summary.CPT }}, CPARA :  {{ summary.CPR }}, F1B :  {{ summary.F1B }}, F1A :  {{ summary.F1A }}, HMF :  {{ summary.HMF }}, HRS :  {{ summary.HRS }},  OBM :  {{ summary.OBM }})</td>
                                     </tr>
                                 </thead>
                                 <tbody id="tbody">
@@ -561,7 +563,14 @@ National
             if (form === 'hrs'){
                 s_url = `hrs/${child}`
             }
-            
+            if (form === 'hhrcpa'){
+                s_url = `grad_monitor/hhrcpa/${child}`
+            }
+            if (form === 'bm'){
+                s_url = `grad_monitor/bm/${child}`
+            }
+
+
             console.log({chvs, form, child, s_url})
             $.ajax({
                 type: "GET",
@@ -614,7 +623,7 @@ National
                                         </div>
                                         <div class="col-md-6">
                                             <b><u> Reason for rejecting </u></b><br>
-                                            <textarea id="message_approve_${service.id}" name="message_approve" rows="1" cols="80" ></textarea>
+                                            <textarea id="message_approve_${service.id}" name="message_approve" rows="1" style="width:80%;" ></textarea>
                                         </div>
                                         <div class="col-md-2" id="approvalbuttons">
                                             <input onclick="consolidatePost(this.id, 'approve', 'F1A')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
@@ -669,7 +678,7 @@ National
                                         </div>
                                         <div class="col-md-6">
                                             <b><u> Reason for rejecting </u></b><br>
-                                            <textarea id="message_approve_${cpt.event_id}" name="message_approve" rows="1" cols="80" ></textarea>
+                                            <textarea id="message_approve_${cpt.event_id}" name="message_approve" rows="1" style="width:80%;" ></textarea>
                                         </div>
                                         <div class="col-md-2" id="approvalbuttons">
                                             <input onclick="consolidateCritical(this.id, 'approve', 'F1A', this.getAttribute('id_1'))" id_1="${event_ids}" id="${cpt.event_id}"  class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
@@ -725,7 +734,7 @@ National
                                         </div>
                                         <div class="col-md-6">
                                             <b><u> Reason for rejecting </u></b><br>
-                                            <textarea id="message_approve_${service.id}" name="message_approve" rows="1" cols="80" ></textarea>
+                                            <textarea id="message_approve_${service.id}" name="message_approve" rows="1" style="width:80%;" ></textarea>
                                         </div>
                                         <div class="col-md-2" id="approvalbuttons">
                                             <input onclick="consolidatePost(this.id, 'approve', 'F1B')" id="${service.id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
@@ -781,7 +790,7 @@ National
                                             </div>
                                             <div class="col-md-6">
                                                 <b><u> Reason for rejecting </u></b><br>
-                                                <textarea id="message_approve_${cpt.event_id}" name="message_approve" rows="1" cols="80" ></textarea>
+                                                <textarea id="message_approve_${cpt.event_id}" name="message_approve" rows="1" style="width:80%;" ></textarea>
                                             </div>
                                             <div class="col-md-2" id="approvalbuttons">
                                                 <input onclick="consolidateCritical(this.id, 'approve', 'F1B', this.getAttribute('id_1'))" id_1="${event_ids}" id="${cpt.event_id}" class="btnApprove btn btn-primary m-5" type="button" value="Approve" />
@@ -1195,6 +1204,7 @@ National
                         ta_trs.created_at = formatPythonDate(data_indx.created_at)
                         ta_trs.user_id = data_indx.user_id
                         ta_trs['app_form_metadata'] = app_form_metdata
+
                         let payload = JSON.stringify(ta_trs)
 
                     
@@ -1276,7 +1286,8 @@ National
                                 </tr>
                         `);                  
                     }
-                }else if(form === 'hrs' ){
+                }
+                else if(form === 'hrs' ){
                     let ta_trs = {}
                     let html_question = ''
 
@@ -1286,13 +1297,12 @@ National
                         html_question = ''
                         let data_indx = data[dta]
                         let row_id_btn = data_indx.risk_id
-                        let app_form_metdata = data_indx.app_form_metadata
-                        app_form_metdata.start_of_interview = formatPythonDate(app_form_metdata.start_of_interview)
-                        app_form_metdata.end_of_interview = formatPythonDate(app_form_metdata.end_of_interview)
-
-                        let cpims_id = data_indx.ovc_cpims
+                        let app_form_metdata = data_indx.app_form_metdata
                         ta_trs['app_form_metadata'] = app_form_metdata
                         
+                        app_form_metdata.start_of_interview = formatPythonDate(app_form_metdata.start_of_interview)
+                        app_form_metdata.end_of_interview = formatPythonDate(app_form_metdata.end_of_interview)
+                        let cpims_id = data_indx.ovc_cpims
                         if (data_indx){
                             for (indx in hmf_translates){
                                 let question_no = hmf_translates[indx].Question_no
@@ -1333,9 +1343,6 @@ National
                         ta_trs.created_at = formatPythonDate(data_indx.created_at)
                         ta_trs.user_id = data_indx.user_id
                         let payload = JSON.stringify(ta_trs)
-
-                        console.log({ta_trs, data_indx, cpims_id, payload})
-
                         $( "#facility_field_"+row_id_btn ).autocomplete({
                             source: function( request, response ) {
                             $.ajax({
@@ -1409,7 +1416,7 @@ National
                                                     <div class="modal-header">
                                                         <button type="button" data-dismiss="modal" class="close" aria-label="Close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                                         <h4 class="modal-title">
-                                                            <p>Form: HIV Risk Screening : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
+                                                            <p>Form: HIV Risk Screening : OVC ID: <b style="color:red;">  ${data[dta].ovc_cpims_id} </b> | Child Name: <b style="color:red;">  ${data[dta].ovc_name} </b> | Child Sex: <b style="color:red;">  ${data[dta].ovc_sex} </b> | Child Age: <b style="color:red;">  ${data[dta].ovc_age} </b> | Date of event - ${data[dta].date_of_event}</p>
                                                         </h4>
                                                     </div>
                                                     <div class="modal-body">
@@ -1440,34 +1447,53 @@ National
                                 </tr>
                         `);                  
                     }
-                }else if(form === 'hhrcpa' || form === 'bm' ){
+                } 
+                else if(form === 'hhrcpa' || form === 'bm' ){
                     let ta_trs = ""
                     for (dta in data){
                         let app_form = data[dta].app_form_metadata || {}
                         let event_id = data[dta].obm_id
                         let form_type = data[dta].form_type
 
-                            let payload  = JSON.stringify({
-                                'household': data[dta].household ? data[dta].household : "",
-                                'date_of_event': data[dta].event_date ? data[dta].event_date : "",
-                                'event_id': event_id ? event_id : "",
-                                'app_form_metadata': app_form ? app_form : "",
-                                "obm_id": data[dta].obm_id ? data[dta].obm_id : "",
-                                "household": data[dta].household ? data[dta].household : "",
-                                "caregiver": data[dta].caregiver ? data[dta].caregiver : "",
-                                "form_type": data[dta].form_type ? data[dta].form_type : "",
-                                "benchmark1": data[dta].benchmark1 ? data[dta].benchmark1 : "",
-                                "benchmark2": data[dta].benchmark2 ? data[dta].benchmark2 : "",
-                                "benchmark3": data[dta].benchmark3 ? data[dta].benchmark3 : "",
-                                "benchmark4": data[dta].benchmark4 ? data[dta].benchmark4 : "",
-                                "benchmark5": data[dta].benchmark5 ? data[dta].benchmark5 : "",
-                                "benchmark6": data[dta].benchmark6 ? data[dta].benchmark6 : "",
-                                "benchmark7": data[dta].benchmark7 ? data[dta].benchmark7 : "",
-                                "benchmark8": data[dta].benchmark8 ? data[dta].benchmark8 : "",
-                                "benchmark9": data[dta].benchmark9 ? data[dta].benchmark9 : "",
-                                "timestamp_created": data[dta].timestamp_created ? data[dta].timestamp_created : "",
-                                "ovc_cpims_id": data[dta].ovc_cpims_id ? data[dta].ovc_cpims_id : "",
-                                "user_id": data[dta].user_id ? data[dta].user_id : "",
+                        let payload  = JSON.stringify({
+                            'household': data[dta].household,
+                            'household': data[dta].household ? data[dta].household : "",
+                            'date_of_event': data[dta].event_date,
+                            'date_of_event': data[dta].event_date ? data[dta].event_date : "",
+                            'event_id': event_id,
+                            'event_id': event_id ? event_id : "",
+                            'app_form_metadata': app_form,
+                            'app_form_metadata': app_form ? app_form : "",
+                            "obm_id": data[dta].obm_id,
+                            "obm_id": data[dta].obm_id ? data[dta].obm_id : "",
+                            "household": data[dta].household,
+                            "household": data[dta].household ? data[dta].household : "",
+                            "caregiver": data[dta].caregiver,
+                            "caregiver": data[dta].caregiver ? data[dta].caregiver : "",
+                            "form_type": data[dta].form_type,
+                            "form_type": data[dta].form_type ? data[dta].form_type : "",
+                            "benchmark1": data[dta].benchmark1,
+                            "benchmark1": data[dta].benchmark1 ? data[dta].benchmark1 : "",
+                            "benchmark2": data[dta].benchmark2,
+                            "benchmark2": data[dta].benchmark2 ? data[dta].benchmark2 : "",
+                            "benchmark3": data[dta].benchmark3,
+                            "benchmark3": data[dta].benchmark3 ? data[dta].benchmark3 : "",
+                            "benchmark4": data[dta].benchmark4,
+                            "benchmark4": data[dta].benchmark4 ? data[dta].benchmark4 : "",
+                            "benchmark5": data[dta].benchmark5,
+                            "benchmark5": data[dta].benchmark5 ? data[dta].benchmark5 : "",
+                            "benchmark6": data[dta].benchmark6,
+                            "benchmark6": data[dta].benchmark6 ? data[dta].benchmark6 : "",
+                            "benchmark7": data[dta].benchmark7,
+                            "benchmark7": data[dta].benchmark7 ? data[dta].benchmark7 : "",
+                            "benchmark8": data[dta].benchmark8,
+                            "benchmark8": data[dta].benchmark8 ? data[dta].benchmark8 : "",
+                            "benchmark9": data[dta].benchmark9,
+                            "benchmark9": data[dta].benchmark9 ? data[dta].benchmark9 : "",
+                            "timestamp_created": data[dta].timestamp_created,
+                            "timestamp_created": data[dta].timestamp_created ? data[dta].timestamp_created : "",
+                            "ovc_cpims_id": data[dta].ovc_cpims_id ? data[dta].ovc_cpims_id : "",
+                            "user_id": data[dta].user_id ? data[dta].user_id : "",
                             })
                         $("#Dataapproval tbody").append(`<tr id="${event_id}_tr" class="datarows">
 
@@ -1515,6 +1541,7 @@ National
                     }                   
                            
                 }
+                
 
                 $("#Dataapproval").DataTable().draw()
             })
@@ -1537,6 +1564,7 @@ National
     }
 
     function apiPost(payload, form_id, f_uid) {
+        console.log({form_id, f_uid})
         let myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("X-CSRFToken", "{{ csrf_token }}");
@@ -1549,7 +1577,7 @@ National
     
         let url;
         if (f_uid === undefined) {
-            url = `/api/form/${form_id.toUpperCase()}/`;
+                url = `/api/form/${form_id.toUpperCase()}/`;
         } else {
             if (form_id === "F1A" || form_id === "F1B") {
                 url = `/mobile/forms/update/${f_uid}`;
@@ -1557,6 +1585,8 @@ National
                 url = `/mobile/cpt/update/${f_uid}`;
             } else if (form_id === "CPR") {
                 url = `/mobile/cpara/update/${f_uid}`;
+            }else if (form_id === "grm") {
+            url = `/mobile/grad_monitor/update/${f_uid}`;
             }
             else  {
                 url = `/mobile/${form_id}/update/${f_uid}`;
@@ -1612,9 +1642,9 @@ National
           day = '' + d.getDate(),
           year = d.getFullYear();
   
-        if (month.length < 2) 
+        if (month.length < 2)
           month = '0' + month;
-        if (day.length < 2) 
+        if (day.length < 2)
           day = '0' + day;
   
         return [year, month, day].join('-');
