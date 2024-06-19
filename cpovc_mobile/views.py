@@ -663,8 +663,11 @@ def get_one_ovc_mobile_cpara_data(request, ovc_id):
             ovc_age=event.ovc_cpims.age
             ovc_sex=get_sex_person(event.ovc_cpims.sex_id)
             event_signature = event.signature
-            event_signature = event_signature.tobytes()
-            event_signature = event_signature.decode('utf-8')
+            if event_signature == None:
+                event_signature = ''   
+            else:
+                event_signature = event_signature.tobytes()
+                event_signature = event_signature.decode('utf-8') 
             # print("dir",type(event_signature))
             # breakpoint()
             
