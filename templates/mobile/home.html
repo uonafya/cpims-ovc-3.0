@@ -154,13 +154,20 @@ National
                         <div class="col-md-2">                           
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p> <strong>
+                                Data for approval (CHV's : {{ summary.CHV_D }}  / {{ summary.CHV }}, OVC's : {{ summary.OVC_D }} / {{ summary.OVC }}, CPT : {{ summary.CPT }}, CPARA :  {{ summary.CPR }}, F1B :  {{ summary.F1B }}, F1A :  {{ summary.F1A }}, HMF :  {{ summary.HMF }}, HRS :  {{ summary.HRS }},  OBM :  {{ summary.OBM }})
+                            </strong> </p>
+                        </div>
+                    </div>
                     <hr>
                     <div class="row">
                         <div class="col-md-12" id="approvaltable">
                             <table id="Dataapproval">
                                 <thead>
                                     <tr>  
-                                        <td style="width: 100%;">Data for approval (CHV : {{ summary.CHV }}, CPT : {{ summary.CPT }}, CPARA :  {{ summary.CPR }}, F1B :  {{ summary.F1B }}, F1A :  {{ summary.F1A }}, HMF :  {{ summary.HMF }}, HRS :  {{ summary.HRS }},  OBM :  {{ summary.OBM }})</td>
+                                        <td style="width: 100%;"></td>
                                     </tr>
                                 </thead>
                                 <tbody id="tbody">
@@ -168,6 +175,16 @@ National
                             </table>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                                <div id='dashboard-cont'>
+
+                                </div>
+                        </div>
+                    </div>
+
+
 				</div>
 			</div>
         </div>
@@ -187,6 +204,9 @@ National
     <script src="{% static 'plugins/datatables/js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'plugins/datatables/js/dataTables.bootstrap.min.js' %}"></script>
     <script src="{% static 'plugins/datatables/js/dataTables.buttons.min.js' %}"></script>
+
+    <script src="{% static 'plugins/highcharts/highcharts.js' %}"></script>
+
     <script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
     <script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
     <script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
@@ -206,6 +226,25 @@ National
                 }
             )
             {% comment %} dataTab = $("#Dataapproval").DataTable({filter: false}) {% endcomment %}
+            slectedForm = 'FORM1A'
+            apicall('/mobile/dash_data/', {form: slectedForm}, 'GET').then(dat =>{
+                data = dat.graph_one
+                console.log({data, slectedForm, dat})
+                drawGraph(
+                'dashboard-cont', 
+                slectedForm + ' Data', 
+                '', 
+                data, 
+                slectedForm, 
+                "Services", 
+                'column'
+                )
+    
+            }).catch(error => {
+                console.error("API Error:", error);
+            });
+        
+            
         })            
 
     let ele=document.getElementsByName('selectOne');
@@ -248,8 +287,9 @@ National
     // API comm to backend
 
     let respStatus = null;
-    function apicall(urls, dataP, method){
+    async function apicall(urls, dataP, method){
         let response = new Object()
+        return new Promise((resolve, reject) => {       
         $.ajax({
             type: method,
             url:  urls,
@@ -262,13 +302,15 @@ National
             console.error({error_submit: message})
             response = {... message}
             respStatus = 'error'
+            reject(message)
         })
         .done(function(data){
-            // console.log({success_post: data})
             response = {... data}
             respStatus = 'success'
+            resolve(response)
         })
-        return response
+
+    })
     }
 
     function consolidatePost(btnID, approval_type, form){
@@ -530,6 +572,26 @@ National
             $('#my-select').css('border', '1px solid red');
         }
         
+    })
+
+    $("#my-select2").change(function(){
+        let selectedForm = $(this).val().toString().toUpperCase()
+        apicall('/mobile/dash_data/', {form: selectedForm}, 'GET').then(dat =>{
+            data = dat.graph_one
+            console.log({data, selectedForm, dat})
+            drawGraph(
+            'dashboard-cont', 
+            selectedForm + ' Data', 
+            '', 
+            data, 
+            selectedForm, 
+            "Services", 
+            'column'
+            )
+
+        }).catch(error => {
+            console.error("API Error:", error);
+        });
     })
 
 
@@ -1162,9 +1224,9 @@ National
                     for (dta in data){
                         let html_question = ''
                         let data_indx = data[dta]
-                        let app_form_metdata = data_indx.app_form_metadata
-                        app_form_metdata.start_of_interview = formatPythonDate(app_form_metdata.start_of_interview)
-                        app_form_metdata.end_of_interview = formatPythonDate(app_form_metdata.end_of_interview)
+                        let app_form_metadata = data_indx.app_form_metadata
+                        app_form_metadata.start_of_interview = formatPythonDate(app_form_metadata.start_of_interview)
+                        app_form_metadata.end_of_interview = formatPythonDate(app_form_metadata.end_of_interview)
 
                         if (data_indx){
                             for (indx in hmf_translates){
@@ -1203,7 +1265,7 @@ National
                         ta_trs['ovc_cpims_id'] = data[dta].ovc_cpims ? data[dta].ovc_cpims : 'false'
                         ta_trs.created_at = formatPythonDate(data_indx.created_at)
                         ta_trs.user_id = data_indx.user_id
-                        ta_trs['app_form_metadata'] = app_form_metdata
+                        ta_trs['app_form_metadata'] = app_form_metadata
 
                         let payload = JSON.stringify(ta_trs)
 
@@ -1297,11 +1359,11 @@ National
                         html_question = ''
                         let data_indx = data[dta]
                         let row_id_btn = data_indx.risk_id
-                        let app_form_metdata = data_indx.app_form_metdata
-                        ta_trs['app_form_metadata'] = app_form_metdata
+                        let app_form_metadata = data_indx.app_form_metadata
+                        ta_trs['app_form_metadata'] = app_form_metadata
                         
-                        app_form_metdata.start_of_interview = formatPythonDate(app_form_metdata.start_of_interview)
-                        app_form_metdata.end_of_interview = formatPythonDate(app_form_metdata.end_of_interview)
+                        app_form_metadata.start_of_interview = formatPythonDate(app_form_metadata.start_of_interview)
+                        app_form_metadata.end_of_interview = formatPythonDate(app_form_metadata.end_of_interview)
                         let cpims_id = data_indx.ovc_cpims
                         if (data_indx){
                             for (indx in hmf_translates){
@@ -1340,7 +1402,7 @@ National
                             html_question += `<p style="color: red;">No benchmark Scores</p>`
                         }
                         ta_trs.ovc_cpims_id = cpims_id
-                        ta_trs.created_at = formatPythonDate(data_indx.created_at)
+                        ta_trs.created_at = formatPythonDate(data_indx.timestamp_created) || ""
                         ta_trs.user_id = data_indx.user_id
                         let payload = JSON.stringify(ta_trs)
                         $( "#facility_field_"+row_id_btn ).autocomplete({
@@ -1654,6 +1716,55 @@ National
         var image = new Image();
         image.src = `data:image/png;base64,${signature}`;
         {% comment %} $(`#image_${nodeID}`).html(image); {% endcomment %}
+    }
+
+
+    const drawGraph = (
+        containerID, 
+        title, 
+        subTitle, 
+        dataArray, 
+        categories, 
+        yAxis, 
+        typeGraph
+        ) => {
+            console.log(dataArray, typeGraph);
+        Highcharts.chart(containerID, {
+            chart: {
+                type: typeGraph
+            },
+            title: {
+                text: title,
+                align: 'center'
+            },
+            subtitle: {
+                text: subTitle,
+                align: 'center'
+            },
+            xAxis: {
+                categories: [categories],
+                crosshair: true,
+                accessibility: {
+                    description: ''
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: yAxis
+                }
+            },
+            tooltip: {
+                valueSuffix: ''
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: dataArray,   
+        });
     }
 
     

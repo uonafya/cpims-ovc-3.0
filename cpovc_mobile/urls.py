@@ -71,4 +71,5 @@ urlpatterns = [
     path('approvedata/', views.mobiledataapproval, name='approvedata'),
     path('fetch_child/', views.fetchChildren, name='fetch_child'),
     path('fetch_data/', views.fetchData, name='fetch_data'),
+    path('dash_data/', views.dashboardData, name='dashboard_data'), # dashbboard data
 ]

@@ -32,7 +32,7 @@ from .models import (OVCMobileEvent, OVCMobileEventAttribute,CasePlanTemplateEve
                     OVCMobileEventRejected,OVCEventRejected,
                     OVCMobileEventAttributeRejected,OVCServicesRejected, CasePlanTemplateEventRejected,CasePlanTemplateServiceRejected,
                     HIVManagementStaging,HIVManagementStagingRejected,RiskScreeningStaging,RiskScreeningStagingRejected,
-                    MobileAppDataTrack,OVCBenchmarkMonitoringStaging,OVCBenchmarkMonitoringRejected
+                    MobileAppDataTrack,OVCBenchmarkMonitoringStaging,OVCBenchmarkMonitoringRejected, ApprovalStatus
                     )
 from rest_framework.permissions import IsAuthenticated,AllowAny 
 from rest_framework.decorators import api_view, permission_classes
@@ -2630,6 +2630,9 @@ def mobile_home(request):
             is_void=False, child_chv_id__in=chv_list).values('person_id')
         house_holds = OVCHHMembers.objects.filter(is_void=False, person_id__in=childrens).values('house_hold').distinct()
         
+        
+        summary['OVC']=childrens.count()
+        
         # count cpara unapproved
         cpr_count=OVCMobileEvent.objects.filter(is_accepted=1, ovc_cpims__in=childrens).count()
 
@@ -2671,7 +2674,6 @@ def mobile_home(request):
         # Count Benchmark Monitoring Unapproved
         obm_count=OVCBenchmarkMonitoringStaging.objects.filter(is_accepted=1, household__in=house_holds).count()
         
-        print(f"CPT-> {cpt_count} CPR-> {cpr_count} F1A-> {f1a_count} F1B-> {f1b_count} HMF-> {hmf_count} HRS-> {hrs_count} OBM-> {obm_count}")
         summary['CPT'] = cpt_count
         summary['CPR'] = cpr_count
         summary['F1A'] = f1a_count
@@ -2679,7 +2681,31 @@ def mobile_home(request):
         summary['HMF'] = hmf_count
         summary['HRS'] = hrs_count
         summary['OBM'] = obm_count
+        
+        # print(f"CPT-> {cpt_count} CPR-> {cpr_count} F1A-> {f1a_count} F1B-> {f1b_count} HMF-> {hmf_count} HRS-> {hrs_count} OBM-> {obm_count}")
+        
+        # return data for visualisations
+        result_dict = MobileAppDataTrack.objects.values('action').annotate(count=Count('id'))
+        
+        dashboard_data = {}
+        total = 0
 
+        for entry in result_dict:
+            action = entry['action']
+            count = entry['count']
+
+            if action == 3:
+                action_label = "Rejected"
+            elif action == 2:
+                action_label = "Approved"
+            else:
+                action_label = f"Action {action}"  # Default label if action is neither 3 nor 2
+
+            dashboard_data[action_label] = count
+            total += count
+
+        dashboard_data["Total"] = total
+            
         return render(
             request, 'mobile/home.html',
             {
@@ -2691,7 +2717,7 @@ def mobile_home(request):
                 'cptlist': cpt_list,
                 'f1blist': f1b_list,
                 'summary': summary,
-                'hiv_form': hmfhrs 
+                'hiv_form': hmfhrs,
 
             }
         )
@@ -2700,6 +2726,36 @@ def mobile_home(request):
     else:
         pass
 
+@api_view(['GET', 'POST'])
+def dashboardData(request):
+    lip_id = request.session.get('ou_primary')
+    form = request.GET.get('form', '')
+    print(f" lip: {lip_id}      form:   {form}" )
+    try:
+        result_dict_data = MobileAppDataTrack.objects.values('action').annotate(count=Count('id')).filter(form_type=form)
+        result_dict = result_dict_data.filter()
+        dashboard_data = []
+        total = 0
+
+        for entry in result_dict:
+            action = entry['action']
+            count = entry['count']
+
+            if action == 3:
+                action_label = "Rejected"
+            elif action == 2:
+                action_label = "Approved"
+            else:
+                action_label = f"Action {action}"  # Default label if action is neither 3 nor 2
+
+            dashboard_data.append({"name": action_label, "data" : [count]})
+            total += count
+
+        dashboard_data.append({"name": "Total", "data" : [total]})
+        return Response({"graph_one": dashboard_data}, status=200)
+    except Exception as e:
+        print({"message" : f"error fetching dashboard data: cause being: {e}"})
+        return Response({"message: ": e}, status=500)
 
 def mobiledataapproval(request):
     message = {}
