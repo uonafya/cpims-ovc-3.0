@@ -66,9 +66,9 @@ class SetupGeography(models.Model):
     timestamp_updated = models.DateTimeField(auto_now=True, null=True)
     is_void = models.BooleanField(default=False)
 
-    # def __unicode__(self):
-    #     """To be returned by admin actions."""
-    #     return '%s - %s' % (self.area_type_id, self.area_name)
+    def __str__(self):
+        """To be returned by admin actions."""
+        return self.area_name
 
     class Meta:
         """Override some params."""
@@ -96,7 +96,7 @@ class SetupLocation(models.Model):
 class SetupList(models.Model):
     """List used for drop downs and other selections."""
 
-    item_id = models.CharField(max_length=7)
+    item_id = models.CharField(max_length=10)
     item_description = models.CharField(max_length=255)
     item_description_short = models.CharField(max_length=100, null=True)
     item_category = models.CharField(max_length=255, null=True, blank=True)

@@ -1,0 +1,1282 @@
+[
+    {
+        "pk": 40200,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "dsp_times_id",
+            "item_category": "Displine",
+            "item_id": "DSPN",
+            "item_description": "Never",
+            "item_description_short": "Never",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40201,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "dsp_times_id",
+            "item_category": "Displine",
+            "item_id": "DSP1",
+            "item_description": "1 time",
+            "item_description_short": "1 time",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40203,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "dsp_times_id",
+            "item_category": "Displine",
+            "item_id": "DSP2",
+            "item_description": "2 times",
+            "item_description_short": "2 times",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40204,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "dsp_times_id",
+            "item_category": "Displine",
+            "item_id": "DSP3",
+            "item_description": "3 times",
+            "item_description_short": "3 times",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40205,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "field_name": "dsp_times_id",
+            "item_category": "Displine",
+            "item_id": "DSP4",
+            "item_description": "4 times",
+            "item_description_short": "4 times",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40206,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 6,
+            "field_name": "dsp_times_id",
+            "item_category": "Displine",
+            "item_id": "DSP5",
+            "item_description": "5 times",
+            "item_description_short": "5 times",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40207,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 7,
+            "field_name": "dsp_times_id",
+            "item_category": "Displine",
+            "item_id": "DSP6",
+            "item_description": "6 times",
+            "item_description_short": "6 times",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40208,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 8,
+            "field_name": "dsp_times_id",
+            "item_category": "Displine",
+            "item_id": "DSP7",
+            "item_description": "7 times",
+            "item_description_short": "7 times",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40209,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 9,
+            "field_name": "dsp_times_id",
+            "item_category": "Displine",
+            "item_id": "DSP8",
+            "item_description": "8 or mote times",
+            "item_description_short": "8 times",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40210,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "feeling_sad_id",
+            "item_category": "Feeling_Sad",
+            "item_id": "FSD1",
+            "item_description": "Rarely or none of the time (less than 1 day)",
+            "item_description_short": "Rarely",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40211,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "feeling_sad_id",
+            "item_category": "Feeling_Sad",
+            "item_id": "FSD2",
+            "item_description": "Some or a little of the time (1-2 days)",
+            "item_description_short": "Some",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40212,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "feeling_sad_id",
+            "item_category": "Feeling_Sad",
+            "item_id": "FSD3",
+            "item_description": "Occasionally or a moderate amount of time (3-4 days)",
+            "item_description_short": "Occasionally",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40213,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "feeling_sad_id",
+            "item_category": "Feeling_Sad",
+            "item_id": "FSD4",
+            "item_description": "Most or all of the time (5-7 days)",
+            "item_description_short": "Most",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40214,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "my_behaviour_id",
+            "item_category": "Behaviour",
+            "item_id": "MBHV1",
+            "item_description": "Not true",
+            "item_description_short": "Not true",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40215,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "my_behaviour_id",
+            "item_category": "Behaviour",
+            "item_id": "MBHV2",
+            "item_description": "Somewhat true",
+            "item_description_short": "Somewhat true",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40216,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "my_behaviour_id",
+            "item_category": "Behaviour",
+            "item_id": "MBHV3",
+            "item_description": "Very true",
+            "item_description_short": "Very true",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40217,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "relationship_caregiver_id",
+            "item_category": "Relationship_caregiver",
+            "item_id": "RTN1",
+            "item_description": "Never",
+            "item_description_short": "Never",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40218,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "relationship_caregiver_id",
+            "item_category": "Relationship_caregiver",
+            "item_id": "RTN2",
+            "item_description": "Almost never",
+            "item_description_short": "Almost never",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40219,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "relationship_caregiver_id",
+            "item_category": "Relationship_caregiver",
+            "item_id": "RTN3",
+            "item_description": "Sometimes",
+            "item_description_short": "Sometimes",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40220,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "relationship_caregiver_id",
+            "item_category": "Relationship_caregiver",
+            "item_id": "RTN4",
+            "item_description": "Often",
+            "item_description_short": "Often",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40221,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "field_name": "relationship_caregiver_id",
+            "item_category": "Relationship_caregiver",
+            "item_id": "RTN5",
+            "item_description": "Always",
+            "item_description_short": "Always",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40222,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "father_mortality_id",
+            "item_category": "Father_mortality",
+            "item_id": "FMT1",
+            "item_description": "Yes",
+            "item_description_short": "Yes",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40223,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "father_mortality_id",
+            "item_category": "Father_mortality",
+            "item_id": "FMT2",
+            "item_description": "No, he passed away",
+            "item_description_short": "No, he passed away",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40224,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "father_mortality_id",
+            "item_category": "Father_mortality",
+            "item_id": "FMT3",
+            "item_description": "No, he lives elsewhere",
+            "item_description_short": "No, he lives elsewhere",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40225,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "mother_mortality_id",
+            "item_category": "Mother_mortality",
+            "item_id": "MMT1",
+            "item_description": "Yes",
+            "item_description_short": "Yes",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40226,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "field_name": "mother_mortality_id",
+            "item_category": "Mother_mortality",
+            "item_id": "MMT2",
+            "item_description": "No, she passed away",
+            "item_description_short": "No, she passed away",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40227,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 6,
+            "field_name": "mother_mortality_id",
+            "item_category": "Mother_mortality",
+            "item_id": "MMT3",
+            "item_description": "No, she lives elsewhere",
+            "item_description_short": "No, she lives elsewhere",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40228,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "literacy_lvl_id",
+            "item_category": "Literacy_lvl",
+            "item_id": "LIT1",
+            "item_description": "Cannot read at all",
+            "item_description_short": "Cannot read at all",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40229,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "literacy_lvl_id",
+            "item_category": "Literacy_lvl",
+            "item_id": "LIT2",
+            "item_description": "Can read but with lots of difficulty",
+            "item_description_short": "Can read but with lots of difficulty",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40230,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "literacy_lvl_id",
+            "item_category": "Literacy_lvl",
+            "item_id": "LIT3",
+            "item_description": "Can read with a little difficulty",
+            "item_description_short": "Can read with a little difficulty",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40231,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "literacy_lvl_id",
+            "item_category": "Literacy_lvl",
+            "item_id": "LIT4",
+            "item_description": "Can read easily",
+            "item_description_short": "Can read easily",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40232,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "under_care_id",
+            "item_category": "Under_care",
+            "item_id": "UCRN",
+            "item_description": "No",
+            "item_description_short": "No",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40233,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "under_care_id",
+            "item_category": "Under_care",
+            "item_id": "UCRY",
+            "item_description": "Yes, all of them",
+            "item_description_short": "Yes",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40234,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "under_care_id",
+            "item_category": "Under_care",
+            "item_id": "UCRS",
+            "item_description": "Yes, some of them",
+            "item_description_short": "Yes, some of them",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40235,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "employed_id",
+            "item_category": "Income source",
+            "item_id": "SOIU",
+            "item_description": "No, unemployed",
+            "item_description_short": "No, unemployed",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40236,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "employed_id",
+            "item_category": "Income source",
+            "item_id": "SOIS",
+            "item_description": "Yes, self-employed",
+            "item_description_short": "Yes, self-employed",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40237,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "employed_id",
+            "item_category": "Income source",
+            "item_id": "SOIF",
+            "item_description": "Yes, employed full-time",
+            "item_description_short": "Yes, employed full-time",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40238,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "employed_id",
+            "item_category": "Income source",
+            "item_id": "SOIP",
+            "item_description": "Yes, employed part time",
+            "item_description_short": "Yes, employed part time",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40239,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "agree_level_id",
+            "item_category": "Agree level",
+            "item_id": "AGSD",
+            "item_description": "Strongly disagree",
+            "item_description_short": "Strongly disagree",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40240,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "agree_level_id",
+            "item_category": "Agree level",
+            "item_id": "AGDI",
+            "item_description": "Disagree",
+            "item_description_short": "Disagree",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40241,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "agree_level_id",
+            "item_category": "Agree level",
+            "item_id": "AGNS",
+            "item_description": "Not sure",
+            "item_description_short": "Not sure",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40242,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "agree_level_id",
+            "item_category": "Agree level",
+            "item_id": "AGAG",
+            "item_description": "Agree",
+            "item_description_short": "Agree",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40243,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "field_name": "agree_level_id",
+            "item_category": "Agree level",
+            "item_id": "AGSA",
+            "item_description": "Strongly agree",
+            "item_description_short": "Strongly agree",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40244,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "often_id",
+            "item_category": "Handle Finances",
+            "item_id": "HFNE",
+            "item_description": "Never",
+            "item_description_short": "Never",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40245,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "often_id",
+            "item_category": "Handle Finances",
+            "item_id": "HFRA",
+            "item_description": "Rarely",
+            "item_description_short": "Rarely",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40246,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "often_id",
+            "item_category": "Handle Finances",
+            "item_id": "HFSO",
+            "item_description": "Sometimes",
+            "item_description_short": "Sometimes",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40247,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "often_id",
+            "item_category": "Handle Finances",
+            "item_id": "HFOF",
+            "item_description": "Often",
+            "item_description_short": "Often",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40248,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "evaluation_type_id",
+            "item_category": "Evaluation Type",
+            "item_id": "EPRE",
+            "item_description": "Pre Evaluation",
+            "item_description_short": "Pre",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40249,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "evaluation_type_id",
+            "item_category": "Evaluation Type",
+            "item_id": "EPOS",
+            "item_description": "Post Evaluation",
+            "item_description_short": "Post",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40250,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "rate_times_id",
+            "item_category": "Rate times",
+            "item_id": "RTNN",
+            "item_description": "No, never",
+            "item_description_short": "No, never",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40251,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "rate_times_id",
+            "item_category": "Rate times",
+            "item_id": "RTYO",
+            "item_description": "Yes, once",
+            "item_description_short": "Yes, once",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40252,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "rate_times_id",
+            "item_category": "Rate times",
+            "item_id": "RTMO",
+            "item_description": "Yes, more than once",
+            "item_description_short": "Yes, more than once",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40253,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "count_times_id",
+            "item_category": "Count times",
+            "item_id": "CTNV",
+            "item_description": "Never",
+            "item_description_short": "Never",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40254,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "count_times_id",
+            "item_category": "Count times",
+            "item_id": "CTST",
+            "item_description": "Sometimes",
+            "item_description_short": "Sometimes",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40255,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "count_times_id",
+            "item_category": "Count times",
+            "item_id": "CTMT",
+            "item_description": "A lot of times",
+            "item_description_short": "A lot of times",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40256,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "count_times_id",
+            "item_category": "Count times",
+            "item_id": "CTAT",
+            "item_description": "All of the time",
+            "item_description_short": "All of the time",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40257,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "rate_truth_id",
+            "item_category": "Truth rate",
+            "item_id": "RTNT",
+            "item_description": "Not at all true",
+            "item_description_short": "Not at all true",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40258,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "rate_truth_id",
+            "item_category": "Truth rate",
+            "item_id": "RTAT",
+            "item_description": "A little true",
+            "item_description_short": "A little true",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40259,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "rate_truth_id",
+            "item_category": "Truth rate",
+            "item_id": "RTVT",
+            "item_description": "Very true",
+            "item_description_short": "Very true",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40260,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "rate_likely_id",
+            "item_category": "Likely rate",
+            "item_id": "LRVU",
+            "item_description": "Very unlikely",
+            "item_description_short": "Very unlikely",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40261,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "rate_likely_id",
+            "item_category": "Likely rate",
+            "item_id": "LRUN",
+            "item_description": "Unlikely",
+            "item_description_short": "Unlikely",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40262,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "rate_likely_id",
+            "item_category": "Likely rate",
+            "item_id": "LRNS",
+            "item_description": "Not Sure",
+            "item_description_short": "Not Sure",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40263,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "rate_likely_id",
+            "item_category": "Likely rate",
+            "item_id": "LRLK",
+            "item_description": "Likely",
+            "item_description_short": "Likely",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40264,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "field_name": "rate_likely_id",
+            "item_category": "Likely rate",
+            "item_id": "LRVL",
+            "item_description": "Very likely",
+            "item_description_short": "Very likely",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40265,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "rate_abuse_id",
+            "item_category": "Abuse rate",
+            "item_id": "ABR1",
+            "item_description": "1 ------(not abusive)",
+            "item_description_short": "1 ------(not abusive)",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40266,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "rate_abuse_id",
+            "item_category": "Abuse rate",
+            "item_id": "ABR2",
+            "item_description": "2 ------",
+            "item_description_short": "2 ------",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40267,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "rate_abuse_id",
+            "item_category": "Abuse rate",
+            "item_id": "ABR3",
+            "item_description": "3 ------",
+            "item_description_short": "3 ------",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40268,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "rate_abuse_id",
+            "item_category": "Abuse rate",
+            "item_id": "ABR4",
+            "item_description": "4 ------",
+            "item_description_short": "4 ------",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40269,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "field_name": "rate_abuse_id",
+            "item_category": "Abuse rate",
+            "item_id": "ABR5",
+            "item_description": "5 ------(abusive)",
+            "item_description_short": "5 ------(abusive)",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40270,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "age_rate_id",
+            "item_category": "Age rate",
+            "item_id": "A9T14",
+            "item_description": "9 \u2013 14 years",
+            "item_description_short": "9 \u2013 14 years",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40271,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "age_rate_id",
+            "item_category": "Age rate",
+            "item_id": "AOV14",
+            "item_description": "over 14",
+            "item_description_short": "over 14",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40272,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "race_id",
+            "item_category": "Race",
+            "item_id": "RCAI",
+            "item_description": "American Indian/Alaska Native",
+            "item_description_short": "American Indian/Alaska Native",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40273,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "race_id",
+            "item_category": "Race",
+            "item_id": "RCAS",
+            "item_description": "Asian",
+            "item_description_short": "Asian",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40274,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "race_id",
+            "item_category": "Race",
+            "item_id": "RCBA",
+            "item_description": "Black or African American",
+            "item_description_short": "Black or African American",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40275,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 4,
+            "field_name": "race_id",
+            "item_category": "Race",
+            "item_id": "RCNH",
+            "item_description": "Native Hawaiian or Other Pacific Islander",
+            "item_description_short": "Native Hawaiian or Other Pacific Islander",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40276,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 5,
+            "field_name": "race_id",
+            "item_category": "Race",
+            "item_id": "RCWH",
+            "item_description": "White",
+            "item_description_short": "White",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40277,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 6,
+            "field_name": "race_id",
+            "item_category": "Race",
+            "item_id": "RPNT",
+            "item_description": "Prefer not to say",
+            "item_description_short": "Prefer not to say",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40278,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "field_name": "cbim_coaching_id",
+            "item_category": "CBIM Coaching",
+            "item_id": "CBIM1",
+            "item_description": "Yes, my coach talked to us about this.",
+            "item_description_short": "Yes",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40279,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 2,
+            "field_name": "cbim_coaching_id",
+            "item_category": "CBIM Coaching",
+            "item_id": "CBIM2",
+            "item_description": "No, my coach didn\u2019t talk to us about this.",
+            "item_description_short": "No",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    },
+    {
+        "pk": 40280,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 3,
+            "field_name": "cbim_coaching_id",
+            "item_category": "CBIM Coaching",
+            "item_id": "CBIM3",
+            "item_description": "I wasn\u2019t involved in this group for the past three months.",
+            "item_description_short": "Not involved",
+            "item_sub_category": "",
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false
+        }
+    }
+]

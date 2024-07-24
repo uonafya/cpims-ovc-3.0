@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 ''' Django Notifications exemple views '''
-from distutils.version import StrictVersion
-# pylint: disable=no-name-in-module,import-error
 from django.shortcuts import render
-from django import get_version
 from django.contrib.auth.decorators import login_required
 from django.forms import model_to_dict
 from django.shortcuts import get_object_or_404, redirect
@@ -14,20 +11,10 @@ from notifications.models import Notification
 from notifications.utils import id2slug, slug2id
 from notifications.settings import get_config
 
-if StrictVersion(get_version()) >= StrictVersion('1.7.0'):
-    from django.http import JsonResponse  # noqa
-else:
-    # Django 1.6 doesn't have a proper JsonResponse
-    import json
-    from django.http import HttpResponse  # noqa
+from notifications.signals import notify
 
-    def date_handler(obj):
-        return obj.isoformat() if hasattr(obj, 'isoformat') else obj
-
-    def JsonResponse(data):  # noqa
-        return HttpResponse(
-            json.dumps(data, default=date_handler),
-            content_type="application/json")
+from django.http import JsonResponse
+from cpovc_settings.models import CaseAlert
 
 
 class NotificationViewList(ListView):
@@ -60,7 +47,7 @@ class UnreadNotificationsList(NotificationViewList):
         return self.request.user.notifications.unread()
 
 
-# @login_required
+@login_required
 def mark_all_as_read(request):
     request.user.notifications.mark_all_as_read()
 
@@ -71,7 +58,7 @@ def mark_all_as_read(request):
     return redirect('notifications:home')
 
 
-# @login_required
+@login_required
 def mark_as_read(request, slug=None):
     notification_id = slug2id(slug)
 
@@ -87,7 +74,7 @@ def mark_as_read(request, slug=None):
     return redirect('notifications:home')
 
 
-# @login_required
+@login_required
 def mark_as_unread(request, slug=None):
     notification_id = slug2id(slug)
 
@@ -103,7 +90,7 @@ def mark_as_unread(request, slug=None):
     return redirect('notifications:unread')
 
 
-# @login_required
+@login_required
 def delete(request, slug=None):
     notification_id = slug2id(slug)
 
@@ -256,18 +243,22 @@ def live_all_notification_count(request):
     return JsonResponse(data)
 
 
-# @login_required
+@login_required
 def notifications_home(request):
     """Method to do pivot reports."""
     try:
+        user = request.user
+        target, created = CaseAlert.objects.get_or_create(alert_name='HRS')
+        # notify.send(user, recipient=user, verb='Test HRS', target=target)
+        CaseAlert.objects.get(id=500)
         return render(request, 'notifications/home.html', {'form': {}})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass
 
 
-# @login_required
+@login_required
 def notifications_read(request, id):
     """Method to do pivot reports."""
     try:
@@ -275,7 +266,7 @@ def notifications_read(request, id):
             Notification, recipient=request.user, id=id)
         return render(request, 'notifications/details.html',
                       {'form': {}, 'notification': notification})
-    except Exception, e:
+    except Exception as e:
         raise e
     else:
         pass

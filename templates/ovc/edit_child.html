@@ -122,7 +122,7 @@
                     </div>
                     <!-- end col-2 -->
                     <!-- begin col-1 -->
-                    <div class="col-md-1">
+                    <div class="col-md-2">
                     <div class="form-group">
                         <label class="text-bold">Is the child Disabled?</label>
                         {{ form.disb }}
@@ -130,7 +130,7 @@
                     </div>
                     <!-- end col-2 -->
                     <!-- begin col-2 -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                     <div class="form-group">
                         <label class="text-bold">PWD Registration No.</label>
                         {{ form.ncpwd_no }}
@@ -152,36 +152,96 @@
                     <!-- begin col-2 -->
                     <div class="col-md-3">
                     <div class="form-group">
-                        <label class="text-bold">CBO Child ID</label>
+                        <label class="text-bold">CBO assigned Child ID</label>
                         {{ form.cbo_uid }}
                         {{ form.cbo_uid_check }}
                       </div>
                     </div>
                     <!-- end col-2 -->
                      <!-- begin col-1 -->
-                    <div class="col-md-1">
+                    <div class="col-md-2">
                     <div class="form-group">
-                        <label class="text-bold">Exit</label>
+                        <label class="text-bold">Exited from Program</label>
                         {{ form.is_exited }}
                       </div>
                     </div>
                     <!-- end col-1 -->
                     <!-- begin col-4 -->
-                    <div class="col-md-4" id="exit_reason_div">
+                    <div class="col-md-3" id="exit_reason_div">
                     <div class="form-group">
                         <label class="text-bold">Exit reason</label>
-                        {{ form.exit_reason }}
+                        <div>
+                        {{ form.exit_reason.value|default_if_none:"N/A"|gen_value:vals }}
+                        </div>
                       </div>
                     </div>
-                    <!-- end col-4 -->
+                    <!-- end col-4  -->
                     </div>
+                    <hr/>
+                    <!-- begin row -->
+                    <div class="row">
+                        <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="text-bold">NEMIS Number</label>
+                            {{ form.nemis_id }}
+                          </div>
+                        </div>
+                        <!-- end col-4 -->
+                        <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="text-bold">Birth Notification Number</label>
+                            {{ form.birth_not_id }}
+                          </div>
+                        </div>
+                        <!-- end col-3 -->
+                        {% if child.years > 9 and child.sex_id == 'SFEM' %}
+                         <!-- begin col-1 -->
+                        <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="text-bold">Enrolled in DREAMS?</label>
+                            <div>
+                            {{ form.is_dreams_enrolled }}
+                            </div>
+                          </div>
+                        </div>
+                        <!-- end col-1 -->
+                        <!-- begin col-3 -->
+                        <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="text-bold">DREAMS ID</label>
+                            <div>
+                            {{ form.dreams_id }}
+                            </div>
+                          </div>
+                        </div>
+                        <!-- end col-4 -->
+                        {% endif %}
+                    </div>
+                    
+
+                    {% if creg.hiv_status == 'HSTP' %}
+                    <hr/>
+                    <!-- begin row  -->
+                    <div class="row">
+                        <!-- begin col-4 -->
+                        <div class="col-md-4" id="exit_reason_div">
+                        <div class="form-group">
+                            <label class="text-bold">NUPI Number</label>
+                            <div><br>
+                            {{ form.nupi_id }}
+                            </div>
+                          </div>
+                        </div>
+                        <!-- end col-4 -->
+                    </div>
+                    {% endif %}
             </fieldset>
         </div>
         <div class="primary1">
             <fieldset>
                 <legend class="pull-left width-full">Health details</legend>
                 <!-- begin row -->
-                 {% if  not child.years > 5 %}
+                 {% if not child.years > 5 %}
                  <div class="row">
                     <!-- begin col-2 -->
                     <div class="col-md-3">
@@ -398,7 +458,7 @@
                             <option value="">Please Select Caretaker</option>
                             {% for guardian in hhmembers %}
                                {% if 'OVC' not in guardian.member_type and 'TBVC' not in guardian.member_type %}
-                               <option value="{{ guardian.person_id }}" {% if ctaker == guardian.person_id %}selected="selected"{% endif %}>{{ guardian.member_type|gen_value:vals }}</option>
+                               <option value="{{ guardian.person_id }}" {% if ctaker == guardian.person_id %}selected="selected"{% endif %}>{{ guardian.member_type|gen_value:vals }} ({{ guardian.person_id }})</option>
                             {% endif %}
                             {% endfor %}
                         </select>
@@ -482,7 +542,7 @@
                         <div class="col-md-8 col-md-offset-4">
                             <button type="submit" class="btn btn-primary" value="submit" id="s1"> <i class="fa fa-save"></i> Update</button>
                             <button type="button" class="btn btn-danger" value="exit-ovc" id="ovcexit"> <i class="fa fa-pencil"></i> Exit OVC</button>
-                            <a href="{% url 'ovc_home' %}">
+                            <a href="{% url 'ovc_view' id=child.id %}">
                             <button type="button" class="btn btn-default"> Cancel </button>
                             </a>
                         </div>
@@ -560,6 +620,12 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td>Positive</td>
+                            <td>{{data.date_of_event}}</td>
+                        </tr>
+                        {% elif data.hiv_status == "HHEI" %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>Unknown (HEI)</td>
                             <td>{{data.date_of_event}}</td>
                         </tr>
                         {% elif data.hiv_status == "HSTN" %}
@@ -665,6 +731,8 @@
                             {% endfor %}
                         </thead>
                     </table>
+                <hr>
+                    <b>EID Key:</b> -995/-996: Empty results; -997: Collect new sample; -998: Invalid results; -999: Failed Test; 0: LDL
                 </div>
                 <div class="modal-footer">
                     <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
@@ -787,6 +855,8 @@
     
          
     });
+    $("#is_exited").prop("disabled", true);
+
     console.log('{{date_difference}}')
 
     $('#ovcexit').click(function() { 
@@ -840,9 +910,6 @@
         // alert(hiv_statuss);
         var csrftoken = $.cookie('csrftoken');
         var child="{{child.id}}";
-        console.log('abdiiii ' +date_of_testing);
-        console.log('Moha ' +hiv_statuss);
-        console.log('WEWEW ' +child);
 
         var csrftoken = $.cookie('csrftoken');
         var values = {
@@ -878,25 +945,6 @@
         $('#modal-hiv').find('button.close').trigger('click');
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     $('#oexit').click(function() {
         $('#ovcreg_form').parsley().validate("primary4");
         var ovc_id = $('#ovc_id').val();
@@ -983,6 +1031,14 @@
         var cond = $('#ovc_exit_reason').val();
         handle_exit_org(cond);
     });
+    // DREAMS
+    var drcond = $('#is_dreams_enrolled').is(":checked");
+    disable_fields(drcond, 'dreams_id');
+    $('#is_dreams_enrolled').live('change', function() {
+        var drcond = $('#is_dreams_enrolled').is(":checked");
+        disable_fields(drcond, 'dreams_id');
+    });
+
     $('#caretaker').val('{{ child.caretaker }}');
     var hstatus = $('#hiv_status').val();
     var hlevel = $('#school_level').val();
@@ -1091,8 +1147,9 @@
            $('#exit_org_name').attr("data-parsley-required", "false");
         }
     }
+
     function handle_hstatus(hstatus){
-        if (hstatus == 'HSTP') {
+        if ((hstatus == 'HSTP') || (hstatus == 'HHEI')){
             $('#facility_div').show();
             $('#facility_id_div').show();
             $('#art_div').show();

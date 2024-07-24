@@ -24,8 +24,6 @@
 
 	}
 
-
-
 </style>
 
 {% block primary %}
@@ -52,7 +50,7 @@ National
     {% if request.session.reg_ovc %}
     <div class="row">
 		<!-- begin col-3 -->
-		<div class="col-md-3 col-sm-4">
+		<div class="col-md-3 col-sm-3">
 			<div class="widget widget-stats bg-green">
 				<div class="stats-icon"><i class="fa fa-child"></i></div>
 				<div class="stats-info">
@@ -67,12 +65,12 @@ National
 		</div>
 		<!-- end col-3 -->
 		<!-- begin col-3 -->
-		<div class="col-md-2 col-sm-3">
+		<div class="col-md-3 col-sm-3">
 			<div class="widget widget-stats bg-blue">
 				<div class="stats-icon"><i class="fa fa-users"></i></div>
 				<div class="stats-info">
-					<h4 id="rpt_2">CAREGIVERS / GUARDIANS</h4>
-					<p>{{ ovc.guardians }}</p>
+					<h4 id="rpt_2">CAREGIVERS &amp; GUARDIANS (ACTIVE / EVER)</h4>
+					<p>{{ ovc.guardians }} / {{ ovc.guardians_all }}</p>
 				</div>
 				<div class="stats-link">
 					<a href="#" class="dash_details" id="dt_2">View Detail <i class="fa fa-arrow-circle-o-right"></i></a>
@@ -81,7 +79,7 @@ National
 		</div>
 		<!-- end col-3 -->
 		<!-- begin col-3 -->
-		<div class="col-md-2 col-sm-3">
+		<div class="col-md-2 col-sm-2">
 			<div class="widget widget-stats bg-purple">
 				<div class="stats-icon"><i class="fa fa-user"></i></div>
 				<div class="stats-info">
@@ -95,7 +93,7 @@ National
 		</div>
 		<!-- end col-3 -->
 		<!-- begin col-3 -->
-		<div class="col-md-2 col-sm-3">
+		<div class="col-md-2 col-sm-2">
 			<div class="widget widget-stats bg-aqua">
 				<div class="stats-icon"><i class="fa fa-institution"></i></div>
 				<div class="stats-info">
@@ -109,7 +107,7 @@ National
 		</div>
 		<!-- end col-3 -->
 		<!-- begin col-3 -->
-		<div class="col-md-3 col-sm-4">
+		<div class="col-md-2 col-sm-2">
 			<div class="widget widget-stats bg-red">
 				<div class="stats-icon"><i class="fa fa-chain-broken"></i></div>
 				<div class="stats-info">
@@ -233,7 +231,7 @@ National
 				</div>
 			</div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
 	        <div class="panel panel-inverse" data-sortable-id="index-7">
 				<div class="panel-heading">
 					<div class="panel-heading-btn">
@@ -258,38 +256,8 @@ National
 				</div>
 			</div>
 		</div>
-		<!--HIV status graph -->
-		<div class="col-md-2">
-	        <div class="panel panel-inverse" data-sortable-id="index-8">
-				<div class="panel-heading">
-					<div class="panel-heading-btn">
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-					</div>
-					<h4 class="panel-title">Cacade 90-90-90</h4>
-				</div>
-				<div class="panel-body">
-					<div id="test-flot" class="height-sm"></div>
-				</div>
-			</div>
-		</div>
-
-
-		<!--Domain HIV Status -->
-		<div class="col-md-4">
-	        <div class="panel panel-inverse" data-sortable-id="index-9">
-				<div class="panel-heading">
-					<div class="panel-heading-btn">
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-					</div>
-					<h4 class="panel-title">ART Status</h4>
-				</div>
-				<div class="panel-body">
-					<div id="domain_hiv_status" class="height-sm"></div>
-				</div>
-			</div>
-		</div>
+	</div>
+	<div class="row">
 
 		<!--Domain HIV Status -->
 		<div class="col-md-4">
@@ -306,6 +274,38 @@ National
 				</div>
 			</div>
 		</div>
+
+		<!--Domain HIV Status -->
+		<div class="col-md-4">
+	        <div class="panel panel-inverse" data-sortable-id="index-9">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+					</div>
+					<h4 class="panel-title">ART Status</h4>
+				</div>
+				<div class="panel-body">
+					<div id="domain_hiv_status" class="height-sm"></div>
+				</div>
+			</div>
+		</div>
+		<!--HIV status graph -->
+		<div class="col-md-4">
+	        <div class="panel panel-inverse" data-sortable-id="index-8">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+					</div>
+					<h4 class="panel-title">Cacade 90-90-90</h4>
+				</div>
+				<div class="panel-body">
+					<div id="test-flot" class="height-sm"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 		{% for hiv_stats in ovc.hiv_status %}
 		<input type="hidden"  name="ovc_unknown_count" value={{hiv_stats.ovc_unknown_count}}/>

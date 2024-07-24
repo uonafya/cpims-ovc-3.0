@@ -33,13 +33,26 @@ REPORTS[26] = 'caregivers_served'
 REPORTS[27] = 'kpis'
 REPORTS[28] = 'hiv_risk_screening'
 REPORTS[29] = 'hiv_management'
-
+# New reports
+REPORTS[30] = 'case_transfer'
+REPORTS[31] = 'critical_events'
+REPORTS[32] = 'list_of_not_served_q'
+REPORTS[33] = 'list_of_not_served_m'
+REPORTS[34] = 'cpara_v1'
+REPORTS[35] = 'case_plan_achievement'
+REPORTS[36] = 'active_beneficiary'
+REPORTS[37] = 'benchmark_v1'
+REPORTS[38] = 'graduation'
+REPORTS[39] = 'hei'
+REPORTS[40] = 'case_load'
+# Other
 REPORTS[51] = 'datim'
 REPORTS[52] = 'pepfar'
 REPORTS[53] = 'kpi'
 REPORTS[54] = 'datim_mer_22'
 REPORTS[55] = 'datim_mer_23'
 REPORTS[56] = 'datim_mer_24'
+REPORTS[57] = 'datim_mer_26'
 
 # Master List
 QUERIES['master_list'] = '''
@@ -76,12 +89,12 @@ and  ((exit_status = 'ACTIVE' and registration_date <= '{end_date}')
 '''
 
 
+
 # Registration List April 2019
 QUERIES['registration_list'] = '''
-
-SELECT * from vw_cpims_registration where cbo_id in ({cbos})
-and vw_cpims_registration.registration_date between '{start_date}' and '{end_date}'
-order by  chv_id ASC, vw_cpims_registration.dob ASC, cbo_id ASC, ward_id ASC;
+SELECT * from vw_cpims_registration_fy23 WHERE  cbo_id in ({cbos})
+and vw_cpims_registration_fy23.registration_date between '{start_date}' and '{end_date}'
+order by  chv_id ASC, vw_cpims_registration_fy23.dob ASC, cbo_id ASC, ward_id ASC;
 
 '''
 # Registration List
@@ -1340,7 +1353,7 @@ group by person_id) as fp where scnts > 0;
 
 # List of OVC Served
 QUERIES['ovc_served_list'] = '''
-select * from vw_cpims_list_served where cbo_id in ({cbos})
+select * from vw_cpims_list_served_fy23 where cbo_id in ({cbos})
 AND date_of_service between '{start_date}' and '{end_date}'
 AND service != '' and service is not null;
 '''
@@ -3119,15 +3132,15 @@ Select * from vw_cpims_cpara_final
 WHERE cbo_id in ({cbos}) AND (vw_cpims_cpara_final.date_of_event BETWEEN '{start_date}' AND '{end_date}');
 '''
 QUERIES['case_plan'] = '''
-Select * from vw_cpims_case_plan
-WHERE cbo_id in ({cbos}) AND (vw_cpims_case_plan.date_of_event BETWEEN '{start_date}' AND '{end_date}');
+Select * from vw_cpims_case_plan_fy23
+WHERE cbo_id in ({cbos}) AND (vw_cpims_case_plan_fy23.date_of_event BETWEEN '{start_date}' AND '{end_date}');
 '''
 QUERIES['served_two_quaters'] = '''
 select * from vw_cpims_two_quarters
 WHERE cbo_id in ({cbos}) AND (date_of_event BETWEEN '{start_date}' AND '{end_date}');
 '''
 QUERIES['benchmark'] = '''
-select * from vw_cpims_benchmark_achieved
+select * from vw_cpims_benchmark
 WHERE cbo_id in ({cbos}) AND (date_of_event BETWEEN '{start_date}' AND '{end_date}');
 '''
 QUERIES['datim_mer_22'] = '''
@@ -4230,11 +4243,44 @@ Select * from vw_cpims_hiv_management
 WHERE cbo_id in ({cbos}) AND (vw_cpims_hiv_management.date_of_event BETWEEN '{start_date}' AND '{end_date}');
 '''
 
+QUERIES['cpara_v1'] = '''
+Select * from vw_cpims_cpara_final_v1
+WHERE cbo_id in ({cbos}) AND (vw_cpims_cpara_final_v1.date_of_event BETWEEN '{start_date}' AND '{end_date}');
+
+'''
+
+
+
+
 
 QUERIES['caregivers_served'] = '''
 Select * from vw_cpims_caregivers_served
 WHERE cbo_id in ({cbos}) AND (vw_cpims_caregivers_served.date_of_event BETWEEN '{start_date}' AND '{end_date}');
 '''
+
+QUERIES['critical_events'] = '''
+Select * from vw_cpims_critical_events
+WHERE cbo_id in ({cbos}) AND (vw_cpims_critical_events.date_of_event BETWEEN '{start_date}' AND '{end_date}');
+'''
+
+QUERIES['graduation'] = '''
+Select * from vw_cpims_dash_graduated WHERE cbo_id in ({cbos}) ;
+'''
+
+
+
+
+QUERIES['hei'] = '''
+Select * from vw_cpims_hei WHERE cbo_id in ({cbos}) ;
+'''
+
+
+QUERIES['benchmark_v1'] = '''
+select * from vw_cpims_benchmark_achieved_v1
+WHERE cbo_id in ({cbos}) AND (date_of_event BETWEEN '{start_date}' AND '{end_date}');
+'''
+
+
 
 QUERIES['kpis'] = '''
 --1.a Number of OVCs Ever Registered
@@ -4299,9 +4345,40 @@ UNION
  END
     AS Indicator
 FROM vw_cpims_treatment
-WHERE  
  vw_cpims_treatment.cbo_id in (3520)
 AND (vw_cpims_treatment.exit_status = 'ACTIVE' 
  AND vw_cpims_treatment.registration_date <= '31-mar-2019')
 GROUP BY CBO, ward, County,AgeRange,ward_id,countyid,Gender,vw_cpims_treatment.linked
+'''
+
+
+QUERIES['case_load'] = '''
+select * from vw_cpims_reg_active WHERE cbo_id in ({cbos})
+'''
+
+# Preventive - as in parameters but without spaces
+
+QUERIES['Register'] = '''
+Select * from vw_cpims_preventive_registration WHERE cbo_id in ({cbos}) ;
+'''
+
+QUERIES['Attendance'] = '''
+Select * from vw_preventive_attendance  WHERE cbo_id in ({cbos}) ;
+
+'''
+
+QUERIES['Services'] = '''
+'''
+
+QUERIES['SINOVUYO'] = '''
+'''
+
+QUERIES['FMP'] = '''
+'''
+
+# PMTCT
+QUERIES['PregnantTeenOrWomen'] = '''
+'''
+
+QUERIES['HEI'] = '''
 '''

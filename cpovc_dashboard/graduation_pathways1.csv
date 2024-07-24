@@ -1,0 +1,677 @@
+COPY (
+
+select count(distinct(cpims_ovc_id)) as dcount, county,
+graduation_pathway,
+CASE
+            WHEN tq.cbo_id = ANY (ARRAY[4097, 4099, 2758, 2793, 2766, 4082, 4083, 4084, 4087, 4089, 4090]) THEN 'USAID_Nuru Ya Mtoto'::text
+            WHEN tq.cbo_id = ANY (ARRAY[6534, 6535, 6479, 4146, 4147, 4148, 4149, 4150, 6480, 6448, 4151, 4152, 6469, 4153, 6533, 4242, 6437, 6436, 6517, 4243, 4244, 6466, 6447, 6532, 6537, 6443, 4266, 4267, 6459, 6428, 4268, 6465, 4269, 6484, 4270, 7307, 7306, 7308]) THEN 'USAID Tumikia Mtoto'::text
+            WHEN tq.cbo_id = ANY (ARRAY[7266, 7267, 7268, 7263]) THEN 'USAID 4Better Health'::text
+            WHEN tq.cbo_id = ANY (ARRAY[4095, 2752, 2764, 2769, 2770, 4091, 2794, 2796, 4096, 7345, 7386]) THEN 'USAID 4The Child'::text
+            WHEN tq.cbo_id = ANY (ARRAY[7341, 7343, 7341, 2805, 2774]) THEN 'USAID Boresha Jamii'::text
+            WHEN tq.cbo_id = ANY (ARRAY[4115, 4116, 4117, 4118, 4119]) THEN 'USAID Imarisha Jamii'::text
+            WHEN tq.cbo_id = 7233 THEN 'USAID Jamii Tekelezi'::text
+            WHEN tq.cbo_id = ANY (ARRAY[3510, 3522, 6565, 6563, 6564, 3500, 3501, 3502, 3503, 3517, 3518, 3519, 3520, 3526, 3527, 3535, 3540, 6538, 6539]) THEN 'Ampath Uzima'::text
+            WHEN tq.cbo_id = ANY (ARRAY[6541, 6543, 7258, 7378, 7379]) THEN 'USAID Tujitegemee'::text
+            WHEN tq.cbo_id = ANY (ARRAY[6525, 6525, 4064, 4066, 4070, 4067, 4069, 4071, 4065, 4068, 4065, 4066, 4067, 4068, 4069, 4070, 4071, 4064]) THEN 'COGRI'::text
+            WHEN tq.cbo_id = ANY (ARRAY[7064, 7065]) THEN 'CIHEB'::text
+            WHEN tq.cbo_id = ANY (ARRAY[4073, 4074, 4075, 4076, 7023, 7024, 7053, 7054, 7351, 7352]) THEN 'LVCT'::text
+            WHEN tq.cbo_id = ANY (ARRAY[900, 910, 960, 3900]) THEN 'CHAK'::text
+            WHEN tq.cbo_id = ANY (ARRAY[7009, 7010, 7013, 7015, 7017]) THEN 'Bomu'::text
+            WHEN tq.cbo_id = ANY (ARRAY[7019, 7021, 7022]) THEN 'HJF Kisumu West'::text
+            WHEN tq.cbo_id = 7235 THEN 'HJF MRI Mombasa'::text
+            ELSE NULL::text
+        END AS mechanism,
+        CASE
+            WHEN tq.cbo_id = ANY (ARRAY[4097, 4099, 2758, 2793, 2766, 4082, 4083, 4084, 4087, 4089, 4090, 6534, 6535, 6479, 4146, 4147, 4148, 4149, 4150, 6480, 6448, 4151, 4152, 6469, 4153, 6533, 4242, 6437, 6436, 6517, 4243, 4244, 6466, 6447, 6532, 6537, 6443, 4266, 4267, 6459, 6428, 4268, 6465, 4269, 6484, 4270, 7307, 7306, 7308, 7266, 7267, 7268, 7263, 4095, 2752, 2764, 2769, 2770, 4091, 2794, 2796, 4096, 7343, 7345, 7386, 7341, 7343, 7341, 2805, 2774, 4115, 4116, 4117, 4118, 4119, 7233, 3510, 3522, 6565, 6563, 6564, 3500, 3501, 3502, 3503, 3517, 3518, 3519, 3520, 3526, 3527, 3535, 3540, 6538, 6539, 6541, 6543, 7258, 7378, 7379, 6525, 6525, 4064, 4066, 4070, 4067, 4069, 4071, 4065, 4068, 4065, 4066, 4067, 4068, 4069, 4070, 4071, 4064]) THEN 'USAID'::text
+            WHEN tq.cbo_id = ANY (ARRAY[7064, 7065, 4073, 4074, 4075, 4076, 7023, 7024, 7053, 7054, 7351, 7352, 900, 910, 960, 3900, 7009, 7010, 7013, 7015, 7017]) THEN 'CDC'::text
+            WHEN tq.cbo_id = ANY (ARRAY[800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 821, 822, 823, 4020, 7019, 7021, 7022, 7235]) THEN 'DOD'::text
+            ELSE NULL::text
+        END AS agency
+ 
+from vw_cpims_benchmark tq
+where exit_status='ACTIVE' AND date_of_event > '2022-03-31' 
+group by cbo_id, county, graduation_pathway
+)TO STDOUT WITH CSV HEADER DELIMITER ','; 
+dcount,county,graduation_pathway,mechanism,agency
+1,Kericho,Medium Vulnerability 5-7,,DOD
+1,Kericho,Medium Vulnerability 5-7,,DOD
+1,Kericho,Medium Vulnerability 5-7,,DOD
+2,Bomet,Highly Vulnerable 0-4,,DOD
+1,Bomet,Medium Vulnerability 5-7,,DOD
+2,Narok,Medium Vulnerability 5-7,,DOD
+2,Kericho,Medium Vulnerability 5-7,,DOD
+1,Kericho,Medium Vulnerability 5-7,,DOD
+1,Kericho,Highly Vulnerable 0-4,,DOD
+1,,Medium Vulnerability 5-7,,
+1,,Medium Vulnerability 5-7,,
+27,Kericho,Highly Vulnerable 0-4,,
+16,Kericho,Low Vulnerability - 8,,
+227,Kericho,Medium Vulnerability 5-7,,
+3,Kericho,Ready to graduate - 9,,
+9,,Low Vulnerability - 8,,
+80,,Medium Vulnerability 5-7,,
+1,,Ready to graduate - 9,,
+1,Narok,Medium Vulnerability 5-7,CHAK,CDC
+5,Nairobi,Highly Vulnerable 0-4,CHAK,CDC
+10,Nairobi,Low Vulnerability - 8,CHAK,CDC
+297,Nairobi,Medium Vulnerability 5-7,CHAK,CDC
+1,Nairobi,Ready to graduate - 9,CHAK,CDC
+214,Machakos,Highly Vulnerable 0-4,CHAK,CDC
+1,Machakos,Low Vulnerability - 8,CHAK,CDC
+572,Machakos,Medium Vulnerability 5-7,CHAK,CDC
+1,Machakos,Ready to graduate - 9,CHAK,CDC
+2,Kitui,Medium Vulnerability 5-7,,
+1,Nairobi,Medium Vulnerability 5-7,,
+1,Mombasa,Medium Vulnerability 5-7,,
+1,Kilifi,Highly Vulnerable 0-4,,
+5,Nairobi,Highly Vulnerable 0-4,,
+3,Nairobi,Low Vulnerability - 8,,
+60,Nairobi,Medium Vulnerability 5-7,,
+1,Nairobi,Medium Vulnerability 5-7,,
+1,Nairobi,Ready to graduate - 9,,
+4,Mombasa,Medium Vulnerability 5-7,,
+5,Nairobi,Highly Vulnerable 0-4,,
+27,Nairobi,Medium Vulnerability 5-7,,
+5,Nairobi,Ready to graduate - 9,,
+6,Nairobi,Highly Vulnerable 0-4,,
+2,Nairobi,Low Vulnerability - 8,,
+75,Nairobi,Medium Vulnerability 5-7,,
+12,Nairobi,Ready to graduate - 9,,
+7,Mombasa,Medium Vulnerability 5-7,,
+8,Nairobi,Highly Vulnerable 0-4,,
+14,Nairobi,Medium Vulnerability 5-7,,
+2,Nairobi,Ready to graduate - 9,,
+1,Mombasa,Medium Vulnerability 5-7,,
+2,Nairobi,Medium Vulnerability 5-7,,
+1,Kilifi,Highly Vulnerable 0-4,,
+3,Nairobi,Medium Vulnerability 5-7,,
+5,Nairobi,Highly Vulnerable 0-4,,
+14,Nairobi,Medium Vulnerability 5-7,,
+3,Kilifi,Highly Vulnerable 0-4,,
+7,Kilifi,Highly Vulnerable 0-4,,
+3,,Medium Vulnerability 5-7,,
+1,,Ready to graduate - 9,,
+11,Nairobi,Highly Vulnerable 0-4,,
+1,Nairobi,Low Vulnerability - 8,,
+20,Nairobi,Medium Vulnerability 5-7,,
+2,Kilifi,Highly Vulnerable 0-4,,
+2,Kilifi,Medium Vulnerability 5-7,,
+1,Nairobi,Highly Vulnerable 0-4,,
+23,Nairobi,Medium Vulnerability 5-7,,
+1,Nairobi,Medium Vulnerability 5-7,,
+2,Nairobi,Highly Vulnerable 0-4,,
+17,Nairobi,Medium Vulnerability 5-7,,
+2,Nairobi,Medium Vulnerability 5-7,,
+8,Nairobi,Medium Vulnerability 5-7,,
+15,Nairobi,Medium Vulnerability 5-7,,
+9,Nairobi,Medium Vulnerability 5-7,,
+2,,Medium Vulnerability 5-7,,
+2,Nairobi,Medium Vulnerability 5-7,,
+2,Kilifi,Low Vulnerability - 8,,
+1,Mombasa,Highly Vulnerable 0-4,,
+5,Mombasa,Medium Vulnerability 5-7,,
+2,Nairobi,Highly Vulnerable 0-4,,
+2,Nairobi,Medium Vulnerability 5-7,,
+1,Nairobi,Ready to graduate - 9,,
+2,Nairobi,Medium Vulnerability 5-7,,
+5,Kilifi,Highly Vulnerable 0-4,,
+5,Kilifi,Medium Vulnerability 5-7,,
+1,Kilifi,Highly Vulnerable 0-4,,
+1,Nairobi,Low Vulnerability - 8,,
+3,Nairobi,Medium Vulnerability 5-7,,
+2,Nairobi,Highly Vulnerable 0-4,,
+2,Nairobi,Medium Vulnerability 5-7,,
+3,Nairobi,Medium Vulnerability 5-7,,
+3,Kilifi,Highly Vulnerable 0-4,,
+3,Kilifi,Medium Vulnerability 5-7,,
+3,Kilifi,Medium Vulnerability 5-7,,
+6,Kilifi,Highly Vulnerable 0-4,,
+7,Kilifi,Medium Vulnerability 5-7,,
+2,Kilifi,Ready to graduate - 9,,
+1,Kilifi,Low Vulnerability - 8,,
+5,Kilifi,Medium Vulnerability 5-7,,
+24,Nairobi,Highly Vulnerable 0-4,,
+28,Nairobi,Medium Vulnerability 5-7,,
+2,Kilifi,Highly Vulnerable 0-4,,
+16,Kilifi,Medium Vulnerability 5-7,,
+2,Nairobi,Highly Vulnerable 0-4,,
+9,Nairobi,Medium Vulnerability 5-7,,
+1,Nairobi,Highly Vulnerable 0-4,,
+5,Nairobi,Medium Vulnerability 5-7,,
+6,Mombasa,Low Vulnerability - 8,,
+9,Mombasa,Medium Vulnerability 5-7,,
+1,Kilifi,Highly Vulnerable 0-4,,
+4,Kilifi,Highly Vulnerable 0-4,,
+11,Kilifi,Medium Vulnerability 5-7,,
+4,Kilifi,Highly Vulnerable 0-4,,
+1,Kilifi,Low Vulnerability - 8,,
+1,Kilifi,Medium Vulnerability 5-7,,
+2,Kilifi,Highly Vulnerable 0-4,,
+2,,Medium Vulnerability 5-7,,
+7,Kilifi,Highly Vulnerable 0-4,,
+5,Mombasa,Medium Vulnerability 5-7,,
+7,Kilifi,Highly Vulnerable 0-4,,
+6,Mombasa,Medium Vulnerability 5-7,,
+5,Kilifi,Highly Vulnerable 0-4,,
+3,Kilifi,Medium Vulnerability 5-7,,
+1,Mombasa,Highly Vulnerable 0-4,,
+1,Mombasa,Medium Vulnerability 5-7,,
+1,Nairobi,Highly Vulnerable 0-4,,
+2,Nairobi,Medium Vulnerability 5-7,,
+32,Nairobi,Medium Vulnerability 5-7,,
+4,Kwale,Medium Vulnerability 5-7,,
+2,Kilifi,Medium Vulnerability 5-7,,
+5,Mombasa,Medium Vulnerability 5-7,,
+2,Kilifi,Medium Vulnerability 5-7,,
+9,Nairobi,Highly Vulnerable 0-4,,
+18,Nairobi,Medium Vulnerability 5-7,,
+5,Nairobi,Ready to graduate - 9,,
+5,,Highly Vulnerable 0-4,,
+1,,Low Vulnerability - 8,,
+12,,Medium Vulnerability 5-7,,
+2,Nairobi,Medium Vulnerability 5-7,,
+1,Nairobi,Ready to graduate - 9,,
+1,Uasin Gishu,Ready to graduate - 9,,
+3,Nairobi,Highly Vulnerable 0-4,,
+2,Nairobi,Low Vulnerability - 8,,
+7,Nairobi,Medium Vulnerability 5-7,,
+3,Nairobi,Ready to graduate - 9,,
+26,Nairobi,Medium Vulnerability 5-7,,
+2,Nairobi,Ready to graduate - 9,,
+2,Nairobi,Highly Vulnerable 0-4,,
+3,Nairobi,Low Vulnerability - 8,,
+48,Nairobi,Medium Vulnerability 5-7,,
+3,Kilifi,Medium Vulnerability 5-7,,
+1,Nairobi,Medium Vulnerability 5-7,,
+1,Nairobi,Medium Vulnerability 5-7,,
+5,Nairobi,Low Vulnerability - 8,,
+8,Nairobi,Medium Vulnerability 5-7,,
+12,Nairobi,Medium Vulnerability 5-7,,
+5,,Medium Vulnerability 5-7,,
+3,Nairobi,Highly Vulnerable 0-4,,
+30,Nairobi,Medium Vulnerability 5-7,,
+3,Kilifi,Medium Vulnerability 5-7,,
+2,Kilifi,Highly Vulnerable 0-4,,
+2,Kilifi,Medium Vulnerability 5-7,,
+1,Kilifi,Highly Vulnerable 0-4,,
+2,Nairobi,Medium Vulnerability 5-7,,
+8,Nairobi,Highly Vulnerable 0-4,,
+30,Nairobi,Medium Vulnerability 5-7,,
+1,Nairobi,Ready to graduate - 9,,
+3,Nairobi,Medium Vulnerability 5-7,,
+800,Busia,Highly Vulnerable 0-4,USAID 4The Child,USAID
+513,Busia,Low Vulnerability - 8,USAID 4The Child,USAID
+4806,Busia,Medium Vulnerability 5-7,USAID 4The Child,USAID
+121,Busia,Ready to graduate - 9,USAID 4The Child,USAID
+1535,Migori,Highly Vulnerable 0-4,USAID_Nuru Ya Mtoto,USAID
+871,Migori,Low Vulnerability - 8,USAID_Nuru Ya Mtoto,USAID
+7026,Migori,Medium Vulnerability 5-7,USAID_Nuru Ya Mtoto,USAID
+159,Migori,Ready to graduate - 9,USAID_Nuru Ya Mtoto,USAID
+253,Busia,Highly Vulnerable 0-4,USAID 4The Child,USAID
+1364,Busia,Low Vulnerability - 8,USAID 4The Child,USAID
+3280,Busia,Medium Vulnerability 5-7,USAID 4The Child,USAID
+73,Busia,Ready to graduate - 9,USAID 4The Child,USAID
+1073,Homa Bay,Highly Vulnerable 0-4,USAID_Nuru Ya Mtoto,USAID
+1485,Homa Bay,Low Vulnerability - 8,USAID_Nuru Ya Mtoto,USAID
+17214,Homa Bay,Medium Vulnerability 5-7,USAID_Nuru Ya Mtoto,USAID
+449,Homa Bay,Ready to graduate - 9,USAID_Nuru Ya Mtoto,USAID
+1,Kakamega,Medium Vulnerability 5-7,,
+232,Kakamega,Highly Vulnerable 0-4,USAID 4The Child,USAID
+477,Kakamega,Low Vulnerability - 8,USAID 4The Child,USAID
+7960,Kakamega,Medium Vulnerability 5-7,USAID 4The Child,USAID
+46,Kakamega,Ready to graduate - 9,USAID 4The Child,USAID
+607,Bungoma,Highly Vulnerable 0-4,USAID 4The Child,USAID
+262,Bungoma,Low Vulnerability - 8,USAID 4The Child,USAID
+4224,Bungoma,Medium Vulnerability 5-7,USAID 4The Child,USAID
+23,Bungoma,Ready to graduate - 9,USAID 4The Child,USAID
+1,Nyamira,Medium Vulnerability 5-7,USAID Boresha Jamii,USAID
+1,Kisumu,Medium Vulnerability 5-7,,
+1,Kisumu,Medium Vulnerability 5-7,,
+1,Kisumu,Medium Vulnerability 5-7,,
+2,Migori,Low Vulnerability - 8,,
+5,Migori,Medium Vulnerability 5-7,,
+4,Migori,Ready to graduate - 9,,
+1,Kisumu,Low Vulnerability - 8,,
+1,Kisumu,Medium Vulnerability 5-7,,
+339,Kakamega,Highly Vulnerable 0-4,USAID 4The Child,USAID
+157,Kakamega,Low Vulnerability - 8,USAID 4The Child,USAID
+3763,Kakamega,Medium Vulnerability 5-7,USAID 4The Child,USAID
+19,Kakamega,Ready to graduate - 9,USAID 4The Child,USAID
+132,Kisumu,Highly Vulnerable 0-4,USAID 4The Child,USAID
+1400,Kisumu,Low Vulnerability - 8,USAID 4The Child,USAID
+9050,Kisumu,Medium Vulnerability 5-7,USAID 4The Child,USAID
+406,Kisumu,Ready to graduate - 9,USAID 4The Child,USAID
+8,Kisumu,Medium Vulnerability 5-7,,
+4,Kisumu,Ready to graduate - 9,,
+5,Homa Bay,Highly Vulnerable 0-4,,
+2,Homa Bay,Low Vulnerability - 8,,
+15,Homa Bay,Medium Vulnerability 5-7,,
+5,Homa Bay,Ready to graduate - 9,,
+1,Busia,Ready to graduate - 9,,
+1,Migori,Medium Vulnerability 5-7,,
+1,Kakamega,Medium Vulnerability 5-7,,
+4,Nandi,Low Vulnerability - 8,,
+7,Nandi,Medium Vulnerability 5-7,,
+1,Busia,Highly Vulnerable 0-4,,
+2,Busia,Medium Vulnerability 5-7,,
+1,Busia,Ready to graduate - 9,,
+146,Trans Nzoia,Highly Vulnerable 0-4,Ampath Uzima,USAID
+176,Trans Nzoia,Low Vulnerability - 8,Ampath Uzima,USAID
+1299,Trans Nzoia,Medium Vulnerability 5-7,Ampath Uzima,USAID
+10,Trans Nzoia,Ready to graduate - 9,Ampath Uzima,USAID
+1,Kakamega,Highly Vulnerable 0-4,,
+30,Uasin Gishu,Highly Vulnerable 0-4,Ampath Uzima,USAID
+231,Uasin Gishu,Low Vulnerability - 8,Ampath Uzima,USAID
+1565,Uasin Gishu,Medium Vulnerability 5-7,Ampath Uzima,USAID
+14,Uasin Gishu,Ready to graduate - 9,Ampath Uzima,USAID
+8,Uasin Gishu,Highly Vulnerable 0-4,Ampath Uzima,USAID
+84,Uasin Gishu,Low Vulnerability - 8,Ampath Uzima,USAID
+888,Uasin Gishu,Medium Vulnerability 5-7,Ampath Uzima,USAID
+14,Uasin Gishu,Ready to graduate - 9,Ampath Uzima,USAID
+1,Kisumu,Medium Vulnerability 5-7,,
+59,Trans Nzoia,Highly Vulnerable 0-4,Ampath Uzima,USAID
+523,Trans Nzoia,Low Vulnerability - 8,Ampath Uzima,USAID
+882,Trans Nzoia,Medium Vulnerability 5-7,Ampath Uzima,USAID
+73,Trans Nzoia,Ready to graduate - 9,Ampath Uzima,USAID
+1,Nandi,Medium Vulnerability 5-7,,
+47,Uasin Gishu,Highly Vulnerable 0-4,Ampath Uzima,USAID
+143,Uasin Gishu,Low Vulnerability - 8,Ampath Uzima,USAID
+903,Uasin Gishu,Medium Vulnerability 5-7,Ampath Uzima,USAID
+6,Uasin Gishu,Ready to graduate - 9,Ampath Uzima,USAID
+282,Uasin Gishu,Highly Vulnerable 0-4,Ampath Uzima,USAID
+145,Uasin Gishu,Low Vulnerability - 8,Ampath Uzima,USAID
+2533,Uasin Gishu,Medium Vulnerability 5-7,Ampath Uzima,USAID
+34,Uasin Gishu,Ready to graduate - 9,Ampath Uzima,USAID
+1,Siaya,Highly Vulnerable 0-4,,
+2,Siaya,Medium Vulnerability 5-7,,
+1,Siaya,Ready to graduate - 9,,
+1,Bungoma,Medium Vulnerability 5-7,,
+1,Busia,Medium Vulnerability 5-7,,
+1,Trans Nzoia,Medium Vulnerability 5-7,,
+1,West Pokot,Medium Vulnerability 5-7,,
+5,,Medium Vulnerability 5-7,,
+1,Busia,Medium Vulnerability 5-7,,
+7,Trans Nzoia,Highly Vulnerable 0-4,,
+2,Trans Nzoia,Low Vulnerability - 8,,
+13,Trans Nzoia,Medium Vulnerability 5-7,,
+2,Trans Nzoia,Ready to graduate - 9,,
+1,Uasin Gishu,Low Vulnerability - 8,,
+1,West Pokot,Highly Vulnerable 0-4,,
+1,West Pokot,Medium Vulnerability 5-7,,
+1,West Pokot,Ready to graduate - 9,,
+1,,Highly Vulnerable 0-4,,
+3,,Medium Vulnerability 5-7,,
+3,Trans Nzoia,Highly Vulnerable 0-4,,
+10,Trans Nzoia,Medium Vulnerability 5-7,,
+3,Trans Nzoia,Ready to graduate - 9,,
+118,Kajiado,Highly Vulnerable 0-4,CHAK,CDC
+30,Kajiado,Low Vulnerability - 8,CHAK,CDC
+532,Kajiado,Medium Vulnerability 5-7,CHAK,CDC
+9,Kajiado,Ready to graduate - 9,CHAK,CDC
+11,Kilifi,Highly Vulnerable 0-4,,
+25,Kilifi,Medium Vulnerability 5-7,,
+1,Nairobi,Medium Vulnerability 5-7,,
+1,Kilifi,Highly Vulnerable 0-4,,
+4,Homa Bay,Highly Vulnerable 0-4,LVCT,CDC
+3,Homa Bay,Low Vulnerability - 8,LVCT,CDC
+58,Homa Bay,Medium Vulnerability 5-7,LVCT,CDC
+11,Homa Bay,Highly Vulnerable 0-4,LVCT,CDC
+3,Homa Bay,Low Vulnerability - 8,LVCT,CDC
+63,Homa Bay,Medium Vulnerability 5-7,LVCT,CDC
+1,Homa Bay,Ready to graduate - 9,LVCT,CDC
+3,Homa Bay,Medium Vulnerability 5-7,LVCT,CDC
+2910,Homa Bay,Highly Vulnerable 0-4,USAID_Nuru Ya Mtoto,USAID
+580,Homa Bay,Low Vulnerability - 8,USAID_Nuru Ya Mtoto,USAID
+7082,Homa Bay,Medium Vulnerability 5-7,USAID_Nuru Ya Mtoto,USAID
+25,Homa Bay,Ready to graduate - 9,USAID_Nuru Ya Mtoto,USAID
+1,Kwale,Medium Vulnerability 5-7,,
+3,Kwale,Ready to graduate - 9,,
+5099,Homa Bay,Highly Vulnerable 0-4,USAID_Nuru Ya Mtoto,USAID
+321,Homa Bay,Low Vulnerability - 8,USAID_Nuru Ya Mtoto,USAID
+9704,Homa Bay,Medium Vulnerability 5-7,USAID_Nuru Ya Mtoto,USAID
+165,Homa Bay,Ready to graduate - 9,USAID_Nuru Ya Mtoto,USAID
+3002,Kisii,Highly Vulnerable 0-4,USAID_Nuru Ya Mtoto,USAID
+839,Kisii,Low Vulnerability - 8,USAID_Nuru Ya Mtoto,USAID
+9603,Kisii,Medium Vulnerability 5-7,USAID_Nuru Ya Mtoto,USAID
+42,Kisii,Ready to graduate - 9,USAID_Nuru Ya Mtoto,USAID
+1238,Kisumu,Highly Vulnerable 0-4,USAID 4The Child,USAID
+1394,Kisumu,Low Vulnerability - 8,USAID 4The Child,USAID
+7443,Kisumu,Medium Vulnerability 5-7,USAID 4The Child,USAID
+733,Kisumu,Ready to graduate - 9,USAID 4The Child,USAID
+1,Homa Bay,Medium Vulnerability 5-7,USAID 4The Child,USAID
+862,Migori,Highly Vulnerable 0-4,USAID_Nuru Ya Mtoto,USAID
+862,Migori,Low Vulnerability - 8,USAID_Nuru Ya Mtoto,USAID
+6176,Migori,Medium Vulnerability 5-7,USAID_Nuru Ya Mtoto,USAID
+195,Migori,Ready to graduate - 9,USAID_Nuru Ya Mtoto,USAID
+1517,Turkana,Highly Vulnerable 0-4,USAID Imarisha Jamii,USAID
+114,Turkana,Low Vulnerability - 8,USAID Imarisha Jamii,USAID
+902,Turkana,Medium Vulnerability 5-7,USAID Imarisha Jamii,USAID
+6,Turkana,Ready to graduate - 9,USAID Imarisha Jamii,USAID
+19,Turkana,Highly Vulnerable 0-4,USAID Imarisha Jamii,USAID
+28,Turkana,Low Vulnerability - 8,USAID Imarisha Jamii,USAID
+187,Turkana,Medium Vulnerability 5-7,USAID Imarisha Jamii,USAID
+391,Turkana,Highly Vulnerable 0-4,USAID Imarisha Jamii,USAID
+2,Turkana,Low Vulnerability - 8,USAID Imarisha Jamii,USAID
+118,Turkana,Medium Vulnerability 5-7,USAID Imarisha Jamii,USAID
+21,Turkana,Highly Vulnerable 0-4,USAID Imarisha Jamii,USAID
+43,Turkana,Low Vulnerability - 8,USAID Imarisha Jamii,USAID
+632,Turkana,Medium Vulnerability 5-7,USAID Imarisha Jamii,USAID
+1,Turkana,Ready to graduate - 9,USAID Imarisha Jamii,USAID
+160,Turkana,Highly Vulnerable 0-4,USAID Imarisha Jamii,USAID
+878,Turkana,Medium Vulnerability 5-7,USAID Imarisha Jamii,USAID
+3,Machakos,Low Vulnerability - 8,,
+12,Machakos,Medium Vulnerability 5-7,,
+1,Murang'a,Highly Vulnerable 0-4,,
+2,Murang'a,Low Vulnerability - 8,,
+22,Murang'a,Medium Vulnerability 5-7,,
+16,Murang'a,Medium Vulnerability 5-7,,
+2,Murang'a,Ready to graduate - 9,,
+3,Murang'a,Low Vulnerability - 8,,
+2,Murang'a,Medium Vulnerability 5-7,,
+1,Murang'a,Ready to graduate - 9,,
+3,Murang'a,Low Vulnerability - 8,,
+21,Murang'a,Medium Vulnerability 5-7,,
+1,Murang'a,Ready to graduate - 9,,
+4,Murang'a,Highly Vulnerable 0-4,,
+19,Murang'a,Medium Vulnerability 5-7,,
+1,Murang'a,Ready to graduate - 9,,
+8,Nakuru,Medium Vulnerability 5-7,,
+1,,Low Vulnerability - 8,,
+1,,Medium Vulnerability 5-7,,
+2,Kisumu,Low Vulnerability - 8,,
+2,Kisumu,Ready to graduate - 9,,
+1,Mombasa,Medium Vulnerability 5-7,,
+1,Mombasa,Medium Vulnerability 5-7,,
+2,Nairobi,Medium Vulnerability 5-7,,
+1,Nairobi,Medium Vulnerability 5-7,,
+1,Nairobi,Medium Vulnerability 5-7,,
+1,Nairobi,Highly Vulnerable 0-4,,
+1,Kilifi,Medium Vulnerability 5-7,,
+1,Kilifi,Medium Vulnerability 5-7,,
+1,Nairobi,Medium Vulnerability 5-7,,
+8,Nairobi,Medium Vulnerability 5-7,,
+2,Nairobi,Medium Vulnerability 5-7,,
+1,Nairobi,Medium Vulnerability 5-7,,
+3,Nairobi,Medium Vulnerability 5-7,,
+1,Nairobi,Medium Vulnerability 5-7,,
+2,Kilifi,Highly Vulnerable 0-4,,
+3,Kilifi,Medium Vulnerability 5-7,,
+1,Kilifi,Highly Vulnerable 0-4,,
+2,Kilifi,Medium Vulnerability 5-7,,
+1,Busia,Medium Vulnerability 5-7,,
+3,Homa Bay,Medium Vulnerability 5-7,,
+1,Homa Bay,Ready to graduate - 9,,
+1,Nyeri,Medium Vulnerability 5-7,,
+1,Murang'a,Medium Vulnerability 5-7,,
+2,Kiambu,Medium Vulnerability 5-7,,
+5,Laikipia,Medium Vulnerability 5-7,,
+1,Machakos,Low Vulnerability - 8,,
+6,Machakos,Medium Vulnerability 5-7,,
+1,Kajiado,Medium Vulnerability 5-7,,
+1,Machakos,Medium Vulnerability 5-7,,
+5,Nairobi,Highly Vulnerable 0-4,,
+5,Nairobi,Medium Vulnerability 5-7,,
+1,Kakamega,Medium Vulnerability 5-7,,
+2,Kisumu,Highly Vulnerable 0-4,,
+6,Kisumu,Low Vulnerability - 8,,
+18,Kisumu,Medium Vulnerability 5-7,,
+7,Kisumu,Ready to graduate - 9,,
+2,Migori,Highly Vulnerable 0-4,,
+3,Migori,Medium Vulnerability 5-7,,
+3,Migori,Ready to graduate - 9,,
+1,Nandi,Highly Vulnerable 0-4,,
+1,Nandi,Medium Vulnerability 5-7,,
+1,Nandi,Ready to graduate - 9,,
+3,Siaya,Low Vulnerability - 8,,
+31,Siaya,Medium Vulnerability 5-7,,
+7,Siaya,Ready to graduate - 9,,
+1,Trans Nzoia,Medium Vulnerability 5-7,,
+6,Uasin Gishu,Medium Vulnerability 5-7,,
+1,,Highly Vulnerable 0-4,,
+1,,Medium Vulnerability 5-7,,
+1,,Ready to graduate - 9,,
+1940,Nairobi,Highly Vulnerable 0-4,USAID Tumikia Mtoto,USAID
+181,Nairobi,Low Vulnerability - 8,USAID Tumikia Mtoto,USAID
+12715,Nairobi,Medium Vulnerability 5-7,USAID Tumikia Mtoto,USAID
+56,Nairobi,Ready to graduate - 9,USAID Tumikia Mtoto,USAID
+1,Uasin Gishu,Medium Vulnerability 5-7,USAID Tumikia Mtoto,USAID
+1444,Nairobi,Highly Vulnerable 0-4,USAID Tumikia Mtoto,USAID
+600,Nairobi,Low Vulnerability - 8,USAID Tumikia Mtoto,USAID
+11213,Nairobi,Medium Vulnerability 5-7,USAID Tumikia Mtoto,USAID
+80,Nairobi,Ready to graduate - 9,USAID Tumikia Mtoto,USAID
+942,Nairobi,Highly Vulnerable 0-4,USAID Tumikia Mtoto,USAID
+799,Nairobi,Low Vulnerability - 8,USAID Tumikia Mtoto,USAID
+11287,Nairobi,Medium Vulnerability 5-7,USAID Tumikia Mtoto,USAID
+49,Nairobi,Ready to graduate - 9,USAID Tumikia Mtoto,USAID
+791,Nairobi,Highly Vulnerable 0-4,USAID Tumikia Mtoto,USAID
+120,Nairobi,Low Vulnerability - 8,USAID Tumikia Mtoto,USAID
+11553,Nairobi,Medium Vulnerability 5-7,USAID Tumikia Mtoto,USAID
+35,Nairobi,Ready to graduate - 9,USAID Tumikia Mtoto,USAID
+15,Uasin Gishu,Highly Vulnerable 0-4,Ampath Uzima,USAID
+62,Uasin Gishu,Low Vulnerability - 8,Ampath Uzima,USAID
+347,Uasin Gishu,Medium Vulnerability 5-7,Ampath Uzima,USAID
+2,Uasin Gishu,Ready to graduate - 9,Ampath Uzima,USAID
+31,Uasin Gishu,Highly Vulnerable 0-4,Ampath Uzima,USAID
+78,Uasin Gishu,Low Vulnerability - 8,Ampath Uzima,USAID
+610,Uasin Gishu,Medium Vulnerability 5-7,Ampath Uzima,USAID
+4,Uasin Gishu,Ready to graduate - 9,Ampath Uzima,USAID
+1,Taita Taveta,Highly Vulnerable 0-4,,
+7,Taita Taveta,Medium Vulnerability 5-7,,
+820,Mombasa,Highly Vulnerable 0-4,USAID Tujitegemee,USAID
+43,Mombasa,Low Vulnerability - 8,USAID Tujitegemee,USAID
+2489,Mombasa,Medium Vulnerability 5-7,USAID Tujitegemee,USAID
+4,Mombasa,Ready to graduate - 9,USAID Tujitegemee,USAID
+4,Mombasa,Medium Vulnerability 5-7,,
+3384,Kilifi,Highly Vulnerable 0-4,USAID Tujitegemee,USAID
+214,Kilifi,Low Vulnerability - 8,USAID Tujitegemee,USAID
+6364,Kilifi,Medium Vulnerability 5-7,USAID Tujitegemee,USAID
+59,Kilifi,Ready to graduate - 9,USAID Tujitegemee,USAID
+7,Kwale,Highly Vulnerable 0-4,,
+5,Kwale,Medium Vulnerability 5-7,,
+59,Trans Nzoia,Highly Vulnerable 0-4,Ampath Uzima,USAID
+61,Trans Nzoia,Low Vulnerability - 8,Ampath Uzima,USAID
+939,Trans Nzoia,Medium Vulnerability 5-7,Ampath Uzima,USAID
+16,Trans Nzoia,Ready to graduate - 9,Ampath Uzima,USAID
+106,Trans Nzoia,Highly Vulnerable 0-4,Ampath Uzima,USAID
+216,Trans Nzoia,Low Vulnerability - 8,Ampath Uzima,USAID
+1477,Trans Nzoia,Medium Vulnerability 5-7,Ampath Uzima,USAID
+17,Trans Nzoia,Ready to graduate - 9,Ampath Uzima,USAID
+307,Trans Nzoia,Highly Vulnerable 0-4,Ampath Uzima,USAID
+83,Trans Nzoia,Low Vulnerability - 8,Ampath Uzima,USAID
+718,Trans Nzoia,Medium Vulnerability 5-7,Ampath Uzima,USAID
+34,Trans Nzoia,Ready to graduate - 9,Ampath Uzima,USAID
+3,Turkana,Highly Vulnerable 0-4,,
+1,Turkana,Medium Vulnerability 5-7,,
+2,Turkana,Highly Vulnerable 0-4,,
+7,Turkana,Low Vulnerability - 8,,
+32,Turkana,Medium Vulnerability 5-7,,
+4,Turkana,Ready to graduate - 9,,
+25,Turkana,Highly Vulnerable 0-4,,
+3,Turkana,Low Vulnerability - 8,,
+21,Turkana,Medium Vulnerability 5-7,,
+3,Turkana,Highly Vulnerable 0-4,,
+27,Turkana,Medium Vulnerability 5-7,,
+2,Turkana,Medium Vulnerability 5-7,,
+1,Siaya,Low Vulnerability - 8,,
+14,Siaya,Medium Vulnerability 5-7,,
+2,Siaya,Ready to graduate - 9,,
+6,Kilifi,Highly Vulnerable 0-4,Bomu,CDC
+8,Kilifi,Medium Vulnerability 5-7,Bomu,CDC
+26,Mombasa,Highly Vulnerable 0-4,Bomu,CDC
+2,Mombasa,Low Vulnerability - 8,Bomu,CDC
+109,Mombasa,Medium Vulnerability 5-7,Bomu,CDC
+1,Mombasa,Ready to graduate - 9,Bomu,CDC
+5,Kilifi,Highly Vulnerable 0-4,Bomu,CDC
+9,Kilifi,Low Vulnerability - 8,Bomu,CDC
+88,Kilifi,Medium Vulnerability 5-7,Bomu,CDC
+11,Kilifi,Ready to graduate - 9,Bomu,CDC
+2,,Medium Vulnerability 5-7,Bomu,CDC
+4,Kilifi,Low Vulnerability - 8,Bomu,CDC
+2,Mombasa,Highly Vulnerable 0-4,Bomu,CDC
+85,Mombasa,Low Vulnerability - 8,Bomu,CDC
+57,Mombasa,Medium Vulnerability 5-7,Bomu,CDC
+14,Mombasa,Ready to graduate - 9,Bomu,CDC
+1,Mombasa,Ready to graduate - 9,,
+2,Kilifi,Ready to graduate - 9,Bomu,CDC
+5,Kwale,Medium Vulnerability 5-7,Bomu,CDC
+19,Kwale,Ready to graduate - 9,Bomu,CDC
+3,Mombasa,Highly Vulnerable 0-4,Bomu,CDC
+9,Mombasa,Low Vulnerability - 8,Bomu,CDC
+27,Mombasa,Medium Vulnerability 5-7,Bomu,CDC
+50,Mombasa,Ready to graduate - 9,Bomu,CDC
+28,Kilifi,Highly Vulnerable 0-4,Bomu,CDC
+16,Kilifi,Low Vulnerability - 8,Bomu,CDC
+74,Kilifi,Medium Vulnerability 5-7,Bomu,CDC
+13,Kilifi,Ready to graduate - 9,Bomu,CDC
+2,Kwale,Highly Vulnerable 0-4,Bomu,CDC
+1,Kwale,Low Vulnerability - 8,Bomu,CDC
+18,Kwale,Medium Vulnerability 5-7,Bomu,CDC
+8,Kwale,Ready to graduate - 9,Bomu,CDC
+1,Taita Taveta,Medium Vulnerability 5-7,Bomu,CDC
+556,Kisumu,Highly Vulnerable 0-4,HJF Kisumu West,DOD
+125,Kisumu,Low Vulnerability - 8,HJF Kisumu West,DOD
+1600,Kisumu,Medium Vulnerability 5-7,HJF Kisumu West,DOD
+14,Kisumu,Ready to graduate - 9,HJF Kisumu West,DOD
+113,Kisumu,Highly Vulnerable 0-4,HJF Kisumu West,DOD
+246,Kisumu,Low Vulnerability - 8,HJF Kisumu West,DOD
+2272,Kisumu,Medium Vulnerability 5-7,HJF Kisumu West,DOD
+5,Kisumu,Ready to graduate - 9,HJF Kisumu West,DOD
+1,Trans Nzoia,Medium Vulnerability 5-7,HJF Kisumu West,DOD
+57,Kisumu,Highly Vulnerable 0-4,HJF Kisumu West,DOD
+15,Kisumu,Low Vulnerability - 8,HJF Kisumu West,DOD
+869,Kisumu,Medium Vulnerability 5-7,HJF Kisumu West,DOD
+3,Kisumu,Ready to graduate - 9,HJF Kisumu West,DOD
+10,Homa Bay,Highly Vulnerable 0-4,LVCT,CDC
+5,Homa Bay,Low Vulnerability - 8,LVCT,CDC
+119,Homa Bay,Medium Vulnerability 5-7,LVCT,CDC
+31,Homa Bay,Ready to graduate - 9,LVCT,CDC
+2,,Low Vulnerability - 8,LVCT,CDC
+2,,Medium Vulnerability 5-7,LVCT,CDC
+2,Homa Bay,Highly Vulnerable 0-4,LVCT,CDC
+8,Homa Bay,Medium Vulnerability 5-7,LVCT,CDC
+1,,Highly Vulnerable 0-4,LVCT,CDC
+1,,Medium Vulnerability 5-7,LVCT,CDC
+92,Homa Bay,Highly Vulnerable 0-4,LVCT,CDC
+379,Homa Bay,Low Vulnerability - 8,LVCT,CDC
+846,Homa Bay,Medium Vulnerability 5-7,LVCT,CDC
+7,Homa Bay,Ready to graduate - 9,LVCT,CDC
+1,Homa Bay,Low Vulnerability - 8,LVCT,CDC
+13,Kisumu,Highly Vulnerable 0-4,CIHEB,CDC
+238,Kisumu,Low Vulnerability - 8,CIHEB,CDC
+492,Kisumu,Medium Vulnerability 5-7,CIHEB,CDC
+18,Kisumu,Ready to graduate - 9,CIHEB,CDC
+10,Kisumu,Low Vulnerability - 8,CIHEB,CDC
+92,Kisumu,Medium Vulnerability 5-7,CIHEB,CDC
+4,Kisumu,Ready to graduate - 9,CIHEB,CDC
+1,Homa Bay,Highly Vulnerable 0-4,,
+1,Homa Bay,Low Vulnerability - 8,,
+1,Homa Bay,Medium Vulnerability 5-7,,
+1,Vihiga,Medium Vulnerability 5-7,,
+4,Bomet,Medium Vulnerability 5-7,,
+1167,Kericho,Highly Vulnerable 0-4,,
+32,Kericho,Low Vulnerability - 8,,
+958,Kericho,Medium Vulnerability 5-7,,
+1,Machakos,Low Vulnerability - 8,,
+1,Nakuru,Medium Vulnerability 5-7,,
+1,,Highly Vulnerable 0-4,,
+1,,Highly Vulnerable 0-4,,
+1,,Medium Vulnerability 5-7,,
+41,Meru,Highly Vulnerable 0-4,USAID Jamii Tekelezi,USAID
+461,Meru,Low Vulnerability - 8,USAID Jamii Tekelezi,USAID
+1838,Meru,Medium Vulnerability 5-7,USAID Jamii Tekelezi,USAID
+273,Meru,Ready to graduate - 9,USAID Jamii Tekelezi,USAID
+4,Kwale,Medium Vulnerability 5-7,HJF MRI Mombasa,DOD
+2,Mombasa,Highly Vulnerable 0-4,HJF MRI Mombasa,DOD
+2,Mombasa,Low Vulnerability - 8,HJF MRI Mombasa,DOD
+121,Mombasa,Medium Vulnerability 5-7,HJF MRI Mombasa,DOD
+168,Mombasa,Highly Vulnerable 0-4,USAID Tujitegemee,USAID
+23,Mombasa,Low Vulnerability - 8,USAID Tujitegemee,USAID
+2091,Mombasa,Medium Vulnerability 5-7,USAID Tujitegemee,USAID
+2,Garissa,Low Vulnerability - 8,USAID 4Better Health,USAID
+2,Garissa,Medium Vulnerability 5-7,USAID 4Better Health,USAID
+18,Kitui,Highly Vulnerable 0-4,USAID 4Better Health,USAID
+816,Kitui,Low Vulnerability - 8,USAID 4Better Health,USAID
+1688,Kitui,Medium Vulnerability 5-7,USAID 4Better Health,USAID
+28,Kitui,Ready to graduate - 9,USAID 4Better Health,USAID
+4,Machakos,Highly Vulnerable 0-4,USAID 4Better Health,USAID
+790,Machakos,Low Vulnerability - 8,USAID 4Better Health,USAID
+2230,Machakos,Medium Vulnerability 5-7,USAID 4Better Health,USAID
+49,Machakos,Ready to graduate - 9,USAID 4Better Health,USAID
+100,Makueni,Highly Vulnerable 0-4,USAID 4Better Health,USAID
+232,Makueni,Low Vulnerability - 8,USAID 4Better Health,USAID
+2633,Makueni,Medium Vulnerability 5-7,USAID 4Better Health,USAID
+4,Makueni,Ready to graduate - 9,USAID 4Better Health,USAID
+1,Wajir,Low Vulnerability - 8,USAID 4Better Health,USAID
+1,Wajir,Medium Vulnerability 5-7,USAID 4Better Health,USAID
+7,Embu,Medium Vulnerability 5-7,USAID 4Better Health,USAID
+2,Embu,Ready to graduate - 9,USAID 4Better Health,USAID
+1,Garissa,Medium Vulnerability 5-7,USAID 4Better Health,USAID
+238,Murang'a,Highly Vulnerable 0-4,USAID 4Better Health,USAID
+124,Murang'a,Low Vulnerability - 8,USAID 4Better Health,USAID
+2275,Murang'a,Medium Vulnerability 5-7,USAID 4Better Health,USAID
+61,Murang'a,Ready to graduate - 9,USAID 4Better Health,USAID
+1,Wajir,Medium Vulnerability 5-7,USAID 4Better Health,USAID
+3,Kiambu,Medium Vulnerability 5-7,USAID 4Better Health,USAID
+3406,Nakuru,Highly Vulnerable 0-4,USAID 4Better Health,USAID
+1012,Nakuru,Low Vulnerability - 8,USAID 4Better Health,USAID
+10804,Nakuru,Medium Vulnerability 5-7,USAID 4Better Health,USAID
+144,Nakuru,Ready to graduate - 9,USAID 4Better Health,USAID
+223,Kajiado,Highly Vulnerable 0-4,USAID 4Better Health,USAID
+276,Kajiado,Low Vulnerability - 8,USAID 4Better Health,USAID
+1851,Kajiado,Medium Vulnerability 5-7,USAID 4Better Health,USAID
+35,Kajiado,Ready to graduate - 9,USAID 4Better Health,USAID
+377,Kiambu,Highly Vulnerable 0-4,USAID Tumikia Mtoto,USAID
+28,Kiambu,Low Vulnerability - 8,USAID Tumikia Mtoto,USAID
+2338,Kiambu,Medium Vulnerability 5-7,USAID Tumikia Mtoto,USAID
+4,Kiambu,Ready to graduate - 9,USAID Tumikia Mtoto,USAID
+2,Nairobi,Highly Vulnerable 0-4,USAID Tumikia Mtoto,USAID
+16,Nairobi,Medium Vulnerability 5-7,USAID Tumikia Mtoto,USAID
+229,Kiambu,Highly Vulnerable 0-4,USAID Tumikia Mtoto,USAID
+443,Kiambu,Low Vulnerability - 8,USAID Tumikia Mtoto,USAID
+8603,Kiambu,Medium Vulnerability 5-7,USAID Tumikia Mtoto,USAID
+26,Kiambu,Ready to graduate - 9,USAID Tumikia Mtoto,USAID
+1,Nairobi,Low Vulnerability - 8,USAID Tumikia Mtoto,USAID
+54,Nairobi,Medium Vulnerability 5-7,USAID Tumikia Mtoto,USAID
+2,Nyamira,Highly Vulnerable 0-4,USAID Boresha Jamii,USAID
+18,Nyamira,Low Vulnerability - 8,USAID Boresha Jamii,USAID
+104,Nyamira,Medium Vulnerability 5-7,USAID Boresha Jamii,USAID
+6,Nyamira,Ready to graduate - 9,USAID Boresha Jamii,USAID
+65,Vihiga,Highly Vulnerable 0-4,USAID Boresha Jamii,USAID
+39,Vihiga,Low Vulnerability - 8,USAID Boresha Jamii,USAID
+140,Vihiga,Medium Vulnerability 5-7,USAID Boresha Jamii,USAID
+2,Vihiga,Ready to graduate - 9,USAID Boresha Jamii,USAID
+118,Kisumu,Highly Vulnerable 0-4,USAID 4The Child,USAID
+785,Kisumu,Low Vulnerability - 8,USAID 4The Child,USAID
+3003,Kisumu,Medium Vulnerability 5-7,USAID 4The Child,USAID
+68,Kisumu,Ready to graduate - 9,USAID 4The Child,USAID
+998,Homa Bay,Highly Vulnerable 0-4,LVCT,CDC
+52,Homa Bay,Low Vulnerability - 8,LVCT,CDC
+2394,Homa Bay,Medium Vulnerability 5-7,LVCT,CDC
+17,Homa Bay,Ready to graduate - 9,LVCT,CDC
+293,Homa Bay,Highly Vulnerable 0-4,LVCT,CDC
+98,Homa Bay,Low Vulnerability - 8,LVCT,CDC
+1901,Homa Bay,Medium Vulnerability 5-7,LVCT,CDC
+14,Homa Bay,Ready to graduate - 9,LVCT,CDC
+3270,Kilifi,Highly Vulnerable 0-4,USAID Tujitegemee,USAID
+105,Kilifi,Low Vulnerability - 8,USAID Tujitegemee,USAID
+4467,Kilifi,Medium Vulnerability 5-7,USAID Tujitegemee,USAID
+72,Kilifi,Ready to graduate - 9,USAID Tujitegemee,USAID
+2868,Kilifi,Highly Vulnerable 0-4,USAID Tujitegemee,USAID
+20,Kilifi,Low Vulnerability - 8,USAID Tujitegemee,USAID
+3919,Kilifi,Medium Vulnerability 5-7,USAID Tujitegemee,USAID
+11,Kilifi,Ready to graduate - 9,USAID Tujitegemee,USAID
+2,Migori,Medium Vulnerability 5-7,USAID 4The Child,USAID
+1,Nairobi,Medium Vulnerability 5-7,USAID 4The Child,USAID
+293,Siaya,Highly Vulnerable 0-4,USAID 4The Child,USAID
+1339,Siaya,Low Vulnerability - 8,USAID 4The Child,USAID
+10847,Siaya,Medium Vulnerability 5-7,USAID 4The Child,USAID
+151,Siaya,Ready to graduate - 9,USAID 4The Child,USAID
+1,,Medium Vulnerability 5-7,USAID 4The Child,USAID
+97,Nyamira,Highly Vulnerable 0-4,,
+277,Nyamira,Low Vulnerability - 8,,
+1437,Nyamira,Medium Vulnerability 5-7,,
+43,Nyamira,Ready to graduate - 9,,
+926,Vihiga,Highly Vulnerable 0-4,,
+734,Vihiga,Low Vulnerability - 8,,
+2439,Vihiga,Medium Vulnerability 5-7,,
+26,Vihiga,Ready to graduate - 9,,

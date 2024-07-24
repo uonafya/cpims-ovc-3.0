@@ -1,0 +1,470 @@
+{% extends 'base.html' %}
+{% load app_filters %}
+{% load static %}
+{% block page_title %} Reaching Case Plan Achievement {% endblock %}
+{% block style_code %}
+<link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" xmlns="http://www.w3.org/1999/html"/>
+<link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet" />
+<style type="text/css">
+.dialog_paragraph {
+  color: #f00;
+}
+
+.table_data {
+  display: none;
+}
+
+.container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.td_style {
+  /*color: #000000;*/
+  color: #0057e7;
+}
+</style>
+{% endblock %}
+
+{% block javascript_code%}
+{% endblock javascript_code%}
+
+{% block primary %}
+
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+	<li><a href="#">Home</a></li>
+	<li class="active">Forms</li>
+</ol>
+<!-- end breadcrumb -->
+
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-child"></i> OVC Care <small>Case closure  | {{ ovc.person.first_name }} {{ ovc.person.surname }} | {{ ovc.person.age }}</small></h1>
+<!-- end page-header -->
+
+{% if messages %}
+    {% for message in messages %}
+    {% if 'error' in message.tags %}
+        <div id="messages" class="alert alert-danger fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-info fa-2x pull-left"></i>
+    {% else %}
+        <div id="messages" class="alert alert-success fade in">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+    {% endif %}
+        <p>{{ message }}</p>
+    </div>
+   {% endfor %}
+{% endif %}
+    <div id="message" class="alert alert-success fade in" style="display: none">
+        <span class="close" data-dismiss="alert">×</span>
+        <i class="fa fa-check fa-2x pull-left"></i>
+
+        <span id="response"></span>
+    </div>
+<!-- begin row -->
+
+<!-- begin row -->
+<div id='case_details' class="row">
+	<!-- begin col-12 -->
+    <div class="col-md-12">
+    	<!-- begin panel -->
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title">{{ ovc.person.first_name }} {{ ovc.person.surname }} - OVC care timeline details</h4>
+
+            </div>
+            <div class="alert alert-danger fade in">
+                This form should ONLY filled after exiting the OVC.
+            </div>
+            <div class="panel-body">
+                {% if not case_closure %}
+            	<form class="form-horizontal" action="." method="POST" data-parsley-validate="true" id="close-closure-form">
+                	{% csrf_token %}
+                    <div class="form-group">
+                        <label class="col-md-5 control-label">Q1A - Reason for Case Closure (tick):</label>
+                        <div class="col-md-3">{{ form.CASE_CL001A }}</div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-1"></div>
+                    </div>
+
+                    <div class="form-group" id="trans_org_div">
+                        <label class="col-md-5 control-label">Q1B - For those Transferred (Name of receiving Organization/program)</label>
+                        <div class="col-md-5">{{ form.CASE_CL001B }}</div>
+                        <div class="col-md-1">{{ form.exit_org_id }}</div>
+                        <div class="col-md-1"></div>
+                    </div>
+
+                    <div class="form-group" id="attr_all_div">
+                        <label class="col-md-5 control-label">Q1C - For Attrition Specify reason for attrition.</label>
+                        <div class="col-md-3">{{ form.CASE_CL001C }}</div>
+                        <div class="col-md-3">{{ form.CASE_CL001D }}</div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div id="cpa_div">
+
+                        <div><h3 class="text-center note note-info" >Case Closure Checklist for Case Plan Achievement</h3></div>
+
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">Q2 - Case files completed per the protocol</label>
+                            <div class="col-md-3">{{ form.CASE_CL002 }}</div>
+                            <div class="col-md-3"></div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">Q3 - Case Worker has given phone number to household</label>
+                            <div class="col-md-3">{{ form.CASE_CL003 }}</div>
+                            <div class="col-md-3"></div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">Q4 - Head of household linked to a family, which already graduated</label>
+                            <div class="col-md-3">{{ form.CASE_CL004 }}</div>
+                            <div class="col-md-3"></div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">Q5 - Informed necessary service providers of graduation</label>
+                            <div class="col-md-3">{{ form.CASE_CL005 }}</div>
+                            <div class="col-md-3"></div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>
+                    <div id="trans_div">
+
+                        <div><h3 class="text-center note note-info" >Case Closure Checklist for Transfer.</h3></div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">Q6 - Case Transfer Form completed per the protocol</label>
+                            <div class="col-md-3">{{ form.CASE_CL006 }}</div>
+                            <div class="col-md-3"></div>
+                            <div class="col-md-1"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">Q7 - Referring Case Manager established time and frequency for follow up</label>
+                            <div class="col-md-3">{{ form.CASE_CL007 }}</div>
+                            <div class="col-md-3"></div>
+                            <div class="col-md-1"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">Q8 - Informed necessary service providers of case transfer.</label>
+                            <div class="col-md-3">{{ form.CASE_CL008 }}</div>
+                            <div class="col-md-3"></div>
+                            <div class="col-md-1"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">Q9 - Copy of family folder sent to receiving organization.</label>
+                            <div class="col-md-3">{{ form.CASE_CL009 }}</div>
+                            <div class="col-md-3"></div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>
+                    <div id="attr_div">
+
+                        <div><h3 class="text-center note note-info">Case Closure Checklist for Attrition.</h3></div>
+
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">Q10 - Reason for attrition documented in family folder.</label>
+                            <div class="col-md-3">{{ form.CASE_CL010 }}</div>
+                            <div class="col-md-3"></div>
+                            <div class="col-md-1"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">Q11 - Case Manager Report.</label>
+                            <div class="col-md-3">{{ form.CASE_CL011 }}</div>
+                            <div class="col-md-3"></div>
+                            <div class="col-md-1"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">Q12 - Exit reason recorded in OVC Database.</label>
+                            <div class="col-md-3">{{ form.CASE_CL012 }}</div>
+                            <div class="col-md-3"></div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="form-group">
+                        <label class="col-md-5 control-label">Q13 - Files stored in a safe place (locked cabinet).</label>
+                        <div class="col-md-3">{{ form.CASE_CL013 }}</div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-1"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-5 control-label">Q14 - Date of case closure / Exit</label>
+                        <div class="col-md-3">{{ form.CASE_CL014 }}</div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-1"></div>
+                    </div>
+
+                    <hr>
+
+					<div class="form-group">
+						<label class="control-label col-md-5 col-sm-5"></label>
+						<div class="col-md-6 col-sm-6">
+							<button type="submit" class="btn btn-primary">Submit</button>
+							<a href="javascript:history.go(-1)" class="btn btn-white">Cancel</a>
+						</div>
+					</div>
+
+            
+
+                </form>
+                {% endif %}
+
+                    <table class="table table-success table-striped" border="1" id="past-hst">
+
+                        <thead>
+                        <tr>
+                            <th>Q1A</th>
+                            <th>Q1B</th>
+                            <th>Q1C</th>
+                            <th>Q2</th>
+                            <th>Q3</th>
+                            <th>Q4</th>
+                            <th>Q5</th>
+                            <th>Q6</th>
+                            <th>Q7</th>
+                            <th>Q8</th>
+                            <th>Q9</th>
+                            <th>Q10</th>
+                            <th>Q11</th>
+                            <th>Q12</th>
+                            <th>Q13</th>
+                            <th>Q14</th>
+                            <th  colspan="2">Action</th>
+
+                        </tr>
+                        </thead>
+                        {% if case_closure %}
+
+                            {% for case_closure_data in case_closure %}
+
+                                <tr>
+                                    <td>{{ case_closure_data.reason |gen_value:vals| default_if_none:" " }}</td>
+                                    <td>{{ case_closure_data.rec_organization |gen_value:vals| default_if_none:"N/A" }}</td>
+                                    <td>{{ case_closure_data.attrition_reason |gen_value:vals| default_if_none:"N/A" }} </td>
+                                    <td>{{ case_closure_data.case_files_completed |gen_value:vals| default_if_none:"N/A" }}</td>
+                                    <td>{{ case_closure_data.cw_phone_household |gen_value:vals |default_if_none:"N/A" }}</td>
+                                    <td>{{ case_closure_data.sp_informed_graduation |gen_value:vals| default_if_none:"N/A" }}<N/A/td>
+                                    <td>{{ case_closure_data.head_hh_linked |gen_value:vals| default_if_none:"N/A" }}</td>
+
+                                    <td>{{ case_closure_data.transfer_form_completed |gen_value:vals |default_if_none:"N/A"  }}</td>
+                                    <td>{{ case_closure_data.follow_up_frequency |gen_value:vals | default_if_none:"N/A" }}</td>
+                                    <td>{{ case_closure_data.sp_informed_transfer|gen_value:vals | default_if_none:"N/A" }}</td>
+                                    <td>{{ case_closure_data.family_folder_sent |gen_value:vals |default_if_none:"N/A" }}</td>
+
+
+                                    <td>{{ case_closure_data.attrition_documented |gen_value:vals| default_if_none:"N/A" }}</td>
+                                    <td>{{ case_closure_data.manager_report |gen_value:vals | default_if_none:"N/A" }}</td>
+
+                                    <td>{{ case_closure_data.exit_reason_stored |gen_value:vals | default_if_none:"N/A" }}</td>
+                                    <td>{{ case_closure_data.files_stored |gen_value:vals| default_if_none:"N/A" }}</td>
+                                    <td>{{ case_closure_data.date_of_closure |gen_value:vals| default_if_none:" " }}</td>
+                                    <td>
+                                        <a href="{% url 'edit_case_closure' id=case_closure_data.person_id cid=case_closure_data.pk %}"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+
+                        {% endif %}
+                    </table>
+
+                </div>
+
+                <a href="{% url 'ovc_view' id=ovc.person_id %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: May 2024</div>
+            </div>
+
+
+            </div>
+
+
+
+        </div>
+        <!-- end panel -->
+
+    </div>
+    <!-- end col-12 -->
+
+
+
+</div>
+<!-- end row -->
+
+{% endblock %}
+
+{% block lazy_javascript_code %}
+
+<script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}"></script>
+<script src="{% static 'js/apps.js' %}"></script>
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+
+<script>
+
+jQuery(document).ready(function()
+{
+    {% if ovc.is_active %}
+    $("#close-closure-form :input").prop("disabled", true);
+    {% endif %}
+    $('#CASE_CL014').datepicker({ format: 'dd-M-yyyy',  autoclose: true, orientation: "top", endDate: "today" }).val();
+    $('#cpa_div').hide();
+    $('#trans_div').hide();
+    $('#attr_div').hide();
+    // Other
+    $('#trans_org_div').hide();
+    $('#attr_all_div').hide();
+    // Default
+    var ival = $("input[name='CASE_CL001A']:checked").val();
+    toggle_closure(ival);
+        
+    $('input[name="CASE_CL001A"]').on('change', function () {
+        var ival = $("input[name='CASE_CL001A']:checked").val();
+        toggle_closure(ival);  
+  });
+
+	$('html,body').scrollTop(0);
+	FormWizardValidation.init();
+});
+    var table = document.getElementsByTagName('table')[0],
+      rows = table.getElementsByTagName('tr'),
+      text = 'textContent' in document ? 'textContent' : 'innerText';
+
+    for (var i = 1, len = rows.length; i < len; i++) {
+      rows[i].children[0][text] = i + ': ' + rows[i].children[0][text];
+    }
+
+
+    //Org unit query
+    $( "#exit_org_name" ).autocomplete({
+        source: function( request, response ) {
+        $.ajax({
+          url: "{% url 'ovc_search' %}",
+          dataType: "json",
+          data: {q: request.term, id: 3},
+          success: function( data ) {
+            response( data );
+          }
+        });
+      },
+      minLength: 4,
+      select: function( event, ui ) {
+         $('#exit_org_name').val(ui.item.name);
+         $('#exit_org_id').val(ui.item.id);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      }
+    });
+
+    function toggle_closure(ival){
+        if(ival == 'ERCP'){
+            $('#cpa_div').show();
+            $('#trans_div').hide();
+            $('#attr_div').hide();
+            // Other
+            $('#trans_org_div').hide();
+            $('#attr_all_div').hide();
+            // CPA
+            $('input[name="CASE_CL002"]').attr({'data-parsley-required':true});
+            $('input[name="CASE_CL003"]').attr({'data-parsley-required':true});
+            $('input[name="CASE_CL004"]').attr({'data-parsley-required':true});
+            $('input[name="CASE_CL005"]').attr({'data-parsley-required':true});
+            // Transfer
+            $('input[name="CASE_CL006"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL007"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL008"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL009"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL001B"]').attr({'data-parsley-required':false});
+            // Attrition
+            $('input[name="CASE_CL010"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL011"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL012"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL013"]').attr({'data-parsley-required':false});
+            $('#id_CASE_CL001C').attr('data-parsley-required', 'false');
+
+          }else if(ival == 'ERCT'){
+            $('#cpa_div').hide();
+            $('#trans_div').show();
+            $('#attr_div').hide();
+            // Other
+            $('#trans_org_div').show();
+            $('#attr_all_div').hide();
+            // CPA
+            $('input[name="CASE_CL002"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL003"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL004"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL005"]').attr({'data-parsley-required':false});
+            // Transfer
+            $('input[name="CASE_CL006"]').attr({'data-parsley-required':true});
+            $('input[name="CASE_CL007"]').attr({'data-parsley-required':true});
+            $('input[name="CASE_CL008"]').attr({'data-parsley-required':true});
+            $('input[name="CASE_CL009"]').attr({'data-parsley-required':true});
+            $('input[name="CASE_CL001B"]').attr({'data-parsley-required':true});
+            // Attrition
+            $('input[name="CASE_CL010"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL011"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL012"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL013"]').attr({'data-parsley-required':false});
+            $('#id_CASE_CL001C').attr('data-parsley-required', 'false');
+
+          }else if(ival == 'ERAT'){
+            $('#cpa_div').hide();
+            $('#trans_div').hide();
+            $('#attr_div').show();
+            // Other
+            $('#trans_org_div').hide();
+            $('#attr_all_div').show();
+            // CPA
+            $('input[name="CASE_CL002"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL003"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL004"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL005"]').attr({'data-parsley-required':false});
+            // Transfer
+            $('input[name="CASE_CL006"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL007"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL008"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL009"]').attr({'data-parsley-required':false});
+            $('input[name="CASE_CL001B"]').attr({'data-parsley-required':false});
+            // Attrition
+            $('input[name="CASE_CL010"]').attr({'data-parsley-required':true});
+            $('input[name="CASE_CL011"]').attr({'data-parsley-required':true});
+            $('input[name="CASE_CL012"]').attr({'data-parsley-required':true});
+            $('input[name="CASE_CL013"]').attr({'data-parsley-required':true});
+            $('#id_CASE_CL001C').attr('data-parsley-required', 'true');
+         }
+
+    }
+
+
+
+    </script>
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,1 @@
+COPY dreams_interventions (intervention_id,org_unit_id,dreams_id,county_code,county_name,sub_county_name,ward_code,ward_name,intervention_date,intervention_type_code,intervention_type_name,hts_result,no_of_sessions_attended,pregnancy_test_result,timestamp_created,is_void) FROM '/tmp/dreams.csv' DELIMITER ',' CSV HEADER;

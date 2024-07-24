@@ -3,7 +3,6 @@
 import uuid
 import datetime
 import collections
-import itertools
 import jellyfish
 import traceback
 import operator
@@ -17,8 +16,10 @@ from cpovc_registry.models import (
     RegOrgUnitGeography, RegPersonsTypes, RegPersonsExternalIds)
 # Added
 from cpovc_forms.models import OVCCaseCategory
-from cpovc_main.models import SetupGeography, SetupList, SchoolList
+from cpovc_main.models import SchoolList
 from functools import reduce
+
+from django.db import connection
 
 organisation_id_prefix = 'U'
 benficiary_id_prefix = 'B'
@@ -120,7 +121,8 @@ class Persons:
                 _communities = self.geo_location['communities']
             else:
                 _communities = []
-            self.locations_for_display = matches_for_display(_distrcits_wards, _communities)
+            self.locations_for_display = matches_for_display(
+                _distrcits_wards, _communities)
         else:
             self.locations_for_display = []
 
@@ -131,7 +133,8 @@ class Persons:
 
         if _communities:
             for comm in communities:
-                self.locations_unique_readable.append(RegOrgUnit.objects.get(pk=comm).org_unit_name)
+                self.locations_unique_readable.append(
+                    RegOrgUnit.objects.get(pk=comm).org_unit_name)
 
     def __unicode__(self):
         return '%s %s' % (self.first_name, self.surname)
@@ -158,7 +161,8 @@ def translate_reverse_org(value):
 
 
 def translate_case(value):
-    item_value = OVCCaseCategory.objects.get(case_category_id=value, is_void=False)
+    item_value = OVCCaseCategory.objects.get(
+        case_category_id=value, is_void=False)
     return item_value.case_category
 
 
@@ -178,7 +182,8 @@ def translate(value):
 
 def translate_reverse(value):
     if value:
-        item_value = SetupList.objects.filter(item_description=value, is_void=False)
+        item_value = SetupList.objects.filter(
+            item_description=value, is_void=False)
         item_value = item_value[0] if item_value else value
         return item_value.item_id
     else:
@@ -229,7 +234,8 @@ def get_vgeo_list(area_id):
     Get list general filtered by field_name
     '''
     try:
-        queryset = SetupGeography.objects.filter(area_id=area_id, is_void=False).order_by('area_id')
+        queryset = SetupGeography.objects.filter(
+            area_id=area_id, is_void=False).order_by('area_id')
 
     except Exception as e:
         error = 'Error getting whole list - %s' % (str(e))
@@ -601,7 +607,8 @@ def load_wfc_from_id(wfc_pk, user=None, include_dead=False):
         if include_dead:
             tmp_wfc = RegPerson.objects.get(pk=wfc_pk, is_void=False)
         else:
-            tmp_wfc = RegPerson.objects.get(pk=wfc_pk, is_void=False, date_of_death=None)
+            tmp_wfc = RegPerson.objects.get(
+                pk=wfc_pk, is_void=False, date_of_death=None)
 
         if tmp_wfc:
             if tmp_wfc.workforce_id == '':
@@ -620,7 +627,8 @@ def load_wfc_from_id(wfc_pk, user=None, include_dead=False):
 
         if RegPersonsOrgUnits.objects.filter(person=tmp_wfc, date_delinked=None, is_void=False).count() > 0:
             try:
-                tmp_org_unit = RegPersonsOrgUnits.objects.get(person=tmp_wfc, date_delinked=None, is_void=False)
+                tmp_org_unit = RegPersonsOrgUnits.objects.get(
+                    person=tmp_wfc, date_delinked=None, is_void=False)
                 if tmp_org_unit:
                     # To come back here
                     org_unit_name = tmp_org_unit.org_unit.org_unit_name
@@ -628,7 +636,8 @@ def load_wfc_from_id(wfc_pk, user=None, include_dead=False):
             except:
                 org_unit_name = None
                 org_unit_id = None
-            tmp_org_units = RegPersonsOrgUnits.objects.filter(person=tmp_wfc, is_void=False, date_delinked=None)
+            tmp_org_units = RegPersonsOrgUnits.objects.filter(
+                person=tmp_wfc, is_void=False, date_delinked=None)
             if tmp_org_units:
                 for org in tmp_org_units:
                     org_model = org.org_unit
@@ -668,11 +677,13 @@ def load_wfc_from_id(wfc_pk, user=None, include_dead=False):
                     org_units.append(org_unit)
 
         if RegPersonsTypes.objects.filter(person=tmp_wfc, is_void=False, date_ended=None).count() > 0:
-            person_type = RegPersonsTypes.objects.get(person=tmp_wfc, is_void=False, date_ended=None)
+            person_type = RegPersonsTypes.objects.get(
+                person=tmp_wfc, is_void=False, date_ended=None)
         person_type_desc = ''
         if person_type:
             person_type_id = person_type.person_type_id
-            wfc_type_tpl = list_provider.get_description_for_item_id(person_type.person_type_id)
+            wfc_type_tpl = list_provider.get_description_for_item_id(
+                person_type.person_type_id)
             if (len(wfc_type_tpl) > 0):
                 person_type_desc = wfc_type_tpl[0]
 
@@ -729,7 +740,8 @@ def load_wfc_from_id(wfc_pk, user=None, include_dead=False):
 
         geos = {}
         if RegPersonsGeo.objects.filter(person=tmp_wfc, is_void=False, date_delinked=None).count() > 0:
-            m_wfc_geo = RegPersonsGeo.objects.filter(person=tmp_wfc, is_void=False, date_delinked=None)
+            m_wfc_geo = RegPersonsGeo.objects.filter(
+                person=tmp_wfc, is_void=False, date_delinked=None)
 
             for geo in m_wfc_geo:
                 areainfo = SetupGeography.objects.get(area_id=geo.area_id)
@@ -802,7 +814,8 @@ def search_wfc_by_org_unit(tokens):
         # print term,'term'
         search_condition.append(Q(org_unit_name__icontains=tokens))
 
-        orgs = RegOrgUnit.objects.filter(reduce(operator.or_, search_condition)).values_list('id', 'org_unit_name')
+        orgs = RegOrgUnit.objects.filter(
+            reduce(operator.or_, search_condition)).values_list('id', 'org_unit_name')
         # print orgs,'orgs'
         if orgs:
             idstosearch = []
@@ -819,7 +832,8 @@ def search_wfc_by_org_unit(tokens):
 
 def get_parent_area_ids(geoid, geoids=[]):
     geoids = [] + geoids
-    children_ids = SetupGeography.objects.filter(parent_area_id=geoid).values_list('area_id', flat=True)
+    children_ids = SetupGeography.objects.filter(
+        parent_area_id=geoid).values_list('area_id', flat=True)
     if children_ids:
         for childid in children_ids:
             if childid in geoids:
@@ -837,7 +851,8 @@ def search_wfc_by_location(tokens):
         # for term in tokens:
         search_condition.append(Q(area_name__icontains=tokens))
 
-        geos = SetupGeography.objects.filter(reduce(operator.or_, search_condition)).values_list('area_id', 'area_name')
+        geos = SetupGeography.objects.filter(
+            reduce(operator.or_, search_condition)).values_list('area_id', 'area_name')
         if geos:
             idstosearch = []
             for geo_id, geo_name in geos:
@@ -846,7 +861,8 @@ def search_wfc_by_location(tokens):
                 idstosearch.append(geo_id)
                 childrenids = get_parent_area_ids(geo_id)
                 idstosearch = idstosearch + childrenids
-            loc_ids = RegPersonsGeo.objects.filter(area_id__in=idstosearch).values_list('area_id', flat=True)
+            loc_ids = RegPersonsGeo.objects.filter(
+                area_id__in=idstosearch).values_list('area_id', flat=True)
     return loc_ids
 
 
@@ -962,6 +978,17 @@ def get_persons_list(user, tokens, wfc_type, getJSON=False,
     return wfcs
 
 
+class SearchIDs:
+    def __init__(self, pid, first_name, surname, onames, sex, dob):
+        self.id = pid
+        self.first_name = first_name
+        self.surname = surname
+        self.other_names = onames
+        self.sex_id = sex
+        self.date_of_birth = dob
+        self.pk = pid
+
+
 def get_list_of_persons(search_string,
                         search_string_look_in=["names", "core_ids",
                                                "parent_orgs", "geo_tags"],
@@ -971,6 +998,74 @@ def get_list_of_persons(search_string,
                         include_died=True, sex=None, include_void=False,
                         search_criteria=None,
                         ):
+    try:
+        pids = []
+        print('criteria', search_criteria)
+        person_type = in_person_types[0]
+        if search_criteria == 'PSCI':
+            query = ("SELECT rp.id, rp.first_name, rp.surname, rp.other_names,"
+                     " rp.sex_id, rp.date_of_birth FROM reg_person rp "
+                     "INNER JOIN reg_persons_types pt ON pt.person_id = rp.id "
+                     "WHERE rp.id = '%s' AND pt.person_type_id = '%s'")
+            vals = search_string.strip()
+        elif search_criteria == 'PSOG':
+            query = ("SELECT rp.id, rp.first_name, rp.surname, rp.other_names,"
+                     " rp.sex_id, rp.date_of_birth FROM reg_person rp "
+                     "INNER JOIN reg_persons_org_units rpou "
+                     "ON rp.id = rpou.person_id "
+                     "INNER JOIN reg_org_unit rou "
+                     " ON rou.id = rpou.org_unit_id "
+                     "INNER JOIN reg_persons_types pt ON pt.person_id = rp.id "
+                     "wHERE to_tsvector (rou.org_unit_name) "
+                     "@@ to_tsquery('english', '%s') AND rpou.is_void = False "
+                     "AND rp.is_void = False and pt.person_type_id = '%s'")
+            names = search_string.strip().split()
+            vals = ' & '.join(names)
+        elif search_criteria == 'PSRE':
+            query = ("SELECT rp.id, rp.first_name, rp.surname, rp.other_names,"
+                     " rp.sex_id, rp.date_of_birth FROM reg_person rp "
+                     "INNER JOIN reg_persons_geo rpg ON rp.id = rpg.person_id "
+                     "INNER JOIN list_geo lg on lg.area_id = rpg.area_id "
+                     "iNNER JOIN reg_persons_types pt ON pt.person_id = rp.id "
+                     "WHERE to_tsvector (lg.area_name) "
+                     "@@ to_tsquery('english', '%s') AND rpg.is_void = False "
+                     "AND rp.is_void = false and pt.person_type_id = '%s'")
+            names = search_string.strip().split()
+            vals = ' & '.join(names)
+        else:
+            names = search_string.strip().split()
+            query = ("SELECT rp.id, rp.first_name, rp.surname, rp.other_names,"
+                     " rp.sex_id, rp.date_of_birth FROM reg_person rp "
+                     "INNER JOIN reg_persons_types pt ON pt.person_id = rp.id "
+                     "WHERE to_tsvector "
+                     "(rp.first_name || ' ' || rp.surname || ' ' "
+                     "|| COALESCE(rp.other_names,'')) "
+                     "@@ to_tsquery('english', '%s') AND rp.is_void=False "
+                     "AND pt.person_type_id = '%s' "
+                     "ORDER BY rp.date_of_birth DESC ")
+            vals = ' & '.join(names)
+        sql = query % (vals, person_type)
+        # print(sql)
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            row = cursor.fetchall()
+            pids = [SearchIDs(r[0], r[1], r[2], r[3], r[4], r[5]) for r in row]
+    except Exception as e:
+        print('Error in search - %s' % (e))
+        return []
+    else:
+        return pids
+
+
+def get_list_of_persons_old(search_string,
+                            search_string_look_in=["names", "core_ids",
+                                                   "parent_orgs", "geo_tags"],
+                            age=None, has_beneficiary_id=False,
+                            has_workforce_id=False, as_of_date=None,
+                            in_person_types=[], number_of_results=5,
+                            include_died=True, sex=None, include_void=False,
+                            search_criteria=None,
+                            ):
     """
     search_string: The text the user has entered in the control. Used for
     searching among the following:
@@ -1286,4 +1381,3 @@ def get_days_difference(d_event):
     delta = d_today - d_event
 
     return delta.days
-

@@ -1,0 +1,479 @@
+{% extends 'base.html' %}
+{% load app_filters %}
+{% load static %}
+{% block page_title %} Pregnant Women/Adolescent Monthly Tracker {% endblock %}
+{% block style_code %}
+<link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet" />
+<style type="text/css">
+.dialog_paragraph {
+  color: #f00;
+}
+
+.table_data {
+  display: none;
+}
+
+.container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.td_style {
+  /*color: #000000;*/
+  color: #0057e7;
+}
+</style>
+{% endblock %}
+
+{% block javascript_code%}
+{% endblock javascript_code%}
+
+{% block primary %}
+
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+	<li><a href="#">Home</a></li>
+	<li class="active">Forms</li>
+</ol>
+<!-- end breadcrumb -->
+
+<!-- begin page-header -->
+
+{% for data in init_data %}
+
+	<h1 class="page-header">Forms <small>Pregnant Women/Adolescent Monthly Tracker  <b>{{ data.first_name }} {{ data.surname }} | {{ data.sex_id|gen_value:vals }} | {% if data.date_of_birth|gen_age == 0 %}
+                            UNDER 1 YEAR
+                        {% else %}
+                            {{ data.date_of_birth|gen_age }} YRS 
+                        {% endif %}</b></small></h1>
+
+{% endfor %}
+<!-- end page-header -->
+
+<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-info fa-2x pull-left"></i>
+    <span class="invalid-form-message" id="invalid-form-message"></span>
+</div>
+
+<!-- begin row -->
+<div id='case_details' class="row">
+	<!-- begin col-12 -->
+    <div class="col-md-12">
+    	<!-- begin panel -->
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title"> Pregnant Women/Adolescent Monthly Tracker </h4>
+			</div>
+			<div style="overflow-x: auto; min-height: 300px;">
+		  		<div class="panel-body">
+            		<form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true"
+              		  name="form-wizard-hhva" id="new_hhva">
+                	{% csrf_token %}
+					<div id="wizard-hhva">
+						<ol>
+							<li>
+							    Pregnant Woman Details
+							</li>
+							<li>
+							    Clinic Attendance & mode of delivery
+							</li>
+
+							<li>
+							    HIV Pos Pregnant Women/Adolescents
+							</li>
+						</ol>
+						
+
+						{{ form.person }}
+						{{ form.household_id }}
+						
+
+						<!-- begin wizard step-1 -->
+						<div class="wizard-step-1">
+							<div class="panel-body">
+
+							    <!-- add labels like HA1, HA2 .. -->
+							    <div class="form-group">
+                        <label class="control-label col-md-4 col-sm-4" for="csi_qs">Date of 1st Contact : <span class="asteriskField">* </label>
+						<div class="col-md-2 col-sm-4">
+							{{ form.PMTCT_PWA19q }}
+						</div>
+                    </div>
+
+                                <div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA1: </b>HIV status and test done : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-2">
+										{{ form.PWA_WA1_01 }}
+
+									</div>
+								</div>
+
+                                <div id="01">
+								<div class="form-group" id="test">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA2A: </b>HIV test done: <span class="asteriskField">* </label>
+									<div class="col-md-2 col-sm-4">
+										{{ form.PMTCT_PWA6q }}
+										<h6><span id="sel_hhva_ha22"></span></h6>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA2B: </b>HIV test results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_PWA7q }}
+									</div>
+								</div>
+                            </div>
+{#                                <div id="1">#}
+{##}
+{#								<div class="form-group" >#}
+{#									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA3A: </b>HIV test done: <span class="asteriskField">* </label>#}
+{#									<div class="col-md-2 col-sm-4">#}
+{#										{{ form.PWA_WA1_3A }}#}
+{#										<h6><span id="sel_hhva_ha22"></span></h6>#}
+{#									</div>#}
+{#								</div>#}
+{##}
+{#								<div class="form-group">#}
+{#									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA3B: </b>HIV test results : <span class="asteriskField">* </label>#}
+{#									<div class="col-md-4 col-sm-4">#}
+{#										{{ form.PWA_WA1_3B }}#}
+{#									</div>#}
+{#								</div>#}
+{#                                </div>#}
+{#                                <div id="2">#}
+{#                                <div class="form-group">#}
+{#									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA4A: </b>HIV test done: <span class="asteriskField">* </label>#}
+{#									<div class="col-md-2 col-sm-4">#}
+{#										{{ form.PWA_WA1_4A }}#}
+{#										<h6><span id="sel_hhva_ha22"></span></h6>#}
+{#									</div>#}
+{#								</div>#}
+{##}
+{#								<div class="form-group">#}
+{#									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA4B: </b>HIV test results : <span class="asteriskField">* </label>#}
+{#									<div class="col-md-4 col-sm-4">#}
+{#										{{ form.PWA_WA1_4B }}#}
+{#									</div>#}
+{#								</div>#}
+{#                                </div>#}
+{#                                <div id="3">#}
+{#                                <div class="form-group">#}
+{#									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA5A: </b>HIV test done: <span class="asteriskField">* </label>#}
+{#									<div class="col-md-2 col-sm-4">#}
+{#										{{ form.PWA_WA1_5A }}#}
+{#										<h6><span id="sel_hhva_ha22"></span></h6>#}
+{#									</div>#}
+{#								</div>#}
+{##}
+{#								<div class="form-group">#}
+{#									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA5B: </b>HIV test results : <span class="asteriskField">* </label>#}
+{#									<div class="col-md-4 col-sm-4">#}
+{#										{{ form.PWA_WA1_5B }}#}
+{#									</div>#}
+{#								</div>#}
+{#                                </div>#}
+
+							</div>
+						</div>
+						<!-- end wizard step-1 -->  
+
+						<!-- begin wizard step-2 -->
+						<div class="wizard-step-2">
+							<div class="panel-body">
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA6: </b>Date attended 1st ANC visit : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_PWA1q }}
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA7: </b>Date Attended 2nd ANC visit? : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_PWA2q }}
+										<br>
+{#										<h6><span id="sel_hhva_ha6"></span></h6>#}
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA8: </b>Date Attended 3rd ANC visit? : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_PWA3q }}
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA9: </b>Date Attended 4th ANC visit? : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_PWA4q }}
+									</div>
+								</div>
+
+                                <div class="form-group">
+									<label class="control-label col-md-4 col-sm-4" for="hhva_qs"><b>WA10: </b>Mode of delivery : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_PWA5q }}
+									</div>
+								</div>
+
+							</div> 							
+						</div> 
+						<!-- end wizard step-2 -->
+
+						<!-- begin wizard step-7 -->
+						<div class="wizard-step-7">
+							<div class="panel-body"> 
+								<div class="form-group">
+									<label class="control-label col-md-3 col-sm-3" for="hhva_qs"><b>WA11: </b>Name of Health Facility linked : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+{#                                        {{ form.PWA_WA1_11 }} #}
+                                        <input type="text" class="form-control" name="facility_field" id="facility_field" placeholder="Search for facility here">
+                                        <input type="hidden" name="PMTCT_PWA14q" id="PMTCT_PWA14q">
+									</div>
+
+								</div>
+
+                                <div class="form-group">
+									<label class="control-label col-md-3 col-sm-3" for="hhva_qs"><b>WA12: </b>CCC Number : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_PWA15q }}
+{#										<h6><span id="sel_hhva_ha28"></span></h6>#}
+									</div>
+								</div>
+
+                                <div class="form-group">
+									<label class="control-label col-md-3 col-sm-3" for="hhva_qs"><b>WA13: </b>Latest VL results : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_PWA16q }}
+{#										<h6><span id="sel_hhva_ha28"></span></h6>#}
+									</div>
+								</div>
+
+                                <div class="form-group">
+									<label class="control-label col-md-3 col-sm-3" for="hhva_qs"><b>WA14: </b>VL test date : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_PWA17q }}
+{#										<h6><span id="sel_hhva_ha28"></span></h6>#}
+									</div>
+								</div>
+
+                                <div class="form-group">
+									<label class="control-label col-md-3 col-sm-3" for="hhva_qs"><b>WA15: </b>Disclosure done to family member : <span class="asteriskField">* </label>
+									<div class="col-md-4 col-sm-4">
+										{{ form.PMTCT_PWA18q }}
+{#										<h6><span id="sel_hhva_ha28"></span></h6>#}
+									</div>
+								</div>
+							</div>
+						</div> 
+
+					</div>
+				</div>
+                <div class="panel-body panel-form" id="submit_section" >
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4"></label>
+                            <div class="col-md-6 col-sm-6">
+                                <button id="mysubmit-hivscreeningtool" type="submit"
+                                    class="btn btn-primary">Submit</button>
+                                <a href="javascript:history.go(-1)" class="btn btn-white">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+            <a href="{% url 'view_pmtct' id=person.id %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: May 2022</div>
+
+				</form>
+            </div>
+        </div>
+        <!-- end panel -->
+
+    </div>
+    <!-- end col-12 -->
+
+</div>
+<div class="row">
+    <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin panel -->
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                </div>
+                <h4 class="panel-title"><b>Pregnant Women/Adolescent Tracker </b></h4>
+            </div>
+
+            <div class="panel-body">
+                <div  class="panel panel-inverse">
+                    <div id="case-events"  class="table-responsive">
+                        <table class="table" border="1" id="past-hst">
+                            <thead>
+                            <tr>
+                            <th colspan="5">Clinic Attendance & mode of delivery</th>
+                            <th colspan="9">Pregnant Woman Details</th>
+                            <th colspan="5">HIV Pos Pregnant Women/Adolescents</th>
+
+                            </tr>
+
+                                  <tr>
+                                        <th>Q 1</th>
+                                        <th>Q 2</th>
+                                        <th>Q 3</th>
+                                        <th>Q 4</th>
+                                        <th>Q 5</th>
+                                        <th>Q 1</th>
+                                        <th>Q 2A</th>
+                                        <th>Q 2B</th>
+                                        <th>Q 3A</th>
+                                        <th>Q 3B</th>
+                                        <th>Q 4A</th>
+                                        <th>Q 4B</th>
+                                        <th>Q 5A</th>
+                                        <th>Q 5B</th>
+                                        <th>Q 1</th>
+                                        <th>Q 2</th>
+                                        <th>Q 3</th>
+                                        <th>Q 4</th>
+                                        <th>Q 5</th>
+                                      <th> ACTIONS</th>
+
+                                  </tr>
+                                </thead>
+                            <tbody>
+                                {% if data_get %}
+                                    {% for data in data_get %}
+                                      <tr>
+                                         {% for k, v in data.items %}
+                                            <td>{{ v }}</td>
+                                         {% endfor %}
+
+                                                 <td>
+                                                      <a href="#"><button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-pencil"></i>&nbsp;Edit</button></a>
+                                                     <a href="#"><button type="button" class="btn btn-sm btn-danger m-r-5"><i class="fa fa-trash"></i>&nbsp;Delete</button></a>
+                           </td>
+
+
+                                      </tr>
+                                    {% endfor %}
+                                {% endif %}
+
+                            </tbody>
+
+                </table>
+                    </div>
+                    <br><br>
+                </div>
+            </div>
+
+        </div>
+        <!-- end panel -->
+    </div>
+    <!-- end col-12 -->
+</div>
+<!-- end row -->
+{#    end row#}
+
+{% endblock %}
+
+{% block lazy_javascript_code %}
+<script src="{% static 'plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>	
+<script src="{% static 'plugins/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}"></script>
+<script src="{% static 'js/apps.js' %}"></script>
+<script src="{% static 'js/form-wizards.js' %}"></script>
+<script src="{% static 'js/tag-it.js' %}"></script>
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+<script>
+jQuery(document).ready(function()
+{
+	//multi selects
+    $('#hhva_ha6, #hhva_ha21, #hhva_ha22, #hhva_ha28, #hhva_ha29, #hhva_ha30, #hhva_ha31').multiselect({
+        selectAllValue: 'multiselect-all',
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true,
+        numberDisplayed: 1,
+        maxHeight: 300,
+        buttonWidth: '100%',
+		buttonClass: 'btn btn-white',
+		nonSelectedText: 'Please Select'
+    });
+
+	$('html,body').scrollTop(0);
+	FormWizardValidation.init();
+});
+</script>
+
+<script>
+$("#PMTCT_PWA19q ").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PMTCT_PWA6q").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PWA_WA1_3A").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PWA_WA1_4A").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PWA_WA1_5A").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PWA_WA1_1").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PMTCT_PWA1q").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PMTCT_PWA2q").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PMTCT_PWA3q").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PMTCT_PWA4q").datepicker({ format: 'yyyy-mm-dd' }).val();
+$("#PMTCT_PWA17q").datepicker({ format: 'yyyy-mm-dd' }).val();
+$( "#facility_field" ).autocomplete({
+    source: function( request, response ) {
+    $.ajax({
+        url: "{% url 'ovc_search' %}",
+        dataType: "json",
+        data: {q: request.term, id: 1},
+        success: function( data ) {
+            response( data );
+        }
+        });
+    },
+    minLength: 4,
+    select: function( event, ui ) {
+        $('#facility_field').val(ui.item.name);
+        $('#PMTCT_PWA14q').val(ui.item.id);
+    },
+    open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+    },
+    close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+    }
+});
+
+{#$("#01, #1, #2, #3").hide()#}
+{#$(function(){#}
+{#   $("input[name='PWA_WA1_01']").on('change', function () {#}
+{#          var ival = $("input[name='PWA_WA1_01']:checked").val();#}
+{#          if (ival == 'contact') {#}
+{#               $("#01").show()#}
+{#               $("#1, #2, #3").hide()#}
+{#          }else if(ival == 'tri'){#}
+{#               $("#1").show()#}
+{#               $("#01, #2, #3").hide()#}
+{#          }else if(ival == '3rd'){#}
+{#               $("#2").show()#}
+{#               $("#01, #1, #3").hide()#}
+{#          }else if(ival == '4th'){#}
+{#               $("#3").show()#}
+{#               $("#01, #1, #2").hide()#}
+{#          }#}
+{##}
+{#      });#}
+{#})#}
+
+</script>
+{% endblock %}

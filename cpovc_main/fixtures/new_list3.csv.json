@@ -1,0 +1,18 @@
+[
+    {
+        "pk": 40000,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "item_sub_category": "",
+            "is_void": false,
+            "item_id": "TNSA",
+            "item_description_short": "Adoption",
+            "field_name": "adoption_unit_type_id",
+            "item_description": "Adoption Society",
+            "item_category": "Adoption"
+        }
+    }
+]

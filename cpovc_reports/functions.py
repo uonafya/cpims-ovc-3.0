@@ -1,4 +1,5 @@
 """Reports functions."""
+import os
 import re
 import csv
 import uuid
@@ -31,7 +32,7 @@ import numpy as np
 from openpyxl.styles import colors, PatternFill
 
 from cpovc_main.functions import (
-    get_general_list, get_dict, get_mapped, convert_date, get_description_for_item_id)
+    get_general_list, get_dict, get_mapped, convert_date)
 from cpovc_main.models import SetupGeography
 
 from cpovc_ovc.models import (
@@ -47,12 +48,13 @@ from cpovc_forms.models import (
     OVCCaseCategory, OVCCaseGeo, OVCCaseEventServices,
     OVCPlacement, OVCAdverseEventsOtherFollowUp,
     OVCDischargeFollowUp, OVCCaseRecord, OVCAdverseEventsFollowUp)
-# from cpovc_auth.models import AppUser
+
+from cpovc_auth.models import AppUser
 
 from django.conf import settings
 from django.db.models import Count
 from .queries import QUERIES, REPORTS
-from .parameters import ORPTS, RPTS
+from .parameters import ORPTS, RPTS, PR_RPTS, PM_RPTS
 
 MEDIA_ROOT = settings.MEDIA_ROOT
 STATIC_ROOT = settings.STATICFILES_DIRS[0]
@@ -1935,11 +1937,11 @@ def get_performance(request):
                 case_count=Count('created_by')).order_by('-case_count')
         for case in pcases:
             acases[case['created_by']] = case['case_count']
-        for pd in ads:
-            if pd in acases:
-                cases[pd] = acases[pd]
+        for ad in ads:
+            if ad in acases:
+                cases[ad] = acases[pd]
             else:
-                cases[pd] = 0
+                cases[ad] = 0
 
     except Exception as e:
         print('error with dashboard - %s' % (str(e)))
@@ -2007,6 +2009,10 @@ def get_variables(request):
         rpt_ovc_id = int(report_ovc_id) if report_ovc_id else 1
         if rpt_ovc == 6 or rpt_ovc in [1, 2, 3]:
             report_ovc_name = ORPTS[rpt_ovc_id]
+        elif rpt_ovc == 7:
+            report_ovc_name = PR_RPTS[rpt_ovc_id]
+        elif rpt_ovc == 8:
+            report_ovc_name = PM_RPTS[rpt_ovc_id]
         else:
             report_ovc_name = RPTS[rpt_ovc]
         report_name = report_ovc_name.title().replace(' ', '')
@@ -2448,13 +2454,11 @@ def get_services_data(servs, params):
         return datas
 
 
-
 def get_viral_load_rpt_stats(params):
     """Get viral load data."""
     try:
-
         results = []
-        start = time.clock()
+        # start = time.clock()
 
         cbo = params['org_unit']
         cbo_id = int(cbo) if cbo else 0
@@ -2469,7 +2473,7 @@ def get_viral_load_rpt_stats(params):
             # cbos = cbo_id.split(',')
         with connection.cursor() as cursor:
             try:
-                query = ''' SELECT ovc_reg.person_id ,CONCAT (reg_person.surname,' ',reg_person.first_name, ' ', reg_person.other_names)  AS "Full name",vl.viral_load as vload 
+                query = '''SELECT ovc_reg.person_id ,CONCAT (reg_person.surname,' ',reg_person.first_name, ' ', reg_person.other_names)  AS "Full name",vl.viral_load as vload 
                         FROM ovc_registration ovc_reg inner join reg_person reg_person on reg_person.id=ovc_reg.person_id inner join 
                         ovc_viral_load vl on vl.person_id = ovc_reg.person_id where ovc_reg.art_status = 'ARAR'                             
                         '''
@@ -2490,9 +2494,12 @@ def get_viral_load_rpt_stats(params):
                         elif (int(ovc_person[2]) > 1000):
                             suppression = "Not Suppressed"
                     except Exception as e:
+                        print(str(e))
                         pass
-                    results.append({'CPIMS ID': ovc_person[0], 'NAME': ovc_person[1], 'VIRAL LOAD': ovc_person[2],
-                                    'SUPPRESSION': suppression})
+                    results.append(
+                        {'CPIMS ID': ovc_person[0], 'NAME': ovc_person[1],
+                         'VIRAL LOAD': ovc_person[2],
+                         'SUPPRESSION': suppression})
 
             except Exception as e:
                 print('error viral load stats - %s' % (str(e)))
@@ -2503,9 +2510,6 @@ def get_viral_load_rpt_stats(params):
         raise e
     else:
         return results
-
-
-
 
 
 def get_pivot_ovc(request, params={}):
@@ -2560,16 +2564,6 @@ def get_pivot_ovc(request, params={}):
         else:
             datas, titles = get_sql_data(request, params)
 
-        #  translating domain to full description
-        # if report_id == 6:
-        #     for one_datas in datas:
-        #         try:
-        #             name = get_description_for_item_id(one_datas['DOMAIN'])
-        #             print name
-        #             one_datas['DOMAIN'] = str(name[0])
-        #         except Exception, exe:
-        #             print 'Error translating domain to full description - %s' % (str(exe))
-
     except Exception as e:
         print('Error getting OVC pivot data - %s' % (str(e)))
         return []
@@ -2599,7 +2593,7 @@ def write_xls(response, data, titles=None):
 def write_xlsm(csv_file, file_name, report_id=1):
     """Method to write excel."""
     try:
-        print(MEDIA_ROOT)
+        print('MROOT', MEDIA_ROOT)
         csv_file_name = '%s/%s.csv' % (MEDIA_ROOT, csv_file)
         excel_file = '%s/%s.xlsx' % (MEDIA_ROOT, file_name)
         s_name = RPTS[report_id] if report_id in RPTS else 1
@@ -2609,13 +2603,12 @@ def write_xlsm(csv_file, file_name, report_id=1):
             data = pandas.read_csv(csv_file_name)
             data.to_excel(writer, sheet_name='Sheet1', index=False)
             workbook = writer.book
-            xlsm_file = '%s/%s.xlsm' % (MEDIA_ROOT, file_name)
+            xlsm_file = '%s/xlsx/%s' % (MEDIA_ROOT, file_name)
             workbook.add_worksheet('Sheet2')
             workbook.add_worksheet('Sheet3')
             workbook.filename = xlsm_file
             workbook.add_vba_project(vba_file)
             writer.save()
-            writer.close()
             print('Macros written - %s' % (xlsm_file))
         else:
             file_name = ""
@@ -2643,6 +2636,9 @@ def get_sql_data(request, params):
     print(params)
     df_rpt = REPORTS[1]
     qname = REPORTS[rpt_ovc] if rpt_ovc in REPORTS else df_rpt
+    # Override
+    if int(params['report_ovc']) in [7, 8]:
+        qname = params['report_ovc_name']
     sql = QUERIES[qname]
     sql = sql.format(**params)
     print('Report Name', qname)
@@ -2847,7 +2843,7 @@ def csvxls_data(request, f):
     try:
         data = []
         csv_file = '%s/tmp-%s.csv' % (MEDIA_ROOT, f)
-        with open(csv_file, 'rb') as csvfile:
+        with open(csv_file, 'rt') as csvfile:
             rows = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in rows:
                 data.append(row)

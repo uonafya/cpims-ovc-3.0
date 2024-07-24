@@ -1,0 +1,599 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block page_title %} Device App - Stats {% endblock %}
+
+{% block style_code %}
+<link href="{% static 'plugins/jquery-jvectormap/jquery-jvectormap.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/morris/morris.css' %}" rel="stylesheet" />
+<style>
+    .widget-chart-sidebar .chart-number {
+      font-size: 24px;
+      font-weight: 300;
+      color: #000;
+      margin-bottom: 10px;
+    }
+    .widget-chart-sidebar .chart-number small {
+      font-size: 12px;
+      color: #000;
+      display: block;
+    }
+    .widget-chart-sidebar .chart-legend > li {
+      margin-bottom: 5px;
+      color: #000;
+    }
+    .widget-chart-sidebar .chart-legend > li span {
+      color: #000;
+    }
+</style>
+{% endblock %}
+
+{% block primary %}
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+    <li><a href="#">Home</a></li>
+    <li class="active">Mobile App - Stats</li>
+</ol>
+<!-- end breadcrumb -->
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-mobile"></i> Mobile App Stats - 
+{% if request.session.ou_primary_name %}
+   {{ request.session.ou_primary_name }}
+{% else %} 
+   National
+{% endif %}
+<small>({{ form_id }})</small></h1>
+<!-- end page-header -->
+<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+    <span class="invalid-form-message" id="invalid-form-message"></span>
+</div>
+<!-- begin row -->
+<div class="row">
+  <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin row -->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="widget-chart with-sidebar bg-light">
+                    <div class="widget-chart-content">
+                        <h4 class="chart-title-b">
+                            Mobile App Case Management Analytics<br>
+                            <small>Forms and data submitted</small>
+                        </h4>
+                        <div id="cm-line-chart" class="morris-inverse" style="height: 341px;"></div>
+                    </div>
+                    <div class="widget-chart-sidebar bg-light">
+                        <div class="chart-number">
+                            {{ stats.events|intcomma }}
+                            <small>Total Records ({{ form_id }})</small>
+                        </div>
+                        <div id="cm-donut-chart" style="height: 160px; font-color: #000 !important; "></div>
+                        <ul class="chart-legend">
+                            <li><i class="fa fa-circle-o fa-fw text-success m-r-5"></i> {{ stats.pending_perc }}% <span>Pending</span></li>
+                            <li><i class="fa fa-circle-o fa-fw text-primary m-r-5"></i> {{ stats.approved_perc }}% <span>Approved</span></li>
+                            <li><i class="fa fa-circle-o fa-fw text-danger m-r-5"></i> {{ stats.rejected_perc }}% <span>Rejected</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- begin panel -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">                 
+                        <h4 class="panel-title">Case Management </h4>
+                    </div>
+                    <!-- start panel body -->
+                    <div class="panel-body" style="min-height: 551px;">
+                        <table class="table" id="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>LIP</th>
+                                <th>Records (OVC IDs)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if stats.cbos %}
+                            {% for cbo in stats.cbos %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ cbo.child_cbo__org_unit_name }}</td>
+                                <td>{{ cbo.dc }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td></td>
+                                <td><p>Click on the Link on the right to view per Form</p></td>
+                                <td></td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+
+                    </table>
+                    
+                    </div>
+                    <!-- end panel body -->
+                </div>
+                <!-- end panel --> 
+
+            </div>
+            <div class="col-md-4">
+                <div class="panel">
+                    <div class="panel-body">
+                        <button type="button" class="btn btn-primary start" id="dlPending">
+                            <i class="fa fa-download"></i>
+                            <span>Pending</span>
+                        </button>
+                        <button type="button" class="btn btn-success" id="dlApproved">
+                            <i class="fa fa-download"></i>
+                            <span>Approved</span>
+                        </button>
+                        
+                        <button type="button" class="btn btn-danger" id="dlRejected">
+                            <i class="fa fa-download"></i>
+                            <span>Rejected</span>
+                        </button>
+                        <button type="button" class="btn btn-info" id="dlDevices">
+                            <i class="fa fa-cogs"></i>
+                            <span>Devices</span>
+                        </button>
+                        <button type="button" class="btn btn-warning" id="dlFeatures">
+                            <i class="fa fa-hand-o-up"></i>
+                            <span>Features</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel panel-default" data-sortable-id="index-1">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            Forms Submission Geo Mapping
+                        </h4>
+                    </div>
+                    <div id="geo-map" class="bg-light" style="height: 466px;"></div>
+                    <div class="list-group">
+                        <a href="?form_id=CPT" class="list-group-item list-group-item-default text-ellipsis">
+                            <span class="badge badge-sm badge-success">{{ stats.cl_CPT|intcomma }}</span>
+                            1. Case Plans
+                        </a> 
+                        <a href="?form_id=CPR" class="list-group-item list-group-item-default text-ellipsis">
+                            <span class="badge badge-success">{{ stats.cl_CPR|intcomma }}</span>
+                            2. CPARA
+                        </a>
+                        <a href="?form_id=F1A" class="list-group-item list-group-item-default text-ellipsis">
+                            <span class="badge badge-success">{{ stats.cl_F1A|intcomma }}</span>
+                            3. Form 1A
+                        </a>
+                        <a href="?form_id=F1B" class="list-group-item list-group-item-default text-ellipsis">
+                            <span class="badge badge-success">{{ stats.cl_F1B|intcomma }}</span>
+                            4. Form 1B
+                        </a>
+                        <a href="?form_id=ALL" class="list-group-item list-group-item-default text-ellipsis">
+                            <span class="badge badge-success">{{ stats.total_events|intcomma }}</span>
+                            5. All Forms
+                        </a>                        
+                    </div>
+                </div>
+
+                <div class="panel panel-default" data-sortable-id="index-1">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            Device Management
+                        </h4>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Status</th>
+                                <th>Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>1</td>
+                                <td>Pending</td>
+                                <td>{{ stats.dev_pending }}</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>                                    
+                                <td>Approved</td>
+                                <td>{{ stats.dev_active }}</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Blocked</td>
+                                <td>{{ stats.dev_blocked }}</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Retired</td>
+                                <td>{{ stats.dev_retired }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- end row -->        
+    </div>
+    <!-- end col-12 -->
+
+</div>
+<!-- end row -->
+
+<!-- #modal-dialog -->
+<div class="modal fade" id="modal-pending">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">{{ form_id }} Download Pending approval list</h4>
+            </div>
+            <div class="modal-body">
+                <table id="table-pending">
+                    <thead>
+                        <tr>
+                            <th data-field="chv_id">CHV CPIMS ID</th>
+                            <th data-field="chv_name">CHV Name</th>
+                            <th data-field="ovc_id">OVC CPIMS ID</th>
+                            <th data-field="ovc_name">OVC Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ovc in stats.ovcs %}
+                        <tr>
+                            <td>{{ ovc.child_chv_id }}</td>
+                            <td>{{ ovc.child_chv.first_name }} {{ ovc.child_chv.surname }}</td>
+                            <td>{{ ovc.person_id }}</td>
+                            <td>{{ ovc.person.first_name }} {{ ovc.person.surname }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
+                <a href="javascript:;" class="btn btn-sm btn-success">Action</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- #modal-rejected -->
+<div class="modal fade" id="modal-rejected">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">{{ form_id }} Download Rejected list</h4>
+            </div>
+            <div class="modal-body">
+                <table id="table-rejected">
+                    <thead>
+                        <tr>
+                            <th data-field="chv_id">CHV CPIMS ID</th>
+                            <th data-field="chv_name">CHV Name</th>
+                            <th data-field="ovc_id">OVC CPIMS ID</th>
+                            <th data-field="ovc_name">OVC Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ovc in stats.aovcs %}
+                        <tr>
+                            <td>{{ ovc.child_chv_id }}</td>
+                            <td>{{ ovc.child_chv.first_name }} {{ ovc.child_chv.surname }}</td>
+                            <td>{{ ovc.person_id }}</td>
+                            <td>{{ ovc.person.first_name }} {{ ovc.person.surname }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
+                <a href="javascript:;" class="btn btn-sm btn-success">Action</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- #modal-devices -->
+<div class="modal fade" id="modal-devices">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">{{ form_id }} Download Devices list</h4>
+            </div>
+            <div class="modal-body">
+                <table id="table-rejected">
+                    <thead>
+                        <tr>
+                            <th data-field="did">#</th>
+                            <th data-field="dev_id">Device ID</th>
+                            <th data-field="dev_user">User Names</th>
+                            <th data-field="dev_ts">Created</th>
+                            <th data-field="dev_st">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for device in stats.devices %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ device.device_id }}</td>
+                            <td>{{ device.user.reg_person.first_name }} {{ device.user.reg_person.surname }}</td>
+                            <td>{{ device.timestamp_created }}</td>
+                            <td>
+                                {% if device.is_void %}
+                                   Retired
+                                {% else %}
+                                   {% if device.blocked %}
+                                      Blocked
+                                    {% else %}
+                                       {% if device.active %}
+                                           Active
+                                        {% else %}                                        
+                                           Pending
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
+                <a href="javascript:;" class="btn btn-sm btn-success">Action</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block lazy_javascript_code %}
+
+<script src="{% static 'plugins/morris/raphael.min.js' %}"></script>
+<script src="{% static 'plugins/morris/morris.js' %}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.6/proj4.js"></script>
+<script src="https://code.highcharts.com/maps/highmaps.js"></script>
+<script src="https://code.highcharts.com/modules/marker-clusters.js"></script>
+<script src="https://code.highcharts.com/modules/coloraxis.js"></script>
+
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-table-locale-all.min.js' %}"></script>
+<script>
+    var green = '#0D888B';
+    var greenLight = '#00ACAC';
+    var blue = '#3273B1';
+    var blueLight = '#348FE2';
+    var red = '#e41a1c';
+    // var blackTransparent = 'rgba(0,0,0,0.6)';
+    // var whiteTransparent = 'rgba(255,255,255,0.4)';
+    var blackTransparent = '#000000';
+    var whiteTransparent = '#000000';
+    // CM Data
+    var cm_data = [];
+
+    {% for c in stats.cm %}
+    // cm_data.push({{ c }});
+    cm_data.push({x: '{{ c.x }}', y: {{ c.y }}, z: {{ c.z }}, a: {{ c.a }}, b: {{ c.b }}});
+    {% endfor %}
+
+    var getMonthName = function(number) {
+        var month = [];
+        month[0] = "Jan";
+        month[1] = "Feb";
+        month[2] = "Mar";
+        month[3] = "Apr";
+        month[4] = "May";
+        month[5] = "Jun";
+        month[6] = "Jul";
+        month[7] = "Aug";
+        month[8] = "Sep";
+        month[9] = "Oct";
+        month[10] = "Nov";
+        month[11] = "Dec";
+        
+        return month[number];
+    };
+    // 'y', 'z', 'a', 'b'
+    {% if form_id == 'CPR' %}
+    var ykey = ['y']
+    {% elif form_id == 'CPT' %}
+    var ykey = ['z']
+    {% elif form_id == 'F1A' %}
+    var ykey = ['a']
+    {% elif form_id == 'F1B' %}
+    var ykey = ['b']
+    {% else %}
+    var ykey = ['y', 'z', 'a', 'b']
+    {% endif %}
+    Morris.Line({
+        element: 'cm-line-chart',
+        data: cm_data,
+        xkey: 'x',
+        ykeys: ykey,
+        xLabelFormat: function(x) {
+            x = getMonthName(x.getMonth());
+            return x.toString();
+        },
+        labels: ['CPARA', 'Case Plan', 'F1A', 'F1B'],
+        lineColors: [green, blue, red, red],
+        pointFillColors: [greenLight, blueLight],
+        lineWidth: '2px',
+        pointStrokeColors: [blackTransparent, blackTransparent],
+        resize: true,
+        gridTextFamily: 'Open Sans',
+        gridTextColor: blackTransparent,
+        gridTextWeight: 'normal',
+        gridTextSize: '11px',
+        gridLineColor: blackTransparent,
+        hideHover: 'auto',
+    });
+
+
+    Morris.Donut({
+        element: 'cm-donut-chart',
+        data: [
+            {label: "New Entries", value: {{ stats.pending }}},
+            {label: "Approved Entries", value: {{ stats.approved }}},
+            {label: "Rejected Entries", value: {{ stats.rejected }}}
+        ],
+        colors: [blue, green, red],
+        labelFamily: 'Open Sans',
+        labelColor: blackTransparent,
+        labelTextSize: '12px',
+        backgroundColor: blackTransparent
+    });
+
+    (async () => {
+
+    const topology = await fetch(
+        'https://code.highcharts.com/mapdata/countries/ke/ke-all.geo.json'
+    ).then(response => response.json());
+
+    const data = await fetch(
+        '/mobile/geos/?form_id={{form_id}}'
+    ).then(response => response.json());
+
+    Highcharts.mapChart('geo-map', {
+        chart: {
+            map: topology
+        },
+        title: {
+            text: ''
+        },
+        mapNavigation: {
+            enabled: true
+        },
+        tooltip: {
+            formatter: function () {
+                if (this.point.clusteredData) {
+                    return 'Clustered points: ' + this.point.clusterPointsAmount;
+                }
+                return '<b>' + this.key + '</b><br>Lat: ' + this.point.lat.toFixed(2) + ', Lon: ' + this.point.lon.toFixed(2);
+            }
+        },
+        colorAxis: {
+            min: 0,
+            max: 20
+        },
+        plotOptions: {
+            mappoint: {
+                cluster: {
+                    enabled: true,
+                    allowOverlap: false,
+                    animation: {
+                        duration: 450
+                    },
+                    layoutAlgorithm: {
+                        type: 'grid',
+                        gridSize: 70
+                    },
+                    zones: [{
+                        from: 1,
+                        to: 4,
+                        marker: {
+                            radius: 13
+                        }
+                    }, {
+                        from: 5,
+                        to: 9,
+                        marker: {
+                            radius: 15
+                        }
+                    }, {
+                        from: 10,
+                        to: 15,
+                        marker: {
+                            radius: 17
+                        }
+                    }, {
+                        from: 16,
+                        to: 20,
+                        marker: {
+                            radius: 19
+                        }
+                    }, {
+                        from: 21,
+                        to: 100,
+                        marker: {
+                            radius: 21
+                        }
+                    }]
+                }
+            }
+        },
+        legend: {
+             layout: 'bottom',
+             align: 'left',
+             verticalAlign: 'bottom',
+             itemMarginTop: 10,
+             itemMarginBottom: 10
+        },
+        series: [{
+            name: 'Basemap',
+            borderColor: '#A0A0A0',
+            nullColor: 'rgba(200, 200, 200, 0.3)',
+            showInLegend: false
+        }, {
+            type: 'mappoint',
+            enableMouseTracking: true,
+            colorKey: 'clusterPointsAmount',
+            name: 'Case Management',
+            color: Highcharts.getOptions().colors[1],
+            data: data
+        }]
+    });
+
+})();
+// Modals
+
+$(document).ready(function () {
+    $('#dlPending').on('click', function() {
+        $('#modal-pending').modal('show');
+    });
+    $('#dlRejected').on('click', function() {
+        $('#modal-rejected').modal('show');
+    });
+    $('#dlDevices').on('click', function() {
+        $('#modal-devices').modal('show');
+    });
+
+    $('#data-table').bootstrapTable(
+        { 
+            toggle: 'table', 
+            search: 'true',
+            locale: 'en-US',
+            pagination: 'true',
+            pageNumber: 1,
+            pageSize: 10,
+            singleSelect: true,
+            clickToSelect:true,
+            maintainSelected: true                
+        });
+    $('#table-pending, #table-rejected').bootstrapTable({ 
+            toggle: 'table', 
+            search: 'true',
+            locale: 'en-US',
+            pagination: 'true',
+            pageNumber: 1,
+            pageSize: 50,
+            singleSelect: true,
+            clickToSelect:true,
+            maintainSelected: true                
+        });
+});
+
+
+</script>
+
+{% endblock %}

@@ -20,17 +20,24 @@ from cpovc_ovc import urls as ovc_urls
 from cpovc_settings import urls as settings_urls
 from data_cleanup import urls as data_cleanup_urls
 from cpovc_offline_mode import urls as offline_mode_urls
-# from django.contrib.auth.views import (
-#     password_reset_done, password_change, password_change_done)
 from django.contrib.auth import views as auth_views
 from cpovc_auth.views import password_reset
 from django.views.generic import TemplateView
 from cpovc_dashboard import urls as dashboard_api_urls
 from cpovc_access.forms import StrictPasswordChangeForm
 # New changes
-from cpovc_pfs import urls as pfs_urls
-from cpovc_pfs.pmtct import urls as pmtct_urls
+from cpovc_preventive import urls as preventive_urls
+from cpovc_pmtct import urls as pmtct_urls
+#from notifications import urls as noti_urls
+# from simple_forums import urls as forum_urls
+from cpovc_api import urls as api_urls
+from cpovc_dashboards import urls as dashboards_urls
+from cpovc_mobile import urls as mobile_urls
+from cpovc_hes import urls as hes_urls
+from cpovc_dreams import urls as dreams_urls
 
+from drf_spectacular.views import (
+    SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -69,8 +76,6 @@ urlpatterns = [
     re_path(r'^$', views.home, name='home'),
     path('accounts/request/', views.access, name='access'),
     path('accounts/terms/<int:id>/', cpovc_access.views.terms, name='terms'),
-    path('login/', cpovc_auth.views.log_in, name='login'),
-    path('logout/', cpovc_auth.views.log_out, name='logout'),
     path('register/', cpovc_auth.views.register, name='register'),
     path('auth/', include(auth_urls)),
     path('registry/', include(registry_urls)),
@@ -78,46 +83,51 @@ urlpatterns = [
     path('reports/', include(reports_urls)),
     path('gis/', include(gis_urls)),
     # path('api/', include(api_urls)),
-    path('ovcare/', include(ovc_urls)),
+    path('ovc-care/', include(ovc_urls)),
     path('settings/', include(settings_urls)),
     path('data_cleanup/', include(data_cleanup_urls)),
     # Accounts management
-    path('accounts/login/', cpovc_auth.views.log_in, name='acclogin'),
-    path(
-        'accounts/password/reset/', password_reset,
-        {'template_name': 'registration/password_reset.html'},
-        name='password_reset'),
-    # path('accounts/password/reset/done/', password_reset_done,
-    #     {'template_name': 'registration/password_reset_done.html'},
-    #     name='password_reset_done'),
-    re_path(
-        r'^accounts/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
-        cpovc_auth.views.reset_confirm, name='password_reset_confirm'),
-    path('reset/', cpovc_auth.views.reset, name='reset'),
-    path(
-        'accounts/password/change/', auth_views.PasswordChangeView.as_view(),
-        {'post_change_redirect': '/accounts/password/change/done/',
-         'template_name': 'registration/password_change.html',
-         'password_change_form': StrictPasswordChangeForm},
-        name='password_change'),
-    path(
-        'accounts/password/change/done/',
-        auth_views.PasswordResetDoneView.as_view(),
-        {'template_name': 'registration/password_change_done.html'}),
+    path('accounts/', include(cpovc_auth.urls)),
+    # path('accounts/', include('django.contrib.auth.urls')),
+    # Override
+    path('login/', cpovc_auth.views.log_in, name='login'),
+    path('logout/', cpovc_auth.views.log_out, name='logout'),
     re_path(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt',
                                                    content_type='text/plain')),
     path('offline_mode/', include(offline_mode_urls)),
     # Dashboards
     path('d/', dash_views.ovc_dashboard, name='ovc_dashboard'),
+    path(
+        'd/registration/', dash_views.ovc_dashboard_registration,
+        name='ovc_registration'),
     path('d/hivstat/', dash_views.ovc_dashboard_hivstat, name='hivstat_dash'),
     path(
         'd/services/', dash_views.ovc_dashboard_services,
         name='services_dash'),
     path('d/cm/', dash_views.ovc_dashboard_cm, name='cm_dash'),
+    path('d/MER/', dash_views.ovc_dashboard_MER, name='mer_dash'),
+    path('d/epidemic-control/', dash_views.ovc_dashboard_epc, name='epc_dash'),
+    path(
+        'd/performance/', dash_views.ovc_dashboard_perform,
+        name='perform_dash'),
+    path('d/glossary/', dash_views.ovc_dashboard_help, name='dash_help'),
     path('api/v2/', include(dashboard_api_urls)),
+    # Dashboards V2
+    path('dashboards/', include(dashboards_urls)),
     # Preventive and Family Support
-    path('ovcare/pfs/', include(pfs_urls)),
-    path('ovcare/pmtct/', include(pmtct_urls)),
+    path('ovc-care/preventive/', include(preventive_urls)),
+    path('ovc-care/pmtct/', include(pmtct_urls)),
+    # Notifications
+    #path('notifications/', include(noti_urls, namespace='notifications')),
+    # path('forums/', include(forum_urls)),
+    path('api/', include(api_urls)),
+    path('mobile/', include(mobile_urls)),
+    path('hes/', include(hes_urls)),
+    path('dreams/', include(dreams_urls)),
+    # API Documentations
+    path('api/docs/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/docs/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
 handler400 = 'cpims.views.handler_400'

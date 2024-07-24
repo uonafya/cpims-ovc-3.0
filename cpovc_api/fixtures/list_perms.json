@@ -1,0 +1,11 @@
+[
+{
+	"model":"cpovc_auth.CPOVCRole",
+	"pk":15,
+	"fields":{
+		"group_id":"DAP"
+		,"group_name":"Data approver"
+		,"group_description":"This role allows viewing of sensitive individual beneficiary registry records and forms data and approve data from the capture sites / Apps"
+	}
+}
+]
