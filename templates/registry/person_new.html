@@ -5,6 +5,7 @@
 
 {% load crispy_forms_tags %}
 
+
 {% block style_code %}
 <link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
 <link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
@@ -76,7 +77,9 @@
                                     <div id="provides_service" class="form-group">
                                         <label for="child_services">Provides services directly to children <span class="asteriskField">*</span></label>
                                         <br>                                        
-                                        {{ form.child_services }}
+                                        {% for choice in form.child_services %}
+                                            <label for="{{ choice.id_for_label  }}" class="radio-inline">{{ choice.tag }} {{ choice.choice_label }}</label>
+                                        {% endfor %}
                                         <span id="services_error"></span>
                                     </div>
                                 </div>
@@ -85,9 +88,11 @@
                                 <!-- begin col-4 -->
                                 <div class="col-md-4">
                                     <div id="is_ovc" class="form-group">
-                                        <label for="child_ovc">Child is OVC <span class="asteriskField">*</span></label>
+                                        <label for="child_ovc">Child is in OVC Program <span class="asteriskField">*</span></label>
                                         <br>                                        
-                                        {{ form.child_ovc }}
+                                        {% for choice in form.child_ovc %}
+                                            <label for="{{ choice.id_for_label  }}" class="radio-inline">{{ choice.tag }} {{ choice.choice_label }}</label>
+                                        {% endfor %}
                                         <span id="child_ovc_error"></span>
                                     </div>
                                 </div>
@@ -296,7 +301,9 @@
                                                         <div class="form-group" id="working_in_region_div">
                                                            <label class="control-label col-md-4 col-sm-4" for="working_in_region">Region :</label>
                                                             <div class="col-md-4 col-sm-4">
-                                                               {{ form.working_in_region }}
+                                                               {% for choice in form.working_in_region %}
+                                                                    <label for="{{ choice.id_for_label  }}" class="radio-inline">{{ choice.tag }} {{ choice.choice_label }}</label>
+                                                                {% endfor %}
                                                             </div>
                                                             <div id="type_error"></div>
                                                         </div>
@@ -443,6 +450,12 @@
                                                         {{ form.cbo_unit_id  }}
                                                     </div>
                                                 </div>
+                                                <div id="ovc_programs_id_div" class="form-group">
+                                                    <label class="control-label col-md-4 col-sm-4" for="chv_unit_id">OVC Program Enrollment<span class="asteriskField">*</span> :</label>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        {{ form.ovc_programs  }}
+                                                    </div>
+                                                </div>
 
                                                 <div id="chv_id_div" class="form-group">
                                                     <label class="control-label col-md-4 col-sm-4" for="chv_unit_id">CHV <span class="asteriskField">*</span> :</label>
@@ -450,6 +463,7 @@
                                                         {{ form.chv_unit_id  }}
                                                     </div>
                                                 </div>
+                                                
                                             </div>
                                             <div class="row"  id="parent_org_add">
                                                 <span class="form-group"></span>
@@ -1327,7 +1341,7 @@ jQuery(document).ready(function() {
                         .attr("value", ward_attribs[0])
                         .text(ward_attribs[1]));
                  });
-                //$('#working_in_subcounty').multiselect('rebuild');
+                $('#working_in_subcounty').multiselect('rebuild');
             },
             error: function(){
                 $('#messages').html("Error")
@@ -1358,7 +1372,7 @@ jQuery(document).ready(function() {
                         .attr("value", ward_attribs[0])
                         .text(ward_attribs[1]));
                  });
-                 //$('#working_in_ward').multiselect('rebuild');
+                 $('#working_in_ward').multiselect('rebuild');
             },
             error: function(){
                 $('#messages').html("Error")
@@ -1689,15 +1703,21 @@ function handle_child(){
         $('#other_names').attr('data-parsley-required', 'true');
         $('#chv_id_div').show();
         $('#chv_unit_id').attr('data-parsley-required', 'true');
+        $('#ovc_programs_id_div').show();
+        $('#ovc_programs').attr('data-parsley-required', 'true');
     }else{
         $('#chv_id_div').hide();
         $('#chv_unit_id').attr('data-parsley-required', 'false');
+        $('#ovc_programs_id_div').hide();
+        $('#ovc_programs').attr('data-parsley-required', 'false');
     }
     {% if request.session.reg_ovc %}
     $("#cbo_chv_add").show();
     $('#add_org_info').html('');
     $('#chv_id_div').show();    
     $('#chv_unit_id').attr('data-parsley-required', 'true');
+    $('#ovc_programs_id_div').show();
+    $('#ovc_programs').attr('data-parsley-required', 'true');
     {% endif %}
 }
 
@@ -1750,6 +1770,8 @@ function handle_caregiver(person_text){
     $('#audit_detail_div').show();
     $('#audit_workforce_id').attr('data-parsley-required', 'true');
     $('#audit_date').attr('data-parsley-required', 'true');
+    $('#ovc_programs_id_div').hide();
+    $('#ovc_programs').attr('data-parsley-required', 'false');
 
     {% if request.session.reg_ovc %}
     $("#cbo_chv_add").show();
@@ -1829,6 +1851,8 @@ function handle_volunteer(person_text){
     $('#chv_id_div').hide();    
     $('#chv_unit_id').attr('data-parsley-required', 'false');
     //
+    $('#ovc_programs_id_div').hide();
+    $('#ovc_programs').attr('data-parsley-required', 'false');
 }
 
 function handle_government(person_text){
@@ -1887,6 +1911,8 @@ function handle_government(person_text){
     $('#religion_id_div').hide();
     $('#nation_id_div').hide();
     $('#des_phone_number').attr('data-parsley-required', 'true');
+    $('#ovc_programs_id_div').hide();
+    $('#ovc_programs').attr('data-parsley-required', 'false');
 }
 
 function handle_ngo_private(person_text){
@@ -1945,6 +1971,8 @@ function handle_ngo_private(person_text){
     $('#religion_id_div').hide();
     $('#nation_id_div').hide();
     $('#des_phone_number').attr('data-parsley-required', 'true');
+    $('#ovc_programs_id_div').hide();
+    $('#ovc_programs').attr('data-parsley-required', 'false');
 }
 
 {% for key, values in titles.items %}
@@ -1964,6 +1992,8 @@ function handle_ovc(person_type){
             $("#cbo_chv_div").show();
             $("#cbo_chv_ndiv").hide();
             $('#ou_ovc').html('CBO / CHV details');
+            $('#ovc_programs_id_div').show();
+            $('#ovc_programs').attr('data-parsley-required', 'true');
         {% else %}
             $("#cbo_chv_add").hide();
             $('#add_org_info').html(' - Not required');

@@ -1,0 +1,486 @@
+{% load static %}
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>CPIMS Dashboard - Help and documentation</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    
+    <!-- ================== BEGIN BASE CSS STYLE ================== -->
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <!-- ================== BEGIN BASE CSS STYLE ================== -->
+    <link href="{% static 'plugins/jquery-ui/themes/base/minified/jquery-ui.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'dashboards/css/style.css' %}" rel="stylesheet" />
+    <link href="{% static 'dashboards/css/style-responsive.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'dashboards/css/theme/default.css' %}" rel="stylesheet" id="theme" />
+    <link href="{% static 'dashboards/css/dashboards.css' %}" rel="stylesheet">
+    <!-- ================== END BASE CSS STYLE ================== -->
+    <script src="{% static 'plugins/pace/pace.min.js' %}"></script>
+
+</head>
+<body>
+    <!-- begin #page-loader -->
+    <div id="page-loader" class="fade in"><span class="spinner"></span></div>
+    <!-- end #page-loader -->
+    
+    <!-- begin #page-container -->
+    <div id="page-container" class="page-container fade page-without-sidebar page-header-fixed page-with-top-menu">
+        <!-- begin #header -->
+        <div id="header" class="header navbar navbar-default navbar-fixed-top">
+            <!-- begin container-fluid -->
+            <div class="container-fluid">
+                <!-- begin mobile sidebar expand / collapse button -->
+                <div class="navbar-header">
+                    <a href="/" class="navbar-brand"><span class="navbar-logo"></span>OVC dashboards</a>
+                    <button type="button" class="navbar-toggle" data-click="top-menu-toggled">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <!-- end mobile sidebar expand / collapse button -->
+                
+                <!-- begin header navigation right -->
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <form class="navbar-form full-width">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter keyword" />
+                                <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
+                            </div>
+                        </form>
+                    </li>
+                    
+                    <li><a href="#" onclick="printChart(); return false;"><i class="fa fa-print"></i> </a></li>
+                    {% if user.is_authenticated %}
+                    <li class="dropdown" id="session_status"></li>
+                    <li class="dropdown navbar-user">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="{% static 'img/user-2.jpg' %}" alt="" /> 
+                            <span class="hidden-xs">
+                            {% if request.session.names %}
+                                {{ request.session.names }}
+                            {% else %}
+                                {{ request.user.username }}
+                            {% endif %}
+                            </span> <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInLeft">
+                            <li class="arrow"></li>
+                            <li><a href="{% url 'view_person' id=request.user.reg_person_id %}">View My Profile</a></li>
+                            <li><a href="{% url 'password_change' %}">Change Password</a></li>
+                            <li><a href="#"><span class="badge badge-danger pull-right">2</span> Messages</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{% url 'cluster' %}">Clusters</a></li>
+                            <li class="divider"></li>
+                            {% if request.user.is_staff %}
+                                <li><a href="/admin/">Administration</a></li>
+                            {% endif %}
+                            <li><a href="{% url 'logout' %}" id="logout_button">Log Out</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="dropdown navbar-user online_mode">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="{% static 'img/user-2.jpg' %}" alt="" /> 
+                            <span class="hidden-xs">CPMIS Guest</span> <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInLeft">
+                            <li class="arrow"></li>
+                            <li class="divider"></li>
+                            <li><a href="{% url 'login' %}">Log in</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+                <!-- end header navigation right -->
+                
+            </div>
+            <!-- end container-fluid -->
+        </div>
+        <!-- end #header -->
+        <!-- begin #top-menu -->
+        <div id="top-menu" class="top-menu">
+            <!-- begin top-menu nav -->
+            <ul class="nav">
+                <li><a href="{% url 'ovc_dashboard' %}" id="main_url">1. Registrations</a></li>
+                <li><a href="{% url 'ovc_registration' %}" id="reg_url">2. OVC Eligible for reporting</a></li>
+                <li><a href="{% url 'hivstat_dash' %}" id="hivstat_url">3. OVC Served & HIV Information</a></li>
+                <li><a href="{% url 'services_dash' %}" id="services_url">4. Services</a></li>
+                <li><a href="{% url 'cm_dash' %}" id="cm_url">5. Case Management</a></li>
+                <li><a href="{% url 'perform_dash' %}" id="pf_url">6. Performance</a></li>
+                <li><a href="{% url 'mer_dash' %}" id="mer_url">7. MER Reporting</a></li>
+                <li><a href="{% url 'epc_dash' %}" id="epd_url">8. Epidemic Control</a></li>
+                <li class="active"><a href="{% url 'dash_help' %}" id="help_url">Glossary</a></li>
+                <li class="menu-control menu-control-left">
+                    <a href="#" data-click="prev-menu"><i class="fa fa-angle-left"></i></a>
+                </li>
+                <li class="menu-control menu-control-right">
+                    <a href="#" data-click="next-menu"><i class="fa fa-angle-right"></i></a>
+                </li>
+            </ul>
+        </div>        
+        <!-- begin #content -->
+        <div id="content" class="content">
+            <!-- begin breadcrumb -->
+            <ol class="breadcrumb pull-right">
+                <li><a href="/">CPIMS Home</a></li>
+                <li><a href="#">Registrations</a></li>
+                <li class="active" id=ipt></li>
+                <li class="active" id=lpt></li>
+            </ol>
+            <!-- end breadcrumb -->
+            <!-- begin page-header -->
+            <h1 class="page-header"><span id="at">Help and documentation </span> - <small> Glossary of Definitions of Indicators and Terms </small></h1>
+            <!-- end page-header -->
+
+
+
+            <!-- begin row -->
+            <div class="row">
+                <!-- begin col-12 -->
+                <div class="col-md-12">
+                    <div class="panel panel-default" data-sortable-id="index-1">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="media-heading">1. Registrations</h4>
+                        </div>
+                        <div class="panel-body">
+                            <dl class="dl-horizontal">
+                                {% for chart in charts.1 %}
+                                <dt><h5 class="media-heading">{{ chart.number }}</h4></dt>
+                                <dd><h5 class="media-heading">{{ chart.ctitle }}</h4>
+                                    <b><p>Description:</b> {{ chart.desc }}</p>
+                                    <b><p>Calculation:</b> {{ chart.calc }}</p></dd>
+                                {% endfor %}
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-12 -->
+
+                <!-- begin col-12 -->
+                <div class="col-md-12">
+                    <div class="panel panel-default" data-sortable-id="index-2">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="media-heading">2. OVC eligible for reporting</h4>
+                        </div>
+                        <div class="panel-body">
+                            <dl class="dl-horizontal">
+                                {% for chart in charts.2 %}
+                                <dt><h5 class="media-heading">{{ chart.number }}</h4></dt>
+                                <dd><h5 class="media-heading">{{ chart.ctitle }}</h4>
+                                    <b><p>Description:</b> {{ chart.desc }}</p>
+                                    <b><p>Calculation:</b> {{ chart.calc }}</p></dd>
+                                {% endfor %}
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-12 -->
+
+                <!-- begin col-12 -->
+                <div class="col-md-12">
+                    <div class="panel panel-default" data-sortable-id="index-3">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="media-heading">3. HIVSTAT and VL</h4>
+                        </div>
+                        <div class="panel-body">
+                            <dl class="dl-horizontal">
+                                {% for chart in charts.3 %}
+                                <dt><h5 class="media-heading">{{ chart.number }}</h4></dt>
+                                <dd><h5 class="media-heading">{{ chart.ctitle }}</h4>
+                                    <b><p>Description:</b> {{ chart.desc }}</p>
+                                    <b><p>Calculation:</b> {{ chart.calc }}</p></dd>
+                                {% endfor %}
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-12 -->
+
+                <!-- begin col-12 -->
+                <div class="col-md-12">
+                    <div class="panel panel-default" data-sortable-id="index-4">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="media-heading">4. Services</h4>
+                        </div>
+                        <div class="panel-body">
+                            <dl class="dl-horizontal">
+                                {% for chart in charts.4 %}
+                                <dt><h5 class="media-heading">{{ chart.number }}</h4></dt>
+                                <dd><h5 class="media-heading">{{ chart.ctitle }}</h4>
+                                    <b><p>Description:</b> {{ chart.desc }}</p>
+                                    <b><p>Calculation:</b> {{ chart.calc }}</p></dd>
+                                {% endfor %}
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-12 -->
+
+                <!-- begin col-12 -->
+                <div class="col-md-12">
+                    <div class="panel panel-default" data-sortable-id="index-5">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="media-heading">5. Case Management</h4>
+                        </div>
+                        <div class="panel-body">
+                            <dl class="dl-horizontal">
+                                {% for chart in charts.5 %}
+                                <dt><h5 class="media-heading">{{ chart.number }}</h4></dt>
+                                <dd><h5 class="media-heading">{{ chart.ctitle }}</h4>
+                                    <b><p>Description:</b> {{ chart.desc }}</p>
+                                    <b><p>Calculation:</b> {{ chart.calc }}</p></dd>
+                                {% endfor %}
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-12 -->
+
+                <!-- begin col-12 -->
+                <div class="col-md-12">
+                    <div class="panel panel-default" data-sortable-id="index-6">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="media-heading">6. Performance</h4>
+                        </div>
+                        <div class="panel-body">
+                            <dl class="dl-horizontal">
+                                {% for chart in charts.6 %}
+                                <dt><h5 class="media-heading">{{ chart.number }}</h4></dt>
+                                <dd><h5 class="media-heading">{{ chart.ctitle }}</h4>
+                                    <b><p>Description:</b> {{ chart.desc }}</p>
+                                    <b><p>Calculation:</b> {{ chart.calc }}</p></dd>
+                                {% endfor %}
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-12 -->
+
+                <!-- begin col-12 -->
+                <div class="col-md-12">
+                    <div class="panel panel-default" data-sortable-id="index-7">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="media-heading">7. MER Reporting</h4>
+                        </div>
+                        <div class="panel-body">
+                            <dl class="dl-horizontal">
+                                {% for chart in charts.7 %}
+                                <dt><h5 class="media-heading">{{ chart.number }}</h4></dt>
+                                <dd><h5 class="media-heading">{{ chart.ctitle }}</h4>
+                                    <b><p>Description:</b> {{ chart.desc }}</p>
+                                    <b><p>Calculation:</b> {{ chart.calc }}</p></dd>
+                                {% endfor %}
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-12 -->
+
+                <!-- begin col-12 -->
+                <div class="col-md-12">
+                    <div class="panel panel-default" data-sortable-id="index-8">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="media-heading">8. Epidemic Control</h4>
+                        </div>
+                        <div class="panel-body">
+                            <dl class="dl-horizontal">
+                                {% for chart in charts.8 %}
+                                <dt><h5 class="media-heading">{{ chart.number }}</h4></dt>
+                                <dd><h5 class="media-heading">{{ chart.ctitle }}</h4>
+                                    <b><p>Description:</b> {{ chart.desc }}</p>
+                                    <b><p>Calculation:</b> {{ chart.calc }}</p></dd>
+                                {% endfor %}
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-12 -->
+            </div>
+            <!-- end row -->
+            <p class="foot">
+                <a href="/" class="btn btn-success">
+                    <i class="fa fa-arrow-circle-left"></i> Back to Home
+                </a>
+                &nbsp; &nbsp; &copy; {% now "Y" %}. All Rights Reserved. Version : 2.0.0
+            </p>
+        </div>
+        <!-- end #content -->
+        <!-- #modal-dialog -->
+        <div class="modal fade" id="modal-dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Other Filters &amp; Settings</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" name="dash-settings" id="dash-settings">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Reporting Period</label>
+                                <div class="col-md-9">
+                                    {{ form.sel_period }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Financial Year</label>
+                                <div class="col-md-9">
+                                    {{ form.sel_year }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Date From</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" placeholder="Disabled input date" disabled />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Date To</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" placeholder="Disabled input date" disabled />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Colors Options </label>
+                                <div class="col-md-2">
+                                    <table class="table">
+                                        <tr>
+                                            <td><input type="radio" name="sel_color" value="1" {% if request.session.sel_color == 1 or not request.session.sel_color %} checked {% endif %}> 1 </td>
+                                        </tr>
+                                            {% for cl in colors.1 %}
+                                            <tr><td bgcolor="{{ cl }}">{{ forloop.counter }} : {{ cl }}</td></tr>
+                                            {% endfor %}
+                                    </table>                                        
+                                </div>
+                                <div class="col-md-2">
+                                    <table class="table">
+                                        <tr>
+                                            <td><input type="radio" name="sel_color" value="2" {% if request.session.sel_color == 2 %} checked {% endif %}> 2 </td>
+                                            {% for cl in colors.2 %}
+                                            <tr><td bgcolor="{{ cl }}">{{ forloop.counter }} : {{ cl }}</td></tr>
+                                            {% endfor %}
+                                        </table>                                        
+                                </div>
+                                <div class="col-md-2">
+                                    <table class="table">
+                                        <tr>
+                                            <td><input type="radio" name="sel_color" value="3" {% if request.session.sel_color == 3 %} checked {% endif %}> 3 </td>
+                                            {% for cl in colors.3 %}
+                                            <tr><td bgcolor="{{ cl }}">{{ forloop.counter }} : {{ cl }}</td></tr>
+                                            {% endfor %}
+                                        </table>                                        
+                                </div>
+                                <div class="col-md-2">
+                                    <table class="table">
+                                        <tr>
+                                            <td><input type="radio" name="sel_color" value="4" {% if request.session.sel_color == 4 %} checked {% endif %}> 4 </td>
+                                            {% for cl in colors.4 %}
+                                            <tr><td bgcolor="{{ cl }}">{{ forloop.counter }} : {{ cl }}</td></tr>
+                                            {% endfor %}
+                                        </table>                                        
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
+                        <button class="btn btn-sm btn-success" type="button" id="fsettings">Apply Filters &amp; Settings</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #modal-dialog -->  
+        
+        
+        <!-- begin scroll to top btn -->
+        <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+        <!-- end scroll to top btn -->
+    </div>
+    <!-- end page container -->
+    
+    <!-- ================== BEGIN BASE JS ================== -->
+    <script src="{% static 'plugins/jquery/jquery-1.9.1.min.js' %}"></script>
+    <script src="{% static 'plugins/jquery/jquery-migrate-1.1.0.min.js' %}"></script>
+    <script src="{% static 'plugins/jquery-ui/ui/minified/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+    <!--[if lt IE 9]>
+        <script src="{% static 'xbrowserjs/html5shiv.js' %}"></script>
+        <script src="{% static 'xbrowserjs/respond.min.js' %}"></script>
+        <script src="{% static 'xbrowserjs/excanvas.min.js' %}"></script>
+    <![endif]-->
+    <script src="{% static 'plugins/highcharts/highcharts.js' %}"></script>
+    <script src="{% static 'plugins/highcharts/modules/exporting.js' %}"></script>
+    <script src="{% static 'plugins/highcharts/modules/export-data.js' %}"></script>
+    <script src="{% static 'plugins/highcharts/modules/accessibility.js' %}"></script>
+    <!-- ================== END BASE JS ================== -->
+    
+    <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+    <script src="{% static 'dashboards/js/apps.js' %}"></script>
+    <!-- ================== END PAGE LEVEL JS ================== -->
+    
+    <script>
+        function printChart() {
+              //Print Chart
+              //var mapContainer;
+              //var body = $('body');                  
+
+              window.print();
+            }
+        $(document).ready(function() {
+           App.init();
+
+        });
+
+    </script>
+</body>
+</html>

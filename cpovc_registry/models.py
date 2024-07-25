@@ -10,7 +10,6 @@ from django.dispatch import receiver
 from cpovc_auth.models import AppUser
 
 
-
 class RegOrgUnit(models.Model):
     """Model for Organisational Units details."""
 
@@ -22,7 +21,8 @@ class RegOrgUnit(models.Model):
     handle_ovc = models.BooleanField(default=False)
     is_void = models.BooleanField(default=False)
     parent_org_unit_id = models.IntegerField(null=True, blank=True)
-    created_by = models.ForeignKey(AppUser, on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(
+        AppUser, on_delete=models.CASCADE, null=True)
     created_at = models.DateField(default=timezone.now)
 
     def _is_active(self):
@@ -93,7 +93,8 @@ class RegOrgUnitGeography(models.Model):
     """Model for Organisational units Geography."""
 
     org_unit = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE)
-    area = models.ForeignKey(to='cpovc_main.SetupGeography', on_delete=models.CASCADE)
+    area = models.ForeignKey(
+        to='cpovc_main.SetupGeography', on_delete=models.CASCADE)
     date_linked = models.DateField(null=True)
     date_delinked = models.DateField(null=True)
     is_void = models.BooleanField(default=False)
@@ -127,7 +128,8 @@ class RegPerson(models.Model):
     sex_id = models.CharField(max_length=4,
                               choices=[('SMAL', 'Male'), ('SFEM', 'Female')])
     is_void = models.BooleanField(default=False)
-    created_by = models.ForeignKey(AppUser, on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(
+        AppUser, on_delete=models.CASCADE, null=True)
     created_at = models.DateField(default=timezone.now)
 
     def _get_persons_data(self):
@@ -157,12 +159,13 @@ class RegPerson(models.Model):
         if self.date_of_birth:
             dob = self.date_of_birth
             date_check = (today.month, today.day) < (dob.month, dob.day)
-            yrs = today.year - dob.year - date_check
-            age = '{:d} years'.format(yrs)
+            yrs = int(today.year - dob.year - date_check)
+            age = '{} years'.format(yrs)
             if yrs == 0:
-                days = (today - dob).days
-                mon = days / 30
-                age = '{:d} days'.format(days if mon < 1 else '{:d} months'.format(mon))
+                days = int((today - dob).days)
+                mon = int(days / 30)
+                rem_days = days - int(mon * 30)
+                age = '{} months {} days'.format(mon, rem_days)
         return age
 
     age = property(_calculate_age)
@@ -194,7 +197,8 @@ class RegPerson(models.Model):
 
     def __str__(self):
         """To be returned by admin actions."""
-        return '{} {} {}'.format(self.first_name, self.other_names, self.surname)
+        onames = ' %s' % self.other_names if self.other_names else ''
+        return '{} {} {}'.format(self.first_name, self.surname, onames,)
 
 
 class RegBiometric(models.Model):
@@ -220,8 +224,10 @@ class RegBiometric(models.Model):
 class RegPersonsGuardians(models.Model):
     """Model for Persons (Child) guardians."""
 
-    child_person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='child_person')
-    guardian_person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='guardian_person')
+    child_person = models.ForeignKey(
+        RegPerson, on_delete=models.CASCADE, related_name='child_person')
+    guardian_person = models.ForeignKey(
+        RegPerson, on_delete=models.CASCADE, related_name='guardian_person')
     relationship = models.CharField(max_length=5)
     date_linked = models.DateField(null=True)
     date_delinked = models.DateField(null=True)
@@ -244,8 +250,10 @@ class RegPersonsGuardians(models.Model):
 class RegPersonsSiblings(models.Model):
     """Model for Persons (Child) siblings."""
 
-    child_person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='child_sibling')
-    sibling_person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='sibling_person')
+    child_person = models.ForeignKey(
+        RegPerson, on_delete=models.CASCADE, related_name='child_sibling')
+    sibling_person = models.ForeignKey(
+        RegPerson, on_delete=models.CASCADE, related_name='sibling_person')
     date_linked = models.DateField(null=True)
     date_delinked = models.DateField(null=True)
     remarks = models.TextField(null=True)
@@ -293,7 +301,8 @@ class RegPersonsGeo(models.Model):
 
     # from cpovc_main.models import SetupGeography
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
-    area = models.ForeignKey(to='cpovc_main.SetupGeography', on_delete=models.CASCADE)
+    area = models.ForeignKey(
+        to='cpovc_main.SetupGeography', on_delete=models.CASCADE)
     area_type = models.CharField(max_length=4)
     date_linked = models.DateField(null=True)
     date_delinked = models.DateField(null=True)
@@ -423,7 +432,8 @@ class RegPersonsAuditTrail(models.Model):
     interface_id = models.CharField(max_length=4, null=True, db_index=True)
     date_recorded_paper = models.DateField(null=True)
     person_recorded_paper = models.ForeignKey(
-        RegPerson, on_delete=models.CASCADE, related_name='person_recorded_paper', null=True)
+        RegPerson, on_delete=models.CASCADE,
+        related_name='person_recorded_paper', null=True)
     timestamp_modified = models.DateTimeField(auto_now=True)
     app_user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     ip_address = models.GenericIPAddressField(protocol='both')
@@ -441,8 +451,11 @@ class RegPersonsAuditTrail(models.Model):
 class OVCSibling(models.Model):
     """Model for Siblings details."""
 
-    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='ovc_sibling')
-    cpims = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='ovc_cpims', null=True)
+    person = models.ForeignKey(
+        RegPerson, on_delete=models.CASCADE, related_name='ovc_sibling')
+    cpims = models.ForeignKey(
+        RegPerson, on_delete=models.CASCADE,
+        related_name='ovc_cpims', null=True)
     first_name = models.CharField(max_length=50)
     other_names = models.CharField(max_length=50, default=None)
     surname = models.CharField(max_length=50)
@@ -467,7 +480,8 @@ class OVCCheckin(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False)
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
-    org_unit = models.ForeignKey(RegOrgUnit, on_delete=models.CASCADE, null=True)
+    org_unit = models.ForeignKey(
+        RegOrgUnit, on_delete=models.CASCADE, null=True)
     is_ovc = models.BooleanField(default=True)
     is_void = models.BooleanField(default=False)
     timestamp_created = models.DateTimeField(default=timezone.now)
@@ -483,7 +497,8 @@ class OVCHouseHold(models.Model):
 
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    index_child = models.ForeignKey(RegPerson, on_delete=models.CASCADE, related_name='index_child')
+    index_child = models.ForeignKey(
+        RegPerson, on_delete=models.CASCADE, related_name='index_child')
     members = models.CharField(max_length=200)
     is_void = models.BooleanField(default=False)
     timestamp_created = models.DateTimeField(default=timezone.now)
@@ -492,6 +507,8 @@ class OVCHouseHold(models.Model):
         """Override table details."""
 
         db_table = 'reg_household'
+        verbose_name = 'OVC Household'
+        verbose_name_plural = 'OVC Households'
 
 
 class PersonsMaster(models.Model):
@@ -524,3 +541,23 @@ def check_malice(sender, instance, **kwargs):
         sm_ratio = round(sm.ratio(), 2) * 100
         if sm_ratio < 70:
             raise Exception('Complete change of Org Unit name is NOT allowed.')
+
+
+@receiver(pre_save, sender=RegPerson)
+def check_name_malice(sender, instance, **kwargs):
+    """Method to check malicious edits."""
+    try:
+        obj = sender.objects.get(pk=instance.pk)
+    except sender.DoesNotExist:
+        pass
+    else:
+        fname = obj.first_name.upper()
+        sname = obj.surname.upper()
+        new_fname = instance.first_name.upper()
+        new_sname = instance.surname.upper()
+        f_sm = SequenceMatcher(None, fname, new_fname)
+        s_sm = SequenceMatcher(None, sname, new_sname)
+        fsm_ratio = round(f_sm.ratio(), 2) * 100
+        ssm_ratio = round(s_sm.ratio(), 2) * 100
+        if fsm_ratio < 70 or ssm_ratio < 70:
+            raise Exception('Complete change of First name and Surname is NOT allowed.')

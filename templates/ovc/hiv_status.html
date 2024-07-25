@@ -1,0 +1,469 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page_title %} HIV Status update {% endblock %}
+
+{% load app_filters %}
+{% load app_forms %}
+
+{% block style_code %}
+<link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block primary %}
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+	<li><a href="#">Home</a></li>
+	<li class="active">OVC Care</li>
+</ol>
+<!-- end breadcrumb -->
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-child"></i> OVC Care <small>HIV Status details | {{ child.first_name }} {{ child.surname }} | {{ child.age }}
+{% if validity > 0 and validity < 180 %}
+<span class="label label-primary">Valid HIV status</span>
+{% else %}
+<span class="label label-danger">Invalid HIV Status ({{ validity }})</span>
+{% endif %}
+</small></h1>
+<!-- end page-header -->
+<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+    <span class="close" data-dismiss="alert">�</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+    <span class="invalid-form-message" id="invalid-form-message"></span>
+</div>
+<!-- begin row -->
+<div class="row">
+  <!-- begin col-12 -->
+    <div class="col-md-12">
+        <!-- begin panel -->
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>                      
+                <h4 class="panel-title">HIV Status update details &nbsp;</h4>
+            </div>
+            <!-- start panel body -->
+            <div class="panel-body">
+                <form class="form-horizontal" action="." method="post" name="ovcreg_form" id="ovcreg_form"  data-parsley-validate="true">
+                {% csrf_token %}
+                <input type="hidden" name="ovc_id" id="ovc_id" value="{{ child.id }}">
+
+                {% if creg.hiv_status != 'HSTP' and creg.is_active == True %}
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Date of HIV Testing / HRS</label>
+                    <div class="col-md-7">{{ form.date_of_testing }}</div>
+                    <div class="col-md-2"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">HIV Status</label>
+                    <div class="col-md-7">{{ form.hiv_statuss }}</div>
+                    <div class="col-md-2"></div>
+                </div>
+
+
+                <div class="form-group">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                                <button type="button" class="btn btn-primary" name='btn-hiv' id='btn_hiv'>Submit</button>
+                        </div>
+                    </div>
+                {% else %}
+                
+                <div class="note note-danger">
+                    <h4>Warning!</h4>
+                    <p>
+                        This form only applies for Active Non HIV Positive OVC. If you clicked here from browsing history or by mistake kindly recheck the URL and try again.
+                    </p>
+                </div>
+                {% endif %}
+
+                <br>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">HIV Status tracking</label>
+                    <div class="col-md-7">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>HIV Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if hiv_statuses %}
+                                {% for hiv_status in hiv_statuses %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ hiv_status.hiv_status|gen_value:vals }}</td>
+                                    <td>{{ hiv_status.date_of_event }}</td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="3">No HIV status update using this form. ONLY records less than 6 months old should be valid status.</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <a href="{% url 'ovc_view' id=ovc_id %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: May 2024</div>
+                          
+            </div>
+            <!-- end panel body -->
+        </div>
+        <!-- end panel -->  
+    </div>
+    <!-- end col-12 -->
+    
+    
+    
+    
+</div>
+</div>
+</form>
+<!-- end row -->
+{% endblock %}
+
+{% block lazy_javascript_code %}
+<script src="{% static 'plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap-multiselect.js' %}"></script>
+<script>
+    $("#wizard").bwizard();
+    $('#ovcreg_form').submit(function(){
+        if ($('#ovcreg_form').parsley().isValid()){ 
+             $('#messages').html('Form is OK.');
+             $('#messages').show();
+        }else{
+            $('#messages').html('Please fill all the mandatory fields. Only complete records will be saved.');
+            $('#messages').show();
+            return true;
+        }
+    
+         
+    });
+    $("#is_exited").prop("disabled", true);
+
+    console.log('{{date_difference}}')
+
+    $('#ovcexit').click(function() { 
+        $('#modal-ovc-exit').modal('toggle');
+    });
+    $('#viral_details').click(function() {
+        var viral_date = $('#viral_date').val();
+        var viral_value = $('#viral_value').val();
+        var ldl = $('#ldl').is(":checked");
+         var ovc_id = $('#ovc_id').val();
+        //disable_fields(ccond, 'bcert_no');
+        var csrftoken = $.cookie('csrftoken');
+        var values = {'ovc_id': ovc_id, 'action': 3,
+                      'viral_value': viral_value,
+                      'viral_date': viral_date, 'ldl': ldl,
+                      'csrfmiddlewaretoken': csrftoken };
+        if(( ldl || viral_value) && viral_date){
+            $.ajax({
+                type: "POST",
+                data: values,
+                dataType: "json",
+                url: "{% url 'ovc_manage' %}",
+                success: function(data){
+                    $('#messages').html('Viral load update was successful' );
+                    $('#messages').show();
+                    // Redirect to view
+                    $('#modal-viralload').modal('toggle');
+                },
+                error: function(){
+                    $('#messages').html("Error");
+                    $('#messages').show();
+                }
+            });
+        }else{
+            $('#vmessage').html('Please fill the date and LDL or Viral Load value' );
+            $("#vmessage").addClass( "alert alert-danger fade in" ); 
+        }
+        $('#messages').html('Viral Load added successful' );
+        $('#messages').show();
+    });  
+
+
+
+
+    $('#btn_hiv').click(function(ev) {
+        ev.preventDefault();
+        var date_of_testing=$('#date_of_event').val();
+        var hiv_statuss=$('#hiv_statuss option:selected').val();
+        // alert(hiv_statuss);
+        var csrftoken = $.cookie('csrftoken');
+        var child="{{child.id}}";
+
+        var csrftoken = $.cookie('csrftoken');
+        var values = {
+                      'hiv_statuss': hiv_statuss,
+                      'date_of_testing': date_of_testing,
+                      'child':child,
+                      'csrfmiddlewaretoken': csrftoken };
+        if(date_of_testing && hiv_statuss){
+            $.ajax({
+                type: "POST",
+                data: values,
+                dataType: "json",
+                url: "{% url 'hiv_status' %}",
+                success: function(data){
+                    $('#messages').html('HIV status update was successful' );
+                    $('#messages').show();
+                    // Redirect to view
+                    $('#modal-hiv').modal('toggle');
+                    $(location).attr('href', '{% url 'ovc_view' id=ovc_id %}');
+                },
+                // error: function(){
+                //     $('#messages').html("Error");
+                //     $('#messages').show();
+                // }
+            });
+        }else{
+            $('#vmessage').html('Please fill the date' );
+            $("#vmessage").addClass( "alert alert-danger fade in" ); 
+        }
+        $('#messages').removeClass('alert-danger').addClass('alert-success');
+        $('#messages').html('HIV status added successful' );
+        $('#messages').show();
+        $('#modal-hiv').find('button.close').trigger('click');
+    });
+
+    
+    
+    var is_exit = $('#is_exited').is(":checked");
+    disable_fields(is_exit, 'exit_reason');
+    //Class levels
+    {% for key, values in levels.items %}
+        var {{ key }} = {{ values|safe }};
+    {% endfor %}
+    $('#eligibility, #exit_reason').multiselect({
+        enableCaseInsensitiveFiltering: true,
+        numberDisplayed: 1,
+        maxHeight: 300,
+        buttonWidth: '100%',
+        disableIfEmpty: true,
+        enableClickableOptGroups: true,
+        buttonClass: 'btn btn-white'
+    });
+    $('#reg_date, #link_date, #exit_date, #viral_date').datepicker({
+        dateFormat: 'yy-mm-dd', format: 'dd-M-yyyy',
+        endDate: '+0d', enddate: '+0d', autoclose: true
+    });
+    var ccond = $('#has_bcert').is(":checked");
+    disable_fields(ccond, 'bcert_no');
+    var dcond = $('#disb').is(":checked");
+    disable_fields(dcond, 'ncpwd_no');
+    $('#is_exited').live('change', function() {
+        var is_exit = $('#is_exited').is(":checked");
+        disable_fields(is_exit, 'exit_reason');
+        $('#exit_reason').multiselect('rebuild');
+    });
+    $('#has_bcert').live('change', function() {
+        var cond = $('#has_bcert').is(":checked");
+        disable_fields(cond, 'bcert_no');
+    });
+    $('#disb').live('change', function() {
+        var cond = $('#disb').is(":checked");
+        disable_fields(cond, 'ncpwd_no');
+    });
+    $('#exit_org_div').hide();
+    var cond = $('#ovc_exit_reason').val();
+    handle_exit_org(cond);
+    $('#ovc_exit_reason').live('change', function() {
+        var cond = $('#ovc_exit_reason').val();
+        handle_exit_org(cond);
+    });
+    // DREAMS
+    var drcond = $('#is_dreams_enrolled').is(":checked");
+    disable_fields(drcond, 'dreams_id');
+    $('#is_dreams_enrolled').live('change', function() {
+        var drcond = $('#is_dreams_enrolled').is(":checked");
+        disable_fields(drcond, 'dreams_id');
+    });
+
+    $('#caretaker').val('{{ child.caretaker }}');
+    var hstatus = $('#hiv_status').val();
+    var hlevel = $('#school_level').val();
+    handle_hstatus(hstatus);
+    handle_education(hlevel);
+    handle_levels(hlevel);
+    $('#school_class').val('{{ sch_class }}');
+    $('#hiv_status').change(function(){
+        handle_hstatus(this.value);
+    });
+    $('#school_level').change(function(){
+        handle_education(this.value);
+        handle_levels(this.value);
+    });
+    $('.alive').change(function(){
+        var ids = $(this).attr('id');
+        var alive = this.value;
+        var id = ids.split('_')[1];
+        if (alive == 'ANNO'){
+           $('#div_' + ids).hide();
+           $('#ndiv_' + ids).show();
+           $('#gstatus_' + id).attr("data-parsley-required", "false");
+           $('#cstatus_' + id).attr("data-parsley-required", "true");
+        }else{
+           $('#div_' + ids).show();
+           $('#ndiv_' + ids).hide();
+           $('#gstatus_' + id).attr("data-parsley-required", "true");
+           $('#cstatus_' + id).attr("data-parsley-required", "false");
+        }
+    });
+    //Facility query
+    $( "#facility" ).autocomplete({
+        source: function( request, response ) {
+        $.ajax({
+          url: "{% url 'ovc_search' %}",
+          dataType: "json",
+          data: {q: request.term, id: 1},
+          success: function( data ) {
+            response( data );
+          }
+        });
+      },
+      minLength: 4,
+      select: function( event, ui ) {
+         $('#facility').val(ui.item.name);
+         $('#facility_id').val(ui.item.id);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      }
+    });
+    //School query
+    var s_level = $('#school_level').val();
+    $( "#school_name" ).autocomplete({
+        source: function( request, response ) {
+        $.ajax({
+          url: "{% url 'ovc_search' %}",
+          dataType: "json",
+          data: {q: request.term, id: 2, level: $('#school_level').val()},
+          success: function( data ) {
+            response( data );
+          }
+        });
+      },
+      minLength: 4,
+      select: function( event, ui ) {
+         $('#school_name').val(ui.item.name);
+         $('#school_id').val(ui.item.id);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      }
+    });
+    function handle_levels(person_type){
+        var default_txt = "<option value=''>Select title</option>";
+        if (person_type != ''){
+            var person_txt = ((eval(person_type)).length == 1) ? '' : default_txt;
+        }else{
+            var person_txt = "<option value=''>Select Class</option>";
+        }
+        $('#school_class').html(person_txt);
+        if (person_type != ''){
+            eval(person_type).forEach(function(tts) {
+                var tts_attribs = tts.split(",");
+                $('#school_class')
+                    .append($("<option></option>")
+                    .attr("value", tts_attribs[0])
+                    .text(tts_attribs[1]));
+            });
+        }else{
+             $('#school_class').append('<option></option>'); 
+        }
+    }
+    function handle_exit_org(cond){
+        if (cond == 'ERFO' || cond == 'ERTL'){
+           $('#exit_org_div').show(); 
+           $('#exit_org_name').attr("data-parsley-required", "true");
+        }else{
+           $('#exit_org_div').hide();
+           $('#exit_org_name').attr("data-parsley-required", "false");
+        }
+    }
+
+    function handle_hstatus(hstatus){
+        if ((hstatus == 'HSTP') || (hstatus == 'HHEI')){
+            $('#facility_div').show();
+            $('#facility_id_div').show();
+            $('#art_div').show();
+            $('#link_date_div').show();
+            $('#ccc_no_div').show();
+            $('#facility').attr("data-parsley-required", "true");
+            $('#facility_id').attr("data-parsley-required", "true");
+            $('#art_status').attr("data-parsley-required", "true");
+            $('#link_date').attr("data-parsley-required", "true");
+            $('#ccc_number').attr("data-parsley-required", "true");
+            $('#viralloadbtncontainer').removeClass('hidden')
+        }else{
+            $('#viralloadbtncontainer').addClass('hidden')
+            $('#facility_div').hide();
+            $('#facility_id_div').hide();
+            $('#art_div').hide();
+            $('#link_date_div').hide();
+            $('#ccc_no_div').hide();
+            $('#facility').attr("data-parsley-required", "false");
+            $('#facility_id').attr("data-parsley-required", "false");
+            $('#art_status').attr("data-parsley-required", "false");
+            $('#link_date').attr("data-parsley-required", "false");
+            $('#ccc_number').attr("data-parsley-required", "false");
+        } 
+    }
+    function handle_education(hlevel){
+        if ((hlevel == 'SLNS') || (hlevel == '')) {
+            $('#school_name_div').hide();
+            $('#school_id_div').hide();
+            $('#school_class_div').hide();
+            $('#admission_type_div').hide();
+            $('#school_name').attr("data-parsley-required", "false");
+            $('#school_id').attr("data-parsley-required", "false");
+            $('#school_class').attr("data-parsley-required", "false");
+            $('#admission_type').attr("data-parsley-required", "false");
+        }else{
+            $('#school_name_div').show();
+            $('#school_id_div').show();
+            $('#school_class_div').show();
+            $('#admission_type_div').show();
+            $('#school_name').attr("data-parsley-required", "true");
+            $('#school_id').attr("data-parsley-required", "true");
+            $('#school_class').attr("data-parsley-required", "true");
+            $('#admission_type').attr("data-parsley-required", "true");
+        }
+    }
+    function disable_fields(cond, field_id){
+        if (cond){
+            console.log(field_id + ' 1');
+            $('#'+ field_id).prop('disabled', false);
+            $('#'+ field_id).attr("data-parsley-required", "true");  
+        }else{
+            console.log(field_id + ' 2');
+            $('#'+ field_id).prop('disabled', true);
+            $('#'+ field_id).attr("data-parsley-required", "false");
+        }
+        
+    }
+</script>
+<script>
+
+        $('#date_of_event').datepicker({ endDate: '0y', format: 'dd-M-yyyy' });
+        </script>
+
+{% endblock %}

@@ -110,30 +110,6 @@
     <span class="mesagg" id="mesagg"></span>
 </div>
 
-<!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#delete-form1a-entry">Open Modal</button>-->
-
-  <!--Confirm form1a delete Modal -->
-
-  <div class="modal fade" id="delete-form1a-entry" style="margin-left: auto; margin-right: auto; width: 50%;" role="dialog">
-    <div class="modal-dialog modal-sm">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Delete Entry</h4>
-        </div>
-        <div class="modal-body">
-          <p style="color: #ff0000; font-size: 16px;">Delete selected entry?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default btn-default" onclick="deleteForm1aEntry()" data-dismiss="modal">Yes</button>
-          <button type="button" class="btn btn-default btn-primary" data-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
 
 <!-- begin row -->
 <div id='case_details' class="row">
@@ -154,11 +130,6 @@
             	
 
 					<div id="wizard-f1a">
-
-
-
-
-
 
 						<!-- begin wizard step-1 -->
 						<div class="wizard-step-1">
@@ -189,7 +160,7 @@
                                     </div>
 									<div class="col-md-2">
 										<div class="form-group">
-											<label class="control-label formlabel">Date of caseplan:</label><br/>
+											<label class="control-label formlabel">Date of caseplan: <span class="asteriskField">* </span></label><br/>
 											<input type="text" class="form-control" style="max-width: 200px;" name="CPT_DATE_CASEPLAN"/>
 										</div>
                                     </div>
@@ -275,11 +246,11 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th colspan="2"><h6><b>Services<span class="asteriskField">* </b></h6></th>
-                                            <th colspan="2"><h6><b>Person Responsible<span class="asteriskField">* </b></h6></th>
-                                            <th colspan="1"><h6><b>Date to be completed<span class="asteriskField">* </b></h6></th>
-                                            <th colspan="1"><h6><b>Results<span class="asteriskField">* </b></h6></th>
-                                            <th colspan="2"><h6><b>Reasons<span class="asteriskField">* </b></h6></th>
+                                            <th colspan="2"><h6><b>Services<span class="asteriskField">* </span></b></h6></th>
+                                            <th colspan="2"><h6><b>Person Responsible<span class="asteriskField">* </span></b></h6></th>
+                                            <th colspan="1"><h6><b>Date to be completed<span class="asteriskField">* </span></b></h6></th>
+                                            <th colspan="1"><h6><b>Results</b></h6></th>
+                                            <th colspan="2"><h6><b>Reasons</b></h6></th>
                                             <th colspan="1"></th>
                                         </tr>
 
@@ -411,8 +382,8 @@
                     <input type="hidden" name="final_submission"/>
 				</form>
             </div>
-            <a href="#" class="badge badge-primary m-4"> Back to OVC</a>
-            <div class="badge pull-right m-4">Revised: Oct 6th 2016</div>
+            <a href="{% url 'ovc_view' id=child.id %}" class="badge badge-primary m-4"> Back to OVC</a>
+            <div class="badge pull-right m-4">Revised: May 2022</div>
         </div>
         <!-- end panel -->
 
@@ -445,6 +416,7 @@
                                     
                                     <th>#</th>
                                     <th>Domain</th>
+                                    <th>Case Plan Date</th>
                                     <th>Goal</th>
                                     <th>Needs/Gaps</th>
                                     <th>Priority Actions</th>
@@ -462,6 +434,11 @@
                                         <tr>
                                             <td rowspan="4" style="text-align: center;vertical-align: middle;" width="40px" valign="center">{{forloop.counter}}</td>
                                             <td style="text-align: center;vertical-align: middle;"><b>HEALTHY</b></td>
+                                            <td>
+                                                {% for one_healthy in one_cpt_event.event_healthy %}
+                                                    <small><b>({{forloop.counter}})</b></small> <small>{{ one_healthy.ev_date }}</small> <hr class="m-t-0 m-b-0"/>
+                                                {% endfor %}
+                                            </td>
                                             <td>
                                                 {% for one_healthy in one_cpt_event.event_healthy %}
                                                     <small><b>({{forloop.counter}})</b></small> <small>{{one_healthy.ev_goal}}</small><hr class="m-t-0 m-b-0"/>
@@ -503,11 +480,39 @@
                                                 {% endfor %}
                                             </td>
                                             <td rowspan="4" style="text-align: center;vertical-align: middle;" width="40px" valign="center">
-                                                <a href="{% url 'update_caseplan' event_id=one_cpt_event.event_id ovcid=one_cpt_event.event_ovc %}" class="btn btn-sm btn-primary btn-outline btn-sm">Update</a>
+                                                <a href="{% url 'update_caseplan' event_id=one_cpt_event.event_id ovcid=one_cpt_event.event_ovc %}" class="btn btn-sm btn-primary btn-outline btn-sm">Update &nbsp; </a><p></p>
+                                                <a href="{% url 'monitor_caseplan' event_id=one_cpt_event.event_id ovcid=one_cpt_event.event_ovc %}" class="btn btn-sm btn-primary btn-outline">Monitor</a><p></p>
+                                                <a href="#delete-caseplan-entry-{{ one_cpt_event.event_id }}" class="btn btn-sm btn-danger btn-outline" data-toggle="modal">Delete &nbsp;&nbsp;</a>
+                                                <!--Confirm form1a delete Modal -->
+                                                  <div class="modal fade" id="delete-caseplan-entry-{{ one_cpt_event.event_id }}" style="margin-left: auto; margin-right: auto; width: 90%;" role="dialog">
+                                                    <div class="modal-dialog modal-sm">
+
+                                                      <!-- Modal content-->
+                                                      <div class="modal-content">
+                                                        <div class="modal-header">
+                                                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                          <h4 class="modal-title">Delete Case Plan Entry - {{ one_cpt_event.event_id }}</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                          <p style="color: #ff0000; font-size: 16px;">Delete selected entry?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                          <button type="button" class="btn btn-default btn-default" onclick="deleteCPTEntry({{one_cpt_event.event_ovc }}, '{{ one_cpt_event.event_id }}' )" data-dismiss="modal">Yes</button>
+                                                          <button type="button" class="btn btn-default btn-primary" data-dismiss="modal">Cancel</button>
+                                                        </div>
+                                                      </div>
+
+                                                    </div>
+                                                  </div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="text-align: center;vertical-align: middle;"><b>STABLE</b></td>
+                                            <td>
+                                                {% for one_stable in one_cpt_event.event_stable %}
+                                                    <small><b>({{forloop.counter}})</b></small> <small>{{ one_stable.ev_date }}</small> <hr class="m-t-0 m-b-0"/>
+                                                {% endfor %}
+                                            </td>
                                             <td>
                                                 {% for one_stable in one_cpt_event.event_stable %}
                                                     <small><b>({{forloop.counter}})</b></small> <small>{{one_stable.ev_goal}}</small><hr class="m-t-0 m-b-0"/>
@@ -553,6 +558,11 @@
                                             <td style="text-align: center;vertical-align: middle;"><b>SAFE</b></td>
                                             <td>
                                                 {% for one_safe in one_cpt_event.event_safe %}
+                                                    <small><b>({{forloop.counter}})</b></small> <small>{{ one_school.ev_date }}</small> - <hr class="m-t-0 m-b-0"/>
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                {% for one_safe in one_cpt_event.event_safe %}
                                                     <small><b>({{forloop.counter}})</b></small> <small>{{one_safe.ev_goal}}</small><hr class="m-t-0 m-b-0"/>
                                                 {% endfor %}
                                             </td>
@@ -594,6 +604,11 @@
                                         </tr>
                                         <tr style="border-bottom: 5px solid #aaa;">
                                             <td style="text-align: center;vertical-align: middle;"><b>SCHOOLED</b></td>
+                                            <td>
+                                                {% for one_school in one_cpt_event.event_school %}
+                                                    <small><b>({{forloop.counter}})</b></small> <small>{{ one_school.ev_date }}</small> <hr class="m-t-0 m-b-0"/>
+                                                {% endfor %}
+                                            </td>
                                             <td>
                                                 {% for one_school in one_cpt_event.event_school %}
                                                     <small><b>({{forloop.counter}})</b></small> <small>{{one_school.ev_goal}}</small><hr class="m-t-0 m-b-0"/>
@@ -640,10 +655,6 @@
                             </tbody>
                         </table>
 
-
-
-
-
                         <table class="table hidden">
                             <thead>
                                 <tr>
@@ -660,7 +671,11 @@
                                             <td><b>{{one_cpt_event.event_id}}</b></td>
                                             <td>{{one_cpt_event.event_date}}</td>
                                             <td>{{one_cpt_event.event_services_count}}</td>
-                                            <td><a href="{% url 'update_caseplan' event_id=one_cpt_event.event_id ovcid=one_cpt_event.event_ovc %}" class="btn btn-sm btn-primary btn-outline">Update</a></td>
+                                            <td>
+                                                <a href="{% url 'update_caseplan' event_id=one_cpt_event.event_id ovcid=one_cpt_event.event_ovc %}" class="btn btn-sm btn-primary btn-outline">Update</a>
+                                                <a href="#" class="btn btn-sm btn-primary btn-outline">Monitor</a>
+                                                <a href="#" class="btn btn-sm btn-danger btn-outline">Delete</a>
+                                            </td>
                                         </tr>
                                     {% endif %}
                                 {% endfor %}
@@ -722,6 +737,12 @@
             $('#div_CPT_ACTUAL_DATE_COMPLETION').addClass('hidden');
         }
     })
+    function deleteCPTEntry(ovc_id, event_id){
+        //alert('Delete record');
+        var CPTDelete= "{% url 'delete_caseplan' id=1234 event_id='00000000-0000-0000-0000-000000000000' %}".replace(/1234/, ovc_id.toString()).replace(/00000000-0000-0000-0000-000000000000/, event_id.toString());
+        // alert();
+        window.location.href = CPTDelete;
+    }
 </script>
 {% endblock %}
 	

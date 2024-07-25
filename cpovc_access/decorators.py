@@ -9,7 +9,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.template import RequestContext
 from django.utils import timezone as datetime
 from django.utils.translation import gettext_lazy
 

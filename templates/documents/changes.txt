@@ -1,3 +1,25 @@
+<b>August 8, 2023 </b>
+
+- Dashboards set two responsive and renamed to archive
+- Landing page introduction of active caregivers and fix HH query
+- Introduction of caseload report to query only active without date filters
+- Other TDY recommendations on the dashboards
+
+<b>August 2, 2023 </b>
+
+- API endpoints - Documentation and version 2.3 release
+- User initiated password reset for active accounts using email
+- Remove old partners logos
+- New identifiers - NUPI, NEMIS, DREAMS ID, Birth Certificate Notification
+
+<b>July 15, 2023 </b>
+
+- Dashboards versioning to SAPR / APR
+
+<b>July 1, 2023 </b>
+
+- Bug fixes - Editing exited OVC
+
 <b>July 11, 2018</b>
 
 - Presidential Bursary Form.

@@ -1,49 +1,13 @@
 """Admin backend for editing some admin details."""
-import csv
-import time
 from django.contrib import admin
-from django.http import HttpResponse
-from numpy.compat import unicode
 
 from .models import (RegPerson, RegOrgUnit, RegOrgUnitsAuditTrail,
-                     RegPersonsAuditTrail, RegPersonsTypes)
+                     RegPersonsAuditTrail, RegPersonsTypes, OVCHouseHold)
 
 
 from cpovc_auth.models import AppUser
 
-
-def dump_to_csv(modeladmin, request, qs):
-    """
-    These takes in a Django queryset and spits out a CSV file.
-
-    Generic method for any queryset
-    """
-    model = qs.model
-    file_id = 'CPIMS_{}_{:d}'.format(model.__name__, int(time.time()))
-    file_name = 'attachment; filename={}.csv'.format(file_id)
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = file_name
-    writer = csv.writer(response, csv.excel)
-
-    headers = []
-    for field in model._meta.fields:
-        headers.append(field.name)
-    writer.writerow(headers)
-
-    for obj in qs:
-        row = []
-        for field in headers:
-            val = getattr(obj, field)
-            if callable(val):
-                val = val()
-            if type(val) == unicode:
-                val = val.encode("utf-8")
-            row.append(val)
-        writer.writerow(row)
-    return response
-
-
-dump_to_csv.short_description = u"Dump to CSV"
+from cpovc_main.utils import dump_to_csv
 
 
 class PersonInline(admin.StackedInline):
@@ -123,3 +87,15 @@ class PersonsAuditAdmin(admin.ModelAdmin):
 
 
 admin.site.register(RegPersonsAuditTrail, PersonsAuditAdmin)
+
+
+class OVCHouseHoldAdmin(admin.ModelAdmin):
+    """Register persons admin."""
+
+    search_fields = ['index_child', 'members']
+    list_display = ['index_child_id', 'index_child', 'members']
+    # readonly_fields = ['id']
+    list_filter = ['is_void']
+
+
+admin.site.register(OVCHouseHold, OVCHouseHoldAdmin)

@@ -1,0 +1,1000 @@
+   55  ls
+   56  cd snippets/
+   57  ls
+   58  vim ssl-childprotection.go.ke.conf 
+   59  ls
+   60  cd /etc/nginx/
+   61  ls
+   62  vim uwsgi_params
+   63  vim nginx.conf
+   64  ls /usr/share/nginx/html
+   65  cd /usr/share/nginx/html
+   66  ls
+   67  vim index.html
+   68  vim index.html.bak 
+   69  mv index.html index-old.html
+   70  vim report.html 
+   71  touch index.html
+   72  ls
+   73  cd /etc/
+   74  ls
+   75  cd nginx/
+   76  ls
+   77  vim nginx.conf
+   78  cp nginx.conf nginx.conf-bak
+   79  vim nginx.conf
+   80  ls
+   81  cd conf.d/
+   82  ls
+   83  vim cpportal.conf
+   84  service nginx configtest
+   85  systemctl nginx configtest
+   86  vim /etc/systemd/system/uwsgi.service 
+   87  service nginx restart
+   88  systemctl status nginx.service
+   89  ls
+   90  mv cpportal.conf cpportal.conf.bak
+   91  service nginx restart
+   92  ls
+   93  vim cpportal.conf.bak 
+   94  service nginx restart
+   95  ls
+   96  mv cpportal.conf.bak cpportal.conf
+   97  service nginx restart
+   98  service uwsgi restart
+   99  tail -f /var/log/nginx/error.log
+  100  vim /etc/systemd/system/uwsgi.service 
+  101  ls /etc/systemd/system/
+  102  ls
+  103  vim cpportal.conf 
+  104  cd ../
+  105  ls
+  106  vim nginx.conf
+  107  ls /run/uwsgi/
+  108  vim /etc/systemd/system/uwsgi.service
+  109  ls /etc/uwsgi/sites
+  110  cd /etc/uwsgi/sites
+  111  ls
+  112  vim cpims.ini 
+  113  ls
+  114  vim cpportal.ini 
+  115  vim cpims.ini 
+  116  systemctl status uwsgi
+  117  mkdir /etc/uwsgi/sites_python3
+  118  cd /etc/uwsgi/sites_python3/
+  119  ls
+  120  cp ../sites/cpportal.ini .
+  121  ls /home/%(username)/python3-cpims
+  122  ls /home/cpimsuser/python3-cpims
+  123  ls /home/cpimsuser/python3-cpims/bin/
+  124  ls /home/cpimsuser/cpimsapp/bin/
+  125  ls /home/cpimsuser/python3-cpims/bin/
+  126  su cpimsuser
+  127  yum install python3-devel
+  128  su cpimsuser
+  129  ls /home/cpimsuser/python3-cpims/bin/
+  130  cd /etc/uwsgi/
+  131  ls
+  132  cd sites_python3/
+  133  ls
+  134  vim cpportal.ini 
+  135  cd ../
+  136  ls
+  137  cd sites
+  138  ls
+  139  vim cpportal.ini 
+  140  service uwsgi restart
+  141  systemctl status uwsgi
+  142  tail -f /var/log/nginx/error.log
+  143  ls /run/uwsgi/
+  144  tail -f /var/log/cpportal.log 
+  145  su cpimsuser
+  146  ls
+  147  tail -f /var/log/
+  148  tail -f /var/log/cpportal.log 
+  149  ls
+  150  vim cpportal.ini 
+  151  vim cpims.ini 
+  152  vim cpportal.ini 
+  153  ls
+  154  vim ../sites_python3/cpportal.ini 
+  155  ls /home/cpimsuser/cpims
+  156  ls /home/cpimsuser/cpims/cpims/wsgi.py
+  157  vim /home/cpimsuser/cpims/cpims/wsgi.py
+  158  su cpimsuser
+  159  tail -f /var/log/cpportal.log 
+  160  tail -f /var/log/nginx/error.log
+  161  tail -f /var/log/cpportal.log 
+  162  service nginx restart
+  163  tail -f /var/log/cpportal.log 
+  164  ls
+  165  vim cpims.ini 
+  166  vim ../sites_python3/cpportal.ini 
+  167  service uwsgi restart
+  168  tail -f /var/log/cpportal.log 
+  169  service nginx restart
+  170  tail -f /var/log/cpportal.log 
+  171  tail -f /var/log/nginx/error.log
+  172  tail -f /var/log/cpportal.log 
+  173  su cpimsuser
+  174  service uwsgi restart
+  175  su cpimsuser
+  176  service uwsgi restart
+  177  su cpimsuser
+  178  su cpimsuser
+  179  tail -f /var/log/cpims.log 
+  180  su postgres
+  181  su cpims
+  182  su postgres
+  183  su cpimsuser
+  184  cd /dbs/
+  185  ls
+  186  mkdir scripts
+  187  ls
+  188  cd scripts/
+  189  cd ../
+  190  chown -R postgres:postres scripts/
+  191  chown -R postgres:postgres scripts/
+  192  su postgres
+  193  certbot --nginx -d data.childprotection.go.ke
+  194  ls /dbs/backups/databases/
+  195  su postgres
+  196  ls
+  197  su postgres
+  198  ls
+  199  su cpimsuser
+  200  service nginx restart
+  201  ls
+  202  ls /home/
+  203  cd /etc/nginx/
+  204  ls
+  205  vim nginx.conf
+  206  ls
+  207  vim nginx.conf
+  208  ls
+  209  cd conf.d/
+  210  ls
+  211  vim cpportal.conf 
+  212  service uwsgi restart
+  213  ls
+  214  su cpimsuser
+  215  service uwsgi restart
+  216  su cpimsuser
+  217  su postgres
+  218  locate hba.conf
+  219  cd /etc/
+  220  ls
+  221  cd /var/lib/pgsql/
+  222  ls
+  223  cd 11
+  224  ls
+  225  cd data/
+  226  ls
+  227  vim pg_hba.conf 
+  228  su cpimsuser
+  229  service uwsgi restart
+  230  cd /etc/nginx/
+  231  ls
+  232  vim nginx.conf
+  233  cd conf.d
+  234  ls
+  235  vim cpportal.conf 
+  236  service nginx reload
+  237  su cpimsuser
+  238  ls
+  239  su cpimsuser
+  240  service uwsgi restart
+  241  ls /dbs/backups/databases/
+  242  du -sh /dbs/backups/databases/*
+  243  su postgres
+  244  df -kh
+  245  du -sh /*
+  246  cd /var/
+  247  ls
+  248  du -sh *
+  249  cd log
+  250  ldu -sh *
+  251  du -sh *
+  252  rm cpims-05.08.2019.log 
+  253  service postgres start
+  254  systemctl list-units|grep postgresql
+  255  service postgresql-11 start
+  256  rm cpims.2020-04-18.log 
+  257  yum install logrotate
+  258  df -kh
+  259  su cpimsuser
+  260  ls /dbs/backups/databases/
+  261  service uwsgi restart
+  262  cd
+  263  ls /dbs/backups
+  264  ls /dbs/backups/databases/
+  265  exit
+  266  su cpmis
+  267  su cpimsuser
+  268  su postgres
+  269  vim /home/cpimsuser/cpims/cpims/settings.py
+  270  ls /home/cpimsuser/cpportal/
+  271  ls /opt/
+  272  vim /opt/cpportal/cpportal/settings.py
+  273  su postgres
+  274  su cpimsuser
+  275  service uwsgi restart
+  276  psql
+  277  su postgres
+  278  su cpimsuser
+  279  su postgres
+  280  su insadmin
+  281  su cpimsuser
+  282  service uwsgi restart
+  283  top
+  284  service uwsgi restart
+  285  top
+  286  service uwsgi restart
+  287  yum install monit
+  288  monit status
+  289  vim /etc/monitrc
+  290  systemctl restart monit
+  291  systemctl enable monit
+  292  cerbot renew
+  293  certbot renew
+  294  su cpimsuser
+  295  service uwsgi restart
+  296  crontab -e
+  297  su cpimsuser
+  298  tail -f /var/log/nginx/cpims_access.log
+  299  su insadmin
+  300  su cpimsuser
+  301  crontab -e
+  302  /usr/bin/goaccess /var/log/nginx/cpims_access* --log-format=COMBINED > /opt/cpims/static/stats/index.html
+  303  ls /home/cpimsuser/cpims/static/stats/
+  304  /usr/bin/goaccess /var/log/nginx/cpims_access* --log-format=COMBINED > /home/cpimsuser/cpims/static/stats/index.html
+  305  /usr/bin/goaccess /var/log/nginx/cpims_access.log --log-format=COMBINED > /home/cpimsuser/cpims/static/stats/index.html
+  306  rm /var/log/nginx/cpims_access.log-20200713.gz
+  307  /usr/bin/goaccess /var/log/nginx/cpims_access* --log-format=COMBINED > /home/cpimsuser/cpims/static/stats/index.html
+  308  crontab -e
+  309  /usr/bin/goaccess /var/log/nginx/cpims_access.log --log-format=COMBINED > /home/cpimsuser/cpims/static/stats/index.html
+  310  su cpimsuser
+  311  top
+  312  service uwsgi restart
+  313  vim /etc/monitrc
+  314  cd /opt/
+  315  s
+  316  cd /dbs/
+  317  ls
+  318  cd backup
+  319  cd backups
+  320  ls
+  321  cd databases/
+  322  ls
+  323  df -kh
+  324  cd ../
+  325  ls
+  326  cd ../
+  327  ls
+  328  rm cpims.*
+  329  df -kh
+  330  ls
+  331  rm cpims.2019-0*
+  332  df -kh
+  333  ls
+  334  su postgres
+  335  su cpimsuser
+  336  service uwsgi restart
+  337  su cpimsuser
+  338  tail -f /var/log/cpims.log 
+  339  free -m
+  340  su cpimsuser
+  341  tail -f /var/log/cpims.log 
+  342  top
+  343  service uwsgi restart
+  344  tail -f /var/log/cpims.log 
+  345  vim /etc/monitrc
+  346  service monit restart
+  347  su postgres
+  348  su postgres
+  349  top
+  350  service monit restart
+  351  service uwsgi restart
+  352  top
+  353  service uwsgi restart
+  354  ls /opt/
+  355  ls -als
+  356  cd /lop
+  357  cd /opt/
+  358  ls -als
+  359  su cpimsuser
+  360  service uwsgi restart
+  361  exit
+  362  su cpimsuser
+  363  service uwsgi restart
+  364  su postgres
+  365  tail -f /var/log/cpims.log 
+  366  su postgres
+  367  l -als /opt/
+  368  ls -als /opt/
+  369  su cpimsuser
+  370  su cpimsuser
+  371  service uwsgi restart
+  372  su cpimsuser
+  373  service uwsgi restart
+  374  certbot renew
+  375  su postgres
+  376  su cpimsuser
+  377  service uwsgi restart
+  378  su cpimsuser
+  379  su cpimsuser
+  380  service uwsgi restart
+  381  tail -f /var/log/cpims.log 
+  382  su cpimsuser
+  383  service uwsgi restart
+  384  tail -f /var/log/cpims.log 
+  385  su cpimsuser
+  386  service uwsgi restart
+  387  su cpimsuser
+  388  service uwsgi restart
+  389  su cpimsuser
+  390  service uwsgi restart
+  391  service nginx restart
+  392  tail -f /var/log/cpims.log 
+  393  su cpimsuser
+  394  service uwsgi restart
+  395  su cpimsuser
+  396  su cpimsuser
+  397  tail -f /var/log/cpims.log 
+  398  su cpimsuser
+  399  cd /tmp/
+  400  cd /dbs/
+  401  su postgres
+  402  su postgres
+  403  su postgres
+  404  su postgres
+  405  cd /dbs/
+  406  ls
+  407  rm cpims.2020-*
+  408  du -sh *
+  409  su postgres
+  410  yum update
+  411  su postgres
+  412  yum update
+  413  yum install java-1.8.0-openjdk
+  414  yum install java-1.7.0-openjdk-devel
+  415  groupadd tomcat
+  416  useradd -M -s /bin/nologin -g tomcat -d /opt/tomcat tomcat
+  417  yum install wget
+  418  java
+  419  java -version
+  420  cd ~
+  421  ls
+  422  wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.9/bin/apache-tomcat-8.5.9.tar.gz
+  423  ls
+  424  mkdir /opt/tomcat
+  425  tar xvf apache-tomcat-8*tar.gz -C /opt/tomcat --strip-components=1
+  426  cd /opt/tomcat
+  427  chgrp -R tomcat /opt/tomcat
+  428  chmod -R g+r conf
+  429  chmod g+x conf
+  430  chown -R tomcat webapps/ work/ temp/ logs/
+  431  vim /etc/systemd/system/tomcat.service
+  432  systemctl daemon-reload
+  433  systemctl start tomcat
+  434  systemctl status tomcat
+  435  systemctl enable tomcat
+  436  cd /etc/
+  437  ls
+  438  cd nginx/
+  439  ls
+  440  cd conf.d/
+  441  ls
+  442  cd ../
+  443  ls
+  444  vim nginx.conf
+  445  service nginx reload
+  446  cd /etc/nginx/
+  447  ls
+  448  vim nginx.conf
+  449  service nginx reload
+  450  vim nginx.conf
+  451  service nginx reload
+  452  vim nginx.conf
+  453  service nginx reload
+  454  cd /opt/tomcat/
+  455  ls
+  456  cd webapps/
+  457  ls
+  458  cd manager/
+  459  ls
+  460  cd ../
+  461  ls
+  462  ls host-manager/
+  463  cd ..
+  464  ls
+  465  cd conf/
+  466  ls
+  467  vim tomcat-users.xml 
+  468  systemctl restart tomcat
+  469  yum install postgis25_11
+  470  su postgres
+  471  su tomcat
+  472  cd /tmp/
+  473  ls
+  474  scp cpmis@cpims.net:/tmp/apps.tar.gz .
+  475  su postgres
+  476  ls
+  477  cd /tmp/
+  478  ls
+  479  su tomcat
+  480  ls
+  481  mv apps.tar.gz /dbs/
+  482  ls
+  483  cd /dbs/
+  484  ls
+  485  mkdir webapps
+  486  mv apps.tar.gz webapps/
+  487  cd webapps/
+  488  ls
+  489  tar -xvzf apps.tar.gz 
+  490  ls
+  491  cd ROOT
+  492  ls
+  493  vim index.jsp 
+  494  cd /dbs/
+  495  ls
+  496  mkdir webapps_bak/
+  497  mv -r /opt/tomcat/webapps/* webapps_bak/
+  498  mv /opt/tomcat/webapps/* webapps_bak/
+  499  ls webapps/
+  500  du -sh *
+  501  du -sh webapps/*
+  502  mv webapps/apps.tar.gz .
+  503  cp -r webapps/* /opt/tomcat/webapps/
+  504  chown -R tomcat /opt/tomcat/webapps
+  505  service tomcat restart
+  506  cd /opt/tomcat/
+  507  ls
+  508  ls logs/
+  509  tail -f logs/localhost_access_log.2020-10-1
+  510  tail -f logs/localhost_access_log.2020-10-14.txt 
+  511  ls
+  512  cd conf/
+  513  ls
+  514  vim web.xml 
+  515  ls
+  516  vim server.xml 
+  517  cd /opt/tomcat/conf/
+  518  ls
+  519  vim server.xml 
+  520  service tomcat restart
+  521  cd ../
+  522  ls
+  523  cd logs/
+  524  ls
+  525  ls -als
+  526  tail -f catalina.2020-10-14.log
+  527  tail -f catalina.out 
+  528  vim catalina.out 
+  529  su postgres
+  530  service tomcat restart
+  531  ls
+  532  tail -f catalina.out 
+  533  su postgres
+  534  tail -f catalina.out 
+  535  su postgres
+  536  tail -f catalina.out 
+  537  service tomcat restart
+  538  tail -f catalina.out 
+  539  ls
+  540  cd ../
+  541  ;s
+  542  ls
+  543  ls work/
+  544  cd webapps/
+  545  ls
+  546  cd ROOT
+  547  ls
+  548  cd WEB-INF/
+  549  ls
+  550  vim web.xml 
+  551  service tomcat restart
+  552  cd ../../
+  553  ls
+  554  cd ../logs 
+  555  tail -f catalina.out 
+  556  cd /opt/tomcat/
+  557  ls
+  558  cd webapps/
+  559  ls
+  560  ls ROOT
+  561  ls ROOT/react-dist/
+  562  cd /opt/tomcat/
+  563  ls
+  564  cd conf/
+  565  ls
+  566  vim web.xml 
+  567  vim server.xml 
+  568  ls -als /opt/
+  569  su cpimsuser
+  570  cerbot renew
+  571  certbot renew
+  572  cd /dbs/
+  573  ls
+  574  vim flat_cases_insert.sql 
+  575  su postgres
+  576  su cpimsuser
+  577  service httpd restart
+  578  service uwsgi restart
+  579  su cpimsuser
+  580  service uwsgi restart
+  581  su cpimsuser
+  582  service uwsgi restart
+  583  su cpimsuser
+  584  service uwsgi restart
+  585  su cpimsuser
+  586  service uwsgi restart
+  587  tail -f /var/log/nginx/cpims_error.log
+  588  tail -f /var/log/nginx/cpims_access.log
+  589  su cpimsuser
+  590  service uwsgi restart
+  591  su cpimsuser
+  592  service uwsgi restart
+  593  su cpimsuser
+  594  service uwsgi restart
+  595  su postgres
+  596  cerbot renew
+  597  certbot renew
+  598  su cpimsuser
+  599  certbot renew
+  600  service uwsgi restart
+  601  cd ~/
+  602  ls
+  603  cd /home/
+  604  ls
+  605  cd cpimsuser/
+  606  ls
+  607  du -sh *
+  608  cd cpims
+  609  ls
+  610  cd reports/
+  611  ls
+  612  rm *.csv
+  613  rm -rf *.csv
+  614  ls
+  615  du -sh *
+  616  rm -rf xlsx/*
+  617  cd ../../
+  618  ls
+  619  du -sh *
+  620  tar -cvzf /tmp/cpims.tar.gz cpims/
+  621  su postgres
+  622  su cpimusers
+  623  su cpimuser
+  624  su cpimsuser
+  625  su cpimsuser
+  626  service uwsgi restart
+  627  df -kh
+  628  fdisk -l
+  629  su postgres
+  630  lspcu
+  631  free -m
+  632  lscpu
+  633  su postgres
+  634  su cpimsuser
+  635  su postgres
+  636  su insadmin
+  637  su cpimsuser
+  638  su cpimsuser
+  639  service uwsgi restart
+  640  su cpimsuser
+  641  service uwsgi restart
+  642  su cpimsuser
+  643  service uwsgi restart
+  644  su cpimsuser
+  645  service uwsgi restart
+  646  su cpimsuser
+  647  service uwsgi restart
+  648  su postgres
+  649  su postgres
+  650  su cpimsuser
+  651  service uwsgi restart
+  652  su cpimsuser
+  653  su cpimsuser
+  654  service uwsgi restart
+  655  su cpimsuser
+  656  service uwsgi restart
+  657  su cpimsuser
+  658  su postgres
+  659  certbot renew
+  660  cronta -e
+  661  crontab -e
+  662  tail -f /var/log/nginx/cpims_error.log
+  663  cd /var/log/
+  664  ls
+  665  du -sh *
+  666  ls
+  667  cd /etc/nginx/
+  668  ls
+  669  cd conf.d/
+  670  ls
+  671  cd ..
+  672  ls
+  673  vim nginx.conf
+  674  ls
+  675  vim snippets/ssl-childprotection.go.ke.conf 
+  676  vim snippets/ssl-params.conf 
+  677  ls
+  678  cd /var/log/
+  679  ls
+  680  ls -als
+  681  tail -f cpims.log 
+  682  ls
+  683  du -sh *
+  684  tar -cvzf cpims.log-2021-01-18.tar.gz cpims.log 
+  685  su postgres
+  686  su cpimsuser
+  687  service uwsgi restart
+  688  su postgrs
+  689  su postgres
+  690  su cpimsuser
+  691  top
+  692  service uwsgi restart
+  693  top
+  694  service tomcat stop
+  695  top
+  696  df =kh
+  697  df -kh
+  698  cd /
+  699  du -sh *
+  700  cd /dbs/
+  701  ls
+  702  du -sh *
+  703  rm cpims.202*
+  704  df -kh
+  705  cd /d
+  706  cd /
+  707  du -sh *
+  708  cd /var/
+  709  ls
+  710  cd log/
+  711  ls
+  712  du -sh *
+  713  rm cpims.log
+  714  ls
+  715  df -kh
+  716  ls
+  717  service nginx restart
+  718  ls
+  719  rm cpims.log-2021-01-18.tar.gz 
+  720  ls -als
+  721  du -sh *
+  722  touch cpims.log
+  723  tail -f cpims.log 
+  724  ls
+  725  ls -als
+  726  df -kh
+  727  cd /
+  728  du -sh *
+  729  df -kh
+  730  service uwsgi restart
+  731  ls
+  732  ls -als /var/log/
+  733  tail -f /var/log/cpims.log 
+  734  top
+  735  service uwsgi restart
+  736  yum install
+  737  yum update
+  738  yum install postgresql13 postgresql13-server
+  739  yum update
+  740  yum update repolist
+  741  yum repolist
+  742  cat /etc/centos-release
+  743  yum list postgresql*
+  744  yum whatprovides postgresql13
+  745  yum repolist
+  746  cd /etc/yum
+  747  ls
+  748  cd ../yum.repos.d/
+  749  ls
+  750  vim pgdg-redhat-all.repo 
+  751  su postgres
+  752  su cpimsuser
+  753  pip install pandas
+  754  pip freeze /tmp/t.txt
+  755  python
+  756  su cpimsuser
+  757  su postgres
+  758  tail -f /var/log/cpims.log 
+  759  cd /var/lib/pgsql/
+  760  ls
+  761  ls -lhS
+  762  rm -rf cpims-10feb21.tar 
+  763  pwd
+  764  cp ./cpims-10feb21.gz /home/felix/
+  765  cd
+  766  su cpimsuser
+  767  service nginx restart
+  768  service uwsgi restart
+  769  ls
+  770  su cpimsuser
+  771  su postres
+  772  su postgres
+  773  cd /home/cpimsuser/
+  774  ls
+  775  tar -cxvf cpims11022021.tar.gz cpims
+  776  tar -czvf cpims11022021.tar.gz cpims
+  777  ll -h
+  778  mv cpims11022021.tar.gz /home/felix/
+  779  cd /home/felix/
+  780  ls
+  781  ll
+  782  chown felix:felix cpims11022021.tar.gz 
+  783  ls
+  784  ll
+  785  su postgres
+  786  crontab -e
+  787  certbot renew
+  788  cd /etc/letsencrypt/
+  789  ls
+  790  ls keys/
+  791  ls csr/
+  792  ls renewal-hooks/
+  793  ls renewal
+  794  cd renewal
+  795  ls
+  796  vim childprotection.go.ke.conf 
+  797  ls
+  798  mv childprotection.go.ke.conf childprotection.go.ke.conf.bak
+  799  cd ../live/
+  800  ls
+  801  cd childprotection.go.ke/
+  802  ls
+  803  cd ../
+  804  ls
+  805  head README 
+  806  ls
+  807  su postgres
+  808  tail -f /var/log/nginx/error.log
+  809  su postgres
+  810  su postgres
+  811  su cpims
+  812  su cpimsuser
+  813  service uwsgi restart
+  814  service nginx restart
+  815  su postgres
+  816  tail -f /var/log/nginx/error.log
+  817  cd /var/log/nginx/
+  818  ls
+  819  ls
+  820  su cpimsuser
+  821  service uwsgi restart
+  822  service nginx restart
+  823  tail -f /var/log/nginx/cpims_error.log
+  824  cd /etc/nginx/
+  825  ls
+  826  cd conf.d/
+  827  ls
+  828  vim cpportal.conf 
+  829  tail -f /var/log/nginx/access.log
+  830  su postgres
+  831  su postgres
+  832  su felix
+  833  su postgres
+  834  su cpimsuser
+  835  rm /tmp/admin.py 
+  836  rm /tmp/dq_home.html 
+  837  ext
+  838  exit
+  839  ls
+  840  su cpimsuser
+  841  service uwsgi restart
+  842  su cpims
+  843  su cpimsuser
+  844  service uwsgi restart
+  845  su cpimsuer
+  846  su cpimsuser
+  847  su postgres
+  848  vim /var/log/cron
+  849  su postgres
+  850  cd /dbs/datas/
+  851  ls -als
+  852  su postgres
+  853  service uwsgi restart
+  854  service nginx restart
+  855  ls -als /dbs/datas/
+  856  ls
+  857  su postgres
+  858  certbot renew
+  859  su postgres
+  860  su postgres
+  861  certbot renew
+  862  cd /etc/ht
+  863  cd /etc/
+  864  ls
+  865  cd nginx/
+  866  ls
+  867  cd conf.d/
+  868  ls
+  869  vim cpportal.conf 
+  870  ls
+  871  cd ../
+  872  ls
+  873  vim nginx.conf
+  874  ls
+  875  vim uwsgi_params
+  876  ls
+  877  ls
+  878  vim nginx.conf
+  879  cd conf.d/
+  880  ls
+  881  vim cpportal.conf 
+  882  ls
+  883  cd ../
+  884  ls
+  885  vim uwsgi_params
+  886  vim ls snippets/
+  887  ls
+  888  ls snippets/
+  889  vim snippets/ssl-childprotection.go.ke.conf
+  890  vim snippets/ssl-params.conf 
+  891  ls
+  892  vim fastcgi.conf
+  893  ls
+  894  vim nginx.conf
+  895  ls snippets/
+  896  vim snippets/ssl-childprotection.go.ke.conf 
+  897  certbot renew
+  898  su postgres
+  899  systemctl restart postgres
+  900  systemctl restart postgres
+  901  systemctl restart postgres-11.service
+  902  systemctl postgres-11.service restart
+  903  systemctl reload postgres-11.service
+  904  systemctl status postgresql-11
+  905  systemctl restart postgresql-11
+  906  systemctl status postgresql-11
+  907  systemctl status postgresql-11
+  908  systemctl status postgresql-11
+  909  systemctl status postgresql-11
+  910  sudo su postgres
+  911  pwd
+  912  sudo vim /etc/ssh/sshd_config
+  913  sudo su postgres
+  914  cd /etc/
+  915  ls
+  916  cd nginx/
+  917  ls
+  918  cd conf.d/
+  919  ls
+  920  vim cpportal.conf 
+  921  ls
+  922  cd ..
+  923  ls
+  924  vim uwsgi_params
+  925  vim fastcgi.conf
+  926  vim uwsgi_params
+  927  ls
+  928  vim nginx.conf
+  929  vim conf.d/cpportal.conf 
+  930  su cpimsuser
+  931  su cpimsuser
+  932  cd /etc/nginx/
+  933  ls
+  934  cd /etc/uwsgi/
+  935  ls
+  936  cd sites
+  937  ls
+  938  vim cpportal.ini 
+  939  ls
+  940  vim cpims.ini 
+  941  ls
+  942  cp cpims.ini cpims_new.ini 
+  943  vim cpims_new.ini 
+  944  vim cpims_new.ini 
+  945  vim cpims.ini 
+  946  vim cpims_new.ini 
+  947  ls
+  948  cd ..
+  949  ls
+  950  ls sites
+  951  ls sites_python3/
+  952  vim /etc/nginx/conf.d/
+  953  vim /etc/nginx/conf.d/cpportal.conf 
+  954  vim /etc/nginx/conf.d/cpportal.conf 
+  955  vim /etc/nginx/nginx.conf
+  956  service uwsgi restart
+  957  ls /run/uwsgi/
+  958  vim /etc/systemd/system/uwsgi.service
+  959  ls
+  960  cd sites
+  961  ls
+  962  vim cpportal.ini 
+  963  ls
+  964  vim cpims_new.ini 
+  965  cd /etc/nginx/conf.d/
+  966  ls
+  967  vim cpims_new.conf
+  968  service nginx restart
+  969  tail -f /var/log/nginx/error.log
+  970  tail -f /var/log/nginx/access.log
+  971  tail -f /var/log/nginx/error.log
+  972  service uwsgi restart
+  973  tail -f /var/log/nginx/error.log
+  974  su cpimsuser
+  975  vim /etc/uwsgi/sites/cpims_new.ini 
+  976  vim /etc/uwsgi/sites/cpims.ini 
+  977  ls /home/cpimsuser/
+  978  ls /home/cpimsuser/cpimsapp/
+  979  vim /etc/uwsgi/sites/cpims.ini 
+  980  vim /etc/uwsgi/sites/cpims_new.ini 
+  981  su cpimsuser
+  982  su postgres
+  983  su cpimsuser
+  984  service uwsgi restart
+  985  service nginx restart
+  986  tail -f /var/log/nginx/cpims_error.log
+  987  ls
+  988  vim cpims_new.conf 
+  989  cd /etc/uwsgi/
+  990  ls
+  991  cd sites
+  992  ls
+  993  mv cpims.ini /dbs/
+  994  service uwsgi restart
+  995  vim cpims_new.ini 
+  996  service uwsgi restart
+  997  service nginx restart
+  998  tail -f /var/log/cpims_new.log 
+  999  su postgres
+ 1000  exit
+ 1001  cd /etc/
+ 1002  ls
+ 1003  cd nginx/
+ 1004  ls
+ 1005  vim uwsgi_params
+ 1006  ls
+ 1007  cd conf.d/
+ 1008  ls
+ 1009  vim cpims_new.conf
+ 1010  vim /run/uwsgi/cpims.sock
+ 1011  ls /run/uwsgi/
+ 1012  q
+ 1013  ls
+ 1014  ls /run/uwsgi/
+ 1015  ls
+ 1016  vim cpims_new.conf 
+ 1017  ls /opt/
+ 1018  ls
+ 1019  vim cpims_v3.conf 
+ 1020  service nginx reload
+ 1021  vim cpims_new.ini 
+ 1022  cd /etc/uwsgi/
+ 1023  ls
+ 1024  cd sites
+ 1025  ls
+ 1026  vim cpims_new.ini 
+ 1027  ls /opt/
+ 1028  ls /opt/OVC_V3/
+ 1029  ls /home/cpimsuser/cpimsapp/
+ 1030  ls
+ 1031  vim cpims_v3.ini 
+ 1032  service uwsgi restart
+ 1033  ls /run/uwsgi/
+ 1034  service nginx reload
+ 1035  service nginx restart
+ 1036  cd /etc/nginx/
+ 1037  ls
+ 1038  cd conf.d/
+ 1039  ls
+ 1040  vim cpims_v3.conf 
+ 1041  ls /opt/OVC_V3/
+ 1042  ls /run/
+ 1043  ls /run/uwsgi/
+ 1044* 
+ 1045  ls /etc/uwsgi/
+ 1046  vim /etc/uwsgi/sites/cpims_v3.ini 
+ 1047  ls
+ 1048  vim cpims_v3.conf 
+ 1049  vim /etc/uwsgi/sites/cpims_v3.ini 
+ 1050  ls
+ 1051  vim cpims_v3.conf 
+ 1052  service uwsgi restart
+ 1053  service uwsgi status
+ 1054  history > /tmp/h.txt

@@ -656,7 +656,7 @@
     }
 
     function handle_hstatus(hstatus){
-        if (hstatus == 'HSTP') {
+        if ((hstatus == 'HSTP') || (hstatus == 'HHEI')) {
             $('#facility_div').show();
             $('#facility_id_div').show();
             $('#art_div').show();

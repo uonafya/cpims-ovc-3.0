@@ -1,5 +1,6 @@
 """Main CPIMS common views."""
 import memcache
+import sys
 from datetime import datetime, timedelta
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -209,7 +210,7 @@ def get_dashboard(request):
             return value
         else:
             print(('Set new Dashboard - %s' % (user_key)))
-        dash = dashboard()
+        dash = dashboard(request)
         start_date = datetime.now() - timedelta(days=21)
         summary = {}
         summary['org_units'] = '{:,}'.format(dash['org_units'])
@@ -227,10 +228,11 @@ def get_dashboard(request):
         ovc['children'] = '{:,}'.format(odash['children'])
         ovc['children_all'] = '{:,}'.format(odash['children_all'])
         ovc['guardians'] = '{:,}'.format(odash['guardian'])
+        ovc['guardians_all'] = '{:,}'.format(odash['guardian_all'])
         ovc['workforce'] = '{:,}'.format(odash['workforce_members'])
         ovc['cases'] = '{:,}'.format(odash['case_records'])
         ovc['pending'] = '{:08}'.format(odash['pending_cases'])
-        ovc['household'] = 0
+        ovc['household'] = '{:,}'.format(odash['household'])
         ovc['hiv_status'] = odash['hiv_status']
         ovc['domain_hiv_status'] = odash['domain_hiv_status']
         child_regs = odash['child_regs']
@@ -336,7 +338,15 @@ def handler_400(request, exception, template_name="400.html"):
 def handler_404(request, exception):
     """Some default page for the Page not Found."""
     try:
-        return render(request, '404.html', {'status': 404})
+        todate = datetime.now()
+        ts = todate.strftime("%d %b %Y %H:%M:%S")
+        context = {'status': 404}
+        etype, value, traceback = sys.exc_info()
+        context['traceback'] = traceback
+        context['value'] = value
+        context['etype'] = etype
+        context['ts'] = ts
+        return render(request, '404.html', context)
     except Exception as e:
         raise e
 
@@ -344,7 +354,15 @@ def handler_404(request, exception):
 def handler_500(request):
     """Some default page for Server Errors."""
     try:
-        return render(request, '500.html', {'status': 500})
+        todate = datetime.now()
+        ts = todate.strftime("%d %b %Y %H:%M:%S")
+        context = {'status': 500}
+        etype, value, traceback = sys.exc_info()
+        context['traceback'] = traceback
+        context['value'] = value
+        context['etype'] = etype
+        context['ts'] = ts
+        return render(request, '500.html', context)
     except Exception as e:
         raise e
 

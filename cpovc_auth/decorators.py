@@ -17,12 +17,30 @@ FORMS = ['crs', 'education', 'school', 'documents']
 TRANS = {'search': 0, 'new': 1, 'edit': 2, 'view': 3, 'delete': 4}
 
 
+def is_allowed_user_groups(allowed_groups, page=11):
+
+    def decorator(function):
+        @wraps(function)
+        def wrap(request, *args, **kwargs):
+            if request.user.is_active and request.user.is_superuser:
+                return function(request, *args, **kwargs)
+            allowed = check_permisions(request, allowed_groups)
+            if allowed:
+                return function(request, *args, **kwargs)
+            else:
+                page_info = 'Permission denied'
+                return render(request, 'registry/roles_none.html',
+                              {'page': page_info})
+        return wrap
+    return decorator
+
+
 def is_allowed_groups(allowed_groups, page=11):
 
     def decorator(function):
         @wraps(function)
         def wrap(request, *args, **kwargs):
-            allowed = check_permisions(request, allowed_groups)
+            allowed = True
             if allowed:
                 return function(request, *args, **kwargs)
             else:
@@ -37,12 +55,81 @@ def check_permisions(request, allowed_groups):
     """ Return permissions."""
     try:
         profile = request.user.id
-        print('User', profile, allowed_groups)
-        is_allowed = True
-    except Exception:
+        if request.user.is_active and request.user.is_superuser:
+            return True
+        cpims_groups = request.user.groups.values_list(
+            'cpovcrole__group_id', flat=True)
+        print('User', profile, allowed_groups, cpims_groups)
+        response = any(value in cpims_groups for value in allowed_groups)
+        is_allowed = False
+        if response:
+            is_allowed = True
+    except Exception as e:
+        print('Permissions error - %s' % (str(e)))
         return False
     else:
         return is_allowed
+
+
+def validate_ovc(ovc_groups=[], check_active=0):
+
+    def decorator(function):
+        @wraps(function)
+        def wrap(request, *args, **kwargs):
+            allowed, msg = check_ovc_permisions(
+                request, ovc_groups, check_active)
+            if allowed:
+                return function(request, *args, **kwargs)
+            else:
+                page_info = msg if msg else 'Permission denied'
+                return render(request, 'registry/roles_none.html',
+                              {'page': page_info})
+        return wrap
+    return decorator
+
+
+def check_ovc_permisions(request, ovc_groups, check_active):
+    """ Return permissions."""
+    try:
+        profile = request.user.id
+        print('User ID & Groups', profile, ovc_groups)
+        # Validate the OVC if within IP/LIP and is active
+        curr_url = request.path_info
+        url_parts = curr_url.split('/')
+        ou_attached = request.session.get('ou_attached', 0)
+        ou_primary = request.session.get('ou_primary', 0)
+        reg_ovc = request.session.get('reg_ovc', 0)
+        ou_parts = ou_attached.split(',') if ou_attached else []
+        ious = [int(iou) for iou in ou_parts] if ou_attached else []
+        pous = get_orgs_child(ious)
+        ous = ious + pous
+        print('Wajuaji : ', profile, reg_ovc, ou_attached, ou_primary, ous)
+        ovc_id, msg = 0, ''
+        if request.user.is_superuser and not reg_ovc:
+            return True, ''
+        is_allowed = True
+        for url_part in url_parts:
+            if url_part.isnumeric():
+                ovc_id = int(url_part)
+        if ovc_id:
+            ovc = get_ovc(ovc_id)
+            if ovc:
+                cbo_id = ovc.child_cbo_id
+                ovc_active = ovc.is_active
+                if cbo_id in ous:
+                    is_allowed = True
+                else:
+                    is_allowed = False
+                    msg = 'This OVC is not within your IP/LIP.'
+                if check_active and not ovc_active:
+                    is_allowed = False
+                    msg = 'This OVC is already exited.'
+            else:
+                is_allowed = False
+    except Exception:
+        return False, None
+    else:
+        return is_allowed, msg
 
 
 def is_allowed_groups_old(allowed_groups, page=11):
@@ -241,6 +328,18 @@ def get_child_cbo(child_id):
         return []
     else:
         return cbo_ids
+
+
+def get_ovc(person_id):
+    """Method to get child cbo."""
+    try:
+        ovc = OVCRegistration.objects.get(
+            person_id=person_id, is_void=False)
+    except Exception as e:
+        print(('error getting OVC - %s' % (str(e))))
+        return None
+    else:
+        return ovc
 
 
 def check_workmate(creator_id, person_id, check_type='P'):

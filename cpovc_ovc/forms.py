@@ -15,9 +15,11 @@ hiv_status_list = get_list('hiv_status_id', 'Please Select HIV Status')
 alive_status_list = get_list('yesno_id', '')
 art_status_list = get_list('art_status_id', 'Please Select Status')
 ovc_form_type_list = get_list('ovc_form_type_id', 'Please Select')
-ovc_form_type_list += [('CPR', 'Case Plan'), ('CPT', 'Case Plan Template'), ('WB', 'Well Being'),
-                       ('WBA', 'Well Being Adolescent'), ('HVSRN',
-                                                          'HIV Risk Assessment'), ('HVMGT', 'HIV Management Form'),
+ovc_form_type_list += [('CPR', 'Case Plan'), ('CPT', 'Case Plan Template'),
+                       ('WB', 'Well Being'),
+                       ('WBA', 'Well Being Adolescent'),
+                       ('HVSRN', 'HIV Risk Assessment'),
+                       ('HVMGT', 'HIV Management Form'),
                        ('DREAMS', 'DREAMS Service Uptake Form')]
 eligibility_list = get_list('eligibility_criteria_id', '')
 death_cause_list = get_list('death_cause_id', 'Please Select Cause of Death')
@@ -34,6 +36,7 @@ initial_enrolment_choices = (
     ('', 'Select Criteria'), ('1', 'Yes'), ('2', 'No'))
 
 # -------------additions
+education_level_list = get_list('education_level_id', 'Please Select')
 
 
 class OVCSearchForm(forms.Form):
@@ -49,7 +52,7 @@ class OVCSearchForm(forms.Form):
     search_criteria = forms.ChoiceField(
         choices=search_criteria_list,
         initial='0',
-        required=True,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': "true",
@@ -240,7 +243,7 @@ class OVCRegistrationForm(forms.Form):
     school_level = forms.ChoiceField(
         choices=school_level_list,
         initial='0',
-        required=True,
+        required=False,
         widget=forms.Select(
             attrs={'class': 'form-control',
                    'data-parsley-required': "true",
@@ -334,3 +337,91 @@ class OVCRegistrationForm(forms.Form):
             attrs={'class': 'form-control',
                    'data-parsley-required': "true",
                    'id': 'hiv_statuss'}))
+
+    # July 2023
+    birth_not_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Birth Notification Number'),
+                   'class': 'form-control',
+                   'id': 'birth_not_id'}))
+
+    nemis_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('NEMIS Number'),
+                   'class': 'form-control',
+                   'id': 'nemis_id'}))
+
+    is_dreams_enrolled = forms.CharField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={'class': 'form-control',
+                   'id': 'is_dreams_enrolled'}))
+
+    dreams_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('DREAMS ID'),
+                   'class': 'form-control',
+                   'id': 'dreams_id'}))
+
+    nupi_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': _('NUPI Number'),
+                   'class': 'form-control',
+                   'id': 'nupi_id'}))
+
+    exit_org_id = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'class': 'form-control',
+                   'readonly': 'readonly',
+                   'id': 'exit_org_id'}))
+
+
+class OVCExtraInfoForm(forms.Form):
+    """OVC Extra Information form."""
+
+    date_of_birth = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'class': 'form-control',
+                   'id': 'date_of_birth',
+                   'data-parsley-required': 'true'}
+        )
+    )
+
+    id_number = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'placeholder': 'ID Number',
+                   'class': 'form-control',
+                   'id': 'id_number',
+                   'data-parsley-required': 'true'}
+        )
+    )
+
+    mobile_number = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'placeholder': '07x or 01x',
+                   'class': 'form-control',
+                   'id': 'mobile_number',
+                   'data-parsley-required': 'true'}
+        )
+    )
+
+    education_level = forms.ChoiceField(
+        choices=education_level_list,
+        widget=forms.Select(
+            attrs={'class': 'form-control',
+                   'id': 'form_type'}
+        )
+    )
+
+    member_type = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(
+            attrs={'class': 'form-control',
+                   'id': 'member_type'}
+        )
+    )

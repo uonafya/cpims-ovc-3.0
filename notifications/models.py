@@ -1,10 +1,6 @@
 ''' Django notifications models file '''
 # -*- coding: utf-8 -*-
-# pylint: disable=too-many-lines
-# from distutils.version import StrictVersion
-# pylint: disable=no-name-in-module,import-error
-from packaging.version import Version
-from django import get_version
+
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
@@ -19,10 +15,7 @@ from notifications import settings as notifications_settings
 from notifications.signals import notify
 from notifications.utils import id2slug
 
-if Version(get_version()) >= Version('1.8.0'):
-    from django.contrib.contenttypes.fields import GenericForeignKey  # noqa
-else:
-    from django.contrib.contenttypes.generic import GenericForeignKey  # noqa
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 
 EXTRA_DATA = notifications_settings.get_config()['USE_JSONFIELD']
@@ -34,7 +27,8 @@ def is_soft_delete():
 
 def assert_soft_delete():
     if not is_soft_delete():
-        msg = """To use 'deleted' field, please set 'SOFT_DELETE'=True in settings.
+        msg = """
+        To use 'deleted' field, please set 'SOFT_DELETE'=True in settings.
         Otherwise NotificationQuerySet.unread and NotificationQuerySet.read
         do NOT filter by 'deleted' field.
         """
@@ -43,6 +37,7 @@ def assert_soft_delete():
 
 class NotificationQuerySet(models.query.QuerySet):
     ''' Notification QuerySet '''
+
     def unsent(self):
         return self.filter(emailed=False)
 
@@ -229,15 +224,16 @@ class Notification(models.Model):
             'verb': self.verb,
             'action_object': self.action_object,
             'target': self.target,
-            'timesince': self.timesince()
+            'ts': self.timesince()
         }
+        itm = u'%(actor)s %(verb)s %(action_object)s on %(target)s %(ts)s ago'
         if self.target:
             if self.action_object:
-                return u'%(actor)s %(verb)s %(action_object)s on %(target)s %(timesince)s ago' % ctx
-            return u'%(actor)s %(verb)s %(target)s %(timesince)s ago' % ctx
+                return itm % ctx
+            return u'%(actor)s %(verb)s %(target)s %(ts)s ago' % ctx
         if self.action_object:
-            return u'%(actor)s %(verb)s %(action_object)s %(timesince)s ago' % ctx
-        return u'%(actor)s %(verb)s %(timesince)s ago' % ctx
+            return u'%(actor)s %(verb)s %(action_object)s %(ts)s ago' % ctx
+        return u'%(actor)s %(verb)s %(ts)s ago' % ctx
 
     def __str__(self):  # Adds support for Python 3
         return self.__unicode__()
