@@ -428,3 +428,51 @@ def get_orgs_child(child_units):
         return []
     else:
         return all_units
+
+
+def validate_workmate(request, is_staff):
+    """ Return permissions."""
+    try:
+        user_id = request.user.id
+        user_person_id = request.user.reg_person_id
+        curr_url = request.path_info
+        url_parts = curr_url.split('/')
+        reg_ovc = request.session.get('reg_ovc', 0)
+        wk_user_id, msg = 0, ''
+        if request.user.is_superuser and not reg_ovc:
+            return True, ''
+        is_allowed = True
+        for url_part in url_parts:
+            if url_part.isnumeric():
+                wk_user_id = int(url_part)
+        if wk_user_id:
+            if is_staff:
+                user = AppUser.objects.get(pk=wk_user_id)
+                person_id = user.reg_person_id
+            else:
+                person_id = wk_user_id
+            wkm = check_workmate(user_person_id, person_id, 'SL')
+            is_allowed = True if wkm else False
+        else:
+            is_allowed = False
+    except Exception as e:
+        print('Workmate check error - %s' % (str(e)))
+        return False
+    else:
+        return is_allowed
+
+
+def is_workmate(is_staff=True):
+
+    def decorator(function):
+        @wraps(function)
+        def wrap(request, *args, **kwargs):
+            allowed = validate_workmate(request, is_staff)
+            if allowed:
+                return function(request, *args, **kwargs)
+            else:
+                page_info = 'Permission denied'
+                return render(request, 'registry/roles_none.html',
+                              {'page': page_info})
+        return wrap
+    return decorator

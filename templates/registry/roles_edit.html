@@ -33,6 +33,32 @@
     </div>
 {% endif %}
 <!-- begin row -->
+<div class="invoice">
+    <div class="invoice-company">
+
+        <span class="pull-right hidden-print">
+        {% if user.is_superuser or is_supervisor %}
+        <span class="label label-danger">Account management NOT allowed</span>
+        {% else %}
+        <a href="#modal-activate" class="btn btn-success m-b-10" data-toggle="modal"><i class="fa fa-cogs m-r-5"></i> Activate Account</a>
+        <a href="#modal-password" class="btn btn-warning m-b-10" data-toggle="modal"><i class="fa fa-cogs m-r-5"></i> Change Password</a>
+        <a href="#modal-deactivate" class="btn btn-danger m-b-10" data-toggle="modal"><i class="fa fa-cogs m-r-5"></i> Deactivate Account</a>
+        <a href="#modal-force-change" class="btn btn-primary m-b-10" data-toggle="modal"><i class="fa fa-download m-r-5"></i> Force password change</a>
+        <!--
+        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Print</a>
+    -->
+    
+        {% endif %}
+        </span>        
+        {{ person.full_name }} ({{ person.id }})
+    </div>
+</div>
+<br>
+<div id="user-message" class="alert alert-success fade in">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+    <p id="user-form-message">OK</p>
+</div>
 <div class="row">
 <!-- Start content area -->
     <div class="col-md-12">
@@ -40,13 +66,10 @@
         <form class="form-horizontal form-bordered" action="." method="POST" data-parsley-validate="true" name="form-wizard" id="roles">
         {% csrf_token %}
         {{ form.user_id }}
+        <input type="hidden" name="person_id" id="person_id" value="{{ user.reg_person_id }}">
+        <input type="hidden" name="username" id="username" value="{{ user.username }}">
         <div class="panel panel-inverse">
-            <div class="panel-heading">
-                <div class="panel-heading-btn">
-                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                </div>
-                <h4 class="panel-title">Workforce / user details</h4>
-            </div>
+
             <div class="panel-body">
                 <table width="100%" class="table table-profile">
                     <tbody>
@@ -207,7 +230,126 @@
     </div>
     </form>
 <!-- End content area -->
+<!-- #modal-activate -->
+<div class="modal fade" id="modal-activate">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Activate account for {{ person.full_name }} ({{ person.id }})</h4>
+            </div>
+            <div class="modal-body">
+                <br>
+                <table width="100%" class="table">
+                    <tr><td width="40%">Username</td><td>{{ user.username }}</td></tr>
+                    <tr><td width="40%">Timestamp created</td><td>{{ user.timestamp_created }}</td></tr>
+                    <tr><td width="40%">Last Updated</td><td>{{ user.timestamp_updated }}</td></tr>
+                    <tr><td width="40%">Last login</td><td>{{ user.last_login }}</td></tr>
+                    <tr><td width="40%">Account is active</td><td>{{ user.is_active }}</td></tr>
+                    <tr><td width="40%">Last password change</td><td>{{ user.password_changed_timestamp }}</td></tr>
 
+                </table>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
+                <a href="#" onclick="account_management(1, 'modal-activate')" class="btn btn-sm btn-success">Update Account</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end #modal-activate -->
+<!-- #modal-activate -->
+<div class="modal fade" id="modal-password">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Change password for {{ person.full_name }} ({{ person.id }})</h4>
+            </div>
+            <div class="modal-body">
+            <br>
+                <table width="100%" class="table">
+                    <tr><td width="40%">Username</td><td>{{ user.username }}</td></tr>
+                    <tr><td width="40%">Timestamp created</td><td>{{ user.timestamp_created }}</td></tr>
+                    <tr><td width="40%">Last Updated</td><td>{{ user.timestamp_updated }}</td></tr>
+                    <tr><td width="40%">Last login</td><td>{{ user.last_login }}</td></tr>
+                    <tr><td width="40%">Account is active</td><td>{{ user.is_active }}</td></tr>
+                    <tr><td width="40%">Last password change</td><td>{{ user.password_changed_timestamp }}</td></tr>
+                    <tr>
+                        <td width="40%">Password</td>
+                        <td><input type="password" class="form-control" id="password" name="password" placeholder="Password" /></td>
+                    </tr>
+                    <tr>
+                        <td width="40%">Password (Repeat)</td>
+                        <td><input type="password" class="form-control" id="password1" name="password1" placeholder="Password 2" /></td>
+                    </tr>                   
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
+                <a href="#" onclick="account_management(2, 'modal-password')" class="btn btn-sm btn-success">Update Account</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end #modal-activate -->
+<!-- #modal-activate -->
+<div class="modal fade" id="modal-deactivate">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Deactivate account for {{ person.full_name }} ({{ person.id }})</h4>
+            </div>
+            <div class="modal-body">
+                <br>
+                <table width="100%" class="table">
+                    <tr><td width="40%">Username</td><td>{{ user.username }}</td></tr>
+                    <tr><td width="40%">Timestamp created</td><td>{{ user.timestamp_created }}</td></tr>
+                    <tr><td width="40%">Last Updated</td><td>{{ user.timestamp_updated }}</td></tr>
+                    <tr><td width="40%">Last login</td><td>{{ user.last_login }}</td></tr>
+                    <tr><td width="40%">Account is active</td><td>{{ user.is_active }}</td></tr>
+                    <tr><td width="40%">Last password change</td><td>{{ user.password_changed_timestamp }}</td></tr>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
+                <a href="#" onclick="account_management(3, 'modal-deactivate')" class="btn btn-sm btn-success">Update Account</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end #modal-activate -->
+<!-- #modal-activate -->
+<div class="modal fade" id="modal-force-change">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Force password change on next login for {{ person.full_name }} ({{ person.id }})</h4>
+            </div>
+            <div class="modal-body">
+                <br>
+                <table width="100%" class="table">
+                    <tr><td width="40%">Username</td><td>{{ user.username }}</td></tr>
+                    <tr><td width="40%">Timestamp created</td><td>{{ user.timestamp_created }}</td></tr>
+                    <tr><td width="40%">Last Updated</td><td>{{ user.timestamp_updated }}</td></tr>
+                    <tr><td width="40%">Last login</td><td>{{ user.last_login }}</td></tr>
+                    <tr><td width="40%">Account is active</td><td>{{ user.is_active }}</td></tr>
+                    <tr><td width="40%">Last password change</td><td>{{ user.password_changed_timestamp }}</td></tr>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
+                <a href="#" onclick="account_management(4, 'modal-force-change')" class="btn btn-sm btn-success">Update Account</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end #modal-activate -->
 </div>
 <!-- end row -->
 {% endblock %}
@@ -225,7 +367,9 @@
         $("#selecctall").change(function(){
             $(".area_check").prop('checked', $(this).prop("checked"));
         });
-    });
+
+        $('#user-message').hide();
+
 
     function confirm_dialogue(id){
         if (!$('#dataConfirmModal').length) {
@@ -254,6 +398,59 @@
         $('#dataConfirmModal').modal({show:true});
         return false;
     }
+});
+
+function account_management(action_id, modal_id){
+    var person_id = $('#person_id').val();
+    var username = $('#username').val();
+    var password = $('#password').val();
+    var password1 = $('#password1').val();
+    
+    var csrftoken = $.cookie('csrftoken');
+    var values = {'person_id': person_id, 'action_id': action_id,
+                  'username': username, 'password': password,
+                  'csrfmiddlewaretoken': csrftoken };
+    //Ajax call
+    var is_allowed = true;
+    if (password != password1){
+        is_allowed = false;
+    }
+    if (action_id == 2){
+        if (password.length < 8){
+            $('#user-form-message').html('Password must be 8 characters or more');
+            $('#user-message').show();
+            return false;
+        }
+   }
+
+    if (is_allowed){
+        $.ajax({
+            type: "POST",
+            data: values,
+            dataType: "json",
+            url: "/api/user/",
+            success: function(data){
+                var msg = data.message;
+                $('#user-form-message').html(msg);
+                $('#user-message').show();
+                // Toggle modal
+                $('#'+ modal_id).modal('toggle');
+            },
+            error: function(){
+                $('#user-form-message').html("Error");
+                $('#user-message').show();
+                // Toggle modal
+                $('#'+ modal_id).modal('toggle');
+            }
+        });
+    }else{
+        $('#user-form-message').html("Please provide all the details.");
+        $('#user-message').show();
+        // Toggle modal
+        $('#'+ modal_id).modal('toggle');
+    }
+
+}
 </script>
 
 {% endblock %}

@@ -47,7 +47,7 @@ class MetadataManagement(models.Model):
     device_user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='device_user')
     device_event_id = models.UUIDField(default=uuid.uuid4)
     date_of_event = models.DateField()
-    device_timestamp_created = models.DateTimeField(auto_now_add=True)
+    device_timestamp_created = models.DateTimeField(default=timezone.now)
     location_lat = models.DecimalField(max_digits=22, decimal_places=10, blank=True, null=True)
     location_lon = models.DecimalField(max_digits=22, decimal_places=10, blank=True, null=True)
     device_start_timestamp = models.DateTimeField(null=True)

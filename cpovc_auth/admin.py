@@ -81,7 +81,7 @@ class MyUserAdmin(UserAdmin):
     list_display = ['username', 'sex', 'surname', 'first_name', 'last_name',
                     'email', 'timestamp_created', 'last_login', 'is_active']
 
-    search_fields = ['username']
+    search_fields = ['username', 'reg_person__id']
     readonly_fields = ['reg_person']
     list_filter = ['is_active', 'is_staff', 'is_superuser',
                    'timestamp_created', 'last_login',

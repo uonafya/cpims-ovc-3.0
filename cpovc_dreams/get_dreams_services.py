@@ -14,7 +14,7 @@ def get_dreams(dreams_id):
         r = requests.get(url, headers=headers)
         # print(r.headers)
     except Exception as e:
-        print('Error from DREAMS' % str(e))
+        print('Error from DREAMS %s' % str(e))
         return []
     else:
         if r.status_code == 200:

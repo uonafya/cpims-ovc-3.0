@@ -522,7 +522,7 @@ def get_ovc_event(request, form_type, ovc_id):
                 event__form_type=form_type, event__ovc_cpims_id=ovc_id,
                 is_accepted=1).values(
                 'event_id', 'event__ovc_cpims_id', 'event__date_of_event',
-                'event__user_id',
+                'event__user_id', 'event__created_at',
                 'domain_id', 'service_id', 'is_accepted', 'id',
             ).order_by('event_id')
             # breakpoint()
@@ -539,6 +539,7 @@ def get_ovc_event(request, form_type, ovc_id):
                     'ovc_cpims_id': service['event__ovc_cpims_id'],
                     'date_of_event': service['event__date_of_event'],
                     'user_id': service['event__user_id'],
+                    'created_at': service['event__created_at'],
                     'event_id': event_id,
                     'services': [],
                     'critical_events': [],
@@ -732,6 +733,7 @@ def get_one_case_plan(request, ovc_id):
                 'event_id': event.id,
                 'ovc_cpims_id': event.ovc_cpims_id,
                 'user_id': event.user_id,
+                'created_at': event.created_at,
                 'date_of_event': event.date_of_event,
                 'services': [service_serializer(service) for service in services]
             })

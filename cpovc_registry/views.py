@@ -33,7 +33,7 @@ from cpovc_registry.forms import (
 from cpovc_main.functions import (
     workforce_id_generator, beneficiary_id_generator, get_org_units_dict)
 from cpovc_main.models import SetupGeography
-from cpovc_auth.decorators import is_allowed_groups
+from cpovc_auth.decorators import is_allowed_groups, is_workmate
 
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
@@ -939,6 +939,7 @@ def view_person(request, id):
 
 
 @login_required
+@is_workmate(False)
 @is_allowed_groups(['RGM', 'RGU', 'DSU'])
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_person(request, id):
@@ -1448,9 +1449,9 @@ def new_user(request, id):
         names = user.full_name
         if request.method == 'POST':
             form = NewUser(user, data=request.POST)
-            username = request.POST.get('username')
-            password1 = request.POST.get('password1')
-            password2 = request.POST.get('password2')
+            username = request.POST.get('username').strip()
+            password1 = request.POST.get('password1').strip()
+            password2 = request.POST.get('password2').strip()
 
             # resolve existing account
             user_exists = AppUser.objects.filter(reg_person=person_id)
@@ -1467,9 +1468,12 @@ def new_user(request, id):
                 messages.add_message(request, messages.INFO, msg)
                 form = NewUser(user, data=request.POST)
                 return render(request, 'registry/new_user.html',
-                              {'form': form}, )
+                              {'names': names, 'form': form}, )
 
             # validate username if__exists
+            f_name = personfname.lower()
+            s_name = personsname.lower()
+            u_name = username.lower()
             username_exists = AppUser.objects.filter(username__iexact=username)
             if username_exists:
                 msg = 'Username ({}) is taken. Pick another one.'.format(
@@ -1477,7 +1481,15 @@ def new_user(request, id):
                 messages.add_message(request, messages.INFO, msg)
                 form = NewUser(user, data=request.POST)
                 return render(request, 'registry/new_user.html',
-                              {'form': form}, )
+                              {'names': names, 'form': form}, )
+            elif f_name not in u_name and s_name not in u_name:
+                msg = 'Username ({}) must contain either your First Name or Surname.'.format(
+                    username)
+                messages.add_message(request, messages.INFO, msg)
+                form = NewUser(user, data=request.POST)
+                return render(request, 'registry/new_user.html',
+                              {'names': names, 'form': form}, )
+
             else:
                 # Create User
                 user = AppUser.objects.create_user(username=username,

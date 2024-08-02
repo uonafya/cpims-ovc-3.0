@@ -977,9 +977,13 @@ def ovc_exits(request, id):
             exit_date = creg.exit_date.strftime('%d-%b-%Y')
             exit_org = get_exit_org(ovc_id, True)
             initial['exit_reason'] = creg.exit_reason
-            initial['exit_date'] = exit_date
-            initial['exit_org_name'] = exit_org.org_unit_name
-            initial['exit_org_id'] = exit_org.org_unit_id
+            initial['exit_date'] = exit_date, ou_id = '', ''
+            ou_name, ou_id = '', ''
+            if exit_org:
+                ou_name = exit_org.org_unit_name
+                ou_id = exit_org.org_unit_id
+            initial['exit_org_name'] = ou_name
+            initial['exit_org_id'] = ou_id
         form = OVCRegistrationForm(guids=guids, data=initial)
         reg_audits = RegPersonsAuditTrail.objects.filter(person_id=ovc_id)
         return render(request, 'ovc/exit_and_graduation.html',

@@ -20,13 +20,13 @@ ALLOWED_HOSTS = ['*']
 cpims_db_host = os.environ.get(
     'CPIMS_HOST') if os.environ.get('CPIMS_HOST') else '127.0.0.1'
 cpims_db_pass = os.environ.get(
-    'CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else ''
+    'CPIMS_PASSWORD') if os.environ.get('CPIMS_PASSWORD') else 'Xaen!ee8'
 cpims_db_instance = os.environ.get(
-    'CPIMS_DB') if os.environ.get('CPIMS_DB') else ''
+    'CPIMS_DB') if os.environ.get('CPIMS_DB') else 'cpims_live'
 cpims_db_port = os.environ.get(
-    'CPIMS_PORT') if os.environ.get('CPIMS_PORT') else ''
+    'CPIMS_PORT') if os.environ.get('CPIMS_PORT') else '5432'
 cpims_db_user = os.environ.get(
-    'CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else ''
+    'CPIMS_DBUSER') if os.environ.get('CPIMS_DBUSER') else 'cpimsdbuser'
 cpims_debug = eval(os.environ.get(
     'CPIMS_DEBUG')) if os.environ.get('CPIMS_DEBUG') else True
 
@@ -166,8 +166,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'cpimskenya@gmail.com'
+EMAIL_HOST_PASSWORD = 'disbczrulkewfdry'
 
 DEFAULT_FROM_EMAIL = 'CPIMS Kenya <%s>' % EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
@@ -245,10 +245,10 @@ NASCOP_LOGIN_URL = os.environ.get(
     'NASCOP_LOGIN_URL') else NASCOP_URL + 'login'
 NASCOP_EMAIL = os.environ.get(
     'NASCOP_EMAIL') if os.environ.get(
-    'NASCOP_EMAIL') else ''
+    'NASCOP_EMAIL') else 'rpundo@healthit.uonbi.ac.ke'
 NASCOP_PASSWORD = os.environ.get(
     'NASCOP_PASSWORD') if os.environ.get(
-    'NASCOP_PASSWORD') else ''
+    'NASCOP_PASSWORD') else 'UUwF3AlPaZ7z0uynDT'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 LOGIN_URL = 'login'

@@ -14,14 +14,14 @@ from django.contrib.auth.models import Group
 from .functions import (
     save_group_geo_org, remove_group_geo_org, get_allowed_units_county,
     get_groups, save_temp_data, check_national, get_attached_units,
-    get_orgs_tree)
+    get_orgs_tree, get_group_geos_org)
 from .models import AppUser, CPOVCPermission
 from cpovc_registry.models import (
     RegPerson, RegPersonsExternalIds, RegPersonsOrgUnits, RegPersonsGeo)
 from cpovc_main.models import SetupGeography
 
 from .forms import RolesOrgUnits, RolesGeoArea, RolesForm, PasswordResetForm
-from .decorators import is_allowed_groups
+from .decorators import is_allowed_groups, check_workmate, is_workmate
 
 from django.contrib.auth.models import Permission
 from cpims.views import home as cpims_home
@@ -181,13 +181,17 @@ def roles_home(request):
         raise e
 
 
-# @login_required
-# @is_allowed_groups(['ACM', 'DSU'])
+@login_required
+@is_allowed_groups(['ACM', 'DSU'])
+@is_workmate()
 def roles_edit(request, user_id):
     """Create / Edit page for the roles."""
     try:
+        is_supervisor = False
         login_id = request.user.id
+        login_person_id = request.user.reg_person_id
         print("Track users, Editing|Logged in", user_id, login_id)
+        print('user groups', request.user.groups)
         if int(user_id) == login_id:
             page_info = (' - You can not manage your own Rights. '
                          'Contact your supervisor.')
@@ -199,8 +203,10 @@ def roles_edit(request, user_id):
         groups_cpims = dict(list(zip(list(cpims_groups.values()), list(cpims_groups.keys()))))
         # Current geo orgs
         user = AppUser.objects.get(pk=user_id)
+        print('current user groups', user.groups)
         # Test groups
         mygrp = user.groups.values_list('id', flat=True)
+        print('mygrp', mygrp)
         person_id = user.reg_person_id
         ex_areas, ex_orgs = get_allowed_units_county(user_id)
         user_data = {'user_id': user_id}
@@ -303,6 +309,29 @@ def roles_edit(request, user_id):
             user_data['activate_choice'] = 'activate'
         if not user.password_changed_timestamp:
             user_data['reset_password'] = True
+        # Get existing groups
+        user_sups, my_user_sups = [], []
+        org_users = get_group_geos_org(user.id)
+        for org_user in org_users:
+            if org_user['group_id'] == 4:
+                user_sups.append(org_user['org_unit_id'])
+        # My supervisor groups
+        my_org_users = get_group_geos_org(request.user.id)        
+        for my_org_user in my_org_users:
+            if my_org_user['group_id'] == 4:
+                my_user_sups.append(my_org_user['org_unit_id'])
+        if request.user.is_superuser:
+            if 2 in my_user_sups:
+                is_supervisor = True
+        else:
+            print('Check for non super users')
+            response = any(value in my_user_sups for value in user_sups)
+            print('su check', response)
+            is_supervisor = response
+            wkm = check_workmate(login_person_id, user.reg_person_id, 'SL')
+            if not wkm:
+                is_supervisor = True
+        print('workmate', wkm)
         form = RolesForm(data=user_data)
         # Lets do the processing down here - Makes sense
         if request.method == 'POST':
@@ -415,7 +444,7 @@ def roles_edit(request, user_id):
         return render(request, 'registry/roles_edit.html',
                       {'form': form, 'formset': formset,
                        'gformset': gformset, 'person': person,
-                       'vals': vals})
+                       'vals': vals, 'user': user, 'is_supervisor': is_supervisor})
     except AppUser.DoesNotExist:
         msg = 'Account must exist to attach a Role / Permission'
         messages.add_message(request, messages.ERROR, msg)

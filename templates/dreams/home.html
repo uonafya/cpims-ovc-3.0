@@ -53,18 +53,14 @@
                                 {{ form.search_criteria }}
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="checkbox m-r-10">
-                                <label>
-                                    {{ form.person_exited }} <span>Include Inactive Cases</span>
-                                </label>
-                            </div>
+
+                        <div class="col-md-1">
+                            <button type="submit" class="btn btn-primary m-r-5"><i class="fa fa-search"></i>&nbsp;Search</button>
                         </div>
-                        <div class="col-md-3">
-                            <button type="submit" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-search"></i>&nbsp;Search</button>
-                            <a href="{% url 'new_person' %}" id="create-person">
-                               <button type="button" class="btn btn-sm btn-primary m-r-5"><i class="fa fa-plus"></i>&nbsp;Register New</button>
-                            </a>
+                        <div class="col-md-4 pull-right">
+                            <span class="btn btn-info">Unique AGYW: {{ stats.agyw }}</span>
+                            <span class="btn btn-info">Total Services: {{ stats.services }}</span>
+                            <span class="btn btn-info">Co-enrolled AGYW: {{ stats.co_enrolled }}</span>
                         </div>
                 </form>
                 </div>
@@ -77,11 +73,11 @@
                 {% for combined_record in combined_data %}
                    <tr>
                        <td>{{ forloop.counter }}</td>
-                       <td>{{ combined_record.DREAMS_data.id }}</td>
-                       <td>{{ combined_record.person_record.id }}</td>
-                       <td>{{ combined_record.person_record.first_name }} {{ combined_record.person_record.surname }}</td>
+                       <td>{{ combined_record.dreams_id }}</td>
+                       <td>{{ combined_record.person_id }}</td>
+                       <td>{{ combined_record.person.first_name }} {{ combined_record.person.surname }}</td>
 
-                       <td>{{ combined_record.DREAMS_data.org_unit_name }}</td>
+                       <td>{{ combined_record.org_unit.org_unit_name }}</td>
                        
                        <td>
                             <a href="#" class="btn  btn-sm btn-primary m-r-5">View Details</a>
