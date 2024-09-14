@@ -12,7 +12,7 @@ from cpovc_registry.models import (
     RegPersonsAuditTrail)
 from cpovc_main.functions import (get_dict, get_days_difference)
 from .models import (
-    OVCRegistration, OVCHHMembers, OVCEligibility, OVCViralload)
+    OVCRegistration, OVCHHMembers, OVCEligibility, OVCViralload, OVCVLTracker)
 from .functions import (
     ovc_registration, get_hh_members, get_ovcdetails, gen_cbo_id, search_ovc,
     search_master, get_school, get_health, manage_checkins, ovc_management,
@@ -22,7 +22,7 @@ from cpovc_auth.decorators import is_allowed_ous
 from cpovc_forms.models import (
     OVCCareEvents, OVCHivStatus, OVCCareBenchmarkScore, OVCBenchmarkMonitoring)
 
-from .functions import PersonObj, perform_exit
+from .functions import PersonObj, perform_exit, dates_difference
 from cpovc_auth.decorators import validate_ovc
 from cpovc_auth.models import AppUser
 
@@ -312,7 +312,8 @@ def ovc_edit(request, id):
                 date_linked = health.date_linked.strftime('%d-%b-%Y')
                 art_status = health.art_status
                 facility_id = health.facility_id
-                facility = health.facility.facility_name
+                facility = "%s - %s" % (
+                    health.facility.facility_code, health.facility.facility_name)
         # Get School information
         sch_class, sch_adm_type = '', ''
         school_id, school = '', ''
@@ -892,6 +893,9 @@ def ovc_viral_load(request, id):
     """Method to list all audit trails."""
     try:
         vals = {}
+        days = 0
+        validity = 0
+        msg = "Test required"
         initial = {}
         ovc_id = int(id)
         guids = {'guids': [], 'chids': []}
@@ -900,10 +904,38 @@ def ovc_viral_load(request, id):
         creg = OVCRegistration.objects.get(is_void=False, person_id=ovc_id)
         vloads = OVCViralload.objects.filter(
             is_void=False, person_id=ovc_id).order_by("-viral_date")
+        # CG VL
+        cg_vloads = OVCViralload.objects.filter(
+            is_void=False, person_id=creg.caretaker_id).order_by("-viral_date")
+        if vloads:
+            cvload = vloads.first()
+            viral_load = cvload.viral_load
+            days = dates_difference(cvload.viral_date) * -1
+            if not viral_load:
+                validity = 1
+                msg = "Continue management"
+            elif viral_load > 0 and viral_load < 50:
+                validity = 1
+                msg = "Continue management"
+            elif viral_load >= 50 and viral_load < 199:
+                validity = 2
+                msg = "Continue management, Enroll in DSD"
+            elif viral_load > 199 and viral_load < 1000:
+                validity = 3
+                msg = "Institute EAC, repeat VL after 3 months"
+            elif viral_load >= 1000:
+                validity = 4
+                msg = "Conduct EAC, Repeat VL after 3 months, 2nd Line if 2nd Line VL is >1,000 copies"
+            else:
+                validity = 0
+        vl_days = 180 if child.years < 18 else 365
+        vl_tracker = OVCVLTracker.objects.filter(person_id=ovc_id).first()
         return render(request, 'ovc/viral_load.html',
                       {'status': 200, 'vals': vals, 'ovc_id': ovc_id,
                        'vloads': vloads, 'child': child, 'form': form,
-                       'creg': creg})
+                       'creg': creg, 'vl_tracker': vl_tracker, 'msg': msg,
+                       'cg_vloads': cg_vloads, 'days': days, 'validity': validity,
+                       'vl_days': vl_days})
     except Exception as e:
         raise e
     else:

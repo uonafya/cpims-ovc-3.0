@@ -14,20 +14,21 @@ class KMHFLFacilities(object):
     '''
 
     def __init__(self):
-        self.username = settings.KMHFL_USERNAME
-        self.password = settings.KMHFL_PASSWORD
-        self.scope = settings.KMHFL_SCOPE
-        self.grant_type = settings.KMHFL_GRANT_TYPE
-        self.client_id = settings.KMHFL_CLIENTID
-        self.client_secret = settings.KMHFL_CLIENT_SECRET
-        self.api_base_url = settings.KMHFL_API_BASE_URL
-        self.facility_base_url = settings.KMHFL_FACILITY_BASE_URL
-        self.sub_county_base_url = settings.KMHFL_SUBCOUNTY_BASE_URL
-        self.token_url = settings.KMHFL_TOKEN_URL
+        self.username = settings.KMHFR_USERNAME
+        self.password = settings.KMHFR_PASSWORD
+        self.scope = settings.KMHFR_SCOPE
+        self.grant_type = settings.KMHFR_GRANT_TYPE
+        self.client_id = settings.KMHFR_CLIENTID
+        self.client_secret = settings.KMHFR_CLIENT_SECRET
+        self.api_base_url = settings.KMHFR_API_BASE_URL
+        self.facility_base_url = settings.KMHFR_FACILITY_BASE_URL
+        self.sub_county_base_url = settings.KMHFR_SUBCOUNTY_BASE_URL
+        self.token_url = settings.KMHFR_TOKEN_URL
         self.api_token = self.generate_token()
         self.latest_facility = self.latest_facility()
 
-    @method_once
+
+    # @method_once
     def latest_facility(self):
         # query latest facility from db
         latest_mfl_code = OVCFacility.objects.values("facility_code").exclude(facility_code__regex=r'[^0-9]').order_by('facility_code').last()
@@ -36,7 +37,7 @@ class KMHFLFacilities(object):
         else:
             return 0
 
-    @method_once
+    # @method_once
     def generate_token(self):
         # generate token.
         token_url = self.token_url
@@ -45,14 +46,15 @@ class KMHFLFacilities(object):
         credentials = { "grant_type": self.grant_type, 
                         "username": self.username, 
                         "password": self.password, 
-                        "scope": self.scope }
-        response = requests.post(token_url, headers=headers, data=credentials, auth=auth)
+                        "scope": self.scope, "client_id": self.client_id,
+                        "client_secret": self.client_secret}
+        response = requests.post(token_url, headers=headers, data=credentials)
         if response.status_code == 200:
             json_token = json.loads(response.content)
             api_token = json_token.get('access_token')
             return api_token
         else:
-            print(response.content)
+            print('Failed login', response.content)
     
 
     def get_facilities(self):
@@ -62,9 +64,11 @@ class KMHFLFacilities(object):
         params = {'fields':'id,code,official_name,sub_county_id,subcounty_name', 
                   'format':'json', 'page_size':'50'}
         response = requests.get(api_url, headers=headers, params=params)
+        print(headers, response)
         
         if response.status_code == 200:
             json_object = json.loads(response.content)
+            print(json.loads(response.content.decode('utf-8')))
             return json_object
         else:
             print(response.content, api_url)

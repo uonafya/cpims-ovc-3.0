@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 {% block page_title %} DREAMS {% endblock %}
 
 {% load app_filters %}
@@ -57,10 +58,12 @@
                         <div class="col-md-1">
                             <button type="submit" class="btn btn-primary m-r-5"><i class="fa fa-search"></i>&nbsp;Search</button>
                         </div>
-                        <div class="col-md-4 pull-right">
-                            <span class="btn btn-info">Unique AGYW: {{ stats.agyw }}</span>
-                            <span class="btn btn-info">Total Services: {{ stats.services }}</span>
-                            <span class="btn btn-info">Co-enrolled AGYW: {{ stats.co_enrolled }}</span>
+                        <div class="col-md-4">
+                        <span class="pull-right">
+                            <span class="btn btn-info">AGYW: {{ stats.agyw|intcomma }}</span>
+                            <span class="btn btn-info">Services: {{ stats.services|intcomma }}</span>
+                            <span class="btn btn-info">Co-enrolled: {{ stats.co_enrolled|intcomma }}</span>
+                        </span>
                         </div>
                 </form>
                 </div>

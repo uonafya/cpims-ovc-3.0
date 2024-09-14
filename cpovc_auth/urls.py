@@ -4,6 +4,7 @@ from cpovc_access.forms import StrictPasswordChangeForm
 
 from .forms import PasswordResetForm
 from . import views
+from .authentication import TokenAuthenticationView
 # This should contain urls related to auth app ONLY
 urlpatterns = [
     path('', views.home, name='auth_home'),
@@ -42,4 +43,5 @@ urlpatterns = [
          'template_name': 'registration/password_change.html',
          'password_change_form': StrictPasswordChangeForm},
         name='password_change'),
+    path('api-token-auth/', TokenAuthenticationView.as_view()),
 ]

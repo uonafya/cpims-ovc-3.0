@@ -553,11 +553,17 @@ def check_name_malice(sender, instance, **kwargs):
     else:
         fname = obj.first_name.upper()
         sname = obj.surname.upper()
+        ptype = obj.designation
         new_fname = instance.first_name.upper()
         new_sname = instance.surname.upper()
+        aname = '%s %s' % (fname, sname)
+        bname = '%s %s' % (new_fname, new_sname)
         f_sm = SequenceMatcher(None, fname, new_fname)
         s_sm = SequenceMatcher(None, sname, new_sname)
         fsm_ratio = round(f_sm.ratio(), 2) * 100
         ssm_ratio = round(s_sm.ratio(), 2) * 100
-        if fsm_ratio < 70 or ssm_ratio < 70:
-            raise Exception('Complete change of First name and Surname is NOT allowed.')
+        # print(fsm_ratio, ssm_ratio, ptype)  and ptype != 'COVC'
+        if (fsm_ratio < 70 or ssm_ratio < 70):
+            raise Exception('Complete change of Names from (%s) to (%s) is NOT allowed.' % (aname, bname))
+        else:
+            print("Name changed from (%s) to (%s)" % (aname, bname))

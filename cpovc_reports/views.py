@@ -259,7 +259,7 @@ def write_csv(data, file_name, params):
                 excel_file_path = excel_file_path.replace('.xlsx', '.xlsm')
                 workbook.filename = excel_file_path
                 workbook.add_vba_project(vba_file)
-            writer.save()
+            # writer.save()
     except Exception as e:
         print('Error creating csv Results - %s' % (str(e)))
         pass

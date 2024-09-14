@@ -1,0 +1,2082 @@
+[
+    {
+        "pk": 31187,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN11HE",
+            "item_description": "GN 1.1 HE Child/adolescent has unknown HIV status (0-17)",
+            "item_description_short": "GN 1.1 HE Child/adolescent has unknown HIV status (0-17)",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31188,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN12HE",
+            "item_description": "GN 1.2 HE HIV status of HEI not confirmed at 18 months /one week after cessation of breastfeeding whichever comes later",
+            "item_description_short": "GN 1.2 HE HIV status of HEI not confirmed at 18 months /one week after cessation of",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31189,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN13HE",
+            "item_description": "GN 1.3 HE HIV status of the caregiver not known",
+            "item_description_short": "GN 1.3 HE HIV status of the caregiver not known",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31190,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN21HE",
+            "item_description": "GN 2.1 HE HIV positive child/adolescent not enrolled on treatment",
+            "item_description_short": "GN 2.1 HE HIV positive child/adolescent not enrolled on treatment",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31191,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN22HE",
+            "item_description": "GN 2.2 HE Child/adolescent on treatment with no documented viral load results",
+            "item_description_short": "GN 2.2 HE Child/adolescent on treatment with no documented viral load results",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31192,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN23HE",
+            "item_description": "GN 2.3 HE Child/adolescent on treatment with documented viral load results not suppressed",
+            "item_description_short": "GN 2.3 HE Child/adolescent on treatment with documented viral load results not suppr",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 6,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31193,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN24HE",
+            "item_description": "GN 2.4 HE Child/adolescent living with HIV not attending their appointments regularly (past 12 months)",
+            "item_description_short": "GN 2.4 HE Child/adolescent living with HIV not attending their appointments regula",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 7,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31194,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN25HE",
+            "item_description": "GN 2.5 HE Child/adolescent living with HIV not adhering to medication",
+            "item_description_short": "GN 2.5 HE Child/adolescent living with HIV not adhering to medication",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 8,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31195,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN26HE",
+            "item_description": "GN 2.6 HE HIV positive caregiver not enrolled on treatment",
+            "item_description_short": "GN 2.6 HE HIV positive caregiver not enrolled on treatment",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 9,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31196,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN27HE",
+            "item_description": "GN 2.7 HE HIV positive caregiver on treatment with no documented viral load results",
+            "item_description_short": "GN 2.7 HE HIV positive caregiver on treatment with no documented viral load results",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 10,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31197,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN28HE",
+            "item_description": "GN 2.8 HE HIV positive caregiver on treatment with documented viral load results not suppressed",
+            "item_description_short": "GN 2.8 HE HIV positive caregiver on treatment with documented viral load results not",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 11,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31198,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN29HE",
+            "item_description": "GN 2.9 HE HIV positive caregiver not attending their appointments regularly (past 12 months)",
+            "item_description_short": "GN 2.9 HE HIV positive caregiver not attending their appointments regularly (past 12 m",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 12,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31199,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN210H",
+            "item_description": "GN 2.10 HE HIV positive caregiver not adhering to medication",
+            "item_description_short": "GN 2.10 HE HIV positive caregiver not adhering to medication",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 13,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 43029,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN211H",
+            "item_description": "GN 2.11 HE HIV positive child/adolescent defaulted treatment",
+            "item_description_short": "GN 2.11 HE HIV positive child/adolescent defaulted treatment",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 14,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31200,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN31HE",
+            "item_description": "GN 3.1 HE Adolescent has inadequate knowledge on HIV prevention",
+            "item_description_short": "GN 3.1 HE Adolescent has inadequate knowledge on HIV prevention",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31201,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN32HE",
+            "item_description": "GN 3.2 HE Unable to describe two HIV infection risks",
+            "item_description_short": "GN 3.2 HE Unable to describe two HIV infection risks",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31202,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN33HE",
+            "item_description": "GN 3.3 HE Unable to describe one example of how to prevent themselves from HIV risk",
+            "item_description_short": "GN 3.3 HE Unable to describe one example of how to prevent themselves from HIV risk",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31203,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN34HE",
+            "item_description": "GN 3.4 HE Unable to correctly describe the location of at least one place where HIV prevention support is available",
+            "item_description_short": "GN 3.4 HE Unable to correctly describe the location of at least one place where HIV prev",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31205,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN42HE",
+            "item_description": "GN 4.2 HE Child below the age of five assessed using MUAC and scored yellow/red (<12.5)",
+            "item_description_short": "GN 4.2 HE Child below the age of five assessed using MUAC and scored yellow/red (<12.5)",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31206,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN43HE",
+            "item_description": "GN 4.3 HE Child below five years showed signs of bipedal edema",
+            "item_description_short": "GN 4.3 HE Child below five years showed signs of bipedal edema",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 6,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31207,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN44HE",
+            "item_description": "GN 4.4 HE Clinician confirms that child previously treated for malnutrition has a Z score below <-2",
+            "item_description_short": "GN 4.4 HE Clinician confirms that child previously treated for malnutrition has a Z s",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 7,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31208,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN45HE",
+            "item_description": "GN 4.5 HE Child below the age of two immunization not on track",
+            "item_description_short": "GN 4.5 HE Child below the age of two immunization not on track",
+            "item_category": "CasePlan Gaps \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 8,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_health"
+        }
+    },
+    {
+        "pk": 31250,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN61SA",
+            "item_description": "GN 6.1 SA Caregiver has experienced violence and has not received post violence services",
+            "item_description_short": "GN 6.1 SA Caregiver has experienced violence and has not received post violence services",
+            "item_category": "CasePlan Gaps \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_safe"
+        }
+    },
+    {
+        "pk": 31251,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN62SA",
+            "item_description": "GN 6.2 SA Child (below 12 yrs) has experienced violence and has not received post violence services",
+            "item_description_short": "GN 6.2 SA Child (below 12 yrs) has experienced violence and has not received post violen",
+            "item_category": "CasePlan Gaps \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_safe"
+        }
+    },
+    {
+        "pk": 31252,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN63SA",
+            "item_description": "GN 6.3 SA Adolescent (12yrs and above) has experienced violence and has not received post violence services",
+            "item_description_short": "GN 6.3 SA Adolescent (12yrs and above) has experienced violence and has not received pos",
+            "item_category": "CasePlan Gaps \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_safe"
+        }
+    },
+    {
+        "pk": 31253,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN71SA",
+            "item_description": "GN 7.1 SA Household lacks a stable adult caregiver",
+            "item_description_short": "GN 7.1 SA Household lacks a stable adult caregiver",
+            "item_category": "CasePlan Gaps \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_safe"
+        }
+    },
+    {
+        "pk": 31254,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN81SA",
+            "item_description": "GN 8.1 SA Child lacks legal documents (eg. Birth certificate",
+            "item_description_short": "GN 8.1 SA Child lacks legal documents (eg. Birth certificate",
+            "item_category": "CasePlan Gaps \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_safe"
+        }
+    },
+    {
+        "pk": 31272,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN91SC",
+            "item_description": "GN 9.1 SC Child (4\u20135-year-old) not attending ECDE (in cases where there is an ECD center in the area)",
+            "item_description_short": "GN 9.1 SC Child (4\u20135-year-old) not attending ECDE (in cases where there is an ECD cent",
+            "item_category": "CasePlan Gaps \u2013 School",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_school"
+        }
+    },
+    {
+        "pk": 31273,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN92SC",
+            "item_description": "GN 9.2 SC School aged children (6-17) not enrolled in school",
+            "item_description_short": "GN 9.2 SC School aged children (6-17) not enrolled in school",
+            "item_category": "CasePlan Gaps \u2013 School",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_school"
+        }
+    },
+    {
+        "pk": 31274,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN93SC",
+            "item_description": "GN 9.3 SC Out of school OVC aged 15-20 years not engaged in approved economic intervention",
+            "item_description_short": "GN 9.3 SC Out of school OVC aged 15-20 years not engaged in approved economic interven",
+            "item_category": "CasePlan Gaps \u2013 School",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_school"
+        }
+    },
+    {
+        "pk": 31275,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN94SC",
+            "item_description": "GN 9.4 SC Children not attending school regularly (i.e. have missed school for more than five school days in a month).",
+            "item_description_short": "GN 9.4 SC Children not attending school regularly (i.e. have missed school for more th",
+            "item_category": "CasePlan Gaps \u2013 School",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_school"
+        }
+    },
+    {
+        "pk": 31276,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN95SC",
+            "item_description": "GN 9.5 SC Children enrolled in school not progressed/graduated from one level to the other in the last school calendar year",
+            "item_description_short": "GN 9.5 SC Children enrolled in school not progressed/graduated from one level to the oth",
+            "item_category": "CasePlan Gaps \u2013 School",
+            "item_sub_category": "",
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_school"
+        }
+    },
+    {
+        "pk": 31229,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN51ST",
+            "item_description": "GN 5.1 ST Caregiver is not able to pay school fees (without selling productive/HH assets and/or project cash transfer support) for the school going children",
+            "item_description_short": "GN 5.1 ST Caregiver is not able to pay school fees (without selling productive/HH assets",
+            "item_category": "CasePlan Gaps \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_stable"
+        }
+    },
+    {
+        "pk": 31230,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN52ST",
+            "item_description": "GN 5.2 ST Caregiver is not able to pay all medical costs (buy prescribed medicine and take care of transport to facility) in the past 6 months for all children the household under the age of 18 without PEPFAR support",
+            "item_description_short": "GN 5.2 ST Caregiver is not able to pay all medical costs (buy prescribed medicine and take c",
+            "item_category": "CasePlan Gaps \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_stable"
+        }
+    },
+    {
+        "pk": 31231,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "GN53ST",
+            "item_description": "GN 5.3 ST Caregiver is not able to pay for legal and other administrative fees related to guardianship, civil registration or inheritance",
+            "item_description_short": "GN 5.3 ST Caregiver is not able to pay for legal and other administrative fees related to gu",
+            "item_category": "CasePlan Gaps \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_gaps_stable"
+        }
+    },
+    {
+        "pk": 31170,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P11HE",
+            "item_description": "P 1.1 HE Conduct/refer for HIV risk assessment",
+            "item_description_short": "P 1.1 HE Conduct/refer for HIV risk assessment",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31171,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P12HE",
+            "item_description": "P 1.2 HE Escort/refer for HIV testing",
+            "item_description_short": "P 1.2 HE Escort/refer for HIV testing",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31172,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P13HE",
+            "item_description": "P 1.3 HE Escort/refer HEI MBP for confirmatory test",
+            "item_description_short": "P 1.3 HE Escort/refer HEI MBP for confirmatory test",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31173,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P21HE",
+            "item_description": "P 2.1 HE Refer/escort for enrollment to treatment",
+            "item_description_short": "P 2.1 HE Refer/escort for enrollment to treatment",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31174,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P22HE",
+            "item_description": "P 2.2 HE Refer/escort to clinic for viral load testing",
+            "item_description_short": "P 2.2 HE Refer/escort to clinic for viral load testing",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31175,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P23HE",
+            "item_description": "P 2.3 HE Enroll non suppressed into Jua Mtoto Wako",
+            "item_description_short": "P 2.3 HE Enroll non suppressed into Jua Mtoto Wako",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 6,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31176,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P24HE",
+            "item_description": "P 2.4 HE Characterize non suppressed",
+            "item_description_short": "P 2.4 HE Characterize non suppressed",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 7,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31177,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P25HE",
+            "item_description": "P 2.5 HE Provide interventions to address adherence and non-suppression",
+            "item_description_short": "P 2.5 HE Provide interventions to address adherence and non-suppression",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 8,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31178,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P26HE",
+            "item_description": "P 2.6 HE Refer for other health services",
+            "item_description_short": "P 2.6 HE Refer for other health services",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 9,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31179,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P31HE",
+            "item_description": "P 3.1 HE Refer for DREAMS enrollment",
+            "item_description_short": "P 3.1 HE Refer for DREAMS enrollment",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 10,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31180,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P32HE",
+            "item_description": "P 3.2 HE Link to adolescent and youth programs",
+            "item_description_short": "P 3.2 HE Link to adolescent and youth programs",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 11,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31181,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P33HE",
+            "item_description": "P 3.3 HE Provide knowledge on HIV and violence prevention",
+            "item_description_short": "P 3.3 HE Provide knowledge on HIV and violence prevention",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 12,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31184,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P43HE",
+            "item_description": "P 4.3 HE Provide/refer child for malnutrition interventions",
+            "item_description_short": "P 4.3 HE Provide/refer child for malnutrition interventions",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 15,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31185,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P44HE",
+            "item_description": "P 4.4 HE Refer child for immunization and growth monitoring",
+            "item_description_short": "P 4.4 HE Refer child for immunization and growth monitoring",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 16,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31186,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P45HE",
+            "item_description": "P 4.5 HE Referral for other services for U5s",
+            "item_description_short": "P 4.5 HE Referral for other services for U5s",
+            "item_category": "CasePlan Services \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 17,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_health"
+        }
+    },
+    {
+        "pk": 31245,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P61SA",
+            "item_description": "P 6.1 SA Provision of structured psychosocial and family related conflict mitigation and family relationships support",
+            "item_description_short": "P 6.1 SA Provision of structured psychosocial and family related conflict mitigation and family rel",
+            "item_category": "CasePlan Services \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_safe"
+        }
+    },
+    {
+        "pk": 31246,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P62SA",
+            "item_description": "P 6.2 SA Provision or linkage for child protection and post violence related services",
+            "item_description_short": "P 6.2 SA Provision or linkage for child protection and post violence related services",
+            "item_category": "CasePlan Services \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_safe"
+        }
+    },
+    {
+        "pk": 31247,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P63SA",
+            "item_description": "P 6.3 SA Provide interventions aimed at preventing HIV and SGBV",
+            "item_description_short": "P 6.3 SA Provide interventions aimed at preventing HIV and SGBV",
+            "item_category": "CasePlan Services \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_safe"
+        }
+    },
+    {
+        "pk": 31248,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P71SA",
+            "item_description": "P 7.1 SA Link OVC to a stable adult caregiver",
+            "item_description_short": "P 7.1 SA Link OVC to a stable adult caregiver",
+            "item_category": "CasePlan Services \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_safe"
+        }
+    },
+    {
+        "pk": 31249,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P81SA",
+            "item_description": "P 8.1 SA Support child to acquire legal documents.",
+            "item_description_short": "P 8.1 SA Support child to acquire legal documents.",
+            "item_category": "CasePlan Services \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_safe"
+        }
+    },
+    {
+        "pk": 31265,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P91SC",
+            "item_description": "P 9.1 SC Enroll child in School (ECD/primary for late enrolment)",
+            "item_description_short": "P 9.1 SC Enroll child in School (ECD/primary for late enrolment)",
+            "item_category": "CasePlan Services \u2013 School",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_school"
+        }
+    },
+    {
+        "pk": 31266,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P92SC",
+            "item_description": "P 9.2 SC Re-enrol child/adolescent to school",
+            "item_description_short": "P 9.2 SC Re-enrol child/adolescent to school",
+            "item_category": "CasePlan Services \u2013 School",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_school"
+        }
+    },
+    {
+        "pk": 31267,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P93SC",
+            "item_description": "P 9.3 SC Enroll adolescent for an approved HES intervention",
+            "item_description_short": "P 9.3 SC Enroll adolescent for an approved HES intervention",
+            "item_category": "CasePlan Services \u2013 School",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_school"
+        }
+    },
+    {
+        "pk": 31268,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P94SC",
+            "item_description": "P 9.4 SC Refer/ link child for education support (i.e., presidential bursary fund, CDF)",
+            "item_description_short": "P 9.4 SC Refer/ link child for education support (i.e., presidential bursary fund, CDF)",
+            "item_category": "CasePlan Services \u2013 School",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_school"
+        }
+    },
+    {
+        "pk": 31269,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P95SC",
+            "item_description": "P 9.5 SC Provide education support (school fees, school levies, scholastic materials, school uniform.",
+            "item_description_short": "P 9.5 SC Provide education support (school fees, school levies, scholastic materials, school unifor",
+            "item_category": "CasePlan Services \u2013 School",
+            "item_sub_category": "",
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_school"
+        }
+    },
+    {
+        "pk": 31270,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P96SC",
+            "item_description": "P 9.6 SC Provide/Refer for provision of sanitary towels",
+            "item_description_short": "P 9.6 SC Provide/Refer for provision of sanitary towels",
+            "item_category": "CasePlan Services \u2013 School",
+            "item_sub_category": "",
+            "the_order": 6,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_school"
+        }
+    },
+    {
+        "pk": 31271,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P97SC",
+            "item_description": "P 9.7 SC Caregiver support (tracks child's school attendance and progress & offer assistance with homework",
+            "item_description_short": "P 9.7 SC Caregiver support (tracks child's school attendance and progress & offer assistance with h",
+            "item_category": "CasePlan Services \u2013 School",
+            "item_sub_category": "",
+            "the_order": 7,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_school"
+        }
+    },
+    {
+        "pk": 31222,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P51ST",
+            "item_description": "P 5.1 ST Provide Social Assistance: Linkages to GOK and other social safety nets",
+            "item_description_short": "P 5.1 ST Provide Social Assistance: Linkages to GOK and other social safety nets",
+            "item_category": "CasePlan Services \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_stable"
+        }
+    },
+    {
+        "pk": 31223,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P52ST",
+            "item_description": "P 5.2 ST Provide consumption support (Emergency fund/Cash transfer)",
+            "item_description_short": "P 5.2 ST Provide consumption support (Emergency fund/Cash transfer)",
+            "item_category": "CasePlan Services \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_stable"
+        }
+    },
+    {
+        "pk": 31224,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P53ST",
+            "item_description": "P 5.3 ST Productive Asset support (Goats, Poultry)",
+            "item_description_short": "P 5.3 ST Productive Asset support (Goats, Poultry)",
+            "item_category": "CasePlan Services \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_stable"
+        }
+    },
+    {
+        "pk": 31225,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P54ST",
+            "item_description": "P 5.4 ST Provide Income Growth Support (enroll in saving groups, link HH to formal financial institutions like banks etc, small business support/IGA seed capital, Business grants, startup capital, business boos)",
+            "item_description_short": "P 5.4 ST Provide Income Growth Support (enroll in saving groups, link HH to formal financial instit",
+            "item_category": "CasePlan Services \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_stable"
+        }
+    },
+    {
+        "pk": 31226,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P55ST",
+            "item_description": "P 5.5 ST Capacity building/provision of information on saving groups, financial literacy, business skills, entrepreneurship, Agribusiness",
+            "item_description_short": "P 5.5 ST Capacity building/provision of information on saving groups, financial literacy, business",
+            "item_category": "CasePlan Services \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_stable"
+        }
+    },
+    {
+        "pk": 31227,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P16ST",
+            "item_description": "P 1.6 ST Provide adolescent (17 years and out of school) with market driven livelihood skills/support",
+            "item_description_short": "P 1.6 ST Provide adolescent (17 years and out of school) with market driven livelihood skills/suppo",
+            "item_category": "CasePlan Services \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 6,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_stable"
+        }
+    },
+    {
+        "pk": 31228,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "P17ST",
+            "item_description": "P 1.7 ST Enrolment in Health Insurance Plan",
+            "item_description_short": "P 1.7 ST Enrolment in Health Insurance Plan",
+            "item_category": "CasePlan Services \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 7,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_priorities_stable"
+        }
+    },
+    {
+        "pk": 31143,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP11HE",
+            "item_description": "CP 1.1 HE Facilitate to obtain HIV test",
+            "item_description_short": "CP 1.1 HE Facilitate to obtain HIV test",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31144,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP12 HE",
+            "item_description": "CP 1.2 HE Complete a referral for HIV test",
+            "item_description_short": "CP 1.2 HE Complete a referral for HIV test",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31145,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP13HE",
+            "item_description": "CP 1.3 HE Complete a referral for routine Early Infant Diagnosis (EID) - 1st contact, 6wks, 6 months and 12 months)",
+            "item_description_short": "CP 1.3 HE Complete a referral for routine Early Infant Diagnosis (EID) - 1st contact, 6wk",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31146,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP14HE",
+            "item_description": "CP 1.4 HE Facilitate to obtain routine Early Infant Diagnosis (EID) - 1st contact, 6wks, 6 months and 12 months)",
+            "item_description_short": "CP 1.4 HE Facilitate to obtain routine Early Infant Diagnosis (EID) - 1st contact, 6wks,",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 43030,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP15HE",
+            "item_description": "CP 1.5 HE Facilitated/Complete referral for final antibody test",
+            "item_description_short": "CP 1.5 HE Facilitated/Complete referral for final antibody test",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31147,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP21HE",
+            "item_description": "CP 2.1 HE Facilitate/Complete a referral for enrollment/re-enrollment to care and treatment",
+            "item_description_short": "CP 2.1 HE Facilitate/Complete a referral for enrollment/re-enrollment to care and treatmen",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 6,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31148,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP22HE",
+            "item_description": "CP 2.2 HE Complete referral/facilitate to access viral load testing services",
+            "item_description_short": "CP 2.2 HE Complete referral/facilitate to access viral load testing services",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 7,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31149,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP23HE",
+            "item_description": "CP 2.3 HE Facilitate/provide with transport to clinic appointment",
+            "item_description_short": "CP 2.3 HE Facilitate/provide with transport to clinic appointment",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 8,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31150,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP24HE",
+            "item_description": "CP 2.4 HE Provide with appropriate treatment reminder messages (including adherence and appointments)",
+            "item_description_short": "CP 2.4 HE Provide with appropriate treatment reminder messages (including adherence an",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 9,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31151,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP25HE",
+            "item_description": "CP 2.5 HE Provide with age-appropriate counseling and HIV disclosure support",
+            "item_description_short": "CP 2.5 HE Provide with age-appropriate counseling and HIV disclosure support",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 10,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31152,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP26HE",
+            "item_description": "CP 2.6 HE Provide with age-appropriate HIV treatment literacy (for CLHIV)",
+            "item_description_short": "CP 2.6 HE Provide with age-appropriate HIV treatment literacy (for CLHIV)",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 11,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31153,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP27HE",
+            "item_description": "CP 2.7 HE Complete a referral for HIV related opportunistic infection treatment and care",
+            "item_description_short": "CP 2.7 HE Complete a referral for HIV related opportunistic infection treatment and care",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 12,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31154,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP28HE",
+            "item_description": "CP 2.8 HE Link/Facilitate to age appropriate Support group (OTZ club, peer clubs)",
+            "item_description_short": "CP 2.8 HE Link/Facilitate to age appropriate Support group (OTZ club, peer clubs)",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 13,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31155,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP29HE",
+            "item_description": "CP 2.9 HE Link to a structured PLHA support group",
+            "item_description_short": "CP 2.9 HE Link to a structured PLHA support group",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 14,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31156,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP210HE",
+            "item_description": "CP 2.10 HE Provide with HIV adherence support (wristwatch, pill box, treatment buddy, EAC, DWI, Counseling, MDT)",
+            "item_description_short": "CP 2.10 HE Provide with HIV adherence support (wristwatch, pill box, treatment buddy,",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 15,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31157,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP211HE",
+            "item_description": "CP 2.11 HE Complete a referral for or facilitated to obtain routine/ emergency healthcare",
+            "item_description_short": "CP 2.11 HE Complete a referral for or facilitated to obtain routine/ emergency healthcare",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 16,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31158,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP212HE",
+            "item_description": "CP 2.12 HE Provide with age-appropriate health and nutrition messages",
+            "item_description_short": "CP 2.12 HE Provide with age-appropriate health and nutrition messages",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 17,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31160,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP31HE",
+            "item_description": "CP 3.1 HE Complete a referral to obtain age-appropriate HIV prevention support including PrEP, condoms and/or VMMC",
+            "item_description_short": "CP 3.1 HE Complete a referral to obtain age-appropriate HIV prevention support including",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 18,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31161,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP32AHE",
+            "item_description": "CP 3.2a HE Provide with HIV and Violence prevention evidence interventions sessions",
+            "item_description_short": "CP 3.2a HE Provide with HIV and Violence prevention evidence interventions sessions",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 19,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31162,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP32BHE",
+            "item_description": "CP 3.2b HE Complete a referral for or was facilitated to obtain age-appropriate women\u2019s health counseling and/or products, including condoms",
+            "item_description_short": "CP 3.2b HE Complete a referral for or was facilitated to obtain age-appropriate women\u2019s heal",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 20,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 43031,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP33HE",
+            "item_description": "CP 3.3 HE Completed a referral to obtain age-appropriate HIV prevention information",
+            "item_description_short": "CP 3.3 HE Completed a referral to obtain age-appropriate HIV prevention information",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 21,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31164,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP42HE",
+            "item_description": "CP 4.2 HE Complete referral / Provide with supplementary or therapeutic food",
+            "item_description_short": "CP 4.2 HE Complete referral / Provide with supplementary or therapeutic food",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 22,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31165,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP43HE",
+            "item_description": "CP 4.3 HE Complete referral for/facilitate to obtain nutrition, growth, and developmental monitoring services",
+            "item_description_short": "CP 4.3 HE Complete referral for/facilitate to obtain nutrition, growth, and developmental",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 23,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31166,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP44HE",
+            "item_description": "CP 4.4 HE Complete a referral for/facilitated to obtain immunization",
+            "item_description_short": "CP 4.4 HE Complete a referral for/facilitated to obtain immunization",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 24,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31168,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP46HE",
+            "item_description": "CP 4.6 HE Complete referral/facilitate to obtain perinatal care including PMTCT",
+            "item_description_short": "CP 4.6 HE Complete referral/facilitate to obtain perinatal care including PMTCT",
+            "item_category": "CasePlan Goals \u2013 Health",
+            "item_sub_category": "",
+            "the_order": 25,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_health"
+        }
+    },
+    {
+        "pk": 31232,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP61SA",
+            "item_description": "CP 6.1 SA Conduct structured family group conferencing to prevent occurrence/ reoccurrence of child abuse, exploitation or neglect",
+            "item_description_short": "CP 6.1 SA Conduct structured family group conferencing to prevent occurrence/ reoccurr",
+            "item_category": "CasePlan Goals \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_safe"
+        }
+    },
+    {
+        "pk": 31233,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP62SA",
+            "item_description": "CP 6.2 SA Provide structured psycho-social support related to family conflict mitigation and family relationships",
+            "item_description_short": "CP 6.2 SA Provide structured psycho-social support related to family conflict mitigation an",
+            "item_category": "CasePlan Goals \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_safe"
+        }
+    },
+    {
+        "pk": 31234,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP63SA",
+            "item_description": "CP 6.3 SA Complete refferal or Facilitate with transport to access post-violence Management",
+            "item_description_short": "CP 6.3 SA Complete refferal or Facilitate with transport to access post-violence Managemen",
+            "item_category": "CasePlan Goals \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_safe"
+        }
+    },
+    {
+        "pk": 31235,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP64SA",
+            "item_description": "CP 6.4 SA File report of suspected abuse to child protection office, police or other local authority",
+            "item_description_short": "CP 6.4 SA File report of suspected abuse to child protection office, police or other local au",
+            "item_category": "CasePlan Goals \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_safe"
+        }
+    },
+    {
+        "pk": 31236,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP65SA",
+            "item_description": "CP 6.5 SA Refer for emergency shelter/care facility/alternative care placement(Kinship, Guardian, Adoption,foster,other)",
+            "item_description_short": "CP 6.5 SA Refer for emergency shelter/care facility/alternative care placement(Kinship, G",
+            "item_category": "CasePlan Goals \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_safe"
+        }
+    },
+    {
+        "pk": 31237,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP66SA",
+            "item_description": "CP 6.6 SA Complete referral of adolescent for structured safe spaces intervention",
+            "item_description_short": "CP 6.6 SA Complete referral of adolescent for structured safe spaces intervention",
+            "item_category": "CasePlan Goals \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 6,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_safe"
+        }
+    },
+    {
+        "pk": 31238,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP67SA",
+            "item_description": "CP 6.7 SA Facilitate or complete referral for participation in evidenced-based intervention on preventing HIV and sexual violence",
+            "item_description_short": "CP 6.7 SA Facilitate or complete referral for participation in evidenced-based intervention",
+            "item_category": "CasePlan Goals \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 7,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_safe"
+        }
+    },
+    {
+        "pk": 31239,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP68SA",
+            "item_description": "CP 6.8 SA Support caregiver to access structured psycho- social support related to family conflict mitigation and family relationships",
+            "item_description_short": "CP 6.8 SA Support caregiver to access structured psycho- social support related to family con",
+            "item_category": "CasePlan Goals \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 8,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_safe"
+        }
+    },
+    {
+        "pk": 31240,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP69SA",
+            "item_description": "CP 6.9 SA Enroll or complete referral of caregiver for a structured, HIV-sensitive, evidence-based early childhood intervention with a trained provider",
+            "item_description_short": "CP 6.9 SA Enroll or complete referral of caregiver for a structured, HIV-sensitive, evidenc",
+            "item_category": "CasePlan Goals \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 9,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_safe"
+        }
+    },
+    {
+        "pk": 31241,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP610S",
+            "item_description": "CP 6.10 SA Enroll/ or complete refferal of caregiver for an evidence-based parenting intervention to prevent and reduce violence and/or sexual risk of their children",
+            "item_description_short": "CP 6.10 SA Enroll/ or complete refferal of caregiver for an evidence-based parenting interve",
+            "item_category": "CasePlan Goals \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 10,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_safe"
+        }
+    },
+    {
+        "pk": 31242,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP611S",
+            "item_description": "CP 6.11 SA Provide or complete referral for legal assistance (e.g., attorney fees, transport, etc.) related to cases of maltreatment, VAC(physical, neglect, sexual abuse, emotional, trafficking, exploitation)",
+            "item_description_short": "CP 6.11 SA Provide or complete referral for legal assistance (e.g., attorney fees, transport, e",
+            "item_category": "CasePlan Goals \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 11,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_safe"
+        }
+    },
+    {
+        "pk": 31243,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP71SA",
+            "item_description": "CP 7.1 SA Provide or complete referral for shelter/care facility or alternative care placement(Kinship, Guardian, Adoption,foster,other) due to lack of stable care giver",
+            "item_description_short": "CP 7.1 SA Provide or complete referral for shelter/care facility or alternative care placement",
+            "item_category": "CasePlan Goals \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 12,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_safe"
+        }
+    },
+    {
+        "pk": 31244,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP81SA",
+            "item_description": "CP 8.1 SA Facilitate/complete referral for acquisition of Birth certificate",
+            "item_description_short": "CP 8.1 SA Facilitate/complete referral for acquisition of Birth certificate",
+            "item_category": "CasePlan Goals \u2013 Safe",
+            "item_sub_category": "",
+            "the_order": 13,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_safe"
+        }
+    },
+    {
+        "pk": 31255,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP91SC",
+            "item_description": "CP 9.1 SC Enroll in ECD",
+            "item_description_short": "CP 9.1 SC Enroll in ECD",
+            "item_category": "CasePlan Goals \u2013 School",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_school"
+        }
+    },
+    {
+        "pk": 31256,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP92SC",
+            "item_description": "CP 9.2 SC Re-enrol child back to school",
+            "item_description_short": "CP 9.2 SC Re-enrol child back to school",
+            "item_category": "CasePlan Goals \u2013 School",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_school"
+        }
+    },
+    {
+        "pk": 31258,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP94SC",
+            "item_description": "CP 9.4 SC Provide/complete referral for school fees",
+            "item_description_short": "CP 9.4 SC Provide/complete referral for school fees",
+            "item_category": "CasePlan Goals \u2013 School",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_school"
+        }
+    },
+    {
+        "pk": 31259,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP95SC",
+            "item_description": "CP 9.5 SC Provide/Complete referral for school levies support",
+            "item_description_short": "CP 9.5 SC Provide/Complete referral for school levies support",
+            "item_category": "CasePlan Goals \u2013 School",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_school"
+        }
+    },
+    {
+        "pk": 31260,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP96SC",
+            "item_description": "CP 9.6 SC provide/complete referral for scholastic materials",
+            "item_description_short": "CP 9.6 SC provide/complete referral for scholastic materials",
+            "item_category": "CasePlan Goals \u2013 School",
+            "item_sub_category": "",
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_school"
+        }
+    },
+    {
+        "pk": 31261,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP97SC",
+            "item_description": "CP 9.7 SC Provide/complete referral for school uniform support",
+            "item_description_short": "CP 9.7 SC Provide/complete referral for school uniform support",
+            "item_category": "CasePlan Goals \u2013 School",
+            "item_sub_category": "",
+            "the_order": 6,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_school"
+        }
+    },
+    {
+        "pk": 31262,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP98SC",
+            "item_description": "CP 9.8 SC Provide/complete referral for sanitary towels to adolescent girls",
+            "item_description_short": "CP 9.8 SC Provide/complete referral for sanitary towels to adolescent girls",
+            "item_category": "CasePlan Goals \u2013 School",
+            "item_sub_category": "",
+            "the_order": 7,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_school"
+        }
+    },
+    {
+        "pk": 43032,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP911SC",
+            "item_description": "CP 9.11 SC Provide/complete referral for lighting equipment e.g.solar lamps",
+            "item_description_short": "CP 9.11 SC Provide/complete referral for lighting equipment e.g.solar lamps",
+            "item_category": "CasePlan Goals \u2013 School",
+            "item_sub_category": "",
+            "the_order": 8,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_school"
+        }
+    },
+    {
+        "pk": 31209,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP51ST",
+            "item_description": "CP 5.1 ST Link to GOK and other social safety nets (OVC, Elderly or Disability cash transfers)",
+            "item_description_short": "CP 5.1 ST Link to GOK and other social safety nets (OVC, Elderly or Disability cash tran",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 31210,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP52ST",
+            "item_description": "CP 5.2 ST Provide Emergency cash transfer",
+            "item_description_short": "CP 5.2 ST Provide Emergency cash transfer",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 31211,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP53ST",
+            "item_description": "CP 5.3 ST Provide or complete referral for business support (startup kit/business boost/Market Linkage)",
+            "item_description_short": "CP 5.3 ST Provide or complete referral for business support (startup kit/business boost/Mark",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 31212,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP54ST",
+            "item_description": "CP 5.4 ST Provide or complete referral for productive assets)",
+            "item_description_short": "CP 5.4 ST Provide or complete referral for productive assets)",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 31213,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP55ST",
+            "item_description": "CP 5.5 ST Enrol to saving groups (VSLA/SILC/youth lending associations)",
+            "item_description_short": "CP 5.5 ST Enrol to saving groups (VSLA/SILC/youth lending associations)",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 31214,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP56ST",
+            "item_description": "CP 5.6 ST Link to financial institutions",
+            "item_description_short": "CP 5.6 ST Link to financial institutions",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 6,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 31215,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP57ST",
+            "item_description": "CP 5.7 ST Provide or complete referral for financial literacy training to CG and adolescent",
+            "item_description_short": "CP 5.7 ST Provide or complete referral for financial literacy training to CG and adolescent",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 7,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 31216,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP58ST",
+            "item_description": "CP 5.8 ST Provide or complete referral for Entrepreneurship training",
+            "item_description_short": "CP 5.8 ST Provide or complete referral for Entrepreneurship training",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 8,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 31217,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP59ST",
+            "item_description": "CP 5.9 ST Provide or complete referral for Agribusiness and /or Agrinutrition skills training",
+            "item_description_short": "CP 5.9 ST Provide or complete referral for Agribusiness and /or Agrinutrition skills train",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 9,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 31218,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP510S",
+            "item_description": "CP 5.10 ST Provide or complete referral for vocational training/ apprenticeship",
+            "item_description_short": "CP 5.10 ST Provide or complete referral for vocational training/ apprenticeship",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 10,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 31219,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP511S",
+            "item_description": "CP 5.11 ST Link to internship and or job opportunities",
+            "item_description_short": "CP 5.11 ST Link to internship and or job opportunities",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 11,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 31220,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP512S",
+            "item_description": "CP 5.12 ST Enrol or complete referral for health insurance plan ( e.g. NHIF/SHIF, UHC and County Specific schemes)",
+            "item_description_short": "CP 5.12 ST Enrol or complete referral for health insurance plan ( e.g. NHIF/SHIF, UHC a",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 12,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 31221,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP513S",
+            "item_description": "CP 5.13 ST Provide with or referr for legal and other administrative fees support related to guardianship, civil registration or inheritance",
+            "item_description_short": "CP 5.13 ST Provide with or referr for legal and other administrative fees support related to",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 13,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 43033,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP514S",
+            "item_description": "CP 5.14 ST Link/Provide soft skills/employability skills",
+            "item_description_short": "CP 5.14 ST Link/Provide soft skills/employability skills",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 14,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    },
+    {
+        "pk": 43034,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP515S",
+            "item_description": "CP 5.15 ST Enroll Adolescent (15-20 yrs) in an approved HES intervention including VTC",
+            "item_description_short": "CP 5.15 ST Enroll Adolescent (15-20 yrs) in an approved HES intervention including VTC",
+            "item_category": "CasePlan Goals \u2013 Stable",
+            "item_sub_category": "",
+            "the_order": 15,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "case_plan_services_stable"
+        }
+    }
+]

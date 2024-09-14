@@ -1,0 +1,84 @@
+id,item_id,item_description,item_description_short,item_category,the_order,field_name
+31000,CP11aHEs,CP1.1aHEs - Facilitated to obtain HIV test,Facilitated to obtain HIV test,Service - Healthy,1,olmis_health_service_id
+31001,CP12aHEs,CP1.2aHEs - Completed a referral for HIV test,Completed a referral for HIV test,Service - Healthy,2,olmis_health_service_id
+31002,CP13aHEs,"CP1.3aHEs - Completed a referral for routine Early Infant Diagnosis (EID) - 1st contact, 6wks, 6 months and 12 months)","Completed a referral for routine Early Infant Diagnosis (EID) - 1st, 6wks, 6 and 12 months)",Service - Healthy,3,olmis_health_service_id
+31003,CP14aHEs,"CP1.4aHEs - Facilitated to obtain routine Early Infant Diagnosis (EID) - 1st contact, 6wks, 6 months and 12 months)","Facilitated to obtain routine Early Infant Diagnosis (EID) - 1st, 6wks, 6 and 12 months)",Service - Healthy,4,olmis_health_service_id
+43000,CP15aHEs,CP1.5aHEs - Facilitated to obtain final antibody test,Facilitated to obtain final antibody test,Service - Healthy,5,olmis_health_service_id
+43001,CP16aHEs,CP1.6aHEs - Completed a referral for final antibody test,Completed a referral for final antibody test,Service - Healthy,6,olmis_health_service_id
+31004,CP21aHEs,CP2.1aHEs - Completed a referral for enrollment to care and treatment,Completed a referral for enrollment to care and treatment,Service - Healthy,7,olmis_health_service_id
+43002,CP21bHEs,CP2.1bHEs - Facilitated for enrollment to care and treatment,Facilitated for enrollment to care and treatment,Service - Healthy,8,olmis_health_service_id
+43004,CP21cHEs,CP2.1cHEs - Facilitated to return back to care and treatment,Facilitated to return back to care and treatment,Service - Healthy,9,olmis_health_service_id
+43005,CP21dHEs,CP2.1dHEs - Completed referral for return to care and treatment,Completed referral for return to care and treatment,Service - Healthy,10,olmis_health_service_id
+31005,CP22aHEs,CP2.2aHEs - Facilitated to access viral load testing services,Facilitated to access viral load testing services,Service - Healthy,11,olmis_health_service_id
+31006,CP22bHEs,CP2.2bHEs - Completed referral to access viral load testing services,Completed referral to access viral load testing services,Service - Healthy,12,olmis_health_service_id
+31007,CP23aHEs,CP2.3aHEs - Provided with transport to clinic appointment,Provided with transport to clinic appointment,Service - Healthy,13,olmis_health_service_id
+31008,CP24aHEs,CP2.4aHEs - Provided with appropriate treatment reminder messages (including adherence and appointments),Provided with appropriate treatment reminder messages (including adherence and appointments),Service - Healthy,14,olmis_health_service_id
+31009,CP25aHEs,CP2.5aHEs - Provided with age-appropriate counseling and HIV disclosure support,Provided with age-appropriate counseling and HIV disclosure support,Service - Healthy,15,olmis_health_service_id
+31010,CP26aHEs,CP2.6aHEs - Provided with age-appropriate HIV treatment literacy,Provided with age-appropriate HIV treatment literacy,Service - Healthy,16,olmis_health_service_id
+31011,CP27aHEs,CP2.7aHEs - Completed a referral for HIV related opportunistic infection treatment and care,Completed a referral for HIV related opportunistic infection treatment and care,Service - Healthy,17,olmis_health_service_id
+31012,CP28aHEs,"CP2.8aHEs - Linked to age appropriate support group eg Peer clubs, OTZ club","Linked to age appropriate support group eg Peer clubs, OTZ club",Service - Healthy,18,olmis_health_service_id
+43006,CP28bHEs,"CP2.8bHEs - Facilitated to participate in age appropriate support group eg Peer clubs, OTZ club","Facilitated to participate in age appropriate support group eg Peer clubs, OTZ club",Service - Healthy,19,olmis_health_service_id
+31014,CP210aHEs,CP2.10aHEs - Provided with HIV adherence support (wristwatch),Provided with HIV adherence support (wristwatch),Service - Healthy,20,olmis_health_service_id
+31015,CP210bHEs,CP2.10bHEs - Provided with HIV adherence support (Pill box),Provided with HIV adherence support (Pill box),Service - Healthy,21,olmis_health_service_id
+31016,CP210cHEs,CP2.10cHEs - Provided with HIV adherence support (Treatment buddy),Provided with HIV adherence support (Treatment buddy),Service - Healthy,22,olmis_health_service_id
+31017,CP210dHEs,CP2.10dHEs - Provided with HIV adherence support (Direct Witnessed Ingestion),Provided with HIV adherence support (Direct Witnessed Ingestion),Service - Healthy,23,olmis_health_service_id
+31018,CP210eHEs,CP2.10eHEs - Provided with HIV adherence support (Enhanced Adherence Counseling),Provided with HIV adherence support (Enhanced Adherence Counseling),Service - Healthy,24,olmis_health_service_id
+31019,CP210fHEs,CP2.10fHEs - Provided with HIV adherence support (MDT),Provided with HIV adherence support (MDT),Service - Healthy,25,olmis_health_service_id
+43007,CP210gHEs,CP2.10gHEs - Completed referral for HIV adherence support (Enhanced Adherence Counseling),Completed referral for HIV adherence support (Enhanced Adherence Counseling),Service - Healthy,26,olmis_health_service_id
+31020,CP211aHEs,CP2.11aHEs - Facilitated to obtain routine/ emergency healthcare,Facilitated to obtain routine/ emergency healthcare,Service - Healthy,27,olmis_health_service_id
+31021,CP211bHEs,CP2.11bHEs - Completed a referral to obtain routine/ emergency healthcare,Completed a referral to obtain routine/ emergency healthcare,Service - Healthy,28,olmis_health_service_id
+31022,CP212aHEs,CP2.12aHEs - Provided with age-appropriate health and nutrition messages,Provided with age-appropriate health and nutrition messages,Service - Healthy,29,olmis_health_service_id
+31023,CP213aHEs,CP2.13aHEs - Facilitated to obtain STI treatment,Facilitated to obtain STI treatment,Service - Healthy,30,olmis_health_service_id
+31024,CP213bHEs,CP2.13bHEs - Completed a referral to obtain STI treatment,Completed a referral to obtain STI treatment,Service - Healthy,31,olmis_health_service_id
+31025,CP31aHEs,"CP3.1aHEs - Completed a referral to obtain age-appropriate HIV prevention support including PrEP, condoms and/or VMMC","Completed a referral to obtain age-appropriate HIV prevention support; PrEP, condoms and/or VMMC",Service - Healthy,32,olmis_health_service_id
+31026,CP32aHEs,CP3.2aHEs - Provided with HIV and Violence prevention evidence interventions sessions,Provided with HIV and Violence prevention evidence interventions sessions,Service - Healthy,33,olmis_health_service_id
+43008,CP32bHEs,"CP3.2bHEs - Completed a referral to obtain age-appropriate women’s health counseling and/or products, including condoms",Completed a referral to obtain age-appropriate women’s health counseling and/or products,Service - Healthy,34,olmis_health_service_id
+31027,CP33aHEs,CP3.3aHEs - Completed a referral to obtain age-appropriate HIV prevention information,Completed a referral to obtain age-appropriate HIV prevention information,Service - Healthy,35,olmis_health_service_id
+31030,CP42aHEs,CP4.2aHEs - Completed a referral to be provided with supplementary or therapeutic food,Completed a referral to be provided with supplementary or therapeutic food,Service - Healthy,36,olmis_health_service_id
+31031,CP43aHEs,"CP4.3aHEs - Completed referral for nutrition, growth, and developmental monitoring services","Completed referral for nutrition, growth, and developmental monitoring services",Service - Healthy,37,olmis_health_service_id
+31032,CP44aHEs,CP4.4aHEs - Facilitated to obtain immunization,Facilitated to obtain immunization,Service - Healthy,38,olmis_health_service_id
+31033,CP44bHEs,CP4.4bHEs - Completed a referral to obtain immunization,Completed a referral to obtain immunization,Service - Healthy,39,olmis_health_service_id
+31038,CP53aSTs,CP5.3aSTs - OVC Provided with business support (startup kit),OVC Provided with business support (startup kit),Service - Stable,1,olmis_hes_service_id
+31039,CP53bSTs,CP5.3bSTs - OVC completed referral for business support (startup kit),OVC completed referral for business support (startup kit),Service - Stable,2,olmis_hes_service_id
+31040,CP55aSTs,CP5.5aSTs - OVC(15-20) Linked to youth saving and lending associations,OVC(15-20) Linked to youth saving and lending associations,Service - Stable,3,olmis_hes_service_id
+43009,CP56aSTs,CP5.6aSTs - Adolescent (15-20 yrs) completed referral to financial institutions for saving,Adolescent (15-20 yrs) completed referral to financial institutions for saving,Service - Stable,4,olmis_hes_service_id
+43010,CP56bSTs,CP5.6bSTs - Adolescent (15-20 yrs) completed referral to financial institutions for credit services,Adolescent (15-20 yrs) completed referral to financial institutions for credit services,Service - Stable,5,olmis_hes_service_id
+31041,CP57aSTs,CP5.7aSTs - Adolescent (15-20 yrs) provided with training on Financial Literacy,Adolescent (15-20 yrs) provided with training on Financial Literacy,Service - Stable,6,olmis_hes_service_id
+31042,CP57bSTs,CP5.7bSTs - Adolescent (15-20 yrs) completed referral for training on Financial Literacy,Adolescent (15-20 yrs) completed referral for training on Financial Literacy,Service - Stable,7,olmis_hes_service_id
+31043,CP58aSTs,CP5.8aSTs - Adolescent (15-20 yrs) provided with training on Entrepreneurship,Adolescent (15-20 yrs) provided with training on Entrepreneurship,Service - Stable,8,olmis_hes_service_id
+31044,CP58bSTs,CP5.8bSTs - Adolescent (15-20 yrs) completed referral for Entrepreneurship training,Adolescent (15-20 yrs) completed referral for Entrepreneurship training,Service - Stable,9,olmis_hes_service_id
+31045,CP59aSTs,CP5.9aSTs - Adolescent (15-20 yrs) provided with Agribusiness skills training,Adolescent (15-20 yrs) provided with Agribusiness skills training,Service - Stable,10,olmis_hes_service_id
+31046,CP59bSTs,CP5.9bSTs - Adolescent (15-20 yrs) completed referral for Agribusiness skills training,Adolescent (15-20 yrs) completed referral for Agribusiness skills training,Service - Stable,11,olmis_hes_service_id
+31047,CP510aSTs,CP5.10aSTs - Adolescent (15-20 yrs) Provided with support for vocational training/apprenticeship,Adolescent (15-20 yrs) Provided with support for vocational training/apprenticeship,Service - Stable,12,olmis_hes_service_id
+31048,CP510bSTs,CP5.10bSTs - Adolescent (15-20 yrs) completed referral for vocational training/apprenticeship,Adolescent (15-20 yrs) completed referral for vocational training/apprenticeship,Service - Stable,13,olmis_hes_service_id
+31049,CP511aSTs,CP5.11aSTs - OVC(18-20) Completed referral for internship and/or job opportunities(job placement),OVC(18-20) Completed referral for internship and/or job opportunities(job placement),Service - Stable,14,olmis_hes_service_id
+43011,CP514aSTs,CP5.14aSTs - Adolescent(15-20 yrs) Provided with soft skills for employment(employability skills),Adolescent(15-20 yrs) Provided with soft skills for employment(employability skills),Service - Stable,15,olmis_hes_service_id
+43012,CP514bSTs,CP5.14bSTs - Adolescent(15-20 yrs ) Completed referral for provision of soft skills for employment,Adolescent(15-20 yrs ) Completed referral for provision of soft skills for employment,Service - Stable,16,olmis_hes_service_id
+43013,CP515aSTs,CP5.15aSTs - Adolescent (15-20 yrs) enrolled in VTC,Adolescent (15-20 yrs) enrolled in VTC,Service - Stable,17,olmis_hes_service_id
+31050,CP61aSAs,"CP6.1aSAs - Conducted structured family group conferencing to prevent occurrence/ reoccurrence of child abuse, exploitation or neglect",Conducted structured family group conferencing to prevent occurrence / reoccurrence of child abuse,Service - Safe,1,olmis_protection_service_id
+31051,CP63aSAs,CP6.3aSAs - Facilitated with transport to access post-violence medical care,Facilitated with transport to access post-violence medical care,Service - Safe,2,olmis_protection_service_id
+31052,CP63bSAs,CP6.3bSAs - OVC Completed a referral for post-violence medical care,OVC Completed a referral for post-violence medical care,Service - Safe,3,olmis_protection_service_id
+31053,CP64aSAs,"CP6.4aSAs - Suspected abuse case reported to child protection office, police or other local authority and safety plan developed","Suspected abuse case reported to child protection office, police or other local authority",Service - Safe,4,olmis_protection_service_id
+31054,CP65aSAs,CP6.5aSAs - Completed referral for emergency shelter/care facility (within DCS Guidelines),Completed referral for emergency shelter/care facility (within DCS Guidelines),Service - Safe,5,olmis_protection_service_id
+31055,CP66aSAs,CP6.6aSAs - Adolescent completed a referral to structured safe space intervention. (within DCS Guidelines),Adolescent completed a referral to structured safe space intervention. (within DCS Guidelines),Service - Safe,6,olmis_protection_service_id
+31056,CP67aSAs,CP6.7aSAs - Adolescent completed referral for evidenced-based intervention on preventing HIV and sexual violence (aligned to MoH &/or MoE Guidelines),Adolescent completed referral for EBI on preventing HIV and sexual violence,Service - Safe,7,olmis_protection_service_id
+31057,CP611aSAs,"CP6.11aSAs - Facilitated to access legal assistance (e.g., attorney fees, transport, etc.) related to cases of maltreatment ie VAC(physical, neglect, sexual abuse, emotional, trafficking, exploitation","Facilitated to access legal assistance (attorney fees, transport, etc.) to cases of maltreatment",Service - Safe,8,olmis_protection_service_id
+31058,CP611bSAs,"CP6.11bSAs - Completed referral for legal assistance (e.g., attorney fees, transport, etc.) related to cases of maltreatment, VAC(physical, neglect, sexual abuse, emotional, trafficking, exploitation)","Completed referral for legal assistance (attorney fees, transport, etc.) to cases of maltreatment",Service - Safe,9,olmis_protection_service_id
+31059,CP71aSAs,"CP7.1aSAs - Facilitated to access alternative care placement (Kinship, Guardian, Adoption,foster,other) due to lack of stable care giver","Facilitated to access alternative care placement (Kinship, Guardian, Adoption, foster, other)",Service - Safe,10,olmis_protection_service_id
+31060,CP71bSAs,"CP7.1bSAs - Completed referral for alternative care placement(Kinship, Guardian, Adoption,foster,other) due to lack of stable care giver","Completed referral for alternative care placement(Kinship, Guardian, Adoption, foster, other)",Service - Safe,11,olmis_protection_service_id
+31061,CP81aSAs,CP8.1aSAs - Facilitated acquisition of Birth certificate,Facilitated acquisition of Birth certificate,Service - Safe,12,olmis_protection_service_id
+31062,CP81bSAs,CP8.1bSAs - Completed referral for acquisition of Birth certificate,Completed referral for acquisition of Birth certificate,Service - Safe,13,olmis_protection_service_id
+31063,CP91aSCs,CP9.1aSCs - Enrolled in ECD,Enrolled in ECD,Service - Schooled,1,olmis_education_service_id
+31064,CP92aSCs,CP9.2aSCs - Re-enrolled child back to school,Re-enrolled child back to school,Service - Schooled,2,olmis_education_service_id
+31066,CP94aSCs,CP9.4aSCs - School fees paid,School fees paid,Service - Schooled,3,olmis_education_service_id
+31067,CP94bSCs,CP9.4bSCs - Complete referral for bursary,Complete referral for bursary,Service - Schooled,4,olmis_education_service_id
+31068,CP95aSCs,CP9.5aSCs - School levies paid,School levies paid,Service - Schooled,5,olmis_education_service_id
+43014,CP95bSCs,CP9.5bSCs - Completed referral for school levies,Completed referral for school levies,Service - Schooled,6,olmis_education_service_id
+31069,CP96aSCs,CP9.6aSCs - Scholastic materials provided,Scholastic materials provided,Service - Schooled,7,olmis_education_service_id
+43015,CP96bSCs,CP9.6bSCs - Complete referral for Scholastic materials,Complete referral for Scholastic materials,Service - Schooled,8,olmis_education_service_id
+31070,CP97aSCs,CP9.7aSCs - School uniform provided,School uniform provided,Service - Schooled,9,olmis_education_service_id
+43016,CP97bSCs,CP9.7bSCs - Complete referral for school uniform,Complete referral for school uniform,Service - Schooled,10,olmis_education_service_id
+31071,CP98aSCs,CP9.8aSCs - Sanitary towels provided,Sanitary towels provided,Service - Schooled,11,olmis_education_service_id
+31072,CP98bSCs,CP9.8bSCs - Completed referral for provision of Sanitary towels),Completed referral for provision of Sanitary towels),Service - Schooled,12,olmis_education_service_id
+31326,CP911aSCs,CP9.11aSCs - Lighting equipment provided (e.g. solar lamps),Lighting equipment provided (e.g. solar lamps),Service - Schooled,13,olmis_education_service_id
+31327,CP911bSCs,CP9.11bSCs - Completed referral for lighting equipment (e.g. solar lamps),Completed referral for lighting equipment (e.g. solar lamps),Service - Schooled,14,olmis_education_service_id

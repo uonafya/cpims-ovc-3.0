@@ -1,0 +1,6 @@
+id,item_id,item_description,item_description_short,item_category,item_sub_category,the_order,user_configurable,sms_keyword,is_void,field_name
+39888,CECCE1,CCE1 - Caregiver experienced abuse,CCE1 - Caregiver experienced abuse,Critical event - Caregiver,,1,FALSE,FALSE,FALSE,caregiver_critical_event_id
+39889,CECCE2,CCE2 - Caregiver died,CCE2 - Caregiver died,Critical event - Caregiver,,2,FALSE,FALSE,FALSE,caregiver_critical_event_id
+39890,CECCE3,CCE3 - HH Relocation,CCE3 - HH Relocation,Critical event - Caregiver,,3,FALSE,FALSE,FALSE,caregiver_critical_event_id
+43027,CECCE4,"CCE4 - Emergency (National emergency, Severe weather or Fire)","CCE4 - Emergency (National emergency, Severe weather and Fire)",Critical event - Caregiver,,4,FALSE,FALSE,FALSE,caregiver_critical_event_id
+43028,CECCE5,CCE5 - Caregiver Not Adhering to ARVs,CCE5 - Caregiver Not Adhering to ARVs,Critical event - Caregiver,,5,FALSE,FALSE,FALSE,caregiver_critical_event_id

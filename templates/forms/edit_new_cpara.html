@@ -2,7 +2,7 @@
 print(blu.sing("'Happy'"))
 {% load app_filters %}
 {% load static %}
-{% block page_title %} Case Plan Achievement Readiness Assessment {% endblock %}
+{% block page_title %} Case Plan Achievement Readiness Assessment (CPARA) {% endblock %}
 {% block style_code %}
 <link href="{% static 'plugins/parsley/src/parsley.css' %}" rel="stylesheet" />
 <link href="{% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet" />
@@ -99,7 +99,7 @@ print(blu.sing("'Happy'"))
                     <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i class="fa fa-minus"></i></a>
                     <a href="#" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-collapse"><i class="fa fa-times"></i></a>
                 </div>
-                <h4 class="panel-title"> Case Plan Achievement Readiness Assessment || {{care_giver}}</h4> 
+                <h4 class="panel-title"> Case Plan Achievement Readiness Assessment (CPARA) | Caregiver: {{ care_giver }} ({{ care_giver.id }})</h4> 
             </div>
             <div class="panel-body">
             	<form class="form-horizontal form-bordered form-control" style="border: 0px" action="." method="POST" data-parsley-validate="false" name="form-wizard-hhva" id="new_hhva" novalidate>
@@ -151,9 +151,9 @@ print(blu.sing("'Happy'"))
                                                             <table width="100%" class="table table-profile">
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td><b>Name of Organization (LIP):</b></td>
-                                                                        <td>{{ creg.child_cbo.org_unit_name }}</td>
-                                                                        <td><b>Date enrolled in the project: </b></td>
+                                                                        <td width="25%"><b>Name of Organization (LIP):</b></td>
+                                                                        <td width="25%">{{ creg.child_cbo.org_unit_name }}</td>
+                                                                        <td width="25%"><b>Date enrolled in the project: </b></td>
                                                                         <td>{{ creg.registration_date }}</td>
                                                                     </tr>
                                                                     <tr>
@@ -161,8 +161,12 @@ print(blu.sing("'Happy'"))
                                                                         <td>{{ county.area_name }}</td>
                                                                         <td><b>Sub County:</b></td>
                                                                         <td>{{subcounty.area_name}}</td>
+                                                                    </tr>
+                                                                    <tr>
                                                                         <td><b>Ward:</b></td>
                                                                         <td>{{ward.area_name}}</td>
+                                                                        <td><b>Village/Estate:</b></td>
+                                                                        <td>-</td>
                                                                     </tr>                                                                
                                                                     <tr>
                                                                         <td><b>Name of case worker/CHV conducting assesment:</b></td>
@@ -174,8 +178,8 @@ print(blu.sing("'Happy'"))
                                                                     <tr>
                                                                         <td><b>Name of Caregiver:</b></td>
                                                                         <td>{{caregiver}}</td>
-                                                                        <td><b>Caregiver ID Number:</b></td>                                                                    
-                                                                        <td>{{household.head_identifier }}</td> 
+                                                                        <td><b>Caregiver CPIMS ID:</b></td>                                                          
+                                                                        <td>{{ household.head_identifier }}</td> 
                                                                     </tr>                                                                
                                                                     <tr>                                                                                                                                       
                                                                         <td><b>Caregiver Gender:</b></td>
@@ -191,29 +195,54 @@ print(blu.sing("'Happy'"))
                                                                     <tr>                                                                    
                                                                         <td><b>Caregiver Phone Number:</b></td>
                                                                         <td>{{caregiver.des_phone_number}}</td>
-                                                                    </tr>                                              
+                                                                        <td><b>Caregiver ID Number:</b></td>
+                                                                        <td>-</td>
+                                                                    </tr>
+                                                                    <tr>                                                                    
+                                                                        <td><b>Caregiver type:</b></td>
+                                                                        <td>-</td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                    </tr>
                                                                 </tbody>
                                                             </table> 
                                                     </div>
                                             {# </form>#}
                                         </div>
-                                        <hr/> 
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="form-group"> 
-                                                    <label class="control-label formlabel">Is this the first Case Plan Readiness Assessment?:<span class="asteriskField">*  </label><br/>
-                                                    {{ form.CP1d }}
-                                                </div>
+                                        <hr> 
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <label class="control-label formlabel">Is the caregiver key population? <span class="asteriskField">*</span></label>
+                                            </div>
+                                            <div class="col-md-2">{{ form.CP0a }}
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="form-group">
+                                                    <label class="control-label formlabel">If yes indicate type:</label><br/>
+                                                    {{ form.CP0b }}
+                                                </div>
+
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <label class="control-label formlabel">Is caregiver pregnant and/or Breastfeeding?<span class="asteriskField">*</span> </label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ form.CP0c }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <label class="control-label formlabel">Is this the first Case Plan Readiness Assessment?<span class="asteriskField">*</span></label>
+                                            </div>
+                                            <div class="col-md-2">{{ form.CP1d }}
+                                            </div>
+                                            <div class="col-md-4">
                                                     <label class="control-label formlabel">If No, give date of Previous Case Plan Readiness Assessment:</label><br/>
                                                     {{ form.CP2d }}
                                                 </div>
-                                            </div>
-                                            
                                         </div>
-                                        <hr/>
                                             <div class="col-md-12">
                                                 <h4>Details of all children below 18 years currently living in the household.</h4>
                                                 <div class="alert alert-info    ">
@@ -229,11 +258,12 @@ print(blu.sing("'Happy'"))
                                                         <tr>
                                                             <th>Name</th>
                                                             <th>Age</th>
-                                                            <th>Gender</th>
-                                                            <th>Child Unique Number</th>
+                                                            <th>Sex</th>
+                                                            <th>Child CPIMS ID</th>
                                                             <th>School Level</th>
+                                                            <th>HIV Status</th>
                                                             <th>Registered in this OVC Program</th>
-                                                            <!--<th>Age</th>-->
+                                                            <th>Relationship of Caregiver to OVC</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -243,15 +273,13 @@ print(blu.sing("'Happy'"))
                                                             <td>{{ child.age }}</td>
                                                             {#{% endif %}#}
                                                             <td>
-                                                                {% if child.sex_id == 'SFEM' %}
-                                                                F
-                                                                {% else %}
-                                                                M
-                                                                {% endif %}
+                                                                {{ child.sex_id|gen_value:vals }}
                                                             </td>
-                                                            <td>{{child.id}}</td>
-                                                            <td></td>
+                                                            <td>{{ child.id }}</td>
+                                                            <td>{{ creg.school_level|gen_value:vals }}</td>
+                                                            <td>{{ creg.hiv_status|gen_value:vals }}</td>
                                                             <td>Yes</td>
+                                                            <td>{{ creg.cg_type|gen_value:vals }}</td>
                                                         </tr>
                                                         {% if hhmembers %}
                                                             {% for sibling in hhmembers %}
@@ -261,20 +289,18 @@ print(blu.sing("'Happy'"))
                                                                 <td>{{ sibling.person.age }}</td>
                                                                 {#{% endif %}#}
                                                                 <td>
-                                                                    {% if sibling.person.sex_id == 'SFEM' %}
-                                                                    F
-                                                                    {% else %}
-                                                                    M
-                                                                {% endif %}
+                                                                    {{ sibling.person.sex_id|gen_value:vals }}
                                                                 </td>
-                                                            <td>{{sibling.person.id}}</td>
-                                                            <td></td>
+                                                            <td>{{ sibling.person.id }}</td>
+                                                            <td>{{ sibling.sibling.school_level|gen_value:vals }}</td>
+                                                            <td>{{ sibling.sibling.hiv_status|gen_value:vals }}</td>
                                                             <td>{% if sibling.member_type == "TOVC" %} Yes {%else%} No {%endif%}</td>
+                                                            <td>{{ sibling.cg_type|gen_value:vals }}</td>
                                                             </tr>
                                                             {% endfor %}
                                                             {% else %}
                                                                 <tr>
-                                                                    <td colspan="6">
+                                                                    <td colspan="8">
                                                                         <p class="custom-alert-warning">No siblings provided for this person.</p>  
                                                                     </td>
                                                                 </tr>
@@ -284,51 +310,88 @@ print(blu.sing("'Happy'"))
                                             </div>
                                         </div>
                                         <hr/>
-                                        <div class="row">
-                                            <div class="col-md-12">
                                                 <div class="form-group">                                                
                                                     <div class="col-md-12">
                                                         <h4 class="alert alert-primary">
-                                                            Other Household Characteristics. Please tick either <b>Yes</b> or <b>No</b> on each of the statements below.
+                                                            Other Household Characteristics. Please tick either <b>Yes</b> or <b>No</b> on each of the statements below. Tick the HH Member to which this applies.
                                                         </h4>
                                                     </div>                                                
                                                 </div>
-                                            </div>
-                                            <div class="col-md-12">
+
                                                 <div class="form-group">
-                                                    <div class="col-md-9">
-                                                        <label class="control-label formlabel">Is this household child-headed (i.e. Household head age is less than 18 years)?<span class="asteriskField">*</label>
+                                                    <div class="col-md-6">
+                                                        <label class="control-label formlabel">Is this household child-headed (i.e. Household head age is less than 18 years)?<span class="asteriskField">*</span></label>
                                                     </div>
-                                                    <div class="col-md-3 text-left">
+                                                    <div class="col-md-2 text-left">
                                                         {{ form.CP3d }}
                                                         <!-- TODOne if no handle q11 skips then score benchmark -->
                                                     </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div class="col-md-9">
-                                                        <label class="control-label formlabel">Does this HH have HIV exposed infant?<span class="asteriskField">*</label>
+                                                    <div class="col-md-4">
+                                                        {% for member in members %}
+                                                        {% if member.age < 18 %}
+                                                        <label class="checkbox-inline">
+                                                            <input name="CP3d1" type="checkbox" value="{{ member.id }}" {% if member.id in datas.CP3d1 %} checked {% endif %} />
+                                                            {{ member }} ({{ member.id }})
+                                                        </label><br>
+                                                        {% endif %}
+                                                        {% endfor %}
                                                     </div>
-                                                    <div class="col-md-3 text-left">
+                                                </div>
+                                            
+                                                <div class="form-group">
+                                                    <div class="col-md-6">
+                                                        <label class="control-label formlabel">Does this HH have HIV exposed infant?<span class="asteriskField">*</span></label>
+                                                    </div>
+                                                    <div class="col-md-2 text-left">
                                                         {{ form.CP4d }}
                                                     </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div class="col-md-9">
-                                                        <label class="control-label formlabel">Does this HH currently have a pregnant and/or breastfeeding woman/ adolescent?
-                                                        <!-- TODOne if no skip 6.1 & 6.2 then score benchmark -->
+                                                    <div class="col-md-4">
+                                                        {% for member in members %}
+                                                        {% if member.age < 1 %}
+                                                        <label class="checkbox-inline">
+                                                            <input name="CP4d1" type="checkbox" value="{{ member.id }}" {% if member.id in datas.CP4d1 %} checked {% endif %} />
+                                                            {{ member }} ({{ member.id }})
+                                                        </label><br>
+                                                        {% endif %}
+                                                        {% endfor %}
                                                     </div>
-                                                    <div class="col-md-3 text-left">
+                                                </div>
+                                            
+                                                <div class="form-group">
+                                                    <div class="col-md-6">
+                                                        <label class="control-label formlabel">Does this HH currently have a pregnant and/or breastfeeding woman/ adolescent?<span class="asteriskField">*</span></label>
+                                                    </div>
+                                                    <div class="col-md-2 text-left">
                                                         {{ form.CP5d }}
                                                     </div>
+                                                    <div class="col-md-4">
+                                                        {% for member in members %}
+                                                        {% if member.sex_id == 'SFEM' %}
+                                                        <label class="checkbox-inline">
+                                                            <input name="CP5d1" type="checkbox" value="{{ member.id }}" {% if member.id in datas.CP5d1 %} checked {% endif %} />
+                                                            {{ member }} ({{ member.id }})
+                                                        </label><br>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-6">
+                                                        <label class="control-label formlabel">Does this HH have any disabled person?<span class="asteriskField">*</span></label>
+                                                    </div>
+                                                    <div class="col-md-2 text-left">
+                                                        {{ form.CP5e }}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        {% for member in members %}
+                                                        <label class="checkbox-inline">
+                                                            <input name="CP5e1" type="checkbox" value="{{ member.id }}" {% if member.id in datas.CP5e1 %} checked {% endif %} />
+                                                            {{ member }} ({{ member.id }})
+                                                        </label><br>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
 
                                        
                                         <!-- End of OVC Sub Option Questions-->
@@ -555,7 +618,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth1_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">1.1 Have all your children been tested for HIV and their HIV status known (HIV negative, positive) ? <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">1.1 Have all your children been tested for HIV and their HIV status known (HIV negative, positive) ? <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP1q }}
@@ -566,7 +629,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth2_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">1.2 For those with unknown HIV status, have they been screened for HIV risk and results showed test not required ? <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">1.2 For those with unknown HIV status, have they been screened for HIV risk and results showed test not required ? <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP2q }}
@@ -584,7 +647,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth3_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">1.3 If there is an infant Exposed to HIV (HEI), has the final HIV status been confirmed at 18 months or one week after cessation of breastfeeding, whichever comes later? <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">1.3 If there is an infant Exposed to HIV (HEI), has the final HIV status been confirmed at 18 months or one week after cessation of breastfeeding, whichever comes later? <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP3q }}
@@ -602,7 +665,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth4_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">1.4 Is the HIV status of the caregiver known (positive, negative)? <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">1.4 Is the HIV status of the caregiver known (positive, negative)? <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP4q }}
@@ -613,7 +676,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth5_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">1.5 For caregiver with unknown HIV status have they been screened for HIV risk and the results showing test not required? <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">1.5 For caregiver with unknown HIV status have they been screened for HIV risk and the results showing test not required? <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP5q }}
@@ -685,7 +748,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12 skip21">
                                                 <div class="form-group" id="CPhealth6_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">2.1 Have all HIV positive children on treatment with documented viral load results been suppressed in the past 12 months? <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">2.1 Have all HIV positive children on treatment with documented viral load results been suppressed in the past 12 months? <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP6q }}
@@ -695,7 +758,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12 skip21">
                                                 <div class="form-group" id="CPhealth7_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">2.2 For those with no documented viral load results; Have all the children living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment) <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">2.2 For those with no documented viral load results; Have all the children living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment) <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP7q }}
@@ -706,7 +769,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12 skip21">
                                                 <div class="form-group"  id="CPhealth8_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">2.3 Have all HIV+ children been regularly taking medication without missing doses for the past 12 months (reported by caregiver for the 0-12 years)? <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">2.3 Have all HIV+ children been regularly taking medication without missing doses for the past 12 months (reported by caregiver for the 0-12 years)? <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP8q }}
@@ -735,7 +798,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12 skip24">
                                                 <div class="form-group" id="CPhealth9_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">2.4 Have all HIV positive children and adolescents (12years and above) on treatment with documented viral load results been suppressed in the past 12 months? <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">2.4 Have all HIV positive children and adolescents (12years and above) on treatment with documented viral load results been suppressed in the past 12 months? <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP9q }}
@@ -745,7 +808,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12 skip24">
                                                 <div class="form-group" id="CPhealth10_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">2.5 For those with no documented viral load results; Have all the children and adolescents (12years and above) living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment) <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">2.5 For those with no documented viral load results; Have all the children and adolescents (12years and above) living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment) <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP10q }}
@@ -755,7 +818,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12 skip24">
                                                 <div class="form-group" id="CPhealth11_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">2.6 Have all HIV+ adolescent been regularly taking medication without missing doses for the past 12 months? (Adolescents self-reported). <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">2.6 Have all HIV+ adolescent been regularly taking medication without missing doses for the past 12 months? (Adolescents self-reported). <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP11q }}
@@ -785,7 +848,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth12_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">2.7 Have all HIV positive caregivers on treatment with documented viral load results been suppressed in the past 12 months? <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">2.7 Have all HIV positive caregivers on treatment with documented viral load results been suppressed in the past 12 months? <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP12q }}
@@ -796,7 +859,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth13_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">2.8  For those no documented viral load results; Have the caregiver living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment)<span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">2.8  For those no documented viral load results; Have the caregiver living with HIV been attending their appointments regularly for the past 12 months (check CCC card to confirm adherence to treatment)<span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP13q }}
@@ -807,7 +870,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth14_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">2.9 Have all HIV+ caregivers been regularly taking medication without missing doses for the past 12 months? (Caregiver self-reported).<span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">2.9 Have all HIV+ caregivers been regularly taking medication without missing doses for the past 12 months? (Caregiver self-reported).<span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{ form.CP14q }}
@@ -881,7 +944,7 @@ print(blu.sing("'Happy'"))
                                                                             Yes
                                                                         </label>
                                                                         <label class="radio-inline">
-                                                                            <input type="radio"  name="{{ child.id }}_CP15q"  value="ANNO" {% if child.id|stringformat:'s'|add:'_CP15q' not in ind_cpara_data %} checked="" {% endif %}>
+                                                                            <input type="radio"  name="{{ child.id }}_CP15q" value="ANNO" {% if child.id|stringformat:'s'|add:'_CP15q' not in ind_cpara_data %} checked="" {% endif %}>
                                                                             No
                                                                         </label>
                                                                     </td>
@@ -901,7 +964,7 @@ print(blu.sing("'Happy'"))
                                                                                 Yes
                                                                         </label>
                                                                         <label class="radio-inline">
-                                                                            <input type="radio"  name="{{ child.id }}_CP17q" value="ANNO" {% if child.id|stringformat:'s'|add:'_CP17q'  in ind_cpara_data %} checked="" {% endif %}>
+                                                                            <input type="radio"  name="{{ child.id }}_CP17q" value="ANNO" {% if child.id|stringformat:'s'|add:'_CP17q'  not in ind_cpara_data %} checked="" {% endif %}>
                                                                                 No
                                                                         </label>
                                                                     </td>
@@ -1069,7 +1132,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth21_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">4.1 Have all children below the age of five been assessed using MUAC and scored green? <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">4.1 Have all children under the age of five who have been assessed through MUAC scored green as a sign of no malnutrition? (Green through MUAC assessment means no malnutrition, can also be confirmed through documentation in the clinic card) <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP18q}}
@@ -1079,7 +1142,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth22_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">4.2 Have all the children below five years showed no signs of bipedal edema (e.g. Pressure applied on top of both feet for three seconds and did not leave a pit)? <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">4.2 Have all the children below five years showed no signs of bipedal edema (e.g. Pressure applied on top of both feet for three seconds and did not leave a pit)? <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP19q}}
@@ -1089,8 +1152,8 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth23_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">4.3 Have all the children previously identified as malnourished been treated and has a Z score of >-2? (Confirm with clinical as appropriate)
-                                                            <br><u style="color:red"><i>NB: Score</i> YES if none in the HH has ever been previously malnourished <strong>NB-Score YES if none in the HH has ever been previously malnourished</u></strong> <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">4.3 Have all the children previously identified as malnourished currently has a Z score of >-2? (Confirm with clinical as appropriate)
+                                                            <br><u style="color:red"><i>NB: Score</i> YES if none in the HH has ever been previously malnourished</u> <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP20q}}
@@ -1112,7 +1175,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPhealth24_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">4.4 If there is a child under 2 years in the household, Is the infant’s immunization on schedule? (Check mother baby booklet pages 33-35)</strong> <span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">4.4 If there is a child under 2 years in the household, Is the infant’s immunization on schedule? (Check mother baby booklet pages 33-35)</strong> <span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP21q}}
@@ -1173,7 +1236,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPstable1_Qn">
                                                     <div class="col-md-9 text-left">
-                                                        <label class="control-label formlabel">5.1 Were you able to pay school fees for the last two terms for all school going children in your household without PEPFAR support? (Confirm availability of school fees receipt, government supported cash transfer/scholarships, confirm school going children are retained in school)<span class="asteriskField">* </label>
+                                                        <label class="control-label formlabel">5.1 Were you able to pay school fees for the last two terms for all school going children in your household without PEPFAR support? (Confirm availability of school fees receipt, government supported cash transfer/scholarships, confirm school going children are retained in school)<span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP22q}}
@@ -1185,7 +1248,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPstable2_Qn">
                                                     <div class="col-md-9 text-left">
-                                                        <label class="control-label formlabel">5.2 Was anyone sick in the past six months, were you able to pay all medical costs in the past 6 months for all children in your household under the age of 18 without PEPFAR support? Medical costs include medicine and transport to medical appointments<span class="asteriskField">* </label>
+                                                        <label class="control-label formlabel">5.2 Was anyone sick in the past six months, were you able to pay all medical costs in the past 6 months for all children in your household under the age of 18 without PEPFAR support? Medical costs include medicine and transport to medical appointments<span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP23q}}
@@ -1195,7 +1258,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPstable3_Qn">
                                                     <div class="col-md-9">
-                                                        <label class="control-label formlabel">5.3 In case you find yourself in a situation, are you currently able to pay for legal and other administrative fees related to guardianship, civil registration or inheritance?<span class="asteriskField">*</label>
+                                                        <label class="control-label formlabel">5.3 In case you find yourself in a situation, are you currently able to pay for legal and other administrative fees related to guardianship, civil registration or inheritance?<span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP24q}}
@@ -1265,7 +1328,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPsafe1_Qn">
                                                     <div class="col-md-9 text-left">
-                                                        <label class="control-label formlabel">6.1 Have you experienced violence, abuse (sexual, physical, or emotional) in the last six months?<span class="asteriskField">* </label>
+                                                        <label class="control-label formlabel">6.1 Have you experienced violence, abuse (sexual, physical, or emotional) in the last six months?<span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP25q}}
@@ -1277,7 +1340,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPsafe2_Qn">
                                                     <div class="col-md-9 text-left">
-                                                        <label class="control-label formlabel"> 6.2 Is there a child below 12 years who has been exposed to violence or abuse (sexual, physical or emotional), neglect, or exploitation in the last six months?<span class="asteriskField">* </label>
+                                                        <label class="control-label formlabel"> 6.2 Is there a child below 12 years who has been exposed to violence or abuse (sexual, physical or emotional), neglect, or exploitation in the last six months?<span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP26q}}
@@ -1435,7 +1498,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPsafe6_Qn">
                                                         <div class="col-md-9">
-                                                            <label class="control-label formlabel">6.4 Is there any evidence that the case has referred for services such as child protection?<span class="asteriskField">* </label>
+                                                            <label class="control-label formlabel">6.4 Is there any evidence that the case has referred for services such as child protection?<span class="asteriskField">*</span></label>
                                                         </div>
                                                         <div class="col-md-3 text-left">
                                                             {{form.CP28q}}
@@ -1446,7 +1509,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPsafe7_Qn">
                                                         <div class="col-md-9">
-                                                            <label class="control-label formlabel">6.5 Is there documentation that they received   services (e,g counseling, psycho-social, legal or health services)?<span class="asteriskField">* </label>
+                                                            <label class="control-label formlabel">6.5 Is there documentation that they received   services (e,g counseling, psycho-social, legal or health services)?<span class="asteriskField">*</span></label>
                                                         </div>
                                                         <div class="col-md-3 text-left">
                                                             {{form.CP29q}}
@@ -1482,7 +1545,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPsafe8_Qn">
                                                     <div class="col-md-9 text-left">
-                                                        <label class="control-label formlabel">7.1 Is the primary caregiver 18yrs and above?<span class="asteriskField">* </label>
+                                                        <label class="control-label formlabel">7.1 Is the primary caregiver 18yrs and above?<span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP30q}}
@@ -1495,7 +1558,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPsafe9_Qn">
                                                     <div class="col-md-9 text-left">
-                                                        <label class="control-label formlabel">7.2 Has the caregiver cared for and lived in the same home as the child/adolescents for at least the last 12 months?<span class="asteriskField">* </label>
+                                                        <label class="control-label formlabel">7.2 Has the caregiver cared for and lived in the same home as the child/adolescents for at least the last 12 months?<span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP31q}}
@@ -1535,7 +1598,7 @@ print(blu.sing("'Happy'"))
                                             <div class="col-md-12">
                                                 <div class="form-group" id="CPsafe10_Qn">
                                                     <div class="col-md-9 text-left">
-                                                        <label class="control-label formlabel">8.1 Do all children under the age of 18 have legal documents (birth certificate)?<span class="asteriskField">* </label>
+                                                        <label class="control-label formlabel">8.1 Do all children under the age of 18 have legal documents (birth certificate)?<span class="asteriskField">*</span></label>
                                                     </div>
                                                     <div class="col-md-3 text-left">
                                                         {{form.CP32q}}
@@ -1593,7 +1656,7 @@ print(blu.sing("'Happy'"))
                                                 <div class="col-md-12">
                                                     <div class="form-group" id="CPschool1_Qn">
                                                         <div class="col-md-9 text-left">
-                                                            <label class="control-label formlabel">9.1 Are all school aged children (6-17) enrolled in school? (And out of school OVC aged 15-20 years engaged in approved economic intervention?<span class="asteriskField">* </label>
+                                                            <label class="control-label formlabel">9.1 Are all school aged children (6-17) enrolled in school? (And out of school OVC aged 15-20 years engaged in approved economic intervention?<span class="asteriskField">*</span></label>
                                                         </div>
                                                         <div class="col-md-3 text-left">
                                                             {{form.CP33q}}
@@ -1607,7 +1670,7 @@ print(blu.sing("'Happy'"))
                                                 <div class="col-md-12">
                                                     <div class="form-group" id="CPschool2_Qn">
                                                         <div class="col-md-9 text-left">
-                                                            <label class="control-label formlabel">9.2 Are the enrolled children attending school regularly? (i.e. have not missed school for more than five school days in a month). Probe the trend of absence). Verify with the school attendance tracking tool where applicable)<span class="asteriskField">* </label>
+                                                            <label class="control-label formlabel">9.2 Are the enrolled children attending school regularly? (i.e. have not missed school for more than five school days in a month). Probe the trend of absence). Verify with the school attendance tracking tool where applicable)<span class="asteriskField">*</span></label>
                                                         </div>
                                                         <div class="col-md-3 text-left">
                                                             {{form.CP34q}}
@@ -1637,7 +1700,7 @@ print(blu.sing("'Happy'"))
                                                 <div class="col-md-12">
                                                     <div class="form-group" id="CPschool3_Qn">
                                                         <div class="col-md-9 text-left">
-                                                            <label class="control-label formlabel">9.3 Is your child (4–5-year-old) attending ECDE?<span class="asteriskField">* </label>
+                                                            <label class="control-label formlabel">9.3 Is your child (4–5-year-old) attending ECDE?<span class="asteriskField">*</span></label>
                                                         </div>
                                                         <div class="col-md-3 text-left">
                                                             {{form.CP35q}}
@@ -1649,7 +1712,7 @@ print(blu.sing("'Happy'"))
                                                 <div class="col-md-12">
                                                     <div class="form-group" id="CPschool4_Qn">
                                                         <div class="col-md-9 text-left">
-                                                            <label class="control-label formlabel">9.4 Have all the enrolled children progressed/graduated from one level to the other in the last school calendar year? Note: if possible, please ask to see report card.<span class="asteriskField">* </label>
+                                                            <label class="control-label formlabel">9.4 Have all the enrolled children progressed/graduated from one level to the other in the last school calendar year? Note: if possible, please ask to see report card.<span class="asteriskField">*</span></label>
                                                         </div>
                                                         <div class="col-md-3 text-left">
                                                             {{form.CP36q}}
@@ -1788,7 +1851,7 @@ print(blu.sing("'Happy'"))
                     </div>
 				</form>
             </div>
-            <a href="" class="badge badge-primary m-4"> Back to OVC</a>
+            <a href="{% url 'ovc_view' id=person %}" class="badge badge-primary m-4"> Back to OVC</a>
             <div class="badge pull-right m-4">Revised: May 2022</div>
         </div>
         <!-- end panel -->
@@ -1797,7 +1860,7 @@ print(blu.sing("'Happy'"))
     <!-- end col-12 -->
 </div>
 <!-- end row -->
-
+</div>
 <!-- {% endblock %} -->
 
 {% block lazy_javascript_code %}
@@ -1854,7 +1917,20 @@ jQuery(document).ready(function()
         $(window).scrollTop(0)
     });
 
-	
+    $('input[name=CP0a]').click(function(){
+        var check_field = $(this).val();
+        handle_related(check_field, 'ANNO', 'CP0b');
+    });
+
+    var cp0a = $('input[name="CP0a"]:checked').val();
+    handle_related(cp0a, 'ANNO', 'CP0b');
+
+    var cp1d = $('input[name="CP1d"]:checked').val();
+    handle_related(cp1d, 'AYES', 'CP2d');
+
+    //
+    mainBmks();
+    mainBmks_adolescents();
 	
 });
 
@@ -1897,6 +1973,64 @@ jQuery(document).ready(function()
                 }
             });
         }
+
+        function handle_related(check_field, check_answer, related_field){
+            if (check_field == check_answer){
+                $('input[name='+related_field+']').removeAttr('data-parsley-required');
+                $('input[name='+related_field+']').removeAttr('required');
+                $('input[name='+related_field+']').attr('disabled', true);
+            }else{
+                $('input[name='+related_field+']').attr('data-parsley-required', true);
+                $('input[name='+related_field+']').attr('disabled', false);
+            }
+        }
+
+        function mainBmks(){
+            //  Score benchamrk 3
+            if($('input[name={{child.id}}_CP15q]:checked').val() == 'AYES'){
+                $('input[name=CP23q_b_1][value=AYES]').prop("checked", true);}
+            else{
+                $('input[name=CP23q_b_1][value=ANNO]').prop("checked", true);}
+       
+            if($('input[name={{child.id}}_CP16q]:checked').val() == 'AYES'){
+                $('input[name=CP23q_b_2][value=AYES]').prop("checked", true);}
+            else{
+                $('input[name=CP23q_b_2][value=ANNO]').prop("checked", true);}
+        
+        
+            if($('input[name={{child.id}}_CP17q]:checked').val() == 'AYES'){
+                $('input[name=CP23q_b_3][value=AYES]').prop("checked", true);}
+            else{
+                $('input[name=CP23q_b_3][value=ANNO]').prop("checked", true);}
+
+            // Question 6.3
+            if($('input[name={{child.id}}_CP27q2]:checked').val() == 'AYES'){
+                $('input[name=CP58q]').attr('disabled', true);
+                
+                $('input[name=CP58q]').click(function(){return false;});
+                $('input[name=CP58q][value=AYES]').prop("checked", true);}
+
+            else{
+                $('input[name=CP58q]').attr('disabled', true);
+                $('input[name=CP58q]').click(function(){return false;});
+
+                $('input[name=CP58q][value=ANNO]').prop("checked", true);}
+
+        }
+        function mainBmks_adolescents(){
+            //  Score the subtotal row
+                $('input[name=CP23q_b_1][value=AYES]').prop("checked", true);
+                $('input[name=CP23q_b_2][value=AYES]').prop("checked", true);
+                $('input[name=CP23q_b_3][value=AYES]').prop("checked", true);
+
+                //  Score benchamrk 3
+                $('input[name=CP31Skip]').attr('disabled', true);
+                $('input[name=CP3b][value=AYES]').prop("checked", true);
+
+                //  Question 6.3
+                $('input[name=CP58q]').attr('disabled', true);
+                $('input[name=CP58q][value=AYES]').prop("checked", true);
+        }
     
     
     </script>
@@ -1908,7 +2042,6 @@ jQuery(document).ready(function()
         <script>
             
             //  Benchmark 3 with household members and or OVC is not less than 10 years
-
             
             var count_r12 = 0;
             $('tr.row12 td.r12q1 input[type=radio]').each( () => { count_r12 += 1 }); count_r12 /= 2
@@ -1977,81 +2110,40 @@ jQuery(document).ready(function()
             
         });
 
-            //------tick main qn
-            function q13MainQn_v1(pass, qn) {
-                if(pass){
-                    if(qn === 'a'){
-                         $('.ro13_total td.r13_t_q2 label input[value=AYES]').prop('checked', true); 
-                         $('input[name=CP58q]').attr('disabled',true);
-                        } 
-                }else{
-                    if(qn === 'a'){ $('.ro13_total td.r13_t_q2 label input[value=ANNO]').prop('checked', true);
-                    $('input[name=CP58q]').attr('disabled',true);
-                 } 
-                }
+        //------tick main qn
+        function q13MainQn_v1(pass, qn) {
+            if(pass){
+                if(qn === 'a'){
+                     $('.ro13_total td.r13_t_q2 label input[value=AYES]').prop('checked', true); 
+                     $('input[name=CP58q]').attr('disabled',true);
+                    } 
+            }else{
+                if(qn === 'a'){ $('.ro13_total td.r13_t_q2 label input[value=ANNO]').prop('checked', true);
+                $('input[name=CP58q]').attr('disabled',true);
+             } 
             }
+        }
             
     </script>
 
     {% else %}
-        {% if child.years > 10 %}
+    {% if child.years > 10 %}
     <script>
         // cpara
         
         $('input[type=radio]').on('change', function () {
-
-            //  Score benchamrk 3
-            if($('input[name={{child.id}}_CP15q]:checked').val() == 'AYES'){
-                $('input[name=CP23q_b_1][value=AYES]').prop("checked", true);}
-            else{
-                $('input[name=CP23q_b_1][value=ANNO]').prop("checked", true);}
-       
-            if($('input[name={{child.id}}_CP16q]:checked').val() == 'AYES'){
-                $('input[name=CP23q_b_2][value=AYES]').prop("checked", true);}
-            else{
-                $('input[name=CP23q_b_2][value=ANNO]').prop("checked", true);}
-        
-        
-            if($('input[name={{child.id}}_CP17q]:checked').val() == 'AYES'){
-                $('input[name=CP23q_b_3][value=AYES]').prop("checked", true);}
-            else{
-                $('input[name=CP23q_b_3][value=ANNO]').prop("checked", true);}
-
-            // Question 6.3
-            if($('input[name={{child.id}}_CP27q2]:checked').val() == 'AYES'){
-                $('input[name=CP58q]').attr('disabled', true);
-                
-                $('input[name=CP58q]').click(function(){return false;});
-                $('input[name=CP58q][value=AYES]').prop("checked", true);}
-
-            else{
-                $('input[name=CP58q]').attr('disabled', true);
-                $('input[name=CP58q]').click(function(){return false;});
-
-                $('input[name=CP58q][value=ANNO]').prop("checked", true);}
+            mainBmks();
         })
 
     </script>  
-        {% else %}
-        <script>
-            //  Get the evaluaton if No OVC under 10 and no sibling
-            $('input[type=radio]').on('change', function () {
-                
-                //  Score the subtotal row
-                $('input[name=CP23q_b_1][value=AYES]').prop("checked", true);
-                $('input[name=CP23q_b_2][value=AYES]').prop("checked", true);
-                $('input[name=CP23q_b_3][value=AYES]').prop("checked", true);
-
-                //  Score benchamrk 3
-                $('input[name=CP31Skip]').attr('disabled', true);
-                $('input[name=CP3b][value=AYES]').prop("checked", true);
-
-                //  Question 6.3
-                $('input[name=CP58q]').attr('disabled', true);
-                $('input[name=CP58q][value=AYES]').prop("checked", true);
-            })
-        </script>
-        {% endif %}
+    {% else %}
+    <script>
+        //  Get the evaluaton if No OVC under 10 and no sibling
+        $('input[type=radio]').on('change', function () {
+            mainBmks_adolescents();
+        })
+    </script>
+    {% endif %}
     {% endif %}
     
         

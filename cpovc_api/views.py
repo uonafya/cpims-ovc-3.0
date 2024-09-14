@@ -16,6 +16,8 @@ from .functions import (
     validate_ovc, get_ovc_data, get_services_data, get_caseload,
     access_manager, handle_notification)
 
+from django.contrib.auth.models import update_last_login
+
 from cpovc_dashboard.parameters import PARAMS
 from .params import SID, SIDS, META_IDS, STATUSES
 
@@ -453,3 +455,15 @@ def user_account(request):
         return Response({'status': 9, 'message': 'Error'})
     else:
         return Response(results)
+
+
+@api_view(['GET', 'POST'])
+def token_check(request):
+    """ Method for validating Basic Tokens and update last_login details."""
+    try:
+        # print('User', request.user.id)
+        update_last_login(None, request.user)
+    except Exception as e:
+        return Response({'status': 9, 'message': 'Error'}, status=status.HTTP_401_UNAUTHORIZED)
+    else:
+        return Response({'status': 0, 'message': 'Success'})

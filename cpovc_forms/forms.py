@@ -155,6 +155,8 @@ FAVORITE_COLORS_CHOICES = (
         ('Bring food', 'Bring food'),
         ('Other', 'Other')
     )
+# Sept 2024
+key_pop_ids = get_list('key_population_id')
 
 # Case plan Template from DB not hard coded
 CPT_DOMAIN_CHOICES = get_list('ovc_domain_id')
@@ -8838,6 +8840,25 @@ class CparaAssessment(forms.Form):
             #    'data-parsley-group': 'group1'
             #    'type': 'hidden'
                }))
+    CP0a = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+
+    CP0b = forms.ChoiceField(
+        choices=key_pop_ids,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+
+
+    CP0c = forms.ChoiceField(
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+
     CP1d = forms.ChoiceField(
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
@@ -8865,6 +8886,12 @@ class CparaAssessment(forms.Form):
 
     # Sub population
     CP5d = forms.ChoiceField(  
+        choices=YESNO_CHOICES,
+        widget=forms.RadioSelect(
+            # renderer=RadioCustomRenderer,
+            attrs={'data-parsley-required': 'true'}))
+
+    CP5e = forms.ChoiceField(  
         choices=YESNO_CHOICES,
         widget=forms.RadioSelect(
             # renderer=RadioCustomRenderer,

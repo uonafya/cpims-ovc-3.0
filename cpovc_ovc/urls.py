@@ -11,7 +11,7 @@ urlpatterns = [
     path('ovc/manage/', views.ovc_manage, name='ovc_manage'),
     path('hh/view/<uuid:hhid>/', views.hh_manage, name='hh_manage'),
     path('hh/edit/<uuid:hhid>/<int:id>/', views.hh_edit, name='hh_edit'),
-    # Audits and May 2024 additions
+    # Audits and Aug 2024 additions
     path('audit/<int:id>/', views.ovc_audit_trails, name='ovc_audit_trails'),
     path('exit/<int:id>/', views.ovc_exits, name='ovc_exits'),
     path('vl/<int:id>/', views.ovc_viral_load, name='ovc_viral_load'),

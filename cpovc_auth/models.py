@@ -8,6 +8,8 @@ from datetime import datetime
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
+from django.contrib.auth.signals import user_logged_in
+
 
 class CPOVCUserManager(BaseUserManager):
 
@@ -170,6 +172,16 @@ class CPOVCUserRoleGeoOrg(models.Model):
         db_table = 'auth_user_groups_geo_org'
 
 
+class CPOVCProfile(models.Model):
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    details = models.TextField(default="{}")
+    is_void = models.BooleanField(default=False)
+    timestamp_updated = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        db_table = 'auth_user_profile'
+
+
 @receiver(pre_save, sender=AppUser)
 def update_change(sender, instance, **kwargs):
     """Method to Update pwd change."""
@@ -183,3 +195,9 @@ def update_change(sender, instance, **kwargs):
             print("Password changed so update date.")
         else:
             print("Password NOT changed so NO update.")
+
+
+
+@receiver(user_logged_in)
+def login_logger(request, user, **kwargs):
+    print("{} logged in with {}".format(user.email, request))

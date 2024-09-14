@@ -1,0 +1,998 @@
+[
+    {
+        "pk": 31000,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP11aHEs",
+            "item_description": "CP1.1aHEs - Facilitated to obtain HIV test",
+            "item_description_short": "Facilitated to obtain HIV test",
+            "item_category": "Service - Healthy",
+            "the_order": 1,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31001,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP12aHEs",
+            "item_description": "CP1.2aHEs - Completed a referral for HIV test",
+            "item_description_short": "Completed a referral for HIV test",
+            "item_category": "Service - Healthy",
+            "the_order": 2,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31002,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP13aHEs",
+            "item_description": "CP1.3aHEs - Completed a referral for routine Early Infant Diagnosis (EID) - 1st contact, 6wks, 6 months and 12 months)",
+            "item_description_short": "Completed a referral for routine Early Infant Diagnosis (EID) - 1st, 6wks, 6 and 12 months)",
+            "item_category": "Service - Healthy",
+            "the_order": 3,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31003,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP14aHEs",
+            "item_description": "CP1.4aHEs - Facilitated to obtain routine Early Infant Diagnosis (EID) - 1st contact, 6wks, 6 months and 12 months)",
+            "item_description_short": "Facilitated to obtain routine Early Infant Diagnosis (EID) - 1st, 6wks, 6 and 12 months)",
+            "item_category": "Service - Healthy",
+            "the_order": 4,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 43000,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP15aHEs",
+            "item_description": "CP1.5aHEs - Facilitated to obtain final antibody test",
+            "item_description_short": "Facilitated to obtain final antibody test",
+            "item_category": "Service - Healthy",
+            "the_order": 5,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 43001,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP16aHEs",
+            "item_description": "CP1.6aHEs - Completed a referral for final antibody test",
+            "item_description_short": "Completed a referral for final antibody test",
+            "item_category": "Service - Healthy",
+            "the_order": 6,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31004,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP21aHEs",
+            "item_description": "CP2.1aHEs - Completed a referral for enrollment to care and treatment",
+            "item_description_short": "Completed a referral for enrollment to care and treatment",
+            "item_category": "Service - Healthy",
+            "the_order": 7,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 43002,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP21bHEs",
+            "item_description": "CP2.1bHEs - Facilitated for enrollment to care and treatment",
+            "item_description_short": "Facilitated for enrollment to care and treatment",
+            "item_category": "Service - Healthy",
+            "the_order": 8,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 43004,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP21cHEs",
+            "item_description": "CP2.1cHEs - Facilitated to return back to care and treatment",
+            "item_description_short": "Facilitated to return back to care and treatment",
+            "item_category": "Service - Healthy",
+            "the_order": 9,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 43005,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP21dHEs",
+            "item_description": "CP2.1dHEs - Completed referral for return to care and treatment",
+            "item_description_short": "Completed referral for return to care and treatment",
+            "item_category": "Service - Healthy",
+            "the_order": 10,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31005,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP22aHEs",
+            "item_description": "CP2.2aHEs - Facilitated to access viral load testing services",
+            "item_description_short": "Facilitated to access viral load testing services",
+            "item_category": "Service - Healthy",
+            "the_order": 11,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31006,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP22bHEs",
+            "item_description": "CP2.2bHEs - Completed referral to access viral load testing services",
+            "item_description_short": "Completed referral to access viral load testing services",
+            "item_category": "Service - Healthy",
+            "the_order": 12,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31007,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP23aHEs",
+            "item_description": "CP2.3aHEs - Provided with transport to clinic appointment",
+            "item_description_short": "Provided with transport to clinic appointment",
+            "item_category": "Service - Healthy",
+            "the_order": 13,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31008,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP24aHEs",
+            "item_description": "CP2.4aHEs - Provided with appropriate treatment reminder messages (including adherence and appointments)",
+            "item_description_short": "Provided with appropriate treatment reminder messages (including adherence and appointments)",
+            "item_category": "Service - Healthy",
+            "the_order": 14,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31009,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP25aHEs",
+            "item_description": "CP2.5aHEs - Provided with age-appropriate counseling and HIV disclosure support",
+            "item_description_short": "Provided with age-appropriate counseling and HIV disclosure support",
+            "item_category": "Service - Healthy",
+            "the_order": 15,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31010,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP26aHEs",
+            "item_description": "CP2.6aHEs - Provided with age-appropriate HIV treatment literacy",
+            "item_description_short": "Provided with age-appropriate HIV treatment literacy",
+            "item_category": "Service - Healthy",
+            "the_order": 16,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31011,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP27aHEs",
+            "item_description": "CP2.7aHEs - Completed a referral for HIV related opportunistic infection treatment and care",
+            "item_description_short": "Completed a referral for HIV related opportunistic infection treatment and care",
+            "item_category": "Service - Healthy",
+            "the_order": 17,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31012,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP28aHEs",
+            "item_description": "CP2.8aHEs - Linked to age appropriate support group eg Peer clubs, OTZ club",
+            "item_description_short": "Linked to age appropriate support group eg Peer clubs, OTZ club",
+            "item_category": "Service - Healthy",
+            "the_order": 18,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 43006,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP28bHEs",
+            "item_description": "CP2.8bHEs - Facilitated to participate in age appropriate support group eg Peer clubs, OTZ club",
+            "item_description_short": "Facilitated to participate in age appropriate support group eg Peer clubs, OTZ club",
+            "item_category": "Service - Healthy",
+            "the_order": 19,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31014,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP210aHEs",
+            "item_description": "CP2.10aHEs - Provided with HIV adherence support (wristwatch)",
+            "item_description_short": "Provided with HIV adherence support (wristwatch)",
+            "item_category": "Service - Healthy",
+            "the_order": 20,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31015,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP210bHEs",
+            "item_description": "CP2.10bHEs - Provided with HIV adherence support (Pill box)",
+            "item_description_short": "Provided with HIV adherence support (Pill box)",
+            "item_category": "Service - Healthy",
+            "the_order": 21,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31016,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP210cHEs",
+            "item_description": "CP2.10cHEs - Provided with HIV adherence support (Treatment buddy)",
+            "item_description_short": "Provided with HIV adherence support (Treatment buddy)",
+            "item_category": "Service - Healthy",
+            "the_order": 22,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31017,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP210dHEs",
+            "item_description": "CP2.10dHEs - Provided with HIV adherence support (Direct Witnessed Ingestion)",
+            "item_description_short": "Provided with HIV adherence support (Direct Witnessed Ingestion)",
+            "item_category": "Service - Healthy",
+            "the_order": 23,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31018,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP210eHEs",
+            "item_description": "CP2.10eHEs - Provided with HIV adherence support (Enhanced Adherence Counseling)",
+            "item_description_short": "Provided with HIV adherence support (Enhanced Adherence Counseling)",
+            "item_category": "Service - Healthy",
+            "the_order": 24,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31019,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP210fHEs",
+            "item_description": "CP2.10fHEs - Provided with HIV adherence support (MDT)",
+            "item_description_short": "Provided with HIV adherence support (MDT)",
+            "item_category": "Service - Healthy",
+            "the_order": 25,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 43007,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP210gHEs",
+            "item_description": "CP2.10gHEs - Completed referral for HIV adherence support (Enhanced Adherence Counseling)",
+            "item_description_short": "Completed referral for HIV adherence support (Enhanced Adherence Counseling)",
+            "item_category": "Service - Healthy",
+            "the_order": 26,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31020,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP211aHEs",
+            "item_description": "CP2.11aHEs - Facilitated to obtain routine/ emergency healthcare",
+            "item_description_short": "Facilitated to obtain routine/ emergency healthcare",
+            "item_category": "Service - Healthy",
+            "the_order": 27,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31021,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP211bHEs",
+            "item_description": "CP2.11bHEs - Completed a referral to obtain routine/ emergency healthcare",
+            "item_description_short": "Completed a referral to obtain routine/ emergency healthcare",
+            "item_category": "Service - Healthy",
+            "the_order": 28,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31022,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP212aHEs",
+            "item_description": "CP2.12aHEs - Provided with age-appropriate health and nutrition messages",
+            "item_description_short": "Provided with age-appropriate health and nutrition messages",
+            "item_category": "Service - Healthy",
+            "the_order": 29,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31023,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP213aHEs",
+            "item_description": "CP2.13aHEs - Facilitated to obtain STI treatment",
+            "item_description_short": "Facilitated to obtain STI treatment",
+            "item_category": "Service - Healthy",
+            "the_order": 30,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31024,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP213bHEs",
+            "item_description": "CP2.13bHEs - Completed a referral to obtain STI treatment",
+            "item_description_short": "Completed a referral to obtain STI treatment",
+            "item_category": "Service - Healthy",
+            "the_order": 31,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31025,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP31aHEs",
+            "item_description": "CP3.1aHEs - Completed a referral to obtain age-appropriate HIV prevention support including PrEP, condoms and/or VMMC",
+            "item_description_short": "Completed a referral to obtain age-appropriate HIV prevention support; PrEP, condoms and/or VMMC",
+            "item_category": "Service - Healthy",
+            "the_order": 32,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31026,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP32aHEs",
+            "item_description": "CP3.2aHEs - Provided with HIV and Violence prevention evidence interventions sessions",
+            "item_description_short": "Provided with HIV and Violence prevention evidence interventions sessions",
+            "item_category": "Service - Healthy",
+            "the_order": 33,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 43008,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP32bHEs",
+            "item_description": "CP3.2bHEs - Completed a referral to obtain age-appropriate women\u2019s health counseling and/or products, including condoms",
+            "item_description_short": "Completed a referral to obtain age-appropriate women\u2019s health counseling and/or products",
+            "item_category": "Service - Healthy",
+            "the_order": 34,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31027,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP33aHEs",
+            "item_description": "CP3.3aHEs - Completed a referral to obtain age-appropriate HIV prevention information",
+            "item_description_short": "Completed a referral to obtain age-appropriate HIV prevention information",
+            "item_category": "Service - Healthy",
+            "the_order": 35,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31030,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP42aHEs",
+            "item_description": "CP4.2aHEs - Completed a referral to be provided with supplementary or therapeutic food",
+            "item_description_short": "Completed a referral to be provided with supplementary or therapeutic food",
+            "item_category": "Service - Healthy",
+            "the_order": 36,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31031,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP43aHEs",
+            "item_description": "CP4.3aHEs - Completed referral for nutrition, growth, and developmental monitoring services",
+            "item_description_short": "Completed referral for nutrition, growth, and developmental monitoring services",
+            "item_category": "Service - Healthy",
+            "the_order": 37,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31032,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP44aHEs",
+            "item_description": "CP4.4aHEs - Facilitated to obtain immunization",
+            "item_description_short": "Facilitated to obtain immunization",
+            "item_category": "Service - Healthy",
+            "the_order": 38,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31033,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP44bHEs",
+            "item_description": "CP4.4bHEs - Completed a referral to obtain immunization",
+            "item_description_short": "Completed a referral to obtain immunization",
+            "item_category": "Service - Healthy",
+            "the_order": 39,
+            "field_name": "olmis_health_service_id"
+        }
+    },
+    {
+        "pk": 31038,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP53aSTs",
+            "item_description": "CP5.3aSTs - OVC Provided with business support (startup kit)",
+            "item_description_short": "OVC Provided with business support (startup kit)",
+            "item_category": "Service - Stable",
+            "the_order": 1,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 31039,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP53bSTs",
+            "item_description": "CP5.3bSTs - OVC completed referral for business support (startup kit)",
+            "item_description_short": "OVC completed referral for business support (startup kit)",
+            "item_category": "Service - Stable",
+            "the_order": 2,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 31040,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP55aSTs",
+            "item_description": "CP5.5aSTs - OVC(15-20) Linked to youth saving and lending associations",
+            "item_description_short": "OVC(15-20) Linked to youth saving and lending associations",
+            "item_category": "Service - Stable",
+            "the_order": 3,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 43009,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP56aSTs",
+            "item_description": "CP5.6aSTs - Adolescent (15-20 yrs) completed referral to financial institutions for saving",
+            "item_description_short": "Adolescent (15-20 yrs) completed referral to financial institutions for saving",
+            "item_category": "Service - Stable",
+            "the_order": 4,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 43010,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP56bSTs",
+            "item_description": "CP5.6bSTs - Adolescent (15-20 yrs) completed referral to financial institutions for credit services",
+            "item_description_short": "Adolescent (15-20 yrs) completed referral to financial institutions for credit services",
+            "item_category": "Service - Stable",
+            "the_order": 5,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 31041,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP57aSTs",
+            "item_description": "CP5.7aSTs - Adolescent (15-20 yrs) provided with training on Financial Literacy",
+            "item_description_short": "Adolescent (15-20 yrs) provided with training on Financial Literacy",
+            "item_category": "Service - Stable",
+            "the_order": 6,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 31042,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP57bSTs",
+            "item_description": "CP5.7bSTs - Adolescent (15-20 yrs) completed referral for training on Financial Literacy",
+            "item_description_short": "Adolescent (15-20 yrs) completed referral for training on Financial Literacy",
+            "item_category": "Service - Stable",
+            "the_order": 7,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 31043,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP58aSTs",
+            "item_description": "CP5.8aSTs - Adolescent (15-20 yrs) provided with training on Entrepreneurship",
+            "item_description_short": "Adolescent (15-20 yrs) provided with training on Entrepreneurship",
+            "item_category": "Service - Stable",
+            "the_order": 8,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 31044,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP58bSTs",
+            "item_description": "CP5.8bSTs - Adolescent (15-20 yrs) completed referral for Entrepreneurship training",
+            "item_description_short": "Adolescent (15-20 yrs) completed referral for Entrepreneurship training",
+            "item_category": "Service - Stable",
+            "the_order": 9,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 31045,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP59aSTs",
+            "item_description": "CP5.9aSTs - Adolescent (15-20 yrs) provided with Agribusiness skills training",
+            "item_description_short": "Adolescent (15-20 yrs) provided with Agribusiness skills training",
+            "item_category": "Service - Stable",
+            "the_order": 10,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 31046,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP59bSTs",
+            "item_description": "CP5.9bSTs - Adolescent (15-20 yrs) completed referral for Agribusiness skills training",
+            "item_description_short": "Adolescent (15-20 yrs) completed referral for Agribusiness skills training",
+            "item_category": "Service - Stable",
+            "the_order": 11,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 31047,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP510aSTs",
+            "item_description": "CP5.10aSTs - Adolescent (15-20 yrs) Provided with support for vocational training/apprenticeship",
+            "item_description_short": "Adolescent (15-20 yrs) Provided with support for vocational training/apprenticeship",
+            "item_category": "Service - Stable",
+            "the_order": 12,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 31048,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP510bSTs",
+            "item_description": "CP5.10bSTs - Adolescent (15-20 yrs) completed referral for vocational training/apprenticeship",
+            "item_description_short": "Adolescent (15-20 yrs) completed referral for vocational training/apprenticeship",
+            "item_category": "Service - Stable",
+            "the_order": 13,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 31049,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP511aSTs",
+            "item_description": "CP5.11aSTs - OVC(18-20) Completed referral for internship and/or job opportunities(job placement)",
+            "item_description_short": "OVC(18-20) Completed referral for internship and/or job opportunities(job placement)",
+            "item_category": "Service - Stable",
+            "the_order": 14,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 43011,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP514aSTs",
+            "item_description": "CP5.14aSTs - Adolescent(15-20 yrs) Provided with soft skills for employment(employability skills)",
+            "item_description_short": "Adolescent(15-20 yrs) Provided with soft skills for employment(employability skills)",
+            "item_category": "Service - Stable",
+            "the_order": 15,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 43012,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP514bSTs",
+            "item_description": "CP5.14bSTs - Adolescent(15-20 yrs ) Completed referral for provision of soft skills for employment",
+            "item_description_short": "Adolescent(15-20 yrs ) Completed referral for provision of soft skills for employment",
+            "item_category": "Service - Stable",
+            "the_order": 16,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 43013,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP515aSTs",
+            "item_description": "CP5.15aSTs - Adolescent (15-20 yrs) enrolled in VTC",
+            "item_description_short": "Adolescent (15-20 yrs) enrolled in VTC",
+            "item_category": "Service - Stable",
+            "the_order": 17,
+            "field_name": "olmis_hes_service_id"
+        }
+    },
+    {
+        "pk": 31050,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP61aSAs",
+            "item_description": "CP6.1aSAs - Conducted structured family group conferencing to prevent occurrence/ reoccurrence of child abuse, exploitation or neglect",
+            "item_description_short": "Conducted structured family group conferencing to prevent occurrence / reoccurrence of child abuse",
+            "item_category": "Service - Safe",
+            "the_order": 1,
+            "field_name": "olmis_protection_service_id"
+        }
+    },
+    {
+        "pk": 31051,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP63aSAs",
+            "item_description": "CP6.3aSAs - Facilitated with transport to access post-violence medical care",
+            "item_description_short": "Facilitated with transport to access post-violence medical care",
+            "item_category": "Service - Safe",
+            "the_order": 2,
+            "field_name": "olmis_protection_service_id"
+        }
+    },
+    {
+        "pk": 31052,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP63bSAs",
+            "item_description": "CP6.3bSAs - OVC Completed a referral for post-violence medical care",
+            "item_description_short": "OVC Completed a referral for post-violence medical care",
+            "item_category": "Service - Safe",
+            "the_order": 3,
+            "field_name": "olmis_protection_service_id"
+        }
+    },
+    {
+        "pk": 31053,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP64aSAs",
+            "item_description": "CP6.4aSAs - Suspected abuse case reported to child protection office, police or other local authority and safety plan developed",
+            "item_description_short": "Suspected abuse case reported to child protection office, police or other local authority",
+            "item_category": "Service - Safe",
+            "the_order": 4,
+            "field_name": "olmis_protection_service_id"
+        }
+    },
+    {
+        "pk": 31054,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP65aSAs",
+            "item_description": "CP6.5aSAs - Completed referral for emergency shelter/care facility (within DCS Guidelines)",
+            "item_description_short": "Completed referral for emergency shelter/care facility (within DCS Guidelines)",
+            "item_category": "Service - Safe",
+            "the_order": 5,
+            "field_name": "olmis_protection_service_id"
+        }
+    },
+    {
+        "pk": 31055,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP66aSAs",
+            "item_description": "CP6.6aSAs - Adolescent completed a referral to structured safe space intervention. (within DCS Guidelines)",
+            "item_description_short": "Adolescent completed a referral to structured safe space intervention. (within DCS Guidelines)",
+            "item_category": "Service - Safe",
+            "the_order": 6,
+            "field_name": "olmis_protection_service_id"
+        }
+    },
+    {
+        "pk": 31056,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP67aSAs",
+            "item_description": "CP6.7aSAs - Adolescent completed referral for evidenced-based intervention on preventing HIV and sexual violence (aligned to MoH &/or MoE Guidelines)",
+            "item_description_short": "Adolescent completed referral for EBI on preventing HIV and sexual violence",
+            "item_category": "Service - Safe",
+            "the_order": 7,
+            "field_name": "olmis_protection_service_id"
+        }
+    },
+    {
+        "pk": 31057,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP611aSAs",
+            "item_description": "CP6.11aSAs - Facilitated to access legal assistance (e.g., attorney fees, transport, etc.) related to cases of maltreatment ie VAC(physical, neglect, sexual abuse, emotional, trafficking, exploitation",
+            "item_description_short": "Facilitated to access legal assistance (attorney fees, transport, etc.) to cases of maltreatment",
+            "item_category": "Service - Safe",
+            "the_order": 8,
+            "field_name": "olmis_protection_service_id"
+        }
+    },
+    {
+        "pk": 31058,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP611bSAs",
+            "item_description": "CP6.11bSAs - Completed referral for legal assistance (e.g., attorney fees, transport, etc.) related to cases of maltreatment, VAC(physical, neglect, sexual abuse, emotional, trafficking, exploitation)",
+            "item_description_short": "Completed referral for legal assistance (attorney fees, transport, etc.) to cases of maltreatment",
+            "item_category": "Service - Safe",
+            "the_order": 9,
+            "field_name": "olmis_protection_service_id"
+        }
+    },
+    {
+        "pk": 31059,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP71aSAs",
+            "item_description": "CP7.1aSAs - Facilitated to access alternative care placement (Kinship, Guardian, Adoption,foster,other) due to lack of stable care giver",
+            "item_description_short": "Facilitated to access alternative care placement (Kinship, Guardian, Adoption, foster, other)",
+            "item_category": "Service - Safe",
+            "the_order": 10,
+            "field_name": "olmis_protection_service_id"
+        }
+    },
+    {
+        "pk": 31060,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP71bSAs",
+            "item_description": "CP7.1bSAs - Completed referral for alternative care placement(Kinship, Guardian, Adoption,foster,other) due to lack of stable care giver",
+            "item_description_short": "Completed referral for alternative care placement(Kinship, Guardian, Adoption, foster, other)",
+            "item_category": "Service - Safe",
+            "the_order": 11,
+            "field_name": "olmis_protection_service_id"
+        }
+    },
+    {
+        "pk": 31061,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP81aSAs",
+            "item_description": "CP8.1aSAs - Facilitated acquisition of Birth certificate",
+            "item_description_short": "Facilitated acquisition of Birth certificate",
+            "item_category": "Service - Safe",
+            "the_order": 12,
+            "field_name": "olmis_protection_service_id"
+        }
+    },
+    {
+        "pk": 31062,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP81bSAs",
+            "item_description": "CP8.1bSAs - Completed referral for acquisition of Birth certificate",
+            "item_description_short": "Completed referral for acquisition of Birth certificate",
+            "item_category": "Service - Safe",
+            "the_order": 13,
+            "field_name": "olmis_protection_service_id"
+        }
+    },
+    {
+        "pk": 31063,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP91aSCs",
+            "item_description": "CP9.1aSCs - Enrolled in ECD",
+            "item_description_short": "Enrolled in ECD",
+            "item_category": "Service - Schooled",
+            "the_order": 1,
+            "field_name": "olmis_education_service_id"
+        }
+    },
+    {
+        "pk": 31064,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP92aSCs",
+            "item_description": "CP9.2aSCs - Re-enrolled child back to school",
+            "item_description_short": "Re-enrolled child back to school",
+            "item_category": "Service - Schooled",
+            "the_order": 2,
+            "field_name": "olmis_education_service_id"
+        }
+    },
+    {
+        "pk": 31066,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP94aSCs",
+            "item_description": "CP9.4aSCs - School fees paid",
+            "item_description_short": "School fees paid",
+            "item_category": "Service - Schooled",
+            "the_order": 3,
+            "field_name": "olmis_education_service_id"
+        }
+    },
+    {
+        "pk": 31067,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP94bSCs",
+            "item_description": "CP9.4bSCs - Complete referral for bursary",
+            "item_description_short": "Complete referral for bursary",
+            "item_category": "Service - Schooled",
+            "the_order": 4,
+            "field_name": "olmis_education_service_id"
+        }
+    },
+    {
+        "pk": 31068,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP95aSCs",
+            "item_description": "CP9.5aSCs - School levies paid",
+            "item_description_short": "School levies paid",
+            "item_category": "Service - Schooled",
+            "the_order": 5,
+            "field_name": "olmis_education_service_id"
+        }
+    },
+    {
+        "pk": 43014,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP95bSCs",
+            "item_description": "CP9.5bSCs - Completed referral for school levies",
+            "item_description_short": "Completed referral for school levies",
+            "item_category": "Service - Schooled",
+            "the_order": 6,
+            "field_name": "olmis_education_service_id"
+        }
+    },
+    {
+        "pk": 31069,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP96aSCs",
+            "item_description": "CP9.6aSCs - Scholastic materials provided",
+            "item_description_short": "Scholastic materials provided",
+            "item_category": "Service - Schooled",
+            "the_order": 7,
+            "field_name": "olmis_education_service_id"
+        }
+    },
+    {
+        "pk": 43015,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP96bSCs",
+            "item_description": "CP9.6bSCs - Complete referral for Scholastic materials",
+            "item_description_short": "Complete referral for Scholastic materials",
+            "item_category": "Service - Schooled",
+            "the_order": 8,
+            "field_name": "olmis_education_service_id"
+        }
+    },
+    {
+        "pk": 31070,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP97aSCs",
+            "item_description": "CP9.7aSCs - School uniform provided",
+            "item_description_short": "School uniform provided",
+            "item_category": "Service - Schooled",
+            "the_order": 9,
+            "field_name": "olmis_education_service_id"
+        }
+    },
+    {
+        "pk": 43016,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP97bSCs",
+            "item_description": "CP9.7bSCs - Complete referral for school uniform",
+            "item_description_short": "Complete referral for school uniform",
+            "item_category": "Service - Schooled",
+            "the_order": 10,
+            "field_name": "olmis_education_service_id"
+        }
+    },
+    {
+        "pk": 31071,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP98aSCs",
+            "item_description": "CP9.8aSCs - Sanitary towels provided",
+            "item_description_short": "Sanitary towels provided",
+            "item_category": "Service - Schooled",
+            "the_order": 11,
+            "field_name": "olmis_education_service_id"
+        }
+    },
+    {
+        "pk": 31072,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP98bSCs",
+            "item_description": "CP9.8bSCs - Completed referral for provision of Sanitary towels)",
+            "item_description_short": "Completed referral for provision of Sanitary towels)",
+            "item_category": "Service - Schooled",
+            "the_order": 12,
+            "field_name": "olmis_education_service_id"
+        }
+    },
+    {
+        "pk": 31326,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP911aSCs",
+            "item_description": "CP9.11aSCs - Lighting equipment provided (e.g. solar lamps)",
+            "item_description_short": "Lighting equipment provided (e.g. solar lamps)",
+            "item_category": "Service - Schooled",
+            "the_order": 13,
+            "field_name": "olmis_education_service_id"
+        }
+    },
+    {
+        "pk": 31327,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CP911bSCs",
+            "item_description": "CP9.11bSCs - Completed referral for lighting equipment (e.g. solar lamps)",
+            "item_description_short": "Completed referral for lighting equipment (e.g. solar lamps)",
+            "item_category": "Service - Schooled",
+            "the_order": 14,
+            "field_name": "olmis_education_service_id"
+        }
+    }
+]

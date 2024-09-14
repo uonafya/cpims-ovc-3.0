@@ -44,7 +44,7 @@ REPORTS[36] = 'active_beneficiary'
 REPORTS[37] = 'benchmark_v1'
 REPORTS[38] = 'graduation'
 REPORTS[39] = 'hei'
-REPORTS[40] = 'case_load'
+REPORTS[40] = 'eid_vl'
 # Other
 REPORTS[51] = 'datim'
 REPORTS[52] = 'pepfar'
@@ -4381,4 +4381,8 @@ QUERIES['PregnantTeenOrWomen'] = '''
 '''
 
 QUERIES['HEI'] = '''
+'''
+
+QUERIES['eid_vl'] = '''
+select * from vw_vl_tracker WHERE cbo_id in ({cbos})
 '''

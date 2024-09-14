@@ -275,4 +275,7 @@ urlpatterns = [
     # cpara delete
     path('cpara/delete/<int:id>/<uuid:btn_event_pk>/',
          views.delete_cpara, name='delete_cpara'),
+
+    # Revision September 2024
+     path('form1a/v2/<int:id>/', views.form1a_v2, name='form1a_v2'),
 ]

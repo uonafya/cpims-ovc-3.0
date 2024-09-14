@@ -782,8 +782,8 @@ class OVCCareForms(models.Model):
     class Meta:
         db_table = 'ovc_care_forms'
 
-    def __unicode__(self):
-        return str(self.form_id)
+    def __str__(self):
+        return str(self.name)
 
 
 class OVCCareBenchmarkScore(models.Model):

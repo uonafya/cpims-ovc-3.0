@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 from cpovc_auth.models import AppUser
 from cpovc_main.functions import convert_date
@@ -17,6 +18,7 @@ from .models import DREAMSServices
 from cpovc_dreams.tasks import get_dreams_services
 
 
+@login_required
 def dreams_home(request):
     try:
         form = OVCSearchForm(data=request.GET)

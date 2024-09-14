@@ -78,7 +78,8 @@ from django.views.decorators.cache import cache_control
 from cpovc_registry.functions import extract_post_params
 from cpovc_ovc.functions import get_ovcdetails,search_master, get_exit_org
 from .functions import (
-    create_fields, create_form_fields, save_form1b, save_bursary, get_caseplan)
+    create_fields, create_form_fields, save_form1b, save_bursary,
+    get_caseplan, save_form1a_v2)
 from .documents import create_mcert
 
 from cpovc_ovc.views import ovc_view
@@ -7042,6 +7043,30 @@ def form1a_events(request, id):
 
 @login_required
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def form1a_v2(request, id):
+    init_data = RegPerson.objects.filter(pk=id)
+    ovc = OVCRegistration.objects.filter(person_id=id).first()
+    check_fields = ['sex_id', 'hiv_status_id']
+    vals = get_dict(field_name=check_fields)
+    form = OVCF1AForm(initial={'person': id})
+    caseplans = get_caseplan(request, id)
+    if request.method == 'POST':
+        print(request.POST)
+        save_form1a_v2(request)
+        ovc_id = int(request.POST.get('person'))
+        msg = 'Form 1A saved successfully'
+        messages.info(request, msg)
+        url = reverse('ovc_view', kwargs={'id': ovc_id})
+        return HttpResponseRedirect(url)
+    return render(request,
+                  'forms/form1a_v2.html',
+                  {'form': form, 'init_data': init_data,
+                   'vals': vals, 'ovc': ovc,
+                   'caseplans': caseplans})
+
+
+@login_required
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def save_form1a(request):
     jsonResponse = []
     try:
@@ -8583,6 +8608,22 @@ def manage_service_category(request):
                                 jsonServiceCategoriesData.append({'item_sub_category': s.item_description,
                                                                   'item_sub_category_id': str(s.item_id),
                                                                   'status': 1})
+                if index == 5:
+                    bm_id = request.POST.get('bm_id')
+                    domains = {"DHNU": "olmis_health_service_id",
+                               "DHES": "olmis_hes_service_id",
+                               "DEDU": "olmis_education_service_id",
+                               "DPRO": "olmis_protection_service_id"}
+                    # domains = { "DPRO": 'Safe', "DHES": 'Stable',
+                    # "DHNU": 'Healthy', "DEDU": 'Schooled' }
+                    itm_bm = 'CP%s' % (bm_id.replace('BM', ''))
+                    field_name = domains[domain_id]
+                    setuplists = SetupList.objects.filter(
+                        field_name=field_name, item_id__icontains=itm_bm, is_void=False)
+                    for s in setuplists:
+                        jsonServiceCategoriesData.append({'item_name': s.item_description,
+                                                          'item_id': str(s.item_id),
+                                                          'status': 1})
     except Exception as e:
         print('Error >>  %s' % str(e))
         raise e
@@ -10730,6 +10771,7 @@ def new_cpara(request, id):
             d_previous=data.get('CP2d')
             date_previous = d_previous if d_previous else None
             answer = data.get(question['code'])
+            print('ANS', answer)
             # print(f'date_previous{date_previous} date of event {date_of_event}')
             
             if answer is None:
@@ -10799,7 +10841,6 @@ def new_cpara(request, id):
         hhmembers = hhmembers2.exclude(person=care_giver)
 
         # start of appending the results
-
 
 
         # Save data for table data for 3.1 , 3.2 and 3.3
@@ -11007,6 +11048,34 @@ def new_cpara(request, id):
         hhmembers2 = hhmqs.exclude(person_id=id)
         hhmembers = hhmembers2.exclude(person=care_giver)
         '''
+        check_fields = ['sex_id', 'school_level_id', 'hiv_status_id',
+                        'relationship_type_id', 'identifier_type_id']
+        vals = get_dict(field_name=check_fields)
+        # IDs
+        sibling_dict = {}
+        sibling_ids = hhmqs.values_list('person_id', flat=True)
+
+        cg_type_dict = {}
+        cg_types = RegPersonsGuardians.objects.filter(
+            child_person_id__in=sibling_ids, guardian_person_id=care_giver_id, is_void=False)
+        for cg_type in cg_types:
+            cg_type_dict[cg_type.child_person_id] = cg_type.relationship
+        cg_type_id = cg_type_dict[ovc_id] if ovc_id in cg_type_dict else ''
+
+        setattr(creg, 'cg_type', cg_type_id)
+        # Other members
+        
+        sibling_regs = OVCRegistration.objects.filter(person_id__in=sibling_ids, is_void=False)
+        for sibling in sibling_regs:
+            sibling_dict[sibling.person_id] = sibling
+
+        for hhmember in hhmembers:
+            sib_id = hhmember.person_id
+            sibling_obj = sibling_dict[sib_id] if sib_id in sibling_dict else None
+            cg_type_id = cg_type_dict[sib_id] if sib_id in cg_type_dict else ''
+            setattr(hhmember, 'sibling', sibling_obj)
+            setattr(hhmember, 'cg_type', cg_type_id)
+        members = RegPerson.objects.filter(id__in=sibling_ids)
 
         # Get child geo
         child_geos = RegPersonsGeo.objects.select_related().filter(
@@ -11114,7 +11183,9 @@ def new_cpara(request, id):
                     'subcounty': subcounty,
                     'county': county,
                     'care_giver': care_giver,
-                    'past_cpara': past_cpara
+                    'past_cpara': past_cpara,
+                    'vals': vals,
+                    'members': members
                     
                     }    
         return render(request,'forms/new_cpara.html',context)
@@ -11147,6 +11218,7 @@ def edit_cpara(request, id):
     if request.method == 'POST':
         
         data = request.POST
+        print('POST data', data)
         
         update_time=timezone.now()
         ovc_event = OVCCareEvents.objects.filter(event=id)
@@ -11155,28 +11227,75 @@ def edit_cpara(request, id):
 
         ovc_score = data.get('bench_array').replace('[', '').replace(']', '').split(',')
 
+
+        event_id = id
+        date_previous = data.get('CP2d')
+        cpara_old_elms = ['CP2d', 'CP0b', 'CP3d1', 'CP4d1', 'CP5d1', 'CP5e1']
+
+        answer_value = {'AYES':'True', 'ANNO':'False', 'ANA':'Na', None:'No'}
+
         # Update OVC CPARA Table
         try:
             for question in cpara_saved:
-                answer=data.get(question.question_code)
+                qcode = question.question_code
+                answer = data.get(qcode)
+                cpara_old_elms.append(qcode)
 
-                answer_value = {
-                    'AYES':'True',
-                    'ANNO':'False',
-                    'ANA':'Na',
-                    None:'No'
-                }
 
-                answer = answer_value[answer]
+                answer = answer_value[answer] if answer in answer_value else answer
                 # print(f'{question.question_code}  <><>  {answer}')
-                OVCCareCpara.objects.filter(event=id,question_code = question.question_code).update(                    
-                    answer=answer,
-                    date_of_event=date_of_event,
-                    timestamp_updated=update_time,  
-                    event=id
-                )
-                
-                print(OVCCareCpara.objects.filter(question_code=question.question_code, event=id))
+                if qcode in ['CP3d1', 'CP4d1', 'CP5d1', 'CP5e1']:
+                    answers = data.getlist(qcode)
+                    for answer in answers:
+                        qtype = OVCCareQuestions.objects.filter(code=qcode).first()
+                        if qtype:
+                            cpara, created = OVCCareCpara.objects.update_or_create(
+                                event_id=event_id, question_code=qcode, person_id=person_id,
+                                caregiver_id=care_giver_id,
+                                defaults={'date_of_event': date_of_event,
+                                          'timestamp_updated': update_time,
+                                          'date_of_previous_event': date_previous,
+                                          'question_id': qtype.pk,
+                                          'household': house_hold,
+                                          'question_type': qtype.question_type,
+                                          'domain': qtype.domain,
+                                          'answer': answer, 
+                                          'is_void': False})
+                else:
+                    OVCCareCpara.objects.filter(event=id, question_code=qcode).update(                    
+                        answer=answer,
+                        date_of_event=date_of_event,
+                        date_of_previous_event=date_previous,
+                        timestamp_updated=update_time
+                    )
+                # print(OVCCareCpara.objects.filter(question_code=question.question_code, event=id))
+
+            # Logic above will not work when there are new elements in POST not already saved
+            for elm in data:
+                if elm.startswith('CP'):
+                    if elm not in cpara_old_elms:
+                        print('elms', elm)
+                        qtype = OVCCareQuestions.objects.filter(code=elm).first()
+                        if qtype:
+                            ans_list = [data.get(elm)]
+                            if elm in ['CP3d1', 'CP4d1', 'CP5d1', 'CP5e1']:
+                                ans_list = data.getlist(elm)
+                            for ans in ans_list:
+                                OVCCareCpara.objects.create(
+                                    person_id=person_id,
+                                    caregiver_id=care_giver_id,
+                                    question_id=qtype.pk,
+                                    question_code=elm,
+                                    answer=ans,
+                                    household=house_hold,
+                                    question_type=qtype.question_type,
+                                    domain=qtype.domain,
+                                    event_id=event_id,
+                                    date_of_event=date_of_event,
+                                    date_of_previous_event=date_previous, 
+                                )
+                else:
+                    print('TTTT', elm)
                 
                 
         except Exception as e:
@@ -11222,32 +11341,65 @@ def edit_cpara(request, id):
             print(e)
             msg = f'Error while updating to OVC sub population. Send this error to Support'
 
+        # Individual CPARA was missing - September 2024
+        ind_cpara = ['CP15q','CP16q','CP17q', 'CP27q']
+        
+        for b_item in data:
+            b_items = b_item.split('_')
+            if len(b_items) > 1:      
+                b_person_id = b_items[0]
+                b_qcode = b_items[1]                
+                qtype = OVCCareQuestions.objects.filter(code=b_qcode).first()
+                if qtype and b_qcode in ind_cpara:            
+                    try:
+                        ind_answer = data.get(b_item)
+                        answer = answer_value[ind_answer] if ind_answer in answer_value else ind_answer
+                        # print('iCPARA', b_qcode, ind_answer, answer)
+                        icpara, created = OVCCareIndividaulCpara.objects.update_or_create(
+                                    event_id=event_id, question_code=b_qcode,
+                                    person_id=b_person_id, caregiver_id=care_giver_id,
+                                    defaults={'date_of_event': date_of_event,
+                                              'timestamp_updated': update_time,
+                                              'date_of_previous_event': date_previous,
+                                              'question_id': qtype.pk,
+                                              'household': house_hold,
+                                              'question_type': qtype.question_type,
+                                              'domain': qtype.domain,
+                                              'answer': answer,
+                                              'is_void': False
+                                              })
+                    except Exception as e:
+                        print(e)
+                        msg = f'Error while updating Individual CPARA details'
+
         url = reverse('ovc_view', kwargs={'id':person_id})
         msg = 'CPARA edited successfully'
         messages.add_message(request, messages.INFO, msg)
         return HttpResponseRedirect(url)
 
-        # cpara_id=OVCCareCpara.objects.get(event=id,is_void=False)
+    # GET Method
     # person_id=OVCSubPopulation.objects.filter(event=id).first().person_id
     # house_id = OVCHHMembers.objects.get(person_id=person_id).house_hold_id
     # person_id = OVCHHMembers.objects.get(house_hold=house_id, member_type='TOVC').person_id
     # pdb.set_trace()
     person_id = OVCCareCpara.objects.filter(event=id).first().person_id
-
     
-    cpara_data=OVCCareCpara.objects.filter(event=id,is_void=False).values()
+    cpara_data = OVCCareCpara.objects.filter(event=id,is_void=False).values()
 
     # Get an event date of a single question for that event id
-    evts = OVCCareCpara.objects.filter(event_id=id) #.first()
-    d_o_a=OVCCareCpara.objects.get(event=id, question_code='CP10q').date_of_event
-    CP2d=OVCCareCpara.objects.get(event=id, question_code='CP10q').date_of_previous_event
+    evts = OVCCareCpara.objects.filter(event_id=id).first()
+    # d_o_a=OVCCareCpara.objects.get(event=id, question_code='CP10q').date_of_event
+    # CP2d=OVCCareCpara.objects.get(event=id, question_code='CP10q').date_of_previous_event
+    d_o_a = evts.date_of_event
+    CP2d = evts.date_of_previous_event
     # date_event = cpara_data.get('date_of_event')
    
     # pull OVC sub population get
     ovc_sub_pop_data = {}    
     ovc_sub_population = OVCSubPopulation.objects.filter(event=id,is_void=False).values()
     # OVCSubPopulation.objects.filter(event=id,is_void=False).delete()
-    sub_pop = {'double' :'CP6d_1','AGYW':'CP6d_2','HEI':'CP6d_3','FSW':'CP6d_4','PLHIV':'CP6d_5','CLHIV':'CP6d_6','SVAC':'CP6d_7','AHIV':'CP6d_8'}
+    sub_pop = {'double' :'CP6d_1','AGYW':'CP6d_2','HEI':'CP6d_3','FSW':'CP6d_4',
+               'PLHIV':'CP6d_5','CLHIV':'CP6d_6','SVAC':'CP6d_7','AHIV':'CP6d_8'}
     for ovc_sub in ovc_sub_population:
         
         ovc_sub_id = ovc_sub['person_id']
@@ -11266,15 +11418,22 @@ def edit_cpara(request, id):
         'True': 'AYES',
         'Na': 'ANA',
         'No':'',
-        'AYES':'AYES'
+        'AYES':'AYES',
+        'ANNO':'ANNO'
     }
 
     for one_data in cpara_data:
         one_data_q = one_data.get('question_code')
-        one_data_a = one_data.get('answer') 
-        if one_data_q == 'CP2d':
-            one_data_a
+        one_data_a = one_data.get('answer')
+        print(one_data_q, one_data_a)
+        if one_data_q in ['CP2d', 'CP0b']:
             edit_data_cpara[one_data_q]=one_data_a
+        elif one_data_q in ['CP3d1', 'CP4d1', 'CP5d1', 'CP5e1']:
+            if one_data_a.isnumeric():
+                if one_data_q not in edit_data_cpara:
+                    edit_data_cpara[one_data_q]= [int(one_data_a)]
+                else:
+                    edit_data_cpara[one_data_q].append(int(one_data_a))
         else:
             # one_data_val = answer_value[one_data_a]            
             edit_data_cpara[one_data_q]=answer_value[one_data_a]
@@ -11443,16 +11602,48 @@ def edit_cpara(request, id):
 
             
 
-    # print(f'Edit data: {edit_data_cpara}')
+    print(f'Edit data: {edit_data_cpara}')
+    print('Ind CPARA', individual_cpara_data)
     
     ovc_id = int(person_id)
     child = RegPerson.objects.get(is_void=False, id=ovc_id)
     care_giver = RegPerson.objects.get(id=OVCRegistration.objects.get(person=child).caretaker_id)
-    hhmembers = hhmembers2.exclude(person=care_giver)   
+    hhmembers = hhmembers2.exclude(person=care_giver)
+
+    check_fields = ['sex_id', 'school_level_id', 'hiv_status_id',
+                    'relationship_type_id', 'identifier_type_id']
+    vals = get_dict(field_name=check_fields)
+
+    # IDs
+    sibling_dict = {}
+    sibling_ids = hhmqs.values_list('person_id', flat=True)
+
+    cg_type_dict = {}
+    cg_types = RegPersonsGuardians.objects.filter(
+        child_person_id__in=sibling_ids, guardian_person_id=care_giver_id, is_void=False)
+    for cg_type in cg_types:
+        cg_type_dict[cg_type.child_person_id] = cg_type.relationship
+    cg_type_id = cg_type_dict[ovc_id] if ovc_id in cg_type_dict else ''
+
+    setattr(creg, 'cg_type', cg_type_id)
+    # Other members
+    
+    sibling_regs = OVCRegistration.objects.filter(person_id__in=sibling_ids, is_void=False)
+    for sibling in sibling_regs:
+        sibling_dict[sibling.person_id] = sibling
+
+    for hhmember in hhmembers:
+        sib_id = hhmember.person_id
+        sibling_obj = sibling_dict[sib_id] if sib_id in sibling_dict else None
+        cg_type_id = cg_type_dict[sib_id] if sib_id in cg_type_dict else ''
+        setattr(hhmember, 'sibling', sibling_obj)
+        setattr(hhmember, 'cg_type', cg_type_id)
+
+    members = RegPerson.objects.filter(id__in=sibling_ids)
 
     form = CparaAssessment(data=edit_data_cpara)
     context = {'form':form,
-                'person': id,
+                'person': ovc_id,
                 'siblings': siblings,
                 'hhmembers': hhmembers,
                 'osiblings': osiblings,
@@ -11460,14 +11651,14 @@ def edit_cpara(request, id):
                 'child': child,
                 'creg': creg,
                 'caregiver': care_giver,
-                # 'household': house_hold,
                 'ward': ward,
                 'subcounty': subcounty,
                 'county': county,
                 'care_giver': care_giver,
-                'sub_pop':ovc_sub_pop_data,
-                'ind_cpara_data':individual_cpara_data
-                
+                'sub_pop': ovc_sub_pop_data,
+                'ind_cpara_data': individual_cpara_data,
+                'vals': vals, 'members': members,
+                'datas': edit_data_cpara
                 }
 
     return render(request,'forms/edit_new_cpara.html',context)

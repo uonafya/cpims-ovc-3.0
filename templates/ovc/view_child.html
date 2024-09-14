@@ -78,6 +78,14 @@ Caregiver details | {{care_giver}}
             </tr>
             <tr>
                 <td>
+                    <a href="{% url 'form1a_v2' id=creg.person_id %}">
+                    <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
+                    <span class="badge pull-right">{{ services.f1a }}</span>
+                    <div class="m-t-4">Form 1A (v2)</div></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="{% url 'new_form1b' id=creg.person_id %}">
                     <i class="fa fa-file-o fa-1x pull-left fa-fw m-t-4"></i>
                     <span class="badge pull-right">{{ services.f1b }}</span>

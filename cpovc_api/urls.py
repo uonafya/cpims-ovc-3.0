@@ -41,4 +41,7 @@ urlpatterns = [
     path('form1a/', views.form1a, name='sub_pop'),
     path('form1b/', views.form1b, name='sub_pop'),
     path('user/', views.user_account),
+
+    # Basic Token heartbeat
+    path('token/check/', views.token_check, name='token_check'),
 ]

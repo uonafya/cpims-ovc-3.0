@@ -344,6 +344,7 @@ class OVCViralload(models.Model):
     person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
     viral_load = models.IntegerField(null=True)
     viral_date = models.DateField(null=True)
+    viral_source = models.CharField(max_length=5, default='DSUI')
     created_at = models.DateTimeField(default=timezone.now)
     is_void = models.BooleanField(default=False)
 
@@ -357,3 +358,30 @@ class OVCViralload(models.Model):
     def __str__(self):
         """To be returned by admin actions."""
         return str(self.person)
+
+
+class OVCVLTracker(models.Model):
+    """Model for OVC Care VL Tracker details."""
+
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False)
+    person = models.ForeignKey(RegPerson, on_delete=models.CASCADE)
+    facility = models.ForeignKey(OVCFacility, on_delete=models.CASCADE)
+    ccc_number = models.CharField(max_length=20)
+    mfl_code = models.CharField(max_length=20)
+    timestamp_created = models.DateTimeField(default=timezone.now)
+    timestamp_synced = models.DateTimeField(auto_now=True, null=True)
+    eid_validated =  models.BooleanField(default=False)
+    is_active =  models.BooleanField(default=True)
+    is_void = models.BooleanField(default=False)
+
+    class Meta:
+        """Override table details."""
+
+        db_table = 'ovc_care_vl_tracker'
+        verbose_name = 'OVC Care VL Tracker'
+        verbose_name_plural = 'OVC Care  VL Tracker'
+
+    def __str__(self):
+        """To be returned by admin actions."""
+        return str(self.id)

@@ -331,7 +331,7 @@ def roles_edit(request, user_id):
             wkm = check_workmate(login_person_id, user.reg_person_id, 'SL')
             if not wkm:
                 is_supervisor = True
-        print('workmate', wkm)
+        # print('workmate', wkm)
         form = RolesForm(data=user_data)
         # Lets do the processing down here - Makes sense
         if request.method == 'POST':

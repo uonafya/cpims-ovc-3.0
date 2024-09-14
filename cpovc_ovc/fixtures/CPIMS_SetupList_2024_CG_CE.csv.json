@@ -1,0 +1,82 @@
+[
+    {
+        "pk": 39888,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CECCE1",
+            "item_description": "CCE1 - Caregiver experienced abuse",
+            "item_description_short": "CCE1 - Caregiver experienced abuse",
+            "item_category": "Critical event - Caregiver",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "caregiver_critical_event_id"
+        }
+    },
+    {
+        "pk": 39889,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CECCE2",
+            "item_description": "CCE2 - Caregiver died",
+            "item_description_short": "CCE2 - Caregiver died",
+            "item_category": "Critical event - Caregiver",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "caregiver_critical_event_id"
+        }
+    },
+    {
+        "pk": 39890,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CECCE3",
+            "item_description": "CCE3 - HH Relocation",
+            "item_description_short": "CCE3 - HH Relocation",
+            "item_category": "Critical event - Caregiver",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "caregiver_critical_event_id"
+        }
+    },
+    {
+        "pk": 43027,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CECCE4",
+            "item_description": "CCE4 - Emergency (National emergency, Severe weather or Fire)",
+            "item_description_short": "CCE4 - Emergency (National emergency, Severe weather and Fire)",
+            "item_category": "Critical event - Caregiver",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "caregiver_critical_event_id"
+        }
+    },
+    {
+        "pk": 43028,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "CECCE5",
+            "item_description": "CCE5 - Caregiver Not Adhering to ARVs",
+            "item_description_short": "CCE5 - Caregiver Not Adhering to ARVs",
+            "item_category": "Critical event - Caregiver",
+            "item_sub_category": "",
+            "the_order": 5,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "caregiver_critical_event_id"
+        }
+    }
+]

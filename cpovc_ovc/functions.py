@@ -190,12 +190,15 @@ def search_master(request):
         # Filters for external ids
         if query_id == 1:
             agents = OVCFacility.objects.filter(
-                facility_name__icontains=query, is_void=False)
+                Q(facility_name__icontains=query) | Q(
+                    facility_code=query)).filter(is_void=False)
             for agent in agents:
                 name = agent.facility_name
+                code = agent.facility_code
                 agent_id = agent.id
-                val = {'id': agent_id, 'label': name,
-                       'value': name}
+                names = '%s - %s' % (code, name)
+                val = {'id': agent_id, 'label': names,
+                       'value': names}
                 results.append(val)
         elif query_id == 2:
             agents = OVCSchool.objects.filter(

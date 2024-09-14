@@ -13,4 +13,6 @@ urlpatterns = [
     path('schools/', views.settings_schools, name='settings_schools'),
     path('data/', views.settings_rawdata, name='settings_rawdata'),
     path('changes/', views.change_notes, name='change_notes'),
+    # Integration
+    path('system/', views.settings_system, name='settings_system'),
     ]

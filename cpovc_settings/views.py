@@ -15,6 +15,9 @@ from cpovc_access.views import open_terms
 from cpovc_reports.queries import QUERIES
 from cpovc_reports.functions import run_sql_data, get_variables
 
+from django.utils import timezone
+from cpovc_auth.models import CPOVCProfile
+
 MEDIA_ROOT = settings.MEDIA_ROOT
 
 
@@ -266,6 +269,51 @@ def change_notes(request):
         return render(request, 'settings/changes.html',
                       {'term_title': 'Change Notes',
                        'term_detail': term_detail})
+    except Exception as e:
+        raise e
+    else:
+        pass
+
+
+@login_required
+def settings_system(request):
+    """Method to do pivot reports."""
+    # mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime
+    try:
+        integrations_in = ['ADMIN_DREAMS', 'HELPLINEKENYA', 'VURUGUMAPPER']
+        integrations_out = ['NASCOP', 'KMHFR', 'DREAMS', 'HELPLINE_116', 'PAJAT_VURUGUMAPPER', 'ESR', 'IPRS']
+        context = {}
+        systems = []
+        status_id, details = 0, {}
+        ts = timezone.now()
+        # Get from profiles
+        profile = CPOVCProfile.objects.filter(user_id=1).first()
+        if profile:
+            details = eval(profile.details)
+        print('Profile', details)
+        for its in integrations_out:
+            fits = its.split('_')[0]
+            if fits in details:
+                status = details[fits]['status']
+                ts = details[fits]['ts']
+                status_id = 1 if status == 200 else 2
+            else:
+                status_id = 0
+                ts = ''
+            systems.append({'name': its, 'type': 'OUT', 'status': status_id, 'ts': ts})
+        for ots in integrations_in:
+            fots = ots.split('_')[0]
+            if fots in details:
+                status = details[fots]['status']
+                ts = details[fots]['ts']
+                status_id = 1 if status == 200 else 2
+            else:
+                status_id = 0
+                ts = ''
+            systems.append({'name': ots, 'type': 'IN', 'status': status_id, 'ts': ts})
+        context['systems'] = systems
+        print('SYS', systems)
+        return render(request, 'settings/system.html', context)
     except Exception as e:
         raise e
     else:

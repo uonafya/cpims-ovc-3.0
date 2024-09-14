@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page_title %} System {% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block style_code %}
+<link href="{% static 'plugins/datatables/css/dataTables.bootstrap.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block primary %}
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+	<li><a href="#">Home</a></li>
+	<li class="active">Settings</li>
+</ol>
+<!-- end breadcrumb -->
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-cogs" aria-hidden="true"></i>
+ System <small> Integrations Monitoring </small></h1>
+<!-- end page-header -->
+<div id="messages" class="alert alert-danger fade in" style="display: none;" tabindex="1">
+    <span class="close" data-dismiss="alert">×</span>
+    <i class="fa fa-check fa-2x pull-left"></i>
+    <span class="invalid-form-message" id="invalid-form-message"></span>
+</div>
+<!-- begin row -->
+<div class="row">
+  <!-- begin col-8 -->
+    <div class="col-md-8">
+        <!-- begin panel -->
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="#" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>                      
+                <h4 class="panel-title">System Settings - Integrations Monitoring</h4>
+            </div>
+            <!-- start panel body -->
+            <div class="panel-body">
+              <br/>
+              <table id="data-table" class="table table-striped table-bordered">
+                  <thead>
+                      <tr>
+                          <th>#</th>
+                          <th>Sytem</th>
+                          <th>Type</th>
+                          <th>Status</th>
+                          <th>Timestamp Checked</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for system in systems %}
+                      <tr>
+                          <td>{{ forloop.counter }}</td>
+                          <td>{{ system.name }}</td>
+                          <td>{{ system.type }}</td>
+                          <td>{% if system.status == 0 %} <span class="label label-warning">Pending</span>{% elif system.status == 1 %} <span class="label label-success">Success</span> {% else %} <span class="label label-danger"> Failed </span> {% endif %}</td>
+                          <td>{{ system.ts }}</td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+
+              </table>
+            </div>
+            <!-- end panel body -->
+        </div>
+        <!-- end panel -->  
+    </div>
+    <!-- end col-8 -->
+    <!-- start col-4 -->
+    <div class="col-md-4">
+      <!-- begin panel -->
+              <div class="panel panel-inverse" data-sortable-id="index-3">
+                  <div class="panel-heading">
+                      <h4 class="panel-title">Syncronization Schedule</h4>
+                  </div>
+                  <div id="schedule-calendar" class="bootstrap-calendar"></div>
+                  <div class="list-group">
+                        <a href="#" class="list-group-item text-ellipsis">
+                            <span class="badge badge-primary">Hourly</span> EID/VL results
+                        </a> 
+                        <a href="#" class="list-group-item text-ellipsis">
+                            <span class="badge badge-primary">Midnight</span> KHMFR
+                        </a>
+                        <a href="#" class="list-group-item text-ellipsis">
+                            <span class="badge badge-primary">Weekly</span> From DREAMS
+                        </a>
+                        <a href="#" class="list-group-item text-ellipsis">
+                            <span class="badge badge-primary">On request</span> To DREAMS
+                        </a>
+                        <a href="#" class="list-group-item text-ellipsis">
+                            <span class="badge badge-primary">Instant</span> From Helpline 116
+                        </a>
+                        <a href="#" class="list-group-item text-ellipsis">
+                            <span class="badge badge-primary">Midnight</span> ESR
+                        </a>
+                        <a href="#" class="list-group-item text-ellipsis">
+                            <span class="badge badge-primary">Midnight</span> IPRS
+                        </a>
+                        <a href="#" class="list-group-item text-ellipsis">
+                            <span class="badge badge-primary">On request</span> To DREAMS
+                        </a>
+                        <a href="#" class="list-group-item text-ellipsis">
+                            <span class="badge badge-primary">On request</span> To VuruguMapper
+                        </a>
+                        <a href="#" class="list-group-item text-ellipsis">
+                            <span class="badge badge-primary">Instant</span> From VuruguMapper
+                        </a>
+                        <br>
+                        <br>
+                        <br>
+                    </div>
+              </div>
+              <!-- end panel -->
+    </div>
+    <!-- end col-4 -->
+</div>
+<!-- end row -->
+{% endblock %}
+
+{% block lazy_javascript_code %}
+<script src="{% static 'plugins/datatables/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'plugins/datatables/js/dataTables.bootstrap.min.js' %}"></script>
+<script src="{% static 'plugins/datatables/js/moment.min.js' %}"></script>
+<script src="{% static 'plugins/datatables/js/datetime-moment.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    $('#data-table').DataTable( {
+        "order": [[ 2, "desc" ]]
+    } );
+} );
+</script>
+{% endblock %}

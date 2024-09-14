@@ -1,0 +1,66 @@
+[
+    {
+        "pk": 43035,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "KPSWO",
+            "item_description": "SW",
+            "item_description_short": "SW",
+            "item_category": "Key Population",
+            "item_sub_category": "",
+            "the_order": 1,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "key_population_id"
+        }
+    },
+    {
+        "pk": 43036,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "KPMSM",
+            "item_description": "MSM",
+            "item_description_short": "MSM",
+            "item_category": "Key Population",
+            "item_sub_category": "",
+            "the_order": 2,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "key_population_id"
+        }
+    },
+    {
+        "pk": 43037,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "KPIDU",
+            "item_description": "IDU",
+            "item_description_short": "IDU",
+            "item_category": "Key Population",
+            "item_sub_category": "",
+            "the_order": 3,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "key_population_id"
+        }
+    },
+    {
+        "pk": 43038,
+        "model": "cpovc_main.SetupList",
+        "fields": {
+            "item_id": "KLGBT",
+            "item_description": "LGBTQ+",
+            "item_description_short": "LGBTQ+",
+            "item_category": "Key Population",
+            "item_sub_category": "",
+            "the_order": 4,
+            "user_configurable": false,
+            "sms_keyword": false,
+            "is_void": false,
+            "field_name": "key_population_id"
+        }
+    }
+]

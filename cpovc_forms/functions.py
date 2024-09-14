@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timedelta
 from django.db import connection
 from django.forms import NullBooleanField
@@ -6,7 +7,7 @@ from cpovc_registry.functions import (
     get_client_ip, get_meta_data)
 
 from cpovc_main.functions import (
-    get_general_list, convert_date, get_days_difference)
+    get_general_list, convert_date, get_days_difference, new_guid_32)
 from cpovc_forms.models import (
     FormsAuditTrail, OVCCareCpara, OVCCareCasePlan,
     OVCCareEvents, OVCEducationFollowUp)
@@ -15,7 +16,7 @@ from cpovc_registry.models import RegOrgUnit
 
 from .models import (
     OVCGokBursary, OVCCareEAV, OvcCaseInformation, OVCPlacement,
-    OVCCaseLocation, OVCCareF1B, OVCProgramRegistration)
+    OVCCaseLocation, OVCCareF1B, OVCProgramRegistration, OVCCareServices)
 from cpovc_ovc.models import OVCFacility, OVCRegistration
 
 from cpovc_main.models import ListAnswers
@@ -897,3 +898,73 @@ def get_caseplan(request, ovc_id):
         return {}
     else:
         return caseplans
+
+
+def save_form1a_v2(request):
+    """Method to save Form1A V2."""
+    try:
+        event_type_id = 'FSAM'
+        service_list = request.POST.get('all_answers')
+        person_id = int(request.POST.get('person'))
+        date_of_assessment = request.POST.get('date_of_service')
+        date_of_event = convert_date(date_of_assessment)
+
+        # Save F1A Event
+        event_counter = OVCCareEvents.objects.filter(
+            event_type_id=event_type_id,
+            person_id=person_id, is_void=False).count()
+        ovccareevent = OVCCareEvents(
+            event_type_id=event_type_id,
+            event_counter=event_counter,
+            date_of_event=date_of_event,
+            created_by=request.user.id,
+            person_id=person_id, event_score=0
+            )
+        ovccareevent.save()
+        event_id = ovccareevent.pk
+
+        # Get CBO / Org unit
+        ou_primary = request.session.get('ou_primary')
+        ou_attached = request.session.get('ou_attached')
+        ou_attached = ou_attached.split(',');
+        org_unit = ou_primary if ou_primary else ou_attached[0]
+
+        # Services in JSON submitted file
+        if service_list:
+            services_data = json.loads(service_list)
+            for sid in services_data:
+                service_data = services_data[sid]
+                service_gid = new_guid_32()
+                domain_id = service_data['domain_id']
+                service_id = service_data['service_id']
+                OVCCareServices(
+                    domain=domain_id,
+                    service_provided=service_id,
+                    service_provider=org_unit,
+                    date_of_encounter_event=date_of_event,
+                    event_id=event_id, service_grouping_id=service_gid
+                    ).save()
+
+        # Critical Events
+        my_kvals = []
+        olmis_critical_event = request.POST.getlist('olmis_critical_event')
+        for i, cevts in enumerate(olmis_critical_event):
+            cevts = cevts.split(',')
+            for cevt in cevts:
+                my_kvals.append({"entity": "CEVT", "value": cevt})
+
+        for kvals in my_kvals:
+            key = kvals["entity"]
+            value = kvals["value"]
+            attribute = "FSAM"
+            OVCCareEAV(
+                entity=key,
+                attribute=attribute,
+                value=value,
+                event_id=event_id
+            ).save()
+
+    except Exception as e:
+        raise e
+    else:
+        pass
