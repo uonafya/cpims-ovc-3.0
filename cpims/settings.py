@@ -124,6 +124,9 @@ DATABASES = {
         'PASSWORD': cpims_db_pass,
         'HOST': '41.89.94.104',
         'PORT': cpims_db_port, }
+    'options': {
+        'pool': True, 
+    }
 }
 
 LANGUAGE_CODE = 'en-us'
