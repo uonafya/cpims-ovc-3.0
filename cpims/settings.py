@@ -123,7 +123,7 @@ DATABASES = {
         'USER': cpims_db_user,
         'PASSWORD': cpims_db_pass,
         'HOST': '41.89.94.104',
-        'PORT': cpims_db_port, }
+        'PORT': cpims_db_port, },
     'options': {
         'pool': True, 
     }
